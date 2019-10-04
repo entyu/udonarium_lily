@@ -23,7 +23,6 @@ import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.s
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
-import { debug } from 'util';
 
 @Component({
   selector: 'game-character',
@@ -194,7 +193,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   private appendCloneNumber(objectname: string): string {
     let reg = new RegExp('(.*)_([0-9]*)');
     let res = objectname.match(reg);
-    console.log(res);
 
     if(res != null && res.length == 3) {
       let cloneNumber:number = parseInt(res[2]) + 1;
