@@ -57,7 +57,9 @@ export class GameCharacter extends TabletopObject {
     }
     return null;
   }
-  
+
+  set name(value:string) { this.setCommonValue('name', value); }
+
   TestExec() {
     console.log('TestExec');
  
