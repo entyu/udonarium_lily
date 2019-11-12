@@ -4,6 +4,7 @@
       <ng-container *ngTemplateOutlet="editButtons"></ng-container>
       <select (change)="setElementType($event.target.value)" [ngModel]="gameDataElement.type">
         <option value="">通常</option>
+        <option value="simpleNumber">数値</option>
         <option value="numberResource">リソース</option>
         <option value="note">ノート</option>
       </select>
@@ -19,22 +20,35 @@
       </ng-container>
     </div>
     <div class="table-cell">
-      <ng-container [ngSwitch]="gameDataElement.type">
-        <ng-container *ngSwitchCase="'numberResource'">
-          <input [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
-            [(ngModel)]="currentValue" type="range" min="0" max="{{value}}" />
-          <br>
-          <input style="width: 5em; text-align: right;" size="1" type="number" [(ngModel)]="currentValue" placeholder="Value" />
-          /
-          <input style="width: 5em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
-        </ng-container>
-        <ng-container *ngSwitchCase="'note'">
-          <textarea style="width:100%; height:5em; min-width:50px; resize: none; font-size: 0.8em;" [(ngModel)]="value" placeholder="Note"></textarea>
-        </ng-container>
-        <ng-container *ngSwitchDefault>
-          <!-- size属性がないと小さくならない -->
-          <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div>
-          <input style="width:100%; min-width:10px;" size="1" [(ngModel)]="value" placeholder="Value" />
+      <ng-container *ngIf="isCommonValue">
+        <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
+          [(ngModel)]="value" type="range" min="{{name === 'altitude' ? -24 : 0}}" max="{{name === 'fontsize' ? 64 : 24}}" step="0.5" />
+        <br />
+        <input style="width:90%; max-width:8em; text-align:right;" type="number" min="{{name === 'altitude' ? -24 : 0}}" step="0.1" size="1" [(ngModel)]="value" placeholder="Value" />
+      </ng-container>
+      <ng-container *ngIf="!isCommonValue">
+        <ng-container [ngSwitch]="gameDataElement.type">
+        <ng-container *ngSwitchCase="'simpleNumber'">
+            <!-- size属性がないと小さくならない -->
+            <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div>
+            <input [type]="(value && value == +value) ? 'number' : 'text'" style="width:100%; max-width:8em; text-align:right;" size="1" [(ngModel)]="value" placeholder="Number" />
+          </ng-container>
+          <ng-container *ngSwitchCase="'numberResource'">
+            <input [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
+              [(ngModel)]="currentValue" type="range" min="0" max="{{value}}" />
+            <br>
+            <input style="width: 5em; text-align: right;" size="1" type="number" [(ngModel)]="currentValue" placeholder="Value" />
+            /
+            <input style="width: 5em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
+          </ng-container>
+          <ng-container *ngSwitchCase="'note'">
+            <textarea style="width:100%; height:5em; min-width:50px; resize: none; font-size: 0.8em;" [(ngModel)]="value" placeholder="Note"></textarea>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <!-- size属性がないと小さくならない -->
+            <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div>
+            <input style="width:100%; min-width:10px;" size="1" [(ngModel)]="value" placeholder="Value" />
+          </ng-container>
         </ng-container>
       </ng-container>
     </div>

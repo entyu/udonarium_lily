@@ -34,6 +34,18 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   get currentValue(): number | string { return this._currentValue; }
   set currentValue(currentValue: number | string) { this._currentValue = currentValue; this.setUpdateTimer(); }
 
+  get isCommonValue(): boolean {
+    if (this.gameDataElement) {
+      return this.isTagLocked && (this.gameDataElement.name === 'size'
+        || this.gameDataElement.name === 'width'
+        || this.gameDataElement.name === 'height'
+        || this.gameDataElement.name === 'depth'
+        || this.gameDataElement.name === 'fontsize'
+        || this.gameDataElement.name === 'altitude');
+    }
+    return false;
+  }
+
   private updateTimer: NodeJS.Timer = null;
 
   constructor(
