@@ -8,6 +8,7 @@ export class DataElement extends ObjectNode {
   @SyncVar() type: string;
   @SyncVar() currentValue: number | string;
 
+  get isSimpleNumber(): boolean { return this.type != null && this.type === 'simpleNumber'; }
   get isNumberResource(): boolean { return this.type != null && this.type === 'numberResource'; }
   get isNote(): boolean { return this.type != null && this.type === 'note'; }
 
