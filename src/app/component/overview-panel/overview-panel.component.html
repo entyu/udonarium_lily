@@ -164,6 +164,13 @@
           </div>
         </div>
       </ng-container>
+      <ng-container *ngSwitchCase="'simpleNumber'">
+        <div class="tag">{{dataElm.name}}</div>
+        <div class="value">
+          <div class="hidden-spacer">{{dataElm.value}}</div>
+          <input class="input" [type]="(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'" style="width:40%; max-width:8em; text-align:right;" size="1" [(ngModel)]="dataElm.value" />
+        </div>
+      </ng-container>
       <ng-container *ngSwitchCase="'numberResource'">
         <div class="tag">{{dataElm.name}}</div>
         <div class="value">
