@@ -1,4 +1,6 @@
 .text {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Verdana, Meiryo, sans-serif;
   font-size: 12px;
+  white-space: pre-wrap;
+  margin: 0px;
 }
