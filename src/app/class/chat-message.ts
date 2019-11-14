@@ -61,5 +61,6 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isDisplayable(): boolean { return this.isDirect ? this.isRelatedToMe : true; }
   get isSystem(): boolean { return -1 < this.tags.indexOf('system') ? true : false; }
   get isDicebot(): boolean { return this.isSystem && this.from.indexOf('BCDice') >= 0 && this.text.indexOf(': 計算結果 →') < 0 ? true : false; }
+  get isCalculate(): boolean { return this.isSystem && this.from.indexOf('BCDice') >= 0 && this.text.indexOf(': 計算結果 →') > -1 ? true : false; }
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
 }
