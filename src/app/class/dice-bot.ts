@@ -311,7 +311,7 @@ export class DiceBot extends GameObject {
             finalResult.result += rollResult.result;
             finalResult.isSecret = finalResult.isSecret || rollResult.isSecret;
             if (1 < repeat) finalResult.result += ` #${i + 1}`;
-            if (DiceBot.apiUrl) finalResult.result += "\r\n"; //とりあえず
+            if (DiceBot.apiUrl) finalResult.result += "\n"; //とりあえず
           }
           this.sendResultMessage(finalResult, chatMessage);
         } catch (e) {
@@ -437,11 +437,12 @@ export class DiceBot extends GameObject {
           + '　choice[a,b,c]：列挙した要素から一つを選択表示。ランダム攻撃対象決定などに\n'
           + '　S3d6 ： 各コマンドの先頭に「S」を付けると他人結果の見えないシークレットロール\n'
           + '　3d6/2 ： ダイス出目を割り算（切り捨て）。切り上げは /2U、四捨五入は /2R。\n'
-          + '　D66 ： D66ダイス。順序はゲームに依存。D66N：そのまま、D66S：昇順。\n';
+          + '　D66 ： D66ダイス。順序はゲームに依存。D66N：そのまま、D66S：昇順。';
         try {
           let bcdice = Opal.CgiDiceBot.$new().$newBcDice();
           bcdice.$setGameByTitle(gameType);
-          help += ('===================================\n' + bcdice.diceBot.$getHelpMessage());
+          const specialHelp = bcdice.diceBot.$getHelpMessage();
+          if (specialHelp) help += ('\n===================================\n' + specialHelp);
         } catch (e) {
           console.error(e);
         }
