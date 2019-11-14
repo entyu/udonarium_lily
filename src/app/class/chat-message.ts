@@ -60,6 +60,6 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isRelatedToMe(): boolean { return (-1 < this.sendTo.indexOf(Network.peerContext.id)) || this.isSendFromSelf ? true : false; }
   get isDisplayable(): boolean { return this.isDirect ? this.isRelatedToMe : true; }
   get isSystem(): boolean { return -1 < this.tags.indexOf('system') ? true : false; }
-  get isDicebot(): boolean { return this.isSystem && this.from === 'System-BCDice' ? true : false; }
+  get isDicebot(): boolean { return this.isSystem && this.from.indexOf('BCDice') >= 0 ? true : false; }
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
 }

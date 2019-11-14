@@ -310,7 +310,8 @@ export class DiceBot extends GameObject {
 
             finalResult.result += rollResult.result;
             finalResult.isSecret = finalResult.isSecret || rollResult.isSecret;
-            if (1 < repeat) finalResult.result += ` #${i + 1}\n`;
+            if (1 < repeat) finalResult.result += ` #${i + 1}`;
+            if (DiceBot.apiUrl) finalResult.result += "\r\n"; //とりあえず
           }
           this.sendResultMessage(finalResult, chatMessage);
         } catch (e) {
