@@ -144,7 +144,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 500 };
       let textView = this.panelService.open(TextViewComponent, option);
       textView.title = gameName;
-      textView.text =
+      textView.text = help;
+      /*
         '【ダイスボット】チャットにダイス用の文字を入力するとダイスロールが可能\n'
         + '入力例）２ｄ６＋１　攻撃！\n'
         + '出力例）2d6+1　攻撃！\n'
@@ -164,6 +165,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         + '　D66 ： D66ダイス。順序はゲームに依存。D66N：そのまま、D66S：昇順。\n'
         + '===================================\n'
         + help;
+      */
       console.log('onChangeGameType done');
     });
   }

@@ -141,6 +141,31 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on('SYNCHRONIZE_FILE_LIST', event => { if (event.isSendFromSelf) this.lazyNgZoneUpdate(false); })
       .on<AppConfig>('LOAD_CONFIG', event => {
         console.log('LOAD_CONFIG !!!', event.data);
+        if (event.data.dice && event.data.dice.url) {
+          fetch(event.data.dice.url + '/v1/names', {mode: 'cors'})
+            .then(response => { return response.json() })
+            .then(infos => {
+              let apiUrl = event.data.dice.url;
+              DiceBot.apiUrl = (apiUrl.substr(apiUrl.length - 1) === '/') ? apiUrl.substr(0, apiUrl.length - 1) : apiUrl;
+              DiceBot.diceBotInfos = [];
+              DiceBot.diceBotInfos.push(
+                ...infos.names
+                  .filter(info => info.system != 'DiceBot')
+                  .map(info => {
+                    let lang = /.+\:(.+)/.exec(info.system);
+                    info.lang = lang ? lang[1] : 'A';
+                    return info;
+                  })
+                  .sort((a, b) => {
+                    return a.lang < b.lang ? -1 
+                      : a.lang > b.lang ? 1
+                      : a.name == b.name ? 0 
+                      : a.name < b.name ? -1 : 1;
+                  })
+                  .map(info => { return { script: info.system, game: info.name } })
+              );
+            });
+        }
         Network.setApiKey(event.data.webrtc.key);
         Network.open();
       })

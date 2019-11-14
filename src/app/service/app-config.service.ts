@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { EventSystem, Network } from '@udonarium/core/system';
 import { Database } from '@udonarium/database/database';
+import { DiceBotInfo } from '@udonarium/dice-bot';
 
 import * as yaml from 'js-yaml/dist/js-yaml.min.js';
 
@@ -16,6 +17,9 @@ export interface AppConfig {
   app: {
     title: string,
     mode: string
+  },
+  dice?: {
+    url?: string
   }
 }
 
@@ -34,6 +38,9 @@ export class AppConfigService {
     app: {
       title: '',
       mode: ''
+    },
+    dice: {
+      url: ''
     }
   }
 

@@ -9,7 +9,7 @@ import { StringUtil } from './core/system/util/string-util';
 
 declare var Opal
 
-interface DiceBotInfo {
+export interface DiceBotInfo {
   script: string;
   game: string;
 }
@@ -23,6 +23,8 @@ interface DiceRollResult {
 export class DiceBot extends GameObject {
   private static loadedDiceBots: { [gameType: string]: boolean } = {};
   private static queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
+
+  public static apiUrl: string = null;
 
   public static diceBotInfos: DiceBotInfo[] = [
     { script: 'EarthDawn', game: 'アースドーン' },
@@ -297,7 +299,10 @@ export class DiceBot extends GameObject {
           let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(text);
           let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
-
+          // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
+          if (!rollText || repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) {
+            return;
+          }
           let finalResult: DiceRollResult = { result: '', isSecret: false };
           for (let i = 0; i < repeat && i < 32; i++) {
             let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
@@ -305,7 +310,7 @@ export class DiceBot extends GameObject {
 
             finalResult.result += rollResult.result;
             finalResult.isSecret = finalResult.isSecret || rollResult.isSecret;
-            if (1 < repeat) finalResult.result += ` #${i + 1}`;
+            if (1 < repeat) finalResult.result += ` #${i + 1}\n`;
           }
           this.sendResultMessage(finalResult, chatMessage);
         } catch (e) {
@@ -333,7 +338,7 @@ export class DiceBot extends GameObject {
       identifier: '',
       tabIdentifier: originalMessage.tabIdentifier,
       originFrom: originalMessage.from,
-      from: 'System-BCDice',
+      from: DiceBot.apiUrl ? `BCDice-API(${DiceBot.apiUrl})` : 'System-BCDice',
       timestamp: originalMessage.timestamp + 1,
       imageIdentifier: '',
       tag: isSecret ? 'system secret' : 'system',
@@ -352,47 +357,96 @@ export class DiceBot extends GameObject {
   }
 
   static diceRollAsync(message: string, gameType: string): Promise<DiceRollResult> {
-    DiceBot.queue.add(DiceBot.loadDiceBotAsync(gameType));
-    return DiceBot.queue.add(() => {
-      if ('Opal' in window === false) {
-        console.warn('Opal is not loaded...');
-        return { result: '', isSecret: false };
-      }
-      let result = [];
-      let dir = [];
-      let diceBotTablePrefix = 'diceBotTable_';
-      let isNeedResult = true;
-      try {
-        Opal.gvars.isDebug = false;
-        let cgiDiceBot = Opal.CgiDiceBot.$new();
-        result = cgiDiceBot.$roll(message, gameType, dir, diceBotTablePrefix, isNeedResult);
-        console.log('diceRoll!!!', result);
-        console.log('isSecret!!!', cgiDiceBot.isSecret);
-        return { result: result[0], isSecret: cgiDiceBot.isSecret };
-      } catch (e) {
-        console.error(e);
-      }
-      return { result: '', isSecret: false };
-    });
+    if (DiceBot.apiUrl) {
+      const request = DiceBot.apiUrl + '/v1/diceroll?system=' + (gameType ? encodeURIComponent(gameType) : 'DiceBot') + '&command=' + encodeURIComponent(message);
+      return DiceBot.queue.add(fetch(request, {mode: 'cors'})
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error(response.statusText);
+        })
+        .then(json => {
+          return { result: (gameType ? gameType : 'DiceBot') + json.result, isSecret: json.secret };
+        })
+        .catch(e => {
+          console.error(e);
+          return { result: '', isSecret: false };
+        }));
+    } else {
+      DiceBot.queue.add(DiceBot.loadDiceBotAsync(gameType));
+      return DiceBot.queue.add(() => {
+          if ('Opal' in window === false) {
+            console.warn('Opal is not loaded...');
+            return { result: '', isSecret: false };
+          }
+          let result = [];
+          let dir = [];
+          let diceBotTablePrefix = 'diceBotTable_';
+          let isNeedResult = true;
+          try {
+            Opal.gvars.isDebug = false;
+            let cgiDiceBot = Opal.CgiDiceBot.$new();
+            result = cgiDiceBot.$roll(message, gameType, dir, diceBotTablePrefix, isNeedResult);
+            console.log('diceRoll!!!', result);
+            console.log('isSecret!!!', cgiDiceBot.isSecret);
+            return { result: result[0], isSecret: cgiDiceBot.isSecret };
+          } catch (e) {
+            console.error(e);
+          }
+          return { result: '', isSecret: false };
+      });
+    }
   }
 
   static getHelpMessage(gameType: string): Promise<string> {
-    DiceBot.queue.add(DiceBot.loadDiceBotAsync(gameType));
-    return DiceBot.queue.add(() => {
-      if ('Opal' in window === false) {
-        console.warn('Opal is not loaded...');
-        return '';
+    if (DiceBot.apiUrl) {
+      const promisise = [
+        fetch(DiceBot.apiUrl + '/v1/systeminfo?system=DiceBot', {mode: 'cors'})
+          .then(response => { return response.json() })
+      ];
+      if (gameType && gameType != 'DiceBot') {
+        promisise.push(
+          fetch(DiceBot.apiUrl + '/v1/systeminfo?system=' + encodeURIComponent(gameType), {mode: 'cors'})
+            .then(response => { return response.json() })
+        );
       }
-      let help = '';
-      try {
-        let bcdice = Opal.CgiDiceBot.$new().$newBcDice();
-        bcdice.$setGameByTitle(gameType);
-        help = bcdice.diceBot.$getHelpMessage();
-      } catch (e) {
-        console.error(e);
-      }
-      return help;
-    });
+      return Promise.all(promisise)
+        .then(jsons => { return jsons.map(json => { return json.systeminfo.info.trim() }).join('\n===================================\n') });
+    } else {
+      DiceBot.queue.add(DiceBot.loadDiceBotAsync(gameType));
+      return DiceBot.queue.add(() => {
+        if ('Opal' in window === false) {
+          console.warn('Opal is not loaded...');
+          return '';
+        }
+        let help = '【ダイスボット】チャットにダイス用の文字を入力するとダイスロールが可能\n'
+          + '入力例）２ｄ６＋１　攻撃！\n'
+          + '出力例）2d6+1　攻撃！\n'
+          + '　　　　  diceBot: (2d6) → 7\n'
+          + '上記のようにダイス文字の後ろに空白を入れて発言する事も可能。\n'
+          + '以下、使用例\n'
+          + '　3D6+1>=9 ：3d6+1で目標値9以上かの判定\n'
+          + '　1D100<=50 ：D100で50％目標の下方ロールの例\n'
+          + '　3U6[5] ：3d6のダイス目が5以上の場合に振り足しして合計する(上方無限)\n'
+          + '　3B6 ：3d6のダイス目をバラバラのまま出力する（合計しない）\n'
+          + '　10B6>=4 ：10d6を振り4以上のダイス目の個数を数える\n'
+          + '　(8/2)D(4+6)<=(5*3)：個数・ダイス・達成値には四則演算も使用可能\n'
+          + '　C(10-4*3/2+2)：C(計算式）で計算だけの実行も可能\n'
+          + '　choice[a,b,c]：列挙した要素から一つを選択表示。ランダム攻撃対象決定などに\n'
+          + '　S3d6 ： 各コマンドの先頭に「S」を付けると他人結果の見えないシークレットロール\n'
+          + '　3d6/2 ： ダイス出目を割り算（切り捨て）。切り上げは /2U、四捨五入は /2R。\n'
+          + '　D66 ： D66ダイス。順序はゲームに依存。D66N：そのまま、D66S：昇順。\n';
+        try {
+          let bcdice = Opal.CgiDiceBot.$new().$newBcDice();
+          bcdice.$setGameByTitle(gameType);
+          help += ('===================================\n' + bcdice.diceBot.$getHelpMessage());
+        } catch (e) {
+          console.error(e);
+        }
+        return help;
+      });
+    }
   }
 
   static loadDiceBotAsync(gameType: string): Promise<void> {
