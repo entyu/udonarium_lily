@@ -304,14 +304,18 @@ export class DiceBot extends GameObject {
             return;
           }
           let finalResult: DiceRollResult = { result: '', isSecret: false };
-          for (let i = 0; i < repeat && i < 32; i++) {
-            let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
-            if (rollResult.result.length < 1) break;
+          //TODO システムダイスも並列に
+          if (DiceBot.apiUrl) {
+            finalResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);
+          } else {
+            for (let i = 0; i < repeat && i < 32; i++) {
+              let rollResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);
+              if (rollResult.result.length < 1) break;
 
-            finalResult.result += rollResult.result;
-            finalResult.isSecret = finalResult.isSecret || rollResult.isSecret;
-            if (1 < repeat) finalResult.result += ` #${i + 1}`;
-            if (DiceBot.apiUrl) finalResult.result += "\n"; //とりあえず
+              finalResult.result += rollResult.result;
+              finalResult.isSecret = finalResult.isSecret || rollResult.isSecret;
+              if (1 < repeat) finalResult.result += ` #${i + 1}`;
+            }
           }
           this.sendResultMessage(finalResult, chatMessage);
         } catch (e) {
@@ -357,23 +361,36 @@ export class DiceBot extends GameObject {
     if (chatTab) chatTab.addMessage(diceBotMessage);
   }
 
-  static diceRollAsync(message: string, gameType: string): Promise<DiceRollResult> {
+  static diceRollAsync(message: string, gameType: string, repeat: number = 1): Promise<DiceRollResult> {
     if (DiceBot.apiUrl) {
       const request = DiceBot.apiUrl + '/v1/diceroll?system=' + (gameType ? encodeURIComponent(gameType) : 'DiceBot') + '&command=' + encodeURIComponent(message);
-      return DiceBot.queue.add(fetch(request, {mode: 'cors'})
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error(response.statusText);
-        })
-        .then(json => {
-          return { result: (gameType ? gameType : 'DiceBot') + json.result, isSecret: json.secret };
-        })
-        .catch(e => {
-          console.error(e);
-          return { result: '', isSecret: false };
-        }));
+      const promisise = [];
+      for (let i = 1; i <= repeat; i++) {
+        promisise.push(
+          fetch(request, {mode: 'cors'})
+            .then(response => {
+              if (response.ok) {
+                return response.json();
+              }
+              throw new Error(response.statusText);
+            })
+            .then(json => {
+              return { result: (gameType ? gameType : 'DiceBot') + json.result + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret };
+            })
+            .catch(e => {
+              console.error(e);
+              return { result: '', isSecret: false };
+            })
+        );
+      }
+      return DiceBot.queue.add(
+        Promise.all(promisise)
+          .then(results => { return results.reduce((ac, cv) => {
+            let result = ac.result + cv.result;
+            let isSecret = ac.isSecret || cv.isSecret;
+            return { result: result, isSecret: isSecret };
+          }, { result: '', isSecret: false }) })
+      );
     } else {
       DiceBot.queue.add(DiceBot.loadDiceBotAsync(gameType));
       return DiceBot.queue.add(() => {
@@ -435,7 +452,7 @@ export class DiceBot extends GameObject {
           + '　(8/2)D(4+6)<=(5*3)：個数・ダイス・達成値には四則演算も使用可能\n'
           + '　C(10-4*3/2+2)：C(計算式）で計算だけの実行も可能\n'
           + '　choice[a,b,c]：列挙した要素から一つを選択表示。ランダム攻撃対象決定などに\n'
-          + '　S3d6 ： 各コマンドの先頭に「S」を付けると他人結果の見えないシークレットロール\n'
+          + '　S3d6 ： 各コマンドの先頭に「S」を付けると他人に結果の見えないシークレットロール\n'
           + '　3d6/2 ： ダイス出目を割り算（切り捨て）。切り上げは /2U、四捨五入は /2R。\n'
           + '　D66 ： D66ダイス。順序はゲームに依存。D66N：そのまま、D66S：昇順。';
         try {
