@@ -10,6 +10,7 @@ export class DataElement extends ObjectNode {
 
   get isSimpleNumber(): boolean { return this.type != null && this.type === 'simpleNumber'; }
   get isNumberResource(): boolean { return this.type != null && this.type === 'numberResource'; }
+  get isCheckProperty(): boolean { return this.type != null && this.type === 'checkProperty'; }
   get isNote(): boolean { return this.type != null && this.type === 'note'; }
 
   public static create(name: string, value: number | string = '', attributes: Attributes = {}, identifier: string = ''): DataElement {

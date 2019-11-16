@@ -69,7 +69,11 @@ export class ChatPalette extends ObjectNode {
         }
         if (extendVariables) {
           let element = extendVariables.getFirstElementByName(name);
-          if (element) return element.isNumberResource ? element.currentValue + '' : element.value + '';
+          if (element) {
+            return element.isNumberResource ? element.currentValue + ''
+              : element.isCheckProperty ? element.value + (element.value ? ' ' + element.currentValue : '')
+              : element.value + '';
+          }
         }
         return '';
       });

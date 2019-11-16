@@ -186,6 +186,12 @@
             min="0" max="{{!+dataElm.value ? 1000 : dataElm.value}}" [(ngModel)]="dataElm.currentValue" />
         </div>
       </ng-container>
+      <ng-container  *ngSwitchCase="'checkProperty'">
+          <div class="tag" [style.textDecoration]="dataElm.value ? 'none' : 'line-through'">{{dataElm.name}} {{dataElm.currentValue}}</div>
+          <div class="value">
+            <input type="checkbox" style="margin-right:1em" [(ngModel)]="dataElm.value" checked="{{dataElm.value ? 'checked' : ''}}" (change)="dataElm.value = (dataElm.value ? dataElm.name : '')">
+          </div>
+        </ng-container>
       <ng-container *ngSwitchDefault>
         <div class="tag">{{dataElm.name}}</div>
         <div class="value">
