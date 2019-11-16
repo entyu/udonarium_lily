@@ -61,6 +61,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
+  get altitude(): number { return this.gameCharacter.altitude; }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
