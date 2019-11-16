@@ -74,6 +74,17 @@
   <ng-container *ngIf="dataElm?.name === newLineString"><br></ng-container>
   <div *ngIf="dataElm && dataElm.name !== newLineString" class="object-tag">
     <ng-container [ngSwitch]="dataElm.attributes['type']">
+        <ng-container *ngSwitchCase="'simpleNumber'">
+            <div class="tag-name">{{dataElm.name}}</div>
+            <div style="text-align: center;">
+              <div style="display: inline-block;">
+                <div class="tag-value-box">
+                  <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
+                  <input class="input tag-value" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+                </div>
+              </div>
+            </div>
+          </ng-container>
       <ng-container *ngSwitchCase="'numberResource'">
         <div class="resource-tag">
           <div style="font-size: 0.8em; display: inline-block; margin-right: 0.5em;">{{dataElm.name}}</div>
@@ -81,7 +92,7 @@
         </div>
         <div class="resource-tag">
           <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (dataElm.name.length + 4.5) + 'em; --min: 0; --max: ' + dataElm.value + '; --val:' + dataElm.currentValue +';' | safe: 'style'"
-            min="0" max="{{dataElm.value}}" [ngStyle]="{'background-color':'green'}" [(ngModel)]="dataElm.currentValue" />
+            min="0" max="{{!+dataElm.value ? 1000 : dataElm.value}}" [ngStyle]="{'background-color':'green'}" [(ngModel)]="dataElm.currentValue" />
         </div>
       </ng-container>
       <ng-container *ngSwitchDefault>
@@ -90,7 +101,7 @@
           <div style="display: inline-block;">
             <div class="tag-value-box">
               <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
-              <input class="input tag-value" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+              <input class="input tag-value" type="{{dataElm.name === 'size' ? 'number' : 'text'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" placeholder="" />
             </div>
           </div>
         </div>

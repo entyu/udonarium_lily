@@ -168,7 +168,7 @@
         <div class="tag">{{dataElm.name}}</div>
         <div class="value">
           <div class="hidden-spacer">{{dataElm.value}}</div>
-          <input class="input" [type]="(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'" style="width:40%; max-width:8em; text-align:right;" size="1" [(ngModel)]="dataElm.value" />
+          <input class="input" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'numberResource'">
@@ -178,19 +178,19 @@
             <div class="hidden-spacer" style="margin-right: 2em;">{{dataElm.currentValue}}</div>
             <input class="input" type="number" size="1" [(ngModel)]="dataElm.currentValue" />
           </div>
-          <div style="display: inline;"> / {{dataElm.value}}</div>
+          <div style="display: inline;"> / {{!+dataElm.value ? '???' : dataElm.value}}</div>
         </div>
         <div class="section" style="line-height: 1em;">
           <input type="range"
             [style]="'font-size: 0.8em; width: 100%; --min: 0; --max:' + dataElm.value + '; --val:' + dataElm.currentValue +';' | safe: 'style'"
-            min="0" max="{{dataElm.value}}" [(ngModel)]="dataElm.currentValue" />
+            min="0" max="{{!+dataElm.value ? 1000 : dataElm.value}}" [(ngModel)]="dataElm.currentValue" />
         </div>
       </ng-container>
       <ng-container *ngSwitchDefault>
         <div class="tag">{{dataElm.name}}</div>
         <div class="value">
           <div class="hidden-spacer">{{dataElm.value}}</div>
-          <input class="input" size="1" [(ngModel)]="dataElm.value" />
+          <input class="input" type="{{dataElm.name === 'size' ? 'number' : 'text'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" />
         </div>
       </ng-container>
     </ng-container>

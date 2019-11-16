@@ -337,3 +337,8 @@ input[type='range']::-ms-tooltip {
   text-align: center;
   font-family: inherit;
 }
+
+.tag-value[type=number] {
+  min-width: 3.4em;
+  text-align: right;
+}
