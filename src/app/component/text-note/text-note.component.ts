@@ -33,6 +33,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   set rotate(rotate: number) { this.textNote.rotate = rotate; }
   get height(): number { return this.adjustMinBounds(this.textNote.height); }
   get width(): number { return this.adjustMinBounds(this.textNote.width); }
+  get altitude(): number { return this.textNote.altitude; }
 
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 

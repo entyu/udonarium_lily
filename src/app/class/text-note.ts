@@ -15,6 +15,14 @@ export class TextNote extends TabletopObject {
   get title(): string { return this.getCommonValue('title', ''); }
   get text(): string { return this.getCommonValue('text', ''); }
   set text(text: string) { this.setCommonValue('text', text); }
+  get altitude(): number {
+    let element = this.getElement('altitude', this.commonDataElement);
+    if (!element) {
+      this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
+    }
+    let num = element ? +element.value : 0;
+    return Number.isNaN(num) ? 0 : num;
+  }
 
   toTopmost() {
     moveToTopmost(this);
@@ -29,6 +37,7 @@ export class TextNote extends TabletopObject {
     object.commonDataElement.appendChild(DataElement.create('fontsize', fontSize, {}, 'fontsize_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('title', title, {}, 'title_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('text', text, { type: 'note', currentValue: text }, 'text_' + object.identifier));
+    object.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + object.identifier));
     object.initialize();
 
     return object;
