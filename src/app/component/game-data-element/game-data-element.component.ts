@@ -107,6 +107,10 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     this.gameDataElement.setAttribute('type', type);
   }
 
+  isNum(n: any): boolean {
+    return isFinite(n);
+  }
+
   private setValues(object: DataElement) {
     this._name = object.name;
     this._currentValue = object.currentValue;

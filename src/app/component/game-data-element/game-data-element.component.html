@@ -32,18 +32,18 @@
         <ng-container *ngSwitchCase="'simpleNumber'">
             <!-- size属性がないと小さくならない -->
             <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div> 
-            <input type="{{(value && value == +value) ? 'number' : 'text'}}" style="width:40%; max-width:8em; text-align:right;" size="1" [(ngModel)]="value" placeholder="Number" />
+            <input type="{{isNum(value) ? 'number' : 'text'}}" style="width:40%; max-width:8em; text-align:right;" size="1" [(ngModel)]="value" placeholder="Number" />
           </ng-container>
           <ng-container *ngSwitchCase="'numberResource'">
             <input [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
-              [(ngModel)]="currentValue" type="range" min="0" max="{{!+value ? 1000 : value}}" />
+              [(ngModel)]="currentValue" type="range" min="0" max="{{!isNum(value) ? 1000 : value}}" />
             <br>
             <input style="width: 5em; text-align: right;" size="1" type="number" [(ngModel)]="currentValue" placeholder="Value" />
             /
             <input style="width: 5em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
           </ng-container>
           <ng-container *ngSwitchCase="'checkProperty'">
-              <input style="width:40%; max-width:4em" type="{{(currentValue && currentValue == +currentValue) ? 'number' : 'text'}}" size="1" [(ngModel)]="currentValue" placeholder="Option">
+              <input style="width:40%; max-width:4em" type="{{isNum(currentValue) ? 'number' : 'text'}}" size="1" [(ngModel)]="currentValue" placeholder="Option">
               <input style="width:40%; max-width:4em" type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
             </ng-container>
           <ng-container *ngSwitchCase="'note'">
