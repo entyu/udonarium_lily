@@ -39,6 +39,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   get height(): number { return this.adjustMinBounds(this.terrain.height); }
   get width(): number { return this.adjustMinBounds(this.terrain.width); }
   get depth(): number { return this.adjustMinBounds(this.terrain.depth); }
+  get altitude(): number { return this.terrain.altitude; }
 
   gridSize: number = 50;
 

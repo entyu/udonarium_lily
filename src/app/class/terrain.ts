@@ -24,6 +24,14 @@ export class Terrain extends TabletopObject {
   set depth(depth: number) { this.setCommonValue('depth', depth); }
   get name(): string { return this.getCommonValue('name', ''); }
   set name(name: string) { this.setCommonValue('name', name); }
+  get altitude(): number {
+    let element = this.getElement('altitude', this.commonDataElement);
+    if (!element) {
+      this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
+    }
+    let num = element ? +element.value : 0;
+    return Number.isNaN(num) ? 0 : num;
+  }
 
   get wallImage(): ImageFile { return this.getImageFile('wall'); }
   get floorImage(): ImageFile { return this.getImageFile('floor'); }
@@ -45,6 +53,7 @@ export class Terrain extends TabletopObject {
     object.commonDataElement.appendChild(DataElement.create('width', width, {}, 'width_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('height', height, {}, 'height_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('depth', depth, {}, 'depth_' + object.identifier));
+    object.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + object.identifier));
     object.imageDataElement.appendChild(DataElement.create('wall', wall, { type: 'image' }, 'wall_' + object.identifier));
     object.imageDataElement.appendChild(DataElement.create('floor', floor, { type: 'image' }, 'floor_' + object.identifier));
     object.initialize();
