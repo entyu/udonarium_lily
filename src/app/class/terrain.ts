@@ -15,6 +15,7 @@ export class Terrain extends TabletopObject {
   @SyncVar() isLocked: boolean = false;
   @SyncVar() mode: TerrainViewState = TerrainViewState.ALL;
   @SyncVar() rotate: number = 0;
+  @SyncVar() isDropShadow: boolean = true;
 
   @SyncVar() isGrid: boolean = false;
 

@@ -82,6 +82,9 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
     if(conf) conf.roomGridDispAlways = disp;
   }
 
+  get isDropShadow(): boolean { return this.terrain.isDropShadow; }
+  set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -215,6 +218,18 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
             this.mode = TerrainViewState.ALL;
           }
         }),
+        (this.isDropShadow
+          ? {
+            name: '影を非表示', action: () => {
+              this.isDropShadow = false;
+              SoundEffect.play(PresetSound.sweep);
+            }
+          } : {
+            name: '影を表示', action: () => {
+              this.isDropShadow = true;
+              SoundEffect.play(PresetSound.sweep);
+            }
+          }),
       ContextMenuSeparator,
       { name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } },
       {

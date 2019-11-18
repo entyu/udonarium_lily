@@ -67,6 +67,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
   get roll(): number { return this.gameCharacter.roll; }
   set roll(roll: number) { this.gameCharacter.roll = roll; }
+  get isDropShadow(): boolean { return this.gameCharacter.isDropShadow; }
+  set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }
 
   private foldingBuff: boolean = false;
   gridSize: number = 50;
@@ -185,6 +187,19 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isDropShadow
+        ? {
+          name: '影を非表示', action: () => {
+            this.isDropShadow = false;
+            SoundEffect.play(PresetSound.sweep);
+          }
+        } : {
+          name: '影を表示', action: () => {
+            this.isDropShadow = true;
+            SoundEffect.play(PresetSound.sweep);
+          }
+        }),
+      ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
       { name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } },
