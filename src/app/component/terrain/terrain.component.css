@@ -91,6 +91,10 @@
   filter: brightness(0.8);
 }
 
+.of-wall-top.no-shadow, .of-wall-left.no-shadow, .of-wall-right.no-shadow {
+  filter: brightness(1.0);
+}
+
 .pedestal-grab {
   z-index: -1;
   position: absolute;

@@ -10,16 +10,16 @@
       <div *ngIf="isDropShadow && (!hasWall || altitude < -height || 0 < altitude)" style="filter: brightness(0) opacity(0.7) blur(1px); transform: translateZ(1px); backface-visibility: visible;" class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
     </ng-container>
     <ng-container *ngIf="hasWall && 0 < wallImage?.url.length">
-      <div [ngClass]="{'blinking-animation': !isLocked}" class="texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isDropShadow}" class="texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) translateY(-100%) rotateX(90deg) rotateZ(180deg) scaleX(-1.0)'}"></div>
-      <div [ngClass]="{'blinking-animation': !isLocked}" class="texture of-wall-bottom" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isDropShadow}" class="texture of-wall-bottom" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateX(-90deg)'}"></div>
-      <div [ngClass]="{'blinking-animation': !isLocked}" class="texture of-wall-left" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isDropShadow}" class="texture of-wall-left" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize"
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateZ(90deg) rotateX(-90deg) scaleX(-1.0) translateX(-100%) translateY(-100%)'}"></div>
-      <div [ngClass]="{'blinking-animation': !isLocked}" class="texture of-wall-right" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isDropShadow}" class="texture of-wall-right" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize"
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateZ(-90deg) rotateX(-90deg) translateY(-100%)'}"></div>
     </ng-container>
