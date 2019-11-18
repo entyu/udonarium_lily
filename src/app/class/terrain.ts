@@ -15,6 +15,7 @@ export class Terrain extends TabletopObject {
   @SyncVar() isLocked: boolean = false;
   @SyncVar() mode: TerrainViewState = TerrainViewState.ALL;
   @SyncVar() rotate: number = 0;
+  @SyncVar() isDropShadow: boolean = true;
 
   get width(): number { return this.getCommonValue('width', 1); }
   set width(width: number) { this.setCommonValue('width', width); }
