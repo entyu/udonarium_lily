@@ -43,6 +43,8 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get isDropShadow(): boolean { return this.terrain.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
+  get isSurfaceShading(): boolean { return this.terrain.isSurfaceShading; }
+  set isSurfaceShading(isSurfaceShading: boolean) { this.terrain.isSurfaceShading = isSurfaceShading; }
 
   gridSize: number = 50;
 
@@ -146,18 +148,30 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
             this.mode = TerrainViewState.ALL;
           }
         }),
-        (this.isDropShadow
+        (this.isSurfaceShading
           ? {
-            name: '影を非表示', action: () => {
-              this.isDropShadow = false;
+            name: '壁に影をつけない', action: () => {
+              this.isSurfaceShading = false;
               SoundEffect.play(PresetSound.sweep);
             }
           } : {
-            name: '影を表示', action: () => {
-              this.isDropShadow = true;
+            name: '壁に影をつける', action: () => {
+              this.isSurfaceShading = true;
               SoundEffect.play(PresetSound.sweep);
             }
           }),
+          (this.isDropShadow
+            ? {
+              name: '影を落とさない', action: () => {
+                this.isDropShadow = false;
+                SoundEffect.play(PresetSound.sweep);
+              }
+            } : {
+              name: '影を落とす', action: () => {
+                this.isDropShadow = true;
+                SoundEffect.play(PresetSound.sweep);
+              }
+            }),
       ContextMenuSeparator,
       { name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } },
       {

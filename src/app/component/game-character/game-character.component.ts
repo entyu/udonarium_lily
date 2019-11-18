@@ -121,12 +121,12 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.contextMenuService.open(position, [
       (this.isDropShadow
         ? {
-          name: '影を非表示', action: () => {
+          name: '影を落とさない', action: () => {
             this.isDropShadow = false;
             SoundEffect.play(PresetSound.sweep);
           }
         } : {
-          name: '影を表示', action: () => {
+          name: '影を落とす', action: () => {
             this.isDropShadow = true;
             SoundEffect.play(PresetSound.sweep);
           }
