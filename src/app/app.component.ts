@@ -163,7 +163,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                       .replace(/([イキシチニヒミリ])ー+/g, '$1イ')
                       .replace(/([ウクスツヌフムユル])ー+/g, '$1ウ')
                       .replace(/([エケセテネヘメレ])ー+/g, '$1エ')
-                      .replace(/([オコソトノホモヨロ])ー+/g, '$1オ');
+                      .replace(/([オコソトノホモヨロ])ー+/g, '$1オ')
+                      .replace(/ン+ー+/g, 'ン')
+                      .replace(/ン+/g, 'ン');
                     return info;
                   })
                   .map(info => {
