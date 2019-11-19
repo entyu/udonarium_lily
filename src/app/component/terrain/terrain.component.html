@@ -7,7 +7,8 @@
       <div class="texture" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'transform': 'translateZ(' + ((height + altitude) * gridSize) + 'px)'}"
         [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"
         ></div>
-      <div *ngIf="isDropShadow && (!hasWall || altitude < -height || 0 < altitude)" style="filter: brightness(0) opacity(0.7) blur(1px); transform: translateZ(1px); backface-visibility: visible;" class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
+      <div *ngIf="isDropShadow"
+        style="filter: brightness(0) opacity(0.7) blur(1px); transform: translateZ(1px); backface-visibility: visible; isolation: isolate" class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
     </ng-container>
     <ng-container *ngIf="hasWall && 0 < wallImage?.url.length">
       <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
