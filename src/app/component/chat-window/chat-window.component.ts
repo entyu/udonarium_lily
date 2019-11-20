@@ -220,10 +220,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       let gameName: string = 'ダイスボット';
       for (let diceBotInfo of DiceBot.diceBotInfos) {
         if (diceBotInfo.script === this.gameType) {
-          gameName = 'ダイスボット<' + diceBotInfo.game + '＞'
+          gameName = 'ダイスボット <' + diceBotInfo.game + '> '
         }
       }
-      gameName += 'の説明';
+      gameName += '使用法';
 
       let coordinate = this.pointerDeviceService.pointers[0];
       let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 500 };
