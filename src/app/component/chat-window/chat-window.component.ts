@@ -87,6 +87,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   writingPeerNames: string[] = [];
 
   get diceBotInfos() { return DiceBot.diceBotInfos }
+  get diceBotInfosIndexed() { return DiceBot.diceBotInfosIndexed }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 

@@ -35,6 +35,7 @@ import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
   selector: 'app-root',
@@ -148,41 +149,59 @@ export class AppComponent implements AfterViewInit, OnDestroy {
               let apiUrl = event.data.dice.url;
               DiceBot.apiUrl = (apiUrl.substr(apiUrl.length - 1) === '/') ? apiUrl.substr(0, apiUrl.length - 1) : apiUrl;
               DiceBot.diceBotInfos = [];
-              DiceBot.diceBotInfos.push(
-                ...infos.names
-                  .filter(info => info.system != 'DiceBot')
-                  .map(info => {
-                    let normalize = info.name.normalize('NFKD');
-                    for (let replaceData of DiceBot.replaceData) {
-                      normalize = normalize.split(replaceData[0].normalize('NFKD')).join(replaceData[1].normalize('NFKD'));
-                    }
-                    info.normalize = normalize.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60))
-                      .replace(/第(.+?)版/g, 'タイ$1ハン')
-                      .replace(/[・!?！？\s　:：=＝\/／]+/g, '')
-                      .replace(/([アカサタナハマヤラワ])ー+/g, '$1ア')
-                      .replace(/([イキシチニヒミリ])ー+/g, '$1イ')
-                      .replace(/([ウクスツヌフムユル])ー+/g, '$1ウ')
-                      .replace(/([エケセテネヘメレ])ー+/g, '$1エ')
-                      .replace(/([オコソトノホモヨロ])ー+/g, '$1オ')
-                      .replace(/ン+ー+/g, 'ン')
-                      .replace(/ン+/g, 'ン');
-                    return info;
-                  })
-                  .map(info => {
-                    const lang = /.+\:(.+)/.exec(info.system);
-                    info.lang = lang ? lang[1] 
-                      : /^[0-9a-zA-Z]+$/.test(info.normalize) ? 'B'
-                      : 'A';
-                    return info;
-                  })
-                  .sort((a, b) => {
-                    return a.lang < b.lang ? -1 
-                      : a.lang > b.lang ? 1
-                      : a.normalize == b.normalize ? 0 
-                      : a.normalize < b.normalize ? -1 : 1;
-                  })
-                  .map(info => { return { script: info.system, game: info.name } })
-              );
+              //DiceBot.diceBotInfos.push(
+              let tempInfos = infos.names
+                .filter(info => info.system != 'DiceBot')
+                .map(info => {
+                  let normalize = info.name.normalize('NFKD');
+                  for (let replaceData of DiceBot.replaceData) {
+                    normalize = normalize.split(replaceData[0].normalize('NFKD')).join(replaceData[1].normalize('NFKD'));
+                  }
+                  info.normalize = normalize.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60))
+                    .replace(/第(.+?)版/g, 'タイ$1ハン')
+                    .replace(/[・!?！？\s　:：=＝\/／]+/g, '')
+                    .replace(/([アカサタナハマヤラワ])ー+/g, '$1ア')
+                    .replace(/([イキシチニヒミリ])ー+/g, '$1イ')
+                    .replace(/([ウクスツヌフムユル])ー+/g, '$1ウ')
+                    .replace(/([エケセテネヘメレ])ー+/g, '$1エ')
+                    .replace(/([オコソトノホモヨロ])ー+/g, '$1オ')
+                    .replace(/ン+ー+/g, 'ン')
+                    .replace(/ン+/g, 'ン');
+                  return info;
+                })
+                .map(info => {
+                  const lang = /.+\:(.+)/.exec(info.system);
+                  info.lang = lang ? lang[1] 
+                    : /^[0-9a-zA-Z]+$/.test(info.normalize) ? 'B'
+                    : 'A';
+                  return info;
+                })
+                .sort((a, b) => {
+                  return a.lang < b.lang ? -1 
+                    : a.lang > b.lang ? 1
+                    : a.normalize == b.normalize ? 0 
+                    : a.normalize < b.normalize ? -1 : 1;
+                });
+              DiceBot.diceBotInfos.push(...tempInfos.map(info => { return { script: info.system, game: info.name } }));
+              if (tempInfos.length > 0) {
+                let sentinel = tempInfos[0].normalize.substr(0, 1);
+                let group = { index: tempInfos[0].normalize.substr(0, 1), infos: [] };
+                for (let info of tempInfos) {
+                  let index = info.lang == 'B' ? '特殊' 
+                    : info.lang == 'ChineseTraditional' ? '正體中文'
+                    : info.lang == 'Korean' ? '한국어'
+                    : info.lang == 'English' ? 'English'
+                    : info.normalize.substr(0, 1);
+                  if (index !== sentinel) {
+                    sentinel = index;
+                    DiceBot.diceBotInfosIndexed.push(group);
+                    group = { index: index, infos: [] };
+                  }
+                  group.infos.push({ script: info.system, game: info.name });
+                }
+                DiceBot.diceBotInfosIndexed.push(group);
+                console.log(DiceBot.diceBotInfosIndexed);
+              }
             });
         }
         Network.setApiKey(event.data.webrtc.key);

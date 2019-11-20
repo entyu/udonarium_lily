@@ -57,7 +57,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   private doubleClickTimer: NodeJS.Timer = null;
 
   get diceBotInfos() { return DiceBot.diceBotInfos }
-
+  get diceBotInfosIndexed() { return DiceBot.diceBotInfosIndexed }
+  
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
@@ -135,7 +136,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       let gameName: string = 'ダイスボット';
       for (let diceBotInfo of DiceBot.diceBotInfos) {
         if (diceBotInfo.script === this.gameType) {
-          gameName = 'ダイスボット<' + diceBotInfo.game + '＞'
+          gameName = 'ダイスボット <' + diceBotInfo.game + '＞'
         }
       }
       gameName += 'の説明';

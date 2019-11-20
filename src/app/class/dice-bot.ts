@@ -14,6 +14,11 @@ export interface DiceBotInfo {
   game: string;
 }
 
+export interface DiceBotInfosIndexed {
+  index: string;
+  infos: DiceBotInfo[];
+}
+
 interface DiceRollResult {
   result: string;
   isSecret: boolean;
@@ -173,6 +178,8 @@ export class DiceBot extends GameObject {
     { script: 'NjslyrBattle', game: 'NJSLYRBATTLE' },
     { script: 'Pathfinder', game: 'Pathfinder' }
   ];
+
+  public static diceBotInfosIndexed: DiceBotInfosIndexed[] = [];
 
   public static extratablesTables: string[] = [
     'BloodCrusade_TD2T.txt',

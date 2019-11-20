@@ -146,3 +146,18 @@
   vertical-align: middle;
   font-size: 1.0rem;
 }
+
+.not-specified {
+  text-align: center;
+  color: gray;
+}
+
+.dice-bot-group {
+  color: whitesmoke;
+  background-color: #555;
+}
+
+.dice-bot-group option {
+  color: black;
+  background-color: whitesmoke;
+}
