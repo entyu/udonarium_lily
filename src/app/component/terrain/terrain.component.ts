@@ -150,12 +150,12 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         }),
         (this.isSurfaceShading
           ? {
-            name: '壁に影をつけない', action: () => {
+            name: '壁に陰影をつけない', action: () => {
               this.isSurfaceShading = false;
               SoundEffect.play(PresetSound.sweep);
             }
           } : {
-            name: '壁に影をつける', action: () => {
+            name: '壁に陰影をつける', action: () => {
               this.isSurfaceShading = true;
               SoundEffect.play(PresetSound.sweep);
             }
