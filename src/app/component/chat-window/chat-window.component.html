@@ -38,7 +38,7 @@
       <select *ngIf="diceBotInfosIndexed" style="width: 13em;" (change)="onChangeGameType($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
         [ngClass]="{'not-specified': gameType == ''}">
         <option value="" class="not-specified">ダイスボット指定なし</option>
-        <optgroup *ngFor = 'let group of diceBotInfosIndexed' class="dice-bot-group" label="{{group.index}}">
+        <optgroup *ngFor="let group of diceBotInfosIndexed" class="dice-bot-group" label="{{group.index}}">
           <option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
         </optgroup>
       </select>
