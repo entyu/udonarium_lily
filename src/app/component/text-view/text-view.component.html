@@ -1,1 +1,2 @@
-<span><pre class="text">{{text}}</pre></span>
+<span *ngIf="!isObj(text)"><pre class="text">{{text}}</pre></span>
+<span *ngIf="isObj(text)"><pre class="text" *ngFor="let t of text; let l = last">{{t}}<hr *ngIf="!l"></pre></span>

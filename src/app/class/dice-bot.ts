@@ -527,7 +527,7 @@ export class DiceBot extends GameObject {
     }
   }
 
-  static getHelpMessage(gameType: string): Promise<string> {
+  static getHelpMessage(gameType: string): Promise<string|string[]> {
     if (DiceBot.apiUrl) {
       const promisise = [
         fetch(DiceBot.apiUrl + '/v1/systeminfo?system=DiceBot', {mode: 'cors'})
@@ -540,7 +540,7 @@ export class DiceBot extends GameObject {
         );
       }
       return Promise.all(promisise)
-        .then(jsons => { return jsons.map(json => { return json.systeminfo.info.trim() }).join('\n===================================\n') });
+        .then(jsons => { return jsons.map(json => { return json.systeminfo.info.trim() }) });
     } else {
       DiceBot.queue.add(DiceBot.loadDiceBotAsync(gameType));
       return DiceBot.queue.add(() => {
@@ -548,7 +548,7 @@ export class DiceBot extends GameObject {
           console.warn('Opal is not loaded...');
           return '';
         }
-        let help = '【ダイスボット】チャットにダイス用の文字を入力するとダイスロールが可能\n'
+        let help = ['【ダイスボット】チャットにダイス用の文字を入力するとダイスロールが可能\n'
           + '入力例）２ｄ６＋１　攻撃！\n'
           + '出力例）2d6+1　攻撃！\n'
           + '　　　　  diceBot: (2d6) → 7\n'
@@ -564,12 +564,12 @@ export class DiceBot extends GameObject {
           + '　choice[a,b,c]：列挙した要素から一つを選択表示。ランダム攻撃対象決定などに\n'
           + '　S3d6 ： 各コマンドの先頭に「S」を付けると他人に結果の見えないシークレットロール\n'
           + '　3d6/2 ： ダイス出目を割り算（切り捨て）。切り上げは /2U、四捨五入は /2R。\n'
-          + '　D66 ： D66ダイス。順序はゲームに依存。D66N：そのまま、D66S：昇順。';
+          + '　D66 ： D66ダイス。順序はゲームに依存。D66N：そのまま、D66S：昇順。'];
         try {
           let bcdice = Opal.CgiDiceBot.$new().$newBcDice();
           bcdice.$setGameByTitle(gameType);
           const specialHelp = bcdice.diceBot.$getHelpMessage();
-          if (specialHelp) help += ('\n===================================\n' + specialHelp);
+          if (specialHelp) help.push(specialHelp);
         } catch (e) {
           console.error(e);
         }

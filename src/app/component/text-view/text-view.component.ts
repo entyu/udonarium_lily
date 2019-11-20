@@ -10,7 +10,7 @@ import { PanelService } from 'service/panel.service';
 })
 export class TextViewComponent implements OnInit {
 
-  @Input() text: string = '';
+  @Input() text: string|string[] = '';
   @Input() title: string = '';
   constructor(
     private panelService: PanelService,
@@ -25,4 +25,5 @@ export class TextViewComponent implements OnInit {
     }
   }
 
+  isObj(val) { return typeof val == 'object'; }
 }

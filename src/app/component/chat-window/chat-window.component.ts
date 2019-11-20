@@ -48,7 +48,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
   get gameType(): string { return this.chatMessageService.gameType; }
   set gameType(gameType: string) { this.chatMessageService.gameType = gameType; }
-  gameHelp: string = '';
+  gameHelp: string|string[] = '';
 
   private shouldUpdateCharacterList: boolean = true;
   private _gameCharacters: GameCharacter[] = [];
