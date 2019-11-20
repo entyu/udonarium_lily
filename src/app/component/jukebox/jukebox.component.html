@@ -3,12 +3,22 @@
 <hr/>
 <div>
   <div *ngFor="let audio of audios" class="box">
+    <!--
     <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" >試聴/再生</button>
     <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady" >試聴/停止</button>
     <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady" >BGM/再生</button>
     <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady" >BGM/停止</button>
+      -->
+    <span style="margin-right: 6px">
+      <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" style="min-width:5em; height:34px; vertical-align:bottom">&#x23F5; 試聴</button>
+      <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady" style="min-width:5em; height:34px; vertical-align:bottom">&#x23F9; 試聴</button>
+    </span>
+    <button *ngIf="(audio !== jukebox?.audio || jukebox?.paused) && (audio !== jukeboxOnce?.audio || jukeboxOnce?.paused)" (click)="playOnce(audio)" [disabled]="!audio.isReady" style="min-width:5em; height:34px; vertical-align:bottom">&#x23F5; 1回</button>
+    <button *ngIf="(audio !== jukebox?.audio || jukebox?.paused) && (audio !== jukeboxOnce?.audio || jukeboxOnce?.paused)" (click)="playBGM(audio)" [disabled]="!audio.isReady" style="min-width:5em; height:34px; vertical-align:bottom">🔂 BGM</button>
+    <button *ngIf="(audio === jukebox?.audio && !jukebox?.paused) || (audio === jukeboxOnce?.audio && !jukeboxOnce?.paused)" (click)="stopBGM(audio)" [disabled]="!audio.isReady" style="min-width:5em; height:34px; vertical-align:bottom">&#x23F9; 停止</button>
     <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused">【試聴中】</span>
-    <span *ngIf="audio === jukebox?.audio">【BGM】</span>
+    <span *ngIf="audio === jukebox?.audio && !jukebox?.paused">【BGM再生中】</span>
+    <span *ngIf="audio === jukeboxOnce?.audio && !jukeboxOnce?.paused">【1回再生中】</span>
     <span>{{audio.name}}</span>
   </div>
   <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div>
@@ -27,5 +37,5 @@
   </div>
 </label>
 <div style="font-size: 12px;">※「試聴」は自分のスピーカーだけで音楽を1回再生します。</div>
-<div style="font-size: 12px;">※「BGM」はルーム内の全員で1つの音楽をループ再生します。</div>
+<div style="font-size: 12px;">※「1回」「BGM」はルーム内の全員でそれぞれ1つの音楽を再生します。</div>
 <div style="font-size: 12px;">※現行バージョンのセーブデータ（zip）には音楽ファイルは含まれません。（毎回アップロードが必要です）</div>

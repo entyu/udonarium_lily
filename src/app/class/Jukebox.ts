@@ -13,6 +13,7 @@ export class Jukebox extends GameObject {
   @SyncVar() isPlaying: boolean = false;
 
   get audio(): AudioFile { return AudioStorage.instance.get(this.audioIdentifier); }
+  get paused(): boolean { return this.audioPlayer.paused; }
 
   private audioPlayer: AudioPlayer = new AudioPlayer();
 
@@ -43,7 +44,7 @@ export class Jukebox extends GameObject {
       this.playAfterFileUpdate();
       return;
     }
-    this.audioPlayer.loop = true;
+    this.audioPlayer.loop = this.isLoop;
     this.audioPlayer.play(this.audio);
   }
 
