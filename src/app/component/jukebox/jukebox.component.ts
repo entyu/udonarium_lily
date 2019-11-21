@@ -19,19 +19,16 @@ import { PanelService } from 'service/panel.service';
 export class JukeboxComponent implements OnInit, OnDestroy {
 
   get volume(): number { return AudioPlayer.volume; }
-  set volume(volume: number) { AudioPlayer.volume = volume; this.saveLocalVolumeSettings(); }
+  set volume(volume: number) { AudioPlayer.volume = volume; }
 
   get auditionVolume(): number { return AudioPlayer.auditionVolume; }
-  set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; this.saveLocalVolumeSettings(); }
+  set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; }
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
-  get jukeboxOnce(): Jukebox { return ObjectStore.instance.get<Jukebox>('JukeboxOnce'); }
 
   readonly auditionPlayer: AudioPlayer = new AudioPlayer();
   private lazyUpdateTimer: NodeJS.Timer = null;
-
-  private static LOCAL_STORAGE_KEY = "udonanaum-local-volume-setteings";
 
   constructor(
     private modalService: ModalService,
@@ -42,14 +39,6 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.modalService.title = this.panelService.title = 'ジュークボックス'
     this.auditionPlayer.volumeType = VolumeType.AUDITION;
-    if (window.localStorage) {
-      const json = localStorage.getItem(JukeboxComponent.LOCAL_STORAGE_KEY);
-      if (json) {
-        const volumeSetteings = JSON.parse(json);
-        if (volumeSetteings.volume) this.volume = volumeSetteings.volume;
-        if (volumeSetteings.auditionVolume) this.auditionVolume = volumeSetteings.auditionVolume;
-      }
-    }
     EventSystem.register(this)
       .on('*', event => {
         if (event.eventName.startsWith('FILE_')) this.lazyNgZoneUpdate();
@@ -73,13 +62,8 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.jukebox.play(audio.identifier, true);
   }
 
-  playOnce(audio: AudioFile) {
-    this.jukeboxOnce.play(audio.identifier, false);
-  }
-
   stopBGM(audio: AudioFile) {
     if (this.jukebox.audio === audio) this.jukebox.stop();
-    if (this.jukeboxOnce.audio === audio) this.jukeboxOnce.stop();
   }
 
   handleFileSelect(event: Event) {
@@ -93,9 +77,5 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       this.lazyUpdateTimer = null;
       this.ngZone.run(() => { });
     }, 100);
-  }
-
-  private saveLocalVolumeSettings() {
-    localStorage.setItem(JukeboxComponent.LOCAL_STORAGE_KEY, JSON.stringify({volume: this.volume, auditionVolume: this.auditionVolume}));
   }
 }
