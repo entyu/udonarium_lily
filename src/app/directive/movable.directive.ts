@@ -110,8 +110,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.setPointerEvents(true);
     this.setAnimatedTransition(true);
     this.setCollidableLayer(false);
-    let tableSelecter = ObjectStore.instance.get<TableSelecter>('tableSelecter');
-    tableSelecter.viewTable.gridHeight = 0;
+    this.tabletopService.tableSelecter.viewTable.gridHeight = 0;
   }
 
   onInputStart(e: MouseEvent | TouchEvent) {
@@ -141,11 +140,12 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     if (this.pointer3d.z !== this.posZ) {
       this.ratio /= Math.abs(this.pointer3d.z - this.posZ) / 2;
     }
-    console.log([this.posX, this.posY, this.posZ]);
+
     this.width = this.input.target.clientWidth;
     this.height = this.input.target.clientHeight;
-    let tableSelecter = ObjectStore.instance.get<TableSelecter>('tableSelecter');
-    tableSelecter.viewTable.gridHeight = this.posZ;
+
+    this.tabletopService.tableSelecter.viewTable.gridHeight = this.posZ + 0.5;
+    this.setUpdateTimer();
   }
 
   onInputMove(e: MouseEvent | TouchEvent) {
@@ -176,7 +176,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.posZ = this.pointer3d.z;
 
     let tableSelecter = ObjectStore.instance.get<TableSelecter>('tableSelecter');
-    tableSelecter.viewTable.gridHeight = this.posZ;
+    tableSelecter.viewTable.gridHeight = this.posZ + 0.5;
   }
 
   onInputEnd(e: MouseEvent | TouchEvent) {

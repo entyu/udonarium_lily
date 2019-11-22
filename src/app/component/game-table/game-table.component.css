@@ -53,10 +53,10 @@
 .grid-canvas {
   opacity: 0.0;
   transform: translateZ(0.15px);
-  -webkit-transition: 0.3s ease-out;
-  -moz-transition: 0.3s ease-out;
-  -o-transition: 0.3s ease-out;
-  transition: 0.1s ease-out;
+  -webkit-transition: 0.2s ease-out;
+  -moz-transition: 0.2s ease-out;
+  -o-transition: 0.2s ease-out;
+  transition: 0.2s ease-out;
 
   backface-visibility: hidden;
 }

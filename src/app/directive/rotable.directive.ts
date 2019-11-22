@@ -105,6 +105,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     this.input.cancel();
     this.grabbingElement = null;
     this.setAnimatedTransition(true);
+    this.tabletopService.tableSelecter.viewTable.gridHeight = 0;
   }
 
   onInputStart(e: MouseEvent | TouchEvent) {
@@ -117,6 +118,11 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     let pointer = PointerDeviceService.convertLocalToLocal(this.input.pointer, this.grabbingElement, this.input.target.parentElement);
     this.rotateOffset = this.calcRotate(pointer, this.rotate);
     this.setAnimatedTransition(false);
+
+    if (this.tabletopObject) {
+      this.tabletopService.tableSelecter.viewTable.gridHeight = this.tabletopObject.posZ + 0.5;
+      this.setUpdateTimer();
+    }
   }
 
   onInputMove(e: MouseEvent | TouchEvent) {
