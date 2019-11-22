@@ -29,6 +29,8 @@ export class GameTable extends ObjectNode {
   @SyncVar() gridType: GridType = GridType.SQUARE;
   @SyncVar() gridColor: string = '#000000e6';
 
+  gridHeight: number = 0;
+
   get terrains(): Terrain[] {
     let terrains: Terrain[] = [];
     this.children.forEach(object => {

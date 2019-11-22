@@ -38,6 +38,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get tableSelecter(): TableSelecter { return this.tabletopService.tableSelecter; }
   get currentTable(): GameTable { return this.tabletopService.currentTable; }
+  get gridHeight(): number { return this.tabletopService.currentTable.gridHeight; }
 
   get tableImage(): ImageFile {
     let file: ImageFile = ImageStorage.instance.get(this.currentTable.imageIdentifier);
