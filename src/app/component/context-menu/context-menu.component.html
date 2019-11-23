@@ -1,10 +1,12 @@
 <table class="component" [ngClass]="{'submenu-panel': isSubmenu, 'is-max-limit': !isSubmenu, 'pointer-events-none': isPointerDragging}"
   (mouseleave)="hideSubMenu()"  #root>
   <tr>
+    <td *ngIf="0 < title.length" colspan="3"><div class="title">{{title}}<span *ngIf="altitudeHande"> (高度:<span style="display: inline-block; width: 2em; text-align: right;">{{altitudeHande.altitude}}</span>)</span></div></td>
+  </tr>
+  <tr>
     <td *ngIf="altitudeHande" class="altitude">0</td>
     <td *ngIf="altitudeHande" class="altitude"><input class="altitude" title="{{altitudeHande.altitude}}" [(ngModel)]="altitudeHande.altitude" type="range" max="12" min="-12" step="0.5"></td>
     <td>
-      <div *ngIf="0 < title.length" class="title">{{title}}</div>
       <ul>
         <ng-container *ngFor="let action of actions">
           <ng-container *ngTemplateOutlet="action?.type === 'separator' ? separator : actionMenu; context: { action: action }"></ng-container>

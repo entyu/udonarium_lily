@@ -175,12 +175,14 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
               this.altitude = 0;
               SoundEffect.play(PresetSound.sweep);
             },
-            disabled: (this.altitude == 0)
+            disabled: (this.altitude == 0),
+            altitudeHande: this.terrain
           } : {
             name: '地上に出す', action: () => {
               this.altitude = 0;
               SoundEffect.play(PresetSound.sweep);
-            }
+            },
+            altitudeHande: this.terrain
           }),
       ContextMenuSeparator,
       { name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } },

@@ -150,12 +150,14 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
             this.altitude = 0;
             SoundEffect.play(PresetSound.sweep);
           },
-          disabled: (this.altitude == 0)
+          disabled: (this.altitude == 0),
+          altitudeHande: this.textNote
         } : {
           name: '地上に出す', action: () => {
             this.altitude = 0;
             SoundEffect.play(PresetSound.sweep);
-          }
+          },
+          altitudeHande: this.textNote
         }),
       ContextMenuSeparator,
       {
