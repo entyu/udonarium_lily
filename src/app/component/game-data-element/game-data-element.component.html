@@ -24,7 +24,7 @@
     <div class="table-cell">
       <ng-container *ngIf="isCommonValue">
         <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
-          [(ngModel)]="value" type="range" min="{{name === 'altitude' ? -24 : name === 'fontsize' ? 1 : 0}}" max="{{name === 'fontsize' ? 128 : 24}}" step="{{name === 'fontsize' ? 1 : 0.5}}" />
+          [(ngModel)]="value" type="range" title="{{value}}" min="{{name === 'altitude' ? -24 : name === 'fontsize' ? 1 : 0}}" max="{{name === 'fontsize' ? 128 : 24}}" step="{{name === 'fontsize' ? 1 : 0.5}}" />
         <br />
         <input style="width:40%; max-width:8em; text-align:right;" type="number" min="{{name === 'altitude' ? -24 : name === 'fontsize' ? 1 : 0}}" step="{{name === 'fontsize' ? 1 : 0.1}}" size="1" [(ngModel)]="value" placeholder="Value" />
       </ng-container>
@@ -37,16 +37,16 @@
           </ng-container>
           <ng-container *ngSwitchCase="'numberResource'">
             <input [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
-              [(ngModel)]="currentValue" type="range" min="0" max="{{!isNum(value) ? 1000 : value}}" />
+              [(ngModel)]="currentValue" type="range" title="{{currentValue}}" min="0" max="{{!isNum(value) ? 1000 : value}}" />
             <br>
             <input style="width: 5em; text-align: right;" size="1" type="number" [(ngModel)]="currentValue" placeholder="Value" />
             /
             <input style="width: 5em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
           </ng-container>
           <ng-container *ngSwitchCase="'abilityScore'">
-            <input style="width:40%; max-width:8em; text-align:right" type="{{isNum(value) ? 'number' : 'text'}}" size="1" [(ngModel)]="value" placeholder="Value">
+            <input style="width:40%; max-width:5em; text-align:right" type="{{isNum(value) ? 'number' : 'text'}}" size="1" [(ngModel)]="value" placeholder="Value">
             <ng-container *ngIf="isEdit">
-              <select class="modeifire-type" style="width:40%; max-width:8em" [(ngModel)]="currentValue">
+              <select class="modeifire-type" style="width:40%; max-width:5em" [(ngModel)]="currentValue">
                 <option value="">なし</option>
                 <option value="div2">÷2</option>
                 <option value="div3">÷3 (SRS,LHZ)</option>
@@ -60,8 +60,8 @@
             <ng-container *ngIf="!isEdit">{{'(' + (abilityScore >=0 ? '+' : '') + abilityScore + ')'}}</ng-container>
           </ng-container>
           <ng-container *ngSwitchCase="'checkProperty'">
-              <input style="width:40%; max-width:4em" type="text" size="1" [(ngModel)]="currentValue" placeholder="Option">
-              <input style="width:40%; max-width:4em" type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
+              <input style="width:50%; max-width:4em" type="text" size="1" [(ngModel)]="currentValue" placeholder="Option">
+              <input style="width:30%; max-width:4em" type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
             </ng-container>
           <ng-container *ngSwitchCase="'note'">
             <textarea style="width:100%; height:5em; min-width:50px; resize: none; font-size: 0.8em;" [(ngModel)]="value" placeholder="Note"></textarea>

@@ -30,6 +30,8 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   readonly auditionPlayer: AudioPlayer = new AudioPlayer();
   private lazyUpdateTimer: NodeJS.Timer = null;
 
+  math = Math;
+
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,

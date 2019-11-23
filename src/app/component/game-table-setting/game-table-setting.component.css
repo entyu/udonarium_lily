@@ -30,3 +30,7 @@
 .images-select {
   display: flex;
 }
+
+input[type='number'] {
+  text-align: right;
+}

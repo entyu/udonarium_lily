@@ -1,5 +1,5 @@
-<div>試聴音量：🔈 <input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" style="width:60%" /> 🔊</div>
-<div>再生音量：🔈 <input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" style="width:60%" /> 🔊</div>
+<div>試聴音量：🔈 <input [(ngModel)]="auditionVolume" type="range" title="{{math.floor(auditionVolume * 100) + '%'}}" min="0" max="1" step="0.01" style="width:60%" /> 🔊 <span class="volume">{{math.floor(auditionVolume * 100) + '%'}}</span></div>
+<div>再生音量：🔈 <input [(ngModel)]="volume" type="range" min="0" title="{{math.floor(volume * 100) + '%'}}" max="1" step="0.01" style="width:60%" /> 🔊 <span class="volume">{{math.floor(volume * 100) + '%'}}</span></div>
 <hr/>
 <div>
   <div *ngFor="let audio of audios" class="box">

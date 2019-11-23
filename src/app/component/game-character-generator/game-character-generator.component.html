@@ -5,7 +5,7 @@
 <input [(ngModel)]="name" placeholder="Name" name="name" />
 <div>
   <div>
-    <input [(ngModel)]="size" type="range" min="{{minSize}}" max="{{maxSize}}" name="size" /> Size : <input [(ngModel)]="size"
+    <input [(ngModel)]="size" type="range" title="{{size}}" min="{{minSize}}" max="{{maxSize}}" name="size" /> Size : <input [(ngModel)]="size"
       type="number" min="{{minSize}}" max="{{maxSize}}">
   </div>
   <button (click)="createGameCharacter()">キャラクターを作る</button>

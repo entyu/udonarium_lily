@@ -21,3 +21,9 @@
 .box {
   border-bottom:1px dotted #888;
 }
+
+.volume {
+  display: inline-block;
+  width: 3em;
+  text-align: right;
+}
