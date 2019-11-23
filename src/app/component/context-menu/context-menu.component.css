@@ -82,12 +82,11 @@ td.altitude {
 }
 
 input.altitude {
-  writing-mode: bt-lr; /* IE */
-  -webkit-appearance: slider-vertical; /* WebKit */
+  writing-mode: bt-lr;   
   appearance: slider-vertical;
   width: 8px;
   height: 100%;
-  padding: 0 5px;
+  padding: 3px;
 }
 
 .disabled .menu-title {

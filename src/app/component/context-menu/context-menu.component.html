@@ -4,7 +4,7 @@
     <td *ngIf="0 < title.length" colspan="3"><div class="title">{{title}}<span *ngIf="altitudeHande"> (高度:<span style="display: inline-block; width: 2em; text-align: right;">{{altitudeHande.altitude}}</span>)</span></div></td>
   </tr>
   <tr>
-    <td *ngIf="altitudeHande" class="altitude">0</td>
+    <td *ngIf="altitudeHande" class="altitude"><span>0</span></td>
     <td *ngIf="altitudeHande" class="altitude"><input class="altitude" title="{{altitudeHande.altitude}}" [(ngModel)]="altitudeHande.altitude" type="range" max="12" min="-12" step="0.5"></td>
     <td>
       <ul>
