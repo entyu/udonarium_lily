@@ -40,6 +40,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   get width(): number { return this.adjustMinBounds(this.terrain.width); }
   get depth(): number { return this.adjustMinBounds(this.terrain.depth); }
   get altitude(): number { return this.terrain.altitude; }
+  set altitude(altitude: number) { this.terrain.altitude = altitude; }
 
   get isDropShadow(): boolean { return this.terrain.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
@@ -152,26 +153,35 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
           ? {
             name: '壁に陰影をつけない', action: () => {
               this.isSurfaceShading = false;
-              SoundEffect.play(PresetSound.sweep);
             }
           } : {
             name: '壁に陰影をつける', action: () => {
               this.isSurfaceShading = true;
+            }
+          }),
+        (this.isDropShadow
+          ? {
+            name: '影を落とさない', action: () => {
+              this.isDropShadow = false;
+            }
+          } : {
+            name: '影を落とす', action: () => {
+              this.isDropShadow = true;
+            }
+          }),
+        (this.altitude >= 0
+          ? {
+            name: '地上に降ろす', action: () => {
+              this.altitude = 0;
+              SoundEffect.play(PresetSound.sweep);
+            },
+            disabled: (this.altitude == 0)
+          } : {
+            name: '地上に出す', action: () => {
+              this.altitude = 0;
               SoundEffect.play(PresetSound.sweep);
             }
           }),
-          (this.isDropShadow
-            ? {
-              name: '影を落とさない', action: () => {
-                this.isDropShadow = false;
-                SoundEffect.play(PresetSound.sweep);
-              }
-            } : {
-              name: '影を落とす', action: () => {
-                this.isDropShadow = true;
-                SoundEffect.play(PresetSound.sweep);
-              }
-            }),
       ContextMenuSeparator,
       { name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } },
       {

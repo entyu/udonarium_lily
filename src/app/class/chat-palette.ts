@@ -61,15 +61,17 @@ export class ChatPalette extends ObjectNode {
     while (isContinue) {
       loop++;
       isContinue = false;
-      evaluate = evaluate.replace(/\{\s*([^\{\}]+)\s*\}/g, (match, name) => {
+      evaluate = evaluate.replace(/\{\s*([^\{\}]+)\s*\}([Negative|Positive|Nega|Posi|Zero|Abs|A|N|P|Z])?/ig, (match, name, mod) => {
         isContinue = true;
+        let ret = '';
+        if (mod) mod = mod.substr(0, 1).toUpperCase();
         for (let variable of this.paletteVariables) {
-          if (variable.name == name) return variable.value;
+          if (variable.name == name) ret = variable.value;
         }
         if (extendVariables) {
           let element = extendVariables.getFirstElementByName(name);
           if (element) {
-            return element.isNumberResource ? element.currentValue + ''
+            ret = element.isNumberResource ? element.currentValue + ''
               : element.isCheckProperty ? element.value ? element.currentValue + '' : ''
               : element.isAbilityScore ? '(' + (+element.calcAbilityScore() >= 0 ? '+' : '') + element.calcAbilityScore() + ')'
               : element.value + '';
@@ -84,15 +86,17 @@ export class ChatPalette extends ObjectNode {
               || extendVariables.getFirstElementByName(name.replace(/初期値$/, ''))
               || extendVariables.getFirstElementByName(name.replace(/原点$/, ''))
             ) && (element.isNumberResource || element.isAbilityScore)) {
-              return element.value + '';
+              ret = element.value + '';
             }
             if ((element = extendVariables.getFirstElementByName(name.replace(/修正値?$/, ''))
               || extendVariables.getFirstElementByName(name.replace(/\s*Mod(ifier|\.)?$/i, ''))
               || extendVariables.getFirstElementByName(name.replace(/ボーナス$/, ''))
             ) && element.isAbilityScore) {
-              return '(' + (+element.calcAbilityScore() >= 0 ? '+' : '') + element.calcAbilityScore() + ')';
+              ret = '(' + (+element.calcAbilityScore() >= 0 ? '+' : '') + element.calcAbilityScore() + ')';
             }
           }
+          if (!ret && mod) ret = '0'; 
+          return ret;
         }
         return '';
       });

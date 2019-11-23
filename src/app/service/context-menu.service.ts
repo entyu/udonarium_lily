@@ -1,4 +1,5 @@
 import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { TabletopObject } from '@udonarium/tabletop-object';
 
 interface ContextMenuPoint {
   x: number,
@@ -12,16 +13,17 @@ export enum ContextMenuType {
 
 export const ContextMenuSeparator: ContextMenuAction = {
   name: '',
-  enabled: true,
+  disabled: true,
   type: ContextMenuType.SEPARATOR
 }
 
 export interface ContextMenuAction {
   name: string,
   action?: Function,
-  enabled?: boolean,
+  disabled?: boolean,
   type?: ContextMenuType,
-  subActions?: ContextMenuAction[]
+  subActions?: ContextMenuAction[],
+  altitudeHande?: TabletopObject
 }
 
 @Injectable()

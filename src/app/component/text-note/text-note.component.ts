@@ -8,7 +8,7 @@ import { TextNote } from '@udonarium/text-note';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
-import { ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -34,6 +34,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get height(): number { return this.adjustMinBounds(this.textNote.height); }
   get width(): number { return this.adjustMinBounds(this.textNote.width); }
   get altitude(): number { return this.textNote.altitude; }
+  set altitude(altitude: number) { this.textNote.altitude = altitude; }
 
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
@@ -142,6 +143,21 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
           SoundEffect.play(PresetSound.cardPut);
         }
       },
+      ContextMenuSeparator,
+      (this.altitude >= 0
+        ? {
+          name: '地上に降ろす', action: () => {
+            this.altitude = 0;
+            SoundEffect.play(PresetSound.sweep);
+          },
+          disabled: (this.altitude == 0)
+        } : {
+          name: '地上に出す', action: () => {
+            this.altitude = 0;
+            SoundEffect.play(PresetSound.sweep);
+          }
+        }),
+      ContextMenuSeparator,
       {
         name: '削除する', action: () => {
           this.textNote.destroy();

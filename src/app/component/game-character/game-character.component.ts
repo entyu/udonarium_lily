@@ -52,6 +52,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
   get altitude(): number { return this.gameCharacter.altitude; }
+  set altitude(altitude: number) { this.gameCharacter.altitude = altitude; }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
@@ -123,13 +124,26 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         ? {
           name: '影を落とさない', action: () => {
             this.isDropShadow = false;
-            SoundEffect.play(PresetSound.sweep);
           }
         } : {
           name: '影を落とす', action: () => {
             this.isDropShadow = true;
-            SoundEffect.play(PresetSound.sweep);
           }
+        }),
+      (this.altitude >= 0
+        ? {
+          name: '地上に降りる', action: () => {
+            this.altitude = 0;
+            SoundEffect.play(PresetSound.sweep);
+          },
+          disabled: (this.altitude == 0),
+          altitudeHande: this.gameCharacter
+        } : {
+          name: '地上に出る', action: () => {
+            this.altitude = 0;
+            SoundEffect.play(PresetSound.sweep);
+          },
+          altitudeHande: this.gameCharacter
         }),
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },

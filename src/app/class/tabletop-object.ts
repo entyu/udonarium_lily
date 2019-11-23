@@ -48,6 +48,19 @@ export class TabletopObject extends ObjectNode {
     return this._imageFile;
   }
 
+  get altitude(): number {
+    let element = this.getElement('altitude', this.commonDataElement);
+    if (!element) {
+      this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
+    }
+    let num = element ? +element.value : 0;
+    return Number.isNaN(num) ? 0 : num;
+  }
+  set altitude(altitude: number) {
+    let element = this.getElement('altitude', this.commonDataElement);
+    if (element) element.value = altitude;
+  }
+
   protected createDataElements() {
     this.initialize();
     let aliasName: string = this.aliasName;

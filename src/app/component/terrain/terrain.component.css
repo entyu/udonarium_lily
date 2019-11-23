@@ -15,7 +15,7 @@
   transform-style: preserve-3d;
 }
 
-.is-transition {
+.component-content {
   -webkit-transition: -webkit-transform 132ms linear;
   transition: transform 132ms linear;
 }

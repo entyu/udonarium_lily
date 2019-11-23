@@ -76,3 +76,27 @@ ul > li.hasHighlight:hover {
   color: #CCC;
   background-color: rgba(30, 30, 30, 0.8);
 }
+
+td.altitude {
+  vertical-align: middle;
+}
+
+input.altitude {
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* WebKit */
+  appearance: slider-vertical;
+  width: 8px;
+  height: 100%;
+  padding: 0 5px;
+}
+
+.disabled .menu-title {
+  color: gray;
+}
+
+.altitude-view {
+  color: black;
+  vertical-align: top;
+  width: 3em;
+  text-align: right;
+}
