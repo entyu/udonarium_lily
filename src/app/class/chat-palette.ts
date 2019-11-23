@@ -70,7 +70,7 @@ export class ChatPalette extends ObjectNode {
           let element = extendVariables.getFirstElementByName(name);
           if (element) {
             return element.isNumberResource ? element.currentValue + ''
-              : element.isCheckProperty ? element.currentValue + ''
+              : element.isCheckProperty ? element.value ? element.currentValue + '' : ''
               : element.isAbilityScore ? '(' + (+element.calcAbilityScore() >= 0 ? '+' : '') + element.calcAbilityScore() + ')'
               : element.value + '';
           } else {
