@@ -106,18 +106,20 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   selectPalette(line: string) {
-    this.text = line;
+    this.text = this.palette.evaluate(line, this.character.rootDataElement);
+    console.log(this.text);
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
     textArea.value = this.text;
   }
 
   clickPalette(line: string) {
-    if (this.doubleClickTimer && this.text === line) {
+    const evaluatedLine = this.palette.evaluate(line, this.character.rootDataElement);
+    if (this.doubleClickTimer && this.text === evaluatedLine) {
       clearTimeout(this.doubleClickTimer);
       this.doubleClickTimer = null;
       this.sendChat(null);
     } else {
-      this.text = line;
+      this.text = evaluatedLine;
       let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
       textArea.value = this.text;
       this.doubleClickTimer = setTimeout(() => { this.doubleClickTimer = null }, 400);

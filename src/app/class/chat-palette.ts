@@ -62,7 +62,6 @@ export class ChatPalette extends ObjectNode {
       loop++;
       isContinue = false;
       evaluate = evaluate.replace(/\{\s*([^\{\}]+)\s*\}/g, (match, name) => {
-        console.log(name);
         isContinue = true;
         for (let variable of this.paletteVariables) {
           if (variable.name == name) return variable.value;
@@ -71,8 +70,28 @@ export class ChatPalette extends ObjectNode {
           let element = extendVariables.getFirstElementByName(name);
           if (element) {
             return element.isNumberResource ? element.currentValue + ''
-              : element.isCheckProperty ? element.value + (element.value ? ' ' + element.currentValue : '')
+              : element.isCheckProperty ? element.currentValue + ''
+              : element.isAbilityScore ? '(' + (+element.calcAbilityScore() >= 0 ? '+' : '') + element.calcAbilityScore() + ')'
               : element.value + '';
+          } else {
+            if ((
+              element = extendVariables.getFirstElementByName(name.replace(/^最大/, ''))
+              || extendVariables.getFirstElementByName(name.replace(/^MAX[\:\_\-\s]?/i, ''))
+              || extendVariables.getFirstElementByName(name.replace(/^基本/, ''))
+              || extendVariables.getFirstElementByName(name.replace(/^初期/, ''))
+              || extendVariables.getFirstElementByName(name.replace(/^原/, ''))
+              || extendVariables.getFirstElementByName(name.replace(/基本値$/, ''))
+              || extendVariables.getFirstElementByName(name.replace(/初期値$/, ''))
+              || extendVariables.getFirstElementByName(name.replace(/原点$/, ''))
+            ) && (element.isNumberResource || element.isAbilityScore)) {
+              return element.value + '';
+            }
+            if ((element = extendVariables.getFirstElementByName(name.replace(/修正値?$/, ''))
+              || extendVariables.getFirstElementByName(name.replace(/\s*Mod(ifier|\.)?$/i, ''))
+              || extendVariables.getFirstElementByName(name.replace(/ボーナス$/, ''))
+            ) && element.isAbilityScore) {
+              return '(' + (+element.calcAbilityScore() >= 0 ? '+' : '') + element.calcAbilityScore() + ')';
+            }
           }
         }
         return '';

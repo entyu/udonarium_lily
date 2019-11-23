@@ -12,6 +12,7 @@ export class DataElement extends ObjectNode {
   get isNumberResource(): boolean { return this.type != null && this.type === 'numberResource'; }
   get isCheckProperty(): boolean { return this.type != null && this.type === 'checkProperty'; }
   get isNote(): boolean { return this.type != null && this.type === 'note'; }
+  get isAbilityScore(): boolean { return this.type != null && this.type === 'abilityScore'; }
 
   public static create(name: string, value: number | string = '', attributes: Attributes = {}, identifier: string = ''): DataElement {
     let dataElement: DataElement;
@@ -59,5 +60,18 @@ export class DataElement extends ObjectNode {
       }
     }
     return null;
+  }
+
+  calcAbilityScore(): number {
+    if (!this.isAbilityScore || !this.currentValue) return 0;
+    let match;
+    if (match = this.currentValue.toString().match(/^div(\d+)$/)) {
+      return Math.floor(+this.value / +match[1]);
+    // 現状3.0以降のみ
+    } else if (match = this.currentValue.toString().match(/^DnD/)) {
+      return Math.floor((+this.value - 10) / 2);
+    } else {
+      return 0;
+    }
   }
 }

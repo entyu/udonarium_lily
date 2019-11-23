@@ -6,6 +6,7 @@
         <option value="">通常</option>
         <option value="simpleNumber">数値</option>
         <option value="numberResource">リソース</option>
+        <option value="abilityScore">能力値</option>
         <option value="checkProperty">チェック</option>
         <option value="note">ノート</option>
       </select>
@@ -32,7 +33,7 @@
         <ng-container *ngSwitchCase="'simpleNumber'">
             <!-- size属性がないと小さくならない -->
             <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div> 
-            <input type="{{isNum(value) ? 'number' : 'text'}}" style="width:40%; max-width:8em; text-align:right;" size="1" [(ngModel)]="value" placeholder="Number" />
+            <input type="{{isNum(value) ? 'number' : 'text'}}" style="width:40%; max-width:8em; text-align:right" size="1" [(ngModel)]="value" placeholder="Number" />
           </ng-container>
           <ng-container *ngSwitchCase="'numberResource'">
             <input [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
@@ -42,8 +43,24 @@
             /
             <input style="width: 5em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
           </ng-container>
+          <ng-container *ngSwitchCase="'abilityScore'">
+            <input style="width:40%; max-width:8em; text-align:right" type="{{isNum(value) ? 'number' : 'text'}}" size="1" [(ngModel)]="value" placeholder="Value">
+            <ng-container *ngIf="isEdit">
+              <select class="modeifire-type" style="width:40%; max-width:8em" [(ngModel)]="currentValue">
+                <option value="">なし</option>
+                <option value="div2">÷2</option>
+                <option value="div3">÷3 (SRS,LHZ)</option>
+                <option value="div4">÷4</option>
+                <option value="div5">÷5</option>
+                <option value="div6">÷6 (SW)</option>
+                <option value="div10">÷10</option>
+                <option value="DnD3">D&amp;D (3.0以降)</option>
+              </select>
+            </ng-container>
+            <ng-container *ngIf="!isEdit">{{'(' + (abilityScore >=0 ? '+' : '') + abilityScore + ')'}}</ng-container>
+          </ng-container>
           <ng-container *ngSwitchCase="'checkProperty'">
-              <input style="width:40%; max-width:4em" type="{{isNum(currentValue) ? 'number' : 'text'}}" size="1" [(ngModel)]="currentValue" placeholder="Option">
+              <input style="width:40%; max-width:4em" type="text" size="1" [(ngModel)]="currentValue" placeholder="Option">
               <input style="width:40%; max-width:4em" type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
             </ng-container>
           <ng-container *ngSwitchCase="'note'">
