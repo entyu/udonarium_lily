@@ -63,7 +63,7 @@ export class ChatPalette extends ObjectNode {
       isContinue = false;
       evaluate = evaluate.replace(/\{\s*([^\{\}]+)\s*\}([Negative|Positive|Nega|Posi|Zero|Abs|A|N|P|Z])?/ig, (match, name, mod) => {
         isContinue = true;
-        let ret = '';
+        let ret: number|string = '';
         if (mod) mod = mod.substr(0, 1).toUpperCase();
         for (let variable of this.paletteVariables) {
           if (variable.name == name) ret = variable.value;
@@ -71,10 +71,10 @@ export class ChatPalette extends ObjectNode {
         if (extendVariables) {
           let element = extendVariables.getFirstElementByName(name);
           if (element) {
-            ret = element.isNumberResource ? element.currentValue + ''
-              : element.isCheckProperty ? element.value ? element.currentValue + '' : ''
-              : element.isAbilityScore ? '(' + (+element.calcAbilityScore() >= 0 ? '+' : '') + element.calcAbilityScore() + ')'
-              : element.value + '';
+            ret = element.isNumberResource ? element.currentValue
+              : element.isCheckProperty ? element.value ? element.currentValue : ''
+              : element.isAbilityScore ? element.calcAbilityScore()
+              : element.value;
           } else {
             if ((
               element = extendVariables.getFirstElementByName(name.replace(/^最大/, ''))
@@ -86,22 +86,42 @@ export class ChatPalette extends ObjectNode {
               || extendVariables.getFirstElementByName(name.replace(/初期値$/, ''))
               || extendVariables.getFirstElementByName(name.replace(/原点$/, ''))
             ) && (element.isNumberResource || element.isAbilityScore)) {
-              ret = element.value + '';
+              ret = element.value;
             }
             if ((element = extendVariables.getFirstElementByName(name.replace(/修正値?$/, ''))
               || extendVariables.getFirstElementByName(name.replace(/\s*Mod(ifier|\.)?$/i, ''))
               || extendVariables.getFirstElementByName(name.replace(/ボーナス$/, ''))
             ) && element.isAbilityScore) {
-              ret = '(' + (+element.calcAbilityScore() >= 0 ? '+' : '') + element.calcAbilityScore() + ')';
+              ret = element.calcAbilityScore();
             }
           }
-          if (!ret && mod) ret = '0'; 
-          return ret;
+          if (mod) { 
+            if (!ret) ret = '0';
+            console.log(ret);
+            if (isFinite(+ret)) {
+              ret = +ret;
+              console.log(ret);
+              switch (mod) {
+                case 'A':
+                  ret = Math.abs(ret);
+                  break;
+                case 'N':
+                  ret = (ret > 0) ? 0 : ret;
+                  break;
+                case 'P':
+                  ret = (ret < 0) ? 0 : ret;
+                  break;
+              }
+              if (ret < 0) ret = '(' + ret + ')'
+            }
+          }
+          return ret + '';
         }
         return '';
       });
       if (limit < loop) isContinue = false;
     }
+
     return evaluate;
   }
 
