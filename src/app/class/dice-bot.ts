@@ -488,7 +488,7 @@ export class DiceBot extends GameObject {
               return { result: (gameType ? gameType : 'DiceBot') + json.result + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret };
             })
             .catch(e => {
-              console.error(e);
+              //console.error(e);
               return { result: '', isSecret: false };
             })
         );
