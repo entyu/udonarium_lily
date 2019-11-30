@@ -1,22 +1,22 @@
-<table class="component" [ngClass]="{'submenu-panel': isSubmenu, 'is-max-limit': !isSubmenu, 'pointer-events-none': isPointerDragging}"
+<div style="display: flex; flex-direction: column" class="component" [ngClass]="{'submenu-panel': isSubmenu, 'is-max-limit': !isSubmenu, 'pointer-events-none': isPointerDragging}"
   (mouseleave)="hideSubMenu()"  #root>
-  <tr>
-    <td *ngIf="0 < title.length" colspan="3"><div class="title">{{title}}<span *ngIf="altitudeHande"> (高度 <input type="number" step="0.1" style="width:3em; text-align:right" [(ngModel)]="altitudeHande.altitude">)</span></div></td>
-  </tr>
-  <tr>
-    <td *ngIf="altitudeHande" class="altitude"><span>0</span></td>
-    <td *ngIf="altitudeHande" class="altitude"><input class="altitude" title="{{altitudeHande.altitude}}" [(ngModel)]="altitudeHande.altitude" type="range" max="12" min="-12" step="0.5"></td>
-    <td>
+  <div *ngIf="0 < title.length || altitudeHande" colspan="3"><div class="title">{{title}}<span *ngIf="altitudeHande"> (高度 <input type="number" step="0.1" style="width:3.6em; text-align:right" [(ngModel)]="altitudeHande.altitude">)</span></div></div>
+  <div style="display: flex; align-items: center">
+    <div *ngIf="altitudeHande" class="altitude ruler" style="display: flex; align-self: stretch; flex-direction: column; align-content: center"><div style="margin-top: 2em;">高</div><div style="align-self: center; margin-top: auto; margin-bottom: auto">0</div><div style="margin-bottom: 2em;">低</div></div>
+    <div *ngIf="altitudeHande" class="altitude"><input class="altitude" title="{{altitudeHande.altitude}}" [(ngModel)]="altitudeHande.altitude" type="range" max="12" min="-12" step="0.5"></div>
+    <div>
       <ul>
         <ng-container *ngFor="let action of actions">
           <ng-container *ngTemplateOutlet="action?.type === 'separator' ? separator : actionMenu; context: { action: action }"></ng-container>
         </ng-container>
       </ul>
-    </td>
-  </tr>
-</table>
+    </div>
+  </div>
+</div>
 <ng-template #actionMenu let-action="action">
-  <li [ngClass]="{'hasHighlight': !action.disabled, 'disabled': action.disabled}" (click)="action.disabled ? false : doAction(action)" (mouseenter)="action.disabled ? false : showSubMenu(action)">
+  <li [ngClass]="{'hasHighlight': !(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)), 'disabled': (action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0))}"
+      (click)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : doAction(action)"
+      (mouseenter)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : showSubMenu(action)">
     <div class="menu-title">{{action.name}}</div>
     <div *ngIf="action.subActions" class="sub-menu-arrow">
       <i class="material-icons" style="font-size: 1em; vertical-align: bottom;">arrow_forward_ios</i>

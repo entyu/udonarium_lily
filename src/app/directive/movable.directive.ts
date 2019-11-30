@@ -33,6 +33,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.transformCssOffset = option.transformCssOffset != null ? option.transformCssOffset : this.transformCssOffset;
   }
   @Input('movable.disable') isDisable: boolean = false;
+  @Input('movable.interact') isInteract: boolean = true;
   @Output('movable.onstart') onstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondragstart') ondragstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondrag') ondrag: EventEmitter<PointerEvent> = new EventEmitter();
@@ -122,7 +123,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
 
     this.setPointerEvents(false);
     this.setAnimatedTransition(false);
-    this.setCollidableLayer(true);
+    this.setCollidableLayer(this.isInteract);
 
     let target = document.elementFromPoint(this.input.pointer.x, this.input.pointer.y) as HTMLElement;
     this.pointer3d = this.calcLocalCoordinate(target, this.input.pointer);

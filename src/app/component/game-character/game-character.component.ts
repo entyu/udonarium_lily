@@ -130,21 +130,15 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
             this.isDropShadow = true;
           }
         }),
-      (this.altitude >= 0
-        ? {
-          name: '地上に降りる', action: () => {
+      {
+        name: '高度を0にする', action: () => {
+          if (this.altitude != 0) {
             this.altitude = 0;
             SoundEffect.play(PresetSound.sweep);
-          },
-          disabled: (this.altitude == 0),
-          altitudeHande: this.gameCharacter
-        } : {
-          name: '地上に出る', action: () => {
-            this.altitude = 0;
-            SoundEffect.play(PresetSound.sweep);
-          },
-          altitudeHande: this.gameCharacter
-        }),
+          }
+        },
+        altitudeHande: this.gameCharacter
+      },
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },

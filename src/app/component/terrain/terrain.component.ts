@@ -47,6 +47,9 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   get isSurfaceShading(): boolean { return this.terrain.isSurfaceShading; }
   set isSurfaceShading(isSurfaceShading: boolean) { this.terrain.isSurfaceShading = isSurfaceShading; }
 
+  get isInteract(): boolean { return this.terrain.isInteract; }
+  set isInteract(isInteract: boolean) { this.terrain.isInteract = isInteract; }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -134,6 +137,18 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
             SoundEffect.play(PresetSound.lock);
           }
         }),
+        (this.isInteract
+          ? {
+            name: '他の地形に乗らないように', action: () => {
+              this.isInteract = false;
+              SoundEffect.play(PresetSound.unlock);
+            }
+          } : {
+            name: '他の地形に乗るように', action: () => {
+              this.isInteract = true;
+              SoundEffect.play(PresetSound.lock);
+            }
+          }),
       ContextMenuSeparator,
       (this.hasWall
         ? {
@@ -149,41 +164,35 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
             this.mode = TerrainViewState.ALL;
           }
         }),
-        (this.isSurfaceShading
-          ? {
-            name: '壁に陰影をつけない', action: () => {
-              this.isSurfaceShading = false;
-            }
-          } : {
-            name: '壁に陰影をつける', action: () => {
-              this.isSurfaceShading = true;
-            }
-          }),
-        (this.isDropShadow
-          ? {
-            name: '影を落とさない', action: () => {
-              this.isDropShadow = false;
-            }
-          } : {
-            name: '影を落とす', action: () => {
-              this.isDropShadow = true;
-            }
-          }),
-        (this.altitude >= 0
-          ? {
-            name: '地上に降ろす', action: () => {
-              this.altitude = 0;
-              SoundEffect.play(PresetSound.sweep);
-            },
-            disabled: (this.altitude == 0),
-            altitudeHande: this.terrain
-          } : {
-            name: '地上に出す', action: () => {
-              this.altitude = 0;
-              SoundEffect.play(PresetSound.sweep);
-            },
-            altitudeHande: this.terrain
-          }),
+      (this.isSurfaceShading
+        ? {
+          name: '壁に陰影をつけない', action: () => {
+            this.isSurfaceShading = false;
+          }
+        } : {
+          name: '壁に陰影をつける', action: () => {
+            this.isSurfaceShading = true;
+          }
+        }),
+      (this.isDropShadow
+        ? {
+          name: '影を落とさない', action: () => {
+            this.isDropShadow = false;
+          }
+        } : {
+          name: '影を落とす', action: () => {
+            this.isDropShadow = true;
+          }
+        }),
+      {
+        name: '高度を0にする', action: () => {
+          if (this.altitude != 0) {
+            this.altitude = 0;
+            SoundEffect.play(PresetSound.sweep);
+          }
+        },
+        altitudeHande: this.terrain
+      },
       ContextMenuSeparator,
       { name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } },
       {

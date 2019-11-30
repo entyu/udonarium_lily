@@ -99,3 +99,10 @@ input.altitude {
   width: 3em;
   text-align: right;
 }
+
+.ruler {
+  color: #444;
+  font-size: small;
+  padding-left: 4px;
+  padding-right: 2px;
+}
