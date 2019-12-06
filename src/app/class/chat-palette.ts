@@ -16,7 +16,25 @@ export interface PaletteVariable {
 @SyncObject('chat-palette')
 export class ChatPalette extends ObjectNode {
   @SyncVar() dicebot: string = '';
+  @SyncVar() paletteColor: string = '';
   //TODO: キャラシ項目のコピー
+
+  static readonly CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
+
+  get color() {
+    if (this.paletteColor && this.paletteColor != '#ffffff') {
+      return this.paletteColor;
+    }
+    if (window.localStorage 
+      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) 
+      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
+      return localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
+    }
+    return '#444444';
+  }
+  set color(color: string) {
+    this.paletteColor = color;
+  }
 
   get paletteLines(): PaletteLine[] {
     if (!this.isAnalized) this.parse(<string>this.value);

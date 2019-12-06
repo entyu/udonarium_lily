@@ -23,9 +23,9 @@
   </div>
   <div class="table-cell">
     <div>
-      <select style="width: 12em;" (change)="onSelectedCharacter($event.target.value)">
-        <option value="{{myPeer?.identifier}}">{{myPeer?.name}}（あなた）</option>
-        <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
+      <select style="width: 12em;" (change)="onSelectedCharacter($event.target.value)" [style.color]="gameCharacter && gameCharacter.chatPalette && gameCharacter.chatPalette.color && gameCharacter.chatPalette.color != '#ffffff' ? gameCharacter.chatPalette.color : color">
+        <option value="{{myPeer?.identifier}}" [style.color]="myColor">{{myPeer?.name}}（あなた）</option>
+        <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}" [style.color]="gameCharacter.chatPalette && gameCharacter.chatPalette.color && gameCharacter.chatPalette.color != '#ffffff' ? gameCharacter.chatPalette.color : ''">{{gameCharacter.name}}</option>
       </select> ➡
       <select style="width: 10em;" [(ngModel)]="sendTo">
         <option value="">全員</option>
@@ -47,6 +47,7 @@
     </div>
     <div>
       <form #chatWindowForm="ngForm">
+        <input type="color" *ngIf="!(gameCharacter &&  gameCharacter.chatPalette && gameCharacter.chatPalette.paletteColor && gameCharacter.chatPalette.paletteColor != '#ffffff')" style="width:1em" [(ngModel)]="color" [ngModelOptions]="{standalone: true}">
         <textarea #textArea [(ngModel)]="text" placeholder="Enterで送信  Shift+Enterで改行" [ngModelOptions]="{standalone: true}" class="chat-input" (input)="onInput()" (keydown.enter)="sendChat($event)"></textarea>
         <button type="submit" (click)="sendChat(null)">SEND</button>
       </form>

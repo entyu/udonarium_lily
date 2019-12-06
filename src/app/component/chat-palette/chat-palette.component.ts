@@ -33,6 +33,29 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     this._gameType = gameType;
     if (this.character.chatPalette) this.character.chatPalette.dicebot = gameType;
   };
+
+  get paletteColor(): string {
+    if (this.character.chatPalette 
+      && this.character.chatPalette.paletteColor) {
+      return this.character.chatPalette.paletteColor;
+    }
+    return '#ffffff'; 
+  }
+  set paletteColor(color: string) { 
+    this.character.chatPalette.color = color ? color : '#ffffff';
+  }
+
+  get color(): string {
+    if (this.paletteColor && this.paletteColor != '#ffffff') {
+      return this.paletteColor;
+    } 
+    if (window.localStorage 
+      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)) {
+      return localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
+    }
+    return '#444444'; 
+  }
+
   chatTabidentifier: string = '';
   text: string = '';
 
@@ -181,7 +204,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
 
     if (this.chatTab) {
       let text = this.palette.evaluate(this.text, this.character.rootDataElement);
-      this.chatMessageService.sendMessage(this.chatTab, text, this.gameType, this.character.identifier, this.sendTo);
+      this.chatMessageService.sendMessage(this.chatTab, text, this.gameType, this.character.identifier, this.sendTo, this.color);
     }
     this.text = '';
     this.previousWritingLength = this.text.length;

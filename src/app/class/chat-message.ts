@@ -16,6 +16,7 @@ export interface ChatMessageContext {
   tag?: string;
   dicebot?: string;
   imageIdentifier?: string;
+  color?: string;
 }
 
 @SyncObject('chat')
@@ -24,9 +25,10 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() from: string;
   @SyncVar() to: string;
   @SyncVar() name: string;
-  @SyncVar() tag: string;
+  @SyncVar() tag: string; 
   @SyncVar() dicebot: string;
   @SyncVar() imageIdentifier: string;
+  @SyncVar() color: string;
 
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value }
@@ -63,4 +65,5 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isDicebot(): boolean { return this.isSystem && this.from.indexOf('BCDice') >= 0 && this.text.indexOf(': 計算結果 →') < 0 ? true : false; }
   get isCalculate(): boolean { return this.isSystem && this.from.indexOf('BCDice') >= 0 && this.text.indexOf(': 計算結果 →') > -1 ? true : false; }
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
+  get isSpecialColor(): boolean {return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
 }

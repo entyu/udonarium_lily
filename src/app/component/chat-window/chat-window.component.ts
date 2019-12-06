@@ -16,6 +16,8 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
+import { ChatPalette } from '@udonarium/chat-palette';
+
 @Component({
   selector: 'chat-window',
   templateUrl: './chat-window.component.html',
@@ -42,7 +44,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('textArea', { static: true }) textAreaElementRef: ElementRef;
 
-  sender: string = 'Guest';
+  sender: string = 'Guest';  
   text: string = '';
   sendTo: string = '';
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
@@ -75,6 +77,36 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.chatTab) this.chatTab.markForRead();
     }
   }
+
+  get myColor(): string {
+    if (window.localStorage
+      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)
+      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
+      return localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
+    }
+    return '#444444';
+  }
+
+  get color(): string {
+    if (this.gameCharacter 
+      && this.gameCharacter.chatPalette 
+      && this.gameCharacter.chatPalette.color 
+      && this.gameCharacter.chatPalette.color != '#ffffff') {
+      return this.gameCharacter.chatPalette.color;
+    }
+    if (window.localStorage
+      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)
+      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
+      return localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
+    }
+    return '#444444';
+  }
+  set color(color: string) {
+    if (window.localStorage) {
+      localStorage.setItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, color);
+    }
+  }
+
 
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
   maxLogLength: number = 1000;
@@ -263,7 +295,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (!this.sender.length) this.sender = this.myPeer.identifier;
     if (this.chatTab) {
-      this.chatMessageService.sendMessage(this.chatTab, this.text, this.gameType, this.sender, this.sendTo);
+      this.chatMessageService.sendMessage(this.chatTab, this.text, this.gameType, this.sender, this.sendTo, this.color && this.color != '#ffffff' ? this.color : '');
     }
     this.text = '';
     this.previousWritingLength = this.text.length;
