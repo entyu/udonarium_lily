@@ -4,23 +4,25 @@
   <div class="component-content is-3d is-pointer-events-auto" [ngClass]="{'is-grab': !isLocked}"
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLocked">
     <ng-container *ngIf="hasFloor && 0 < floorImage?.url.length" >
-      <div class="texture" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'transform': 'translateZ(' + ((height + altitude) * gridSize) + 'px)'}"
+      <div class="texture" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'transform': 'translateZ(' + ((height / (isSlope ? 2 : 1) + altitude) * gridSize) + 'px)' + (isSlope ? (' rotateX(' + -math.atan(height / depth) + 'rad) scaleY(' + (1 / math.cos(math.atan(height / depth))) + ')') : '')}"
         [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"
         ></div>
       <div *ngIf="isDropShadow"
-        style="filter: brightness(0) opacity(0.7) blur(1px); transform: scale(0.96); backface-visibility: visible" class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
+        style="filter: brightness(0) opacity(0.7) blur(1px); transform: translateZ(0.3px) scale(0.96); backface-visibility: visible" class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
     </ng-container>
     <ng-container *ngIf="hasWall && 0 < wallImage?.url.length">
       <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) translateY(-100%) rotateX(90deg) rotateZ(180deg) scaleX(-1.0)'}"></div>
-      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-bottom" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
-        [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
-        [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateX(-90deg)'}"></div>
-      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-left" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
-        [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize"
+      <ng-container *ngIf="!isSlope">
+        <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-bottom" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+          [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
+          [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateX(-90deg)'}"></div>
+      </ng-container>
+      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShadingl, 'is-slope': isSlope}" class="texture of-wall-left" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+        [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize" 
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateZ(90deg) rotateX(-90deg) scaleX(-1.0) translateX(-100%) translateY(-100%)'}"></div>
-      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-right" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': isSlope}" class="texture of-wall-right" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize"
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateZ(-90deg) rotateX(-90deg) translateY(-100%)'}"></div>
     </ng-container>

@@ -50,10 +50,15 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   get isInteract(): boolean { return this.terrain.isInteract; }
   set isInteract(isInteract: boolean) { this.terrain.isInteract = isInteract; }
 
+  get isSlope(): boolean { return this.terrain.isSlope; }
+  set isSlope(isSlope: boolean) { this.terrain.isSlope = isSlope; }
+  
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
+
+  math = Math;
 
   private input: InputHandler = null;
 
@@ -162,6 +167,16 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         } : {
           name: '壁を表示', action: () => {
             this.mode = TerrainViewState.ALL;
+          }
+        }),
+      (this.isSlope
+        ? {
+          name: '傾斜しない', action: () => {
+            this.isSlope = false;
+          }
+        } : {
+          name: '傾斜する', action: () => {
+            this.isSlope = true;
           }
         }),
       (this.isSurfaceShading

@@ -18,6 +18,7 @@ export class Terrain extends TabletopObject {
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isSurfaceShading: boolean = true
   @SyncVar() isInteract: boolean = true;
+  @SyncVar() isSlope: boolean = false;
 
   get width(): number { return this.getCommonValue('width', 1); }
   set width(width: number) { this.setCommonValue('width', width); }

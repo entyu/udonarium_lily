@@ -91,6 +91,10 @@
   filter: brightness(0.8);
 }
 
+.of-wall-left.is-slope, .of-wall-right.is-slope {
+  clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+}
+
 .of-wall-top.no-shadow, .of-wall-left.no-shadow, .of-wall-right.no-shadow {
   filter: brightness(1.0);
 }
