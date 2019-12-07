@@ -19,7 +19,7 @@
           [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
           [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateX(-90deg)'}"></div>
       </ng-container>
-      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShadingl, 'is-slope': isSlope}" class="texture of-wall-left" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': isSlope}" class="texture of-wall-left" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize" 
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateZ(90deg) rotateX(-90deg) scaleX(-1.0) translateX(-100%) translateY(-100%)'}"></div>
       <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': isSlope}" class="texture of-wall-right" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
