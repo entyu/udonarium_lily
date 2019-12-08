@@ -294,6 +294,27 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     if (event && event.keyCode !== 13) return;
 
     if (!this.sender.length) this.sender = this.myPeer.identifier;
+
+    if (this.gameCharacter) {
+      const dialogRegExp = /「([\s\S]+?)」/gm;
+      let match;
+      let dialogs = [];
+      while ((match = dialogRegExp.exec(this.text)) !== null) {
+        dialogs.push(match[1]);
+      }
+      if (dialogs) {
+        dialogs.push('');
+        if (this.gameCharacter.dialogTimeOutId) clearTimeout(this.gameCharacter.dialogTimeOutId);
+        for (let i = 0; i < dialogs.length; i++) {
+          this.gameCharacter.dialogTimeOutId = setTimeout(() => {
+            this.gameCharacter.dialog = dialogs[i];
+          }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 12000 : 0));
+        }
+      } else {
+        this.gameCharacter.dialog = '';
+      }
+    }
+
     if (this.chatTab) {
       this.chatMessageService.sendMessage(this.chatTab, this.text, this.gameType, this.sender, this.sendTo, this.color && this.color != '#ffffff' ? this.color : '');
     }

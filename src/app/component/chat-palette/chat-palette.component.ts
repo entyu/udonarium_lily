@@ -204,6 +204,23 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
 
     if (this.chatTab) {
       let text = this.palette.evaluate(this.text, this.character.rootDataElement);
+      const dialogRegExp = /「([\s\S]+?)」/gm;
+      let match;
+      let dialogs = [];
+      while ((match = dialogRegExp.exec(text)) !== null) {
+        dialogs.push(match[1]);
+      }
+      if (dialogs) {
+        dialogs.push('');
+        if (this.character.dialogTimeOutId) clearTimeout(this.character.dialogTimeOutId);
+        for (let i = 0; i < dialogs.length; i++) {
+          this.character.dialogTimeOutId = setTimeout(() => {
+            this.character.dialog = dialogs[i];
+          }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 12000 : 0));
+        }
+      } else {
+        this.character.dialog = '';
+      }
       this.chatMessageService.sendMessage(this.chatTab, text, this.gameType, this.character.identifier, this.sendTo, this.color);
     }
     this.text = '';

@@ -26,7 +26,9 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 @Component({
   selector: 'game-character',
   templateUrl: './game-character.component.html',
-  styleUrls: ['./game-character.component.css'],
+  styleUrls: [
+    './game-character.component.css',
+    '../../../../node_modules/balloon-css/balloon.min.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('bounceInOut', [
@@ -179,6 +181,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   onMoved() {
+    this.gameCharacter.dialog = '';
     SoundEffect.play(PresetSound.piecePut);
   }
 

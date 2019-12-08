@@ -14,6 +14,12 @@
       </div>
       <img class="image" *ngIf="isDropShadow && 0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) opacity(0.7) blur(1px)" [ngStyle]="{'transform': 'scaleY(0.6) translateY(-40%) rotateZ(' + roll + 'deg)'}">
       <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
+        <div *ngIf="gameCharacter.dialog" style="backface-visibility: hidden; transform: translate3d(-16px, -24px, 2px);">
+          <div class="baloon-base" [attr.aria-label]="gameCharacter.dialog" data-balloon-visible data-balloon-break data-balloon-length="fit" data-balloon-pos="right"></div>
+        </div>
+        <div *ngIf="gameCharacter.dialog" style="backface-visibility: hidden; transform: rotateY(-180deg) translate3d(-16px, -24px, 2px);">
+            <div class="baloon-base" [attr.aria-label]="gameCharacter.dialog" data-balloon-visible data-balloon-break data-balloon-length="fit" data-balloon-pos="right"></div>
+          </div>
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d">
