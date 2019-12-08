@@ -8,7 +8,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
-  @SyncVar() dialog = '';
+  @SyncVar() dialog = null;
 
   dialogTimeOutId = null
 

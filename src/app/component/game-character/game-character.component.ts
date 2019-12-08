@@ -67,10 +67,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   gridSize: number = 50;
 
   @ViewChild('CharacterImage', { static: false }) characterImage: ElementRef;
+  @ViewChild('BalloonBox', { static: false }) balloonBox: ElementRef;
+  
+  balloonInterval = null;
 
   get characterImageHeight(): number {
     if (!this.characterImage) return 0;
-    const height = (this.characterImage.nativeElement.offsetHeight + (this.name ? this.gridSize / 2 : 0)) * Math.cos(this.roll * Math.PI / 180) - this.gridSize * this.size;
+    const height = this.characterImage.nativeElement.offsetHeight * Math.cos(this.roll * Math.PI / 180) - this.gridSize * this.size;
     return 0 > height ? 0 : height;
   }
 
@@ -92,6 +95,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         if (this.gameCharacter === object || (object instanceof ObjectNode && this.gameCharacter.contains(object))) {
           this.changeDetector.markForCheck();
         }
+
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -107,11 +111,18 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.rotableOption = {
       tabletopObject: this.gameCharacter
     };
+    // もっといい方法ないか
+    this.balloonInterval = setInterval(() => {
+      if (this.balloonBox && this.gameCharacter) {
+        this.balloonBox.nativeElement.style.setProperty('--balloon-text', this.gameCharacter.dialog.color);
+      }
+    }, 33);
   }
 
   ngAfterViewInit() { }
 
   ngOnDestroy() {
+    if (this.balloonInterval) clearInterval(this.balloonInterval);
     EventSystem.unregister(this);
   }
 
