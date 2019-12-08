@@ -8,6 +8,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  ViewChild, ElementRef
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
@@ -64,6 +65,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }
 
   gridSize: number = 50;
+
+  @ViewChild('CharacterImage', { static: false }) characterImage: ElementRef;
+
+  get characterImageHeight(): number {
+    if (!this.characterImage) return 0;
+    const height = (this.characterImage.nativeElement.offsetHeight + (this.name ? this.gridSize / 2 : 0)) * Math.cos(this.roll * Math.PI / 180) - this.gridSize * this.size;
+    return 0 > height ? 0 : height;
+  }
 
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
