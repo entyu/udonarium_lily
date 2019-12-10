@@ -51,8 +51,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       return this.paletteColor;
     } 
     if (window.localStorage 
-      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)) {
-      return localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
+      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)) {
+      return localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
     }
     return '#444444'; 
   }

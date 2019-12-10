@@ -81,9 +81,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get myColor(): string {
     if (window.localStorage
-      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)
-      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
-      return localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
+      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)
+      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
+      return localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
     }
     return '#444444';
   }
@@ -96,15 +96,16 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       return this.gameCharacter.chatPalette.color;
     }
     if (window.localStorage
-      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)
-      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
-      return localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
+      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)
+      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
+      return localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
     }
     return '#444444';
   }
   set color(color: string) {
+    PeerCursor.myCursor.color = color;
     if (window.localStorage) {
-      localStorage.setItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, color);
+      localStorage.setItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, color);
     }
   }
 

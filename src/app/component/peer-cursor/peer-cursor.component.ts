@@ -20,6 +20,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   get iconUrl(): string { return this.cursor.image.url; }
   get name(): string { return this.cursor.name }
   get isMine(): boolean { return this.cursor.isMine; }
+  get color(): string { return (this.cursor.color && this.cursor.color != '#ffffff') ? this.cursor.color : '#f0dabd'; }
 
   private cursorElement: HTMLElement = null;
   private opacityElement: HTMLElement = null;

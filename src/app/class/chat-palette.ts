@@ -3,6 +3,7 @@ import { ObjectContext } from './core/synchronize-object/game-object';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { StringUtil } from './core/system/util/string-util';
 import { DataElement } from './data-element';
+import { PeerCursor } from './peer-cursor';
 
 export interface PaletteLine {
   palette: string;
@@ -19,16 +20,14 @@ export class ChatPalette extends ObjectNode {
   @SyncVar() paletteColor: string = '';
   //TODO: キャラシ項目のコピー
 
-  static readonly CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
-
   get color() {
     if (this.paletteColor && this.paletteColor != '#ffffff') {
       return this.paletteColor;
     }
     if (window.localStorage 
-      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) 
-      && localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
-      return localStorage.getItem(ChatPalette.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
+      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) 
+      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
+      return localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
     }
     return '#444444';
   }

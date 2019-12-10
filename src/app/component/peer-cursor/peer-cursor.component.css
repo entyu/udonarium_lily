@@ -21,7 +21,8 @@
   box-sizing: border-box;
   border: solid 1px rgba(240, 218, 189);
   border-radius: 50% 50% 5% 50%;
-  background-color: rgba(240, 218, 189, 0.9);
+  background-color: rgba(240, 218, 189);
+  opacity: 0.9;
   transform-origin: 100% 100%;
   transform: translateX(-100%) translateY(-100%)  rotateX(-90deg) rotateZ(45deg);
 }
@@ -34,6 +35,7 @@
   background-position: top, center;
   background-repeat: no-repeat;
   background-size: cover;
+  background-color: rgba(240, 218, 189);
   transform: rotateZ(-45deg) scale(0.85);
 }
 
