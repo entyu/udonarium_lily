@@ -23,6 +23,7 @@ import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { TabletopService } from 'service/tabletop.service';
 
 @Component({
   selector: 'game-character',
@@ -66,14 +67,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   gridSize: number = 50;
 
-  @ViewChild('CharacterImage', { static: false }) characterImage: ElementRef;
-  @ViewChild('BalloonBox', { static: false }) balloonBox: ElementRef;
+  @ViewChild('characterImage', { static: false }) characterImage: ElementRef;
+  @ViewChild('balloonBox', { static: false }) balloonBox: ElementRef;
   
   balloonInterval = null;
 
   get characterImageHeight(): number {
     if (!this.characterImage) return 0;
-    const height = this.characterImage.nativeElement.offsetHeight * Math.cos(this.roll * Math.PI / 180) - this.gridSize * this.size;
+    const height = (this.characterImage.nativeElement.offsetHeight + (this.name ? this.gridSize / 2 : 0)) * Math.cos(this.roll * Math.PI / 180) - this.gridSize * this.size;
     return 0 > height ? 0 : height;
   }
 
@@ -84,9 +85,12 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     private contextMenuService: ContextMenuService,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private tableTopService: TabletopService
   ) { }
 
+  viewRotateZ = 0;
+  
   ngOnInit() {
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
@@ -95,12 +99,15 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         if (this.gameCharacter === object || (object instanceof ObjectNode && this.gameCharacter.contains(object))) {
           this.changeDetector.markForCheck();
         }
-
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
+        this.viewRotateZ = event.data;
         this.changeDetector.markForCheck();
       });
     this.movableOption = {
@@ -116,7 +123,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       if (this.balloonBox && this.gameCharacter) {
         this.balloonBox.nativeElement.style.setProperty('--balloon-text', this.gameCharacter.dialog.color);
       }
-    }, 33);
+    }, 150);
   }
 
   ngAfterViewInit() { }
@@ -201,7 +208,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   onMoved() {
-    this.gameCharacter.dialog = '';
+    if (this.gameCharacter && this.gameCharacter.dialog) {
+      this.gameCharacter.dialog = {text: null, color: this.gameCharacter.dialog.color};
+    }
     SoundEffect.play(PresetSound.piecePut);
   }
 

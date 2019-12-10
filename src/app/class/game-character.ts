@@ -3,12 +3,18 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
 
+export interface DialogData {
+  text: string;
+  color: string;
+  emote?: boolean;
+}
+
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
-  @SyncVar() dialog = null;
+  @SyncVar() dialog: DialogData = null;
 
   dialogTimeOutId = null
 

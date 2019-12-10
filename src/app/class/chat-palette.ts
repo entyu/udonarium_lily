@@ -70,7 +70,7 @@ export class ChatPalette extends ObjectNode {
     } else {
       evaluate = line.palette;
     }
-    evaluate = StringUtil.toHalfWidth(evaluate);
+    //evaluate = StringUtil.toHalfWidth(evaluate);
 
     console.log(evaluate);
     let limit = 128;
@@ -79,24 +79,24 @@ export class ChatPalette extends ObjectNode {
     while (isContinue) {
       loop++;
       isContinue = false;
-      evaluate = evaluate.replace(/\{\s*([^\{\}]+)\s*\}([Negative|Positive|Nega|Posi|Zero|Abs|A|N|P|Z])?/ig, (match, name, mod) => {
+      evaluate = evaluate.replace(/[\{｛]\s*([^\{｛\}｝]+)\s*[\}｝]/g, (match, name) => {
         isContinue = true;
+        name = StringUtil.toHalfWidth(name).toLocaleLowerCase();
         let ret: number|string = '';
-        if (mod) mod = mod.substr(0, 1).toUpperCase();
         for (let variable of this.paletteVariables) {
-          if (variable.name == name) ret = variable.value;
+          if (StringUtil.toHalfWidth(variable.name).toLocaleLowerCase() == name) ret = variable.value;
         }
         if (extendVariables) {
           let element = extendVariables.getFirstElementByName(name);
           if (element) {
             ret = element.isNumberResource ? element.currentValue
-              : element.isCheckProperty ? element.value ? element.currentValue : ''
+              : element.isCheckProperty ? element.value ? element.currentValue : '0'
               : element.isAbilityScore ? element.calcAbilityScore()
               : element.value;
           } else {
             if ((
               element = extendVariables.getFirstElementByName(name.replace(/^最大/, ''))
-              || extendVariables.getFirstElementByName(name.replace(/^MAX[\:\_\-\s]?/i, ''))
+              || extendVariables.getFirstElementByName(name.replace(/^Max[\:\_\-\s]?/i, ''))
               || extendVariables.getFirstElementByName(name.replace(/^基本/, ''))
               || extendVariables.getFirstElementByName(name.replace(/^初期/, ''))
               || extendVariables.getFirstElementByName(name.replace(/^原/, ''))
@@ -113,33 +113,12 @@ export class ChatPalette extends ObjectNode {
               ret = element.calcAbilityScore();
             }
           }
-          if (mod) { 
-            if (!ret) ret = '0';
-            console.log(ret);
-            if (isFinite(+ret)) {
-              ret = +ret;
-              console.log(ret);
-              switch (mod) {
-                case 'A':
-                  ret = Math.abs(ret);
-                  break;
-                case 'N':
-                  ret = (ret > 0) ? 0 : ret;
-                  break;
-                case 'P':
-                  ret = (ret < 0) ? 0 : ret;
-                  break;
-              }
-              if (ret < 0) ret = '(' + ret + ')'
-            }
-          }
           return ret + '';
         }
         return '';
       });
       if (limit < loop) isContinue = false;
     }
-
     return evaluate;
   }
 
@@ -162,8 +141,8 @@ export class ChatPalette extends ObjectNode {
   }
 
   private parseVariable(palette: string): PaletteVariable {
-    palette = StringUtil.toHalfWidth(palette);
-    let array = /^\s*\/\/([^=\{\}\s]+)\s*=\s*(.+)\s*/gi.exec(palette);
+    //palette = StringUtil.toHalfWidth(palette);
+    let array = /^\s*\/\/([^=＝\{｛\}｝\s]+)\s*[=＝]\s*(.+)\s*/gi.exec(palette);
     if (!array) return null;
     let variable: PaletteVariable = {
       name: array[1],

@@ -247,19 +247,53 @@
 .baloon-box {
   box-sizing: border-box;
   position: absolute;
-  --balloon-color: rgba(255, 250, 240, 0.9);
+  --balloon-color: linear-gradient(-30deg, rgba(240,218,189, 0.9), rgba(255, 244, 232, 0.9));
   --balloon-text: #444444;
+  --balloon-move: 30px;
+  width: 100%;
 }
 
 [aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
   border: 6px solid transparent;
   border-top: 6px solid var(--balloon-text);
+  visibility: hidden;
 }
 [aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
-  border-radius: 12px;
+  border-radius: 24px;
   color: var(--balloon-text);
   border: 1px solid var(--balloon-text);
-  font-size: smaller;
+  font-size: 11px;
   text-align: center;
   min-width: 120px;
+  visibility: hidden;
+}
+.emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
+  font-size: 38px;
+  font-weight: bold;
+  border: none;
+  background: none;
+  min-width: 200px;
+  -webkit-text-stroke: 1px rgba(240,218,189);
+}
+.emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
+  border: none;
+}
+.is-balloon-visible[aria-label][data-balloon-pos][data-balloon-pos="up"]:before,
+.is-balloon-visible[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
+  visibility: visible;
+  animation-duration: .1s;
+  animation-name: fade-in;
+}
+@keyframes fade-in {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+  }
+  40% {
+    visibility: visible;
+    opacity: .4;
+  }
+  100% {
+    visibility: visible;
+  }
 }

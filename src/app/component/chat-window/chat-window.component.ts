@@ -17,6 +17,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 import { ChatPalette } from '@udonarium/chat-palette';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 @Component({
   selector: 'chat-window',
@@ -304,11 +305,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       if (dialogs) {
         dialogs.push(null);
-        if (this.gameCharacter.dialogTimeOutId) clearTimeout(this.gameCharacter.dialogTimeOutId);
+        const gameCharacter = this.gameCharacter;
+        if (gameCharacter.dialogTimeOutId) clearTimeout(gameCharacter.dialogTimeOutId);
+        gameCharacter.dialog = { text: null, color: this.color };
         for (let i = 0; i < dialogs.length; i++) {
-          const gameCharacter = this.gameCharacter;
           gameCharacter.dialogTimeOutId = setTimeout(() => {
-            gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: this.color } : null;
+            gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: this.color, emote: StringUtil.isEmote(dialogs[i]) } : null;
           }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 12000 : 0));
         }
       } else {
