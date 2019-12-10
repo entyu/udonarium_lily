@@ -25,6 +25,17 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
+  get myPeerName(): string {
+    if (!PeerCursor.myCursor) return null;
+    return PeerCursor.myCursor.name;
+  }
+  set myPeerName(name: string) {
+    if (window.localStorage) {
+      localStorage.setItem(PeerCursor.CHAT_MY_NAME_LOCAL_STORAGE_KEY, name);
+    }
+    PeerCursor.myCursor.name = name;
+  }
+
   constructor(
     private ngZone: NgZone,
     private modalService: ModalService,

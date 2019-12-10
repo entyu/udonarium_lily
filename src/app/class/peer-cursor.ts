@@ -11,6 +11,8 @@ export class PeerCursor extends GameObject {
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
 
+  static readonly CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
+
   static myCursor: PeerCursor = null;
   private static hash: { [peerId: string]: string } = {};
 
@@ -58,6 +60,9 @@ export class PeerCursor extends GameObject {
     PeerCursor.myCursor = new PeerCursor();
     PeerCursor.myCursor.peerId = Network.peerId;
     PeerCursor.myCursor.initialize();
+    if (window.localStorage && localStorage.getItem(PeerCursor.CHAT_MY_NAME_LOCAL_STORAGE_KEY)) {
+      PeerCursor.myCursor.name = localStorage.getItem(PeerCursor.CHAT_MY_NAME_LOCAL_STORAGE_KEY);
+    }
     return PeerCursor.myCursor;
   }
 
