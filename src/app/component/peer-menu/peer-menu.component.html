@@ -4,7 +4,8 @@
     (click)="changeIcon()">
     <!--<img *ngIf="myPeer.image" [src]="myPeer.image.url | safe: 'resourceUrl'" />-->
   </div>
-  <span>あなたのニックネーム：<input [(ngModel)]="myPeerName"  placeholder="ニックネーム" /><br>　※最後に使ったニックネームをブラウザに保存します。</span>
+  <span>あなたの色とニックネーム：<input type="color" style="width:1em; margin-right: 0.5em" [(ngModel)]="myPeerColor">　<input [(ngModel)]="myPeerName" [style.color]="myPeerColor" placeholder="ニックネーム" />
+  <br>※最後に使った色とニックネームをブラウザに保存します。</span>
 </div>
 <div>
   <span>あなたのID：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.id}}</span>

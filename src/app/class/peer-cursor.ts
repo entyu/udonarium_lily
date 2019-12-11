@@ -14,6 +14,9 @@ export class PeerCursor extends GameObject {
 
   static readonly CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
   static readonly CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
+  
+  static readonly CHAT_DEFAULT_COLOR = '#444444';
+  static readonly CHAT_TRANSPARENT_COLOR = '#ffffff';
 
   static myCursor: PeerCursor = null;
   private static hash: { [peerId: string]: string } = {};

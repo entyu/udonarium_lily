@@ -40,21 +40,22 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       && this.character.chatPalette.paletteColor) {
       return this.character.chatPalette.paletteColor;
     }
-    return '#ffffff'; 
+    return PeerCursor.CHAT_TRANSPARENT_COLOR; 
   }
   set paletteColor(color: string) { 
-    this.character.chatPalette.color = color ? color : '#ffffff';
+    this.character.chatPalette.color = color ? color : PeerCursor.CHAT_TRANSPARENT_COLOR;
   }
 
   get color(): string {
-    if (this.paletteColor && this.paletteColor != '#ffffff') {
+    if (this.paletteColor && this.paletteColor != PeerCursor.CHAT_TRANSPARENT_COLOR) {
       return this.paletteColor;
     } 
-    if (window.localStorage 
-      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)) {
-      return localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
+    if (PeerCursor.myCursor
+      && PeerCursor.myCursor.color
+      && PeerCursor.myCursor.color != PeerCursor.CHAT_TRANSPARENT_COLOR) {
+      return PeerCursor.myCursor.color;
     }
-    return '#444444'; 
+    return PeerCursor.CHAT_DEFAULT_COLOR;
   }
 
   chatTabidentifier: string = '';

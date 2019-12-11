@@ -80,27 +80,22 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   get myColor(): string {
-    if (window.localStorage
-      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)
-      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
-      return localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
+    if (PeerCursor.myCursor
+      && PeerCursor.myCursor.color
+      && PeerCursor.myCursor.color != PeerCursor.CHAT_TRANSPARENT_COLOR) {
+      return PeerCursor.myCursor.color;
     }
-    return '#444444';
+    return PeerCursor.CHAT_DEFAULT_COLOR;
   }
 
   get color(): string {
     if (this.gameCharacter 
       && this.gameCharacter.chatPalette 
       && this.gameCharacter.chatPalette.color 
-      && this.gameCharacter.chatPalette.color != '#ffffff') {
+      && this.gameCharacter.chatPalette.color != PeerCursor.CHAT_TRANSPARENT_COLOR) {
       return this.gameCharacter.chatPalette.color;
     }
-    if (window.localStorage
-      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY)
-      && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
-      return localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
-    }
-    return '#444444';
+    return this.myColor;
   }
   set color(color: string) {
     PeerCursor.myCursor.color = color;

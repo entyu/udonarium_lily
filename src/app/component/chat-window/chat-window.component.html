@@ -47,8 +47,8 @@
     </div>
     <div>
       <form #chatWindowForm="ngForm">
-        <input type="color" *ngIf="!(gameCharacter &&  gameCharacter.chatPalette && gameCharacter.chatPalette.paletteColor && gameCharacter.chatPalette.paletteColor != '#ffffff')" style="width:1em" [(ngModel)]="color" [ngModelOptions]="{standalone: true}">
-        <textarea #textArea [(ngModel)]="text" [placeholder]="'Enterで送信  Shift+Enterで改行  ' + (!(gameCharacter &&  gameCharacter.chatPalette && gameCharacter.chatPalette.paletteColor && gameCharacter.chatPalette.paletteColor != '#ffffff') ? '色を初期化する際は白(255,255,255)を選択' : 'チャットパレットの色を優先')" [ngModelOptions]="{standalone: true}" class="chat-input" (input)="onInput()" (keydown.enter)="sendChat($event)"></textarea>
+        <!-- <input type="color" *ngIf="!(gameCharacter &&  gameCharacter.chatPalette && gameCharacter.chatPalette.paletteColor && gameCharacter.chatPalette.paletteColor != '#ffffff')" style="width:1em" [(ngModel)]="color" [ngModelOptions]="{standalone: true}"> -->
+        <textarea #textArea [(ngModel)]="text" placeholder="Enterで送信  Shift+Enterで改行  チャットパレットの色が優先" [ngModelOptions]="{standalone: true}" class="chat-input" (input)="onInput()" (keydown.enter)="sendChat($event)"></textarea>
         <button type="submit" (click)="sendChat(null)">SEND</button>
       </form>
     </div>

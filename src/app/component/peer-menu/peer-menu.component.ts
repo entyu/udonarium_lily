@@ -33,7 +33,20 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     if (window.localStorage) {
       localStorage.setItem(PeerCursor.CHAT_MY_NAME_LOCAL_STORAGE_KEY, name);
     }
-    PeerCursor.myCursor.name = name;
+    if (PeerCursor.myCursor) PeerCursor.myCursor.name = name;
+  }
+
+  get myPeerColor(): string {
+    if (!PeerCursor.myCursor) return PeerCursor.CHAT_DEFAULT_COLOR;
+    return PeerCursor.myCursor.color;
+  }
+  set myPeerColor(color: string) {
+    if (PeerCursor.myCursor) {
+      PeerCursor.myCursor.color = (color == PeerCursor.CHAT_TRANSPARENT_COLOR) ? PeerCursor.CHAT_DEFAULT_COLOR : color;
+    }
+    if (window.localStorage) {
+      localStorage.setItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, PeerCursor.myCursor.color);
+    }
   }
 
   constructor(
