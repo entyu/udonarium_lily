@@ -205,7 +205,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     if (event && event.keyCode !== 13) return;
 
     if (this.chatTab) {
-      let text = this.palette.evaluate(this.text, this.character.rootDataElement);
+      let text = this.palette.evaluate(this.text, this.character.rootDataElement); 
       const dialogRegExp = /「([\s\S]+?)」/gm;
       let match;
       let dialogs = [];
@@ -219,7 +219,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         gameCharacter.dialog = { text: null, color: this.color };
         for (let i = 0; i < dialogs.length; i++) {
           gameCharacter.dialogTimeOutId = setTimeout(() => {
-            gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: this.color, emote: StringUtil.isEmote(dialogs[i]) } : null;
+            gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: this.color, emote: StringUtil.isEmote(dialogs[i]), from: PeerCursor.myCursor.peerId, to: ChatMessageService.findId(this.sendTo) } : null;
           }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 12000 : 0));
         }
       } else {

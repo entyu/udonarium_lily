@@ -23,7 +23,7 @@ import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-import { TabletopService } from 'service/tabletop.service';
+import { PeerCursor } from '@udonarium/peer-cursor';
 
 @Component({
   selector: 'game-character',
@@ -78,6 +78,18 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     return 0 > height ? 0 : height;
   }
 
+  get isListen(): boolean {
+    if (this.gameCharacter && this.gameCharacter.dialog) {
+      if (!this.gameCharacter.dialog.to) return true;
+      return PeerCursor.myCursor && (PeerCursor.myCursor.peerId == this.gameCharacter.dialog.from || PeerCursor.myCursor.peerId == this.gameCharacter.dialog.to);
+    } 
+    return false;
+  }
+
+  get isWhisper(): boolean {
+    return (this.gameCharacter && this.gameCharacter.dialog && this.gameCharacter.dialog.to && this.gameCharacter.dialog.to.length > 0);
+  }
+
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
 
@@ -86,7 +98,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
-    private tableTopService: TabletopService
+
   ) { }
 
   viewRotateZ = 0;

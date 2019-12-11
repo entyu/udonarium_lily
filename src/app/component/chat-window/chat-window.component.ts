@@ -16,7 +16,6 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
-import { ChatPalette } from '@udonarium/chat-palette';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 @Component({
@@ -291,7 +290,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     if (event && event.keyCode !== 13) return;
 
     if (!this.sender.length) this.sender = this.myPeer.identifier;
-
+ 
     if (this.gameCharacter) {
       const dialogRegExp = /「([\s\S]+?)」/gm;
       let match;
@@ -306,16 +305,16 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         gameCharacter.dialog = { text: null, color: this.color };
         for (let i = 0; i < dialogs.length; i++) {
           gameCharacter.dialogTimeOutId = setTimeout(() => {
-            gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: this.color, emote: StringUtil.isEmote(dialogs[i]) } : null;
+            gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: this.color, emote: StringUtil.isEmote(dialogs[i]), from: PeerCursor.myCursor.peerId, to: ChatMessageService.findId(this.sendTo) } : null;
           }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 12000 : 0));
         }
       } else {
         this.gameCharacter.dialog = null;
       }
     }
-
+  
     if (this.chatTab) {
-      this.chatMessageService.sendMessage(this.chatTab, this.text, this.gameType, this.sender, this.sendTo, this.color && this.color != '#ffffff' ? this.color : '');
+      this.chatMessageService.sendMessage(this.chatTab, this.text, this.gameType, this.sender, this.sendTo, this.color);
     }
     this.text = '';
     this.previousWritingLength = this.text.length;

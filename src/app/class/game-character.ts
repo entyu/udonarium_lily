@@ -7,6 +7,8 @@ export interface DialogData {
   text: string;
   color: string;
   emote?: boolean;
+  from?: string;
+  to?: string;
 }
 
 @SyncObject('character')

@@ -267,6 +267,23 @@
   min-width: 120px;
   visibility: hidden;
 }
+.is-whisper[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
+  border: none;
+  color: var(--balloon-text);
+  content: 'o。';
+  font-size: 14px;
+  top: -15px;
+  left: 10px;
+  font-weight: bold;
+  visibility: hidden;
+}
+.is-whisper[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
+  border-radius: 24px 12px;
+  color: #ccc;
+  font-size: 9px;
+  background: #555555dd;
+  border: 1px solid var(--balloon-text);
+}
 .emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
   font-size: 38px;
   font-weight: bold;

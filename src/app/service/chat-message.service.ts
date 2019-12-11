@@ -76,7 +76,7 @@ export class ChatMessageService {
   sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, color? :string): ChatMessage {
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.id,
-      to: this.findId(sendTo),
+      to: ChatMessageService.findId(sendTo),
       name: this.makeMessageName(sendFrom, sendTo),
       imageIdentifier: this.findImageIdentifier(sendFrom),
       timestamp: this.calcTimeStamp(chatTab),
@@ -88,7 +88,7 @@ export class ChatMessageService {
     return chatTab.addMessage(chatMessage);
   }
 
-  private findId(identifier: string): string {
+  static findId(identifier: string): string {
     let object = ObjectStore.instance.get(identifier);
     if (object instanceof GameCharacter) {
       return object.identifier;
