@@ -11,12 +11,15 @@
   width: 100%;
   word-wrap : break-word;
   overflow-wrap:break-word;
+  border-left: 4px solid #555;
   border-bottom:1px dotted #999;
 }
 
 .direct-message {
   background-color: #555;
   color: #CCC;
+  border-left: 4px solid #555;
+  border-bottom:1px dotted #CCC;
 }
 
 .message .image {
@@ -68,4 +71,8 @@
 
 .direct-message.dicebot-message .msg-text {
   color:#CCF;
+}
+
+.dicebot-message {
+  border-left: 4px transparent;
 }

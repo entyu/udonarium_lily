@@ -65,5 +65,5 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isDicebot(): boolean { return this.isSystem && this.from.indexOf('BCDice') >= 0 && this.text.indexOf(': 計算結果 →') < 0 ? true : false; }
   get isCalculate(): boolean { return this.isSystem && this.from.indexOf('BCDice') >= 0 && this.text.indexOf(': 計算結果 →') > -1 ? true : false; }
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
-  get isSpecialColor(): boolean {return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
+  get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
 }

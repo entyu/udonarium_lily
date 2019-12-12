@@ -270,7 +270,7 @@
 .is-whisper[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
   border: none;
   color: var(--balloon-text);
-  content: 'o。';
+  content: '〇。';
   font-size: 14px;
   top: -15px;
   left: 10px;
@@ -278,11 +278,11 @@
   visibility: hidden;
 }
 .is-whisper[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
-  border-radius: 24px 12px;
-  color: #ccc;
+  border-radius: 12px;
+  color: #eee;
   font-size: 9px;
   background: #555555dd;
-  border: 1px solid var(--balloon-text);
+  border: 2px dotted var(--balloon-text);
 }
 .emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
   font-size: 38px;
@@ -292,9 +292,16 @@
   min-width: 200px;
   -webkit-text-stroke: 1px rgba(240,218,189);
 }
-.emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
+.is-whisper.emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--balloon-text);
+}
+.emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:before,
+.is-whisper.emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
+  content: none;
   border: none;
 }
+
 .is-balloon-visible[aria-label][data-balloon-pos][data-balloon-pos="up"]:before,
 .is-balloon-visible[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
   visibility: visible;
