@@ -71,6 +71,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   @ViewChild('balloonBox', { static: false }) balloonBox: ElementRef;
   
   balloonInterval = null;
+  math = Math;
 
   get characterImageHeight(): number {
     if (!this.characterImage) return 0;
