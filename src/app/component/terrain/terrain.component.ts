@@ -55,6 +55,12 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   
   gridSize: number = 50;
 
+  get terreinAltitude(): number {
+    let ret = this.altitude;
+    if (this.altitude < 0 || !this.hasWall || !this.wallImage.url || !this.wallImage.url.length) ret += this.height;
+    return ret;
+  }
+
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
 
@@ -71,6 +77,8 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     private pointerDeviceService: PointerDeviceService
   ) { }
 
+  viewRotateZ = 0;
+
   ngOnInit() {
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
@@ -84,6 +92,10 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
+        this.viewRotateZ = event.data;
         this.changeDetector.markForCheck();
       });
     this.movableOption = {

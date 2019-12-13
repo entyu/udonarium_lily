@@ -189,3 +189,12 @@
   0% { opacity:0.9; }
   100% { opacity:0.5; }
 }
+
+.altitude-indicator {
+  padding-left: 2px;
+  font-size: 11px;
+  font-weight: bolder;
+  color: blanchedalmond;
+  text-shadow: #444 0px 0px 2px;
+  backface-visibility: hidden;
+}

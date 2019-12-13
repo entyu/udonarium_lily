@@ -44,4 +44,10 @@
       </div>
     </ng-container>
   </div>
+  <div class="is-3d" *ngIf="terreinAltitude <= -0.5 || 0.5 <= terreinAltitude" style="display:flex; align-items: center; border-left: 2px dashed blanchedalmond; position: absolute; transform-origin: top left"
+    [style.height.px]="math.abs(terreinAltitude * gridSize)"
+    [ngStyle]="{transform: 'translateX(' + (width * gridSize / 2) + 'px) translateY(' + (-depth * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -(altitude + ((hasWall && 0 < wallImage?.url.length) ? 0 : height)) * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
+    <div class="altitude-indicator"><i>{{ terreinAltitude }}</i></div>
+    <div class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ terreinAltitude }}</i></div>
+  </div>
 </div>
