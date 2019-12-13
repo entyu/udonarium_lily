@@ -254,14 +254,14 @@
 }
 
 [aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
-  border: 6px solid transparent;
-  border-top: 6px solid var(--balloon-text);
+  border: 5px solid transparent;
+  border-top: 5px solid var(--balloon-text);
   visibility: hidden;
 }
 [aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
   border-radius: 24px;
   color: var(--balloon-text);
-  border: 1px solid var(--balloon-text);
+  border: 2px solid var(--balloon-text);
   font-size: 11px;
   text-align: center;
   min-width: 120px;
@@ -278,11 +278,11 @@
   visibility: hidden;
 }
 .is-whisper[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
-  border-radius: 12px;
+  border-radius: 24px 12px;
   color: #eee;
   font-size: 9px;
   background: #555555dd;
-  border: 2px dotted var(--balloon-text);
+  border: 2px solid var(--balloon-text);
 }
 .emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
   font-size: 38px;
