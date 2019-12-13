@@ -53,6 +53,9 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   get isSlope(): boolean { return this.terrain.isSlope; }
   set isSlope(isSlope: boolean) { this.terrain.isSlope = isSlope; }
   
+  get isAltitudeIndicate(): boolean { return this.terrain.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.terrain.isAltitudeIndicate = isAltitudeIndicate; }
+
   gridSize: number = 50;
 
   get terreinAltitude(): number {
@@ -209,6 +212,17 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         } : {
           name: '影を落とす', action: () => {
             this.isDropShadow = true;
+          }
+        }),
+      ContextMenuSeparator,
+      (this.isAltitudeIndicate
+        ? {
+          name: '高度計を表示しない', action: () => {
+            this.isAltitudeIndicate = false;
+          }
+        } : {
+          name: '高度計を表示する', action: () => {
+            this.isAltitudeIndicate = true;
           }
         }),
       {

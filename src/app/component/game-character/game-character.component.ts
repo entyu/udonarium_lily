@@ -64,6 +64,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set roll(roll: number) { this.gameCharacter.roll = roll; }
   get isDropShadow(): boolean { return this.gameCharacter.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }
+  get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
 
   gridSize: number = 50;
 
@@ -170,6 +172,17 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         } : {
           name: '影を落とす', action: () => {
             this.isDropShadow = true;
+          }
+        }),
+      ContextMenuSeparator,
+      (this.isAltitudeIndicate
+        ? {
+          name: '高度計を表示しない', action: () => {
+            this.isAltitudeIndicate = false;
+          }
+        } : {
+          name: '高度計を表示する', action: () => {
+            this.isAltitudeIndicate = true;
           }
         }),
       {
