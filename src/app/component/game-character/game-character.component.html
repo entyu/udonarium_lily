@@ -49,8 +49,8 @@
     <div class="is-3d" *ngIf="altitude <= -0.5 || 0.5 <= altitude" style="display:flex; align-items: center; border-left: 2px dashed black; position: absolute; transform-origin: top left"
       [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : size * gridSize + characterImageHeight)"
       [ngStyle]="{transform: 'translateX(' + (size * gridSize / 2) + 'px) translateY(' + (-size * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
-      <div class="altitude-indicator"><i>{{altitude}}</i></div>
-      <div class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{altitude}}</i></div>
+      <div class="altitude-indicator"><i>{{ altitude }}</i></div>
+      <div class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ altitude }}</i></div>
     </div>
   </div>
 </div>
