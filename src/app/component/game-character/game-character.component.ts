@@ -67,6 +67,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
 
+  get altitudeTotal(): number {
+    return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
+  }
+
   gridSize: number = 50;
 
   @ViewChild('characterImage', { static: false }) characterImage: ElementRef;
@@ -177,11 +181,11 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {
-          name: '高度計を表示しない', action: () => {
+          name: '高度を表示しない', action: () => {
             this.isAltitudeIndicate = false;
           }
         } : {
-          name: '高度計を表示する', action: () => {
+          name: '高度を表示する', action: () => {
             this.isAltitudeIndicate = true;
           }
         }),

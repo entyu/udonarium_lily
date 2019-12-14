@@ -46,11 +46,22 @@
         </div>
       </div>
     </div>
-    <div class="is-3d" *ngIf="isAltitudeIndicate && (altitude <= -0.5 || 0.5 <= altitude)" style="display:flex; align-items: center; border-left: 2px dashed black; position: absolute; transform-origin: top left"
+    <div class="is-3d" *ngIf="isAltitudeIndicate && (altitude <= -0.5 || 0.5 <= altitude)"
+      style="display: flex; flex-flow: column nowrap; justify-content: space-between; border-left: 2px dashed black;  transform-origin: top left"
       [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : size * gridSize + characterImageHeight)"
       [ngStyle]="{transform: 'translateX(' + (size * gridSize / 2) + 'px) translateY(' + (-size * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
-      <div class="altitude-indicator"><i>{{ altitude }}</i></div>
-      <div class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ altitude }}</i></div>
+      <div [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
+        <span class="total-altitude-indicator"><i>{{ altitudeTotal }}</i></span>
+        <span class="total-altitude-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ altitudeTotal }}</i></span>
+      </div>
+      <div>
+        <span class="altitude-indicator">{{ altitude }}</span>
+        <span class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)">{{ altitude }}</span>
+      </div>
+      <div [style.visibility]="altitude < 0 ? 'visible' : 'hidden'">
+        <span class="total-altitude-indicator"><i>{{ altitudeTotal }}</i></span>
+        <span class="total-altitude-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ altitudeTotal }}</i></span>
+      </div>
     </div>
   </div>
 </div>

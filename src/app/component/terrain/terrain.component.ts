@@ -60,7 +60,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get terreinAltitude(): number {
     let ret = this.altitude;
-    if (this.altitude < 0 || !this.hasWall || !this.wallImage.url || !this.wallImage.url.length) ret += this.height;
+    if (this.altitude < 0 || (!this.isSlope && (!this.hasWall || !this.wallImage.url || !this.wallImage.url.length))) ret += this.height;
     return ret;
   }
 
@@ -217,11 +217,11 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
       ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {
-          name: '高度計を表示しない', action: () => {
+          name: '高度を表示しない', action: () => {
             this.isAltitudeIndicate = false;
           }
         } : {
-          name: '高度計を表示する', action: () => {
+          name: '高度を表示する', action: () => {
             this.isAltitudeIndicate = true;
           }
         }),
