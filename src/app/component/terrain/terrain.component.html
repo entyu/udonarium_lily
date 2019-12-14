@@ -10,7 +10,7 @@
       <div *ngIf="isDropShadow"
         style="filter: brightness(0) opacity(0.7) blur(1px); transform: translateZ(0.3px) scale(0.96); backface-visibility: visible" class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
     </ng-container>
-    <ng-container *ngIf="hasWall && 0 < wallImage?.url.length">
+    <ng-container *ngIf="isWallExist">
       <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) translateY(-100%) rotateX(90deg) rotateZ(180deg) scaleX(-1.0)'}"></div>
@@ -44,9 +44,9 @@
       </div>
     </ng-container>
   </div>
-  <div class="is-3d" *ngIf="isAltitudeIndicate && (terreinAltitude <= -0.5 || 0.5 <= terreinAltitude)" style="display:flex; align-items: center; border-left: 2px dashed blanchedalmond; position: absolute; transform-origin: top left"
+  <div class="is-3d" *ngIf="isAltitudeIndicate && !((isSlope || isWallExist) && -height < altitude && altitude < 0) && (terreinAltitude <= -0.5 || 0.5 <= terreinAltitude)" style="display:flex; align-items: center; border-left: 2px dashed blanchedalmond; position: absolute; transform-origin: top left"
     [style.height.px]="math.abs(terreinAltitude * gridSize)"
-    [ngStyle]="{transform: 'translateX(' + (width * gridSize / 2) + 'px) translateY(' + (-depth * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -(altitude + ((isSlope || (hasWall && 0 < wallImage?.url.length)) ? 0 : height)) * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
+    [ngStyle]="{transform: 'translateX(' + (width * gridSize / 2) + 'px) translateY(' + (-depth * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (terreinAltitude > 0 ? -(altitude + ((isSlope || isWallExist) ? 0 : height)) * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
     <div class="altitude-indicator">{{ terreinAltitude }}</div>
     <div class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)">{{ terreinAltitude }}</div>
   </div>
