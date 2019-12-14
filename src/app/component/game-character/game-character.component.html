@@ -55,8 +55,8 @@
         <span class="total-altitude-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ altitudeTotal }}</i></span>
       </div>
       <div>
-        <span class="altitude-indicator">{{ altitude }}</span>
-        <span class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)">{{ altitude }}</span>
+        <span class="altitude-indicator">{{ math.abs(altitude) }}</span>
+        <span class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)">{{ math.abs(altitude) }}</span>
       </div>
       <div [style.visibility]="altitude < 0 ? 'visible' : 'hidden'">
         <span class="total-altitude-indicator"><i>{{ altitudeTotal }}</i></span>
