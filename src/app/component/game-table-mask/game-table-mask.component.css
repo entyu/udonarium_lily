@@ -38,7 +38,12 @@
   color: #444;
   width: 25px;
   height: 25px;
+  visibility: hidden;
 }
+.component:hover .lock-icon, .component:active .lock-icon {
+  visibility: visible;
+}
+
 
 .is-center {
   position: absolute;
@@ -52,6 +57,12 @@
 .border {
   box-sizing: border-box;
   border: solid 2px #CCCCCC;
+}
+.component:not(.is-grab) .border {
+  border-color: transparent;
+}
+.component:not(.is-grab):hover .border {
+  border: solid 1px #CCCCCC;
 }
 
 .is-fit-full {
