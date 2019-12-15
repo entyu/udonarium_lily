@@ -85,6 +85,9 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   get ownerName(): string { return this.diceSymbol.ownerName; }
   get isVisible(): boolean { return this.diceSymbol.isVisible; }
 
+  get isDropShadow(): boolean { return this.diceSymbol.isDropShadow; }
+  set isDropShadow(isDropShadow: boolean) { this.diceSymbol.isDropShadow = isDropShadow; }
+
   animeState: string = 'inactive';
 
   private iconHiddenTimer: NodeJS.Timer = null;
@@ -239,6 +242,19 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       actions.push({ name: `ダイス目を設定`, action: null, subActions: subActions });
     }
+
+    actions.push(ContextMenuSeparator);
+
+    actions.push((this.isDropShadow
+      ? {
+        name: '影を落とさない', action: () => {
+          this.isDropShadow = false;
+        }
+      } : {
+        name: '影を落とす', action: () => {
+          this.isDropShadow = true;
+        }
+      }));
 
     actions.push(ContextMenuSeparator);
 
