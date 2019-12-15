@@ -67,7 +67,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
 
-  get altitudeTotal(): number {
+  get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
   }
 
