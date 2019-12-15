@@ -56,13 +56,10 @@
 
 .border {
   box-sizing: border-box;
-  border: solid 2px #CCCCCC;
+  border: dotted 1px transparent;
 }
-.component:not(.is-grab) .border {
-  border-color: transparent;
-}
-.component:not(.is-grab):hover .border {
-  border: solid 1px #CCCCCC;
+.component:hover .border, .component:active .border {
+  border-color: #CCCCCCdd;
 }
 
 .is-fit-full {
