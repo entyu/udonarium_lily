@@ -205,13 +205,14 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
     let actions: ContextMenuAction[] = [];
 
-    if (this.isVisible) {
+    //if (this.isVisible) {
       actions.push({
         name: 'ダイスを振る', action: () => {
           this.diceRoll();
-        }
+        },
+        disabled: !this.isVisible
       });
-    }
+    //}
     actions.push(ContextMenuSeparator);
     if (this.isMine || this.hasOwner) {
       actions.push({
