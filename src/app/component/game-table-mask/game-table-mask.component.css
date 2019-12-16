@@ -56,11 +56,16 @@
 
 .border {
   box-sizing: border-box;
-  border: solid 2px transparent;
+  border: 2px solid transparent;
 }
+
+.image.border {
+  border-width: 0px;
+} 
+
 .component:hover .border, .component:active .border,
 .is-grab .border {
-  border-color: #CCCCCCdd;
+  border: 2px solid #cccccc;
 }
 
 .is-fit-full {

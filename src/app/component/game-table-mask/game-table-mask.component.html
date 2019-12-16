@@ -6,8 +6,8 @@
     <div class="border is-fit-full" [style.background-color]="'rgba(10, 10, 10,' + opacity +')'"></div>
   </ng-template>
   <ng-template #imageMask>
-    <div class="border is-fit-full">
-      <img class="image is-fit-full" [style.opacity]="opacity" [src]="imageFile.url | safe: 'resourceUrl'">
+    <div class="border image is-fit-full">
+      <img style="display: block" class="is-fit-full" [style.opacity]="opacity" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
   </ng-template>
   <div *ngIf="isLock" class="lock-icon is-center">
