@@ -306,9 +306,9 @@
 .is-balloon-visible[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
   visibility: visible;
   animation-duration: .1s;
-  animation-name: fade-in;
+  animation-name: balloon-fade-in;
 }
-@keyframes fade-in {
+@keyframes balloon-fade-in {
   0% {
     visibility: hidden;
     opacity: 0;

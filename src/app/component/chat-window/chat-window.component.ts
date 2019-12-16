@@ -294,19 +294,20 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.gameCharacter) {
       const dialogRegExp = /「([\s\S]+?)」/gm;
       let match;
-      let dialogs = [];
+      let dialog = [];
       while ((match = dialogRegExp.exec(this.text)) !== null) {
-        dialogs.push(match[1]);
+        dialog.push(match[1]);
       }
-      if (dialogs) {
-        dialogs.push(null);
+      if (dialog) {
+        //TODO 連続吹き出し
+        let dialogs = [dialog.join("\r\n").trim(), null];
         const gameCharacter = this.gameCharacter;
         if (gameCharacter.dialogTimeOutId) clearTimeout(gameCharacter.dialogTimeOutId);
         gameCharacter.dialog = { text: null, color: this.color };
         for (let i = 0; i < dialogs.length; i++) {
           gameCharacter.dialogTimeOutId = setTimeout(() => {
             gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: this.color, emote: StringUtil.isEmote(dialogs[i]), from: PeerCursor.myCursor.peerId, to: ChatMessageService.findId(this.sendTo) } : null;
-          }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 12000 : 0));
+          }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 6000 : 0));
         }
       } else {
         this.gameCharacter.dialog = null;
