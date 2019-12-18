@@ -33,14 +33,34 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   set rotate(rotate: number) { this.textNote.rotate = rotate; }
   get height(): number { return this.adjustMinBounds(this.textNote.height); }
   get width(): number { return this.adjustMinBounds(this.textNote.width); }
+
   get altitude(): number { return this.textNote.altitude; }
   set altitude(altitude: number) { this.textNote.altitude = altitude; }
+
+  get textNoteAltitude(): number {
+    let ret = this.altitude;
+    if (this.isUpright && this.altitude < 0) {
+      if (-this.height <= this.altitude) return 0;
+      ret += this.height;
+    }
+    return +ret.toFixed(1); 
+  }
+
+  get isUpright(): boolean { return this.textNote.isUpright; }
+  set isUpright(isUpright: boolean) { this.textNote.isUpright = isUpright; }
+
+  get isAltitudeIndicate(): boolean { return this.textNote.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.textNote.isAltitudeIndicate = isAltitudeIndicate; }
+
+  get isLocked(): boolean { return this.textNote.isLocked; }
+  set isLocked(isLocked: boolean) { this.textNote.isLocked = isLocked; }
 
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
   private callbackOnMouseUp = (e) => this.onMouseUp(e);
 
   gridSize: number = 50;
+  math = Math;
 
   private calcFitHeightTimer: NodeJS.Timer = null;
 
@@ -55,6 +75,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     private pointerDeviceService: PointerDeviceService
   ) { }
 
+  viewRotateZ = 0;
+
   ngOnInit() {
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
@@ -68,6 +90,9 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
+        this.changeDetector.markForCheck();
+      }).on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
+        this.viewRotateZ = event.data;
         this.changeDetector.markForCheck();
       });
     this.movableOption = {
@@ -99,7 +124,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     this.textNote.toTopmost();
 
     // TODO:もっと良い方法考える
-    if (e.button === 2) {
+    if (e.button === 2 || this.isLocked) {
       EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
       return;
     }
@@ -132,6 +157,19 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isLocked
+        ? {
+          name: '固定解除', action: () => {
+            this.isLocked = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '固定する', action: () => {
+            this.isLocked = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
+      ContextMenuSeparator,
       { name: 'メモを編集', action: () => { this.showDetail(this.textNote); } },
       {
         name: 'コピーを作る', action: () => {
@@ -144,6 +182,27 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       },
       ContextMenuSeparator,
+      (this.isUpright
+        ? {
+          name: '直立しない', action: () => {
+            this.isUpright = false;
+          }
+        } : {
+          name: '直立する', action: () => {
+            this.isUpright = true;
+          }
+        }),
+      ContextMenuSeparator,
+      (this.isAltitudeIndicate
+        ? {
+          name: '高度を表示しない', action: () => {
+            this.isAltitudeIndicate = false;
+          }
+        } : {
+          name: '高度を表示する', action: () => {
+            this.isAltitudeIndicate = true;
+          }
+        }),
       {
         name: '高度を0にする', action: () => {
           if (this.altitude != 0) {

@@ -8,6 +8,8 @@ export class TextNote extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() zindex: number = 0;
   @SyncVar() password: string = '';
+  @SyncVar() isUpright: boolean = true;
+  @SyncVar() isLocked: boolean = false;
 
   get width(): number { return this.getCommonValue('width', 1); }
   get height(): number { return this.getCommonValue('height', 1); }
