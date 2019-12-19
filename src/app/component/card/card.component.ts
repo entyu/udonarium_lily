@@ -103,7 +103,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.movableOption = {
       tabletopObject: this.card,
       transformCssOffset: 'translateZ(0.15px)',
-      colideLayers: ['terrain']
+      colideLayers: ['terrain', 'text-note']
     };
     this.rotableOption = {
       tabletopObject: this.card

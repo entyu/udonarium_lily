@@ -123,7 +123,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     this.movableOption = {
       tabletopObject: this.cardStack,
       transformCssOffset: 'translateZ(0.15px)',
-      colideLayers: ['terrain']
+      colideLayers: ['terrain', 'text-note']
     };
     this.rotableOption = {
       tabletopObject: this.cardStack
