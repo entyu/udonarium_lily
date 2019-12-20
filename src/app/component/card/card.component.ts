@@ -141,6 +141,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDoubleClick(e) {
+    if (this.owner) return;
     if (!this.doubleClickTimer) {
       this.doubleClickTimer = setTimeout(() => {
         clearTimeout(this.doubleClickTimer);
