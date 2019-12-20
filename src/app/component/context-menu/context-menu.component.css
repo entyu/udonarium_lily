@@ -106,3 +106,7 @@ input.altitude {
   padding-left: 4px;
   padding-right: 2px;
 }
+
+.default {
+  font-weight: bolder;
+}

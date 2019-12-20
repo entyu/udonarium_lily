@@ -217,7 +217,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.drawCard() != null) {
             SoundEffect.play(PresetSound.cardDraw);
           }
-        }
+        }, default: true
       },
       ContextMenuSeparator,
       {

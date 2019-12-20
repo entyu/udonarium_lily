@@ -210,7 +210,8 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
         name: 'ダイスを振る', action: () => {
           this.diceRoll();
         },
-        disabled: !this.isVisible
+        disabled: !this.isVisible,
+        default: this.isVisible
       });
     //}
     actions.push(ContextMenuSeparator);

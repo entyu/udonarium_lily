@@ -17,7 +17,7 @@
   <li [ngClass]="{'hasHighlight': !(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)), 'disabled': (action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0))}"
       (click)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : doAction(action)"
       (mouseenter)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : showSubMenu(action)">
-    <div class="menu-title">{{action.name}}</div>
+    <div class="menu-title" [ngClass]="{default: action.default}">{{action.name}}</div>
     <div *ngIf="action.subActions" class="sub-menu-arrow">
       <i class="material-icons" style="font-size: 1em; vertical-align: bottom;">arrow_forward_ios</i>
     </div>

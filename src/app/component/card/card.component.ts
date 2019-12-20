@@ -187,13 +187,13 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           name: '表にする', action: () => {
             this.card.faceUp();
             SoundEffect.play(PresetSound.cardDraw);
-          }
+          }, default: !this.owner
         }
         : {
           name: '裏にする', action: () => {
             this.card.faceDown();
             SoundEffect.play(PresetSound.cardDraw);
-          }
+          }, default: !this.owner
         }
       ),
       (this.isHand
