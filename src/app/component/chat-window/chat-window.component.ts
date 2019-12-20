@@ -299,8 +299,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         dialog.push(match[1]);
       }
       if (dialog) {
-        //TODO 連続吹き出し
-        let dialogs = [dialog.join("\r\n").trim(), null];
+        //連続吹き出し
+        let dialogs = [...dialog, null];
         const gameCharacter = this.gameCharacter;
         if (gameCharacter.dialogTimeOutId) clearTimeout(gameCharacter.dialogTimeOutId);
         gameCharacter.dialog = { text: null, color: this.color };

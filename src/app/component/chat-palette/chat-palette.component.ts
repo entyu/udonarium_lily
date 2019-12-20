@@ -213,8 +213,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         dialog.push(match[1]);
       }
       if (dialog) {
-        //TODO 連続吹き出し
-        let dialogs = [dialog.join("\r\n"), null];
+        // 連続吹き出し
+        let dialogs = [...dialog, null];
         const gameCharacter = this.character; 
         if (gameCharacter.dialogTimeOutId) clearTimeout(gameCharacter.dialogTimeOutId);
         gameCharacter.dialog = { text: null, color: this.color };

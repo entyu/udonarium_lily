@@ -2,6 +2,7 @@ import { ChatPalette } from './chat-palette';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
+import { EventSystem } from '@udonarium/core/system';
 
 export interface DialogData {
   text: string;
@@ -16,7 +17,13 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
-  @SyncVar() dialog: DialogData = null;
+  @SyncVar() dialogData: DialogData = { text: '', color: '#444444' };
+
+  get dialog(): DialogData { return this.dialogData; }
+  set dialog(dialog: DialogData) { 
+    EventSystem.trigger<GameCharacter>('CHAT_BUBBLE', this);
+    this.dialogData = dialog;
+  }
 
   dialogTimeOutId = null
 

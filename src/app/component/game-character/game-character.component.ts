@@ -128,6 +128,12 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
         this.viewRotateZ = event.data;
         this.changeDetector.markForCheck();
+      })
+      .on<GameCharacter>('CHAT_BUBBLE', event => {
+        if (this.balloonBox && this.gameCharacter && this.gameCharacter === event.data && event.data.dialog) {
+          this.balloonBox.nativeElement.style.setProperty('--balloon-text', event.data.dialog.color);
+          this.changeDetector.markForCheck();
+        }
       });
     this.movableOption = {
       tabletopObject: this.gameCharacter,
@@ -137,12 +143,15 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.rotableOption = {
       tabletopObject: this.gameCharacter
     };
+
+    if (this.gameCharacter) this.gameCharacter.dialogData = null;
+
     // もっといい方法ないか
     this.balloonInterval = setInterval(() => {
-      if (this.balloonBox && this.gameCharacter) {
+      if (this.balloonBox && this.gameCharacter && this.gameCharacter.dialog) {
         this.balloonBox.nativeElement.style.setProperty('--balloon-text', this.gameCharacter.dialog.color);
       }
-    }, 150);
+    }, 100);
   }
 
   ngAfterViewInit() { }
