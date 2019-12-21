@@ -220,7 +220,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         const peerId = PeerCursor.myCursor.peerId;
         const sendTo = ChatMessageService.findId(this.sendTo);
         if (gameCharacter.dialogTimeOutId) clearTimeout(gameCharacter.dialogTimeOutId);
-        gameCharacter.dialog = { text: null, color: this.color };
+        //gameCharacter.dialog = { text: null, color: color };
         for (let i = 0; i < dialogs.length; i++) {
           gameCharacter.dialogTimeOutId = setTimeout(() => {
             gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: color, emote: StringUtil.isEmote(dialogs[i]), from: peerId, to: sendTo } : null;
