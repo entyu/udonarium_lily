@@ -23,7 +23,8 @@ export interface ContextMenuAction {
   disabled?: boolean,
   type?: ContextMenuType,
   subActions?: ContextMenuAction[],
-  altitudeHande?: TabletopObject
+  altitudeHande?: TabletopObject,
+  default?: boolean
 }
 
 @Injectable()
