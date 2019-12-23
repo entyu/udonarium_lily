@@ -28,9 +28,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 @Component({
   selector: 'game-character',
   templateUrl: './game-character.component.html',
-  styleUrls: [
-    './game-character.component.css',
-    '../../../../node_modules/balloon-css/balloon.min.css'],
+  styleUrls: ['./game-character.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('bounceInOut', [
