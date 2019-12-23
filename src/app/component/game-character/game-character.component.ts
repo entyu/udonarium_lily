@@ -74,15 +74,15 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   gridSize: number = 50;
 
   @ViewChild('characterImage', { static: false }) characterImage: ElementRef;
-  @ViewChild('balloonBox', { static: false }) balloonBox: ElementRef;
+  @ViewChild('chatBubble', { static: false }) chatBubble: ElementRef;
   
   balloonInterval = null;
   math = Math;
 
   get characterImageHeight(): number {
     if (!this.characterImage) return 0;
-    const height = (this.characterImage.nativeElement.offsetHeight + (this.name ? this.gridSize / 2 : 0)) * Math.cos(this.roll * Math.PI / 180) - this.gridSize * this.size;
-    return 0 > height ? 0 : height;
+    const height = this.chatBubble.nativeElement.offsetHeight + (this.characterImage.nativeElement.offsetHeight + (this.name ? this.gridSize / 2 : 0)) * Math.cos(this.roll * Math.PI / 180) - this.gridSize * this.size;
+    return this.chatBubble.nativeElement.offsetHeight > height ? this.chatBubble.nativeElement.offsetHeight : height;
   }
 
   get isListen(): boolean {
@@ -130,8 +130,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         this.changeDetector.markForCheck();
       })
       .on<GameCharacter>('CHAT_BUBBLE', event => {
-        if (this.balloonBox && this.gameCharacter && this.gameCharacter === event.data && event.data.dialog) {
-          this.balloonBox.nativeElement.style.setProperty('--balloon-text', event.data.dialog.color);
+        if (this.chatBubble && this.gameCharacter && this.gameCharacter === event.data && event.data.dialog) {
           this.changeDetector.markForCheck();
         }
       });
@@ -146,12 +145,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     if (this.gameCharacter) this.gameCharacter.dialogData = null;
 
-    // もっといい方法ないか
+    // もっといい方法ないか    
     this.balloonInterval = setInterval(() => {
-      if (this.balloonBox && this.gameCharacter && this.gameCharacter.dialog) {
-        this.balloonBox.nativeElement.style.setProperty('--balloon-text', this.gameCharacter.dialog.color);
+      if (this.chatBubble && this.gameCharacter && this.gameCharacter.dialog) {
+        this.changeDetector.markForCheck();
       }
-    }, 100);
+    }, 150);
+    
   }
 
   ngAfterViewInit() { }
@@ -248,7 +248,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   onMoved() {
     if (this.gameCharacter && this.gameCharacter.dialog) {
-      this.gameCharacter.dialog = {text: null, color: this.gameCharacter.dialog.color};
+      this.gameCharacter.dialog = null;
     }
     SoundEffect.play(PresetSound.piecePut);
   }

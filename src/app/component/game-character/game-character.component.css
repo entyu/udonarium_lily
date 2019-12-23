@@ -244,83 +244,7 @@
 .component:hover .material-icons, .component:active .material-icons {
   display: inline;
 }
-.baloon-box {
-  box-sizing: border-box;
-  position: absolute;
-  --balloon-color: linear-gradient(-30deg, rgba(240,218,189, 0.9), rgba(255, 244, 232, 0.9));
-  --balloon-text: #444444;
-  --balloon-move: 30px;
-  width: 100%;
-}
 
-[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
-  border: 5px solid transparent;
-  border-top: 5px solid var(--balloon-text);
-  visibility: hidden;
-}
-[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
-  border-radius: 24px;
-  color: var(--balloon-text);
-  border: 2px solid var(--balloon-text);
-  font-size: 11px;
-  text-align: center;
-  min-width: 120px;
-  visibility: hidden;
-}
-.is-whisper[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
-  border: none;
-  color: var(--balloon-text);
-  content: '〇。';
-  font-size: 14px;
-  top: -15px;
-  left: 10px;
-  font-weight: bold;
-  visibility: hidden;
-}
-.is-whisper[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
-  border-radius: 24px 12px;
-  color: #eee;
-  font-size: 9px;
-  background: #555555dd;
-  border: 2px solid var(--balloon-text);
-}
-.emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
-  font-size: 38px;
-  font-weight: bold;
-  border: none;
-  background: none;
-  min-width: 200px;
-  -webkit-text-stroke: 1px rgba(240,218,189);
-}
-.is-whisper.emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
-  color: transparent;
-  -webkit-text-stroke: 2px var(--balloon-text);
-}
-.emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:before,
-.is-whisper.emote[aria-label][data-balloon-pos][data-balloon-pos="up"]:before {
-  content: none;
-  border: none;
-}
-
-.is-balloon-visible[aria-label][data-balloon-pos][data-balloon-pos="up"]:before,
-.is-balloon-visible[aria-label][data-balloon-pos][data-balloon-pos="up"]:after {
-  visibility: visible;
-  animation-duration: .1s;
-  animation-name: balloon-fade-in;
-}
-@keyframes balloon-fade-in {
-  0% {
-    visibility: hidden;
-    opacity: 0;
-  }
-  40% {
-    visibility: visible;
-    opacity: .4;
-  }
-  100% {
-    visibility: visible;
-  }
-}
 .altitude-indicator {
   font-size: 10px;
 }
@@ -333,4 +257,96 @@
 .elevation-indicator {
   font-weight: bolder;
   font-size: 12px;
+}
+
+.chat-bubble {
+  position: absolute;
+}
+
+.chat-bubble p {
+  text-align: center;
+  box-sizing: border-box;
+  min-width: 120px;
+  min-height: 2.4em;
+  font-size: 11px;
+  background: linear-gradient(-30deg, rgba(240, 218, 189, 0.9), rgba(255, 244, 232, 0.9));
+  border: 2px solid;
+  border-radius: 24px;
+  margin: 0px;
+  padding: 6px 12px;
+}
+
+.chat-bubble p.emote {
+  font-size: 38px;
+  font-weight: bold;
+  border: none;
+  background: none;
+  min-width: 200px;
+  -webkit-text-stroke: 1px rgb(240, 218, 189);
+}
+
+.chat-bubble p.is-whisper {
+  border-radius: 24px 12px;
+  font-size: 9px;
+  background: rgba(85, 85, 85, 0.8);
+}
+
+.chat-bubble p.is-whisper.emote {
+  font-size: 38px;
+  font-weight: bold;
+  border: none;
+  background: none;
+  min-width: 200px;
+  -webkit-text-stroke: 1px #555;
+}
+
+.chat-bubble p:after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  margin-left: -8px;
+  border: 6px solid transparent;
+  border-top-color: inherit;
+}
+
+.chat-bubble p.emote:after {
+  border-top-color: transparent;
+}
+
+.chat-bubble p.is-whisper:after {
+  border: none;
+  color: #ccc;
+  content: '〇。';
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.chat-bubble p.is-whisper.emote:after {
+  content: none;
+}
+
+.chat-bubble-fade-in {
+  visibility: visible;
+  animation-duration: .2s;
+  animation-name: chat-bubble-fade-in;
+  transition: all .2s ease;
+}
+
+@keyframes chat-bubble-fade-in {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+  }
+  40% {
+    visibility: hidden;
+    opacity: .4;
+  }
+  80% {
+    visibility: visible;
+    opacity: .6;
+  }
+  100% {
+    visibility: visible;
+  }
 }

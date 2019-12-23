@@ -20,9 +20,9 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() dialogData: DialogData = { text: '', color: '#444444' };
 
   get dialog(): DialogData { return this.dialogData; }
-  set dialog(dialog: DialogData) { 
-    EventSystem.trigger<GameCharacter>('CHAT_BUBBLE', this);
+  set dialog(dialog: DialogData) {
     this.dialogData = dialog;
+    EventSystem.trigger<GameCharacter>('CHAT_BUBBLE', this);
   }
 
   dialogTimeOutId = null
