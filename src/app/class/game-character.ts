@@ -17,13 +17,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
-  @SyncVar() dialogData: DialogData = { text: '', color: '#444444' };
-
-  get dialog(): DialogData { return this.dialogData; }
-  set dialog(dialog: DialogData) {
-    this.dialogData = dialog;
-    EventSystem.trigger<GameCharacter>('CHAT_BUBBLE', this);
-  }
+  @SyncVar() dialog: DialogData = { text: '', color: '#444444' };
 
   dialogTimeOutId = null
 

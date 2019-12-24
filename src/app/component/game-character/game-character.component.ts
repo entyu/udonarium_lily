@@ -6,6 +6,7 @@ import {
   Component,
   HostListener,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   ViewChild, ElementRef
@@ -70,17 +71,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   gridSize: number = 50;
+  math = Math;
+  viewRotateZ = 0;
 
   @ViewChild('characterImage', { static: false }) characterImage: ElementRef;
   @ViewChild('chatBubble', { static: false }) chatBubble: ElementRef;
   
-  balloonInterval = null;
-  math = Math;
-
   get characterImageHeight(): number {
     if (!this.characterImage) return 0;
-    const height = this.chatBubble.nativeElement.offsetHeight + (this.characterImage.nativeElement.offsetHeight + (this.name ? this.gridSize / 2 : 0)) * Math.cos(this.roll * Math.PI / 180) - this.gridSize * this.size;
-    return this.chatBubble.nativeElement.offsetHeight > height ? this.chatBubble.nativeElement.offsetHeight : height;
+    const height = (this.characterImage.nativeElement.offsetHeight + (this.name ? 40 : 0)) * Math.cos(this.roll * Math.PI / 180) - this.gridSize * this.size;
+    return 0 > height ? 0 : height;
   }
 
   get isListen(): boolean {
@@ -103,10 +103,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
-
+    private ngZone: NgZone,
   ) { }
-
-  viewRotateZ = 0;
   
   ngOnInit() {
     EventSystem.register(this)
@@ -124,13 +122,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         this.changeDetector.markForCheck();
       })
       .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
-        this.viewRotateZ = event.data;
-        this.changeDetector.markForCheck();
-      })
-      .on<GameCharacter>('CHAT_BUBBLE', event => {
-        if (this.chatBubble && this.gameCharacter && this.gameCharacter === event.data && event.data.dialog) {
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data;
           this.changeDetector.markForCheck();
-        }
+        });
       });
     this.movableOption = {
       tabletopObject: this.gameCharacter,
@@ -141,21 +136,12 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       tabletopObject: this.gameCharacter
     };
 
-    if (this.gameCharacter) this.gameCharacter.dialogData = null;
-
-    // もっといい方法ないか    
-    this.balloonInterval = setInterval(() => {
-      if (this.chatBubble && this.gameCharacter && this.gameCharacter.dialog) {
-        this.changeDetector.markForCheck();
-      }
-    }, 150);
-    
+    if (this.gameCharacter) this.gameCharacter.dialog = null;
   }
 
   ngAfterViewInit() { }
 
   ngOnDestroy() {
-    if (this.balloonInterval) clearInterval(this.balloonInterval);
     EventSystem.unregister(this);
   }
 
