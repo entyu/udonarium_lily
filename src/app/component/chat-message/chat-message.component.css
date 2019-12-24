@@ -11,15 +11,25 @@
   width: 100%;
   word-wrap : break-word;
   overflow-wrap:break-word;
-  border-left: 4px solid #555;
   border-bottom:1px dotted #999;
+}
+.is-mine.message {
+  border-left: 4px solid #555;
+}
+.is-others.message {
+  border-right: 4px solid #555;
 }
 
 .direct-message {
   background-color: #555;
   color: #CCC;
+  border-bottom: 1px dotted #CCC;
+}
+.is-mine.direct-message {
   border-left: 4px solid #555;
-  border-bottom:1px dotted #CCC;
+}
+.is-others.direct-message {
+  border-right: 4px solid #555;
 }
 
 .message .image {
@@ -43,7 +53,9 @@
   vertical-align: top;
   font-size: 14px;
   padding-left: 12px;
+  padding-right: 12px;
 }
+
 .message .text {
   vertical-align: top;
   padding: 0.1em 12px 0px 12px;
@@ -75,4 +87,17 @@
 
 .dicebot-message {
   border-left: 4px transparent;
+}
+
+.is-others .title {
+  text-align: right;
+}
+
+.is-others .msg-text {
+  text-align: right;
+}
+.is-others .msg-text span {
+  display: inline-block;
+  text-align: left;
+  max-width: 100%
 }

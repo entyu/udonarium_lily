@@ -4,6 +4,8 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input,
 import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 
+import { PeerCursor } from '@udonarium/peer-cursor';
+
 @Component({
   selector: 'chat-message',
   templateUrl: './chat-message.component.html',
@@ -31,6 +33,10 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     let file: ImageFile = this.chatMessage.image;
     if (file) this.imageFile = file;
+  }
+
+  get isMine(): boolean {
+    return PeerCursor.myCursor.peerId === this.chatMessage.from; 
   }
 
   ngAfterViewInit() {
