@@ -36,7 +36,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   }
 
   get isMine(): boolean {
-    return PeerCursor.myCursor.peerId === this.chatMessage.from; 
+    return PeerCursor.myCursor.peerId.substring(0, 5) == this.chatMessage.from.substring(0, 5); 
   }
 
   ngAfterViewInit() {

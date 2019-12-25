@@ -86,7 +86,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get isListen(): boolean {
     if (this.gameCharacter && this.gameCharacter.dialog) {
       if (!this.gameCharacter.dialog.to) return true;
-      return PeerCursor.myCursor && (PeerCursor.myCursor.peerId == this.gameCharacter.dialog.from || PeerCursor.myCursor.peerId == this.gameCharacter.dialog.to);
+      return PeerCursor.myCursor.peerId == this.gameCharacter.dialog.from || Network.peerContext.id == this.gameCharacter.dialog.to;
     } 
     return false;
   }
