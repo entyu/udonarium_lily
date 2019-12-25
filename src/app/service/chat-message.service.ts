@@ -113,7 +113,7 @@ export class ChatMessageService {
     if (sendTo == null || sendTo.length < 1) return sendFromName;
 
     let sendToName = this.findObjectName(sendTo);
-    return sendFromName + ' > ' + sendToName;
+    return sendFromName + ' ➡ ' + sendToName;
   }
 
   private findImageIdentifier(identifier: string): string {
