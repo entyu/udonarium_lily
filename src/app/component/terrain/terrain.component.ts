@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -81,7 +81,8 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private ngZone: NgZone
   ) { }
 
   viewRotateZ = 0;
@@ -102,8 +103,10 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         this.changeDetector.markForCheck();
       })
       .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
-        this.viewRotateZ = event.data;
-        this.changeDetector.markForCheck();
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data;
+          this.changeDetector.markForCheck();
+        });
       });
     this.movableOption = {
       tabletopObject: this.terrain,

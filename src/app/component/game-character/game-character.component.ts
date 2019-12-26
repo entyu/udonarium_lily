@@ -103,7 +103,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) { }
   
   ngOnInit() {
