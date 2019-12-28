@@ -239,7 +239,8 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
           name: `${face}`, action: () => {
             this.face = face;
             SoundEffect.play(PresetSound.dicePut);
-          }
+          },
+          disabled: (this.face == face)
         });
       });
       actions.push({ name: `ダイス目を設定`, action: null, subActions: subActions });

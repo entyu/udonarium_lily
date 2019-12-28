@@ -141,7 +141,6 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDoubleClick(e) {
-    if (this.owner) return;
     if (!this.doubleClickTimer) {
       this.doubleClickTimer = setTimeout(() => {
         clearTimeout(this.doubleClickTimer);
@@ -187,13 +186,13 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           name: '表にする', action: () => {
             this.card.faceUp();
             SoundEffect.play(PresetSound.cardDraw);
-          }, default: !this.owner
+          }, default: !this.hasOwner || this.isHand
         }
         : {
           name: '裏にする', action: () => {
             this.card.faceDown();
             SoundEffect.play(PresetSound.cardDraw);
-          }, default: !this.owner
+          }, default: !this.hasOwner || this.isHand
         }
       ),
       (this.isHand
