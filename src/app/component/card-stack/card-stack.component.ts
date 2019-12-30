@@ -217,39 +217,46 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.drawCard() != null) {
             SoundEffect.play(PresetSound.cardDraw);
           }
-        }, default: true
+        },
+        default: this.cards.length > 0,
+        disabled: this.cards.length == 0
       },
       ContextMenuSeparator,
       {
         name: '一番上を表にする', action: () => {
           this.cardStack.faceUp();
           SoundEffect.play(PresetSound.cardDraw);
-        }
+        }, 
+        disabled: this.cards.length == 0
       },
       {
         name: '一番上を裏にする', action: () => {
           this.cardStack.faceDown();
           SoundEffect.play(PresetSound.cardDraw);
-        }
+        }, 
+        disabled: this.cards.length == 0
       },
       ContextMenuSeparator,
       {
         name: 'すべて表にする', action: () => {
           this.cardStack.faceUpAll();
           SoundEffect.play(PresetSound.cardDraw);
-        }
+        }, 
+        disabled: this.cards.length == 0
       },
       {
         name: 'すべて裏にする', action: () => {
           this.cardStack.faceDownAll();
           SoundEffect.play(PresetSound.cardDraw);
-        }
+        }, 
+        disabled: this.cards.length == 0
       },
       {
         name: 'すべて正位置にする', action: () => {
           this.cardStack.uprightAll();
           SoundEffect.play(PresetSound.cardDraw);
-        }
+        }, 
+        disabled: this.cards.length == 0
       },
       ContextMenuSeparator,
       {
@@ -257,27 +264,30 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           this.cardStack.shuffle();
           SoundEffect.play(PresetSound.cardShuffle);
           EventSystem.call('SHUFFLE_CARD_STACK', { identifier: this.cardStack.identifier });
-        }
+        }, 
+        disabled: this.cards.length == 0
       },
-      { name: 'カード一覧', action: () => { this.showStackList(this.cardStack); } },
+      { name: 'カード一覧', action: () => { this.showStackList(this.cardStack); }, disabled: this.cards.length == 0 },
       ContextMenuSeparator,
       (this.isShowTotal
         ? { name: '枚数を非表示にする', action: () => { this.cardStack.isShowTotal = false; } }
         : { name: '枚数を表示する', action: () => { this.cardStack.isShowTotal = true; } }
       ),
-      { name: 'カードサイズを揃える', action: () => { if (this.cardStack.topCard) this.cardStack.unifyCardsSize(this.cardStack.topCard.size); } },
+      { name: 'カードサイズを揃える', action: () => { if (this.cardStack.topCard) this.cardStack.unifyCardsSize(this.cardStack.topCard.size); }, disabled: this.cards.length == 0 },
       ContextMenuSeparator,
       {
         name: '山札を人数分に分割する', action: () => {
           this.splitStack(Network.peerIds.length);
           SoundEffect.play(PresetSound.cardDraw);
-        }
+        }, 
+        disabled: this.cards.length == 0
       },
       {
         name: '山札を崩す', action: () => {
           this.breakStack();
           SoundEffect.play(PresetSound.cardShuffle);
-        }
+        }, 
+        disabled: this.cards.length == 0
       },
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.cardStack); } },

@@ -236,11 +236,10 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
       let subActions: ContextMenuAction[] = [];
       this.faces.forEach(face => {
         subActions.push({
-          name: `${face}`, action: () => {
+          name: `${this.face == face ? '◉' : '○'} ${face}`, action: () => {
+            if (this.face != face) SoundEffect.play(PresetSound.dicePut);
             this.face = face;
-            SoundEffect.play(PresetSound.dicePut);
-          },
-          disabled: (this.face == face)
+          }
         });
       });
       actions.push({ name: `ダイス目を設定`, action: null, subActions: subActions });

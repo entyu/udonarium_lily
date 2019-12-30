@@ -183,7 +183,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.contextMenuService.open(position, [
       (!this.isVisible || this.isHand
         ? {
-          name: '表にする', action: () => {
+          name: this.isHand ? '表向きで出す（公開する）' : this.hasOwner ? '表にする（公開する）' : '表にする', action: () => {
             this.card.faceUp();
             SoundEffect.play(PresetSound.cardDraw);
           }, default: !this.hasOwner || this.isHand
@@ -197,13 +197,13 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       ),
       (this.isHand
         ? {
-          name: '裏にする', action: () => {
+          name: '裏向きで出す', action: () => {
             this.card.faceDown();
             SoundEffect.play(PresetSound.cardDraw);
           }
         }
         : {
-          name: '自分だけ見る', action: () => {
+          name: '自分だけ見る（手札にする）', action: () => {
             SoundEffect.play(PresetSound.cardDraw);
             this.card.faceDown();
             this.owner = Network.peerId;
