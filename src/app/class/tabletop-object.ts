@@ -48,7 +48,7 @@ export class TabletopObject extends ObjectNode {
     return this._imageFile;
   }
 
-  @SyncVar() isAltitudeIndicate: boolean = true;
+  @SyncVar() isAltitudeIndicate: boolean = false;
   get altitude(): number {
     let element = this.getElement('altitude', this.commonDataElement);
     if (!element) {

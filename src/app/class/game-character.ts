@@ -14,6 +14,11 @@ export interface DialogData {
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
+  constructor() {
+    super();
+    this.isAltitudeIndicate = true;
+  }
+
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
