@@ -290,7 +290,7 @@ export class DiceBot extends GameObject {
     'BloodCrusade_TD1T.txt'
   ];
 
-  public static replaceData: [string, string][] = [
+  public static replaceData: [string, string, string?][] = [
     ['SRS汎用(改造版)', 'SRS Custom'],
     //['NJSLYRBATTLE', 'ニンシヤスレイヤアハトル'],
     ['Record of Steam', 'レコオトオフスチイム'],
@@ -301,13 +301,15 @@ export class DiceBot extends GameObject {
     ['女神転生', 'メカミテンセイ'],
     ['覚醒編', 'カクセイヘン'],
     ['Standard RPG System', 'スタンタアトRPGシステム'],
+    ['新クトゥルフ', 'シンクトゥルフシンワTRPG', '新クトゥルフ神話TRPG'],
+    ['クトゥルフ', 'クトゥルフシンワTRPG', '(旧)クトゥルフ神話TRPG'],
     ['Chill', 'チル'],
     ['絶対隷奴', 'セツタイレイト'],
     ['艦これ', 'カンコレ'],
     ['神我狩', 'カミカカリ'],
     ['鵺鏡', 'ヌエカカミ'],
     ['トーキョー', 'トウキヨウ'],
-    ['Ｎ◎ＶＡ', 'ノハ'],
+    ['Ｎ◎ＶＡ', 'ノウア'],
     ['初音ミク', 'ハツネミク'],
     ['朱の孤塔', 'アケノコトウ'],
     ['在りて遍く', 'アリテアマネク'],

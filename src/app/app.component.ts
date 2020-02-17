@@ -155,11 +155,15 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                 .map(info => {
                   let normalize = info.name.normalize('NFKD');
                   for (let replaceData of DiceBot.replaceData) {
+                    if (replaceData[2] && info.name === replaceData[0]) {
+                      normalize = replaceData[1];
+                      info.name = replaceData[2];
+                    }
                     normalize = normalize.split(replaceData[0].normalize('NFKD')).join(replaceData[1].normalize('NFKD'));
                   }
                   info.normalize = normalize.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60))
                     .replace(/第(.+?)版/g, 'タイ$1ハン')
-                    .replace(/[・!?！？\s　:：=＝\/／]+/g, '')
+                    .replace(/[・!?！？\s　:：=＝\/／（）\(\)]+/g, '')
                     .replace(/([アカサタナハマヤラワ])ー+/g, '$1ア')
                     .replace(/([イキシチニヒミリ])ー+/g, '$1イ')
                     .replace(/([ウクスツヌフムユル])ー+/g, '$1ウ')
