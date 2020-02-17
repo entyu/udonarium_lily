@@ -2,7 +2,7 @@ import { ChatPalette } from './chat-palette';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
-import { EventSystem } from '@udonarium/core/system';
+import { UUID } from '@udonarium/core/system/util/uuid';
 
 export interface DialogData {
   text: string;
@@ -14,8 +14,8 @@ export interface DialogData {
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
-  constructor() {
-    super();
+  constructor(identifier: string = UUID.generateUuid()) {
+    super(identifier);
     this.isAltitudeIndicate = true;
   }
 
