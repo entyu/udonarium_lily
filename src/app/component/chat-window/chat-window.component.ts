@@ -21,26 +21,8 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 @Component({
   selector: 'chat-window',
   templateUrl: './chat-window.component.html',
-  styleUrls: ['./chat-window.component.css'],
-  animations: [
-    trigger('flyInOut', [
-      state('in', style({ transform: 'scale3d(1, 1, 1)' })),
-      transition('void => *', [
-        animate('600ms ease', keyframes([
-          style({ transform: 'scale3d(0, 0, 0)', offset: 0 }),
-          style({ transform: 'scale3d(1.5, 1.5, 1.5)', offset: 0.5 }),
-          style({ transform: 'scale3d(0.75, 0.75, 0.75)', offset: 0.75 }),
-          style({ transform: 'scale3d(1.125, 1.125, 1.125)', offset: 0.875 }),
-          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
-        ]))
-      ]),
-      transition('* => void', [
-        animate(100, style({ transform: 'scale3d(0, 0, 0)' }))
-      ])
-    ])
-  ]
+  styleUrls: ['./chat-window.component.css']
 })
-
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('textArea', { static: true }) textAreaElementRef: ElementRef;
 
@@ -74,7 +56,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     this.updatePanelTitle();
     if (hasChanged) {
       this.scrollToBottom(true);
-      if (this.chatTab) this.chatTab.markForRead();
     }
   }
 
@@ -132,13 +113,14 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
     EventSystem.register(this)
       .on('MESSAGE_ADDED', event => {
+        if (event.data.tabIdentifier !== this.chatTabidentifier) return;
         let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
-        if (message && message.isSendFromSelf && event.data.tabIdentifier === this.chatTabidentifier) {
+        if (message && message.isSendFromSelf) {
           this.isAutoScroll = true;
         } else {
           this.checkAutoScroll();
         }
-        if (this.isAutoScroll && event.data.tabIdentifier === this.chatTabidentifier && this.chatTab) this.chatTab.markForRead();
+        if (this.isAutoScroll && this.chatTab) this.chatTab.markForRead();
         let sendFrom = message ? message.from : '?';
         if (this.writingPeers.has(sendFrom)) {
           clearTimeout(this.writingPeers.get(sendFrom));
