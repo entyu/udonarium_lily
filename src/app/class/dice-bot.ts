@@ -92,7 +92,7 @@ export class DiceBot extends GameObject {
     { script: 'ShoujoTenrankai', game: '少女展爛会' },
     { script: 'Alter_raise', game: '心衝想機TRPGアルトレイズ' },
     { script: 'ShinkuuGakuen', game: '真空学園' },
-    { script: 'ShinMegamiTenseiKakuseihen', game: '真・女神転生TRPG　覚醒編' },
+    { script: 'ShinMegamiTenseiKakuseihen', game: '真・女神転生TRPG　覚醒篇' },
     { script: 'SRS', game: 'Standard RPG System' },
     { script: 'StratoShout', game: 'ストラトシャウト' },
     { script: 'TherapieSein', game: '青春疾患セラフィザイン' },
@@ -291,30 +291,35 @@ export class DiceBot extends GameObject {
   ];
 
   public static replaceData: [string, string, string?][] = [
+    ['新クトゥルフ', 'シンクトゥルフシンワTRPG', '新クトゥルフ神話TRPG'],
+    ['クトゥルフ', 'クトゥルフシンワTRPG', '(旧)クトゥルフ神話TRPG'],
+    ['トーグ', 'トオク', 'TORG'],
+    ['トーグ1.5版', 'トオク1.5ハン', 'TORG1.5版'],
+    ['Pathfinder', 'ハスフアインタア', 'パスファインダーRPG'],
+    ['真・女神転生TRPG　覚醒編', 'シンメカミテンセイTRPGカクセイヘン', '真・女神転生TRPG　覚醒篇'],
+    ['ADVANCED FIGHTING FANTASY 2nd Edition', 'アトハンストファイテインクファンタシイタイ2ハン', 'アドバンスト・ファイティング・ファンタジー第2版'],
     ['SRS汎用(改造版)', 'SRS Custom'],
     //['NJSLYRBATTLE', 'ニンシヤスレイヤアハトル'],
     ['Record of Steam', 'レコオトオフスチイム'],
-    ['Pathfinder', 'ハスフアインタア'],
     ['詩片のアルセット', 'ウタカタノアルセツト'],
     ['Shared†Fantasia', 'シエアアトフアンタシア'],
     ['真・女神転生', 'シンメカミテンセイ'],
     ['女神転生', 'メカミテンセイ'],
-    ['覚醒編', 'カクセイヘン'],
-    ['Standard RPG System', 'スタンタアトRPGシステム'],
-    ['新クトゥルフ', 'シンクトゥルフシンワTRPG', '新クトゥルフ神話TRPG'],
-    ['クトゥルフ', 'クトゥルフシンワTRPG', '(旧)クトゥルフ神話TRPG'],
+    ['覚醒篇', 'カクセイヘン'],
+    ['Standard RPG System', 'スタンタアトRPGシステム', 'スタンダードRPGシステム（SRS）'],
     ['Chill', 'チル'],
     ['絶対隷奴', 'セツタイレイト'],
     ['艦これ', 'カンコレ'],
     ['神我狩', 'カミカカリ'],
     ['鵺鏡', 'ヌエカカミ'],
-    ['トーキョー', 'トウキヨウ'],
+    //['トーキョー', 'トオキヨウ'],
     ['Ｎ◎ＶＡ', 'ノウア'],
     ['初音ミク', 'ハツネミク'],
     ['朱の孤塔', 'アケノコトウ'],
     ['在りて遍く', 'アリテアマネク'],
     ['央華封神', 'オウカホウシン'],
     ['心衝想機', 'シンシヨウソウキ'],
+    ['胎より想え', 'ハラヨリオモエ'],
     ['展爛会', 'テンランカイ'],
     ['壊れた', 'コワレタ'],
     ['比叡山', 'ヒエイサン'],
@@ -352,6 +357,9 @@ export class DiceBot extends GameObject {
     ['炎上', 'エンシヨウ'],
     ['無限', 'ムケン'],
     ['塔', 'トウ'],
+    ['獣', 'ケモノ'],
+    ['獸', 'ケモノ'],
+    ['森', 'モリ'],
     ['&', 'アント'],
     ['＆', 'アント'],
     ['ヴァ', 'ハ'],
@@ -542,7 +550,7 @@ export class DiceBot extends GameObject {
         );
       }
       return Promise.all(promisise)
-        .then(jsons => { return jsons.map(json => { return json.systeminfo.info.trim() }) });
+        .then(jsons => { return jsons.map(json => { return json.systeminfo.info.trim() != '※このダイスボットは部屋のシステム名表示用となります。' ? json.systeminfo.info.trim() : '※このダイスボットはチャットパレットなどのシステム名表示用となります。' }) });
     } else {
       DiceBot.queue.add(DiceBot.loadDiceBotAsync(gameType));
       return DiceBot.queue.add(() => {

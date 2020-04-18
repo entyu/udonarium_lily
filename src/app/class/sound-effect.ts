@@ -23,6 +23,7 @@ export class PresetSound {
   static lock: string = '';
   static unlock: string = '';
   static sweep: string = '';
+  static puyon: string = '';
 }
 
 @SyncObject('sound-effect')

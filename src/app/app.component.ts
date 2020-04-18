@@ -114,6 +114,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PresetSound.lock = AudioStorage.instance.add('./assets/sounds/tm2/tm2_switch001.wav').identifier;
     PresetSound.unlock = AudioStorage.instance.add('./assets/sounds/tm2/tm2_switch001.wav').identifier;
     PresetSound.sweep = AudioStorage.instance.add('./assets/sounds/tm2/tm2_swing003.wav').identifier;
+    PresetSound.puyon = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/puyon1.mp3').identifier;
 
     AudioStorage.instance.get(PresetSound.dicePick).isHidden = true;
     AudioStorage.instance.get(PresetSound.dicePut).isHidden = true;
@@ -129,7 +130,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     AudioStorage.instance.get(PresetSound.blockPut).isHidden = true;
     AudioStorage.instance.get(PresetSound.lock).isHidden = true;
     AudioStorage.instance.get(PresetSound.unlock).isHidden = true;
-    AudioStorage.instance.get(PresetSound.sweep).isHidden = true;
+    AudioStorage.instance.get(PresetSound.sweep).isHidden = true
+    AudioStorage.instance.get(PresetSound.puyon).isHidden = true;
 
     PeerCursor.createMyCursor();
     if (!PeerCursor.myCursor.name) PeerCursor.myCursor.name = 'プレイヤー';
