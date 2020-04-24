@@ -65,6 +65,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }
   get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
+  get isInverse(): boolean { return this.gameCharacter.isInverse; }
+  set isInverse(isInverse: boolean) { this.gameCharacter.isInverse = isInverse; }
 
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
@@ -161,6 +163,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isInverse
+        ? {
+          name: '反転しない', action: () => {
+            this.isInverse = false;
+          }
+        } : {
+          name: '反転する', action: () => {
+            this.isInverse = true;
+          }
+        }),
       (this.isDropShadow
         ? {
           name: '影を落とさない', action: () => {
