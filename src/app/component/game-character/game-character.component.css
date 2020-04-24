@@ -138,7 +138,7 @@
   transform: scaleX(-1);
 }
 .inverser {
-  transition: all 200ms 0s ease;
+  transition: transform 100ms 0s ease;
 }
 
 .name-tag {
