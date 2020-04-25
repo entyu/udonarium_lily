@@ -125,9 +125,15 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     this.selectGameObject(gameObject);
 
     let position = this.pointerDeviceService.pointers[0];
-
+    
     let actions: ContextMenuAction[] = [];
-
+    
+    if (gameObject.isInverse) {
+      actions.push({ name: '画像を反転しない', action: () => { gameObject.isInverse = false; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
+    } else {
+      actions.push({ name: '画像を反転する', action: () => { gameObject.isInverse = true; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
+    }
+    actions.push(ContextMenuSeparator);
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(gameObject); } });
     if (gameObject.location.name !== 'graveyard') {
       actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(gameObject) } });

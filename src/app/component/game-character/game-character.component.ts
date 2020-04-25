@@ -165,12 +165,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.contextMenuService.open(position, [
       (this.isInverse
         ? {
-          name: '反転しない', action: () => {
+          name: '画像を反転しない', action: () => {
             this.isInverse = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
-          name: '反転する', action: () => {
+          name: '画像を反転する', action: () => {
             this.isInverse = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
       (this.isDropShadow

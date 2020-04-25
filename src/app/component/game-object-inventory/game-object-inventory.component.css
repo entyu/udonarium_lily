@@ -342,3 +342,10 @@ input[type='range']::-ms-tooltip {
   min-width: 3.4em;
   text-align: right;
 }
+
+.inverse {
+  transform: scaleX(-1);
+}
+.inverser {
+  transition: transform 100ms 0s ease;
+}

@@ -58,7 +58,7 @@
     </div>
     <div class="object-tags-box">
       <div class="table-cell image-box">
-        <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
+        <img *ngIf="gameObject.imageFile.url" class="inverser" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" [ngClass]="{inverse: gameObject.isInverse}" />
       </div>
       <div class="table-cell">
         <div *ngIf="gameObject.rootDataElement">

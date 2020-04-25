@@ -22,7 +22,6 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
-  @SyncVar() isInverse: boolean = false;
   @SyncVar() dialog: DialogData = { text: '', color: '#444444' };
 
   dialogTimeOutId = null

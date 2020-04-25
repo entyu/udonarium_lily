@@ -62,6 +62,8 @@ export class TabletopObject extends ObjectNode {
     if (element) element.value = altitude;
   }
 
+  @SyncVar() isInverse: boolean = false;
+  
   protected createDataElements() {
     this.initialize();
     let aliasName: string = this.aliasName;
