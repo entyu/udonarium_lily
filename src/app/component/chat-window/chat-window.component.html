@@ -16,7 +16,7 @@
   </form>
 <div class="table" [ngClass]="{'direct-message': isDirect}">
   <div class="table-cell imagebox">
-    <img class="image" *ngIf="gameCharacter && gameCharacter.imageFile != null && 0 < gameCharacter.imageFile?.url?.length" [src]="gameCharacter.imageFile?.url | safe: 'resourceUrl'"
+    <img #characterImage class="image inverser" *ngIf="gameCharacter && gameCharacter.imageFile != null && 0 < gameCharacter.imageFile?.url?.length" [src]="gameCharacter.imageFile?.url | safe: 'resourceUrl'" [ngClass]="{inverse: gameCharacter.isInverse}"
     />
     <img class="image" *ngIf="!gameCharacter && myPeer && myPeer?.image != null" [src]="myPeer?.image?.url | safe: 'resourceUrl'"
     />

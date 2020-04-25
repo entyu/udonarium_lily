@@ -54,6 +54,9 @@
   padding-left: 12px;
   padding-right: 12px;
 }
+.inverse {
+  transform: scaleX(-1);
+}
 
 .message .text {
   vertical-align: top;

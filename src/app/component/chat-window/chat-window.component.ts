@@ -300,7 +300,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   
     if (this.chatTab) {
-      this.chatMessageService.sendMessage(this.chatTab, this.text, this.gameType, this.sender, this.sendTo, this.color);
+      this.chatMessageService.sendMessage(this.chatTab, this.text, this.gameType, this.sender, this.sendTo, this.color, this.gameCharacter ? this.gameCharacter.isInverse : false);
     }
     this.text = '';
     this.previousWritingLength = this.text.length;

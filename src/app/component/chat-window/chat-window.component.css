@@ -25,6 +25,14 @@
   object-fit: cover;
   object-position: 50% 0%;
 }
+.inverse {
+  transform: scaleX(-1);
+}
+/*
+.inverser {
+  transition: transform 100ms 0s ease;
+}
+*/
 .sticky-bottom {
   position: sticky;
   bottom : 0;
