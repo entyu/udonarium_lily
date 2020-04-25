@@ -155,7 +155,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
               let tempInfos = infos.names
                 .filter(info => info.system != 'DiceBot')
                 .map(info => {
-                  let normalize = info.name.normalize('NFKD');
+                  // namesの結果にソートキー欲しい
+                  let normalize = (info.sortKey && info.sortKey.indexOf('国際化') >= 0) ? info.sortKey : info.name.normalize('NFKD');
                   for (let replaceData of DiceBot.replaceData) {
                     if (replaceData[2] && info.name === replaceData[0]) {
                       normalize = replaceData[1];
