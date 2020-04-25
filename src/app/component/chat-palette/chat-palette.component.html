@@ -10,7 +10,7 @@
     </form>
     <div class="table" [ngClass]="{ 'direct-message': isDirect }">
       <div class="table-cell imagebox">
-        <img class="image inverser" *ngIf="character && character.imageFile != null && 0 < character.imageFile.url.length" [src]="character.imageFile.url | safe: 'resourceUrl'" [ngClass]="{inverse: character.isInverse}"
+        <img class="image inverser" *ngIf="character && character.imageFile != null && 0 < character.imageFile.url.length" [src]="character.imageFile.url | safe: 'resourceUrl'" [ngClass]="{inverse: character.isInverse, hollow: character.isHollow}"
         />
       </div>
       <div class="table-cell">

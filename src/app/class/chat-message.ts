@@ -17,7 +17,8 @@ export interface ChatMessageContext {
   dicebot?: string;
   imageIdentifier?: string;
   color?: string;
-  isInverseIcon?: boolean;
+  isInverseIcon?: number;
+  isHollowIcon?: number;
 }
 
 @SyncObject('chat')
@@ -30,7 +31,9 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() dicebot: string;
   @SyncVar() imageIdentifier: string;
   @SyncVar() color: string;
-  @SyncVar() isInverseIcon: boolean;
+  @SyncVar() isInverseIcon: number;
+  @SyncVar() isHollowIcon: number;
+
 
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value }

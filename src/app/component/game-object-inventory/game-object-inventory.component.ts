@@ -133,6 +133,11 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     } else {
       actions.push({ name: '画像を反転する', action: () => { gameObject.isInverse = true; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
     }
+    if (gameObject.isHollow) {
+      actions.push({ name: '半透明にしない', action: () => { gameObject.isHollow = false; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
+    } else {
+      actions.push({ name: '半透明にする', action: () => { gameObject.isHollow = true; EventSystem.trigger('UPDATE_INVENTORY', null)　} });
+    }
     actions.push(ContextMenuSeparator);
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(gameObject); } });
     if (gameObject.location.name !== 'graveyard') {

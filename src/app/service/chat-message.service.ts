@@ -73,7 +73,7 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
-  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, color? :string, isInverseIcon? :boolean): ChatMessage {
+  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, color? :string, isInverseIcon? :boolean, isHollowIcon? :boolean): ChatMessage {
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.id,
       to: ChatMessageService.findId(sendTo),
@@ -83,7 +83,8 @@ export class ChatMessageService {
       tag: gameType,
       text: text,
       color: color,
-      isInverseIcon: isInverseIcon
+      isInverseIcon: isInverseIcon ? 1 : 0,
+      isHollowIcon: isHollowIcon ? 1 : 0
     };
 
     return chatTab.addMessage(chatMessage);

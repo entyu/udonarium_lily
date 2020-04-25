@@ -347,5 +347,8 @@ input[type='range']::-ms-tooltip {
   transform: scaleX(-1);
 }
 .inverser {
-  transition: transform 100ms 0s ease;
+  transition: transform 132ms 0s ease;
+}
+.hollow {
+  opacity: 0.5;
 }

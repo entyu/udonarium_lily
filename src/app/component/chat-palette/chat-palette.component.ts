@@ -241,7 +241,16 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       } else {
         this.character.dialog = null;
       }
-      this.chatMessageService.sendMessage(this.chatTab, text, this.gameType, this.character.identifier, this.sendTo, this.color, this.character ? this.character.isInverse : false);
+      this.chatMessageService.sendMessage(
+        this.chatTab, 
+        text, 
+        this.gameType, 
+        this.character.identifier, 
+        this.sendTo, 
+        this.color, 
+        this.character ? this.character.isInverse : false,
+        this.character ? this.character.isHollow : false,
+      );
     }
     this.text = '';
     this.previousWritingLength = this.text.length;

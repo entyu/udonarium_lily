@@ -2,7 +2,7 @@
   <div class="message" [style.border-left-color]="!chatMessage.isSystem ? chatMessage.color : ''" [style.border-right-color]="!chatMessage.isSystem ? chatMessage.color : ''" [ngClass]="{'is-mine': isMine, 'is-others': !isMine, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}"
     [@flyInOut]="'in'">
     <div *ngIf="isMine" class="image">
-      <img *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" [ngClass]="{inverse:chatMessage.isInverseIcon}" />
+      <img *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" [ngClass]="{inverse: chatMessage.isInverseIcon == 1, hollow: chatMessage.isHollowIcon == 1}" />
     </div>
     <div class="body">
       <div class="title">
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div *ngIf="!isMine" class="image">
-      <img *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" [ngClass]="{inverse: chatMessage.isInverseIcon}" />
+      <img *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" [ngClass]="{inverse: chatMessage.isInverseIcon == 1, hollow: chatMessage.isHollowIcon == 1}" />
     </div>
   </div>
 </div>

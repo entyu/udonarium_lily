@@ -67,6 +67,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
   get isInverse(): boolean { return this.gameCharacter.isInverse; }
   set isInverse(isInverse: boolean) { this.gameCharacter.isInverse = isInverse; }
+  get isHollow(): boolean { return this.gameCharacter.isHollow; }
+  set isHollow(isHollow: boolean) { this.gameCharacter.isHollow = isHollow; }
 
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
@@ -185,6 +187,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
             this.isDropShadow = true;
           }
         }),
+        (this.isHollow
+          ? {
+            name: '半透明にしない', action: () => {
+              this.isHollow = false;
+            }
+          } : {
+            name: '半透明にする', action: () => {
+              this.isHollow = true;
+            }
+          }),
       ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {

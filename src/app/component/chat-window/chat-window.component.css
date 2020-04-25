@@ -33,6 +33,11 @@
   transition: transform 100ms 0s ease;
 }
 */
+.hollow {
+  opacity: 0.5;
+  filter: blur(1px);
+}
+
 .sticky-bottom {
   position: sticky;
   bottom : 0;
