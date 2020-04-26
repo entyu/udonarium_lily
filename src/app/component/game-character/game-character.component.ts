@@ -191,10 +191,12 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           ? {
             name: '半透明にしない', action: () => {
               this.isHollow = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           } : {
             name: '半透明にする', action: () => {
               this.isHollow = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
       ContextMenuSeparator,
