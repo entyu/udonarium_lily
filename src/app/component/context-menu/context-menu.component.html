@@ -1,10 +1,10 @@
 <div style="display: flex; flex-direction: column" class="component" [ngClass]="{'submenu-panel': isSubmenu, 'is-max-limit': !isSubmenu, 'pointer-events-none': isPointerDragging}"
   (mouseleave)="hideSubMenu()"  #root>
-  <div *ngIf="0 < title.length || altitudeHande" colspan="3"><div class="title">{{title}}<span *ngIf="altitudeHande"> (高度 <input type="number" step="0.1" style="width:3.6em; text-align:right" [(ngModel)]="altitudeHande.altitude">)</span></div></div>
+  <div *ngIf="0 < title.length || altitudeHande"><div class="title">{{title}}<span style="font-size: small;" *ngIf="altitudeHande"> (高度 <input type="number" step="0.1" style="font-size: small; width:3.6em; text-align:right" [(ngModel)]="altitudeHande.altitude">)</span></div></div>
   <div style="display: flex; align-items: center">
     <div *ngIf="altitudeHande" class="altitude ruler" style="display: flex; align-self: stretch; flex-direction: column; align-content: center"><div style="margin-top: 2em;">高</div><div style="align-self: center; margin-top: auto; margin-bottom: auto">0</div><div style="margin-bottom: 2em;">低</div></div>
     <div *ngIf="altitudeHande" class="altitude"><input class="altitude" title="{{altitudeHande.altitude}}" [(ngModel)]="altitudeHande.altitude" type="range" max="12" min="-12" step="0.5" orient="vertical"></div>
-    <div>
+    <div style="flex-grow: 1">
       <ul>
         <ng-container *ngFor="let action of actions">
           <ng-container *ngTemplateOutlet="action?.type === 'separator' ? separator : actionMenu; context: { action: action }"></ng-container>
@@ -17,7 +17,13 @@
   <li [ngClass]="{'hasHighlight': !(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)), 'disabled': (action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0))}"
       (click)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : doAction(action)"
       (mouseenter)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : showSubMenu(action)">
-    <div class="menu-title" [ngClass]="{default: action.default}">{{action.name}}</div>
+    <div class="menu-title" [ngClass]="{default: action.default}">
+      <input *ngIf="action.name && action.name.indexOf('☑') == 0" type="checkbox" checked />
+      <input *ngIf="action.name && action.name.indexOf('☐') == 0" type="checkbox" />
+      <input *ngIf="action.name && action.name.indexOf('◉') == 0" type="radio" checked />
+      <input *ngIf="action.name && action.name.indexOf('○') == 0" type="radio" />
+      {{ action.name.replace('☑', '').replace('☐', '').replace('◉', '').replace('○', '') }}
+    </div>
     <div *ngIf="action.subActions" class="sub-menu-arrow">
       <i class="material-icons" style="font-size: 1em; vertical-align: bottom;">arrow_forward_ios</i>
     </div>
