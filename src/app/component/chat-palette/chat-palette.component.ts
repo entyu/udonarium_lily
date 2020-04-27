@@ -250,6 +250,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         this.color, 
         this.character ? this.character.isInverse : false,
         this.character ? this.character.isHollow : false,
+        this.character ? this.character.isBlackPaint : false
       );
     }
     this.text = '';

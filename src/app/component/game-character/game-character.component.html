@@ -22,7 +22,7 @@
               <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
               <div class="back-tag has-length-limit is-3d">{{name}}</div>
             </div>
-            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}"><img #characterImage class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'"></div>
+            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}"><img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageFile.url | safe: 'resourceUrl'"></div>
             <div class="grab-group">
               <div class="rotate-grab rotate-grab-icon of-top"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">

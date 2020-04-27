@@ -69,6 +69,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set isInverse(isInverse: boolean) { this.gameCharacter.isInverse = isInverse; }
   get isHollow(): boolean { return this.gameCharacter.isHollow; }
   set isHollow(isHollow: boolean) { this.gameCharacter.isHollow = isHollow; }
+  get isBlackPaint(): boolean { return this.gameCharacter.isBlackPaint; }
+  set isBlackPaint(isBlackPaint: boolean) { this.gameCharacter.isBlackPaint = isBlackPaint; }
 
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
@@ -180,16 +182,28 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         }),
         (this.isHollow
           ? {
-            name: '☑ 半透明', action: () => {
+            name: '☑ ぼかし', action: () => {
               this.isHollow = false;
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           } : {
-            name: '☐ 半透明', action: () => {
+            name: '☐ ぼかし', action: () => {
               this.isHollow = true;
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
+          (this.isBlackPaint
+            ? {
+              name: '☑ 黒塗り', action: () => {
+                this.isBlackPaint = false;
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            } : {
+              name: '☐ 黒塗り', action: () => {
+                this.isBlackPaint = true;
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            }),
       ]},
       (this.isDropShadow
         ? {

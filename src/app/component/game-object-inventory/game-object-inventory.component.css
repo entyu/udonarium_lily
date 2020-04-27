@@ -352,7 +352,9 @@ input[type='range']::-ms-tooltip {
 .hollow {
   opacity: 0.5;
 }
-
+.black-paint {
+  filter: brightness(0);
+}
 .material-icons.rotate {
   transform: rotate(90deg);
 }

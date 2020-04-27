@@ -26,6 +26,9 @@
   opacity: 0.6;
   filter: blur(1px);
 }
+.black-paint {
+  filter: brightness(0);
+}
 
 .table {
   box-sizing: border-box;

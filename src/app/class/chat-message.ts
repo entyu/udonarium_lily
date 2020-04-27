@@ -19,6 +19,7 @@ export interface ChatMessageContext {
   color?: string;
   isInverseIcon?: number;
   isHollowIcon?: number;
+  isBlackPaint?: number;
 }
 
 @SyncObject('chat')
@@ -33,6 +34,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() color: string;
   @SyncVar() isInverseIcon: number;
   @SyncVar() isHollowIcon: number;
+  @SyncVar() isBlackPaint: number;
 
 
   get tabIdentifier(): string { return this.parent.identifier; }

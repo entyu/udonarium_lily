@@ -308,7 +308,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         this.sendTo, 
         this.color, 
         this.gameCharacter ? this.gameCharacter.isInverse : false,
-        this.gameCharacter ? this.gameCharacter.isHollow : false
+        this.gameCharacter ? this.gameCharacter.isHollow : false,
+        this.gameCharacter ? this.gameCharacter.isBlackPaint : false,
       );
     }
     this.text = '';

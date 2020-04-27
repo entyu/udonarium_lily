@@ -64,6 +64,7 @@ export class TabletopObject extends ObjectNode {
 
   @SyncVar() isInverse: boolean = false;
   @SyncVar() isHollow: boolean = false;
+  @SyncVar() isBlackPaint: boolean = false;
 
   protected createDataElements() {
     this.initialize();
