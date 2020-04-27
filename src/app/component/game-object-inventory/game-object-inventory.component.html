@@ -52,7 +52,13 @@
 <ng-template #gameObjectTags let-gameObject="gameObject">
   <div class="inventory-object">
     <div class="object-name">{{gameObject.name}}
-      <button style="font-size: 0.8em; padding: 2px 5px;" *ngIf="selectedIdentifier === gameObject.identifier" (click)="onContextMenu($event, gameObject)">
+      <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="影の表示" [ngClass]="{'is-active': gameObject.isDropShadow}" (click)="gameObject.isDropShadow = !gameObject.isDropShadow">
+        <i class="material-icons" style="font-size: 1em;">brightness_6</i>
+      </button>
+      <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="高度の表示" [ngClass]="{'is-active': gameObject.isAltitudeIndicate}" (click)="gameObject.isAltitudeIndicate = !gameObject.isAltitudeIndicate">
+        <i class="material-icons rotate" style="font-size: 1em;">straighten</i>
+      </button>
+      <button *ngIf="selectedIdentifier === gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="メニュー" (click)="onContextMenu($event, gameObject)">
         <i class="material-icons" style="font-size: 1em;">settings</i>
       </button>
     </div>

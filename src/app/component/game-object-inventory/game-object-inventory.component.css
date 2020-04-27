@@ -352,3 +352,22 @@ input[type='range']::-ms-tooltip {
 .hollow {
   opacity: 0.5;
 }
+
+.material-icons.rotate {
+  transform: rotate(90deg);
+}
+button.indicate:disabled {
+  border-color: transparent;
+}
+button.indicate:disabled .material-icons {
+  color: black;
+}
+button.indicate .material-icons {
+  opacity: 0.5;
+}
+button.is-active {
+  background-color: white;
+}
+button.is-active .material-icons {
+  opacity: 1.0;
+}

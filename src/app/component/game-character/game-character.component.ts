@@ -165,49 +165,55 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
-      (this.isInverse
+      { name: '画像効果', action: null, subActions: [
+        (this.isInverse
         ? {
-          name: '画像を反転しない', action: () => {
+          name: '☑ 反転', action: () => {
             this.isInverse = false;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
-          name: '画像を反転する', action: () => {
+          name: '☐ 反転', action: () => {
             this.isInverse = true;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
-      (this.isDropShadow
-        ? {
-          name: '影を落とさない', action: () => {
-            this.isDropShadow = false;
-          }
-        } : {
-          name: '影を落とす', action: () => {
-            this.isDropShadow = true;
-          }
-        }),
         (this.isHollow
           ? {
-            name: '半透明にしない', action: () => {
+            name: '☑ 半透明', action: () => {
               this.isHollow = false;
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           } : {
-            name: '半透明にする', action: () => {
+            name: '☐ 半透明', action: () => {
               this.isHollow = true;
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
+      ]},
+      (this.isDropShadow
+        ? {
+          name: '影を落とさない', action: () => {
+            this.isDropShadow = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '影を落とす', action: () => {
+            this.isDropShadow = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }),
       ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {
           name: '高度を表示しない', action: () => {
             this.isAltitudeIndicate = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
           name: '高度を表示する', action: () => {
             this.isAltitudeIndicate = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
       {

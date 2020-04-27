@@ -141,7 +141,7 @@
   transition: transform 132ms 0s ease;
 }
 .hollow {
-  opacity: 0.5;
+  opacity: 0.6;
   filter: blur(1px);
 }
 
