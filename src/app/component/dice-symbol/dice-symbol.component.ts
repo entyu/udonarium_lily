@@ -237,7 +237,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
       this.faces.forEach(face => {
         subActions.push({
           name: `${this.face == face ? '◉' : '○'} ${face}　`, action: () => {
-            if (this.face != face) SoundEffect.play(PresetSound.dicePut);
+            SoundEffect.play(PresetSound.dicePut);
             this.face = face;
           }
         });
