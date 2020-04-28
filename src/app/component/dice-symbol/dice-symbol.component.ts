@@ -242,7 +242,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         });
       });
-      actions.push({ name: `ダイス目`, action: null, subActions: subActions });
+      actions.push({ name: 'ダイス目', action: null, subActions: subActions });
     }
 
     actions.push(ContextMenuSeparator);

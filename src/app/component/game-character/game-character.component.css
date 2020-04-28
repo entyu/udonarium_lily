@@ -148,6 +148,32 @@
   filter: brightness(0);
 }
 
+.aura.black {
+  filter: drop-shadow(0 -4px 4px black);
+}
+.aura.blue {
+  filter: drop-shadow(0 -4px 4px blue);
+}
+.aura.green {
+  filter: drop-shadow(0 -4px 4px green);
+}
+.aura.cyan {
+  filter: drop-shadow(0 -4px 4px cyan);
+}
+.aura.red {
+  filter: drop-shadow(0 -4px 4px red);
+}
+.aura.magenta {
+  filter: drop-shadow(0 -4px 4px magenta);
+}
+
+.aura.yellow {
+  filter: drop-shadow(0 -4px 4px yellow);
+}
+.aura.white {
+  filter: drop-shadow(0 -4px 4px white);
+}
+
 .name-tag {
   box-sizing: border-box;
   font-size: 15px;

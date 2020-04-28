@@ -71,6 +71,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set isHollow(isHollow: boolean) { this.gameCharacter.isHollow = isHollow; }
   get isBlackPaint(): boolean { return this.gameCharacter.isBlackPaint; }
   set isBlackPaint(isBlackPaint: boolean) { this.gameCharacter.isBlackPaint = isBlackPaint; }
+  get aura(): number { return this.gameCharacter.aura; }
+  set aura(aura: number) { this.gameCharacter.aura = aura; }
 
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
@@ -217,6 +219,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
+      ContextMenuSeparator,
+      { name: 'オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+        return { name: `${this.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => { this.aura = i - 1 } };
+      }) },
       ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {

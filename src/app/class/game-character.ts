@@ -23,6 +23,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() dialog: DialogData = { text: '', color: '#444444' };
+  @SyncVar() aura: number = -1;
 
   dialogTimeOutId = null
 
