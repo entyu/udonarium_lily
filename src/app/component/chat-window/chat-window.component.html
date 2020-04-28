@@ -16,10 +16,12 @@
   </form>
 <div class="table" [ngClass]="{'direct-message': isDirect}">
   <div class="table-cell imagebox">
-    <div *ngIf="gameCharacter && gameCharacter.imageFile != null && 0 < gameCharacter.imageFile?.url?.length" class="inverser" [ngClass]="{inverse: gameCharacter.isInverse, hollow: gameCharacter.isHollow}"><img #characterImage class="image" [src]="gameCharacter.imageFile?.url | safe: 'resourceUrl'"
-      [ngClass]="{'black-paint': gameCharacter.isBlackPaint}" /></div>
-    <img class="image" *ngIf="!gameCharacter && myPeer && myPeer?.image != null" [src]="myPeer?.image?.url | safe: 'resourceUrl'"
-    />
+    <div *ngIf="gameCharacter && gameCharacter.imageFile != null && 0 < gameCharacter.imageFile?.url?.length" class="inverser" [ngClass]="{inverse: gameCharacter.isInverse, hollow: gameCharacter.isHollow}">
+      <span class="aura" [ngClass]="{black: gameCharacter.aura == 0, blue: gameCharacter.aura == 1, green: gameCharacter.aura == 2, cyan: gameCharacter.aura == 3, red: gameCharacter.aura == 4, magenta: gameCharacter.aura == 5, yellow: gameCharacter.aura == 6, white: gameCharacter.aura == 7}">
+        <img #characterImage class="image" [src]="gameCharacter.imageFile?.url | safe: 'resourceUrl'" [ngClass]="{'black-paint': gameCharacter.isBlackPaint}" />
+      </span>
+    </div>
+    <img class="image" *ngIf="!gameCharacter && myPeer && myPeer?.image != null" [src]="myPeer?.image?.url | safe: 'resourceUrl'" />
   </div>
   <div class="table-cell">
     <div>

@@ -152,26 +152,25 @@
   filter: drop-shadow(0 -4px 4px black);
 }
 .aura.blue {
-  filter: drop-shadow(0 -4px 4px blue);
+  filter: drop-shadow(0 -4px 4px #33f);
 }
 .aura.green {
-  filter: drop-shadow(0 -4px 4px green);
+  filter: drop-shadow(0 -4px 4px #3f3);
 }
 .aura.cyan {
-  filter: drop-shadow(0 -4px 4px cyan);
+  filter: drop-shadow(0 -4px 4px #3ff);
 }
 .aura.red {
-  filter: drop-shadow(0 -4px 4px red);
+  filter: drop-shadow(0 -4px 4px #f00);
 }
 .aura.magenta {
-  filter: drop-shadow(0 -4px 4px magenta);
+  filter: drop-shadow(0 -4px 4px #f0f);
 }
-
 .aura.yellow {
-  filter: drop-shadow(0 -4px 4px yellow);
+  filter: drop-shadow(0 -4px 4px #ff3);
 }
 .aura.white {
-  filter: drop-shadow(0 -4px 4px white);
+  filter: drop-shadow(0 -4px 4px #fff);
 }
 
 .name-tag {

@@ -41,6 +41,31 @@
   filter: brightness(0);
 }
 
+.aura.black {
+  filter: drop-shadow(0 -4px 4px black);
+}
+.aura.blue {
+  filter: drop-shadow(0 -4px 4px #00f);
+}
+.aura.green {
+  filter: drop-shadow(0 -4px 4px #3f3);
+}
+.aura.cyan {
+  filter: drop-shadow(0 -4px 4px #3ff);
+}
+.aura.red {
+  filter: drop-shadow(0 -4px 4px #f00);
+}
+.aura.magenta {
+  filter: drop-shadow(0 -4px 4px #f0f);
+}
+.aura.yellow {
+  filter: drop-shadow(0 -4px 4px #ff3);
+}
+.aura.white {
+  filter: drop-shadow(0 -4px 6px #ccc) drop-shadow(0 -4px 4px #fff);
+}
+
 .sticky-bottom {
   position: sticky;
   bottom : 0;

@@ -64,7 +64,9 @@
     </div>
     <div class="object-tags-box">
       <div class="table-cell image-box">
-        <img *ngIf="gameObject.imageFile.url" class="inverser" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" [ngClass]="{inverse: gameObject.isInverse, hollow: gameObject.isHollow, 'black-paint': gameObject.isBlackPaint}" />
+        <span class="aura" [ngClass]="{black: gameObject.aura == 0, blue: gameObject.aura == 1, green: gameObject.aura == 2, cyan: gameObject.aura == 3, red: gameObject.aura == 4, magenta: gameObject.aura == 5, yellow: gameObject.aura == 6, white: gameObject.aura == 7}">
+          <img *ngIf="gameObject.imageFile.url" class="inverser" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" [ngClass]="{inverse: gameObject.isInverse, hollow: gameObject.isHollow, 'black-paint': gameObject.isBlackPaint}" />
+        </span>
       </div>
       <div class="table-cell">
         <div *ngIf="gameObject.rootDataElement">

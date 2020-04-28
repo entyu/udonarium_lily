@@ -130,18 +130,21 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     
     actions.push({ name: '画像効果', action: null,  
     subActions: [
+      { name: 'オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+        return { name: `${gameObject.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => { gameObject.aura = i - 1; EventSystem.trigger('UPDATE_INVENTORY', null) } };
+      }) },
       (gameObject.isInverse
-      ? {
-        name: '☑ 反転', action: () => {
-          gameObject.isInverse = false;
-          EventSystem.trigger('UPDATE_INVENTORY', null);
-        }
-      } : {
-        name: '☐ 反転', action: () => {
-          gameObject.isInverse = true;
-          EventSystem.trigger('UPDATE_INVENTORY', null);
-        }
-      }),
+        ? {
+          name: '☑ 反転', action: () => {
+            gameObject.isInverse = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ 反転', action: () => {
+            gameObject.isInverse = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }),
       (gameObject.isHollow
         ? {
           name: '☑ ぼかし', action: () => {
@@ -154,18 +157,18 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
-        (gameObject.isBlackPaint
-          ? {
-            name: '☑ 黒塗り', action: () => {
-              gameObject.isBlackPaint = false;
-              EventSystem.trigger('UPDATE_INVENTORY', null);
-            }
-          } : {
-            name: '☐ 黒塗り', action: () => {
-              gameObject.isBlackPaint = true;
-              EventSystem.trigger('UPDATE_INVENTORY', null);
-            }
-          }),
+      (gameObject.isBlackPaint
+        ? {
+          name: '☑ 黒塗り', action: () => {
+            gameObject.isBlackPaint = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ 黒塗り', action: () => {
+            gameObject.isBlackPaint = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }),
     ]});
     actions.push(
       (gameObject.isDropShadow
@@ -181,10 +184,6 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         }
       })
     );
-    actions.push(ContextMenuSeparator);
-    actions.push({ name: 'オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
-      return { name: `${gameObject.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => { gameObject.aura = i - 1 } };
-    }) });
     actions.push(ContextMenuSeparator);
     actions.push(
       (gameObject.isAltitudeIndicate

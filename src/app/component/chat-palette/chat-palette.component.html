@@ -10,8 +10,11 @@
     </form>
     <div class="table" [ngClass]="{ 'direct-message': isDirect }">
       <div class="table-cell imagebox">
-        <div *ngIf="character && character.imageFile != null && 0 < character.imageFile.url.length" class="inverser" [ngClass]="{inverse: character.isInverse, hollow: character.isHollow}"><img class="image" [src]="character.imageFile.url | safe: 'resourceUrl'"
-          [ngClass]="{'black-paint': character.isBlackPaint}" /></div>
+        <div *ngIf="character && character.imageFile != null && 0 < character.imageFile.url.length" class="inverser" [ngClass]="{inverse: character.isInverse, hollow: character.isHollow}">
+          <span class="aura" [ngClass]="{black: character.aura == 0, blue: character.aura == 1, green: character.aura == 2, cyan: character.aura == 3, red: character.aura == 4, magenta: character.aura == 5, yellow: character.aura == 6, white: character.aura == 7}">
+            <img class="image" [src]="character.imageFile.url | safe: 'resourceUrl'" [ngClass]="{'black-paint': character.isBlackPaint}" />
+          </span>
+        </div>
       </div>
       <div class="table-cell">
         <div>

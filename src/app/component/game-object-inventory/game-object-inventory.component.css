@@ -355,6 +355,32 @@ input[type='range']::-ms-tooltip {
 .black-paint {
   filter: brightness(0);
 }
+
+.aura.black {
+  filter: drop-shadow(0 -2px 2px black);
+}
+.aura.blue {
+  filter: drop-shadow(0 -2px 2px #00f);
+}
+.aura.green {
+  filter: drop-shadow(0 -2px 2px #3f3);
+}
+.aura.cyan {
+  filter: drop-shadow(0 -2px 2px #3ff);
+}
+.aura.red {
+  filter: drop-shadow(0 -2px 2px #f00);
+}
+.aura.magenta {
+  filter: drop-shadow(0 -2px 2px #f0f);
+}
+.aura.yellow {
+  filter: drop-shadow(0 -2px 2px #ff3);
+}
+.aura.white {
+  filter: drop-shadow(0 -2px 3px #aaa) drop-shadow(0 -2px 2px #fff);
+}
+
 .material-icons.rotate {
   transform: rotate(90deg);
 }
