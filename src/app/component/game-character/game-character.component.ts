@@ -209,6 +209,17 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
+          ContextMenuSeparator,
+          {
+            name: 'リセット', action: () => {
+              this.isInverse = false;
+              this.isHollow = false;
+              this.isBlackPaint = false;
+              this.aura = -1;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            },
+            disabled: !this.isInverse && !this.isHollow && !this.isBlackPaint && this.aura == -1
+          }
       ]},
       (this.isDropShadow
         ? {

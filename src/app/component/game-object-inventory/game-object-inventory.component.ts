@@ -169,6 +169,17 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
+        ContextMenuSeparator,
+        {
+          name: 'リセット', action: () => {
+            gameObject.isInverse = false;
+            gameObject.isHollow = false;
+            gameObject.isBlackPaint = false;
+            gameObject.aura = -1;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          },
+          disabled: !gameObject.isInverse && !gameObject.isHollow && !gameObject.isBlackPaint && gameObject.aura == -1
+        }
     ]});
     actions.push(
       (gameObject.isDropShadow
