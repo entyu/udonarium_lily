@@ -284,6 +284,7 @@
 
 .chat-bubble {
   position: absolute;
+  pointer-events: none;
 }
 
 .chat-bubble p {
