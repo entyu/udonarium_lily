@@ -18,10 +18,10 @@
   <ng-container *ngSwitchCase="'character'">
     <button (click)="openModal('imageIdentifier', true)">画像変更</button>
     <ng-container *ngIf="!tabletopObject.faceIcon || tabletopObject.faceIcon?.url.length == 0">
-      <button (click)="openModal('faceIcon')">顔アイコン設定</button>
+      <button (click)="openModal('faceIcon')">顔IC設定</button>
     </ng-container>
     <ng-container *ngIf="0 < tabletopObject.faceIcon?.url.length">
-      <button (click)="tabletopObject.imageDataElement.getFirstElementByName('faceIcon').value = ''">顔アイコン削除</button>
+      <button (click)="tabletopObject.imageDataElement.getFirstElementByName('faceIcon').value = ''">顔IC削除</button>
     </ng-container>
   </ng-container>
   <ng-container *ngSwitchDefault>
@@ -40,8 +40,9 @@
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
   <div class="box main-image-box">
-    <div class="icon-image-box"> 
-      <img *ngIf="0 < tabletopObject.faceIcon?.url.length" [src]="tabletopObject.faceIcon.url | safe: 'resourceUrl'" [alt]="tabletopObject.faceIcon.name" />
+    <div class="icon-image-box" *ngIf="0 < tabletopObject.faceIcon?.url.length"> 
+      <img [src]="tabletopObject.faceIcon.url | safe: 'resourceUrl'" [alt]="tabletopObject.faceIcon.name" />
+      <div><b>ICON</b></div>
     </div>
     <img *ngIf="0 < tabletopObject.imageFile?.url.length" class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" />
   </div>
