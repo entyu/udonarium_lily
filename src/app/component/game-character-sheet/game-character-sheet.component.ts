@@ -105,7 +105,12 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
       let element = this.tabletopObject.imageDataElement.getFirstElementByName(name);
-      if (!element) return;
+      if (!element) {
+        if (name === 'faceIcon') {
+          this.tabletopObject.imageDataElement.appendChild(DataElement.create('faceIcon', value, { type: 'image' }, 'faceIcon_' + this.tabletopObject.identifier));
+        } 
+        return;
+      }
       element.value = value;
     });
   }

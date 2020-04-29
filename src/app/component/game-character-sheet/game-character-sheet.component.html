@@ -15,6 +15,15 @@
   <ng-container *ngSwitchCase="'dice-symbol'">
     <button (click)="openModal(tabletopObject['face'])" [disabled]="!tabletopObject['isVisible']">ダイス目の画像を変更</button>
   </ng-container>
+  <ng-container *ngSwitchCase="'character'">
+    <button (click)="openModal('imageIdentifier', true)">画像変更</button>
+    <ng-container *ngIf="!tabletopObject.faceIcon || tabletopObject.faceIcon?.url.length == 0">
+      <button (click)="openModal('faceIcon')">顔アイコン設定</button>
+    </ng-container>
+    <ng-container *ngIf="0 < tabletopObject.faceIcon?.url.length">
+      <button (click)="tabletopObject.imageDataElement.getFirstElementByName('faceIcon').value = ''">顔アイコン削除</button>
+    </ng-container>
+  </ng-container>
   <ng-container *ngSwitchDefault>
     <button (click)="openModal('imageIdentifier', true)">画像変更</button>
   </ng-container>
@@ -30,9 +39,11 @@
   </select>
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
-  <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">
-    <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name"
-    />
+  <div class="box main-image-box">
+    <div class="icon-image-box"> 
+      <img *ngIf="0 < tabletopObject.faceIcon?.url.length" [src]="tabletopObject.faceIcon.url | safe: 'resourceUrl'" [alt]="tabletopObject.faceIcon.name" />
+    </div>
+    <img *ngIf="0 < tabletopObject.imageFile?.url.length" class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" />
   </div>
   <ng-container *ngIf="tabletopObject.commonDataElement">
     <div class="flex-item">

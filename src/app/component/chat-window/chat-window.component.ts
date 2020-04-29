@@ -47,6 +47,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   gameCharacter: GameCharacter = null;
+  isUseFaceIcon: boolean = true;
 
   private _chatTabidentifier: string = '';
   get chatTabidentifier(): string { return this._chatTabidentifier; }
@@ -310,7 +311,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         this.gameCharacter ? this.gameCharacter.isInverse : false,
         this.gameCharacter ? this.gameCharacter.isHollow : false,
         this.gameCharacter ? this.gameCharacter.isBlackPaint : false,
-        this.gameCharacter ? this.gameCharacter.aura : -1
+        this.gameCharacter ? this.gameCharacter.aura : -1,
+        this.isUseFaceIcon
       );
     }
     this.text = '';

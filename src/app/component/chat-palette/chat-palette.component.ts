@@ -64,6 +64,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   isEdit: boolean = false;
   editPalette: string = '';
 
+  isUseFaceIcon: boolean = true;
+
   private shouldUpdateCharacterList: boolean = true;
   private _gameCharacters: GameCharacter[] = [];
   get gameCharacters(): GameCharacter[] {
@@ -251,7 +253,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         this.character ? this.character.isInverse : false,
         this.character ? this.character.isHollow : false,
         this.character ? this.character.isBlackPaint : false,
-        this.character ? this.character.aura : -1
+        this.character ? this.character.aura : -1,
+        this.isUseFaceIcon
       );
     }
     this.text = '';

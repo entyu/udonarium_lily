@@ -16,15 +16,21 @@
   </form>
 <div class="table" [ngClass]="{'direct-message': isDirect}">
   <div class="table-cell imagebox">
-    <div *ngIf="gameCharacter && gameCharacter.imageFile != null && 0 < gameCharacter.imageFile?.url?.length" class="inverser" [ngClass]="{inverse: gameCharacter.isInverse, hollow: gameCharacter.isHollow}">
-      <span class="aura" [ngClass]="{black: gameCharacter.aura == 0, blue: gameCharacter.aura == 1, green: gameCharacter.aura == 2, cyan: gameCharacter.aura == 3, red: gameCharacter.aura == 4, magenta: gameCharacter.aura == 5, yellow: gameCharacter.aura == 6, white: gameCharacter.aura == 7}">
-        <img #characterImage class="image" [src]="gameCharacter.imageFile?.url | safe: 'resourceUrl'" [ngClass]="{'black-paint': gameCharacter.isBlackPaint}" />
-      </span>
+    <div *ngIf="isUseFaceIcon && gameCharacter && gameCharacter.faceIcon != null && 0 < gameCharacter.faceIcon?.url?.length; else noFaceIcon" class="imagebox">
+      <img #characterImage class="image" [src]="gameCharacter.faceIcon?.url | safe: 'resourceUrl'" />
     </div>
-    <img class="image" *ngIf="!gameCharacter && myPeer && myPeer?.image != null" [src]="myPeer?.image?.url | safe: 'resourceUrl'" />
+    <ng-template #noFaceIcon>
+      <div *ngIf="gameCharacter && gameCharacter.imageFile != null && 0 < gameCharacter.imageFile?.url?.length" class="inverser" [ngClass]="{inverse: gameCharacter.isInverse, hollow: gameCharacter.isHollow}">
+        <span class="aura imagebox" [ngClass]="{black: gameCharacter.aura == 0, blue: gameCharacter.aura == 1, green: gameCharacter.aura == 2, cyan: gameCharacter.aura == 3, red: gameCharacter.aura == 4, magenta: gameCharacter.aura == 5, yellow: gameCharacter.aura == 6, white: gameCharacter.aura == 7}">
+          <img #characterImage class="image" [src]="gameCharacter.imageFile?.url | safe: 'resourceUrl'" [ngClass]="{'black-paint': gameCharacter.isBlackPaint}" />
+        </span>
+      </div>
+      <img class="image" *ngIf="!gameCharacter && myPeer && myPeer?.image != null" [src]="myPeer?.image?.url | safe: 'resourceUrl'" />
+    </ng-template>
   </div>
   <div class="table-cell">
     <div>
+      <label style="margin-right: 4px"><input type="checkbox" [(ngModel)]="isUseFaceIcon" checked="{{isUseFaceIcon ? 'checked' : ''}}" (change)="isUseFaceIcon = (isUseFaceIcon ? true : false)" />顔IC</label>
       <select style="width: 12em;" (change)="onSelectedCharacter($event.target.value)" [style.color]="gameCharacter && gameCharacter.chatPalette && gameCharacter.chatPalette.color && gameCharacter.chatPalette.color != '#ffffff' ? gameCharacter.chatPalette.color : color">
         <option value="{{myPeer?.identifier}}" [style.color]="myColor">{{myPeer?.name}}（あなた）</option>
         <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}" [style.color]="gameCharacter.chatPalette && gameCharacter.chatPalette.color && gameCharacter.chatPalette.color != '#ffffff' ? gameCharacter.chatPalette.color : ''">{{gameCharacter.name}}</option>

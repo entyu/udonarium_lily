@@ -73,20 +73,22 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
-  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, color? :string, isInverseIcon? :boolean, isHollowIcon? :boolean, isBlackPaint? :boolean, aura?: number): ChatMessage {
+  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, color? :string, isInverseIcon? :boolean, isHollowIcon? :boolean, isBlackPaint? :boolean, aura?: number, isUseFaceIcon?: boolean): ChatMessage {
+    // もうちょとなんとかする
+    let effective = !(isUseFaceIcon && this.findFaceIconIdentifier(sendFrom));
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.id,
       to: ChatMessageService.findId(sendTo),
       name: this.makeMessageName(sendFrom, sendTo),
-      imageIdentifier: this.findImageIdentifier(sendFrom),
+      imageIdentifier: this.findImageIdentifier(sendFrom, isUseFaceIcon),
       timestamp: this.calcTimeStamp(chatTab),
       tag: gameType,
       text: text,
       color: color,
-      isInverseIcon: isInverseIcon ? 1 : 0,
-      isHollowIcon: isHollowIcon ? 1 : 0,
-      isBlackPaint: isBlackPaint ? 1 : 0,
-      aura: aura
+      isInverseIcon: effective && isInverseIcon ? 1 : 0,
+      isHollowIcon: effective && isHollowIcon ? 1 : 0,
+      isBlackPaint: effective && isBlackPaint ? 1 : 0,
+      aura: effective ? aura : -1
     };
 
     return chatTab.addMessage(chatMessage);
@@ -120,14 +122,23 @@ export class ChatMessageService {
     return sendFromName + ' ➡ ' + sendToName;
   }
 
-  private findImageIdentifier(identifier: string): string {
+  private findImageIdentifier(identifier: string, isUseFaceIcon: boolean = false): string {
     let object = ObjectStore.instance.get(identifier);
     if (object instanceof GameCharacter) {
+      if (isUseFaceIcon && object.faceIcon && 0 < object.faceIcon.url.length) return object.faceIcon.identifier;
       return object.imageFile ? object.imageFile.identifier : '';
     } else if (object instanceof PeerCursor) {
       return object.imageIdentifier;
     }
     return identifier;
+  }
+
+  private findFaceIconIdentifier(identifier: string): string {
+    let object = ObjectStore.instance.get(identifier);
+    if (object instanceof GameCharacter && object.faceIcon && 0 < object.faceIcon.url.length) {
+      return object.faceIcon.identifier;
+    }
+    return '';
   }
 
   private calcTimeStamp(chatTab: ChatTab): number {

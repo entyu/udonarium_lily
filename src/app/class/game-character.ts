@@ -3,6 +3,7 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
 import { UUID } from '@udonarium/core/system/util/uuid';
+import { ImageFile } from './core/file-storage/image-file';
 
 export interface DialogData {
   text: string;
@@ -29,6 +30,8 @@ export class GameCharacter extends TabletopObject {
 
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
+
+  get faceIcon(): ImageFile { return this.getImageFile('faceIcon'); }
 
   get chatPalette(): ChatPalette {
     for (let child of this.children) {

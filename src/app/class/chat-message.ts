@@ -38,7 +38,6 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() isBlackPaint: number;
   @SyncVar() aura: number = -1;
 
-
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value }
   get timestamp(): number {

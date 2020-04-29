@@ -74,6 +74,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get aura(): number { return this.gameCharacter.aura; }
   set aura(aura: number) { this.gameCharacter.aura = aura; }
 
+  get faceIcons(): ImageFile { return this.gameCharacter.faceIcon; }
+
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
   }
@@ -316,7 +318,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   private showChatPalette(gameObject: GameCharacter) {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 615, height: 350 };
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 620, height: 350 };
     let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
     component.character = gameObject;
   }
