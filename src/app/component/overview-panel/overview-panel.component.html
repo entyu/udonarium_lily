@@ -78,7 +78,7 @@
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
     </div>
     <div class="image-area character-image-box"
-      [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
+      [ngClass]="{ 'has-icon': hasIcon,'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
       *ngIf="hasImage">
       <img class="character-image" [src]="imageUrl | safe: 'resourceUrl'" />
     </div>

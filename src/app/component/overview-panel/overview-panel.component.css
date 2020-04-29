@@ -163,6 +163,20 @@
   border-radius: 1em;
   z-index: 1;
 }
+.character-image-box img {
+  width: 100%;
+  height: 100%;
+  vertical-align: bottom;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+
+.character-image-box.has-icon {
+  width: 100px;
+  height: 100px;
+  max-width: 100px;
+  max-height: 100px;
+}
 
 .character-image {
   padding: 0;

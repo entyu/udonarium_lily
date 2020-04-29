@@ -16,6 +16,7 @@ import { DataElement } from '@udonarium/data-element';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { GameCharacter } from '@udonarium/game-character';
 
 @Component({
   selector: 'overview-panel',
@@ -46,8 +47,17 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   @Input() left: number = 0;
   @Input() top: number = 0;
 
-  get imageUrl(): string { return this.tabletopObject && this.tabletopObject.imageFile ? this.tabletopObject.imageFile.url : ''; }
+  get imageUrl(): string {
+    if (!this.tabletopObject) return '';
+    if (this.hasIcon) {
+      return this.tabletopObject.faceIcon.url;
+    }
+    return this.tabletopObject.imageFile ? this.tabletopObject.imageFile.url : '';
+  }
   get hasImage(): boolean { return 0 < this.imageUrl.length; }
+  get hasIcon(): boolean {
+    return (this.tabletopObject instanceof GameCharacter && this.tabletopObject.faceIcon && 0 < this.tabletopObject.faceIcon.url.length);
+  }
 
   get inventoryDataElms(): DataElement[] { return this.tabletopObject ? this.getInventoryTags(this.tabletopObject) : []; }
   get dataElms(): DataElement[] { return this.tabletopObject && this.tabletopObject.detailDataElement ? this.tabletopObject.detailDataElement.children as DataElement[] : []; }
