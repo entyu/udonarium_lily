@@ -31,8 +31,6 @@ export class GameCharacter extends TabletopObject {
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
 
-  get faceIcon(): ImageFile { return this.getImageFile('faceIcon'); }
-
   get chatPalette(): ChatPalette {
     for (let child of this.children) {
       if (child instanceof ChatPalette) return child;

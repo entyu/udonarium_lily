@@ -48,6 +48,8 @@ export class TabletopObject extends ObjectNode {
     return this._imageFile;
   }
 
+  get faceIcon(): ImageFile { return this.getImageFile('faceIcon'); }
+
   @SyncVar() isAltitudeIndicate: boolean = false;
   get altitude(): number {
     let element = this.getElement('altitude', this.commonDataElement);
