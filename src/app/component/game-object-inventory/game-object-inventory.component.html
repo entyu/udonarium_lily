@@ -51,7 +51,9 @@
 </ng-template>
 <ng-template #gameObjectTags let-gameObject="gameObject">
   <div class="inventory-object">
-    <div class="object-name">{{gameObject.name}}
+    <div class="object-name">
+      <i *ngIf="gameObject.faceIcon != null && 0 < gameObject.faceIcon?.url?.length" class="face-icon" title="顔ICあり"><img [src]="gameObject.faceIcon.url | safe: 'resourceUrl'" alt="顔IC"></i>
+      {{gameObject.name}}
       <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="影の表示" [ngClass]="{'is-active': gameObject.isDropShadow}" (click)="gameObject.isDropShadow = !gameObject.isDropShadow">
         <i class="material-icons" style="font-size: 1em;">brightness_6</i>
       </button>
