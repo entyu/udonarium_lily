@@ -402,10 +402,10 @@ button.is-active .material-icons {
 
 .face-icon {
   display: inline-block;
-  width: 12px;
-  height: 12px;
-  max-width: 12px;
-  max-height: 12px;
+  width: 16px;
+  height: 16px;
+  max-width: 16px;
+  max-height: 16px;
   vertical-align: middle;
 }
 .face-icon img {

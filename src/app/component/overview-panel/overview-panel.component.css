@@ -155,7 +155,6 @@
 
 .character-image-box {
   width: 100px;
-  max-height: 120px;
   overflow: hidden;
   vertical-align: bottom;
   margin-left: 0.5em;
@@ -164,11 +163,9 @@
   z-index: 1;
 }
 .character-image-box img {
-  width: 100%;
-  height: 100%;
   vertical-align: bottom;
-  object-fit: cover;
-  object-position: 50% 0%;
+  object-fit: contain;
+  object-position: bottom left;
 }
 
 .character-image-box.has-icon {
@@ -176,6 +173,13 @@
   height: 100px;
   max-width: 100px;
   max-height: 100px;
+}
+
+.character-image-box.has-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
 }
 
 .character-image {
