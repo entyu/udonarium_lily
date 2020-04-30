@@ -410,3 +410,7 @@
     visibility: visible;
   }
 }
+
+.drop-shadow {
+  pointer-events: none;
+}
