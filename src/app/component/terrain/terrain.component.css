@@ -19,6 +19,9 @@
   -webkit-transition: -webkit-transform 132ms linear;
   transition: transform 132ms linear;
 }
+.component-content:hover .texture {
+  opacity: 0.7;
+}
 
 .is-pointer-events-none {
   pointer-events: none;
