@@ -11,6 +11,7 @@ export interface DialogData {
   emote?: boolean;
   from?: string;
   to?: string;
+  isUseFaceIcon?: boolean;
 }
 
 @SyncObject('character')

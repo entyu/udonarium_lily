@@ -288,11 +288,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         const color = this.color;
         const peerId = PeerCursor.myCursor.peerId;
         const sendTo = ChatMessageService.findId(this.sendTo);
+        const isUseFaceIcon = this.isUseFaceIcon;
         if (gameCharacter.dialogTimeOutId) clearTimeout(gameCharacter.dialogTimeOutId);
         //gameCharacter.dialog = { text: null, color: color };
         for (let i = 0; i < dialogs.length; i++) {
           gameCharacter.dialogTimeOutId = setTimeout(() => {
-            gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: color, emote: StringUtil.isEmote(dialogs[i]), from: peerId, to: sendTo } : null;
+            gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: color, emote: StringUtil.isEmote(dialogs[i]), from: peerId, to: sendTo, isUseFaceIcon: isUseFaceIcon } : null;
           }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 6000 : 0));
         }
       } else {

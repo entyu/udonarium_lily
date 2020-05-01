@@ -318,7 +318,6 @@
 }
 
 .chat-bubble p {
-  text-align: center;
   box-sizing: border-box;
   display: inline-block;
   max-width: 100%;
@@ -330,9 +329,11 @@
   margin: 0px;
   padding: 6px 12px;
   white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .chat-bubble p.emote {
+  text-align: center;
   font-size: 38px;
   font-weight: bold;
   border: none;
@@ -343,7 +344,7 @@
 
 .chat-bubble p.is-whisper {
   border-radius: 24px 12px;
-  font-size: 9px;
+  font-size: 11px;
   background: rgba(85, 85, 85, 0.8);
   box-shadow: 0px 0px 2px 0px #ccc;
 }
@@ -397,6 +398,9 @@
   animation-name: chat-bubble-fade-in;
   transition: all .2s ease;
 }
+.chat-bubble-fade-in.short {
+  text-align: center;
+}
 
 @keyframes chat-bubble-fade-in {
   0% {
@@ -418,4 +422,26 @@
 
 .drop-shadow {
   pointer-events: none;
+}
+
+.face-icon {
+  float: left;
+  position: relative;
+  border: 2px solid;
+  width: 32px;
+  height: 32px;
+  max-width: 32px;
+  max-height: 32px;
+  border-radius: 0.3em;
+  overflow: hidden;
+  vertical-align: bottom;
+  object-fit: cover;
+  left: -22px;
+  top: -20px;
+  margin-right: -20px;
+  margin-bottom: -22px;
+  background: linear-gradient(-30deg, rgb(240, 218, 189), rgb(255, 244, 232));
+}
+p.is-wisper .face-icon {
+  background: rgb(48, 45, 45);
 }
