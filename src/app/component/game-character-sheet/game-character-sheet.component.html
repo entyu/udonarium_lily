@@ -17,7 +17,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'character'">
     <button (click)="openModal('imageIdentifier', true)">画像変更</button>
-    <button *ngIf="0 < tabletopObject.imageFile?.url.length" (click)="openModal('faceIcon')">顔IC{{ (!tabletopObject.faceIcon || tabletopObject.faceIcon?.url.length == 0) ? '設定' : '変更'}}</button>
+    <button [disabled]="0 >= tabletopObject.imageFile?.url.length" (click)="openModal('faceIcon')">顔IC{{ (!tabletopObject.faceIcon || tabletopObject.faceIcon?.url.length == 0) ? '設定' : '変更'}}</button>
   </ng-container>
   <ng-container *ngSwitchDefault>
     <button (click)="openModal('imageIdentifier', true)">画像変更</button>
@@ -38,7 +38,7 @@
     <div *ngIf="0 < tabletopObject.faceIcon?.url.length" class="icon-image-box">
       <img [src]="tabletopObject.faceIcon.url | safe: 'resourceUrl'" [alt]="tabletopObject.faceIcon.name" />
       <button class="button-delete-icon" title="アイコン削除" (click)="deleteIcon()">
-        <b class="material-icons">close</b>
+        <b class="material-icons" style="font-size: 1rem;">close</b>
       </button>
       <div><b>ICON</b></div>
     </div>
