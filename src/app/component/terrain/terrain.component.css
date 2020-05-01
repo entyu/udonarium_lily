@@ -20,7 +20,7 @@
   transition: transform 132ms linear;
 }
 .component-content:hover .texture {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .is-pointer-events-none {
