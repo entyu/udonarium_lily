@@ -59,6 +59,10 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     return (this.tabletopObject instanceof GameCharacter && this.tabletopObject.faceIcon && 0 < this.tabletopObject.faceIcon.url.length);
   }
 
+  get aura(): number {
+    return this.tabletopObject instanceof GameCharacter ? this.tabletopObject.aura : -1;
+  }
+
   get inventoryDataElms(): DataElement[] { return this.tabletopObject ? this.getInventoryTags(this.tabletopObject) : []; }
   get dataElms(): DataElement[] { return this.tabletopObject && this.tabletopObject.detailDataElement ? this.tabletopObject.detailDataElement.children as DataElement[] : []; }
   get hasDataElms(): boolean { return 0 < this.dataElms.length; }

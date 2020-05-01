@@ -81,7 +81,7 @@
       [ngClass]="{ 'has-icon': hasIcon,'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
       *ngIf="hasImage">
       <div class="inverser" [ngClass]="{inverse: tabletopObject.isInverse, hollow: tabletopObject.isHollow}">
-        <span class="aura" [ngClass]="{black: tabletopObject.aura == 0, blue: tabletopObject.aura == 1, green: tabletopObject.aura == 2, cyan: tabletopObject.aura == 3, red: tabletopObject.aura == 4, magenta: tabletopObject.aura == 5, yellow: tabletopObject.aura == 6, white: tabletopObject.aura == 7}">
+        <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
           <img class="character-image" [ngClass]="{'black-paint': tabletopObject.isBlackPaint}" [src]="imageUrl | safe: 'resourceUrl'">
         </span>
       </div>

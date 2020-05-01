@@ -53,6 +53,7 @@
   user-select: none;
   -moz-user-drag: none;
   -webkit-user-drag: none;
+
 }
 
 .component-content {
@@ -186,6 +187,8 @@
   bottom: 0;
   left: 0;
   right: 0;
+  
+  overflow: visible;
 }
 
 .rotate-inner {
@@ -196,6 +199,8 @@
 
   width: 100%;
   height: auto;
+
+  overflow: visible;
 }
 
 .is-nowrap {
