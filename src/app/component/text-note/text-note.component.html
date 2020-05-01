@@ -35,7 +35,7 @@
     style="display: flex; align-items: center; border-left: 2px dashed blanchedalmond; transform-origin: top left"
     [style.height.px]="math.abs(textNoteAltitude * gridSize)"
     [ngStyle]="{transform: 'rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
-    <div>
+    <div class="is-3d">
       <span class="altitude-indicator is-3d" style="position: absolute">{{ math.abs(textNoteAltitude) }}</span>
       <span class="altitude-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)">{{ textNoteAltitude }}</span>
     </div>
