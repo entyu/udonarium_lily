@@ -39,13 +39,15 @@
             </div>
           </div>
         </div>
-        <div #chatBubble class="chat-bubble is-3d" 
+        <div #chatBubble class="chat-bubble is-3d"
           [ngStyle]="{'bottom': ((gameCharacter.dialog?.emote ? (size - 1) * gridSize + gridSize / 3.0 : size * gridSize) + characterImageHeight) + 'px','transform': 'translateX(-50%) translateX(' + (size * gridSize / 2) +'px) rotateY(' + (rotate + viewRotateZ) + 'deg)'}">
           <div *ngIf="isListen" class="chat-bubble-fade-in" [style.color]="!gameCharacter.dialog.emote && isWhisper ? '#ccc' : gameCharacter.dialog.color">
-            <p [style.border-color]="gameCharacter.dialog.color" style="position: absolute; backface-visibility: hidden; transform: translateZ(1px)" 
-              [ngClass]="{'emote': gameCharacter.dialog.emote, 'is-whisper': isWhisper}">{{ gameCharacter.dialog.text }}</p>
-            <p [style.border-color]="gameCharacter.dialog.color" style="backface-visibility: hidden; transform: rotateY(-180deg) translateZ(1px)"
-              [ngClass]="{'emote': gameCharacter.dialog.emote, 'is-whisper': isWhisper}">{{ gameCharacter.dialog.text }}</p>
+            <div class="is-3d">
+              <p class="is-3d" [style.border-color]="gameCharacter.dialog.color" style="position: absolute; backface-visibility: hidden" 
+                [ngClass]="{'emote': gameCharacter.dialog.emote, 'is-whisper': isWhisper}">{{ gameCharacter.dialog.text }}</p>
+              <p class="is-3d" [style.border-color]="gameCharacter.dialog.color" style="backface-visibility: hidden; transform: rotateY(-180deg)"
+                [ngClass]="{'emote': gameCharacter.dialog.emote, 'is-whisper': isWhisper}">{{ gameCharacter.dialog.text }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -54,17 +56,17 @@
       style="display: flex; flex-flow: column nowrap; justify-content: space-between; border-left: 2px dashed black; transform-origin: top left"
       [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : size * gridSize + characterImageHeight)"
       [ngStyle]="{transform: 'translateX(' + (size * gridSize / 2) + 'px) translateY(' + (-size * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
-      <div [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
-        <span class="elevation-indicator" style="position: absolute"><i>{{ elevation }}</i></span>
-        <span class="elevation-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
+      <div class="is-3d" [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
+        <span class="elevation-indicator is-3d" style="position: absolute"><i>{{ elevation }}</i></span>
+        <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
       </div>
-      <div>
-        <span class="altitude-indicator" style="position: absolute">{{ math.abs(altitude) }}</span>
-        <span class="altitude-indicator" style="position: absolute; transform: rotateY(-180deg)">{{ math.abs(altitude) }}</span>
+      <div class="is-3d">
+        <span class="altitude-indicator is-3d" style="position: absolute">{{ math.abs(altitude) }}</span>
+        <span class="altitude-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)">{{ math.abs(altitude) }}</span>
       </div>
-      <div [style.visibility]="altitude < 0 ? 'visible' : 'hidden'">
-        <span class="elevation-indicator" style="position: absolute"><i>{{ elevation }}</i></span>
-        <span class="elevation-indicator" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
+      <div class="is-3d" [style.visibility]="altitude < 0 ? 'visible' : 'hidden'">
+        <span class="elevation-indicator is-3d" style="position: absolute"><i>{{ elevation }}</i></span>
+        <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
       </div>
     </div>
   </div>
