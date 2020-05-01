@@ -172,9 +172,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
       { name: '画像効果', action: null, subActions: [
-        { name: 'オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
-          return { name: `${this.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => { this.aura = i - 1; EventSystem.trigger('UPDATE_INVENTORY', null) } };
-        }) },
         (this.isInverse
           ? {
             name: '☑ 反転', action: () => {
@@ -211,6 +208,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
+          { name: 'オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+            return { name: `${this.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => { this.aura = i - 1; EventSystem.trigger('UPDATE_INVENTORY', null) } };
+          }) },
           ContextMenuSeparator,
           {
             name: 'リセット', action: () => {
