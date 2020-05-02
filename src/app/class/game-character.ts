@@ -27,7 +27,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() dialog: DialogData = { text: '', color: '#444444' };
   @SyncVar() aura: number = -1;
 
-  dialogTimeOutId = null
+  dialogTimeOutId = null;
 
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
