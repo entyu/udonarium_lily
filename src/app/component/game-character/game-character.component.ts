@@ -223,9 +223,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
-          { name: 'オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
-            return { name: `${this.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => { this.aura = i - 1; EventSystem.trigger('UPDATE_INVENTORY', null) } };
-          }) },
+          { name: 'オーラ', action: null, subActions: [{ name: `${this.aura == -1 ? '◉' : '○'} なし`, action: () => { this.aura = -1; EventSystem.trigger('UPDATE_INVENTORY', null) } }, ContextMenuSeparator].concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+            return { name: `${this.aura == i ? '◉' : '○'} ${color}`, action: () => { this.aura = i; EventSystem.trigger('UPDATE_INVENTORY', null) } };
+          })) },
           ContextMenuSeparator,
           {
             name: 'リセット', action: () => {
