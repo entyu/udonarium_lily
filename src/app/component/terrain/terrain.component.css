@@ -14,11 +14,12 @@
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
 }
-
+/*
 .component-content {
   -webkit-transition: -webkit-transform 132ms linear;
   transition: transform 132ms linear;
 }
+*/
 .component-content:hover .texture {
   opacity: 0.8;
 }
