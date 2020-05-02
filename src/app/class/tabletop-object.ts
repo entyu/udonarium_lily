@@ -68,6 +68,8 @@ export class TabletopObject extends ObjectNode {
   @SyncVar() isHollow: boolean = false;
   @SyncVar() isBlackPaint: boolean = false;
 
+  @SyncVar() isNotRide: boolean = false;
+
   protected createDataElements() {
     this.initialize();
     let aliasName: string = this.aliasName;

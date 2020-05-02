@@ -74,6 +74,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get aura(): number { return this.gameCharacter.aura; }
   set aura(aura: number) { this.gameCharacter.aura = aura; }
 
+  get isNotRide(): boolean { return this.gameCharacter.isNotRide; }
+  set isNotRide(isNotRide: boolean) { this.gameCharacter.isNotRide = isNotRide; }
+
   get faceIcon(): ImageFile { return this.gameCharacter.faceIcon; }
 
   get elevation(): number {
