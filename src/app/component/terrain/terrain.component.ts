@@ -165,50 +165,39 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }),
       ContextMenuSeparator,
-      (this.hasWall
+      (this.isSlope
         ? {
-          name: '☑ 壁の表示', action: () => {
+          name: '☑ 傾斜', action: () => {
+            this.isSlope = false;
+          }
+        } : {
+          name: '☐ 傾斜', action: () => {
+            this.isSlope = true;
+          }
+        }),
+      { name: '壁の表示', action: null, subActions: [
+        {
+          name: `${ this.hasWall && this.isSurfaceShading ? '◉' : '○' } 通常`, action: () => {
+            this.mode = TerrainViewState.ALL;
+            this.isSurfaceShading = true;
+          }
+        },
+        {
+          name: `${ this.hasWall && !this.isSurfaceShading ? '◉' : '○' } 陰影なし`, action: () => {
+            this.mode = TerrainViewState.ALL;
+            this.isSurfaceShading = false;
+          }
+        },
+        {
+          name: `${ !this.hasWall ? '◉' : '○' } 非表示`, action: () => {
             this.mode = TerrainViewState.FLOOR;
             if (this.depth * this.width === 0) {
               this.terrain.width = this.width <= 0 ? 1 : this.width;
               this.terrain.depth = this.depth <= 0 ? 1 : this.depth;
             }
           }
-        } : {
-          name: '☐ 壁の表示', action: () => {
-            this.mode = TerrainViewState.ALL;
-          }
-        }),
-      (this.isSlope
-        ? {
-          name: '☑ 傾斜地形', action: () => {
-            this.isSlope = false;
-          }
-        } : {
-          name: '☐ 傾斜地形', action: () => {
-            this.isSlope = true;
-          }
-        }),
-      (this.isSurfaceShading
-        ? {
-          name: '☑ 壁に陰影をつける', action: () => {
-            this.isSurfaceShading = false;
-          }
-        } : {
-          name: '☐ 壁に陰影をつける', action: () => {
-            this.isSurfaceShading = true;
-          }
-        }),
-      (this.isDropShadow
-        ? {
-          name: '☑ 影の表示', action: () => {
-            this.isDropShadow = false;
-          }
-        } : {
-          name: '☐ 影の表示', action: () => {
-            this.isDropShadow = true;
-          }
-        }),
+        },
+      ]},
       ContextMenuSeparator,
       (this.isInteract
         ? {
@@ -231,6 +220,16 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         } : {
           name: '☐ 高度の表示', action: () => {
             this.isAltitudeIndicate = true;
+          }
+        }),
+      (this.isDropShadow
+        ? {
+          name: '☑ 影を落とす', action: () => {
+            this.isDropShadow = false;
+          }
+        } : {
+          name: '☐ 影を落とす', action: () => {
+            this.isDropShadow = true;
           }
         }),
       {
