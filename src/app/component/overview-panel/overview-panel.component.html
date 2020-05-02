@@ -152,7 +152,7 @@
   <ng-container *ngIf="0 < dataElm.children.length; then thenBlock; else elseBlock"></ng-container>
   <ng-template #thenBlock>
     <div class="section" style="padding-top: 0.5em;">
-      <div class="section-text" *ngIf="0 < dataElm.name.trim().length">{{dataElm.name}}</div>
+      <div *ngIf="0 < dataElm.name.trim().length" class="section-text" [attr.title]="dataElm.name">{{dataElm.name}}</div>
       <div class="grid-container indetnt">
         <ng-container *ngFor="let childElm of dataElm.children">
           <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: childElm }"></ng-container>
@@ -164,7 +164,7 @@
     <ng-container [ngSwitch]="dataElm.type">
       <ng-container *ngSwitchCase="'note'">
         <div class="section">
-          <div>{{dataElm.name}}</div>
+          <div [attr.title]="dataElm.name">{{dataElm.name}}</div>
           <div class="note" style="position: relative;">
             <div class="is-fill">
               <textarea class="textarea" [(ngModel)]="dataElm.value" spellcheck="false"></textarea>
@@ -174,14 +174,14 @@
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'simpleNumber'">
-        <div class="tag">{{dataElm.name}}</div>
+        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
         <div class="value">
           <div class="hidden-spacer">{{dataElm.value}}</div>
           <input class="input" style="width:4em" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'numberResource'">
-        <div class="tag">{{dataElm.name}}</div>
+        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
         <div class="value">
           <div style="display: inline-block; width: min-content;">
             <div class="hidden-spacer" style="margin-right: 2em;">{{dataElm.currentValue}}</div>
@@ -195,14 +195,14 @@
             min="0" max="{{!+dataElm.value ? 1000 : dataElm.value}}" [(ngModel)]="dataElm.currentValue" />
         </div>
       </ng-container>
-      <ng-container  *ngSwitchCase="'checkProperty'">
-          <div class="tag" [style.textDecoration]="dataElm.value ? 'none' : 'line-through'">{{dataElm.name}} {{dataElm.currentValue}}</div>
+      <ng-container *ngSwitchCase="'checkProperty'">
+          <div class="tag" [attr.title]="dataElm.name" [style.textDecoration]="dataElm.value ? 'none' : 'line-through'">{{dataElm.name}} {{dataElm.currentValue}}</div>
           <div class="value">
             <input type="checkbox" style="margin-right:1em" [(ngModel)]="dataElm.value" checked="{{dataElm.value ? 'checked' : ''}}" (change)="dataElm.value = (dataElm.value ? dataElm.name : '')">
           </div>
         </ng-container>
       <ng-container *ngSwitchDefault>
-        <div class="tag">{{dataElm.name}}</div>
+        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
         <div class="value">
           <div class="hidden-spacer">{{dataElm.value}}</div>
           <input class="input" type="{{dataElm.name === 'size' || dataElm.name === 'altitude' ? 'number' : 'text'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" />
