@@ -208,7 +208,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
-          { name: 'オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+          { name: '　オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
             return { name: `${this.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => { this.aura = i - 1; EventSystem.trigger('UPDATE_INVENTORY', null) } };
           }) },
           ContextMenuSeparator,
