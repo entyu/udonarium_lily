@@ -171,6 +171,18 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isDropShadow
+        ? {
+          name: '☑ 影の表示', action: () => {
+            this.isDropShadow = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ 影の表示', action: () => {
+            this.isDropShadow = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }),
       { name: '画像効果', action: null, subActions: [
         (this.isInverse
           ? {
@@ -208,7 +220,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }
           }),
-          { name: '　オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+          { name: 'オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
             return { name: `${this.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => { this.aura = i - 1; EventSystem.trigger('UPDATE_INVENTORY', null) } };
           }) },
           ContextMenuSeparator,
@@ -223,27 +235,30 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
             disabled: !this.isInverse && !this.isHollow && !this.isBlackPaint && this.aura == -1
           }
       ]},
-      (this.isDropShadow
+      ContextMenuSeparator,
+      (!this.isNotRide
         ? {
-          name: '影を落とさない', action: () => {
-            this.isDropShadow = false;
+          name: '☑ 他のコマに乗る', action: () => {
+            this.isNotRide = true;
+            SoundEffect.play(PresetSound.sweep);
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
-          name: '影を落とす', action: () => {
-            this.isDropShadow = true;
+          name: '☐ 他のコマに乗る', action: () => {
+            this.isNotRide = false;
+            SoundEffect.play(PresetSound.piecePut);
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
       ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {
-          name: '高度を表示しない', action: () => {
+          name: '☑ 高度の表示', action: () => {
             this.isAltitudeIndicate = false;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
-          name: '高度を表示する', action: () => {
+          name: '☐ 高度の表示', action: () => {
             this.isAltitudeIndicate = true;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }

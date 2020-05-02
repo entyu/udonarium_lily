@@ -161,12 +161,12 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     this.contextMenuService.open(position, [
       (this.isLocked
         ? {
-          name: '固定解除', action: () => {
+          name: '☑ 固定', action: () => {
             this.isLocked = false;
             SoundEffect.play(PresetSound.unlock);
           }
         } : {
-          name: '固定する', action: () => {
+          name: '☐ 固定', action: () => {
             this.isLocked = true;
             SoundEffect.play(PresetSound.lock);
           }
@@ -187,22 +187,22 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       ContextMenuSeparator,
       (this.isUpright
         ? {
-          name: '直立しない', action: () => {
+          name: '☑ 直立', action: () => {
             this.isUpright = false;
           }
         } : {
-          name: '直立する', action: () => {
+          name: '☐ 直立', action: () => {
             this.isUpright = true;
           }
         }),
       ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {
-          name: '高度を表示しない', action: () => {
+          name: '☑ 高度の表示', action: () => {
             this.isAltitudeIndicate = false;
           }
         } : {
-          name: '高度を表示する', action: () => {
+          name: '☐ 高度の表示', action: () => {
             this.isAltitudeIndicate = true;
           }
         }),

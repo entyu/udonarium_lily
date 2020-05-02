@@ -114,13 +114,13 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     this.contextMenuService.open(menuPosition, [
       (this.isLock
         ? {
-          name: '固定解除', action: () => {
+          name: '☑ 固定', action: () => {
             this.isLock = false;
             SoundEffect.play(PresetSound.unlock);
           }
         }
         : {
-          name: '固定する', action: () => {
+          name: '☐ 固定', action: () => {
             this.isLock = true;
             SoundEffect.play(PresetSound.lock);
           }

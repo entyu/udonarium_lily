@@ -154,32 +154,20 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     this.contextMenuService.open(menuPosition, [
       (this.isLocked
         ? {
-          name: '固定解除', action: () => {
+          name: '☑ 固定', action: () => {
             this.isLocked = false;
             SoundEffect.play(PresetSound.unlock);
           }
         } : {
-          name: '固定する', action: () => {
+          name: '☐ 固定', action: () => {
             this.isLocked = true;
             SoundEffect.play(PresetSound.lock);
           }
         }),
-        (this.isInteract
-          ? {
-            name: '他の地形に乗らないように', action: () => {
-              this.isInteract = false;
-              SoundEffect.play(PresetSound.unlock);
-            }
-          } : {
-            name: '他の地形に乗るように', action: () => {
-              this.isInteract = true;
-              SoundEffect.play(PresetSound.lock);
-            }
-          }),
       ContextMenuSeparator,
       (this.hasWall
         ? {
-          name: '壁を非表示', action: () => {
+          name: '☑ 壁の表示', action: () => {
             this.mode = TerrainViewState.FLOOR;
             if (this.depth * this.width === 0) {
               this.terrain.width = this.width <= 0 ? 1 : this.width;
@@ -187,48 +175,61 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
             }
           }
         } : {
-          name: '壁を表示', action: () => {
+          name: '☐ 壁の表示', action: () => {
             this.mode = TerrainViewState.ALL;
           }
         }),
       (this.isSlope
         ? {
-          name: '傾斜しない', action: () => {
+          name: '☑ 傾斜地形', action: () => {
             this.isSlope = false;
           }
         } : {
-          name: '傾斜する', action: () => {
+          name: '☐ 傾斜地形', action: () => {
             this.isSlope = true;
           }
         }),
       (this.isSurfaceShading
         ? {
-          name: '壁に陰影をつけない', action: () => {
+          name: '☑ 壁に陰影をつける', action: () => {
             this.isSurfaceShading = false;
           }
         } : {
-          name: '壁に陰影をつける', action: () => {
+          name: '☐ 壁に陰影をつける', action: () => {
             this.isSurfaceShading = true;
           }
         }),
       (this.isDropShadow
         ? {
-          name: '影を落とさない', action: () => {
+          name: '☑ 影の表示', action: () => {
             this.isDropShadow = false;
           }
         } : {
-          name: '影を落とす', action: () => {
+          name: '☐ 影の表示', action: () => {
             this.isDropShadow = true;
+          }
+        }),
+      ContextMenuSeparator,
+      (this.isInteract
+        ? {
+          name: '☑ 他の地形に乗る', action: () => {
+            this.isInteract = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '☐ 他の地形に乗る', action: () => {
+            this.isInteract = true;
+            SoundEffect.play(PresetSound.lock);
           }
         }),
       ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {
-          name: '高度を表示しない', action: () => {
+          name: '☑ 高度の表示', action: () => {
             this.isAltitudeIndicate = false;
           }
         } : {
-          name: '高度を表示する', action: () => {
+          name: '☐ 高度の表示', action: () => {
             this.isAltitudeIndicate = true;
           }
         }),

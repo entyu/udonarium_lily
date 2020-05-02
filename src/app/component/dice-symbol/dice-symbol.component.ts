@@ -249,11 +249,11 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
     actions.push((this.isDropShadow
       ? {
-        name: '影を落とさない', action: () => {
+        name: '☑ 影の表示', action: () => {
           this.isDropShadow = false;
         }
       } : {
-        name: '影を落とす', action: () => {
+        name: '☐ 影の表示', action: () => {
           this.isDropShadow = true;
         }
       }));

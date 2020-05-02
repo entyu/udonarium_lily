@@ -128,6 +128,20 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     
     let actions: ContextMenuAction[] = [];
     
+    actions.push(
+      (gameObject.isDropShadow
+      ? {
+        name: '☑ 影の表示', action: () => {
+          gameObject.isDropShadow = false;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      } : {
+        name: '☐ 影の表示', action: () => {
+          gameObject.isDropShadow = true;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      })
+    );
     actions.push({ name: '画像効果', action: null,  
     subActions: [
       (gameObject.isInverse
@@ -166,7 +180,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
-        { name: '　オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+        { name: 'オーラ', action: null, subActions: ['なし', 'ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
           return { name: `${gameObject.aura == i - 1 ? '◉' : '○'} ${color}`, action: () => { gameObject.aura = i - 1; EventSystem.trigger('UPDATE_INVENTORY', null) } };
         }) },
         ContextMenuSeparator,
@@ -181,30 +195,31 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
           disabled: !gameObject.isInverse && !gameObject.isHollow && !gameObject.isBlackPaint && gameObject.aura == -1
         }
     ]});
-    actions.push(
-      (gameObject.isDropShadow
+    actions.push(ContextMenuSeparator);
+    actions.push((!gameObject.isNotRide
       ? {
-        name: '影を落とさない', action: () => {
-          gameObject.isDropShadow = false;
+        name: '☑ 他のコマに乗る', action: () => {
+          gameObject.isNotRide = true;
+          SoundEffect.play(PresetSound.sweep);
           EventSystem.trigger('UPDATE_INVENTORY', null);
         }
       } : {
-        name: '影を落とす', action: () => {
-          gameObject.isDropShadow = true;
+        name: '☐ 他のコマに乗る', action: () => {
+          gameObject.isNotRide = false;
+          SoundEffect.play(PresetSound.piecePut);
           EventSystem.trigger('UPDATE_INVENTORY', null);
         }
-      })
-    );
+      }));
     actions.push(ContextMenuSeparator);
     actions.push(
       (gameObject.isAltitudeIndicate
       ? {
-        name: '高度を表示しない', action: () => {
+        name: '☑ 高度の表示', action: () => {
           gameObject.isAltitudeIndicate = false;
           EventSystem.trigger('UPDATE_INVENTORY', null);
         }
       } : {
-        name: '高度を表示する', action: () => {
+        name: '☐ 高度の表示', action: () => {
           gameObject.isAltitudeIndicate = true;
           EventSystem.trigger('UPDATE_INVENTORY', null);
         }
