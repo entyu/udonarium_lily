@@ -262,7 +262,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     this.previousWritingLength = this.text.length;
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
     textArea.value = '';
-    this.resetPletteSelect();
+    //this.resetPletteSelect();
     this.calcFitHeight();
   }
 
