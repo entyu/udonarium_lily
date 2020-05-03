@@ -281,24 +281,38 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
       ContextMenuSeparator,
-      {
-        name: '共有イベントリに移動', action: () => {
-          this.gameCharacter.setLocation('common');
-          SoundEffect.play(PresetSound.piecePut);
-        }
-      },
-      {
-        name: '個人イベントリに移動', action: () => {
-          this.gameCharacter.setLocation(Network.peerId);
-          SoundEffect.play(PresetSound.piecePut);
-        }
-      },
-      {
-        name: '墓場に移動', action: () => {
-          this.gameCharacter.setLocation('graveyard');
-          SoundEffect.play(PresetSound.sweep);
-        }
-      },
+      (this.gameCharacter.isInventoryIndicate
+        ? {
+          name: '☑ インベントリに表示', action: () => {
+            this.gameCharacter.isInventoryIndicate = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ インベントリに表示', action: () => {
+            this.gameCharacter.isInventoryIndicate = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }),
+      { name: 'テーブルから移動', action: null, subActions: [
+        {
+          name: '共有インベントリ', action: () => {
+            this.gameCharacter.setLocation('common');
+            SoundEffect.play(PresetSound.piecePut);
+          }
+        },
+        {
+          name: '個人インベントリ', action: () => {
+            this.gameCharacter.setLocation(Network.peerId);
+            SoundEffect.play(PresetSound.piecePut);
+          }
+        },
+        {
+          name: '墓場', action: () => {
+            this.gameCharacter.setLocation('graveyard');
+            SoundEffect.play(PresetSound.sweep);
+          }
+        },
+      ]},
       ContextMenuSeparator,
       {
         name: 'コピーを作る', action: () => {

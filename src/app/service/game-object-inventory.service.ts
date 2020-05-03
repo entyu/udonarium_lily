@@ -30,6 +30,8 @@ export class GameObjectInventoryService {
   privateInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === Network.peerId; });
   graveyardInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === 'graveyard'; });
 
+  indicateAll: boolean = false;
+
   private locationMap: Map<ObjectIdentifier, LocationName> = new Map();
   private tagNameMap: Map<ObjectIdentifier, ElementName> = new Map();
 
