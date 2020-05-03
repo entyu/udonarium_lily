@@ -199,6 +199,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         },
       ]},
       ContextMenuSeparator,
+      /*
       (this.isInteract
         ? {
           name: '☑ 他の地形に乗る', action: () => {
@@ -212,6 +213,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }),
       ContextMenuSeparator,
+      */
       (this.isDropShadow
         ? {
           name: '☑ 影を落とす', action: () => {
