@@ -14,6 +14,34 @@ export namespace StringUtil {
 
   export function isEmote(str: string): boolean {
     if (!str) return false;
-    return str.length <= 3 && (EMOJI_REGEXP.test(str) || /[！？❕❢‽‼/!/?]/.test(str)); 
+    return str.length <= 3 && (EMOJI_REGEXP.test(str) || /[！？❕❢‽‼/!/?♥💛♪♬🎵♩♫🎶☺🌞]/.test(str)); 
+  }
+
+  export function cr(str: string): string {
+    if (!str) return '';
+    let ret = '';
+    let flg = '';
+    [...str].forEach(c => {
+      if (flg) {
+        switch (c) {
+          case 'n':
+          case 'ｎ':
+            ret += "\n";
+            break;
+          case '\\':
+          case '￥':
+            ret += c;
+            break;
+          default:
+            ret += (flg + c);
+        }
+        flg = '';
+      } else if (c == '\\' || c == '￥') {
+        flg = c;
+      } else {
+        ret += c;
+      }
+    });
+    return ret;
   }
 }

@@ -41,16 +41,16 @@
         </div>
         <div #chatBubble class="chat-bubble is-3d"
           [ngStyle]="{'bottom': ((gameCharacter.dialog?.emote ? (size - 1) * gridSize + gridSize / 3.0 : size * gridSize) + characterImageHeight) + 'px','transform': 'translateX(-50%) translateX(' + (size * gridSize / 2) +'px) rotateY(' + (rotate + viewRotateZ) + 'deg)'}">
-          <div *ngIf="isListen" class="chat-bubble-fade-in is-3d" [ngClass]="{short: gameCharacter.dialog.text.length <= 6 }" [style.color]="!gameCharacter.dialog.emote && isWhisper ? '#ccc' : gameCharacter.dialog.color">
+          <div *ngIf="isListen" class="chat-bubble-fade-in is-3d" [style.color]="!gameCharacter.dialog.emote && isWhisper ? '#ccc' : gameCharacter.dialog.color">
             <div class="is-3d">
               <p class="is-3d" [style.border-color]="gameCharacter.dialog.color" style="position: absolute; backface-visibility: hidden" 
                 [ngClass]="{'emote': gameCharacter.dialog.emote, 'is-whisper': isWhisper}">
                 <img *ngIf="!gameCharacter.dialog.emote && gameCharacter.dialog.isUseFaceIcon && 0 < faceIcon?.url.length" 
-                class="face-icon" [style.border-color]="gameCharacter.dialog.color" [src]="faceIcon.url | safe: 'resourceUrl'">{{ gameCharacter.dialog.text }}</p>
+                class="face-icon" [style.border-color]="gameCharacter.dialog.color" [src]="faceIcon.url | safe: 'resourceUrl'">{{ stringUtil.cr(gameCharacter.dialog.text) }}</p>
               <p class="is-3d" [style.border-color]="gameCharacter.dialog.color" style="backface-visibility: hidden; transform: rotateY(-180deg)"
                 [ngClass]="{'emote': gameCharacter.dialog.emote, 'is-whisper': isWhisper}">
                 <img *ngIf="!gameCharacter.dialog.emote && gameCharacter.dialog.isUseFaceIcon && 0 < faceIcon?.url.length" 
-                class="face-icon" [style.border-color]="gameCharacter.dialog.color" [src]="faceIcon.url | safe: 'resourceUrl'">{{ gameCharacter.dialog.text }}</p>
+                class="face-icon" [style.border-color]="gameCharacter.dialog.color" [src]="faceIcon.url | safe: 'resourceUrl'">{{ stringUtil.cr(gameCharacter.dialog.text) }}</p>
             </div>
           </div>
         </div>

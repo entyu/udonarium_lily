@@ -25,6 +25,7 @@ import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.s
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 @Component({
   selector: 'game-character',
@@ -85,6 +86,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   gridSize: number = 50;
   math = Math;
+  stringUtil = StringUtil;
   viewRotateZ = 0;
 
   @ViewChild('characterImage', { static: false }) characterImage: ElementRef;

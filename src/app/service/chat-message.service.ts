@@ -7,6 +7,7 @@ import { Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 const HOURS = 60 * 60 * 1000;
 
@@ -83,7 +84,7 @@ export class ChatMessageService {
       imageIdentifier: this.findImageIdentifier(sendFrom, isUseFaceIcon),
       timestamp: this.calcTimeStamp(chatTab),
       tag: gameType,
-      text: text,
+      text: StringUtil.cr(text),
       color: color,
       isInverseIcon: effective && isInverseIcon ? 1 : 0,
       isHollowIcon: effective && isHollowIcon ? 1 : 0,
