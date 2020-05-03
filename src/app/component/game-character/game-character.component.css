@@ -329,7 +329,7 @@
   min-width: 120px;
   font-size: 11px;
   background: linear-gradient(-30deg, rgba(240, 218, 189, 0.9), rgba(255, 244, 232, 0.9));
-  border: 2px solid;
+  border: 1px solid;
   border-radius: 24px;
   margin: 0px;
   padding: 6px 12px;
@@ -374,7 +374,7 @@
 	vertical-align: baseline;
   left: 50%;
   margin-left: -8px;
-  bottom: -18px;
+  bottom: -17px;
   border: 8px solid transparent;
   border-top-color: inherit;
 }
@@ -390,7 +390,7 @@
   content: '〇。';
   font-size: 12px;
   font-weight: bold;
-  bottom: -11px;
+  bottom: -10px;
 }
 
 .chat-bubble p.is-whisper.emote:after {
@@ -432,7 +432,7 @@
 .face-icon {
   float: left;
   position: relative;
-  border: 2px solid;
+  border: 1px solid;
   width: 32px;
   height: 32px;
   max-width: 32px;
@@ -441,9 +441,9 @@
   overflow: hidden;
   vertical-align: bottom;
   object-fit: cover;
-  left: -22px;
-  top: -20px;
-  margin-right: -20px;
+  left: -16px;
+  top: -18px;
+  margin-right: -14px;
   margin-bottom: -22px;
   background: linear-gradient(-30deg, rgb(240, 218, 189), rgb(255, 244, 232));
 }
