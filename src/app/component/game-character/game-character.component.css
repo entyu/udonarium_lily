@@ -29,12 +29,12 @@
   -webkit-transition: -webkit-transform 132ms linear;
   transition: transform 132ms linear;
 }
-*/
+
 .upright-transform {
   -webkit-transition: -webkit-transform 132ms ease;
   transition: transform 132ms ease;
 }
-
+*/
 .upright-transform.fall {
   -webkit-transition: -webkit-transform 132ms ease;
   transition: transform 132ms ease;

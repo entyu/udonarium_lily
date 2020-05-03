@@ -13,30 +13,28 @@
         </div>
       </div>
       <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}"><img class="image drop-shadow" *ngIf="isDropShadow && 0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) blur(1px)" [ngStyle]="{'opacity': isHollow ? 0.4 : 0.7, 'transform': 'scale(' + (isInverse ? -1 : 1) + ', 0.6) translateY(-40%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}"></span>
-      <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'translateZ(' + (altitude) * gridSize +'px)'}">
-        <div class="is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%)'}">
-          <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
-            appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-            <div class="rotate-inner is-3d">
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
+      <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
+        <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
+          appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
+          <div class="rotate-inner is-3d">
+            <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
+              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+              <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
+              <div class="back-tag has-length-limit is-3d">{{name}}</div>
+            </div>
+            <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}">
+              <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
+                <img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageFile.url | safe: 'resourceUrl'">
+              </span>
+            </div>
+            <div class="grab-group">
+              <div class="rotate-grab rotate-grab-icon of-top"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-                <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
-                <div class="back-tag has-length-limit is-3d">{{name}}</div>
+                <i class="material-icons">autorenew</i>
               </div>
-              <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}">
-                <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                  <img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageFile.url | safe: 'resourceUrl'">
-                </span>
-              </div>
-              <div class="grab-group">
-                <div class="rotate-grab rotate-grab-icon of-top"
-                  [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-                  <i class="material-icons">autorenew</i>
-                </div>
-                <div class="rotate-grab rotate-grab-icon of-bottom"
-                  [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px'}">
-                  <i class="material-icons">autorenew</i>
-                </div>
+              <div class="rotate-grab rotate-grab-icon of-bottom"
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px'}">
+                <i class="material-icons">autorenew</i>
               </div>
             </div>
           </div>
