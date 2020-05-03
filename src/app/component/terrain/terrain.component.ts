@@ -212,16 +212,6 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }),
       ContextMenuSeparator,
-      (this.isAltitudeIndicate
-        ? {
-          name: '☑ 高度の表示', action: () => {
-            this.isAltitudeIndicate = false;
-          }
-        } : {
-          name: '☐ 高度の表示', action: () => {
-            this.isAltitudeIndicate = true;
-          }
-        }),
       (this.isDropShadow
         ? {
           name: '☑ 影を落とす', action: () => {
@@ -230,6 +220,16 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         } : {
           name: '☐ 影を落とす', action: () => {
             this.isDropShadow = true;
+          }
+        }),
+      (this.isAltitudeIndicate
+        ? {
+          name: '☑ 高度の表示', action: () => {
+            this.isAltitudeIndicate = false;
+          }
+        } : {
+          name: '☐ 高度の表示', action: () => {
+            this.isAltitudeIndicate = true;
           }
         }),
       {
