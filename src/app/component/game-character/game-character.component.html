@@ -45,13 +45,13 @@
             <div class="is-3d">
               <p class="is-3d" [style.border-color]="gameCharacter.dialog.color" style="position: absolute; backface-visibility: hidden" 
                 [ngClass]="{'emote': gameCharacter.dialog.emote, 'is-whisper': isWhisper}"><span class="face-icon-box"
-                  *ngIf="!gameCharacter.dialog.emote && gameCharacter.dialog.isUseFaceIcon && 0 < faceIcon?.url.length">
-                  <img class="face-icon" [style.border-color]="gameCharacter.dialog.color" [src]="faceIcon.url | safe: 'resourceUrl'">
+                  *ngIf="!gameCharacter.dialog.emote && gameCharacter.dialog.isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
+                  <img class="face-icon" [style.border-color]="gameCharacter.dialog.color" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
                 </span>{{ stringUtil.cr(gameCharacter.dialog.text) }}</p>
               <p class="is-3d" [style.border-color]="gameCharacter.dialog.color" style="backface-visibility: hidden; transform: rotateY(-180deg)"
                 [ngClass]="{'emote': gameCharacter.dialog.emote, 'is-whisper': isWhisper}"><span class="face-icon-box"
-                  *ngIf="!gameCharacter.dialog.emote && gameCharacter.dialog.isUseFaceIcon && 0 < faceIcon?.url.length">
-                  <img class="face-icon" [style.border-color]="gameCharacter.dialog.color" [src]="faceIcon.url | safe: 'resourceUrl'">
+                  *ngIf="!gameCharacter.dialog.emote && gameCharacter.dialog.isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
+                  <img class="face-icon" [style.border-color]="gameCharacter.dialog.color" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
                 </span>{{ stringUtil.cr(gameCharacter.dialog.text) }}</p>
             </div>
           </div>

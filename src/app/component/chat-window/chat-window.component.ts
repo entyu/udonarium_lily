@@ -293,11 +293,22 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         const peerId = PeerCursor.myCursor.peerId;
         const sendTo = ChatMessageService.findId(this.sendTo);
         const isUseFaceIcon = this.isUseFaceIcon;
+        const image_identifier = gameCharacter.imageFile ? gameCharacter.imageFile.identifier : null;
+        const icon_identifier = gameCharacter.faceIcon ? gameCharacter.faceIcon.identifier : null;
         if (gameCharacter.dialogTimeOutId) clearTimeout(gameCharacter.dialogTimeOutId);
         //gameCharacter.dialog = { text: null, color: color };
         for (let i = 0; i < dialogs.length; i++) {
           gameCharacter.dialogTimeOutId = setTimeout(() => {
-            gameCharacter.dialog = dialogs[i] ? { text: dialogs[i], color: color, emote: StringUtil.isEmote(dialogs[i]), from: peerId, to: sendTo, isUseFaceIcon: isUseFaceIcon } : null;
+            gameCharacter.dialog = dialogs[i] ? { 
+              text: dialogs[i], 
+              color: color, 
+              emote: StringUtil.isEmote(dialogs[i]), 
+              from: peerId, 
+              to: sendTo, 
+              isUseFaceIcon: isUseFaceIcon,
+              image_identifier: image_identifier,
+              icon_identifier: icon_identifier
+            } : null;
           }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 6000 : 0));
         }
       } else {
@@ -461,6 +472,24 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
               disabled: !this.gameCharacter.isInverse && !this.gameCharacter.isHollow && !this.gameCharacter.isBlackPaint && this.gameCharacter.aura == -1
             }
           ]
+        });
+      } else {
+        contextMenuActions.push(ContextMenuSeparator);
+        contextMenuActions.push({
+          name: '顔アイコンの変更',
+          action: null,
+          subActions: this.gameCharacter.faceIcons.map((faceIconImage, i) => {
+            return { 
+              name: `${this.gameCharacter.currntIconIndex == i ? '◉' : '○'}`, 
+              action: () => { 
+                if (this.gameCharacter.currntIconIndex != i) {
+                  this.gameCharacter.currntIconIndex = i;
+                }
+              }, 
+              default: this.gameCharacter.currntIconIndex == i,
+              icon: faceIconImage
+            };
+          })
         });
       }
       contextMenuActions.push(ContextMenuSeparator);

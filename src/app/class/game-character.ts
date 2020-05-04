@@ -12,6 +12,8 @@ export interface DialogData {
   from?: string;
   to?: string;
   isUseFaceIcon?: boolean;
+  image_identifier?: string;
+  icon_identifier?: string;
 }
 
 @SyncObject('character')

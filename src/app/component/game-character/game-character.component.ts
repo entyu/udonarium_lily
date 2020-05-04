@@ -26,6 +26,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 
 @Component({
   selector: 'game-character',
@@ -79,6 +80,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set isNotRide(isNotRide: boolean) { this.gameCharacter.isNotRide = isNotRide; }
 
   get faceIcon(): ImageFile { return this.gameCharacter.faceIcon; }
+  get dialogFaceIcon(): ImageFile {
+    if (!this.gameCharacter.dialog || !this.gameCharacter.dialog.icon_identifier) return null;
+    return ImageStorage.instance.get(<string>this.gameCharacter.dialog.icon_identifier);
+  }
 
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);

@@ -32,6 +32,13 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     return null;
   }
 
+  get isIconsMenu(): boolean {
+    for (let action of this.actions) {
+      if(!action.icon) return false;
+    }
+    return true;
+  }
+
   constructor(
     private elementRef: ElementRef<HTMLElement>,
     public contextMenuService: ContextMenuService,

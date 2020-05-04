@@ -25,7 +25,7 @@
   border-radius: 0.5rem;
   color: black;
   filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
-  z-index: 1000;
+  z-index: 100;
   margin-top: 1px;
 }
 .icon-image-box img {
@@ -34,17 +34,18 @@
   vertical-align: bottom;
   object-fit: cover;
   object-position: 50% 0%;
+  border-radius: 0.5rem;
 }
 .icon-image-box:hover {
-  border: 1px solid red;
-  z-index: 10000;
+  border: 1px dotted red;
+  z-index: 1000;
 }
 .icon-image-box.current-icon {
   border: 2px solid red;
-  z-index: 5000;
+  z-index: 500;
 }
 .icon-image-box:not(.current-icon) {
-  z-index: 1000;
+  z-index: 400;
 }
 
 .table {

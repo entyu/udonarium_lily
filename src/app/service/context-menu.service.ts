@@ -1,5 +1,6 @@
 import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { TabletopObject } from '@udonarium/tabletop-object';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
 
 interface ContextMenuPoint {
   x: number,
@@ -24,7 +25,8 @@ export interface ContextMenuAction {
   type?: ContextMenuType,
   subActions?: ContextMenuAction[],
   altitudeHande?: TabletopObject,
-  default?: boolean
+  default?: boolean,
+  icon?: ImageFile
 }
 
 @Injectable()
