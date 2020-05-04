@@ -65,6 +65,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   editPalette: string = '';
 
   isUseFaceIcon: boolean = true;
+  selectedPaletteIndex = -1;
 
   private shouldUpdateCharacterList: boolean = true;
   private _gameCharacters: GameCharacter[] = [];
@@ -152,12 +153,14 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   clickPalette(line: string) {
+    if (!this.chatPletteElementRef.nativeElement) return;
     const evaluatedLine = this.palette.evaluate(line, this.character.rootDataElement);
-    if (this.doubleClickTimer && this.text === evaluatedLine) {
+    if (this.doubleClickTimer && this.selectedPaletteIndex === this.chatPletteElementRef.nativeElement.selectedIndex) {
       clearTimeout(this.doubleClickTimer);
       this.doubleClickTimer = null;
       this.sendChat(null);
     } else {
+      this.selectedPaletteIndex = this.chatPletteElementRef.nativeElement.selectedIndex;
       this.text = evaluatedLine;
       let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
       textArea.value = this.text;
