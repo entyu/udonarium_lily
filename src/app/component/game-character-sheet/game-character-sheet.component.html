@@ -44,7 +44,6 @@
           </button>
         </div>
       </ng-container>
-      <div *ngIf="tabletopObject.faceIcons?.length > 0" class="icons-indicate"><b>ICON<ng-container *ngIf="tabletopObject.faceIcons?.length > 1">s</ng-container></b></div>
     </div>
     <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" />
   </div>

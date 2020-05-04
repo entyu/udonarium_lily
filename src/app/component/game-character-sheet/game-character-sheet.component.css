@@ -17,6 +17,7 @@
   left: 216px;
 }
 .icon-image-box {
+  position: relative;
   width: 50px;
   height: 50px;
   max-width: 50px;
@@ -25,6 +26,7 @@
   color: black;
   filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
   z-index: 1000;
+  margin-top: 1px;
 }
 .icon-image-box img {
   width: 100%;
@@ -37,9 +39,8 @@
   border: 2px solid red;
   z-index: 10000;
 }
-
-.icons-indicate {
-  filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
+.icon-image-box:not(.current-icon) {
+  z-index: 1000;
 }
 
 .table {
