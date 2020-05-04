@@ -38,7 +38,7 @@
     <div class="icons-box">
       <ng-container *ngFor="let faceIconImage of tabletopObject.faceIcons; index as i">
         <div *ngIf="0 < faceIconImage.url.length" class="icon-image-box" [ngClass]="{'current-icon': tabletopObject.currntIconIndex == i}">
-          <img [src]="faceIconImage.url | safe: 'resourceUrl'" [alt]="faceIconImage.name" (click)="tabletopObject.currntIconIndex = i" />
+          <img [src]="faceIconImage.url | safe: 'resourceUrl'" [alt]="faceIconImage.name" (click)="selectIcon(i)" />
           <button class="button-delete-icon" title="アイコン削除" (click)="deleteIcon(i)">
             <b class="material-icons" style="font-size: 1rem;">close</b>
           </button>

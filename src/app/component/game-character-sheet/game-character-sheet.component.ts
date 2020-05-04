@@ -111,7 +111,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
         if (elements.length >= this.MAX_FACE_ICON_COUNT) {
           for (let i = this.MAX_FACE_ICON_COUNT; i < elements.length; i++) {
-            this.deleteIcon(i);
+            this.deleteIcon(i, false);
           }
           elements[this.MAX_FACE_ICON_COUNT - 1].value = value;
         } else {
@@ -126,13 +126,20 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     });
   }
 
-  deleteIcon(index: number=0) {
+  selectIcon(index: number) {
+    if (this.tabletopObject.currntIconIndex == index) return;
+    this.tabletopObject.currntIconIndex = index;
+    SoundEffect.play(PresetSound.cardPut);
+  }
+
+  deleteIcon(index: number=0, sound=true) {
     if (!this.tabletopObject || !this.tabletopObject.imageDataElement) return;
     let elements = this.tabletopObject.imageDataElement.getElementsByName('faceIcon');
     if (elements && 0 < elements.length && index < elements.length) {
       if (this.tabletopObject.currntIconIndex >= index) this.tabletopObject.currntIconIndex -= 1;
       if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       this.tabletopObject.imageDataElement.removeChild(elements[index]);
+      if (sound) SoundEffect.play(PresetSound.sweep);
     }
   }
 }

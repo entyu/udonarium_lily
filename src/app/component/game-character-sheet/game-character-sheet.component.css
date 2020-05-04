@@ -35,9 +35,13 @@
   object-fit: cover;
   object-position: 50% 0%;
 }
+.icon-image-box:hover {
+  border: 1px solid red;
+  z-index: 10000;
+}
 .icon-image-box.current-icon {
   border: 2px solid red;
-  z-index: 10000;
+  z-index: 5000;
 }
 .icon-image-box:not(.current-icon) {
   z-index: 1000;
