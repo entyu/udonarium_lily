@@ -244,12 +244,37 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(gameObject) }, disabled: gameObject.location.name === 'graveyard' });
     //}
     actions.push(ContextMenuSeparator);
+    actions.push(gameObject.isInventoryIndicate
+      ? {
+        name: '☑ テーブルインベントリに表示', action: () => {
+          gameObject.isInventoryIndicate = false;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      } : {
+        name: '☐ テーブルインベントリに表示', action: () => {
+          gameObject.isInventoryIndicate = true;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
+        }
+      });
     let locations = [
-      { name: 'table', alias: 'テーブルに移動' },
-      { name: 'common', alias: '共有インベントリに移動' },
-      { name: Network.peerId, alias: '個人インベントリに移動' },
-      { name: 'graveyard', alias: '墓場に移動' }
+      { name: 'table', alias: 'テーブル' },
+      { name: 'common', alias: '共有インベントリ' },
+      { name: Network.peerId, alias: '個人インベントリ' },
+      { name: 'graveyard', alias: '墓場' }
     ];
+    actions.push({
+      name: `${ locations.find((location) => { return location.name == gameObject.location.name }).alias }から移動`,
+      action: null,
+      subActions: locations
+        .filter((location) => { return gameObject.location.name !== location.name })
+        .map((location) => { 
+          return { 
+            name: `${location.alias}`, 
+            action: () => { gameObject.setLocation(location.name); SoundEffect.play(PresetSound.piecePut); }
+          } 
+        })
+    });
+    /*
     for (let location of locations) {
       if (gameObject.location.name === location.name) continue;
       actions.push({
@@ -259,7 +284,14 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         }
       });
     }
-
+    */
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: 'コピーを作る', action: () => {
+        this.cloneGameObject(gameObject);
+        SoundEffect.play(PresetSound.piecePut);
+      }
+    });
     if (gameObject.location.name === 'graveyard') {
       actions.push({
         name: '削除する', action: () => {
@@ -268,14 +300,6 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         }
       });
     }
-    actions.push(ContextMenuSeparator);
-    actions.push({
-      name: 'コピーを作る', action: () => {
-        this.cloneGameObject(gameObject);
-        SoundEffect.play(PresetSound.piecePut);
-      }
-    });
-
     this.contextMenuService.open(position, actions, gameObject.name);
   }
 

@@ -172,19 +172,6 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }),
       ContextMenuSeparator,
-      { name: 'メモを編集', action: () => { this.showDetail(this.textNote); } },
-      {
-        name: 'コピーを作る', action: () => {
-          let cloneObject = this.textNote.clone();
-          cloneObject.isLocked = false;
-          console.log('コピー', cloneObject);
-          cloneObject.location.x += this.gridSize;
-          cloneObject.location.y += this.gridSize;
-          cloneObject.toTopmost();
-          SoundEffect.play(PresetSound.cardPut);
-        }
-      },
-      ContextMenuSeparator,
       (this.isUpright
         ? {
           name: '☑ 直立', action: () => {
@@ -216,6 +203,18 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
         altitudeHande: this.textNote
       },
       ContextMenuSeparator,
+      { name: 'メモを編集', action: () => { this.showDetail(this.textNote); } },
+      {
+        name: 'コピーを作る', action: () => {
+          let cloneObject = this.textNote.clone();
+          cloneObject.isLocked = false;
+          console.log('コピー', cloneObject);
+          cloneObject.location.x += this.gridSize;
+          cloneObject.location.y += this.gridSize;
+          cloneObject.toTopmost();
+          SoundEffect.play(PresetSound.cardPut);
+        }
+      },
       {
         name: '削除する', action: () => {
           this.textNote.destroy();

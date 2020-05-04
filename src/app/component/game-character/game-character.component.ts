@@ -283,12 +283,12 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       ContextMenuSeparator,
       (this.gameCharacter.isInventoryIndicate
         ? {
-          name: '☑ インベントリに表示', action: () => {
+          name: '☑ テーブルインベントリに表示', action: () => {
             this.gameCharacter.isInventoryIndicate = false;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
-          name: '☐ インベントリに表示', action: () => {
+          name: '☐ テーブルインベントリに表示', action: () => {
             this.gameCharacter.isInventoryIndicate = true;
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
