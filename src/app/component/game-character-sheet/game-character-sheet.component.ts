@@ -10,6 +10,8 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
+import { UUID } from '@udonarium/core/system/util/uuid';
+
 @Component({
   selector: 'game-character-sheet',
   templateUrl: './game-character-sheet.component.html',
@@ -113,7 +115,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
           }
           elements[this.MAX_FACE_ICON_COUNT - 1].value = value;
         } else {
-          this.tabletopObject.imageDataElement.appendChild(DataElement.create('faceIcon', value, { type: 'image' }, 'faceIcon_' + this.tabletopObject.identifier));
+          this.tabletopObject.imageDataElement.appendChild(DataElement.create('faceIcon', value, { type: 'image' }, 'faceIcon_' + UUID.generateUuid()));
         }
         if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       } else {
