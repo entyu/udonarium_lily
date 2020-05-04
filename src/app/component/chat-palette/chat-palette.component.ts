@@ -14,6 +14,8 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { ContextMenuSeparator, ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
+import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 
 @Component({
   selector: 'chat-palette',
@@ -94,7 +96,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   constructor(
     public chatMessageService: ChatMessageService,
     private panelService: PanelService,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private contextMenuService: ContextMenuService
   ) { }
 
   ngOnInit() {
@@ -325,5 +328,101 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         }
         return true;
     }
+  }
+
+  onContextMenu(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu || !this.character) return;
+
+    let position = this.pointerDeviceService.pointers[0];
+    let contextMenuActions: ContextMenuAction[] = [
+      { name: '「」を入力', 
+        action: () => {
+          let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
+          let text = this.text.trim();
+          if (text.slice(0, 1) != '「') text = '「' + text;
+          if (text.slice(-1) != '」') text = text + '」';
+          this.text = text;
+          textArea.value = this.text;
+          textArea.selectionStart = this.text.length - 1;
+          textArea.selectionEnd = this.text.length - 1;
+          textArea.focus();
+        },
+        disabled: /^「.*」$/.test(this.text.trim())
+      },
+    ];
+    if (this.character) {
+      if (!this.isUseFaceIcon || !this.character.faceIcon) {
+        contextMenuActions.push(ContextMenuSeparator);
+        contextMenuActions.push(
+          { name: '画像効果', action: null, subActions: [
+            (this.character.isInverse
+              ? {
+                name: '☑ 反転', action: () => {
+                  this.character.isInverse = false;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              } : {
+                name: '☐ 反転', action: () => {
+                  this.character.isInverse = true;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              }),
+            (this.character.isHollow
+              ? {
+                name: '☑ ぼかし', action: () => {
+                  this.character.isHollow = false;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              } : {
+                name: '☐ ぼかし', action: () => {
+                  this.character.isHollow = true;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              }),
+            (this.character.isBlackPaint
+              ? {
+                name: '☑ 黒塗り', action: () => {
+                  this.character.isBlackPaint = false;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              } : {
+                name: '☐ 黒塗り', action: () => {
+                  this.character.isBlackPaint = true;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              }),
+              { name: 'オーラ', action: null, subActions: [{ name: `${this.character.aura == -1 ? '◉' : '○'} なし`, action: () => { this.character.aura = -1; EventSystem.trigger('UPDATE_INVENTORY', null) } }, ContextMenuSeparator].concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+                return { name: `${this.character.aura == i ? '◉' : '○'} ${color}`, action: () => { this.character.aura = i; EventSystem.trigger('UPDATE_INVENTORY', null) } };
+              })) },
+            ContextMenuSeparator,
+            {
+              name: 'リセット', action: () => {
+                this.character.isInverse = false;
+                this.character.isHollow = false;
+                this.character.isBlackPaint = false;
+                this.character.aura = -1;
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              },
+              disabled: !this.character.isInverse && !this.character.isHollow && !this.character.isBlackPaint && this.character.aura == -1
+            }
+          ]
+        });
+      }
+      contextMenuActions.push(ContextMenuSeparator);
+      contextMenuActions.push({ name: '詳細を表示', action: () => { this.showDetail(this.character); } })
+    }
+    this.contextMenuService.open(position, contextMenuActions, this.character.name);
+  }
+
+  private showDetail(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let title = 'キャラクターシート';
+    if (gameObject.name.length) title += ' - ' + gameObject.name;
+    let option: PanelOption = { title: title, left: coordinate.x - 400, top: coordinate.y - 300, width: 800, height: 600 };
+    let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
+    component.tabletopObject = gameObject;
   }
 }

@@ -9,7 +9,7 @@
       </div>
     </form>
     <div class="table" [ngClass]="{ 'direct-message': isDirect }">
-      <div class="table-cell imagebox">
+      <div class="table-cell imagebox" (contextmenu)="onContextMenu($event)">
         <div *ngIf="isUseFaceIcon && character && character.faceIcon != null && 0 < character.faceIcon?.url?.length; else noFaceIcon" class="imagebox">
           <img #characterImage class="image" [src]="character.faceIcon?.url | safe: 'resourceUrl'" />
         </div>

@@ -17,6 +17,9 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { ContextMenuSeparator, ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
+import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 
 @Component({
   selector: 'chat-window',
@@ -105,7 +108,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngZone: NgZone,
     public chatMessageService: ChatMessageService,
     private panelService: PanelService,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private contextMenuService: ContextMenuService
   ) { }
 
   ngOnInit() {
@@ -376,5 +380,109 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   trackByChatTab(index: number, chatTab: ChatTab) {
     return chatTab.identifier;
+  }
+
+  onContextMenu(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu || !this.gameCharacter) return;
+
+    let position = this.pointerDeviceService.pointers[0];
+    let contextMenuActions: ContextMenuAction[] = [
+      { name: '「」を入力', 
+        action: () => {
+          let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
+          let text = this.text.trim();
+          if (text.slice(0, 1) != '「') text = '「' + text;
+          if (text.slice(-1) != '」') text = text + '」';
+          this.text = text;
+          textArea.value = this.text;
+          textArea.selectionStart = this.text.length - 1;
+          textArea.selectionEnd = this.text.length - 1;
+          textArea.focus();
+        },
+        disabled: /^「.*」$/.test(this.text.trim())
+      },
+    ];
+    if (this.gameCharacter) {
+      if (!this.isUseFaceIcon || !this.gameCharacter.faceIcon) {
+        contextMenuActions.push(ContextMenuSeparator);
+        contextMenuActions.push(
+          { name: '画像効果', action: null, subActions: [
+            (this.gameCharacter.isInverse
+              ? {
+                name: '☑ 反転', action: () => {
+                  this.gameCharacter.isInverse = false;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              } : {
+                name: '☐ 反転', action: () => {
+                  this.gameCharacter.isInverse = true;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              }),
+            (this.gameCharacter.isHollow
+              ? {
+                name: '☑ ぼかし', action: () => {
+                  this.gameCharacter.isHollow = false;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              } : {
+                name: '☐ ぼかし', action: () => {
+                  this.gameCharacter.isHollow = true;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              }),
+            (this.gameCharacter.isBlackPaint
+              ? {
+                name: '☑ 黒塗り', action: () => {
+                  this.gameCharacter.isBlackPaint = false;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              } : {
+                name: '☐ 黒塗り', action: () => {
+                  this.gameCharacter.isBlackPaint = true;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }
+              }),
+              { name: 'オーラ', action: null, subActions: [{ name: `${this.gameCharacter.aura == -1 ? '◉' : '○'} なし`, action: () => { this.gameCharacter.aura = -1; EventSystem.trigger('UPDATE_INVENTORY', null) } }, ContextMenuSeparator].concat(['ブラック', 'ブルー', 'グリーン', 'シアン', 'レッド', 'マゼンタ', 'イエロー', 'ホワイト'].map((color, i) => {  
+                return { name: `${this.gameCharacter.aura == i ? '◉' : '○'} ${color}`, action: () => { this.gameCharacter.aura = i; EventSystem.trigger('UPDATE_INVENTORY', null) } };
+              })) },
+            ContextMenuSeparator,
+            {
+              name: 'リセット', action: () => {
+                this.gameCharacter.isInverse = false;
+                this.gameCharacter.isHollow = false;
+                this.gameCharacter.isBlackPaint = false;
+                this.gameCharacter.aura = -1;
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              },
+              disabled: !this.gameCharacter.isInverse && !this.gameCharacter.isHollow && !this.gameCharacter.isBlackPaint && this.gameCharacter.aura == -1
+            }
+          ]
+        });
+      }
+      contextMenuActions.push(ContextMenuSeparator);
+      contextMenuActions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } })
+      contextMenuActions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
+    }
+    this.contextMenuService.open(position, contextMenuActions, this.gameCharacter ? this.gameCharacter.name : `${this.myPeer.name}（あなた）`);
+  }
+
+  private showDetail(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let title = 'キャラクターシート';
+    if (gameObject.name.length) title += ' - ' + gameObject.name;
+    let option: PanelOption = { title: title, left: coordinate.x - 400, top: coordinate.y - 300, width: 800, height: 600 };
+    let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
+    component.tabletopObject = gameObject;
+  }
+
+  private showChatPalette(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 620, height: 350 };
+    let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
+    component.character = gameObject;
   }
 }

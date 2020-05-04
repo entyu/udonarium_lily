@@ -15,7 +15,7 @@
     </div>
   </form>
 <div class="table" [ngClass]="{'direct-message': isDirect}">
-  <div class="table-cell imagebox">
+  <div class="table-cell imagebox" (contextmenu)="onContextMenu($event)">
     <div *ngIf="isUseFaceIcon && gameCharacter && gameCharacter.faceIcon != null && 0 < gameCharacter.faceIcon?.url?.length; else noFaceIcon" class="imagebox">
       <img #characterImage class="image" [src]="gameCharacter.faceIcon?.url | safe: 'resourceUrl'" />
     </div>
