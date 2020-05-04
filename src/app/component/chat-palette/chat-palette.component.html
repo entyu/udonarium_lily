@@ -48,7 +48,7 @@
         <div>
           <form>
             <!--<input [(ngModel)]="text" placeholder="message" [ngModelOptions]="{standalone: true}" style="width: 25em;">-->
-            <input type="color" style="width:1em" [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
+            <input type="color" style="width:1em; margin-left: 3px" [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
             <textarea #textArea [(ngModel)]="text" placeholder="Enterで送信  Shift+Enterで改行  白(255,255,255)の場合あなたの色を使用" [ngModelOptions]="{standalone: true}" class="chat-input" (input)="onInput()" (keydown.enter)="sendChat($event)"></textarea>
             <button type="submit" (click)="sendChat(null)">SEND</button>
           </form>
