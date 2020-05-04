@@ -304,6 +304,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  min-width: 7em;
 }
 
 .value {
@@ -332,7 +333,6 @@
 }
 
 .input {
-  width: 100%;
   min-width: 3em; 
   text-align: right;
   font: inherit;
