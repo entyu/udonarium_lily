@@ -24,7 +24,7 @@ export class TabletopObject extends ObjectNode {
   get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
 
   private _imageFile: ImageFile = ImageFile.Empty;
-  //private _faceIcon: ImageFile = null;
+  private _faceIcon: ImageFile = null;
   private _dataElements: { [name: string]: string } = {};
 
   // GameDataElement getter/setter
@@ -54,9 +54,13 @@ export class TabletopObject extends ObjectNode {
     if (!this.imageDataElement) return null;
     let elements = this.imageDataElement.getElementsByName('faceIcon');
     if (elements) {
+      if (elements.length <= this.currntIconIndex) this.currntIconIndex = 0;
       let imageIdElement = elements[this.currntIconIndex];
-      if (this.currntIconIndex < 0) this.currntIconIndex = 0;
-      return imageIdElement ? ImageStorage.instance.get(<string>imageIdElement.value) : null;
+      if (imageIdElement && (!this._faceIcon || this._faceIcon.identifier !== imageIdElement.value)) {
+        let file: ImageFile = ImageStorage.instance.get(<string>imageIdElement.value);
+        this._faceIcon = file ? file : null;
+      }
+      return this._faceIcon;
     }
     return null;
   }
