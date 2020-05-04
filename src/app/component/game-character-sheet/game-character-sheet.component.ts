@@ -115,6 +115,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         } else {
           this.tabletopObject.imageDataElement.appendChild(DataElement.create('faceIcon', value, { type: 'image' }, 'faceIcon_' + this.tabletopObject.identifier));
         }
+        if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       } else {
         let element = this.tabletopObject.imageDataElement.getFirstElementByName(name);
         if (!element) return;
@@ -127,7 +128,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     if (!this.tabletopObject || !this.tabletopObject.imageDataElement) return;
     let elements = this.tabletopObject.imageDataElement.getElementsByName('faceIcon');
     if (elements && 0 < elements.length && index < elements.length) {
-      if (this.tabletopObject.currntIconIndex >= index && this.tabletopObject.currntIconIndex > 0) this.tabletopObject.currntIconIndex -= 1;
+      if (this.tabletopObject.currntIconIndex >= index) this.tabletopObject.currntIconIndex -= 1;
       if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       this.tabletopObject.imageDataElement.removeChild(elements[index]);
     }
