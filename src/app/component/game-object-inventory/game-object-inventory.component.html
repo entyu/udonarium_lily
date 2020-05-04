@@ -123,6 +123,18 @@
           </div>
         </div>
       </ng-container>
+      <ng-container *ngSwitchCase="'abilityScore'">
+        <div class="tag-name">{{dataElm.name}}</div>
+        <div style="text-align: center;">
+          <div style="display: inline-block;">
+            <div class="tag-value-box">
+              <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
+              <input class="input tag-value" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+              ({{ (dataElm.calcAbilityScore() >= 0 ? '+' : '') + dataElm.calcAbilityScore() }})
+            </div>
+          </div>
+        </div>
+      </ng-container>
       <ng-container *ngSwitchDefault>
         <div class="tag-name">{{dataElm.name}}</div>
         <div style="text-align: center;">
