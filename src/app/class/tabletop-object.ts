@@ -75,7 +75,7 @@ export class TabletopObject extends ObjectNode {
   @SyncVar() isAltitudeIndicate: boolean = false;
   get altitude(): number {
     let element = this.getElement('altitude', this.commonDataElement);
-    if (!element) {
+    if (!element && this.commonDataElement) {
       this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
     }
     let num = element ? +element.value : 0;
