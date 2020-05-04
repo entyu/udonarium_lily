@@ -21,6 +21,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   isEdit: boolean = false;
 
   networkService = Network;
+  MAX_FACE_ICON_COUNT = 5;
 
   constructor(
     private saveDataService: SaveDataService,
@@ -104,19 +105,31 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   openModal(name: string = '', isAllowedEmpty: boolean = false) {
     this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
-      let element = this.tabletopObject.imageDataElement.getFirstElementByName(name);
-      if (!element) {
-        if (name === 'faceIcon') {
+      if (name === 'faceIcon') {
+        let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
+        if (elements.length >= this.MAX_FACE_ICON_COUNT) {
+          for (let i = this.MAX_FACE_ICON_COUNT; i < elements.length; i++) {
+            this.deleteIcon(i);
+          }
+          elements[this.MAX_FACE_ICON_COUNT - 1].value = value;
+        } else {
           this.tabletopObject.imageDataElement.appendChild(DataElement.create('faceIcon', value, { type: 'image' }, 'faceIcon_' + this.tabletopObject.identifier));
-        } 
-        return;
+        }
+      } else {
+        let element = this.tabletopObject.imageDataElement.getFirstElementByName(name);
+        if (!element) return;
+        element.value = value;
       }
-      element.value = value;
     });
   }
 
-  deleteIcon() {
+  deleteIcon(index: number=0) {
     if (!this.tabletopObject || !this.tabletopObject.imageDataElement) return;
-    this.tabletopObject.imageDataElement.removeChild(this.tabletopObject.imageDataElement.getFirstElementByName('faceIcon'));
+    let elements = this.tabletopObject.imageDataElement.getElementsByName('faceIcon');
+    if (elements && 0 < elements.length && index < elements.length) {
+      if (this.tabletopObject.currntIconIndex >= index && this.tabletopObject.currntIconIndex > 0) this.tabletopObject.currntIconIndex -= 1;
+      if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
+      this.tabletopObject.imageDataElement.removeChild(elements[index]);
+    }
   }
 }

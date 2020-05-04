@@ -24,6 +24,7 @@ export class TabletopObject extends ObjectNode {
   get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
 
   private _imageFile: ImageFile = ImageFile.Empty;
+  private _faceIcon: ImageFile = null;
   private _dataElements: { [name: string]: string } = {};
 
   // GameDataElement getter/setter
@@ -48,8 +49,29 @@ export class TabletopObject extends ObjectNode {
     return this._imageFile;
   }
 
-  get faceIcon(): ImageFile { return this.getImageFile('faceIcon'); }
-
+  @SyncVar() currntIconIndex: number = 0;
+  get faceIcon(): ImageFile {
+    if (!this.imageDataElement) return null;
+    let elements = this.imageDataElement.getElementsByName('faceIcon');
+    if (elements) {
+      if (elements.length <= this.currntIconIndex) this.currntIconIndex = 0;
+      let imageIdElement = elements[this.currntIconIndex];
+      if (imageIdElement && (!this._faceIcon || this._faceIcon.identifier !== imageIdElement.value)) {
+        let file: ImageFile = ImageStorage.instance.get(<string>imageIdElement.value);
+        this._faceIcon = file ? file : null;
+      }
+      return this._faceIcon;
+    }
+    return null;
+  }
+  get faceIcons(): ImageFile[] {
+    let elements = this.imageDataElement.getElementsByName('faceIcon');
+    return elements.map((element) => {
+      let file: ImageFile = ImageStorage.instance.get(<string>element.value);
+      return file ? file : null;
+    }).filter((file) => { return file != null });
+  }
+  
   @SyncVar() isAltitudeIndicate: boolean = false;
   get altitude(): number {
     let element = this.getElement('altitude', this.commonDataElement);

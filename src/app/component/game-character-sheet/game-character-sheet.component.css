@@ -10,18 +10,21 @@
   width: 250px;
 }
 
+.icons-box {
+  vertical-align: top;
+  text-align: center;
+  position: absolute;
+  left: 216px;
+}
 .icon-image-box {
   width: 50px;
   height: 50px;
   max-width: 50px;
   max-height: 50px;
-  vertical-align: top;
-  text-align: center;
-  position: absolute;
-  left: 216px;
-
+  border-radius: 0.5rem;
   color: black;
-  filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232))
+  filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
+  z-index: 1000;
 }
 .icon-image-box img {
   width: 100%;
@@ -29,6 +32,14 @@
   vertical-align: bottom;
   object-fit: cover;
   object-position: 50% 0%;
+}
+.icon-image-box.current-icon {
+  border: 2px solid red;
+  z-index: 10000;
+}
+
+.icons-indicate {
+  filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
 }
 
 .table {
@@ -107,8 +118,8 @@ input {
   margin: 0px;
   padding: 2px 0px 0px 0px;
   background-color: transparent;
-  right: -2px;
-  top: -2px;
+  right: 1px;
+  top: 1px;
   height: 18px;
   width: 18px;
   font-size: 8px;

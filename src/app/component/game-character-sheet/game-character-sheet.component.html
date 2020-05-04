@@ -17,7 +17,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'character'">
     <button (click)="openModal('imageIdentifier', true)">画像変更</button>
-    <button [disabled]="0 >= tabletopObject.imageFile?.url.length" (click)="openModal('faceIcon')">顔IC{{ (!tabletopObject.faceIcon || tabletopObject.faceIcon?.url.length == 0) ? '設定' : '変更'}}</button>
+    <button [disabled]="0 >= tabletopObject.imageFile?.url.length || tabletopObject.faceIcons?.length >= MAX_FACE_ICON_COUNT" (click)="openModal('faceIcon')">顔IC{{ (tabletopObject.faceIcons?.length > 0) ? '追加' : '設定' }}</button>
   </ng-container>
   <ng-container *ngSwitchDefault>
     <button (click)="openModal('imageIdentifier', true)">画像変更</button>
@@ -35,12 +35,16 @@
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">
-    <div *ngIf="0 < tabletopObject.faceIcon?.url.length" class="icon-image-box">
-      <img [src]="tabletopObject.faceIcon.url | safe: 'resourceUrl'" [alt]="tabletopObject.faceIcon.name" />
-      <button class="button-delete-icon" title="アイコン削除" (click)="deleteIcon()">
-        <b class="material-icons" style="font-size: 1rem;">close</b>
-      </button>
-      <div><b>ICON</b></div>
+    <div class="icons-box">
+      <ng-container *ngFor="let faceIconImage of tabletopObject.faceIcons; index as i">
+        <div *ngIf="0 < faceIconImage.url.length" class="icon-image-box" [ngClass]="{'current-icon': tabletopObject.currntIconIndex == i}">
+          <img [src]="faceIconImage.url | safe: 'resourceUrl'" [alt]="faceIconImage.name" (click)="tabletopObject.currntIconIndex = i" />
+          <button class="button-delete-icon" title="アイコン削除" (click)="deleteIcon(i)">
+            <b class="material-icons" style="font-size: 1rem;">close</b>
+          </button>
+        </div>
+      </ng-container>
+      <div *ngIf="tabletopObject.faceIcons?.length > 0" class="icons-indicate"><b>ICON<ng-container *ngIf="tabletopObject.faceIcons?.length > 1">s</ng-container></b></div>
     </div>
     <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" />
   </div>
