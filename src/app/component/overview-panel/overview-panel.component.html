@@ -174,14 +174,14 @@
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'simpleNumber'">
-        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="tag" style="width: 140px" [attr.title]="dataElm.name">{{dataElm.name}}</div>
         <div class="value">
           <div class="hidden-spacer">{{dataElm.value}}</div>
-          <input class="input" style="width:4em" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
+          <input class="input" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'numberResource'">
-        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="tag" style="min-width: 200px" [attr.title]="dataElm.name">{{dataElm.name}}</div>
         <div class="value">
           <div style="display: inline-block; width: min-content;">
             <div class="hidden-spacer" style="margin-right: 2em;">{{dataElm.currentValue}}</div>
@@ -196,11 +196,19 @@
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'checkProperty'">
-          <div class="tag" [attr.title]="dataElm.name"><span [style.textDecoration]="dataElm.value ? 'none' : 'line-through'">{{dataElm.name}}</span> {{ dataElm.currentValue.split(checkRegExp)[ dataElm.value ? 0 : 1 ] }}</div>
-          <div class="value">
-            <input type="checkbox" style="margin-right:1em" [(ngModel)]="dataElm.value" checked="{{dataElm.value ? 'checked' : ''}}" (change)="dataElm.value = (dataElm.value ? dataElm.name : '')">
-          </div>
-        </ng-container>
+        <div class="tag" style="min-width: 180px" [attr.title]="dataElm.name"><span [style.textDecoration]="dataElm.value ? 'none' : 'line-through'">{{dataElm.name}}</span> {{ dataElm.currentValue.split(checkRegExp)[ dataElm.value ? 0 : 1 ] }}</div>
+        <div class="value">
+          <input type="checkbox" style="margin-right:1em" [(ngModel)]="dataElm.value" checked="{{dataElm.value ? 'checked' : ''}}" (change)="dataElm.value = (dataElm.value ? dataElm.name : '')">
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'abilityScore'">
+        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="value">
+          <div class="hidden-spacer">{{dataElm.value}}</div>
+          <input class="input" style="width:4em" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" />
+          ({{ dataElm.calcAbilityScore() }})
+        </div>
+      </ng-container>
       <ng-container *ngSwitchDefault>
         <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
         <div class="value">
