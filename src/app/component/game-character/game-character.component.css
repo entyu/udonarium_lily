@@ -430,24 +430,31 @@
   pointer-events: none;
 }
 
-.face-icon {
-  float: left;
+.face-icon-box {
+  display: inline-block;
   position: relative;
-  border: 1px solid;
-  width: 32px;
-  height: 32px;
-  max-width: 32px;
-  max-height: 32px;
+  border: 0px none;
+  width: 36px;
+  height: 36px;
+  max-width: 36px;
+  max-height: 36px;
   border-radius: 0.3em;
   overflow: hidden;
-  vertical-align: bottom;
-  object-fit: cover;
   left: -16px;
   top: -18px;
   margin-right: -14px;
   margin-bottom: -22px;
-  background: linear-gradient(-30deg, rgb(240, 218, 189), rgb(255, 244, 232));
+  /* background: linear-gradient(-30deg, rgb(240, 218, 189), rgb(255, 244, 232)); */
 }
+.face-icon-box img {
+  width: 100%;
+  height: 100%;
+  vertical-align: bottom;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+/*
 p.is-wisper .face-icon {
   background: rgb(48, 45, 45);
 }
+*/
