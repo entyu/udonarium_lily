@@ -15,7 +15,7 @@ export namespace StringUtil {
   export function isEmote(str: string): boolean {
     if (!str) return false;
     str = this.cr(str).replace(/[\r\n]/g, '');
-    return str.length <= 3 && (EMOJI_REGEXP.test(str) || /[$＄\\￥！？❕❢‽‼/!/?♥💛♪♬🎵♩♫🎶☺🌞]/.test(str)); 
+    return str.length <= 3 && (EMOJI_REGEXP.test(str) || /[$＄\\￥！？❕❢‽‼/!/?♥♪♬♩♫☺]/.test(str)); 
   }
 
   export function cr(str: string): string {
