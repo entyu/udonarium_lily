@@ -89,9 +89,10 @@ export class ChatPalette extends ObjectNode {
           let element = extendVariables.getFirstElementByName(name);
           if (element) {
             ret = element.isNumberResource ? element.currentValue
-              : element.isCheckProperty ? element.value ? (element.currentValue + '').split(/[|｜]/g)[0] : (element.currentValue + '').replace('｜', '|').indexOf('|') >= 0 ? (element.currentValue + '').split(/[|｜]/g)[1] : '0'
+              : element.isCheckProperty ? (element.currentValue + '').split(/[|｜]/g)[ element.value ? 0 : 1 ]
               : element.isAbilityScore ? element.calcAbilityScore()
               : element.value;
+            if (ret == null) ret = '';
           } else {
             if ((
               element = extendVariables.getFirstElementByName(name.replace(/^最大/, ''))

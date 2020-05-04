@@ -74,6 +74,8 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
 
   isOpenImageView: boolean = false;
 
+  checkRegExp = /[|｜]/g;
+
   constructor(
     private inventoryService: GameObjectInventoryService,
     private changeDetector: ChangeDetectorRef,
