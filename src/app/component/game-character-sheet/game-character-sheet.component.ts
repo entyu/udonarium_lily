@@ -129,7 +129,6 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   selectIcon(index: number) {
     if (this.tabletopObject.currntIconIndex == index) return;
     this.tabletopObject.currntIconIndex = index;
-    SoundEffect.play(PresetSound.cardPut);
   }
 
   deleteIcon(index: number=0, sound=true) {
