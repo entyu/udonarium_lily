@@ -17,7 +17,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'character'">
     <button (click)="openModal('imageIdentifier', true)">画像変更</button>
-    <button [disabled]="0 >= tabletopObject.imageFile?.url.length || tabletopObject.faceIcons?.length >= MAX_FACE_ICON_COUNT" (click)="openModal('faceIcon')">顔IC{{ (tabletopObject.faceIcons?.length > 0) ? '追加' : '設定' }}</button>
+    <button [disabled]="tabletopObject.faceIcons?.length >= MAX_FACE_ICON_COUNT" (click)="openModal('faceIcon')">顔IC{{ (tabletopObject.faceIcons?.length > 0) ? '追加' : '設定' }}</button>
   </ng-container>
   <ng-container *ngSwitchDefault>
     <button (click)="openModal('imageIdentifier', true)">画像変更</button>
@@ -34,7 +34,7 @@
   </select>
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
-  <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">
+  <div *ngIf="0 < tabletopObject.imageFile?.url.length || 0 < tabletopObject.faceIcons?.length" class="box main-image-box">
     <div class="icons-box">
       <ng-container *ngFor="let faceIconImage of tabletopObject.faceIcons; index as i">
         <div *ngIf="0 < faceIconImage.url.length" class="icon-image-box" [ngClass]="{'current-icon': tabletopObject.currntIconIndex == i}">
