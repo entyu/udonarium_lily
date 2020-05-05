@@ -138,7 +138,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       if (this.tabletopObject.currntIconIndex >= index) this.tabletopObject.currntIconIndex -= 1;
       if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       this.tabletopObject.imageDataElement.removeChild(elements[index]);
-      if (sound) SoundEffect.play(PresetSound.sweep);
+      //if (sound) SoundEffect.play(PresetSound.sweep);
     }
   }
 }
