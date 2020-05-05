@@ -412,9 +412,8 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
           textArea.selectionStart = this.text.length - 1;
           textArea.selectionEnd = this.text.length - 1;
           textArea.focus();
-        },
-        disabled: /^「.*」$/.test(this.text.trim())
-      },
+        }
+      }
     ];
     if (this.gameCharacter) {
       if (!this.isUseFaceIcon || !this.gameCharacter.faceIcon) {

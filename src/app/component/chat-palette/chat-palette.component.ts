@@ -360,9 +360,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
           textArea.selectionStart = this.text.length - 1;
           textArea.selectionEnd = this.text.length - 1;
           textArea.focus();
-        },
-        disabled: /^「.*」$/.test(this.text.trim())
-      },
+        }
+      }
     ];
     if (this.character) {
       if (!this.isUseFaceIcon || !this.character.faceIcon) {
