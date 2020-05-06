@@ -124,6 +124,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         element.value = value;
       }
     });
+    EventSystem.trigger('UPDATE_GAME_OBJECT', this.tabletopObject);
   }
 
   selectIcon(index: number) {

@@ -93,14 +93,29 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   math = Math;
   stringUtil = StringUtil;
   viewRotateZ = 0;
+  heightWidthRatio = 1.5;
 
   @ViewChild('characterImage', { static: false }) characterImage: ElementRef;
   @ViewChild('chatBubble', { static: false }) chatBubble: ElementRef;
   
+
   get characterImageHeight(): number {
     if (!this.characterImage) return 0;
-    const height = (this.characterImage.nativeElement.offsetHeight + (this.name ? 40 : 0)) * Math.cos(this.roll * Math.PI / 180) - this.gridSize * this.size;
-    return 0 > height ? 0 : height;
+    let ratio = this.characterImage.nativeElement.naturalHeight / this.characterImage.nativeElement.naturalWidth;
+    if (ratio > this.heightWidthRatio) ratio = this.heightWidthRatio;
+    return ratio * this.gridSize * this.size;
+  }
+
+  get chatBubbleAltitude(): number {
+    const altitude1 = (this.characterImageHeight + (this.name ? 38 : 0)) * Math.cos(this.roll * Math.PI / 180) + 4;
+    const altitude2 = (this.gridSize * this.size / 2) * Math.abs(Math.sin(this.roll * Math.PI / 180)) + 4 + this.gridSize * this.size / 2;
+    return altitude1 > altitude2 ? altitude1 : altitude2;
+  }
+
+  // 元の高さからマイナスする値
+  get nameplateOffset(): number {
+    if (!this.characterImage) return this.gridSize * this.size * this.heightWidthRatio;
+    return this.gridSize * this.size * this.heightWidthRatio - this.characterImageHeight;
   }
 
   get isListen(): boolean {
