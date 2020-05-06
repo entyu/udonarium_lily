@@ -203,13 +203,11 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       ? {
         name: '☑ 他のキャラクターに乗る', action: () => {
           gameObject.isNotRide = true;
-          SoundEffect.play(PresetSound.sweep);
           EventSystem.trigger('UPDATE_INVENTORY', null);
         }
       } : {
         name: '☐ 他のキャラクターに乗る', action: () => {
           gameObject.isNotRide = false;
-          SoundEffect.play(PresetSound.piecePut);
           EventSystem.trigger('UPDATE_INVENTORY', null);
         }
       }));

@@ -269,13 +269,11 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         ? {
           name: '☑ 他のキャラクターに乗る', action: () => {
             this.isNotRide = true;
-            SoundEffect.play(PresetSound.sweep);
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
           name: '☐ 他のキャラクターに乗る', action: () => {
             this.isNotRide = false;
-            SoundEffect.play(PresetSound.piecePut);
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),

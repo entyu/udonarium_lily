@@ -62,7 +62,7 @@
       <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="影の表示" [ngClass]="{'is-active': gameObject.isDropShadow}" (click)="gameObject.isDropShadow = !gameObject.isDropShadow">
         <i class="material-icons" style="font-size: 1em;">star_half</i>
       </button>
-      <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="他のコマに乗る" [ngClass]="{'is-active': !gameObject.isNotRide}" (click)="gameObject.isNotRide = !gameObject.isNotRide">
+      <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="他のキャラクターに乗る" [ngClass]="{'is-active': !gameObject.isNotRide}" (click)="gameObject.isNotRide = !gameObject.isNotRide">
         <i class="material-icons" style="font-size: 1em;">two_wheeler</i>
       </button>
       <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="高度の表示" [ngClass]="{'is-active': gameObject.isAltitudeIndicate}" (click)="gameObject.isAltitudeIndicate = !gameObject.isAltitudeIndicate">
