@@ -14,7 +14,7 @@
       </div>
       <span class="aura" style="pointer-events: none;" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
         <span class="image-box" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio" style="transform: translateY(-10%); pointer-events: none;">
-          <img *ngIf="isDropShadow && 0 < imageFile.url.length" [style.height.px]="size * gridSize * heightWidthRatio" class="image drop-shadow" style="pointer-events: none;" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) blur(1px)" [ngStyle]="{'opacity': isHollow ? 0.4 : 0.7, 'transform': 'scale(' + (isInverse ? -1 : 1) + ', ' + (1.0 / heightWidthRatio) + ') translateY(-55%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}">
+          <img *ngIf="isDropShadow && 0 < imageFile.url.length" [style.height.px]="size * gridSize * heightWidthRatio" class="image drop-shadow" style="pointer-events: none;" [src]="imageFile.url | safe: 'resourceUrl'" style="filter: brightness(0) blur(1px)" [ngStyle]="{'opacity': isHollow ? 0.4 : 0.7, 'transform': 'scale(' + (isInverse ? -1 : 1) + ', ' + (1.0 / heightWidthRatio) + ') translateY(-52%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}">
         </span>
       </span>
       <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
