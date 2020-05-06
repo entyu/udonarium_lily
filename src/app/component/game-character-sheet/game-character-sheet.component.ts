@@ -111,7 +111,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
         if (elements.length >= this.MAX_FACE_ICON_COUNT) {
           for (let i = this.MAX_FACE_ICON_COUNT; i < elements.length; i++) {
-            this.deleteIcon(i, false);
+            this.deleteIcon(i);
           }
           elements[this.MAX_FACE_ICON_COUNT - 1].value = value;
         } else {
@@ -132,7 +132,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     this.tabletopObject.currntIconIndex = index;
   }
 
-  deleteIcon(index: number=0, sound=true) {
+  deleteIcon(index: number=0) {
     if (!this.tabletopObject || !this.tabletopObject.imageDataElement) return;
     let elements = this.tabletopObject.imageDataElement.getElementsByName('faceIcon');
     if (elements && 0 < elements.length && index < elements.length) {
