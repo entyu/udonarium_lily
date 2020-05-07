@@ -63,13 +63,13 @@
         <i class="material-icons" style="font-size: 1em;">{{ gameObject.isDropShadow ? 'star_half' : 'star_border'}}</i>
       </button>
       <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="他のキャラクターに乗る" [ngClass]="{'is-active': !gameObject.isNotRide}" (click)="gameObject.isNotRide = !gameObject.isNotRide">
-        <i class="material-icons" style="font-size: 1em;">{{ !gameObject.isNotRide ? 'two_wheeler' : 'directions_run'}}</i>
+        <i class="material-icons" style="font-size: 1em;">{{ !gameObject.isNotRide ? 'directions_bike' : 'directions_run'}}</i>
       </button>
       <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="オーバービューに顔アイコンを使用" [ngClass]="{'is-active': gameObject.isUseIconToOverviewImage}" (click)="gameObject.isUseIconToOverviewImage = !gameObject.isUseIconToOverviewImage">
-        <i class="material-icons" style="font-size: 1em;">{{ gameObject.isUseIconToOverviewImage ? 'insert_emoticon' : 'directions_walk' }} </i>
+        <i class="material-icons" style="font-size: 1em;">{{ gameObject.isUseIconToOverviewImage ? 'insert_emoticon' : 'emoji_people' }}</i>
       </button>
       <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="高度の表示" [ngClass]="{'is-active': gameObject.isAltitudeIndicate}" (click)="gameObject.isAltitudeIndicate = !gameObject.isAltitudeIndicate">
-        <i class="material-icons rotate" style="font-size: 1em;">straighten</i>
+        <i class="material-icons rotate" style="font-size: 1em;">straighten</i><span style="display: inline-block; text-align: center; font-size: xx-small; color: gray; min-width: 2em;">{{ gameObject.altitude }}</span>
       </button>
       <button class="indicate" [disabled]="selectedIdentifier !== gameObject.identifier" style="font-size: 0.8em; padding: 2px 5px;" title="テーブルインベントリに表示" [ngClass]="{'is-active': gameObject.isInventoryIndicate}" (click)="gameObject.isInventoryIndicate = !gameObject.isInventoryIndicate">
         <i class="material-icons" style="font-size: 1em;">all_inbox</i>
