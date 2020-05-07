@@ -31,7 +31,7 @@
               <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
                 <span class="image-box" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio">
                   <img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageFile.url | safe: 'resourceUrl'"
-                  [style.height.px]="size * gridSize * heightWidthRatio">
+                  [style.height.px]="size * gridSize * heightWidthRatio" (load)="onImageLoad()">
                 </span>
               </span>
             </div>
