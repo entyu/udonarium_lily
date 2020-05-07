@@ -373,6 +373,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     SoundEffect.play(PresetSound.piecePut);
   }
 
+  onImageLoad() {
+    EventSystem.trigger('UPDATE_GAME_OBJECT', this.gameCharacter);
+  }
+
   private adjustMinBounds(value: number, min: number = 0): number {
     return value < min ? min : value;
   }
