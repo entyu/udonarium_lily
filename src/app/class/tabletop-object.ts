@@ -48,7 +48,7 @@ export class TabletopObject extends ObjectNode {
     }
     return this._imageFile;
   }
-
+  @SyncVar() isUseIconToOverviewImage: boolean = true;
   @SyncVar() currntIconIndex: number = 0;
   get faceIcon(): ImageFile {
     if (!this.imageDataElement) return null;

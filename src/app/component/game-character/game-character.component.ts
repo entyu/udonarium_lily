@@ -78,6 +78,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   get isNotRide(): boolean { return this.gameCharacter.isNotRide; }
   set isNotRide(isNotRide: boolean) { this.gameCharacter.isNotRide = isNotRide; }
+  get isUseIconToOverviewImage(): boolean { return this.gameCharacter.isUseIconToOverviewImage; }
+  set isUseIconToOverviewImage(isUseIconToOverviewImage: boolean) { this.gameCharacter.isUseIconToOverviewImage = isUseIconToOverviewImage; }
 
   get faceIcon(): ImageFile { return this.gameCharacter.faceIcon; }
   get dialogFaceIcon(): ImageFile {
@@ -277,6 +279,18 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
+        (this.isUseIconToOverviewImage
+          ? {
+            name: '☑ オーバービューに顔ICを使用', action: () => {
+              this.isUseIconToOverviewImage = false;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          } : {
+            name: '☐ オーバービューに顔ICを使用', action: () => {
+              this.isUseIconToOverviewImage = true;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }
+          }),
       ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {

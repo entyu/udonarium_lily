@@ -211,6 +211,18 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
           EventSystem.trigger('UPDATE_INVENTORY', null);
         }
       }));
+      actions.push((gameObject.isUseIconToOverviewImage
+        ? {
+          name: '☑ オーバービューに顔ICを使用', action: () => {
+            gameObject.isUseIconToOverviewImage = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ オーバービューに顔ICを使用', action: () => {
+            gameObject.isUseIconToOverviewImage = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        })),
     actions.push(ContextMenuSeparator);
     actions.push(
       (gameObject.isAltitudeIndicate

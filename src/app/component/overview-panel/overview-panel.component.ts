@@ -49,14 +49,14 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
 
   get imageUrl(): string {
     if (!this.tabletopObject) return '';
-    if (this.hasIcon) {
+    if (this.isUseIcon) {
       return this.tabletopObject.faceIcon.url;
     }
     return this.tabletopObject.imageFile ? this.tabletopObject.imageFile.url : '';
   }
   get hasImage(): boolean { return 0 < this.imageUrl.length; }
-  get hasIcon(): boolean {
-    return (this.tabletopObject instanceof GameCharacter && this.tabletopObject.faceIcon && 0 < this.tabletopObject.faceIcon.url.length);
+  get isUseIcon(): boolean {
+    return (this.tabletopObject instanceof GameCharacter && this.tabletopObject.isUseIconToOverviewImage && this.tabletopObject.faceIcon && 0 < this.tabletopObject.faceIcon.url.length);
   }
 
   get aura(): number {
