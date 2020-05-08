@@ -419,7 +419,7 @@
   */
 }
 .chat-bubble-buyo {
-  transform-origin: center bottom;
+  transform-origin: center calc(100% + 8px);
   transition: all .2s ease;
   animation: chat-bubble-buyo 1.2s ease-in-out 0.1s infinite alternate;
   transform: scale3d(0.9, 0.9, 0.9);
