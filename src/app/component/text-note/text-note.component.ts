@@ -75,7 +75,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     private pointerDeviceService: PointerDeviceService
   ) { }
 
-  viewRotateZ = 0;
+  viewRotateZ = 10;
 
   ngOnInit() {
     EventSystem.register(this)

@@ -85,7 +85,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     private ngZone: NgZone
   ) { }
 
-  viewRotateZ = 0;
+  viewRotateZ = 10;
 
   ngOnInit() {
     EventSystem.register(this)

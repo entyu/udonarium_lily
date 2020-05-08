@@ -94,8 +94,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   gridSize: number = 50;
   math = Math;
   stringUtil = StringUtil;
-  viewRotateX = 0;
-  viewRotateZ = 0;
+  viewRotateX = 50;
+  viewRotateZ = 10;
   heightWidthRatio = 1.5;
 
   get chatBubbleXDeg():number {
