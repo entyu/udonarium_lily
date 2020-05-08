@@ -211,6 +211,18 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isUseIconToOverviewImage
+        ? {
+          name: '☑ オーバービューに顔ICを使用', action: () => {
+            this.isUseIconToOverviewImage = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        } : {
+          name: '☐ オーバービューに顔ICを使用', action: () => {
+            this.isUseIconToOverviewImage = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
+          }
+        }),
       (this.isDropShadow
         ? {
           name: '☑ 影の表示', action: () => {
@@ -288,19 +300,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
             EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
-        (this.isUseIconToOverviewImage
-          ? {
-            name: '☑ オーバービューに顔ICを使用', action: () => {
-              this.isUseIconToOverviewImage = false;
-              EventSystem.trigger('UPDATE_INVENTORY', null);
-            }
-          } : {
-            name: '☐ オーバービューに顔ICを使用', action: () => {
-              this.isUseIconToOverviewImage = true;
-              EventSystem.trigger('UPDATE_INVENTORY', null);
-            }
-          }),
-      ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {
           name: '☑ 高度の表示', action: () => {

@@ -402,16 +402,16 @@ button.is-active .material-icons {
 
 .face-icon {
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  max-width: 16px;
-  max-height: 16px;
-  vertical-align: middle;
+  width: 12px;
+  height: 12px;
+  max-width: 12px;
+  max-height: 12px;
+  vertical-align: top;
+  overflow: hidden;
 }
 .face-icon img {
   width: 100%;
   height: 100%;
-  vertical-align: middle;
   object-fit: cover;
   object-position: 50% 0%;
 }

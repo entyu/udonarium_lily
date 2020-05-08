@@ -144,12 +144,17 @@ input.altitude {
 .icon-menu input {
   display: none;
 }
+
+.icon-menu img {
+  border: 2px solid transparent;
+  z-index: 400;
+}
 .icon-menu:hover img {
-  border: 1px dotted red;
-  z-index: 1000;
-  left: 1px;
+  border: 2px dotted rgba(255, 0, 0, 40);
+  z-index: 600;
 }
 .icon-menu.default img {
   border: 2px solid red;
   z-index: 500;
 }
+

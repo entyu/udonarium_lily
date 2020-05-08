@@ -35,14 +35,19 @@
   object-fit: cover;
   object-position: 50% 0%;
   border-radius: 0.5rem;
+  border: 2px solid transparent;
 }
 .icon-image-box:hover {
-  border: 1px dotted red;
-  z-index: 1000;
+  z-index: 600;
+}
+.icon-image-box:hover img {
+  border: 2px dotted rgba(255, 0, 0, 40);
 }
 .icon-image-box.current-icon {
-  border: 2px solid red;
   z-index: 500;
+}
+.icon-image-box.current-icon img {
+  border: 2px solid red;
 }
 .icon-image-box:not(.current-icon) {
   z-index: 400;
@@ -124,8 +129,8 @@ input {
   margin: 0px;
   padding: 2px 0px 0px 0px;
   background-color: transparent;
-  right: 0px;
-  top: 0px;
+  right: -3px;
+  top: 1px;
   height: 18px;
   width: 18px;
   font-size: 8px;
