@@ -47,8 +47,8 @@
             </div>
           </div>
         </div>
-        <div #chatBubble class="chat-bubble is-3d"
-          [ngStyle]="{'bottom': (chatBubbleAltitude - (gameCharacter.dialog.emote ? gridSize / 2 : 0)) + 'px', 'transform': 'translateX(-50%) translateX(' + (size * gridSize / 2) +'px) rotateY(' + (rotate + viewRotateZ) + 'deg)'}">
+        <div #chatBubble class="chat-bubble is-3d" style="transform-origin: center bottom;"
+          [ngStyle]="{'bottom': (chatBubbleAltitude - (gameCharacter.dialog.emote ? gridSize / 2 : 0)) + 'px', 'transform': 'translateX(-50%) translateX(' + (size * gridSize / 2) +'px) rotateY(' + (rotate + viewRotateZ) + 'deg) rotateX(' + (chatBubbleXDeg) + 'deg)'}">
           <div *ngIf="isListen" class="chat-bubble-fade-in is-3d" [style.color]="!gameCharacter.dialog.emote && isWhisper ? '#ccc' : gameCharacter.dialog.color">
             <div class="is-3d">
               <p class="is-3d" [style.border-color]="gameCharacter.dialog.color" style="position: absolute; backface-visibility: hidden" 

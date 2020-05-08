@@ -94,8 +94,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   gridSize: number = 50;
   math = Math;
   stringUtil = StringUtil;
+  viewRotateX = 0;
   viewRotateZ = 0;
   heightWidthRatio = 1.5;
+
+  get chatBubbleXDeg():number {
+    let ret = 90 - this.viewRotateX;
+    if (ret > 90) ret = 90;
+    if (ret < -90) ret = -90;
+    return ret;
+  }
 
   @ViewChild('characterImage', { static: false }) characterImage: ElementRef;
   @ViewChild('chatBubble', { static: false }) chatBubble: ElementRef;
@@ -161,6 +169,12 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      })
+      .on<number>('TABLE_VIEW_ROTATE_X', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateX = event.data;
+          this.changeDetector.markForCheck();
+        });
       })
       .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
         this.ngZone.run(() => {

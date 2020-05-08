@@ -447,7 +447,12 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.viewPotisonX += transformX;
     this.viewPotisonY += transformY;
     this.viewPotisonZ += transformZ;
-
+    if (rotateX != 0) {
+      EventSystem.trigger<number>('TABLE_VIEW_ROTATE_X', this.viewRotateX);
+    }
+    if (rotateX != 0) {
+      EventSystem.trigger<number>('TABLE_VIEW_ROTATE_Y', this.viewRotateY);
+    }
     if (rotateZ != 0) {
       EventSystem.trigger<number>('TABLE_VIEW_ROTATE_Z', this.viewRotateZ);
     }
