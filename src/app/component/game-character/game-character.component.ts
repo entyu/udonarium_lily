@@ -170,15 +170,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
       })
-      .on<number>('TABLE_VIEW_ROTATE_X', -1000, event => {
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {
-          this.viewRotateX = event.data;
-          this.changeDetector.markForCheck();
-        });
-      })
-      .on<number>('TABLE_VIEW_ROTATE_Z', -1000, event => {
-        this.ngZone.run(() => {
-          this.viewRotateZ = event.data;
+          this.viewRotateX = event.data['x'];
+          this.viewRotateZ = event.data['z'];
           this.changeDetector.markForCheck();
         });
       });
