@@ -411,32 +411,46 @@
 
 .chat-bubble-fade-in {
   visibility: visible;
-  animation-duration: .2s;
-  animation-name: chat-bubble-fade-in;
+  transform-origin: center bottom;
+  /*
+  opacity: 0;
   transition: all .2s ease;
+  animation: chat-bubble-fade-in 6s cubic-bezier(0.9, 0,9, 1, 1) 0s 2 alternate;
+  */
 }
-.chat-bubble-fade-in.short {
-  text-align: center;
+.chat-bubble-buyo {
+  transform-origin: center bottom;
+  transition: all .2s ease;
+  animation: chat-bubble-buyo 1.2s ease-in-out 0.1s infinite alternate;
+  transform: scale3d(0.9, 0.9, 0.9);
+}
+.chat-bubble-buyo.emote {
+  animation-duration: .6s;
 }
 
 @keyframes chat-bubble-fade-in {
   0% {
-    visibility: hidden;
     opacity: 0;
   }
   40% {
-    visibility: hidden;
     opacity: .4;
   }
   80% {
-    visibility: visible;
     opacity: .6;
   }
   100% {
-    visibility: visible;
+    opacity: .8;
   }
 }
 
+@keyframes chat-bubble-buyo {
+  0% {
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+  100% {
+    transform: scale3d(1, 1, 1);
+  }
+}
 .drop-shadow {
   pointer-events: none;
 }
