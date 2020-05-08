@@ -210,6 +210,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
           disabled: !gameObject.isInverse && !gameObject.isHollow && !gameObject.isBlackPaint && gameObject.aura == -1
         }
     ]});
+    actions.push(ContextMenuSeparator);
     actions.push((!gameObject.isNotRide
       ? {
         name: '☑ 他のキャラクターに乗る', action: () => {
@@ -222,7 +223,6 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
           EventSystem.trigger('UPDATE_INVENTORY', null);
         }
       }));
-    actions.push(ContextMenuSeparator);
     actions.push(
       (gameObject.isAltitudeIndicate
       ? {
