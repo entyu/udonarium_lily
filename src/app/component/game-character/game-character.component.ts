@@ -119,7 +119,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let sin = Math.abs(Math.sin(this.roll * Math.PI / 180));
     if (cos < 0.5) cos = 0.5;
     if (sin < 0.5) sin = 0.5;
-    const altitude1 = (this.characterImageHeight + (this.name ? 38 : 0)) * cos + 4;
+    const altitude1 = (this.characterImageHeight + (this.name ? 36 : 0)) * cos + 4;
     const altitude2 = (this.gridSize * this.size / 2) * sin + 4 + this.gridSize * this.size / 2;
     return altitude1 > altitude2 ? altitude1 : altitude2;
   }

@@ -331,6 +331,7 @@
 .chat-bubble {
   position: absolute;
   pointer-events: none;
+  transform-origin: center calc(100% + 12px);
 }
 
 .chat-bubble p {
@@ -411,7 +412,6 @@
 
 .chat-bubble-fade-in {
   visibility: visible;
-  transform-origin: center bottom;
   /*
   opacity: 0;
   transition: all .2s ease;
