@@ -406,7 +406,7 @@ button.is-active .material-icons {
   height: 12px;
   max-width: 12px;
   max-height: 12px;
-  vertical-align: top;
+  vertical-align: middle;
   overflow: hidden;
 }
 .face-icon img {
