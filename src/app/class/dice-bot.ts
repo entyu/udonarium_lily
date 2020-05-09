@@ -570,7 +570,7 @@ export class DiceBot extends GameObject {
         .then(jsons => { 
           return jsons.map(json => {
             if (json.systeminfo && json.systeminfo.info) {
-              return (json.systeminfo.info.trim() != '※このダイスボットは部屋のシステム名表示用となります。') ? json.systeminfo.info.trim() : '※このダイスボットはチャットパレットなどのシステム名表示用となります。';
+              return json.systeminfo.info.replace('このダイスボットは部屋のシステム名表示用となります', 'このダイスボットはチャットパレットなどのシステム名表示用となります');
             } else {
               return 'ダイスボット情報がありません。';
             }                
