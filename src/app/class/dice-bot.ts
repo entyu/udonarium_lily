@@ -567,7 +567,15 @@ export class DiceBot extends GameObject {
         );
       }
       return Promise.all(promisise)
-        .then(jsons => { return jsons.map(json => { return json.systeminfo.info.trim() != '※このダイスボットは部屋のシステム名表示用となります。' ? json.systeminfo.info.trim() : '※このダイスボットはチャットパレットなどのシステム名表示用となります。' }) });
+        .then(jsons => { 
+          return jsons.map(json => {
+            if (json.systeminfo && json.systeminfo.info) {
+              return (json.systeminfo.info.trim() != '※このダイスボットは部屋のシステム名表示用となります。') ? json.systeminfo.info.trim() : '※このダイスボットはチャットパレットなどのシステム名表示用となります。';
+            } else {
+              return 'ダイスボット情報がありません。';
+            }                
+          }) 
+        });
     } else {
       DiceBot.queue.add(DiceBot.loadDiceBotAsync(gameType));
       return DiceBot.queue.add(() => {
