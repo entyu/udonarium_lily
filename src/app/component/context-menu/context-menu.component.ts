@@ -10,6 +10,7 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 })
 export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;
+  @ViewChild('altitudeSlider', { static: false }) altitudeSlider: ElementRef<HTMLElement>;
 
   @Input() title: string = '';
   @Input() actions: ContextMenuAction[] = [];
@@ -106,6 +107,10 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
     panel.style.left = panel.offsetLeft + diffLeft + 'px';
     panel.style.top = panel.offsetTop + diffTop + 'px';
+
+    if (this.altitudeSlider) {
+      this.altitudeSlider.nativeElement.style.height = (panel.clientHeight - 72) + 'px';
+    }
   }
 
   private adjustPositionSub() {
