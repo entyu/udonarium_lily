@@ -18,7 +18,7 @@
             [ngStyle]="{'transform-origin': '50% ' + ((size * gridSize) + 'px'), 'opacity': isHollow ? 0.4 : 0.7, 'transform': 'scale(' + (isInverse ? -1 : 1) + ', ' + (1.0 / heightWidthRatio) + ') translateY(-' + (99 / heightWidthRatio) + '%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}">
         </span>
       </span>
-      <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
+      <div class="upright-transform is-fit-width is-3d" [ngClass]="{fall: altitude == 0}" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d">
