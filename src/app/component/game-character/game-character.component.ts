@@ -100,6 +100,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   get chatBubbleXDeg():number {
     let ret = 90 - this.viewRotateX;
+    if (ret < 0) ret = 360 + ret;
+    ret = ret % 360;
+    if (90 < ret && ret <= 180) ret = 90;
+    if (180 < ret && ret <= 270) ret = 270; 
     return ret;
   }
 
