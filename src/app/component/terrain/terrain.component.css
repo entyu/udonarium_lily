@@ -24,11 +24,11 @@
   -webkit-transition: -webkit-transform 132ms ease;
   transition: transform 132ms ease;
 }
-*/
+
 .component-content:hover .texture {
   opacity: 0.8;
 }
-
+*/
 .is-pointer-events-none {
   pointer-events: none;
 }
