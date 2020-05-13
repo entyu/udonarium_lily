@@ -463,11 +463,10 @@
   height: 36px;
   max-width: 36px;
   max-height: 36px;
-  border-radius: 0.3em;
   overflow: hidden;
-  left: -16px;
+  left: -20px;
   top: -18px;
-  margin-right: -14px;
+  margin-right: -16px;
   margin-bottom: -22px;
   /* background: linear-gradient(-30deg, rgb(240, 218, 189), rgb(255, 244, 232)); */
 }
@@ -477,6 +476,7 @@
   vertical-align: bottom;
   object-fit: cover;
   object-position: 50% 0%;
+  border-radius: 0.4em;
 }
 /*
 p.is-wisper .face-icon {
