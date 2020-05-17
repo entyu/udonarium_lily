@@ -424,6 +424,12 @@
   animation: chat-bubble-buyo 1.2s ease-in-out 0.1s infinite alternate;
   transform: scale3d(0.9, 0.9, 0.9);
 }
+.chat-bubble-buyo.back {
+  transform-origin: center calc(100% + 8px);
+  transition: all .2s ease;
+  animation: chat-bubble-buyo-back 1.2s ease-in-out 0.1s infinite alternate;
+  transform: rotateY(-180deg) scale3d(0.9, 0.9, 0.9);
+}
 .chat-bubble-buyo.emote {
   animation-duration: .6s;
 }
@@ -451,6 +457,16 @@
     transform: scale3d(1, 1, 1);
   }
 }
+
+@keyframes chat-bubble-buyo-back {
+  0% {
+    transform: rotateY(-180deg) scale3d(0.9, 0.9, 0.9);
+  }
+  100% {
+    transform: rotateY(-180deg) scale3d(1, 1, 1);
+  }
+}
+
 .drop-shadow {
   pointer-events: none;
 }
