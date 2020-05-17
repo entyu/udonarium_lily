@@ -99,12 +99,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   heightWidthRatio = 1.5;
 
   get chatBubbleXDeg():number {
+    //console.log(this.viewRotateX)
     let ret = 90 - this.viewRotateX;
     if (ret < 0) ret = 360 + ret;
     ret = ret % 360;
-    if (90 < ret && ret <= 180) ret = 90;
-    if (180 < ret && ret <= 270) ret = 270; 
-    return ret;
+    if (ret > 180) ret = -(180 - (ret - 180));
+    //console.log(ret)
+    // 補正
+    if (ret > 90) ret = 90;
+    if (ret < -90) ret = -90;
+    return ret / 2;
   }
 
   @ViewChild('characterImage', { static: false }) characterImage: ElementRef;
