@@ -80,10 +80,10 @@ export class ChatPalette extends ObjectNode {
       isContinue = false;
       evaluate = evaluate.replace(/[\{｛]\s*([^\{｛\}｝]+)\s*[\}｝]/g, (match, name) => {
         isContinue = true;
-        name = StringUtil.toHalfWidth(name).toLocaleLowerCase();
+        //name = StringUtil.toHalfWidth(name).toLocaleLowerCase();
         let ret: number|string = '';
         for (let variable of this.paletteVariables) {
-          if (StringUtil.toHalfWidth(variable.name).toLocaleLowerCase() == name) ret = variable.value;
+          if (variable.name == name) ret = variable.value;
         }
         if (extendVariables) {
           let element = extendVariables.getFirstElementByName(name);
