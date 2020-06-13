@@ -229,6 +229,7 @@ input[type='range']::-ms-tooltip {
 .is-sticky-top {
   position: sticky;
   top : 0;
+  z-index: 10000;
 }
 
 .tab-setting {
