@@ -33,7 +33,7 @@
     "rxjs": "^6.5.5",
     "tslib": "^1.13.0",
     "vkbeautify": "^0.99.1",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.28",
@@ -48,14 +48,14 @@
     "@types/js-yaml": "^3.12.5",
     "@types/jszip": "^3.4.1",
     "@types/msgpack-lite": "^0.1.7",
-    "@types/node": "~8.9.4",
+    "@types/node": "^12.11.1",
     "@types/pako": "^1.0.1",
     "@types/vkbeautify": "^0.99.1",
     "codelyzer": "^5.2.2",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
-    "karma": "~4.1.0",
-    "karma-chrome-launcher": "~2.2.0",
+    "karma": "~5.0.0",
+    "karma-chrome-launcher": "~3.1.0",
     "karma-coverage-istanbul-reporter": "^2.1.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.5.4",
