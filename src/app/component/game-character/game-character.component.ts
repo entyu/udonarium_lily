@@ -111,8 +111,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     return ret / 2;
   }
 
-  @ViewChild('characterImage', { static: false }) characterImage: ElementRef;
-  @ViewChild('chatBubble', { static: false }) chatBubble: ElementRef;
+  @ViewChild('characterImage') characterImage: ElementRef;
+  @ViewChild('chatBubble') chatBubble: ElementRef;
   
 
   get characterImageHeight(): number {

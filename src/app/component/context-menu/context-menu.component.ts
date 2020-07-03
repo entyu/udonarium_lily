@@ -10,7 +10,7 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 })
 export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;
-  @ViewChild('altitudeSlider', { static: false }) altitudeSlider: ElementRef<HTMLElement>;
+  @ViewChild('altitudeSlider') altitudeSlider: ElementRef<HTMLElement>;
 
   @Input() title: string = '';
   @Input() actions: ContextMenuAction[] = [];

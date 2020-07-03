@@ -1,0 +1,40 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "es2020",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es5",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@udonarium/*": [
+        "src/app/class/*"
+      ],
+      "directive/*": [
+        "src/app/directive/*"
+      ],
+      "component/*": [
+        "src/app/component/*"
+      ],
+      "pipe/*": [
+        "src/app/pipe/*"
+      ],
+      "service/*": [
+        "src/app/service/*"
+      ]
+    },
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}
