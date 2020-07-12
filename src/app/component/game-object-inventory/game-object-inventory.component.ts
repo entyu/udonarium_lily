@@ -272,12 +272,12 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       { name: 'graveyard', alias: '墓場' }
     ];
     actions.push({
-      name: `${ locations.find((location) => { return location.name == gameObject.location.name }).alias }から移動`,
+      name: `${ (locations.find((location) => { return location.name == gameObject.location.name }) || locations[1]).alias }から移動`,
       action: null,
       subActions: locations
-        .filter((location) => { return gameObject.location.name !== location.name })
+        .filter((location, i) => { return !(gameObject.location.name == location.name || (i == 1 && !locations.map(loc => loc.name).includes(gameObject.location.name))) })
         .map((location) => { 
-          return { 
+          return {
             name: `${location.alias}`, 
             action: () => { gameObject.setLocation(location.name); SoundEffect.play(PresetSound.piecePut); }
           } 
