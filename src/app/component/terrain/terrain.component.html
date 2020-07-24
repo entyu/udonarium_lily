@@ -3,12 +3,12 @@
   appMovable [movable.option]="movableOption" [movable.disable]="isLocked" [movable.interact]="isInteract" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div class="component-content is-3d is-pointer-events-auto" [ngClass]="{'is-grab': !isLocked}"
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLocked">
-    <ng-container *ngIf="hasFloor && 0 < floorImage?.url.length" >
-      <div class="texture" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'transform': 'translateZ(' + ((height / (isSlope ? 2 : 1) + altitude) * gridSize) + 'px)' + (isSlope ? (' rotateX(' + -math.atan(height / depth) + 'rad) scaleY(' + (1 / math.cos(math.atan(height / depth))) + ')') : '')}"
-        [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"
-        ></div>
+    <ng-container *ngIf="hasFloor && 0 < floorImage?.url.length">
       <div *ngIf="isDropShadow && (terreinAltitude != 0 || (isSlope && !hasWall))"
-        style="opacity: 0.7; filter: brightness(0) blur(1px); transform: translateZ(0.3px) scale(0.96); backface-visibility: visible" class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
+        style="opacity: 0.7; filter: brightness(0) blur(1px); transform: translateZ(0.3px) scale(0.98); backface-visibility: visible"
+        class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
+      <div class="texture" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'backface-visibility': isSlope ? 'visible' : 'hidden', 'transform': 'translateZ(' + ((height / (isSlope ? 2 : 1) + altitude) * gridSize) + 'px)' + (isSlope ? (' rotateX(' + -math.atan(height / depth) + 'rad) scaleY(' + (1 / math.cos(math.atan(height / depth))) + ')') : '')}"
+        [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
     </ng-container>
     <ng-container *ngIf="isWallExist">
       <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
