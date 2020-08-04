@@ -106,6 +106,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   openModal(name: string = '', isAllowedEmpty: boolean = false) {
     this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
+      console.log(value == 'null');
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
       if (name === 'faceIcon') {
         let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
@@ -120,8 +121,13 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       } else {
         let element = this.tabletopObject.imageDataElement.getFirstElementByName(name);
-        if (!element) return;
-        element.value = value;
+        if (element) {
+          element.value = value;
+        } else if (name == 'shadowImageIdentifier') {
+          this.tabletopObject.imageDataElement.appendChild(DataElement.create(name, value, { type: 'image' }, name + '_' + UUID.generateUuid()));
+        } else {
+          return;
+        }
       }
     });
     EventSystem.trigger('UPDATE_GAME_OBJECT', this.tabletopObject);

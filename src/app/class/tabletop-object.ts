@@ -24,6 +24,7 @@ export class TabletopObject extends ObjectNode {
   get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
 
   private _imageFile: ImageFile = ImageFile.Empty;
+  private _shadowImageFile: ImageFile = ImageFile.Empty;
   //private _faceIcon: ImageFile = null;
   private _dataElements: { [name: string]: string } = {};
 
@@ -67,7 +68,17 @@ export class TabletopObject extends ObjectNode {
       return file ? file : null;
     }).filter((file) => { return file != null });
   }
-  
+
+  get shadowImageFile(): ImageFile {
+    if (!this.imageDataElement) return this._shadowImageFile;
+    let imageIdElement: DataElement = this.imageDataElement.getFirstElementByName('shadowImageIdentifier');
+    if (imageIdElement && this._shadowImageFile.identifier !== imageIdElement.value) {
+      let file: ImageFile = ImageStorage.instance.get(<string>imageIdElement.value);
+      this._shadowImageFile = file ? file : ImageFile.Empty;
+    }
+    return this._shadowImageFile;
+  }
+
   @SyncVar() isAltitudeIndicate: boolean = false;
   get altitude(): number {
     let element = this.getElement('altitude', this.commonDataElement);

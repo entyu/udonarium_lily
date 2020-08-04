@@ -32,6 +32,7 @@
     <option value="{{networkService.peerId}}">個人インベントリ</option>
     <option value="graveyard">墓地</option>
   </select>
+  <button (click)="openModal('shadowImageIdentifier', true)">影変更</button>
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length || 0 < tabletopObject.faceIcons?.length" class="box main-image-box">

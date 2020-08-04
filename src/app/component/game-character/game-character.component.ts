@@ -86,6 +86,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     if (!this.gameCharacter.dialog || !this.gameCharacter.dialog.icon_identifier) return null;
     return ImageStorage.instance.get(<string>this.gameCharacter.dialog.icon_identifier);
   }
+  get shadowImageFile(): ImageFile { return this.gameCharacter.shadowImageFile; }
 
   get elevation(): number {
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
