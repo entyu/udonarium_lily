@@ -106,7 +106,6 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   openModal(name: string = '', isAllowedEmpty: boolean = false) {
     this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
-      console.log(value == 'null');
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
       if (name === 'faceIcon') {
         let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
