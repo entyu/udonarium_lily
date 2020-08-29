@@ -20,6 +20,7 @@ export class SynchronizeTask {
 
   private requestMap: Map<ObjectIdentifier, SynchronizeRequest> = new Map();
   private timeoutTimer: NodeJS.Timer;
+  private timeoutDate: number;
 
   private constructor(readonly peerId: PeerId) { }
 
@@ -44,7 +45,7 @@ export class SynchronizeTask {
   }
 
   private cancel() {
-    clearTimeout(this.timeoutTimer);
+    if (this.timeoutTimer) clearTimeout(this.timeoutTimer);
     this.onsynchronize = this.onfinish = this.ontimeout = null;
 
     for (let request of this.requestMap.values()) {
@@ -120,7 +121,19 @@ export class SynchronizeTask {
   }
 
   private resetTimeout() {
-    clearTimeout(this.timeoutTimer);
-    this.timeoutTimer = setTimeout(() => this.timeout(), 30 * 1000);
+    this.timeoutDate = Date.now() + 30 * 1000;
+    if (this.timeoutTimer !== null) return;
+    this.setTimeout();
+  }
+
+  private setTimeout() {
+    this.timeoutTimer = setTimeout(() => {
+      this.timeoutTimer = null;
+      if (Date.now() < this.timeoutDate) {
+        this.setTimeout();
+      } else {
+        this.timeout();
+      }
+    }, this.timeoutDate - Date.now());
   }
 }

@@ -5,38 +5,10 @@
   To learn more about this file see: https://angular.io/config/solution-tsconfig.
 */
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "es5",
-    "lib": [
-      "es2018",
-      "dom"
-    ],
-    "paths": {
-      "@udonarium/*": [
-        "src/app/class/*"
-      ],
-      "directive/*": [
-        "src/app/directive/*"
-      ],
-      "component/*": [
-        "src/app/component/*"
-      ],
-      "pipe/*": [
-        "src/app/pipe/*"
-      ],
-      "service/*": [
-        "src/app/service/*"
-      ]
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
     },
     {
       "path": "./tsconfig.spec.json"
