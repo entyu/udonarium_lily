@@ -34,12 +34,16 @@ export class UIPanelComponent implements OnInit {
   @Input() set top(top: number) { this.panelService.top = top; }
   @Input() set width(width: number) { this.panelService.width = width; }
   @Input() set height(height: number) { this.panelService.height = height; }
+  @Input() set isAbleFullScreenButton(isAbleFullScreenButton: boolean) { this.panelService.isAbleFullScreenButton = isAbleFullScreenButton; }
+  @Input() set isAbleCloseButton(isAbleCloseButton: boolean) { this.panelService.isAbleCloseButton = isAbleCloseButton; }
 
   get title(): string { return this.panelService.title; }
   get left() { return this.panelService.left; }
   get top() { return this.panelService.top; }
   get width() { return this.panelService.width; }
   get height() { return this.panelService.height; }
+  get isAbleFullScreenButton() { return this.panelService.isAbleFullScreenButton; }
+  get isAbleCloseButton() { return this.panelService.isAbleCloseButton; }
 
   private preLeft: number = 0
   private preTop: number = 0;
@@ -61,6 +65,10 @@ export class UIPanelComponent implements OnInit {
 
   toggleFullScreen() {
     let panel = this.draggablePanel.nativeElement;
+    panel.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out';
+    setTimeout(() => {
+      panel.style.transition = null;
+    }, 100);
     if (panel.offsetLeft <= 0
       && panel.offsetTop <= 0
       && panel.offsetWidth >= window.innerWidth

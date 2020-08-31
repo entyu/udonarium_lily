@@ -3,8 +3,8 @@
   [draggable.stack]="'.draggable-panel'" appDraggable appResizable #draggablePanel>
   <div class="title">
     <div class="title-button">
-      <button (click)="toggleFullScreen()"><i class="material-icons" style="font-size: 14px;">fullscreen</i></button>
-      <button (click)="close()"><i class="material-icons" style="font-size: 14px;">close</i></button>
+      <button *ngIf="isAbleFullScreenButton" (click)="toggleFullScreen()"><i class="material-icons" style="font-size: 14px;">fullscreen</i></button>
+      <button *ngIf="isAbleCloseButton" (click)="close()"><i class="material-icons" style="font-size: 14px;">close</i></button>
     </div>
     {{panelService.title}}
   </div>

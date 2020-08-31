@@ -57,7 +57,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.panelService.title = '接続情報');
+    Promise.resolve().then(() => { this.panelService.title = '接続情報'; this.panelService.isAbleFullScreenButton = false });
   }
 
   ngAfterViewInit() {
