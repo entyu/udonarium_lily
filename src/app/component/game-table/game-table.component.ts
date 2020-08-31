@@ -97,19 +97,48 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
+        this.gameTable.nativeElement.style.transition = null;
         if (event.data.identifier !== this.currentTable.identifier && event.data.identifier !== this.tableSelecter.identifier) return;
         console.log('UPDATE_GAME_OBJECT GameTableComponent ' + this.currentTable.identifier);
 
         this.setGameTableGrid(this.currentTable.width, this.currentTable.height, this.currentTable.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
       })
       .on('DRAG_LOCKED_OBJECT', event => {
+        this.gameTable.nativeElement.style.transition = null;
         this.isTransformMode = true;
         this.pointerDeviceService.isDragging = false;
         let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
         this.gridCanvas.nativeElement.style.opacity = opacity + '';
+      })
+      .on('RESET_POINT_OF_VIEW', event => {
+        this.isTransformMode = false;
+        this.pointerDeviceService.isDragging = false;
+
+        this.setTransform(this.viewPotisonX, this.viewPotisonY, this.viewPotisonZ, this._rightRotate(this.viewRotateX), this._rightRotate(this.viewRotateY, true), this._rightRotate(this.viewRotateZ), true);
+        setTimeout(() => {
+          this.gridCanvas.nativeElement.style.opacity = '0.0';
+          this.gameTable.nativeElement.style.transition = '0.1s ease-out';
+          setTimeout(() => {
+            this.gameTable.nativeElement.style.transition = null;
+          }, 100);
+          this.setTransform(100, 0, 0, 50, 0, 10, true);
+        }, 50);
+        this.removeFocus();
       });
     this.tabletopService.makeDefaultTable();
     this.tabletopService.makeDefaultTabletopObjects();
+  }
+
+  private _rightRotate(rotate: number, just: boolean=false): number {
+    let tmp = rotate % 360;
+    if (!just) {
+      if (tmp > 180) {
+        tmp = tmp - 360;
+      } else if (tmp < -180) {
+        tmp = tmp + 360;
+      }
+    }
+    return tmp;
   }
 
   ngAfterViewInit() {
@@ -312,15 +341,25 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.contextMenuService.open(menuPosition, menuActions, this.currentTable.name);
   }
 
-  private setTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number) {
-    this.viewRotateX += rotateX;
-    this.viewRotateY += rotateY;
-    this.viewRotateZ += rotateZ;
+  private setTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number, isAbsolute: boolean=false) {
+    if (isAbsolute) {
+      this.viewRotateX = rotateX;
+      this.viewRotateY = rotateY;
+      this.viewRotateZ = rotateZ;
 
-    this.viewPotisonX += transformX;
-    this.viewPotisonY += transformY;
-    this.viewPotisonZ += transformZ;
-    
+      this.viewPotisonX = transformX;
+      this.viewPotisonY = transformY;
+      this.viewPotisonZ = transformZ;
+    } else {
+      this.viewRotateX += rotateX;
+      this.viewRotateY += rotateY;
+      this.viewRotateZ += rotateZ;
+
+      this.viewPotisonX += transformX;
+      this.viewPotisonY += transformY;
+      this.viewPotisonZ += transformZ;
+    }
+
     if (rotateX != 0 || rotateY != 0 || rotateX != 0) {
       EventSystem.trigger<object>('TABLE_VIEW_ROTATE', {
         x: this.viewRotateX,

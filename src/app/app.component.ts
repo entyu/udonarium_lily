@@ -39,6 +39,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { TabletopService } from 'service/tabletop.service';
 
 @Component({
   selector: 'app-root',
@@ -59,7 +60,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private chatMessageService: ChatMessageService,
     private appConfigService: AppConfigService,
     private saveDataService: SaveDataService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private tableTopService: TabletopService
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -323,6 +325,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.ngZone.run(() => { });
       }, 100);
     }
+  }
+
+  resetPointOfView() {
+    EventSystem.trigger('RESET_POINT_OF_VIEW', null);
   }
 }
 
