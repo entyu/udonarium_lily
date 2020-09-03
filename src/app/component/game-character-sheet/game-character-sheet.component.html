@@ -46,7 +46,7 @@
         </div>
       </ng-container>
     </div>
-    <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" />
+    <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" (dblclick)="openMainImageModal(tabletopObject)" />
   </div>
   <ng-container *ngIf="tabletopObject.commonDataElement">
     <div class="flex-item">

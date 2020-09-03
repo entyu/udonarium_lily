@@ -11,6 +11,9 @@ import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
 import { UUID } from '@udonarium/core/system/util/uuid';
+import { CardStack } from '@udonarium/card-stack';
+import { Card } from '@udonarium/card';
+import { DiceSymbol } from '@udonarium/dice-symbol';
 
 @Component({
   selector: 'game-character-sheet',
@@ -145,6 +148,18 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       this.tabletopObject.imageDataElement.removeChild(elements[index]);
       //if (sound) SoundEffect.play(PresetSound.sweep);
+    }
+  }
+
+  openMainImageModal(tabletopObject: TabletopObject) {
+    if (tabletopObject instanceof CardStack) {
+      return;
+    } else if (tabletopObject instanceof Card) {
+      this.openModal(tabletopObject.isVisible ? 'front' : 'back');
+    } else if (tabletopObject instanceof DiceSymbol) {
+      this.openModal(tabletopObject['face']);
+    } else  {
+      this.openModal('imageIdentifier', true)
     }
   }
 }
