@@ -331,6 +331,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
+      {
+        name: 'URLを開く', action: () => {
+          if (!this.gameCharacter || !this.gameCharacter.getElement('URL')) return;
+          let openUrl = this.gameCharacter.getElement('URL').value + '';
+          if (/^https?\:\/\//.test(openUrl) && window.confirm(openUrl + '\r\nURLを開きますか？（別ウィンドウで開きます、ポップアップを許可してください）')) {
+            window.open(openUrl);
+          }
+        },
+        disabled: !this.gameCharacter || !this.gameCharacter.getElement('URL') || !/^https?\:\/\//.test(this.gameCharacter.getElement('URL').value + '')
+      },
       ContextMenuSeparator,
       (this.gameCharacter.isInventoryIndicate
         ? {
@@ -373,7 +383,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           cloneObject.update();
           SoundEffect.play(PresetSound.piecePut);
         }
-      },
+      }
     ], this.name);
   }
 
