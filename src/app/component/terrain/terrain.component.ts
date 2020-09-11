@@ -56,6 +56,10 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   get isAltitudeIndicate(): boolean { return this.terrain.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.terrain.isAltitudeIndicate = isAltitudeIndicate; }
 
+  get isVisibleFloor(): boolean { return 0 < this.width * this.depth; }
+  get isVisibleWallTopBottom(): boolean { return 0 < this.width * this.height; }
+  get isVisibleWallLeftRight(): boolean { return 0 < this.depth * this.height; }
+
   gridSize: number = 50;
 
   get isWallExist(): boolean {

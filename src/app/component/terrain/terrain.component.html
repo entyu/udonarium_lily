@@ -3,7 +3,7 @@
   appMovable [movable.option]="movableOption" [movable.disable]="isLocked" [movable.interact]="isInteract" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div class="component-content is-3d is-pointer-events-auto" [ngClass]="{'is-grab': !isLocked}"
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLocked">
-    <ng-container *ngIf="hasFloor && 0 < floorImage?.url.length">
+    <ng-container *ngIf="hasFloor && isVisibleFloor && 0 < floorImage?.url.length">
       <div *ngIf="isDropShadow && (terreinAltitude != 0 || (isSlope && !hasWall))"
         style="opacity: 0.7; filter: brightness(0) blur(1px); transform: translateZ(0.3px) scale(0.98); backface-visibility: visible"
         class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
@@ -11,18 +11,18 @@
         [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
     </ng-container>
     <ng-container *ngIf="isWallExist">
-      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+      <div *ngIf="isVisibleWallTopBottom" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) translateY(-100%) rotateX(90deg) rotateZ(180deg) scaleX(-1.0)'}"></div>
       <ng-container *ngIf="!isSlope">
-        <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-bottom" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+        <div *ngIf="isVisibleWallTopBottom" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading}" class="texture of-wall-bottom" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
           [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
           [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateX(-90deg)'}"></div>
       </ng-container>
-      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': isSlope}" class="texture of-wall-left" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+      <div *ngIf="isVisibleWallLeftRight" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': isSlope}" class="texture of-wall-left" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize" 
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateZ(90deg) rotateX(-90deg) scaleX(-1.0) translateX(-100%) translateY(-100%)'}"></div>
-      <div [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': isSlope}" class="texture of-wall-right" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+      <div *ngIf="isVisibleWallLeftRight" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': isSlope}" class="texture of-wall-right" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
         [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize"
         [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateZ(-90deg) rotateX(-90deg) translateY(-100%)'}"></div>
     </ng-container>

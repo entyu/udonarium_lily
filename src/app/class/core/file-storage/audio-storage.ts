@@ -1,7 +1,7 @@
 import { EventSystem } from '../system';
 import { AudioFile, AudioFileContext, AudioState } from './audio-file';
 
-export type CatalogItem = { identifier: string, state: number };
+export type CatalogItem = { readonly identifier: string, readonly state: number };
 
 export class AudioStorage {
   private static _instance: AudioStorage
@@ -43,7 +43,7 @@ export class AudioStorage {
   add(audio: AudioFile): AudioFile
   add(context: AudioFileContext): AudioFile
   add(arg: any): AudioFile {
-    let audio: AudioFile
+    let audio: AudioFile;
     if (typeof arg === 'string') {
       audio = AudioFile.create(arg);
     } else if (arg instanceof AudioFile) {
@@ -97,14 +97,15 @@ export class AudioStorage {
   }
 
   synchronize(peer?: string) {
-    clearTimeout(this.lazyTimer);
+    if (this.lazyTimer) clearTimeout(this.lazyTimer);
     this.lazyTimer = null;
     EventSystem.call('SYNCHRONIZE_AUDIO_LIST', this.getCatalog(), peer);
   }
 
   lazySynchronize(ms: number, peer?: string) {
-    clearTimeout(this.lazyTimer);
+    if (this.lazyTimer) clearTimeout(this.lazyTimer);
     this.lazyTimer = setTimeout(() => {
+      this.lazyTimer = null;
       this.synchronize(peer);
     }, ms);
   }
