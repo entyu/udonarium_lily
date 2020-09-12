@@ -358,6 +358,10 @@ input[type='range']::-ms-tooltip {
   filter: brightness(0);
 }
 
+.aura {
+  transition: filter 0.3s ease-in-out;
+}
+
 .aura.black {
   filter: drop-shadow(0 -2px 2px black);
 }
