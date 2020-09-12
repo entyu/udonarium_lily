@@ -9,63 +9,6 @@
   justify-content: space-between;
   align-content: space-between;
 }
-.imagebox {
-  display: inline-block;
-  width: 50px;
-  height: 50px;
-  max-width: 50px;
-  max-height: 50px;
-  vertical-align: top;
-  text-align: center;
-}
-.image{
-  width: 100%;
-  height: 100%;
-  vertical-align: bottom;
-  object-fit: cover;
-  object-position: 50% 0%;
-  border-radius: 0.5rem;
-}
-.inverse {
-  transform: scaleX(-1);
-}
-/*
-.inverser {
-  transition: transform 100ms 0s ease;
-}
-*/
-.hollow {
-  opacity: 0.6;
-  filter: blur(1px);
-}
-.black-paint {
-  filter: brightness(0);
-}
-
-.aura.black {
-  filter: drop-shadow(0 -4px 4px black);
-}
-.aura.blue {
-  filter: drop-shadow(0 -4px 4px #00f);
-}
-.aura.green {
-  filter: drop-shadow(0 -4px 4px #3f3);
-}
-.aura.cyan {
-  filter: drop-shadow(0 -4px 4px #3ff);
-}
-.aura.red {
-  filter: drop-shadow(0 -4px 4px #f00);
-}
-.aura.magenta {
-  filter: drop-shadow(0 -4px 4px #f0f);
-}
-.aura.yellow {
-  filter: drop-shadow(0 -4px 4px #ff3);
-}
-.aura.white {
-  filter: drop-shadow(0 -4px 6px #ccc) drop-shadow(0 -4px 4px #fff);
-}
 
 .sticky-bottom {
   position: sticky;
@@ -74,52 +17,6 @@
   background-color: rgba(240,218,189, 0.8);
   border-top:1px dotted #666;
   margin-bottom: 0;
-}
-.table {
-  box-sizing: border-box;
-  padding : 5px;
-  /*position : fixed;*/
-  /*bottom : 0;*/
-  display: table;
-  /*width: calc(100% - 30px);*/
-  width: 100%;
-}
-.table .table-cell {
-  display: table-cell;
-}
-.message .body {
-  display: table-cell;
-}
-
-.chat-input {
-  font-family: Arial;
-  font-size: 13px;
-
-  width: calc(100% - 100px);
-  height: calc(1em + 4px);
-  min-height: calc(1em + 7px);
-  max-height: calc(6em + 7px);
-  resize: none;
-  overflow: auto;
-
-  padding: 1px;
-  margin: 5px;
-
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  vertical-align: bottom;
-}
-
-.writing-info {
-  font-size: 8px;
-  height: 1.3em;
-}
-
-.direct-message {
-  background-color: #555;
-  color: #CCC;
 }
 
 .chat-tab {
@@ -190,22 +87,4 @@
 .material-icons {
   vertical-align: middle;
   font-size: 1.0rem;
-}
-
-.not-specified {
-  color: gray;
-}
-
-.dice-bot-group {
-  color: whitesmoke;
-  background-color: #555;
-}
-
-option {
-  color: black;
-  background-color: white;
-}
-
-input[type='image']:disabled {
-  border: 1px transparent none;
 }

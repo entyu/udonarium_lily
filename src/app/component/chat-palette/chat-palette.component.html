@@ -8,64 +8,21 @@
         </label>
       </div>
     </form>
-    <div class="table" [ngClass]="{ 'direct-message': isDirect }">
-      <div class="table-cell imagebox" (contextmenu)="onContextMenu($event)">
-        <div *ngIf="isUseFaceIcon && character && character.faceIcon != null && 0 < character.faceIcon?.url?.length; else noFaceIcon" class="imagebox">
-          <img #characterImage class="image" [src]="character.faceIcon?.url | safe: 'resourceUrl'" />
-        </div>
-        <ng-template #noFaceIcon>
-          <div *ngIf="character && character.imageFile != null && 0 < character.imageFile.url.length" class="inverser" [ngClass]="{inverse: character.isInverse, hollow: character.isHollow}">
-            <span class="aura imagebox" [ngClass]="{black: character.aura == 0, blue: character.aura == 1, green: character.aura == 2, cyan: character.aura == 3, red: character.aura == 4, magenta: character.aura == 5, yellow: character.aura == 6, white: character.aura == 7}">
-              <img class="image" [src]="character.imageFile.url | safe: 'resourceUrl'" [ngClass]="{'black-paint': character.isBlackPaint}" />
-            </span>
-          </div>
-        </ng-template>
-      </div>
-      <div class="table-cell">
-        <div>
-          <label style="margin-right: 2px"><input type="checkbox" [(ngModel)]="isUseFaceIcon" checked="{{isUseFaceIcon ? 'checked' : ''}}" (change)="isUseFaceIcon = (isUseFaceIcon ? true : false)" />顔IC</label>
-          <select style="width: 10em;" (change)="onSelectedCharacter($event.target.value)" [ngModel]="character.identifier" [style.color]="color != '#ffffff' ? color : ''">
-            <option *ngFor="let gameCharacter of gameCharacters" [style.color]="gameCharacter.chatPalette && gameCharacter.chatPalette.color && gameCharacter.chatPalette.color != '#ffffff' ? gameCharacter.chatPalette.color : '#444'" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
-          </select> ➡
-          <select style="width: 10em;" [(ngModel)]="sendTo">
-            <option value="">全員</option>
-            <option *ngFor="let peer of otherPeers" value="{{peer.identifier}}">{{peer.name}}<ng-container *ngIf="peer === myPeer">（あなた）</ng-container></option>
-          </select>
-          <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 12em;" (change)="onChangeGameType($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
-            [ngClass]="{'not-specified': gameType == ''}">>
-            <option value="" class="not-specified">ダイスボット指定なし</option>
-            <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
-          </select>
-          <select *ngIf="diceBotInfosIndexed.length > 0" style="width: 13em;" (change)="onChangeGameType($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
-            [ngClass]="{'not-specified': gameType == ''}">
-            <option value="" class="not-specified">ダイスボット指定なし</option>
-            <optgroup *ngFor="let group of diceBotInfosIndexed" class="dice-bot-group" label="{{group.index}}">
-              <option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
-            </optgroup>
-          </select>
-          <button (click)="showDicebotHelp()">?</button>
-        </div>
-        <div>
-          <form>
-            <!--<input [(ngModel)]="text" placeholder="message" [ngModelOptions]="{standalone: true}" style="width: 25em;">-->
-            <input type="color" style="width:1em; margin-left: 3px" [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
-            <textarea #textArea [(ngModel)]="text" placeholder="Enterで送信  Shift+Enterで改行  白(255,255,255)の場合あなたの色を使用" [ngModelOptions]="{standalone: true}" class="chat-input" (input)="onInput()" (keydown.enter)="sendChat($event)"></textarea>
-            <button type="submit" (click)="sendChat(null)">SEND</button>
-          </form>
-        </div>
-      </div>
-    </div>
+    <chat-input [onlyCharacters]="true" [chatTabidentifier]="chatTabidentifier" 
+    [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #chatInput></chat-input>
     <div *ngIf="isEdit" class="edit-info"><i class="material-icons" style="vertical-align: bottom; size:0.8rem;">info_outline</i> チャットパレット編集中です</div>
   </div>
   <div *ngIf="!isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-    <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" (keydown.enter)="sendChat($event)" #chatPlette>
+    <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
       <ng-container *ngIf="palette">
-        <option *ngFor="let palette of palette.getPalette()" [style.color]="color != '#ffffff' ? color : ''" style="white-space: pre-wrap" value="{{palette}}">{{palette}}</option>
+        <ng-container *ngFor="let palette of palette.getPalette()">
+          <option *ngIf="filter(palette)" value="{{palette}}" [style.color]="color">{{palette}}</option>
+        </ng-container>
       </ng-container>
     </select>
   </div>
   <div *ngIf="isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-    <textarea class="palette" [style.color]="color != '#ffffff' ? color : ''" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
+    <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
   <div style="flex-grow: 0;">
     <button type="submit" (click)="toggleEditMode()">

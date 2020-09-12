@@ -21,25 +21,61 @@
   vertical-align: top;
   text-align: center;
 }
-
 .image{
   width: 100%;
   height: 100%;
   vertical-align: bottom;
   object-fit: cover;
   object-position: 50% 0%;
+  border-radius: 0.5rem;
+}
+.inverse {
+  transform: scaleX(-1);
+}
+
+.hollow {
+  opacity: 0.6;
+  filter: blur(1px);
+}
+.black-paint {
+  filter: brightness(0);
+}
+
+.aura.black {
+  filter: drop-shadow(0 -4px 4px black);
+}
+.aura.blue {
+  filter: drop-shadow(0 -4px 4px #00f);
+}
+.aura.green {
+  filter: drop-shadow(0 -4px 4px #3f3);
+}
+.aura.cyan {
+  filter: drop-shadow(0 -4px 4px #3ff);
+}
+.aura.red {
+  filter: drop-shadow(0 -4px 4px #f00);
+}
+.aura.magenta {
+  filter: drop-shadow(0 -4px 4px #f0f);
+}
+.aura.yellow {
+  filter: drop-shadow(0 -4px 4px #ff3);
+}
+.aura.white {
+  filter: drop-shadow(0 -4px 6px #ccc) drop-shadow(0 -4px 4px #fff);
 }
 
 .chat-input {
-  font-family: inherit;
+  font-family: Arial;
   font-size: 13px;
 
   width: calc(100% - 100px);
   height: calc(1em + 4px);
   min-height: calc(1em + 7px);
   max-height: calc(6em + 7px);
-  resize: none;
-  overflow: auto;
+  /* resize: none; */
+  overflow-y: auto;
 
   padding: 1px;
   margin: 5px;
@@ -59,4 +95,17 @@
 .direct-message {
   background-color: #555;
   color: #CCC;
+}
+
+.not-specified {
+  color: gray;
+}
+
+.dice-bot-group {
+  color: whitesmoke;
+  background-color: #555;
+}
+
+option {
+  color: black;
 }
