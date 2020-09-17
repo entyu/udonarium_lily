@@ -18,6 +18,7 @@
       (click)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : doAction(action)"
       (mouseenter)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : showSubMenu(action)">
     <div class="menu-title" [ngClass]="{'icon-menu': action.icon, default: action.default}">
+      <span *ngIf="action.error" title="{{action.error}}">⚠️</span>
       <input *ngIf="action.name && action.name.indexOf('☑') == 0" type="checkbox" [disabled]="action.disabled" checked/>
       <input *ngIf="action.name && action.name.indexOf('☐') == 0" type="checkbox" [disabled]="action.disabled" />
       <input *ngIf="action.name && action.name.indexOf('◉') == 0" type="radio" [disabled]="action.disabled" checked />
@@ -33,7 +34,8 @@
       {{ action.name.replace('☑', '').replace('☐', '').replace('◉', '').replace('○', '') }}
       <span *ngIf="action.icon && 0 < action.icon?.url.length" class="imagebox"><img class="image" [src]="action.icon.url | safe: 'resourceUrl'"></span>
     </div>
-    <div *ngIf="action.subActions" class="sub-menu-arrow">
+    <span *ngIf="action.materialIcon" style="vertical-align: top"><i style="font-size: 150%; padding-left: 2px;" class="material-icons">{{action.materialIcon}}</i></span>
+    <div *ngIf="action.subActions && !action.disabled" class="sub-menu-arrow">
       <i class="material-icons" style="font-size: 1em; vertical-align: bottom;">arrow_forward_ios</i>
     </div>
     <context-menu *ngIf="subMenu && parentMenu === action" [title]="action.name" [actions]="subMenu" [isSubmenu]="true"></context-menu>

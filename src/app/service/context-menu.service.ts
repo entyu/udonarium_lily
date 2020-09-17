@@ -26,7 +26,9 @@ export interface ContextMenuAction {
   subActions?: ContextMenuAction[],
   altitudeHande?: TabletopObject,
   default?: boolean,
-  icon?: ImageFile
+  icon?: ImageFile,
+  error?: string,
+  materialIcon?: string
 }
 
 @Injectable()

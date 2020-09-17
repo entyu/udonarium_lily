@@ -332,14 +332,28 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
       {
-        name: 'URLを開く', action: () => {
-          if (!this.gameCharacter || !this.gameCharacter.getElement('URL')) return;
-          let openUrl = this.gameCharacter.getElement('URL').value + '';
-          if (/^https?\:\/\//.test(openUrl) && window.confirm(openUrl + '\r\nURLを開きますか？（別ウィンドウで開きます、ポップアップを許可してください）')) {
-            window.open(openUrl);
+        name: 'URLを開く', action: null,
+        subActions: this.gameCharacter.getUrls().map((urlElement) => {
+          const url = urlElement.value.toString();
+          let error = false;
+          try {
+            new URL(url);
+          } catch (e) {
+            error = true;
           }
-        },
-        disabled: !this.gameCharacter || !this.gameCharacter.getElement('URL') || !/^https?\:\/\//.test(this.gameCharacter.getElement('URL').value + '')
+          return {
+            name: urlElement.name ? urlElement.name : url,
+            action: () => {
+              if (/^https?\:\/\//.test(url) && window.confirm(url + '\r\nこのURLを開きますか？（別ウィンドウで開きます、ポップアップを許可してください）')) {
+                window.open(url);
+              }
+            },
+            disabled: !url || !/^https?\:\/\//.test(url),
+            error: error || !/^https?\:\/\//.test(url) ? 'URLが不正です' : null,
+            materialIcon: 'open_in_new'
+          };
+        }),
+        disabled: !this.gameCharacter.getUrls() || this.gameCharacter.getUrls().length <= 0
       },
       ContextMenuSeparator,
       (this.gameCharacter.isInventoryIndicate

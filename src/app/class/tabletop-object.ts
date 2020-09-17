@@ -138,6 +138,10 @@ export class TabletopObject extends ObjectNode {
     }
   }
 
+  getUrls(): DataElement[] {
+    return this.rootDataElement.getElementsByType('url');
+  }
+
   protected setCommonValue(elementName: string, value: any) {
     let element = this.getElement(elementName, this.commonDataElement);
     if (!element) { return; }
