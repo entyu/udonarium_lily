@@ -210,10 +210,10 @@
         </div>
       </ng-container>
       <ng-container *ngSwitchDefault>
-        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div *ngIf="dataElm.name" class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
         <div class="value">
-          <div class="hidden-spacer">{{dataElm.value}}</div>
-          <input class="input" style="width: 8em" type="{{dataElm.name === 'size' || dataElm.name === 'altitude' ? 'number' : 'text'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" />
+          <div *ngIf="dataElm.name" class="hidden-spacer">{{dataElm.value}}</div>
+          <input class="input" [ngStyle]="{'min-width': dataElm.name ? '8em' : '100%'}" type="{{dataElm.name === 'size' || dataElm.name === 'altitude' ? 'number' : 'text'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" />
         </div>
       </ng-container>
     </ng-container>

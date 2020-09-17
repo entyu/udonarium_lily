@@ -306,6 +306,31 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.cardStack); } },
       {
+        name: 'URLを開く', action: null,
+        subActions: this.cardStack.getUrls().map((urlElement) => {
+          const url = urlElement.value.toString();
+          let error = false;
+          try {
+            new URL(url);
+          } catch (e) {
+            error = true;
+          }
+          return {
+            name: urlElement.name ? urlElement.name : url,
+            action: () => {
+              if (/^https?\:\/\//.test(url) && window.confirm(url + '\r\nこのURLを開きますか？（別ウィンドウで開きます、ポップアップを許可してください）')) {
+                window.open(url);
+              }
+            },
+            disabled: !url || !/^https?\:\/\//.test(url),
+            error: error || !/^https?\:\/\//.test(url) ? 'URLが不正です' : null,
+            materialIcon: 'open_in_new'
+          };
+        }),
+        disabled: !this.cardStack.getUrls() || this.cardStack.getUrls().length <= 0
+      },
+      ContextMenuSeparator,
+      {
         name: 'コピーを作る', action: () => {
           let cloneObject = this.cardStack.clone();
           cloneObject.location.x += this.gridSize;
