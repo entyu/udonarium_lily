@@ -40,6 +40,8 @@ export class TabletopObject extends ObjectNode {
   get commonDataElement(): DataElement { return this.getElement('common'); }
   get detailDataElement(): DataElement { return this.getElement('detail'); }
 
+  @SyncVar() currntImageIndex: number = 0;
+  /*
   get imageFile(): ImageFile {
     if (!this.imageDataElement) return this._imageFile;
     let imageIdElement: DataElement = this.imageDataElement.getFirstElementByName('imageIdentifier');
@@ -49,6 +51,25 @@ export class TabletopObject extends ObjectNode {
     }
     return this._imageFile;
   }
+  */
+  get imageFile(): ImageFile {
+    if (!this.imageDataElement) return this._imageFile;
+    let imageIdElements: DataElement[] = this.imageDataElement.getElementsByName('imageIdentifier');
+    let imageIdElement = imageIdElements[this.currntImageIndex < 0 ? 0 : this.currntImageIndex >= imageIdElements.length ? imageIdElements.length - 1 : this.currntImageIndex]
+    if (imageIdElement && this._imageFile.identifier !== imageIdElement.value) {
+      let file: ImageFile = ImageStorage.instance.get(<string>imageIdElement.value);
+      this._imageFile = file ? file : ImageFile.Empty;
+    }
+    return this._imageFile;
+  }
+  get imageFiles(): ImageFile[] {
+    let elements = this.imageDataElement.getElementsByName('imageIdentifier');
+    return elements.map((element) => {
+      let file: ImageFile = ImageStorage.instance.get(<string>element.value);
+      return file ? file : null;
+    }).filter((file) => { return file != null });
+  }
+
   @SyncVar() isUseIconToOverviewImage: boolean = true;
   @SyncVar() currntIconIndex: number = 0;
   get faceIcon(): ImageFile {

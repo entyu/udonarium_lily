@@ -14,6 +14,7 @@ import { UUID } from '@udonarium/core/system/util/uuid';
 import { CardStack } from '@udonarium/card-stack';
 import { Card } from '@udonarium/card';
 import { DiceSymbol } from '@udonarium/dice-symbol';
+import { GameCharacter } from '@udonarium/game-character';
 
 @Component({
   selector: 'game-character-sheet',
@@ -26,7 +27,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   isEdit: boolean = false;
 
   networkService = Network;
-  MAX_FACE_ICON_COUNT = 5;
+  MAX_IMAGE_ICON_COUNT = 5;
 
   constructor(
     private saveDataService: SaveDataService,
@@ -110,15 +111,15 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   openModal(name: string = '', isAllowedEmpty: boolean = false) {
     this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
-      if (name === 'faceIcon') {
+      if (name === 'faceIcon' || this.tabletopObject instanceof GameCharacter) {
         let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
-        if (elements.length >= this.MAX_FACE_ICON_COUNT) {
-          for (let i = this.MAX_FACE_ICON_COUNT; i < elements.length; i++) {
+        if (elements.length >= this.MAX_IMAGE_ICON_COUNT) {
+          for (let i = this.MAX_IMAGE_ICON_COUNT; i < elements.length; i++) {
             this.deleteIcon(i);
           }
-          elements[this.MAX_FACE_ICON_COUNT - 1].value = value;
+          elements[this.MAX_IMAGE_ICON_COUNT - 1].value = value;
         } else {
-          this.tabletopObject.imageDataElement.appendChild(DataElement.create('faceIcon', value, { type: 'image' }, 'faceIcon_' + UUID.generateUuid()));
+          this.tabletopObject.imageDataElement.appendChild(DataElement.create(name, value, { type: 'image' }, name + UUID.generateUuid()));
         }
         if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       } else {
@@ -126,7 +127,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         if (element) {
           element.value = value;
         } else if (name == 'shadowImageIdentifier') {
-          this.tabletopObject.imageDataElement.appendChild(DataElement.create(name, value, { type: 'image' }, name + '_' + UUID.generateUuid()));
+          this.tabletopObject.imageDataElement.appendChild(DataElement.create(name, value, { type: 'image', currentValue: this.tabletopObject.currntImageIndex }, name + '_' + UUID.generateUuid()));
         } else {
           return;
         }
@@ -151,15 +152,15 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  openMainImageModal(tabletopObject: TabletopObject) {
-    if (tabletopObject instanceof CardStack) {
+  openMainImageModal() {
+    if (this.tabletopObject instanceof CardStack) {
       return;
-    } else if (tabletopObject instanceof Card) {
-      this.openModal(tabletopObject.isVisible ? 'front' : 'back');
-    } else if (tabletopObject instanceof DiceSymbol) {
-      this.openModal(tabletopObject['face']);
+    } else if (this.tabletopObject instanceof Card) {
+      this.openModal(this.tabletopObject.isVisible ? 'front' : 'back');
+    } else if (this.tabletopObject instanceof DiceSymbol) {
+      this.openModal(this.tabletopObject['face']);
     } else  {
-      this.openModal('imageIdentifier', true)
+      this.openModal('imageIdentifier', !(this.tabletopObject instanceof GameCharacter))
     }
   }
 }

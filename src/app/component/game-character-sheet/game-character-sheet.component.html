@@ -16,8 +16,8 @@
     <button (click)="openModal(tabletopObject['face'])" [disabled]="!tabletopObject['isVisible']">ダイス目の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchCase="'character'">
-    <button (click)="openModal('imageIdentifier', true)">画像変更</button>
-    <button [disabled]="tabletopObject.faceIcons?.length >= MAX_FACE_ICON_COUNT" (click)="openModal('faceIcon')">顔IC{{ (tabletopObject.faceIcons?.length > 0) ? '追加' : '設定' }}</button>
+    <button [disabled]="tabletopObject.imageFiles?.length >= MAX_IMAGE_ICON_COUNT" (click)="openModal('imageIdentifier')">画像{{ (tabletopObject.imageFiles?.length > 0) ? '追加' : '設定' }}</button>
+    <button [disabled]="tabletopObject.faceIcons?.length >= MAX_IMAGE_ICON_COUNT" (click)="openModal('faceIcon')">顔IC{{ (tabletopObject.faceIcons?.length > 0) ? '追加' : '設定' }}</button>
   </ng-container>
   <ng-container *ngSwitchDefault>
     <button (click)="openModal('imageIdentifier', true)">画像変更</button>
@@ -46,7 +46,7 @@
         </div>
       </ng-container>
     </div>
-    <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" (dblclick)="openMainImageModal(tabletopObject)" />
+    <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" (dblclick)="openMainImageModal()" />
   </div>
   <ng-container *ngIf="tabletopObject.commonDataElement">
     <div class="flex-item">
