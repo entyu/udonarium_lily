@@ -28,7 +28,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
   get altitudeHande(): TabletopObject { 
     for (let action of this.actions) {
-      if (action.altitudeHande) return action.altitudeHande;
+      if (action && action.altitudeHande) return action.altitudeHande;
     }
     return null;
   }

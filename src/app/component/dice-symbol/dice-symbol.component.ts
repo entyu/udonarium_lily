@@ -271,32 +271,32 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
     actions.push(ContextMenuSeparator);
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.diceSymbol); } });
-    actions.push({
-      name: 'URLを開く', action: null,
-      subActions: this.diceSymbol.getUrls().map((urlElement) => {
-        const url = urlElement.value.toString();
-        let error = false;
-        try {
-          new URL(url);
-        } catch (e) {
-          error = true;
-        }
-        return {
-          name: urlElement.name ? urlElement.name : url,
-          action: () => {
-            if (/^https?\:\/\//.test(url) && window.confirm(url + '\r\nこのURLを開きますか？（別ウィンドウで開きます、ポップアップを許可してください）')) {
-              window.open(url);
-            }
-          },
-          disabled: !url || !/^https?\:\/\//.test(url),
-          error: error || !/^https?\:\/\//.test(url) ? 'URLが不正です' : null,
-          materialIcon: 'open_in_new'
-        };
-      }),
-      disabled: !this.diceSymbol.getUrls() || this.diceSymbol.getUrls().length <= 0
-    });
-
-    actions.push(ContextMenuSeparator);
+    if (this.diceSymbol.getUrls().length > 0) {
+      actions.push({
+        name: 'URLを開く', action: null,
+        subActions: this.diceSymbol.getUrls().map((urlElement) => {
+          const url = urlElement.value.toString();
+          let error = false;
+          try {
+            new URL(url);
+          } catch (e) {
+            error = true;
+          }
+          return {
+            name: urlElement.name ? urlElement.name : url,
+            action: () => {
+              if (/^https?\:\/\//.test(url) && window.confirm(url + '\r\nこのURLを開きますか？（別ウィンドウで開きます、ポップアップを許可してください）')) {
+                window.open(url);
+              }
+            },
+            disabled: !url || !/^https?\:\/\//.test(url),
+            error: error || !/^https?\:\/\//.test(url) ? 'URLが不正です' : null,
+            materialIcon: 'open_in_new'
+          };
+        })
+      });
+      actions.push(ContextMenuSeparator);
+    }
     actions.push({
       name: 'コピーを作る', action: () => {
         let cloneObject = this.diceSymbol.clone();

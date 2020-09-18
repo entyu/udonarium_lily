@@ -229,8 +229,8 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       ContextMenuSeparator,
       { name: 'カードを編集', action: () => { this.showDetail(this.card); } },
-      {
-        name: 'URLを開く' + (this.isVisible ? '' : ' (表または手札のみ)'), action: null,
+      (this.isVisible && this.card.getUrls().length > 0 ? {
+        name: 'URLを開く', action: null,
         subActions: this.card.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
           let error = false;
@@ -250,10 +250,9 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
             error: error || !/^https?\:\/\//.test(url) ? 'URLが不正です' : null,
             materialIcon: 'open_in_new'
           };
-        }),
-        disabled: !this.isVisible || !this.card.getUrls() || this.card.getUrls().length <= 0
-      },
-      ContextMenuSeparator,
+        })
+      } : null),
+      (this.isVisible && this.card.getUrls().length > 0 ? ContextMenuSeparator : null),
       {
         name: 'コピーを作る', action: () => {
           let cloneObject = this.card.clone();

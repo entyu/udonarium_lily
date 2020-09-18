@@ -353,7 +353,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
             materialIcon: 'open_in_new'
           };
         }),
-        disabled: !this.gameCharacter.getUrls() || this.gameCharacter.getUrls().length <= 0
+        disabled: this.gameCharacter.getUrls().length <= 0
       },
       ContextMenuSeparator,
       (this.gameCharacter.isInventoryIndicate

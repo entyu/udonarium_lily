@@ -249,7 +249,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       ContextMenuSeparator,
       { name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } },
-      {
+      (this.terrain.getUrls().length <= 0 ? null : {
         name: 'URLを開く', action: null,
         subActions: this.terrain.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
@@ -270,10 +270,9 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
             error: error || !/^https?\:\/\//.test(url) ? 'URLが不正です' : null,
             materialIcon: 'open_in_new'
           };
-        }),
-        disabled: !this.terrain.getUrls() || this.terrain.getUrls().length <= 0
-      },
-      ContextMenuSeparator,
+        })
+      }),
+      (this.terrain.getUrls().length <= 0 ? null : ContextMenuSeparator),
       {
         name: 'コピーを作る', action: () => {
           let cloneObject = this.terrain.clone();

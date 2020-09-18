@@ -7,7 +7,9 @@
     <div style="flex-grow: 1">
       <ul>
         <ng-container *ngFor="let action of actions">
-          <ng-container *ngTemplateOutlet="action?.type === 'separator' ? separator : actionMenu; context: { action: action }"></ng-container>
+          <ng-container *ngIf="action">
+            <ng-container *ngTemplateOutlet="action?.type === 'separator' ? separator : actionMenu; context: { action: action }"></ng-container>
+          </ng-container>
         </ng-container>
       </ul>
     </div>

@@ -128,7 +128,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
       ),
       ContextMenuSeparator,
       { name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableMask); } },
-      {
+      (this.gameTableMask.getUrls().length <= 0 ? null : {
         name: 'URLを開く', action: null,
         subActions: this.gameTableMask.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
@@ -149,10 +149,9 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
             error: error || !/^https?\:\/\//.test(url) ? 'URLが不正です' : null,
             materialIcon: 'open_in_new'
           };
-        }),
-        disabled: !this.gameTableMask.getUrls() || this.gameTableMask.getUrls().length <= 0
-      },
-      ContextMenuSeparator,
+        })
+      }),
+      (this.gameTableMask.getUrls().length <= 0 ? null : ContextMenuSeparator),
       {
         name: 'コピーを作る', action: () => {
           let cloneObject = this.gameTableMask.clone();

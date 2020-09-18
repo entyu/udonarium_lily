@@ -205,7 +205,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       ContextMenuSeparator,
       { name: 'メモを編集', action: () => { this.showDetail(this.textNote); } },
-      {
+      (this.textNote.getUrls().length <= 0 ? null : {
         name: 'URLを開く', action: null,
         subActions: this.textNote.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
@@ -226,10 +226,9 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
             error: error || !/^https?\:\/\//.test(url) ? 'URLが不正です' : null,
             materialIcon: 'open_in_new'
           };
-        }),
-        disabled: !this.textNote.getUrls() || this.textNote.getUrls().length <= 0
-      },
-      ContextMenuSeparator,
+        })
+      }),
+      (this.textNote.getUrls().length <= 0 ? null : ContextMenuSeparator),
       {
         name: 'コピーを作る', action: () => {
           let cloneObject = this.textNote.clone();
