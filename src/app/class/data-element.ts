@@ -13,6 +13,7 @@ export class DataElement extends ObjectNode {
   get isCheckProperty(): boolean { return this.type != null && this.type === 'checkProperty'; }
   get isNote(): boolean { return this.type != null && this.type === 'note'; }
   get isAbilityScore(): boolean { return this.type != null && this.type === 'abilityScore'; }
+  get isUrl(): boolean { return this.type != null && this.type === 'url'; }
 
   public static create(name: string, value: number | string = '', attributes: Attributes = {}, identifier: string = ''): DataElement {
     let dataElement: DataElement;
