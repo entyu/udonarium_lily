@@ -42,7 +42,9 @@ export class OpenUrlComponent implements OnInit, OnDestroy {
 
   openUrl() {
     window.open(this.url.trim());
+    this.modalService.resolve(true);
   }
+  
   validUrl(): boolean {
     return StringUtil.validUrl(this.url.trim());
   }
