@@ -87,7 +87,7 @@ ul > li.hasHighlight:hover {
   background-color: rgba(30, 30, 30, 0.8);
 }
 
-.menu-title {
+.menu-title:not(.icon-menu) {
   overflow: hidden;
   max-width: 16.5em;
   text-overflow: ellipsis;
