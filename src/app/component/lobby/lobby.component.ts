@@ -47,7 +47,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   private changeTitle() {
     this.modalService.title = this.panelService.title = 'ロビー';
     if (Network.peerContext.roomName.length) {
-      this.modalService.title = this.panelService.title = '＜' + Network.peerContext.roomName + '/' + Network.peerContext.room + '＞'
+      this.modalService.title = this.panelService.title = '〈' + Network.peerContext.roomName + '/' + Network.peerContext.room + '〉'
     }
   }
 

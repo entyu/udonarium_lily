@@ -45,4 +45,14 @@ export namespace StringUtil {
     });
     return ret;
   }
+
+  export function validUrl(url: string): boolean {
+    if (!url) return false;
+    try {
+      new URL(url.trim());
+    } catch (e) {
+      return false;
+    }
+    return /^https?\:\/\//.test(url.trim());
+  }
 }

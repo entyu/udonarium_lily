@@ -57,6 +57,7 @@ import { TabletopService } from 'service/tabletop.service';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 @NgModule({
   declarations: [
@@ -103,6 +104,7 @@ import { environment } from '../environments/environment';
     DraggableDirective,
     ResizableDirective,
     ChatInputComponent,
+    OpenUrlComponent,
   ],
   imports: [
     BrowserModule,

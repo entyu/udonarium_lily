@@ -16,13 +16,16 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopService } from 'service/tabletop.service';
@@ -77,7 +80,8 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     private elementRef: ElementRef<HTMLElement>,
     private changeDetector: ChangeDetectorRef,
     private tabletopService: TabletopService,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private modalService: ModalService
   ) { }
 
   ngOnInit() {
@@ -233,21 +237,11 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         name: 'URLを開く', action: null,
         subActions: this.card.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
-          let error = false;
-          try {
-            new URL(url);
-          } catch (e) {
-            error = true;
-          }
           return {
             name: urlElement.name ? urlElement.name : url,
-            action: () => {
-              if (/^https?\:\/\//.test(url) && window.confirm(url + '\r\nこのURLを開きますか？（別ウィンドウで開きます、ポップアップを許可してください）')) {
-                window.open(url);
-              }
-            },
-            disabled: !url || !/^https?\:\/\//.test(url),
-            error: error || !/^https?\:\/\//.test(url) ? 'URLが不正です' : null,
+            action: () => { this.modalService.open(OpenUrlComponent, { url: url, title: this.card.name, subTitle: urlElement.name }); },
+            disabled: !StringUtil.validUrl(url),
+            error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
             materialIcon: 'open_in_new'
           };
         })
