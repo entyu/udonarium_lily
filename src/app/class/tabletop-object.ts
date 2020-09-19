@@ -52,10 +52,14 @@ export class TabletopObject extends ObjectNode {
     return this._imageFile;
   }
   */
+  get imageElement(): DataElement {
+    if (!this.imageDataElement) return null;
+    let imageIdElements: DataElement[] = this.imageDataElement.getElementsByName('imageIdentifier');
+    return imageIdElements[this.currntImageIndex < 0 ? 0 : this.currntImageIndex >= imageIdElements.length ? imageIdElements.length - 1 : this.currntImageIndex];
+  }
   get imageFile(): ImageFile {
     if (!this.imageDataElement) return this._imageFile;
-    let imageIdElements: DataElement[] = this.imageDataElement.getElementsByName('imageIdentifier');
-    let imageIdElement = imageIdElements[this.currntImageIndex < 0 ? 0 : this.currntImageIndex >= imageIdElements.length ? imageIdElements.length - 1 : this.currntImageIndex]
+    let imageIdElement = this.imageElement;
     if (imageIdElement && this._imageFile.identifier !== imageIdElement.value) {
       let file: ImageFile = ImageStorage.instance.get(<string>imageIdElement.value);
       this._imageFile = file ? file : ImageFile.Empty;
@@ -96,6 +100,12 @@ export class TabletopObject extends ObjectNode {
     if (imageIdElement && this._shadowImageFile.identifier !== imageIdElement.value) {
       let file: ImageFile = ImageStorage.instance.get(<string>imageIdElement.value);
       this._shadowImageFile = file ? file : ImageFile.Empty;
+    } else {
+      let imageIdElement: DataElement = this.imageElement;
+      if (imageIdElement && this._shadowImageFile.identifier !== imageIdElement.currentValue) {
+        let file: ImageFile = ImageStorage.instance.get(<string>imageIdElement.currentValue);
+        this._shadowImageFile = file ? file : ImageFile.Empty;
+      }
     }
     return this._shadowImageFile;
   }

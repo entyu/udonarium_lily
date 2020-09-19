@@ -111,7 +111,18 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   openModal(name: string = '', isAllowedEmpty: boolean = false) {
     this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
-      if (name === 'faceIcon' || this.tabletopObject instanceof GameCharacter) {
+      if (name == 'shadowImageIdentifier') {
+        // 影はメイン画像のcurrentValueとする
+        const element = this.tabletopObject.imageElement;
+        if (element) {
+          element.currentValue = value;
+          // 過去の処理で作ったゴミを消す
+          const garbages = this.tabletopObject.imageDataElement.getElementsByName('shadowImageIdentifier');
+          for (const garbage of garbages) {
+            this.tabletopObject.imageDataElement.removeChild(garbage);
+          }
+        }
+      } else if (name === 'faceIcon' || this.tabletopObject instanceof GameCharacter) {
         let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
         if (elements.length >= this.MAX_IMAGE_ICON_COUNT) {
           for (let i = this.MAX_IMAGE_ICON_COUNT; i < elements.length; i++) {
@@ -131,8 +142,6 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         let element = this.tabletopObject.imageDataElement.getFirstElementByName(name);
         if (element) {
           element.value = value;
-        } else if (name == 'shadowImageIdentifier') {
-          this.tabletopObject.imageDataElement.appendChild(DataElement.create(name, value, { type: 'image', currentValue: this.tabletopObject.currntImageIndex }, name + '_' + UUID.generateUuid()));
         } else {
           return;
         }
