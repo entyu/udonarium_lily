@@ -115,12 +115,17 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
         if (elements.length >= this.MAX_IMAGE_ICON_COUNT) {
           for (let i = this.MAX_IMAGE_ICON_COUNT; i < elements.length; i++) {
-            this.deleteIcon(i);
+            if (name === 'faceIcon') {
+              this.deleteIcon(i);
+            } else {
+              this.deleteImage(i);
+            }
           }
           elements[this.MAX_IMAGE_ICON_COUNT - 1].value = value;
         } else {
           this.tabletopObject.imageDataElement.appendChild(DataElement.create(name, value, { type: 'image' }, name + UUID.generateUuid()));
         }
+        if (this.tabletopObject.currntImageIndex < 0) this.tabletopObject.currntImageIndex = 0;
         if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       } else {
         let element = this.tabletopObject.imageDataElement.getFirstElementByName(name);
@@ -136,9 +141,26 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     EventSystem.trigger('UPDATE_GAME_OBJECT', this.tabletopObject);
   }
 
+  //ToDO インデックスも抽象化して汎用にする
+  selectImage(index: number, name='imageIdentifier') {
+    if (this.tabletopObject.currntImageIndex == index) return;
+    this.tabletopObject.currntImageIndex = index;
+  }
+
   selectIcon(index: number) {
     if (this.tabletopObject.currntIconIndex == index) return;
     this.tabletopObject.currntIconIndex = index;
+  }
+
+  deleteImage(index: number=0, name='imageIdentifier') {
+    if (!this.tabletopObject || !this.tabletopObject.imageDataElement) return;
+    let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
+    //ToDO インデックスも抽象化して汎用にする
+    if (elements && 0 < elements.length && index < elements.length) {
+      if (this.tabletopObject.currntImageIndex >= index) this.tabletopObject.currntImageIndex -= 1;
+      if (this.tabletopObject.currntImageIndex < 0) this.tabletopObject.currntImageIndex = 0;
+      this.tabletopObject.imageDataElement.removeChild(elements[index]);
+    }
   }
 
   deleteIcon(index: number=0) {
