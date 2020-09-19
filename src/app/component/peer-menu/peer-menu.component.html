@@ -26,7 +26,7 @@
 <div *ngFor="let conn of networkService.peerContexts">
   <div>
     <span *ngIf="!conn.isOpen">[接続中]</span>
-    <span>他の参加者：{{conn.id}} [{{findPeerName(conn.fullstring)}}]</span>
+    <span>他の参加者：{{conn.id}} [<b [style.color]="findPeerColor(conn.fullstring)">{{findPeerName(conn.fullstring)}}</b>]</span>
   </div>
 </div>
 <div>

@@ -128,7 +128,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   private writingEventInterval: NodeJS.Timer = null;
   private previousWritingLength: number = 0;
   writingPeers: Map<string, NodeJS.Timer> = new Map();
-  writingPeerNames: string[] = [];
+  writingPeerNameAndColors: { name: string, color: string }[] = [];
 
   get diceBotInfos() { return DiceBot.diceBotInfos }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
@@ -153,7 +153,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         if (this.writingPeers.has(sendFrom)) {
           clearTimeout(this.writingPeers.get(sendFrom));
           this.writingPeers.delete(sendFrom);
-          this.updateWritingPeerNames();
+          this.updateWritingPeerNameAndColors();
         }
       })
       .on('UPDATE_GAME_OBJECT', -1000, event => {
@@ -181,9 +181,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           if (this.writingPeers.has(event.sendFrom)) clearTimeout(this.writingPeers.get(event.sendFrom));
           this.writingPeers.set(event.sendFrom, setTimeout(() => {
             this.writingPeers.delete(event.sendFrom);
-            this.updateWritingPeerNames();
+            this.updateWritingPeerNameAndColors();
           }, 2000));
-          this.updateWritingPeerNames();
+          this.updateWritingPeerNameAndColors();
         });
       });
   }
@@ -192,10 +192,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     EventSystem.unregister(this);
   }
 
-  private updateWritingPeerNames() {
-    this.writingPeerNames = Array.from(this.writingPeers.keys()).map(peerId => {
+  private updateWritingPeerNameAndColors() {
+    this.writingPeerNameAndColors = Array.from(this.writingPeers.keys()).map(peerId => {
       let peer = PeerCursor.find(peerId);
-      return peer ? peer.name : '';
+      return {
+        name: (peer ? peer.name : ''),
+        color: (peer ? peer.color : PeerCursor.CHAT_TRANSPARENT_COLOR),
+      };
     });
   }
 
