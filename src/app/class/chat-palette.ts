@@ -1,7 +1,7 @@
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectContext } from './core/synchronize-object/game-object';
 import { ObjectNode } from './core/synchronize-object/object-node';
-import { StringUtil } from './core/system/util/string-util';
+
 import { DataElement } from './data-element';
 import { PeerCursor } from './peer-cursor';
 
