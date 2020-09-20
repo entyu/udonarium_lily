@@ -36,6 +36,24 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
   styleUrls: ['./game-character.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
+    trigger('switchImage', [
+      transition('* => active', [
+        animate('800ms ease', keyframes([
+          style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateY(0deg)', offset: 0 }),
+          style({ transform: 'scale3d(1.2, 1.2, 1.2) rotateY(180deg)', offset: 0.3 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateY(360deg)', offset: 0.5 })
+        ]))
+      ])
+    ]),
+    trigger('switchImageShadow', [
+      transition('* => active', [
+        animate('800ms ease', keyframes([
+          style({ transform: 'scale3d(1.0, 0.8, 0.8)', offset: 0 }),
+          style({ transform: 'scale3d(0, 1.2, 1.2)', offset: 0.3 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 0.5 })
+        ]))
+      ])
+    ]),
     trigger('bounceInOut', [
       transition('void => *', [
         animate('600ms ease', keyframes([
@@ -100,6 +118,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   viewRotateX = 50;
   viewRotateZ = 10;
   heightWidthRatio = 1.5;
+
+  animeState: string = 'inactive';
 
   get chatBubbleXDeg():number {
     //console.log(this.viewRotateX)
@@ -180,6 +200,15 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
       })
+      .on('SWITCH_CHARACTER_IMAGE', -1000, event => {
+        if (event.data.identifier === this.gameCharacter.identifier) {
+          this.ngZone.run(() => {
+            this.animeState = 'inactive';
+            this.changeDetector.markForCheck();
+            setTimeout(() => { this.animeState = 'active'; this.changeDetector.markForCheck(); });
+          });
+        }
+      })
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {
           this.viewRotateX = event.data['x'];
@@ -221,6 +250,26 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.gameCharacter.imageFiles.length <= 1 ? null : {
+        name: '画像切り替え',
+        action: null,
+        subActions: this.gameCharacter.imageFiles.map((image, i) => {
+          return { 
+            name: `${this.gameCharacter.currntImageIndex == i ? '◉' : '○'}`, 
+            action: () => { 
+              if (this.gameCharacter.currntImageIndex != i) {
+                this.gameCharacter.currntImageIndex = i;
+                EventSystem.call('SWITCH_CHARACTER_IMAGE', { identifier: this.gameCharacter.identifier });
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+                this.animeState = 'active';
+              }
+            }, 
+            default: this.gameCharacter.currntImageIndex == i,
+            icon: image
+          };
+        }),
+      }),
+      (this.gameCharacter.imageFiles.length <= 1 ? null : ContextMenuSeparator),
       (this.isUseIconToOverviewImage
         ? {
           name: '☑ オーバービューに顔ICを使用', action: () => {
@@ -427,5 +476,22 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 620, height: 350 };
     let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
     component.character = gameObject;
+  }
+
+  nextImage() {
+    if (this.gameCharacter.imageFiles.length <= 1) return;
+    if (this.gameCharacter.currntImageIndex + 1 >= this.gameCharacter.imageFiles.length) {
+      this.gameCharacter.currntImageIndex = 0;
+    } else {
+      this.gameCharacter.currntImageIndex += 1;
+    }
+    EventSystem.trigger('UPDATE_INVENTORY', null);
+    EventSystem.call('SWITCH_CHARACTER_IMAGE', { identifier: this.gameCharacter.identifier });
+    this.animeState = 'active';
+  }
+
+  animationShuffleDone(event: any) {
+    this.animeState = 'inactive';
+    this.changeDetector.markForCheck();
   }
 }

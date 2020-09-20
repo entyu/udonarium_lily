@@ -115,28 +115,24 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         // 影はメイン画像のcurrentValueとする
         const element = this.tabletopObject.imageElement;
         if (element) {
-          element.currentValue = value;
+          if (element.value != 'null') element.currentValue = value;
           // 過去の処理で作ったゴミを消す
           const garbages = this.tabletopObject.imageDataElement.getElementsByName('shadowImageIdentifier');
           for (const garbage of garbages) {
             this.tabletopObject.imageDataElement.removeChild(garbage);
           }
         }
-      } else if (name === 'faceIcon' || this.tabletopObject instanceof GameCharacter) {
+      } else if (name === 'faceIcon') {
+        // faceIcon特殊処理（ToDo：分ける）
         let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
         if (elements.length >= this.MAX_IMAGE_ICON_COUNT) {
           for (let i = this.MAX_IMAGE_ICON_COUNT; i < elements.length; i++) {
-            if (name === 'faceIcon') {
-              this.deleteIcon(i);
-            } else {
-              this.deleteImage(i);
-            }
+            this.deleteIcon(i);
           }
           elements[this.MAX_IMAGE_ICON_COUNT - 1].value = value;
         } else {
           this.tabletopObject.imageDataElement.appendChild(DataElement.create(name, value, { type: 'image' }, name + UUID.generateUuid()));
         }
-        if (this.tabletopObject.currntImageIndex < 0) this.tabletopObject.currntImageIndex = 0;
         if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       } else {
         let element = this.tabletopObject.imageDataElement.getFirstElementByName(name);
@@ -148,6 +144,40 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       }
     });
     EventSystem.trigger('UPDATE_GAME_OBJECT', this.tabletopObject);
+  }
+
+  openModalAddImage() {
+    this.modalService.open<string>(FileSelecterComponent).then(value => {
+      if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
+      let elements = this.tabletopObject.imageDataElement.getElementsByName('imageIdentifier');
+      if (elements.length >= this.MAX_IMAGE_ICON_COUNT) {
+        for (let i = this.MAX_IMAGE_ICON_COUNT; i < elements.length; i++) {
+          this.deleteImage(i);
+        }
+        elements[this.MAX_IMAGE_ICON_COUNT - 1].value = value;
+      } else {
+        this.tabletopObject.imageDataElement.appendChild(DataElement.create('imageIdentifier', value, { type: 'image' }, name + UUID.generateUuid()));
+      }
+      if (this.tabletopObject.currntImageIndex < 0) this.tabletopObject.currntImageIndex = 0;
+    });
+  }
+
+  openModalReplaceImage(isAllowedEmpty: boolean = false) {
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
+      if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
+      if (value == 'null') {
+        //削除
+        if (this.tabletopObject.imageElement && this.tabletopObject.imageFiles.length == 1) {
+          // 互換のため一個残す
+          this.tabletopObject.imageElement.value = value;
+          this.tabletopObject.imageElement.currentValue = value;
+        } else {
+          this.deleteImage(this.tabletopObject.currntImageIndex);
+        }
+      } else if (this.tabletopObject.imageElement) {
+        this.tabletopObject.imageElement.value = value;
+      }
+    });
   }
 
   //ToDO インデックスも抽象化して汎用にする
@@ -190,8 +220,10 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       this.openModal(this.tabletopObject.isVisible ? 'front' : 'back');
     } else if (this.tabletopObject instanceof DiceSymbol) {
       this.openModal(this.tabletopObject['face']);
-    } else  {
-      this.openModal('imageIdentifier', !(this.tabletopObject instanceof GameCharacter))
+    } else if (this.tabletopObject instanceof GameCharacter) {
+      this.openModalReplaceImage(true);
+    } else {
+      this.openModal('imageIdentifier', true)
     }
   }
 }

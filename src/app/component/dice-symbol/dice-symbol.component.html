@@ -29,7 +29,7 @@
             </div>
           </div>
         </div>
-        <img class="image" *ngIf="isDropShadow && 0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)" [ngStyle]="{'transform': ' scaleY(0.6) translateY(-40%)'}">
+        <img class="image" *ngIf="isDropShadow && 0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)" >
       </div>
     </div>
   </div>
