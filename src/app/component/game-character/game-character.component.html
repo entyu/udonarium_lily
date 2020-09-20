@@ -12,13 +12,15 @@
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
-      <div class="inverser is-3d" style="pointer-events: none;" [ngClass]="{inverse: isInverse}" [@switchImageShadow]="animeState" (@switchImageShadow.done)="animationShuffleDone($event)">
-        <span class="aura is-3d" style="pointer-events: none;" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-          <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio" style="transform: translateY(-10%); pointer-events: none;">
-            <img *ngIf="isDropShadow && (0 < imageFile.url.length || 0 < shadowImageFile.url.length)" [style.height.px]="size * gridSize * heightWidthRatio" class="image drop-shadow is-3d" style="pointer-events: none;" [src]="((0 < shadowImageFile.url.length) ? shadowImageFile.url : imageFile.url) | safe: 'resourceUrl'" style="filter: brightness(0) blur(1px)"
-              [ngStyle]="{'transform-origin': '50% ' + ((size * gridSize) + 'px'), 'opacity': isHollow ? 0.4 : 0.7, 'transform': 'scale(1.0,' + (1.0 / heightWidthRatio) + ') translateY(-' + (99 / heightWidthRatio) + '%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}">
+      <div class="is-pointer-events-none" [@switchImageShadow]="animeState" (@switchImageShadow.done)="animationShuffleDone($event)">
+        <div class="inverser is-3d" style="pointer-events: none;" [ngClass]="{inverse: isInverse}" >
+          <span class="aura is-3d" style="pointer-events: none;" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
+            <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio" style="transform: translateY(-10%); pointer-events: none;">
+              <img *ngIf="isDropShadow && (0 < imageFile.url.length || 0 < shadowImageFile.url.length)" [style.height.px]="size * gridSize * heightWidthRatio" class="image drop-shadow is-3d" style="pointer-events: none;" [src]="((0 < shadowImageFile.url.length) ? shadowImageFile.url : imageFile.url) | safe: 'resourceUrl'" style="filter: brightness(0) blur(1px)"
+                [ngStyle]="{'transform-origin': '50% ' + ((size * gridSize) + 'px'), 'opacity': isHollow ? 0.4 : 0.7, 'transform': 'scale(1.0,' + (1.0 / heightWidthRatio) + ') translateY(-' + (99 / heightWidthRatio) + '%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}">
+            </span>
           </span>
-        </span>
+        </div>
       </div>
       <div class="upright-transform is-fit-width is-3d" [ngClass]="{fall: altitude == 0}" (dblclick)="nextImage()"
         [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
@@ -30,13 +32,15 @@
               <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
               <div class="back-tag has-length-limit is-3d">{{name}}</div>
             </div>
-            <div class="inverser is-3d" [ngClass]="{inverse: isInverse}" [@switchImage]="animeState" (@switchImage.done)="animationShuffleDone($event)">
-              <span class="aura is-3d" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio">
-                  <img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'"
-                  [style.height.px]="size * gridSize * heightWidthRatio" (load)="onImageLoad()">
+            <div class="is-pointer-events-none" [@switchImage]="animeState" (@switchImage.done)="animationShuffleDone($event)">
+              <div class="inverser is-3d" [ngClass]="{inverse: isInverse}">
+                <span class="aura is-3d" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
+                  <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio">
+                    <img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'"
+                    [style.height.px]="size * gridSize * heightWidthRatio" (load)="onImageLoad()">
+                  </span>
                 </span>
-              </span>
+              </div>
             </div>
             <div class="grab-group">
               <div class="rotate-grab rotate-grab-icon of-top"

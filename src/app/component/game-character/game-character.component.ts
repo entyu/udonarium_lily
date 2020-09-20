@@ -256,14 +256,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         subActions: this.gameCharacter.imageFiles.map((image, i) => {
           return { 
             name: `${this.gameCharacter.currntImageIndex == i ? '◉' : '○'}`, 
-            action: () => { 
-              if (this.gameCharacter.currntImageIndex != i) {
-                this.gameCharacter.currntImageIndex = i;
-                EventSystem.call('SWITCH_CHARACTER_IMAGE', { identifier: this.gameCharacter.identifier });
-                EventSystem.trigger('UPDATE_INVENTORY', null);
-                this.animeState = 'active';
-              }
-            }, 
+            action: () => { this.changeImage(i); }, 
             default: this.gameCharacter.currntImageIndex == i,
             icon: image
           };
@@ -478,16 +471,23 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     component.character = gameObject;
   }
 
+  changeImage(index: number) {
+    if (this.gameCharacter.currntImageIndex != index) {
+      this.gameCharacter.currntImageIndex = index;
+      EventSystem.call('SWITCH_CHARACTER_IMAGE', { identifier: this.gameCharacter.identifier });
+      EventSystem.trigger('UPDATE_INVENTORY', null);
+      this.animeState = 'active';
+      SoundEffect.play(PresetSound.cardDraw);
+    }
+  }
+
   nextImage() {
     if (this.gameCharacter.imageFiles.length <= 1) return;
     if (this.gameCharacter.currntImageIndex + 1 >= this.gameCharacter.imageFiles.length) {
-      this.gameCharacter.currntImageIndex = 0;
+      this.changeImage(0);
     } else {
-      this.gameCharacter.currntImageIndex += 1;
+      this.changeImage(this.gameCharacter.currntImageIndex + 1);
     }
-    EventSystem.trigger('UPDATE_INVENTORY', null);
-    EventSystem.call('SWITCH_CHARACTER_IMAGE', { identifier: this.gameCharacter.identifier });
-    this.animeState = 'active';
   }
 
   animationShuffleDone(event: any) {
