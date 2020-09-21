@@ -48,7 +48,7 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
     trigger('switchImageShadow', [
       transition(':increment, :decrement', [
         animate('400ms ease', keyframes([
-          style({ transform: 'scale3d(1.0, 0.8, 0.8)' }),
+          style({ transform: 'scale3d(0.8, 0.8, 0.8)' }),
           style({ transform: 'scale3d(0, 1.2, 1.2)' }),
           style({ transform: 'scale3d(1.0, 1.0, 1.0)' })
         ]))

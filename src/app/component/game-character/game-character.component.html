@@ -12,12 +12,13 @@
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
-      <div class="is-pointer-events-none" [@switchImageShadow]="gameCharacter.currntImageIndex">
+      <div class="is-pointer-events-none" >
         <div class="inverser is-3d" style="pointer-events: none;" [ngClass]="{inverse: isInverse}" >
           <span class="aura is-3d" style="pointer-events: none;" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-            <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio" style="transform: translateY(-10%); pointer-events: none;">
+            <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio" style="pointer-events: none;"
+              [ngStyle]="{'transform-origin': '50% ' + ((size * gridSize) + 'px'), 'transform': 'translateY(-10%) scale(1.0,' + (1.0 / heightWidthRatio) + ') translateY(-' + (99 / heightWidthRatio) + '%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}">
               <img *ngIf="isDropShadow && (0 < imageFile.url.length || 0 < shadowImageFile.url.length)" [style.height.px]="size * gridSize * heightWidthRatio" class="image drop-shadow is-3d" style="pointer-events: none;" [src]="((0 < shadowImageFile.url.length) ? shadowImageFile.url : imageFile.url) | safe: 'resourceUrl'" style="filter: brightness(0) blur(1px)"
-                [ngStyle]="{'transform-origin': '50% ' + ((size * gridSize) + 'px'), 'opacity': isHollow ? 0.4 : 0.7, 'transform': 'scale(1.0,' + (1.0 / heightWidthRatio) + ') translateY(-' + (99 / heightWidthRatio) + '%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}">
+                [ngStyle]="{'opacity': isHollow ? 0.4 : 0.7}" [@switchImageShadow]="gameCharacter.currntImageIndex">
             </span>
           </span>
         </div>
