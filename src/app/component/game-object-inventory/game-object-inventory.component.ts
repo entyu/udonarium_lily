@@ -3,6 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, O
 import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
 import { SortOrder } from '@udonarium/data-summary-setting';
 import { GameCharacter } from '@udonarium/game-character';
@@ -11,8 +12,10 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
+import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -50,7 +53,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     private panelService: PanelService,
     private inventoryService: GameObjectInventoryService,
     private contextMenuService: ContextMenuService,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private modalService: ModalService
   ) { }
 
   ngOnInit() {
@@ -269,6 +273,20 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     //if (gameObject.location.name !== 'graveyard') {
       actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(gameObject) }, disabled: gameObject.location.name === 'graveyard' });
     //}
+    actions.push({
+      name: '参照URLを開く', action: null,
+      subActions: gameObject.getUrls().map((urlElement) => {
+        const url = urlElement.value.toString();
+        return {
+          name: urlElement.name ? urlElement.name : url,
+          action: () => { this.modalService.open(OpenUrlComponent, { url: url, title: gameObject.name, subTitle: urlElement.name }); },
+          disabled: !StringUtil.validUrl(url),
+          error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
+          materialIcon: 'open_in_new'
+        };
+      }),
+      disabled: gameObject.getUrls().length <= 0
+    });
     actions.push(ContextMenuSeparator);
     actions.push(gameObject.isInventoryIndicate
       ? {
