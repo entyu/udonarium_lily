@@ -37,7 +37,7 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('switchImage', [
-      transition('* => active', [
+      transition(':increment, :decrement', [
         animate('800ms ease', keyframes([
           style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateY(0deg)', offset: 0 }),
           style({ transform: 'scale3d(1.2, 1.2, 1.2) rotateY(180deg)', offset: 0.3 }),
@@ -46,7 +46,7 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
       ])
     ]),
     trigger('switchImageShadow', [
-      transition('* => active', [
+      transition(':increment, :decrement', [
         animate('800ms ease', keyframes([
           style({ transform: 'scale3d(1.0, 0.8, 0.8)', offset: 0 }),
           style({ transform: 'scale3d(0, 1.2, 1.2)', offset: 0.3 }),
@@ -118,8 +118,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   viewRotateX = 50;
   viewRotateZ = 10;
   heightWidthRatio = 1.5;
-
-  animeState: string = 'inactive';
 
   get chatBubbleXDeg():number {
     //console.log(this.viewRotateX)
@@ -200,15 +198,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
       })
-      .on('SWITCH_CHARACTER_IMAGE', -1000, event => {
-        if (event.data.identifier === this.gameCharacter.identifier) {
-          this.ngZone.run(() => {
-            this.animeState = 'inactive';
-            this.changeDetector.markForCheck();
-            setTimeout(() => { this.animeState = 'active'; this.changeDetector.markForCheck(); });
-          });
-        }
-      })
+
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {
           this.viewRotateX = event.data['x'];
@@ -474,10 +464,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   changeImage(index: number) {
     if (this.gameCharacter.currntImageIndex != index) {
       this.gameCharacter.currntImageIndex = index;
-      EventSystem.call('SWITCH_CHARACTER_IMAGE', { identifier: this.gameCharacter.identifier });
       EventSystem.trigger('UPDATE_INVENTORY', null);
-      this.animeState = 'active';
-      SoundEffect.play(PresetSound.sweep);
+
     }
   }
 
@@ -488,10 +476,5 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     } else {
       this.changeImage(this.gameCharacter.currntImageIndex + 1);
     }
-  }
-
-  animationShuffleDone(event: any) {
-    this.animeState = 'inactive';
-    this.changeDetector.markForCheck();
   }
 }

@@ -130,7 +130,24 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     let position = this.pointerDeviceService.pointers[0];
     
     let actions: ContextMenuAction[] = [];
-    
+    if (gameObject.imageFiles.length > 1) {
+      actions.push({
+        name: '画像切り替え',
+        action: null,
+        subActions: gameObject.imageFiles.map((image, i) => {
+          return { 
+            name: `${gameObject.currntImageIndex == i ? '◉' : '○'}`, 
+            action: () => { 
+              gameObject.currntImageIndex = i;
+              EventSystem.trigger('UPDATE_INVENTORY', null);
+            }, 
+            default: gameObject.currntImageIndex == i,
+            icon: image
+          };
+        }),
+      });
+      actions.push(ContextMenuSeparator);
+    }
     actions.push((gameObject.isUseIconToOverviewImage
       ? {
         name: '☑ オーバービューに顔ICを使用', action: () => {

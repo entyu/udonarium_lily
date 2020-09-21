@@ -12,7 +12,7 @@
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
-      <div class="is-pointer-events-none" [@switchImageShadow]="animeState" (@switchImageShadow.done)="animationShuffleDone($event)">
+      <div class="is-pointer-events-none" [@switchImageShadow]="gameCharacter.currntImageIndex">
         <div class="inverser is-3d" style="pointer-events: none;" [ngClass]="{inverse: isInverse}" >
           <span class="aura is-3d" style="pointer-events: none;" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
             <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio" style="transform: translateY(-10%); pointer-events: none;">
@@ -32,7 +32,7 @@
               <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
               <div class="back-tag has-length-limit is-3d">{{name}}</div>
             </div>
-            <div class="is-pointer-events-none" [@switchImage]="animeState" (@switchImage.done)="animationShuffleDone($event)">
+            <div class="is-pointer-events-none" [@switchImage]="gameCharacter.currntImageIndex">
               <div class="inverser is-3d" [ngClass]="{inverse: isInverse}">
                 <span class="aura is-3d" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
                   <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio">
