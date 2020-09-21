@@ -210,7 +210,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       ContextMenuSeparator,
       { name: 'メモを編集', action: () => { this.showDetail(this.textNote); } },
       (this.textNote.getUrls().length <= 0 ? null : {
-        name: 'URLを開く', action: null,
+        name: '参照URLを開く', action: null,
         subActions: this.textNote.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
           return {

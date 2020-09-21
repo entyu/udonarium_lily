@@ -278,7 +278,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.diceSymbol); } });
     if (this.diceSymbol.getUrls().length > 0) {
       actions.push({
-        name: 'URLを開く', action: null,
+        name: '参照URLを開く', action: null,
         subActions: this.diceSymbol.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
           return {

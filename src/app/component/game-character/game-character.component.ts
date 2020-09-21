@@ -378,7 +378,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
       {
-        name: 'URLを開く', action: null,
+        name: '参照URLを開く', action: null,
         subActions: this.gameCharacter.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
           return {

@@ -310,7 +310,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.cardStack); } },
       (this.cardStack.getUrls().length <= 0 ? null : {
-        name: 'URLを開く', action: null,
+        name: '参照URLを開く', action: null,
         subActions: this.cardStack.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
           return {

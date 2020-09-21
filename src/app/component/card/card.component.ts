@@ -234,7 +234,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       ContextMenuSeparator,
       { name: 'カードを編集', action: () => { this.showDetail(this.card); } },
       (this.isVisible && this.card.getUrls().length > 0 ? {
-        name: 'URLを開く', action: null,
+        name: '参照URLを開く', action: null,
         subActions: this.card.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
           return {

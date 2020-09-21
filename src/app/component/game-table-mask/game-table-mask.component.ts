@@ -133,7 +133,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
       ContextMenuSeparator,
       { name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableMask); } },
       (this.gameTableMask.getUrls().length <= 0 ? null : {
-        name: 'URLを開く', action: null,
+        name: '参照URLを開く', action: null,
         subActions: this.gameTableMask.getUrls().map((urlElement) => {
           const url = urlElement.value.toString();
           return {
