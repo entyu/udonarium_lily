@@ -70,13 +70,13 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
     ]),
     trigger('fadeAndScaleInOut', [
       transition('void => *', [
-        animate('200ms ease-in', keyframes([
+        animate('200ms ease-in-out', keyframes([
           style({ transform: 'scale3d(0, 0, 0)', opacity: 0  }),
-          style({ transform: 'scale3d(0.8, 0.8, 0.8)', opacity: 0.8 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', opacity: 0.8 }),
         ]))
       ]),
       transition('* => void', [
-        animate('100ms ease-out', style({ transform: 'scale3d(0, 0, 0)', opacity: 0 }))
+        animate('100ms ease-in-out', style({ transform: 'scale3d(0, 0, 0)', opacity: 0 }))
       ])
     ])
   ]
