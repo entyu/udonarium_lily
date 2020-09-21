@@ -38,19 +38,19 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
   animations: [
     trigger('switchImage', [
       transition(':increment, :decrement', [
-        animate('800ms ease', keyframes([
-          style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateY(0deg)', offset: 0 }),
-          style({ transform: 'scale3d(1.2, 1.2, 1.2) rotateY(180deg)', offset: 0.3 }),
-          style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateY(360deg)', offset: 0.5 })
+        animate('400ms ease', keyframes([
+          style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateY(0deg)' }),
+          style({ transform: 'scale3d(1.2, 1.2, 1.2) rotateY(180deg)' }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateY(360deg)' })
         ]))
       ])
     ]),
     trigger('switchImageShadow', [
       transition(':increment, :decrement', [
-        animate('800ms ease', keyframes([
-          style({ transform: 'scale3d(1.0, 0.8, 0.8)', offset: 0 }),
-          style({ transform: 'scale3d(0, 1.2, 1.2)', offset: 0.3 }),
-          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 0.5 })
+        animate('400ms ease', keyframes([
+          style({ transform: 'scale3d(1.0, 0.8, 0.8)' }),
+          style({ transform: 'scale3d(0, 1.2, 1.2)' }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)' })
         ]))
       ])
     ]),
@@ -66,6 +66,17 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
       ]),
       transition('* => void', [
         animate(100, style({ transform: 'scale3d(0, 0, 0)' }))
+      ])
+    ]),
+    trigger('fadeAndScaleInOut', [
+      transition('void => *', [
+        animate('200ms ease-in', keyframes([
+          style({ transform: 'scale3d(0, 0, 0)', opacity: 0  }),
+          style({ transform: 'scale3d(0.8, 0.8, 0.8)', opacity: 0.8 }),
+        ]))
+      ]),
+      transition('* => void', [
+        animate('100ms ease-out', style({ transform: 'scale3d(0, 0, 0)', opacity: 0 }))
       ])
     ])
   ]
