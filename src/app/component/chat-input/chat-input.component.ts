@@ -349,6 +349,24 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     ];
     if (this.character) {
       if (!this.isUseFaceIcon || !this.character.faceIcon) {
+        if (this.character.imageFiles.length > 1) {
+          contextMenuActions.push(ContextMenuSeparator);
+          contextMenuActions.push({
+            name: '画像切り替え',
+            action: null,
+            subActions: this.character.imageFiles.map((image, i) => {
+              return { 
+                name: `${this.character.currntImageIndex == i ? '◉' : '○'}`, 
+                action: () => { 
+                  this.character.currntImageIndex = i;
+                  EventSystem.trigger('UPDATE_INVENTORY', null);
+                }, 
+                default: this.character.currntImageIndex == i,
+                icon: image
+              };
+            })
+          });
+        }
         contextMenuActions.push(ContextMenuSeparator);
         contextMenuActions.push(
           { name: '画像効果', action: null, subActions: [
@@ -405,23 +423,25 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           ]
         });
       } else {
-        contextMenuActions.push(ContextMenuSeparator);
-        contextMenuActions.push({
-          name: '顔アイコンの変更',
-          action: null,
-          subActions: this.character.faceIcons.map((faceIconImage, i) => {
-            return { 
-              name: `${this.character.currntIconIndex == i ? '◉' : '○'}`, 
-              action: () => { 
-                if (this.character.currntIconIndex != i) {
-                  this.character.currntIconIndex = i;
-                }
-              }, 
-              default: this.character.currntIconIndex == i,
-              icon: faceIconImage
-            };
-          })
-        });
+        if (this.character.faceIcons.length > 1) {
+          contextMenuActions.push(ContextMenuSeparator);
+          contextMenuActions.push({
+            name: '顔アイコンの変更',
+            action: null,
+            subActions: this.character.faceIcons.map((faceIconImage, i) => {
+              return { 
+                name: `${this.character.currntIconIndex == i ? '◉' : '○'}`, 
+                action: () => { 
+                  if (this.character.currntIconIndex != i) {
+                    this.character.currntIconIndex = i;
+                  }
+                }, 
+                default: this.character.currntIconIndex == i,
+                icon: faceIconImage
+              };
+            })
+          });
+        }
       }
       contextMenuActions.push(ContextMenuSeparator);
       contextMenuActions.push({ name: '詳細を表示', action: () => { this.showDetail(this.character); } });
