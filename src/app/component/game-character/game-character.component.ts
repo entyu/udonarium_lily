@@ -477,7 +477,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       EventSystem.call('SWITCH_CHARACTER_IMAGE', { identifier: this.gameCharacter.identifier });
       EventSystem.trigger('UPDATE_INVENTORY', null);
       this.animeState = 'active';
-      SoundEffect.play(PresetSound.cardDraw);
+      SoundEffect.play(PresetSound.sweep);
     }
   }
 
