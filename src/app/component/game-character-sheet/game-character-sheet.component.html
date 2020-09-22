@@ -47,7 +47,7 @@
         </div>
       </ng-container>
     </div>
-    <div class="image-showcase" style="position: absolute; height: 50px; top: 300px" [@showcase]="tabletopObject.currntImageIndex">
+    <div class="image-showcase" style="position: absolute; height: 50px; top: 300px">
       <ng-container *ngFor="let imageFile of tabletopObject.imageFiles; index as i">
         <span @showcaseItem *ngIf="i != tabletopObject.currntImageIndex" class="image-thumbnail" style="position: absolute;" [style.left.px]="(tabletopObject.currntImageIndex <= i ? i-1 : i ) * 50">
           <img [src]="imageFile.url | safe: 'resourceUrl'" [alt]="imageFile.name" (click)="selectImage(i)">
