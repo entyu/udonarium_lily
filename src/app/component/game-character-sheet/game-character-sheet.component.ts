@@ -233,9 +233,9 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     } else if (this.tabletopObject instanceof DiceSymbol) {
       this.openModal(this.tabletopObject['face']);
     } else if (this.tabletopObject instanceof GameCharacter) {
-      this.openModalReplaceImage(true);
+      this.openModalReplaceImage(this.tabletopObject.imageFiles.length > 1 || 0 < this.tabletopObject.imageFile?.url.length);
     } else {
-      this.openModal('imageIdentifier', true)
+      this.openModal('imageIdentifier', this.tabletopObject.imageFile && this.tabletopObject.imageFile.url.length > 0)
     }
   }
 }

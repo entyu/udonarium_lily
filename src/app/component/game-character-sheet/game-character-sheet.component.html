@@ -16,11 +16,11 @@
     <button (click)="openModal(tabletopObject['face'])" [disabled]="!tabletopObject['isVisible']">ダイス目の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchCase="'character'">
-    <button (click)="openModalReplaceImage(true)">画像{{ (tabletopObject.imageFiles?.length > 1) ? '置換/削除' : '設定' }}</button>
+    <button (click)="openModalReplaceImage(tabletopObject.imageFiles.length > 1 || 0 < tabletopObject.imageFile?.url.length)">画像{{ (tabletopObject.imageFiles?.length > 1) ? '置換/削除' : '設定' }}</button>
     <button [disabled]="tabletopObject.faceIcons?.length >= MAX_IMAGE_ICON_COUNT" (click)="openModal('faceIcon')">顔IC{{ (tabletopObject.faceIcons?.length > 0) ? '追加' : '設定' }}</button>
   </ng-container>
   <ng-container *ngSwitchDefault>
-    <button (click)="openModal('imageIdentifier', true)">画像変更</button>
+    <button (click)="openModal('imageIdentifier', tabletopObject.imageFile && tabletopObject.imageFile.url.length > 0)">画像変更</button>
   </ng-container>
 </ng-container>
 <button (click)="clone()">コピーを作る</button>
@@ -32,7 +32,7 @@
     <option value="{{networkService.peerId}}">個人インベントリ</option>
     <option value="graveyard">墓地</option>
   </select>
-  <button (click)="openModal('shadowImageIdentifier', true)" [disabled]="!tabletopObject.imageElement || tabletopObject.imageElement.value == 'null'">影変更</button>
+  <button (click)="openModal('shadowImageIdentifier', tabletopObject.shadowImageFile.url.length > 0)" [disabled]="!tabletopObject.imageElement || tabletopObject.imageElement.value == 'null'">影変更</button>
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length || 0 < tabletopObject.faceIcons?.length" class="box main-image-box">
