@@ -476,7 +476,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     if (this.gameCharacter.currntImageIndex != index) {
       this.gameCharacter.currntImageIndex = index;
       EventSystem.trigger('UPDATE_INVENTORY', null);
-
     }
   }
 
