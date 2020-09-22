@@ -18,11 +18,9 @@
   vertical-align: bottom;
 }
 .image-thumbnail {
-  width: 50px;
   color: black;
   filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
   z-index: 100;
-  margin-top: 1px;
   vertical-align: bottom;
 }
 .image-thumbnail img {
