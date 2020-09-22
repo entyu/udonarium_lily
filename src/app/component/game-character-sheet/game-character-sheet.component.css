@@ -17,12 +17,14 @@
   position: absolute;
   display: inline-block;
   vertical-align: bottom;
+  transform-origin: center bottom;
 }
 .image-thumbnail {
   color: black;
   filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
   z-index: 100;
   vertical-align: bottom;
+  transform-origin: center bottom;
 }
 .image-thumbnail img {
   width: 50px;

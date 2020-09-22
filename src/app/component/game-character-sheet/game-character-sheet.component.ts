@@ -24,13 +24,35 @@ import { GameCharacter } from '@udonarium/game-character';
   animations: [
     trigger('switchImage', [
       transition(':increment, :decrement', [
-        animate('400ms ease', keyframes([
+        animate('200ms ease', keyframes([
           style({ transform: 'scale3d(0, 0, 0)' }),
           style({ transform: 'scale3d(0, 1.2, 1.2)' }),
           style({ transform: 'scale3d(1.0, 1.0, 1.0)' })
         ]))
       ])
-    ])
+    ]),
+    trigger('showcase', [
+      transition(':increment, :decrement', [
+        animate('200ms 200ms ease-in', keyframes([
+          style({ transform: 'scale3d(0, 1.0, 1.0)' }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)' })
+        ]))
+      ])
+    ]),
+    trigger('showcaseItem', [
+      transition(':enter', [
+        animate('200ms ease', keyframes([
+          style({ transform: 'scale3d(0, 0, 0)' }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)' })
+        ]))
+      ]),
+      transition(':leave', [
+        animate('200ms ease', keyframes([
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)' }),
+          style({ transform: 'scale3d(0, 0, 0)' })
+        ]))
+      ]),
+    ]),
   ]
 })
 export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterViewInit {
