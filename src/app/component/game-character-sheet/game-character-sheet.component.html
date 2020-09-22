@@ -32,7 +32,7 @@
     <option value="{{networkService.peerId}}">個人インベントリ</option>
     <option value="graveyard">墓地</option>
   </select>
-  <button (click)="openModal('shadowImageIdentifier', tabletopObject.shadowImageFile.url.length > 0)" [disabled]="!tabletopObject.imageElement || tabletopObject.imageElement.value == 'null'">影変更</button>
+  <button (click)="openModal('shadowImageIdentifier', tabletopObject.shadowImageFile.url.length > 0)" [disabled]="!tabletopObject.imageElement || tabletopObject.imageElement.value == 'null'">画像の影の変更</button>
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
   <img class="shadow-image" [src]="tabletopObject.shadowImageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.shadowImageFile.name" (click)="openModal('shadowImageIdentifier', true)">

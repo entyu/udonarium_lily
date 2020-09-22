@@ -38,11 +38,22 @@ import { PointerDeviceService } from 'service/pointer-device.service';
     trigger('diceRoll', [
       transition('* => active', [
         animate('800ms ease', keyframes([
-          style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateZ(0deg)', offset: 0 }),
-          style({ transform: 'scale3d(1.2, 1.2, 1.2) rotateZ(360deg)', offset: 0.5 }),
-          style({ transform: 'scale3d(0.75, 0.75, 0.75) rotateZ(520deg)', offset: 0.75 }),
-          style({ transform: 'scale3d(1.125, 1.125, 1.125) rotateZ(630deg)', offset: 0.875 }),
-          style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateZ(720deg)', offset: 1.0 })
+          style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateZ(-0deg)', offset: 0 }),
+          style({ transform: 'scale3d(1.2, 1.2, 1.2) rotateZ(-360deg)', offset: 0.5 }),
+          style({ transform: 'scale3d(0.75, 0.75, 0.75) rotateZ(-520deg)', offset: 0.75 }),
+          style({ transform: 'scale3d(1.125, 1.125, 1.125) rotateZ(-630deg)', offset: 0.875 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateZ(-720deg)', offset: 1.0 })
+        ]))
+      ])
+    ]),
+    trigger('diceRollNameTag', [
+      transition('* => active', [
+        animate('800ms ease', keyframes([
+          style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateY(0deg)', offset: 0 }),
+          style({ transform: 'scale3d(1.2, 1.2, 1.2) rotateY(360deg)', offset: 0.5 }),
+          style({ transform: 'scale3d(0.75, 0.75, 0.75) rotateY(520deg)', offset: 0.75 }),
+          style({ transform: 'scale3d(1.125, 1.125, 1.125) rotateY(630deg)', offset: 0.875 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateY(720deg)', offset: 1.0 })
         ]))
       ])
     ]),
