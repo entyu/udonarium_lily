@@ -17,7 +17,7 @@
         <div class="upright-transform is-fit-width is-3d">
           <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
             <div class="rotate-inner is-3d">
-              <div class="is-3d" [@diceRollNameTag]="animeState" (@diceRollNameTag.done)="animationShuffleDone($event)" style="transform-origin: center bottom;">
+              <div class="is-3d" [@changeFaceNameTag]="face" [@diceRollNameTag]="animeState" (@diceRollNameTag.done)="animationShuffleDone($event)" style="transform-origin: center bottom;">
                 <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
                   <div class="fornt-tag is-3d">{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
                   <div class="back-tag is-3d">{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
@@ -27,11 +27,11 @@
                 <div class="fornt-tag has-length-limit is-3d">{{ownerName}}</div>
                 <div class="back-tag has-length-limit is-3d">{{ownerName}}</div>
               </div>
-              <img [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)" class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
+              <img [@changeFace]="face" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)" class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
             </div>
           </div>
         </div>
-        <img [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)" class="image" *ngIf="isDropShadow && 0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)" >
+        <img [@changeFace]="face" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)" class="image" *ngIf="isDropShadow && 0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)" >
       </div>
     </div>
   </div>

@@ -57,6 +57,22 @@ import { PointerDeviceService } from 'service/pointer-device.service';
         ]))
       ])
     ]),
+    trigger('changeFace', [
+      transition(':increment,:decrement', [
+        animate('200ms ease', keyframes([
+          style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateZ(0deg)', offset: 0 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateZ(-360deg)', offset: 1.0 })
+        ]))
+      ])
+    ]),
+    trigger('changeFaceNameTag', [
+      transition(':increment,:decrement', [
+        animate('200ms ease', keyframes([
+          style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateY(0deg)', offset: 0 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateY(360deg)', offset: 1.0 })
+        ]))
+      ])
+    ]),
     trigger('bounceInOut', [
       transition('void => *', [
         animate('600ms ease', keyframes([
