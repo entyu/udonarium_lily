@@ -349,7 +349,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     ];
     if (this.character) {
       if (!this.isUseFaceIcon || !this.character.faceIcon) {
-        /*
         if (this.character.imageFiles.length > 1) {
           contextMenuActions.push(ContextMenuSeparator);
           contextMenuActions.push({
@@ -368,7 +367,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
             })
           });
         }
-        */
         contextMenuActions.push(ContextMenuSeparator);
         contextMenuActions.push(
           { name: '画像効果', action: null, subActions: [

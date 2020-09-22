@@ -1,3 +1,4 @@
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { EventSystem, Network } from '@udonarium/core/system';
@@ -19,7 +20,18 @@ import { GameCharacter } from '@udonarium/game-character';
 @Component({
   selector: 'game-character-sheet',
   templateUrl: './game-character-sheet.component.html',
-  styleUrls: ['./game-character-sheet.component.css']
+  styleUrls: ['./game-character-sheet.component.css'],
+  animations: [
+    trigger('switchImage', [
+      transition(':increment, :decrement', [
+        animate('400ms ease', keyframes([
+          style({ transform: 'scale3d(0, 0, 0)' }),
+          style({ transform: 'scale3d(0, 1.2, 1.2)' }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)' })
+        ]))
+      ])
+    ])
+  ]
 })
 export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterViewInit {
 

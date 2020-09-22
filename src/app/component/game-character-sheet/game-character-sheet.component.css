@@ -8,6 +8,7 @@
 }
 .main-image {
   width: 250px;
+  object-position: center bottom;
 }
 
 .image-showcase {
@@ -33,6 +34,7 @@
   margin:auto;
   object-fit: contain;
   object-position: center bottom;
+  transform-origin: center bottom;
 }
 .image-thumbnail:hover {
   z-index: 600;
