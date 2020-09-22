@@ -10,6 +10,42 @@
   width: 250px;
 }
 
+.image-showcase {
+  vertical-align: top;
+  text-align: left;
+  position: absolute;
+  display: inline-block;
+  vertical-align: bottom;
+}
+.image-thumbnail {
+  width: 50px;
+  color: black;
+  filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
+  z-index: 100;
+  margin-top: 1px;
+  vertical-align: bottom;
+}
+.image-thumbnail img {
+  width: 50px;
+  max-height: 100px;
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  margin:auto;
+  object-fit: contain;
+  object-position: center bottom;
+}
+.image-thumbnail:hover {
+  z-index: 600;
+}
+.image-thumbnail:hover img {
+  width: 75px;
+  max-height: 150px;
+  left: -12px;
+  transition: all 132ms ease-in-out;
+}
+
 .icons-box {
   vertical-align: top;
   text-align: center;

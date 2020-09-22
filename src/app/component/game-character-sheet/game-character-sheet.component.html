@@ -41,14 +41,22 @@
       <ng-container *ngFor="let faceIconImage of tabletopObject.faceIcons; index as i">
         <div *ngIf="0 < faceIconImage.url.length" class="icon-image-box" [ngClass]="{'current-icon': tabletopObject.currntIconIndex == i}">
           <img [src]="faceIconImage.url | safe: 'resourceUrl'" [alt]="faceIconImage.name" (click)="selectIcon(i)" />
-          <button *ngIf="tabletopObject.currntIconIndex == i" class="button-delete-icon" title="アイコン削除" (click)="deleteIcon(i)">
+          <button *ngIf="tabletopObject.currntIconIndex == i" class="button-delete-icon" title="顔IC削除" (click)="deleteIcon(i)">
             <b class="material-icons" style="font-size: 1rem;">close</b>
           </button>
         </div>
       </ng-container>
     </div>
+    <div *ngIf="tabletopObject.imageFiles.length > 1" class="image-showcase" style="position: absolute; height: 50px; top: 300px">
+      <ng-container *ngFor="let imageFile of tabletopObject.imageFiles; index as i">
+        <span *ngIf="i != tabletopObject.currntImageIndex" class="image-thumbnail" style="position: absolute;" [style.left.px]="(tabletopObject.currntImageIndex <= i ? i-1 : i ) * 50">
+          <img [src]="imageFile.url | safe: 'resourceUrl'" [alt]="imageFile.name" (click)="selectImage(i)">
+        </span>
+      </ng-container>
+    </div>
     <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" (dblclick)="openMainImageModal()" />
   </div>
+
   <ng-container *ngIf="tabletopObject.commonDataElement">
     <div class="flex-item">
       <div class="table">

@@ -349,6 +349,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     ];
     if (this.character) {
       if (!this.isUseFaceIcon || !this.character.faceIcon) {
+        /*
         if (this.character.imageFiles.length > 1) {
           contextMenuActions.push(ContextMenuSeparator);
           contextMenuActions.push({
@@ -367,6 +368,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
             })
           });
         }
+        */
         contextMenuActions.push(ContextMenuSeparator);
         contextMenuActions.push(
           { name: '画像効果', action: null, subActions: [
@@ -423,7 +425,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           ]
         });
       } else {
-        if (this.character.faceIcons.length > 1) {
+        //if (this.character.faceIcons.length > 1) {
           contextMenuActions.push(ContextMenuSeparator);
           contextMenuActions.push({
             name: '顔アイコンの変更',
@@ -437,11 +439,12 @@ export class ChatInputComponent implements OnInit, OnDestroy {
                   }
                 }, 
                 default: this.character.currntIconIndex == i,
-                icon: faceIconImage
+                icon: faceIconImage,
               };
-            })
+            }),
+            disabled: this.character.faceIcons.length <= 1
           });
-        }
+        //}
       }
       contextMenuActions.push(ContextMenuSeparator);
       contextMenuActions.push({ name: '詳細を表示', action: () => { this.showDetail(this.character); } });
