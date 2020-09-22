@@ -25,6 +25,7 @@
   z-index: 100;
   vertical-align: bottom;
   transform-origin: center bottom;
+  transition: all 132ms ease-in-out;
 }
 .image-thumbnail img {
   width: 50px;
@@ -46,6 +47,9 @@
   max-height: 150px;
   left: -12px;
   transition: all 132ms ease-in-out;
+}
+.image-thumbnail.hide {
+  transform: scale3d(0, 0, 0);
 }
 
 .icons-box {
