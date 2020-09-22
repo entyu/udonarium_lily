@@ -55,7 +55,7 @@
       <button *ngIf="tabletopObject.imageFiles.length < MAX_IMAGE_ICON_COUNT && (tabletopObject.imageFiles.length > 1 || 0 < tabletopObject.imageFile?.url.length)"
         (click)="openModalAddImage()"
         style="position: relative; bottom: 30px; z-index: 700;" 
-        [style.left.px]="tabletopObject.imageFiles.length < 0 ? -5 : (tabletopObject.imageFiles.length - 1) * 50 - 5">{{ tabletopObject.imageFiles.length < 2 ? '画像切り替えを使用する' : '＋' }}</button>
+        [style.left.px]="tabletopObject.imageFiles.length < 0 ? -5 : (tabletopObject.imageFiles.length - 1) * 50 - 5">{{ tabletopObject.imageFiles.length < 2 ? '画像切り替え設定' : '＋' }}</button>
     </div>
     <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" 
       (dblclick)="openMainImageModal()" 
