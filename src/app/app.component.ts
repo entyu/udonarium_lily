@@ -328,6 +328,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   resetPointOfView() {
     EventSystem.trigger('RESET_POINT_OF_VIEW', null);
   }
+
+  diceAllOpne() {
+    if (confirm('「一斉公開しない」設定ではないダイスをすべて公開します。\nよろしいですか？')) {
+      EventSystem.trigger('DICE_ALL_OPEN', null);
+    }
+  }
 }
 
 PanelService.UIPanelComponentClass = UIPanelComponent;

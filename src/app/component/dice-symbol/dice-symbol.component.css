@@ -260,3 +260,9 @@
 .component:hover .material-icons, .component:active .material-icons {
   display: inline;
 }
+
+.material-icons.lock-icon {
+  display: inline-block;
+  font-size: smaller;
+  margin-right: 2px;
+}

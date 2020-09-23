@@ -22,6 +22,7 @@ export class DiceSymbol extends TabletopObject {
   @SyncVar() owner: string = '';
   @SyncVar() rotate: number = 0;
   @SyncVar() isDropShadow: boolean = true;
+  @SyncVar() isLock: boolean = false;
   
   get name(): string { return this.getCommonValue('name', ''); }
   set name(name: string) { this.setCommonValue('name', name); }
@@ -40,6 +41,10 @@ export class DiceSymbol extends TabletopObject {
   get ownerName(): string {
     let object = PeerCursor.find(this.owner);
     return object ? object.name : '';
+  }
+  get ownerColor(): string {
+    let object = PeerCursor.find(this.owner);
+    return object ? object.color : '#444444';
   }
   get hasOwner(): boolean { return PeerCursor.find(this.owner) != null; }
   get isMine(): boolean { return Network.peerId === this.owner; }

@@ -19,8 +19,8 @@
             <div class="rotate-inner is-3d">
               <div class="is-3d" [@changeFaceNameTag]="face" [@diceRollNameTag]="animeState" (@diceRollNameTag.done)="animationShuffleDone($event)" style="transform-origin: center bottom;">
                 <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-                  <div class="fornt-tag is-3d">{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
-                  <div class="back-tag is-3d">{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
+                  <div class="fornt-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
+                  <div class="back-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon"></i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
                 </div>
               </div>
               <div *ngIf="hasOwner" class="owner-tag is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">

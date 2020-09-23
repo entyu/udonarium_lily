@@ -113,10 +113,14 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   get isMine(): boolean { return this.diceSymbol.isMine; }
   get hasOwner(): boolean { return this.diceSymbol.hasOwner; }
   get ownerName(): string { return this.diceSymbol.ownerName; }
+  get ownerColor(): string { return this.diceSymbol.ownerColor; }
   get isVisible(): boolean { return this.diceSymbol.isVisible; }
 
   get isDropShadow(): boolean { return this.diceSymbol.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.diceSymbol.isDropShadow = isDropShadow; }
+
+  get isLock(): boolean { return this.diceSymbol.isLock; }
+  set isLock(isLock: boolean) { this.diceSymbol.isLock = isLock; }
 
   animeState: string = 'inactive';
 
@@ -162,6 +166,12 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
           || (object instanceof ObjectNode && this.diceSymbol.contains(object))
           || (object instanceof PeerCursor && object.peerId === this.diceSymbol.owner)) {
           this.changeDetector.markForCheck();
+        }
+      })
+      .on('DICE_ALL_OPEN', -1000, event => {
+        if (this.owner && !this.isLock) {
+          this.owner = '';
+          SoundEffect.play(PresetSound.unlock);
         }
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
@@ -274,7 +284,18 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     }
-
+    actions.push((this.isLock
+      ? {
+        name: '☑ 一斉公開しない', action: () => {
+          this.isLock = false;
+          SoundEffect.play(PresetSound.unlock);
+        }
+      } : {
+        name: '☐ 一斉公開しない', action: () => {
+          this.isLock = true;
+          SoundEffect.play(PresetSound.lock);
+        }
+      }));
     if (this.isVisible) {
       let subActions: ContextMenuAction[] = [];
       this.faces.forEach(face => {
