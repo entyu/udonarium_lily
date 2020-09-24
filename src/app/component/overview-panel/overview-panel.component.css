@@ -77,13 +77,14 @@
   margin-left: auto;
   margin-right: 0; 
   overflow: hidden;
-  color: #CCC;
-  background-color: rgba(30, 30, 30, 0.8);
+  color: whitesmoke;
+  background-color: rgb(30, 30, 30);
   box-sizing: border-box;
   padding: 3px 9px;
   border-radius: 6px;
   white-space: nowrap;
   text-overflow: ellipsis;
+  opacity: 0.8;
 }
 
 .card-image {

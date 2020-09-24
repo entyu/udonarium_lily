@@ -37,7 +37,7 @@
       </button>
       <div *ngIf="card.hasOwner" class="component-owner position-right-bottom"
         [ngClass]="{'with-button-marign': hasImage}">
-        <div class="owner-tag">{{card.ownerName}}</div>
+        <div class="owner-tag" [style.background-color]="card.ownerColor">{{card.ownerName}}</div>
       </div>
     </div>
     <div *ngIf="0 < card?.name?.length" class="component-title title-background"
@@ -123,7 +123,7 @@
     </div>
     <div *ngIf="dice.hasOwner" class="owner-name-area component-owner"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
-      <div class="owner-tag">{{dice.ownerName}}
+      <div class="owner-tag" [style.background-color]="dice.ownerColor">{{dice.ownerName}}
       </div>
     </div>
     <div class="image-area character-image-box"

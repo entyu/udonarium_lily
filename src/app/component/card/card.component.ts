@@ -55,6 +55,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   get isVisible(): boolean { return this.card.isVisible; }
   get hasOwner(): boolean { return this.card.hasOwner; }
   get ownerName(): string { return this.card.ownerName; }
+  get ownerColor(): string { return this.card.ownerColor; }
 
   get imageFile(): ImageFile { return this.card.imageFile; }
   get frontImage(): ImageFile { return this.card.frontImage; }

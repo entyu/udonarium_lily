@@ -148,6 +148,8 @@
   border-radius: 6px;
   position: absolute;
   top: -55px;
+  opacity: 0.8;
+  color: whitesmoke !important;
 }
 
 .rotate-frame {

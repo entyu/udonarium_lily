@@ -158,6 +158,8 @@
   border-radius: 24px;
   position: absolute;
   top: 0;
+  color: whitesmoke !important;
+  opacity: 0.8;
 }
 
 .has-length-limit {

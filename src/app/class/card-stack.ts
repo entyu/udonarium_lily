@@ -20,6 +20,10 @@ export class CardStack extends TabletopObject {
     let object = PeerCursor.find(this.owner);
     return object ? object.name : '';
   }
+  get ownerColor(): string {
+    let object = PeerCursor.find(this.owner);
+    return object ? object.color : '#444444';
+  }
   get hasOwner(): boolean { return PeerCursor.find(this.owner) != null; }
 
   private get cardRoot(): ObjectNode {
