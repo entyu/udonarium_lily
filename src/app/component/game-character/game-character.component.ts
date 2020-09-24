@@ -54,6 +54,15 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
         ]))
       ])
     ]),
+    trigger('switchImagePedestal', [
+      transition(':increment, :decrement', [
+        animate('400ms ease', keyframes([
+          style({ transform: 'scale3d(0.8, 0.8, 0.8)' }),
+          style({ transform: 'scale3d(1.2, 1.2, 1.2)' }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)' })
+        ]))
+      ])
+    ]),
     trigger('bounceInOut', [
       transition('void => *', [
         animate('600ms ease', keyframes([

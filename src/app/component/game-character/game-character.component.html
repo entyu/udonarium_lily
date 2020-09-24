@@ -4,8 +4,8 @@
   <div class="component-content is-3d" [@bounceInOut]="'in'">
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
       (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-      <div class="pedestal-inner"></div>
-      <div class="pedestal-outer"></div>
+      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-inner"></div>
+      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-outer"></div>
       <div class="pedestal-grab rotate-grab">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
