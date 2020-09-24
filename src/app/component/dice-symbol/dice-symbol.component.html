@@ -18,12 +18,12 @@
           <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
             <div class="rotate-inner is-3d">
               <div class="is-3d" [@changeFaceNameTag]="face" [@diceRollNameTag]="animeState" (@diceRollNameTag.done)="animationShuffleDone($event)" style="transform-origin: center bottom;">
-                <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+                <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}">
                   <div class="fornt-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
                   <div class="back-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon"></i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
                 </div>
               </div>
-              <div *ngIf="hasOwner" class="owner-tag is-nowrap is-black-background is-3d" [ngStyle]="{'background-color': ownerColor,'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+              <div *ngIf="hasOwner" class="owner-tag is-nowrap is-black-background is-3d" [ngStyle]="{'background-color': ownerColor, 'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}">
                 <div class="fornt-tag has-length-limit is-3d"><b>{{ownerName}}</b></div>
                 <div class="back-tag has-length-limit is-3d"><b>{{ownerName}}</b></div>
               </div>

@@ -225,7 +225,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
       })
-
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {
           this.viewRotateX = event.data['x'];
@@ -233,6 +232,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           this.changeDetector.markForCheck();
         });
       });
+      
     this.movableOption = {
       tabletopObject: this.gameCharacter,
       transformCssOffset: 'translateZ(1.0px)',
