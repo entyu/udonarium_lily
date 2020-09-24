@@ -475,6 +475,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   changeImage(index: number) {
     if (this.gameCharacter.currntImageIndex != index) {
       this.gameCharacter.currntImageIndex = index;
+      SoundEffect.play(PresetSound.surprise);
       EventSystem.trigger('UPDATE_INVENTORY', null);
     }
   }

@@ -218,6 +218,8 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   selectImage(index: number, name='imageIdentifier') {
     if (this.tabletopObject.currntImageIndex == index) return;
     this.tabletopObject.currntImageIndex = index;
+    SoundEffect.play(PresetSound.surprise);
+    EventSystem.trigger('UPDATE_INVENTORY', null);
   }
 
   selectIcon(index: number) {

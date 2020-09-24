@@ -74,7 +74,7 @@ export class TabletopObject extends ObjectNode {
     }).filter((file) => { return file != null });
   }
 
-  @SyncVar() isUseIconToOverviewImage: boolean = true;
+  @SyncVar() isUseIconToOverviewImage: boolean = false;
   @SyncVar() currntIconIndex: number = 0;
   get faceIcon(): ImageFile {
     if (!this.imageDataElement) return null;

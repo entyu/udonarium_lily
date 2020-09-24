@@ -17,6 +17,7 @@ import { GameCharacterSheetComponent } from 'component/game-character-sheet/game
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 
 @Component({
   selector: 'chat-input',
@@ -359,6 +360,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
                 name: `${this.character.currntImageIndex == i ? '◉' : '○'}`, 
                 action: () => { 
                   this.character.currntImageIndex = i;
+                  SoundEffect.play(PresetSound.surprise);
                   EventSystem.trigger('UPDATE_INVENTORY', null);
                 }, 
                 default: this.character.currntImageIndex == i,

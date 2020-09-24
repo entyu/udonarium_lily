@@ -143,6 +143,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
             name: `${gameObject.currntImageIndex == i ? '◉' : '○'}`, 
             action: () => { 
               gameObject.currntImageIndex = i;
+              SoundEffect.play(PresetSound.surprise);
               EventSystem.trigger('UPDATE_INVENTORY', null);
             }, 
             default: gameObject.currntImageIndex == i,
