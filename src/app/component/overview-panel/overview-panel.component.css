@@ -286,7 +286,7 @@
   color: #444;
   padding: 0;
   box-sizing: border-box;
-  resize: none;
+  resize: both;
   overflow: hidden;
   white-space: pre-wrap;
   word-wrap: break-word;
