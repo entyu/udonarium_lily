@@ -29,7 +29,7 @@
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d">
             <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
-              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + nameplateOffset + 'px)'}">
+              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + nameplateOffset + 'px) rotateX(' + nameTagRotate + 'deg)'}">
               <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
               <div class="back-tag has-length-limit is-3d">{{name}}</div>
             </div>

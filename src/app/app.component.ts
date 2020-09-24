@@ -60,6 +60,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private appConfigService: AppConfigService,
     private saveDataService: SaveDataService,
     private ngZone: NgZone,
+    private contextMenuService: ContextMenuService
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -328,7 +329,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   resetPointOfView() {
-    EventSystem.trigger('RESET_POINT_OF_VIEW', null);
+    let position = this.pointerDeviceService.pointers[0];
+    this.contextMenuService.open(position, [
+      { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
+      { name: '真上から視る', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', 'top') }
+    ], '視点リセット');
   }
 
   diceAllOpne() {

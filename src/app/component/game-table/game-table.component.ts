@@ -121,7 +121,11 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
           setTimeout(() => {
             this.gameTable.nativeElement.style.transition = null;
           }, 100);
-          this.setTransform(100, 0, 0, 50, 0, 10, true);
+          if (event && event.data == 'top') {
+            this.setTransform(0, 0, 0, 0, 0, 0, true);
+          } else {
+            this.setTransform(100, 0, 0, 50, 0, 10, true);
+          }
         }, 50);
         this.removeFocus();
       });
@@ -360,7 +364,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       this.viewPotisonZ += transformZ;
     }
 
-    if (rotateX != 0 || rotateY != 0 || rotateX != 0) {
+    if (isAbsolute || rotateX != 0 || rotateY != 0 || rotateX != 0) {
       EventSystem.trigger<object>('TABLE_VIEW_ROTATE', {
         x: this.viewRotateX,
         y: this.viewRotateY,

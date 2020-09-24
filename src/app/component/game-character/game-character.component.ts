@@ -149,7 +149,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     // 補正
     if (ret > 90) ret = 90;
     if (ret < -90) ret = -90;
-    return ret / 2;
+    return ret / 1.5;
   }
 
   @ViewChild('characterImage') characterImage: ElementRef;
@@ -177,6 +177,11 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get nameplateOffset(): number {
     if (!this.characterImage) return this.gridSize * this.size * this.heightWidthRatio;
     return this.gridSize * this.size * this.heightWidthRatio - this.characterImageHeight;
+  }
+
+  get nameTagRotate(): number {
+    let z = this.viewRotateZ % 360;
+    return ((this.viewRotateX % 360) - 90) * (90 < z && z < 270 ? 1 : -1);
   }
 
   get isListen(): boolean {
