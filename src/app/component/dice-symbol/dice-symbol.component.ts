@@ -143,7 +143,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get nameTagRotate(): number {
     let x = (this.viewRotateX % 360) - 90;
-    let z = this.viewRotateZ % 360;
+    let z = (this.viewRotateZ + this.rotate) % 360;
     z = (z > 0 ? z : 360 + z);
     return (x > 0 ? x : 360 + x) * (90 < z && z < 270 ? 1 : -1);
   }
