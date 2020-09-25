@@ -57,7 +57,7 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
     trigger('switchImagePedestal', [
       transition(':increment, :decrement', [
         animate('400ms ease', keyframes([
-          style({ transform: 'scale3d(0.8, 0.8, 0.8)' }),
+          style({ transform: 'scale3d(0, 0, 0)' }),
           style({ transform: 'scale3d(1.2, 1.2, 1.2)' }),
           style({ transform: 'scale3d(1.0, 1.0, 1.0)' })
         ]))
@@ -181,7 +181,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   get nameTagRotate(): number {
     let x = (this.viewRotateX % 360) - 90;
-    let z = this.viewRotateZ % 360;
+    let z = (this.viewRotateZ + this.rotate) % 360;
     z = (z > 0 ? z : 360 + z);
     return (x > 0 ? x : 360 + x) * (90 < z && z < 270 ? 1 : -1);
   }
