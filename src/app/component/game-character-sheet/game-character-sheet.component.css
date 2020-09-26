@@ -5,6 +5,8 @@
   */
   width: 250px;
   height: 250px;
+  
+  z-index: 0;
 }
 .main-image {
   width: 250px;
@@ -57,6 +59,7 @@
   text-align: center;
   position: absolute;
   left: 216px;
+  z-index: 2;
 }
 .icon-image-box {
   position: relative;
@@ -69,6 +72,7 @@
   filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
   z-index: 100;
   margin-top: 1px;
+  margin-left: -3px;
 }
 .icon-image-box img {
   width: 100%;
@@ -140,6 +144,7 @@
   align-items: stretch;
 
   /*min-width: 250px;*/
+
 }
 .flex-item {
   margin: 5px 0px;
@@ -163,7 +168,7 @@
   background-color: rgba(70, 70, 70, 0.8);
   color: #CCC;
   */
-
+  z-index: 1;
 }
 .flex-item input, .flex-item button, .flex-item textarea, .flex-item select {
   /*color: #555;*/
@@ -188,3 +193,46 @@ input {
   color: red;
 }
 
+.inverse {
+  transform: scaleX(-1);
+ 
+}
+.inverser {
+  transition: transform 132ms 0s ease;
+}
+.hollow {
+  opacity: 0.6;
+  filter: blur(1px);
+}
+.black-paint {
+  filter: brightness(0);
+}
+
+.aura {
+  transition: filter 0.2s ease-in-out;
+}
+
+.aura.black {
+  filter: drop-shadow(0 -20px 20px black);
+}
+.aura.blue {
+  filter: drop-shadow(0 -20px 20px #33f);
+}
+.aura.green {
+  filter: drop-shadow(0 -20px 20px #3f3);
+}
+.aura.cyan {
+  filter: drop-shadow(0 -20px 20px #3ff);
+}
+.aura.red {
+  filter: drop-shadow(0 -20px 20px #f00);
+}
+.aura.magenta {
+  filter: drop-shadow(0 -20px 20px #f0f);
+}
+.aura.yellow {
+  filter: drop-shadow(0 -20px 20px #ff3);
+}
+.aura.white {
+  filter: drop-shadow(0 -20px 20px #fff);
+}

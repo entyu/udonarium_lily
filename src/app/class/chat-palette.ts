@@ -142,7 +142,7 @@ export class ChatPalette extends ObjectNode {
 
   private parseVariable(palette: string): PaletteVariable {
     //palette = StringUtil.toHalfWidth(palette);
-    let array = /^\s*\/\/([^=＝\{｛\}｝\s]+)\s*[=＝]\s*(.+)\s*/gi.exec(palette);
+    let array = /^\s*\/\/([^=＝\{｛\}｝\s]+)\s*[=＝]\s*(.*)\s*/gi.exec(palette);
     if (!array) return null;
     let variable: PaletteVariable = {
       name: array[1],

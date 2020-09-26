@@ -20,7 +20,8 @@ export class TabletopObject extends ObjectNode {
   };
 
   @SyncVar() posZ: number = 0;
-
+  @SyncVar() aura: number = -1;
+  
   get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
 
   private _imageFile: ImageFile = ImageFile.Empty;

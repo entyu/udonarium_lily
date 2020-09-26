@@ -53,6 +53,20 @@ import { GameCharacter } from '@udonarium/game-character';
         ]))
       ]),
     ]),
+    trigger('bounceInOut', [
+      transition('void => *', [
+        animate('600ms ease', keyframes([
+          style({ transform: 'scale3d(0, 0, 0)', offset: 0 }),
+          style({ transform: 'scale3d(1.5, 1.5, 1.5)', offset: 0.5 }),
+          style({ transform: 'scale3d(0.75, 0.75, 0.75)', offset: 0.75 }),
+          style({ transform: 'scale3d(1.125, 1.125, 1.125)', offset: 0.875 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate(100, style({ transform: 'scale3d(0, 0, 0)' }))
+      ])
+    ]),
   ]
 })
 export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterViewInit {
