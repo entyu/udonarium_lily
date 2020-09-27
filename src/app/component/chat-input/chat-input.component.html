@@ -17,31 +17,35 @@
     </ng-template>
   </div>
   <div class="table-cell">
-    <div style="white-space: nowrap">
+    <div>
       <label style="margin-right: 2px"><input type="checkbox" [(ngModel)]="isUseFaceIcon" checked="{{isUseFaceIcon ? 'checked' : ''}}" (change)="isUseFaceIcon = (isUseFaceIcon ? true : false)" />顔IC</label>
       <select style="max-width: 10em" [(ngModel)]="sendFrom" [ngStyle]="{'color': color, 'font-weight': (sendFrom != myPeer?.identifier ? 'normal' : 'bolder')}">
         <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}" [style.color]="myColor" style="font-weight: bolder;">{{myPeer?.name}}（あなた）</option>
         <option *ngFor="let gameCharacter of gameCharacters" style="font-weight: normal;" [style.color]="gameCharacter.chatPalette && gameCharacter.chatPalette.color && gameCharacter.chatPalette.color != '#ffffff' ? gameCharacter.chatPalette.color : '#444'" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
-      </select> ➡
-      <select style="max-width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
-        <option value="" class="not-specified">全員</option>
-        <option *ngFor="let peer of otherPeers" value="{{peer.identifier}}" [style.color]="peer.color" style="font-weight: bolder;">{{peer.name}}
-          <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
-        </option>
       </select>
-      <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
-        [ngClass]="{'not-specified': gameType == ''}">
-        <option value="" class="not-specified">ダイスボット指定なし</option>
-        <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
-      </select>
-      <select *ngIf="diceBotInfosIndexed.length > 0" style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
-        [ngClass]="{'not-specified': gameType == ''}">
-        <option value="" class="not-specified">ダイスボット指定なし</option>
-        <optgroup *ngFor="let group of diceBotInfosIndexed" class="dice-bot-group" label="{{group.index}}">
-          <option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
-        </optgroup>
-      </select>
-      <button (click)="showDicebotHelp()">?</button>
+      <span style="white-space: nowrap"> ➡
+        <select style="max-width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
+          <option value="" class="not-specified">全員</option>
+          <option *ngFor="let peer of otherPeers" value="{{peer.identifier}}" [style.color]="peer.color" style="font-weight: bolder;">{{peer.name}}
+            <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
+          </option>
+        </select>
+      </span>
+      <span style="white-space: nowrap">
+        <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
+          [ngClass]="{'not-specified': gameType == ''}">
+          <option value="" class="not-specified">ダイスボット指定なし</option>
+          <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
+        </select>
+        <select *ngIf="diceBotInfosIndexed.length > 0" style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
+          [ngClass]="{'not-specified': gameType == ''}">
+          <option value="" class="not-specified">ダイスボット指定なし</option>
+          <optgroup *ngFor="let group of diceBotInfosIndexed" class="dice-bot-group" label="{{group.index}}">
+            <option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
+          </optgroup>
+        </select>
+        <button (click)="showDicebotHelp()">?</button>
+      </span>
     </div>
     <div>
       <form>

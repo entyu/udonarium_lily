@@ -20,7 +20,6 @@ export class TabletopObject extends ObjectNode {
   };
 
   @SyncVar() posZ: number = 0;
-  @SyncVar() aura: number = -1;
   
   get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
 
@@ -128,6 +127,7 @@ export class TabletopObject extends ObjectNode {
   @SyncVar() isInverse: boolean = false;
   @SyncVar() isHollow: boolean = false;
   @SyncVar() isBlackPaint: boolean = false;
+  @SyncVar() aura = -1;
 
   @SyncVar() isNotRide: boolean = true;
   @SyncVar() isInventoryIndicate: boolean = true;
