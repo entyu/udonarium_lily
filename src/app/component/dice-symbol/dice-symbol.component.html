@@ -34,9 +34,9 @@
             </div>
           </div>
         </div>
-        <div class="is-3d" [@changeFace]="face" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)">
-          <img *ngIf="!isFlip && isDropShadow && 0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)">
-          <img *ngIf="isFlip && isDropShadow && 0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px); transform: rotateZ(-180deg)">
+        <div class="is-3d" style="position: relative; top: -20%;" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" [@changeFace]="face" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)">
+          <img *ngIf="!isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)">
+          <img *ngIf="isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px); transform: scaleX(-1)">
         </div>
       </div>
     </div>
