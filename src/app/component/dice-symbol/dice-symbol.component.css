@@ -268,3 +268,13 @@
   font-size: smaller;
   margin-right: 2px;
 }
+
+.front-face {
+  backface-visibility: hidden;
+}
+
+.back-face {
+  backface-visibility: hidden;
+  position: absolute;
+  transform: rotateY(-180deg);
+}

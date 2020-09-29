@@ -145,7 +145,13 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
     let x = (this.viewRotateX % 360) - 90;
     let z = (this.viewRotateZ + this.rotate) % 360;
     z = (z > 0 ? z : 360 + z);
-    return (x > 0 ? x : 360 + x) * (90 < z && z < 270 ? 1 : -1);
+    return (x > 0 ? x : 360 + x) * (this.isFlip ? 1 : -1);
+  }
+
+  get isFlip(): boolean {
+    let z = (this.viewRotateZ + this.rotate) % 360;
+    z = (z > 0 ? z : 360 + z);
+    return 90 < z && z < 270;
   }
 
   constructor(

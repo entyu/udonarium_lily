@@ -13,7 +13,7 @@
         </div>
       </div>
       </ng-container>
-      <div class="component-content is-3d" >
+      <div class="component-content is-3d">
         <div class="upright-transform is-fit-width is-3d">
           <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
             <div class="rotate-inner is-3d">
@@ -27,11 +27,17 @@
                 <div class="fornt-tag has-length-limit is-3d"><b>{{ownerName}}</b></div>
                 <div class="back-tag has-length-limit is-3d"><b>{{ownerName}}</b></div>
               </div>
-              <img [@changeFace]="face" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)" class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
+              <div class="component-content is-3d" [@changeFace]="face" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)">
+                <img class="image front-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
+                <img class="image back-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}" style="transform: rotateY(-180deg)">
+              </div>
             </div>
           </div>
         </div>
-        <img *ngIf="isDropShadow && 0 < imageFile.url.length" [@changeFace]="face" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)" class="image" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)">
+        <div class="is-3d" [@changeFace]="face" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)">
+          <img *ngIf="!isFlip && isDropShadow && 0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)">
+          <img *ngIf="isFlip && isDropShadow && 0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px); transform: rotateZ(-180deg)">
+        </div>
       </div>
     </div>
   </div>
