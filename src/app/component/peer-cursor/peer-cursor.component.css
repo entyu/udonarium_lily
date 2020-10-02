@@ -46,6 +46,7 @@
   border-radius: 14px;
   color: #CCC;
   background-color: rgba(30, 30, 30, 0.8);
+  transform-origin: center;
 }
 
 .is-center {

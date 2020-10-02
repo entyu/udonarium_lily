@@ -1,8 +1,15 @@
 <div *ngIf="!isMine" #cursor class="component is-3d is-transition is-pointer-events-none">
-  <div #opacity class="peer-cursor is-3d is-transition" [style.background-color]="color + 'dd'">
-    <div class="icon" [style.background-image]="'url(' + iconUrl + ')' | safe: 'style'">
-      <div class="name is-center" [style.background-color]="color + 'dd'">
-        <span style="white-space: nowrap; color: whitesmoke"><b>{{name}}</b></span>
+  <div class="is-3d is-transition" [ngStyle]="{'transform': 'rotateZ(' + (-rotateZ) + 'deg)'}">
+    <div #opacity class="peer-cursor is-3d is-transition" [style.background-color]="color + 'dd'">
+      <div class="icon is-3d" [style.background-image]="'url(' + iconUrl + ')' | safe: 'style'">
+        <div class="is-center is-3d" [ngStyle]="{'transform': 'translateX(-50%) rotateX(' + nameTagRotate + 'deg)'}">
+          <div class="name is-3d" style="backface-visibility: hidden;" [style.background-color]="color + 'dd'">
+            <span style="white-space: nowrap; color: whitesmoke"><b>{{name}}</b></span>
+          </div>
+          <div class="name is-3d" style="position:absolute; backface-visibility: hidden; transform: rotateY(-180deg);" [style.background-color]="color + 'dd'">
+            <span style="white-space: nowrap; color: whitesmoke"><b>{{name}}</b></span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

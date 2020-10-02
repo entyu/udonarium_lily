@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { EventSystem, Network } from '@udonarium/core/system';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
@@ -34,6 +34,18 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   private _y: number = 0;
   private _target: HTMLElement;
 
+  static viewRotateX = 50;
+  static viewRotateZ = 10;
+
+  get rotateZ(): number {
+    return PeerCursorComponent.viewRotateZ;
+  }
+
+  get nameTagRotate(): number {
+    let x = (PeerCursorComponent.viewRotateX % 360) - 90;
+    return -(x > 0 ? x : 360 + x);
+  }
+
   get delayMs(): number {
     let maxDelay = Network.peerIds.length * 16.6;
     return maxDelay < 100 ? 100 : maxDelay;
@@ -41,8 +53,17 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private tabletopService: TabletopService,
+    private changeDetector: ChangeDetectorRef,
     private ngZone: NgZone
   ) { }
+
+  static ctor = (() => {
+    EventSystem.register(PeerCursorComponent)
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        PeerCursorComponent.viewRotateX = event.data['x'];
+        PeerCursorComponent.viewRotateZ = event.data['z'];
+    });
+  })();
 
   ngOnInit() {
     if (!this.isMine) {
@@ -54,8 +75,14 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
             this.setAnimatedTransition();
             this.setPosition(event.data[0], event.data[1], event.data[2]);
             this.resetFadeOut();
+            this.changeDetector.markForCheck();
           }, this);
-        });
+        })
+        .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+          PeerCursorComponent.viewRotateX = event.data['x'];
+          PeerCursorComponent.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+      });
     }
   }
 
