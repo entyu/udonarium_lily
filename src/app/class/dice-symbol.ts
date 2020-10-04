@@ -29,7 +29,7 @@ export class DiceSymbol extends TabletopObject {
   get size(): number { return this.getCommonValue('size', 1); }
   set size(size: number) { this.setCommonValue('size', size); }
 
-  get faces(): string[] { return this.imageDataElement.children.map(element => (element as DataElement).name); }
+  get faces(): string[] { return this.imageDataElement.children.filter(element => (element as DataElement).currentValue != 'nothing').map(element => (element as DataElement).name); }
   get imageFile(): ImageFile {
     return this.isVisible ?
       this.getImageFile(this.face)
@@ -37,6 +37,7 @@ export class DiceSymbol extends TabletopObject {
         ? this.getImageFile(this.faces[0])
         : null;
   }
+  get nothingFaces(): string[] { return this.imageDataElement.children.filter(element => (element as DataElement).currentValue == 'nothing').map(element => (element as DataElement).name); }
 
   get ownerName(): string {
     let object = PeerCursor.find(this.owner);
@@ -74,6 +75,8 @@ export class DiceSymbol extends TabletopObject {
         break;
       case DiceType.D6:
         sided = 6;
+        let identifier = identifierSuffix != null ? 'nothing_' + identifierSuffix : null;
+        faces.push(DataElement.create('なし', '', { type: 'image', currentValue: 'nothing' }, identifier));
         break;
       case DiceType.D8:
         sided = 8;
@@ -102,7 +105,7 @@ export class DiceSymbol extends TabletopObject {
 
     this.imageDataElement.children.forEach(element => element.destroy());
     faces.forEach(element => this.imageDataElement.appendChild(element));
-    this.face = faces[0].name;
+    this.face = this.faces[0];
 
     return faces;
   }

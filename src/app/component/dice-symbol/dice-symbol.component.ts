@@ -105,6 +105,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   get size(): number { return this.adjustMinBounds(this.diceSymbol.size); }
 
   get faces(): string[] { return this.diceSymbol.faces; }
+  get nothingFaces(): string[] { return this.diceSymbol.nothingFaces; }
   get imageFile(): ImageFile {
     let image = this.diceSymbol.imageFile;
     return image ? image : this.emptyImage;
@@ -321,6 +322,18 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
       }));
     if (this.isVisible) {
       let subActions: ContextMenuAction[] = [];
+      let nothingFaces = this.nothingFaces;
+      if (nothingFaces.length > 0) {
+        nothingFaces.forEach(face => {
+          subActions.push({
+            name: `${this.face == face ? '◉' : '○'} ${face}　`, action: () => {
+              SoundEffect.play(PresetSound.dicePut);
+              this.face = face;
+            }
+          });
+        });
+        subActions.push(ContextMenuSeparator);
+      }
       this.faces.forEach(face => {
         subActions.push({
           name: `${this.face == face ? '◉' : '○'} ${face}　`, action: () => {

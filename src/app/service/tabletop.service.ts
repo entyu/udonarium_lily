@@ -268,6 +268,13 @@ export class TabletopService {
   createDiceSymbol(position: PointerCoordinate, name: string, diceType: DiceType, imagePathPrefix: string): DiceSymbol {
     let diceSymbol = DiceSymbol.create(name, diceType, 1);
     let image: ImageFile = null;
+    
+    diceSymbol.nothingFaces.forEach(face => {
+      let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[0].png`;
+      image = ImageStorage.instance.get(url)
+      if (!image) { image = ImageStorage.instance.add(url); }
+      diceSymbol.imageDataElement.getFirstElementByName(face).value = image.identifier;
+    });
 
     diceSymbol.faces.forEach(face => {
       let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[${face}].png`;
@@ -460,6 +467,7 @@ export class TabletopService {
     let dices: { menuName: string, diceName: string, type: DiceType, imagePathPrefix: string }[] = [
       { menuName: 'D4', diceName: 'D4', type: DiceType.D4, imagePathPrefix: '4_dice' },
       { menuName: 'D6', diceName: 'D6', type: DiceType.D6, imagePathPrefix: '6_dice' },
+      { menuName: 'D6 (Black)', diceName: 'D6', type: DiceType.D6, imagePathPrefix: '6_dice_black' },
       { menuName: 'D8', diceName: 'D8', type: DiceType.D8, imagePathPrefix: '8_dice' },
       { menuName: 'D10', diceName: 'D10', type: DiceType.D10, imagePathPrefix: '10_dice' },
       { menuName: 'D10 (00-90)', diceName: 'D10', type: DiceType.D10_10TIMES, imagePathPrefix: '100_dice' },
