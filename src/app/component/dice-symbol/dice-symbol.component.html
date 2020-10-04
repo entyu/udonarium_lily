@@ -17,7 +17,7 @@
         <div class="upright-transform is-fit-width is-3d">
           <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
             <div class="rotate-inner is-3d">
-              <div class="is-3d" [@changeFaceNameTag]="face" [@diceRollNameTag]="animeState" (@diceRollNameTag.done)="animationShuffleDone($event)" style="transform-origin: center bottom;">
+              <div class="is-3d" [@changeFaceNameTag]="isVisible ? face : null" [@diceRollNameTag]="animeState" (@diceRollNameTag.done)="animationShuffleDone($event)" style="transform-origin: center bottom;">
                 <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}">
                   <div class="fornt-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
                   <div class="back-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
@@ -27,14 +27,14 @@
                 <div class="fornt-tag has-length-limit is-3d"><b>{{ownerName}}</b></div>
                 <div class="back-tag has-length-limit is-3d"><b>{{ownerName}}</b></div>
               </div>
-              <div class="component-content is-3d" [@changeFace]="face" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)">
+              <div class="component-content is-3d" [@changeFace]="isVisible ? face : null" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)">
                 <img class="image front-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
                 <img class="image back-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}" style="transform: rotateY(-180deg)">
               </div>
             </div>
           </div>
         </div>
-        <div class="is-3d" style="position: relative; top: -20%;" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" [@changeFace]="face" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)">
+        <div class="is-3d" style="position: relative; top: -20%;" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" [@changeFace]="isVisible ? face : null" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)">
           <img *ngIf="!isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)">
           <img *ngIf="isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px); transform: scaleX(-1)">
         </div>
