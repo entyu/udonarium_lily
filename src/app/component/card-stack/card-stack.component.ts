@@ -240,6 +240,18 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         default: this.cards.length > 0,
         disabled: this.cards.length == 0
       },
+      {
+        name: '10枚引く', action: () => {
+          for (let i = 0; i < 10; i++) {
+            if (this.drawCard() != null) {
+              if (i == 0 || i == 4 || i == 9) SoundEffect.play(PresetSound.cardDraw);
+            } else {
+              break;
+            }
+          }
+        },
+        disabled: this.cards.length == 0
+      },
       ContextMenuSeparator,
       {
         name: '一番上を表にする', action: () => {
@@ -277,6 +289,14 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         }, 
         disabled: this.cards.length == 0
       },
+      {
+        name: '山札全体を裏返す', action: () => {
+          this.cardStack.inverse();
+          SoundEffect.play(PresetSound.cardDraw);
+          SoundEffect.play(PresetSound.cardDraw);
+        }, 
+        disabled: this.cards.length == 0
+      },
       ContextMenuSeparator,
       {
         name: 'シャッフル', action: () => {
@@ -286,7 +306,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         }, 
         disabled: this.cards.length == 0
       },
-      { name: 'カード一覧', action: () => { this.showStackList(this.cardStack); }, disabled: this.cards.length == 0 },
+      { name: 'カード一覧を見る', action: () => { this.showStackList(this.cardStack); }, disabled: this.cards.length == 0 },
       ContextMenuSeparator,
       (this.isShowTotal
         ? { name: '☑ 枚数を表示', action: () => { this.cardStack.isShowTotal = false; } }

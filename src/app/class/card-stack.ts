@@ -1,4 +1,4 @@
-import { Card } from './card';
+import { Card, CardState } from './card';
 import { ImageFile } from './core/file-storage/image-file';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
@@ -110,6 +110,19 @@ export class CardStack extends TabletopObject {
     for (let card of this.cards) {
       card.rotate = 0;
       this.setSamePositionFor(card);
+    }
+  }
+
+  inverse() {
+    const tmp: Card[] = [];
+    while (true) {
+      let card = this.drawCard();
+      if (card == null) break;
+      tmp.unshift(card);
+      card.state = (card.state == CardState.FRONT ? CardState.BACK : CardState.FRONT);
+    }
+    for (let card of tmp) {
+      this.putOnBottom(card);
     }
   }
 
