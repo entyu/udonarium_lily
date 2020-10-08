@@ -47,6 +47,15 @@ import { PointerDeviceService } from 'service/pointer-device.service';
           style({ transform: 'scale3d(1.125, 1.125, 1.125) rotateZ(630deg)', offset: 0.875 }),
           style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateZ(720deg)', offset: 1.0 })
         ]))
+      ]),
+      transition('* => inverse', [
+        animate('200ms ease', keyframes([
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 0 }),
+          style({ transform: 'scale3d(0.6, 1.2, 1.2)', offset: 0.5 }),
+          style({ transform: 'scale3d(0, 0.75, 0.75)', offset: 0.75 }),
+          style({ transform: 'scale3d(0.5, 1.125, 1.125)', offset: 0.875 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
+        ]))
       ])
     ])
   ]
@@ -104,6 +113,12 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       .on('SHUFFLE_CARD_STACK', -1000, event => {
         if (event.data.identifier === this.cardStack.identifier) {
           this.animeState = 'active';
+          this.changeDetector.markForCheck();
+        }
+      })
+      .on('INVERSE_CARD_STACK', -1000, event => {
+        if (event.data.identifier === this.cardStack.identifier) {
+          this.animeState = 'inverse';
           this.changeDetector.markForCheck();
         }
       })
@@ -232,7 +247,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
       {
-        name: '１枚引く', action: () => {
+        name: 'カードを１枚引く', action: () => {
           if (this.drawCard() != null) {
             SoundEffect.play(PresetSound.cardDraw);
           }
@@ -240,29 +255,22 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         default: this.cards.length > 0,
         disabled: this.cards.length == 0
       },
-      ContextMenuSeparator,
       {
-        name: '5枚引く', action: () => {
-          for (let i = 0; i < 5; i++) {
-            if (this.drawCard() != null) {
-              if (i == 0 || i == 4 || i == 9) SoundEffect.play(PresetSound.cardDraw);
-            } else {
-              break;
+        name: 'カードを引く', action: null,
+        subActions: [2, 3, 4, 5, 10].map(n => {
+          return {
+            name: `${n}枚`,
+            action: () => { 
+              for (let i = 0; i < n; i++) {
+                if (this.drawCard() != null) {
+                  if (i == 0 || i == 3 || i == 9) SoundEffect.play(PresetSound.cardDraw);
+                } else {
+                  break;
+                }
+              }
             }
-          }
-        },
-        disabled: this.cards.length == 0
-      },
-      {
-        name: '10枚引く', action: () => {
-          for (let i = 0; i < 10; i++) {
-            if (this.drawCard() != null) {
-              if (i == 0 || i == 4 || i == 9) SoundEffect.play(PresetSound.cardDraw);
-            } else {
-              break;
-            }
-          }
-        },
+          };
+        }),
         disabled: this.cards.length == 0
       },
       ContextMenuSeparator,
@@ -302,14 +310,6 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         }, 
         disabled: this.cards.length == 0
       },
-      {
-        name: '山札全体を裏返す', action: () => {
-          this.cardStack.inverse();
-          SoundEffect.play(PresetSound.cardDraw);
-          SoundEffect.play(PresetSound.cardDraw);
-        }, 
-        disabled: this.cards.length == 0
-      },
       ContextMenuSeparator,
       {
         name: 'シャッフル', action: () => {
@@ -338,6 +338,15 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         name: '山札を崩す', action: () => {
           this.breakStack();
           SoundEffect.play(PresetSound.cardShuffle);
+        }, 
+        disabled: this.cards.length == 0
+      },
+      {
+        name: '山札全体を裏返す', action: () => {
+          this.cardStack.inverse();
+          SoundEffect.play(PresetSound.cardDraw);
+          SoundEffect.play(PresetSound.cardDraw);
+          EventSystem.call('INVERSE_CARD_STACK', { identifier: this.cardStack.identifier });
         }, 
         disabled: this.cards.length == 0
       },

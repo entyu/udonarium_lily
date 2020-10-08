@@ -1,3 +1,4 @@
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -34,7 +35,21 @@ import { TabletopService } from 'service/tabletop.service';
   selector: 'card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('inverse', [
+      state('inverse', style({ transform: '' })),
+      transition(':increment, :decrement', [
+        animate('200ms ease', keyframes([
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 0 }),
+          style({ transform: 'scale3d(0.6, 1.2, 1.2)', offset: 0.5 }),
+          style({ transform: 'scale3d(0, 0.75, 0.75)', offset: 0.75 }),
+          style({ transform: 'scale3d(0.5, 1.125, 1.125)', offset: 0.875 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
+        ]))
+      ])
+    ])
+  ]
 })
 export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() card: Card = null;
