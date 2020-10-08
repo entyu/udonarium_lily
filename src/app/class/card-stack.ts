@@ -116,7 +116,7 @@ export class CardStack extends TabletopObject {
   inverse() {
     const tmp: Card[] = [];
     while (true) {
-      let card = this.drawCard();
+      let card = this.topCard ? <Card>this.cardRoot.removeChild(this.topCard) : null;
       if (card == null) break;
       tmp.unshift(card);
       card.state = (card.state == CardState.FRONT ? CardState.BACK : CardState.FRONT);
