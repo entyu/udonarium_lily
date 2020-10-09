@@ -48,6 +48,17 @@ import { TabletopService } from 'service/tabletop.service';
           style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
         ]))
       ])
+    ]),
+    trigger('slidInOut', [
+      transition('void => *', [
+        animate('200ms ease', keyframes([
+          style({ 'transform-origin': 'left center', transform: 'scale3d(0, 1.0, 1.0)', offset: 0 }),
+          style({ 'transform-origin': 'left center', transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate(100, style({ 'transform-origin': 'left center', transform: 'scale3d(0, 1.0, 1.0)' }))
+      ])
     ])
   ]
 })
