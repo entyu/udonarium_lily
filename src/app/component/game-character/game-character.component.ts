@@ -182,8 +182,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get nameTagRotate(): number {
     let x = (this.viewRotateX % 360) - 90;
     let z = (this.viewRotateZ + this.rotate) % 360;
+    let roll = this.roll % 360;
     z = (z > 0 ? z : 360 + z);
-    return (x > 0 ? x : 360 + x) * (90 < z && z < 270 ? 1 : -1);
+    roll = (roll > 0 ? roll : 360 + roll);
+    return (x > 0 ? x : 360 + x) * (90 < z && z < 270 ? 1 : -1) * (90 <= roll && roll <= 270 ? -1 : 1);
   }
 
   get isListen(): boolean {
