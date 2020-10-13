@@ -11,6 +11,8 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/TK11235/udonarium/blob/master/LICENSE)
 
 ---------以下本家からの一部抜粋です---------------
+https://github.com/TK11235/udonarium
+
 ## サーバ設置
 ユーザ自身でWebサーバを用意し、そのサーバにユドナリウムリリィを設置して利用することができます。  
 
