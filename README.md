@@ -10,6 +10,20 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/TK11235/udonarium/blob/master/LICENSE)
 
+## 追加予定機能
+
+### 立ち絵
+どどんとふ様式の大きめなチャット立ち絵を追加したい。
+
+### カウンターリモコン
+テーブルのコマのステータスを増減させるウィンドウ
+
+### バフデバフ表示
+バフかけようのウィンドウを用意し、そこから各キャラクターに補助魔法をかけます。
+かかっている補助はキャラクターコマ丈夫に表示されます。
+
+
+
 ---------以下本家からの一部抜粋です---------------
 https://github.com/TK11235/udonarium
 
