@@ -1,54 +1,37 @@
-<div class="table" [ngClass]="{ 'direct-message': isDirect }">
+<div class="table" [ngClass]="{ 'direct-message': isDirect }" >
   <div class="table-cell imagebox">
     <img *ngIf="0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
-  </div>
+  </div>   
   <div class="table-cell">
     <div>
       <select style="width: 12em;" [(ngModel)]="sendFrom">
         <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}">{{myPeer?.name}}（あなた）</option>
         <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
         </option>
-      </select> ＞
+      </select> 
+<!--
       <select style="width: 10em;" [(ngModel)]="sendTo">
         <option value="">全員</option>
         <option *ngFor="let peer of otherPeers" value="{{peer.identifier}}">{{peer.name}}
           <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
         </option>
       </select>
+-->
+<!--
       <select style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType"
         [ngModelOptions]="{standalone: true}">
         <option value="">ダイスボット指定なし</option>
         <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
       </select>
       <button (click)="showDicebotHelp()">?</button>
+-->
     </div>
-<!-- entyu_10-->
-
-    <div >
-      <div class="table-cell">
-        立ち絵 
-      </div>
-      <div class="tachie-tag table-cell">
-        <ng-container *ngIf="1 >= selectCharacterTachieNum">
-          <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
-          min="0" max="0" [(ngModel)]="tachieNum" />
-           0/0 立ち絵
-        </ng-container>
-        <ng-container *ngIf="1 < selectCharacterTachieNum">
-          <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
-          min="0" max="{{selectCharacterTachieNum -1}}" [(ngModel)]="tachieNum" />
-         {{tachieNum}}/{{selectCharacterTachieNum - 1}} 
-        </ng-container>
-
-      </div>
-    </div>
-<!-- entyu_10-->
     <div>
       <form>
-        <textarea class="chat-input" placeholder="Enterで送信  Shift+Enterで改行" [(ngModel)]="text"
+        <textarea class="controller-input" placeholder="Enterで送信  Shift+Enterで改行" [(ngModel)]="text"
           [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
           #textArea></textarea>
-        <button type="submit" (click)="sendChat(null)">SEND</button>
+        <button type="submit" (click)="sendChat(null)">実行</button>
       </form>
     </div>
     <div class="writing-info">

@@ -15,12 +15,38 @@
       <div class="upright-transform is-fit-width is-3d">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
+
           <div class="rotate-inner is-3d">
-            <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
-              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-              <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
-              <div class="back-tag has-length-limit is-3d">{{name}}</div>
-            </div>
+
+<!--entyu_5-->
+          <!-- •\Ž¦ðŒ‚à‚¤­‚µ‚È‚ñ‚Æ‚©l‚¦‚½‚Ù‚¤‚ª‚¢‚¢@-->
+        <ng-container *ngIf="this.gameCharacter.buffDataElement">
+          <ng-container *ngIf="this.gameCharacter.buffDataElement.children.length == 1">
+            <ng-container *ngFor="let child of this.gameCharacter.buffDataElement.children">
+              <ng-container *ngIf="child.children.length > 0">
+               
+                <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d" 
+                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
+                  <div class="table">
+                    <div class="flex-item" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
+                      <div class="table-row" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                    </div>
+                  </div>
+                 </div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+           
+<!--entyu_5-->
+
+
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+                <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
+                <div class="back-tag has-length-limit is-3d">{{name}}</div>
+
+              </div>
             <img class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'">
             <div class="grab-group">
               <div class="rotate-grab rotate-grab-icon of-top"

@@ -8,6 +8,9 @@ import { Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
+//entyu
+import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+
 
 const HOURS = 60 * 60 * 1000;
 
@@ -75,15 +78,35 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
-  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string): ChatMessage {
+//entyu_8
+  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, tachieNum?: number): ChatMessage {
+//
+
+//entyu_8
+    let img;
+    let imgIndex;
+
+    if( tachieNum > 0 ){
+      imgIndex = tachieNum;
+    }else{
+      imgIndex = 0;
+    }
+    
+    console.log('‰~’Œ '+tachieNum +' '+imgIndex + ' ' + chatTab);
+    
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.id,
       to: this.findId(sendTo),
       name: this.makeMessageName(sendFrom, sendTo),
-      imageIdentifier: this.findImageIdentifier(sendFrom),
+//entyu_8
+      imageIdentifier: this.findImageIdentifier(sendFrom,imgIndex),
+//
       timestamp: this.calcTimeStamp(chatTab),
       tag: gameType,
       text: text,
+//entyu
+      imagePos: this.findImagePos(sendFrom),
+//
     };
 
     return chatTab.addMessage(chatMessage);
@@ -116,17 +139,59 @@ export class ChatMessageService {
     let sendToName = this.findObjectName(sendTo);
     return sendFromName + ' > ' + sendToName;
   }
+//entyu_8
 
-  private findImageIdentifier(identifier: string): string {
-    let object = ObjectStore.instance.get(identifier);
+  private findImageIdentifier(sendFrom,index:number): string {
+
+    let object = ObjectStore.instance.get(sendFrom);
+    if (object instanceof GameCharacter) {
+      if( object.imageDataElement.children.length  > index){
+        return  ImageStorage.instance.get(<string>object.imageDataElement.children[index].value).identifier;
+      }
+      return object.imageFile ? object.imageFile.identifier : '';
+    } else if (object instanceof PeerCursor) {
+      return object.imageIdentifier;
+    }
+    return sendFrom;
+
+/*
+    let object = ObjectStore.instance.get(sendFrom);
     if (object instanceof GameCharacter) {
       return object.imageFile ? object.imageFile.identifier : '';
     } else if (object instanceof PeerCursor) {
       return object.imageIdentifier;
     }
-    return identifier;
+    return sendFrom;
+*/
   }
 
+/*
+  private findImageIdentifier(identifier: string , index:number): string {
+    let object = ObjectStore.instance.get(identifier);
+    if (object instanceof GameCharacter) {
+      return object.imageDataElement ? object.imageDataElement.children.value : '';
+    } else if (object instanceof PeerCursor) {
+      return object.imageIdentifier;
+    }
+    return identifier;
+  }
+*/
+//
+
+
+//entyu
+  private findImagePos(identifier: string): number {
+    let object = ObjectStore.instance.get(identifier);
+    if (object instanceof GameCharacter) {
+        let element = object.getElement('POS', object.detailDataElement);
+        if(element)
+            if( 0 <= <number>element.currentValue && <number>element.currentValue <= 11)
+                return <number>element.currentValue;
+        return 0;
+    }
+    return -1;
+  }
+//
   private calcTimeStamp(chatTab: ChatTab): number {
     let now = this.getTime();
     let latest = chatTab.latestTimeStamp;

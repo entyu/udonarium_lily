@@ -11,7 +11,9 @@ import { DataSummarySetting } from '@udonarium/data-summary-setting';
 import { Room } from '@udonarium/room';
 
 import * as Beautify from 'vkbeautify';
-
+//entyu_2 #92
+import { ImageTagList } from '@udonarium/image-tag-list';
+//
 @Injectable({
   providedIn: 'root'
 })
@@ -25,10 +27,22 @@ export class SaveDataService {
     files.push(new File([roomXml], 'data.xml', { type: 'text/plain' }));
     files.push(new File([chatXml], 'chat.xml', { type: 'text/plain' }));
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));
+//entyu_2 #92
+//    files = files.concat(this.searchImageFiles(roomXml));
+//    files = files.concat(this.searchImageFiles(chatXml));
 
-    files = files.concat(this.searchImageFiles(roomXml));
-    files = files.concat(this.searchImageFiles(chatXml));
+    let images: ImageFile[] = [];
+    images = images.concat(this.searchImageFiles(roomXml));
+    images = images.concat(this.searchImageFiles(chatXml));
+    for (const image of images) {
+      if (image.state === ImageState.COMPLETE) {
+        files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
+      }
+    }
 
+    let imageTagXml = this.convertToXml(ImageTagList.create(images));
+    files.push(new File([imageTagXml], 'imagetag.xml', { type: 'text/plain' }));
+//    
     FileArchiver.instance.save(files, this.appendTimestamp(fileName));
   }
 
@@ -37,8 +51,19 @@ export class SaveDataService {
     let xml: string = this.convertToXml(gameObject);
 
     files.push(new File([xml], 'data.xml', { type: 'text/plain' }));
-    files = files.concat(this.searchImageFiles(xml));
+//entyu_2   #92
+//    files = files.concat(this.searchImageFiles(xml));
+    let images: ImageFile[] = [];
+    images = images.concat(this.searchImageFiles(xml));
+    for (const image of images) {
+      if (image.state === ImageState.COMPLETE) {
+        files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
+      }
+    }
 
+    let imageTagXml = this.convertToXml(ImageTagList.create(images));
+    files.push(new File([imageTagXml], 'imagetag.xml', { type: 'text/plain' }));
+//
     FileArchiver.instance.save(files, this.appendTimestamp(fileName));
   }
 
@@ -47,15 +72,23 @@ export class SaveDataService {
     return xmlDeclaration + '\n' + Beautify.xml(gameObject.toXml(), 2);
   }
 
-  private searchImageFiles(xml: string): File[] {
+//entyu_2   #92
+//  private searchImageFiles(xml: string): File[] {
+  private searchImageFiles(xml: string): ImageFile[] {
+//
     let xmlElement: Element = XmlUtil.xml2element(xml);
-    let files: File[] = [];
+
+//entyu_2   #92
+//    let files: File[] = [];
+    let files: ImageFile[] = [];
+//
     if (!xmlElement) return files;
 
     let images: { [identifier: string]: ImageFile } = {};
     let imageElements = xmlElement.ownerDocument.querySelectorAll('*[type="image"]');
 
     for (let i = 0; i < imageElements.length; i++) {
+      console.log( '円柱 SAVE 00:'+imageElements[i].innerHTML);
       let identifier = imageElements[i].innerHTML;
       images[identifier] = ImageStorage.instance.get(identifier);
     }
@@ -65,15 +98,21 @@ export class SaveDataService {
     for (let i = 0; i < imageElements.length; i++) {
       let identifier = imageElements[i].getAttribute('imageIdentifier');
       if (identifier) images[identifier] = ImageStorage.instance.get(identifier);
-
+      console.log( '円柱 SAVE 1:'+identifier);
       let backgroundImageIdentifier = imageElements[i].getAttribute('backgroundImageIdentifier');
       if (backgroundImageIdentifier) images[backgroundImageIdentifier] = ImageStorage.instance.get(backgroundImageIdentifier);
     }
     for (let identifier in images) {
+      console.log( '円柱 SAVE 2:'+images[identifier]+ '/' + identifier);
       let image = images[identifier];
-      if (image && image.state === ImageState.COMPLETE) {
-        files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
-      }
+//entyu_2 #92
+//      if (image && image.state === ImageState.COMPLETE) {
+//        files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
+//      }
+    if (image) {
+       files.push(image);
+    }
+
     }
     return files;
   }

@@ -49,6 +49,34 @@
       </div>
     </div>
   </ng-container>
+<!-- entyu_8 -->
+  <ng-container [ngSwitch]="tabletopObject.aliasName">
+    <ng-container *ngSwitchCase="'numberResource'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'card'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'card-stack'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'terrain'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'dice-symbol'">
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+
+      <ng-container *ngIf="tabletopObject.imageDataElement">
+
+
+        <div class="flex-item">
+          <div class="table">
+            <div class="table-row" game-data-element [gameDataElement]="tabletopObject.imageDataElement" [isTagLocked]="true" [isEdit]="isEdit" [isImage]="true"></div>
+          </div>
+        </div>
+      </ng-container>
+
+    </ng-container>
+  </ng-container>
+<!-- entyu_8 -->
+
 
   <ng-container *ngIf="isEdit">
     <div class="flex-item">

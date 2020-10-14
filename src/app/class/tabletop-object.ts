@@ -37,6 +37,15 @@ export class TabletopObject extends ObjectNode {
   get imageDataElement(): DataElement { return this.getElement('image'); }
   get commonDataElement(): DataElement { return this.getElement('common'); }
   get detailDataElement(): DataElement { return this.getElement('detail'); }
+//entyu_5
+  get buffDataElement(): DataElement { return this.getElement('buff'); }
+
+
+  addBuffDataElement(){ 
+    if (!this.buffDataElement){
+      this.rootDataElement.appendChild(DataElement.create('buff', '', {}, 'buff_' + this.identifier));
+    }
+  }
 
   get imageFile(): ImageFile {
     if (!this.imageDataElement) return this._imageFile;
@@ -62,6 +71,7 @@ export class TabletopObject extends ObjectNode {
     }
     if (!this.commonDataElement) this.rootDataElement.appendChild(DataElement.create('common', '', {}, 'common_' + this.identifier));
     if (!this.detailDataElement) this.rootDataElement.appendChild(DataElement.create('detail', '', {}, 'detail_' + this.identifier));
+    if (!this.buffDataElement) this.rootDataElement.appendChild(DataElement.create('buff', '', {}, 'buff_' + this.identifier));//entyu
   }
 
   getElement(name: string, from: DataElement = this.rootDataElement): DataElement {

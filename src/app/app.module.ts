@@ -21,6 +21,9 @@ import { GameCharacterGeneratorComponent } from 'component/game-character-genera
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { GameCharacterComponent } from 'component/game-character/game-character.component';
 import { GameDataElementComponent } from 'component/game-data-element/game-data-element.component';
+//entyu_5
+import { GameDataElementBuffComponent } from 'component/game-data-element-buff/game-data-element-buff.component';
+//
 import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
 import { GameTableMaskComponent } from 'component/game-table-mask/game-table-mask.component';
 import { GameTableSettingComponent } from 'component/game-table-setting/game-table-setting.component';
@@ -44,7 +47,10 @@ import { ResizableDirective } from 'directive/resizable.directive';
 import { RotableDirective } from 'directive/rotable.directive';
 import { TooltipDirective } from 'directive/tooltip.directive';
 import { SafePipe } from 'pipe/safe.pipe';
-
+//entyu_3
+import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
+import { ControllerInputComponent } from 'component/controller-input/controller-input.component';  
+//
 import { AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { ContextMenuService } from 'service/context-menu.service';
@@ -69,12 +75,19 @@ import { AppComponent } from './app.component';
     ChatTabSettingComponent,
     ChatWindowComponent,
     ContextMenuComponent,
+//entyu_3
+    RemoteControllerComponent,
+    ControllerInputComponent,
+//
     FileSelecterComponent,
     FileStorageComponent,
     GameCharacterGeneratorComponent,
     GameCharacterSheetComponent,
     GameCharacterComponent,
     GameDataElementComponent,
+//entyu_5
+    GameDataElementBuffComponent,
+//
     GameObjectInventoryComponent,
     GameTableMaskComponent,
     GameTableSettingComponent,

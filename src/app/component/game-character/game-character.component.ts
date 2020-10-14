@@ -22,7 +22,9 @@ import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-
+//entyu_3
+import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
+//
 @Component({
   selector: 'game-character',
   templateUrl: './game-character.component.html',
@@ -118,6 +120,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.contextMenuService.open(position, [
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
+//entyu_3 
+  //      { name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } },
+//
       ContextMenuSeparator,
       {
         name: '共有イベントリに移動', action: () => {
@@ -177,4 +182,20 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
     component.character = gameObject;
   }
+
+//entyu_3
+  private showRemoteController(gameObject: GameCharacter) {
+//      this.panelService.open(RemoteControllerComponent, { width: 700, height: 400, left: 100, top: 450 });
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 615, height: 350 };
+    let component = this.panelService.open<RemoteControllerComponent>(RemoteControllerComponent, option);
+    component.character = gameObject;
+
+//    let coordinate = this.pointerDeviceService.pointers[0];
+//    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 615, height: 350 };
+//    let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
+//    component.character = gameObject;
+  }
+//
+
 }

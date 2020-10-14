@@ -4,9 +4,23 @@ import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
 import { EventSystem } from './core/system';
 
+//entyu
+import { ImageFile } from './core/file-storage/image-file';
+import { ImageStorage } from './core/file-storage/image-storage';
+//
+
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() name: string = 'タブ';
+//entyu
+  @SyncVar() pos_num: number = -1;
+
+
+  @SyncVar() imageIdentifier: string[] = ['a','b','c','d','e','f','g','h','i','j','k','l'];
+  @SyncVar() imageIdentifierZpos: number[] = [0,1,2,3,4,5,6,7,8,9,10,11];
+  @SyncVar() count:number = 0;
+  @SyncVar() imageIdentifierTest: string = 'test';//'testCharacter_1_image';
+  
   get chatMessages(): ChatMessage[] { return <ChatMessage[]>this.children; }
 
   private _unreadLength: number = 0;
@@ -17,7 +31,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     let lastIndex = this.chatMessages.length - 1;
     return lastIndex < 0 ? 0 : this.chatMessages[lastIndex].timestamp;
   }
-
+  
   // ObjectNode Lifecycle
   onChildAdded(child: ObjectNode) {
     super.onChildAdded(child);
@@ -39,6 +53,17 @@ export class ChatTab extends ObjectNode implements InnerXml {
         continue;
       }
       if (message[key] == null || message[key] === '') continue;
+//entyu
+      if (key === 'imagePos') {
+        this.pos_num = message[key];
+        if( 0 <= this.pos_num && this.pos_num < this.imageIdentifier.length ){
+           this.imageIdentifier[this.pos_num] = message['imageIdentifier'];
+           this.imageIdentifierTest = message['imageIdentifier'];
+//           this.imageIdentifier[this.pos_num] =            
+
+        }
+      }
+//
       chat.setAttribute(key, message[key]);
     }
     chat.initialize();

@@ -1,4 +1,6 @@
-import { ChatPalette } from './chat-palette';
+//entyu_3
+import { ChatPalette,BuffPalette } from './chat-palette';
+//
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
@@ -11,13 +13,30 @@ export class GameCharacter extends TabletopObject {
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
 
+//entyu_3
   get chatPalette(): ChatPalette {
     for (let child of this.children) {
       if (child instanceof ChatPalette) return child;
     }
     return null;
   }
+//
+  
+  TestExec() {
+    console.log('TestExec');
+ 
+  }  
+//entyu_3
+  get remoteController(): BuffPalette {
+    for (let child of this.children) {
+      if (child instanceof BuffPalette){
+        return child;
+      } 
+    }
+    return null;
+  }
 
+//
   static create(name: string, size: number, imageIdentifier: string): GameCharacter {
     let gameCharacter: GameCharacter = new GameCharacter();
     gameCharacter.createDataElements();
@@ -26,6 +45,39 @@ export class GameCharacter extends TabletopObject {
 
     return gameCharacter;
   }
+
+  //entyu
+  addExtendData(){
+    //entyu
+//    console.log('ENTYU addExtendData CALL!!!');
+    
+    this.addBuffDataElement();
+//  this.createDataElements();
+    
+    let istachie = this.detailDataElement.getElementsByName('立ち絵位置');
+    if( istachie.length == 0 ){
+      let testElement: DataElement = DataElement.create('立ち絵位置', '', {}, '立ち絵位置' + this.identifier);
+      this.detailDataElement.appendChild(testElement);
+      testElement.appendChild(DataElement.create('POS', 11, { 'type': 'numberResource', 'currentValue': '0' }, 'POS_' + this.identifier));
+    }
+    let isbuff = this.buffDataElement.getElementsByName('バフ/デバフ');
+    if( isbuff.length == 0 ){
+      let buffElement: DataElement = DataElement.create('バフ/デバフ', '', {}, 'バフ/デバフ' + this.identifier);
+      this.buffDataElement.appendChild(buffElement);
+      buffElement.appendChild(DataElement.create('テストバフ1', 3, { 'type': 'numberResource', 'currentValue': '防+1' }, 'テストバフ1_' + this.identifier));
+    }
+    if( this.remoteController == null){
+      let controller: BuffPalette = new BuffPalette('RemotController_' + this.identifier);
+      controller.setPalette(`コントローラ入力例：
+バークメイル A 3
+クリティカルレイ A 3
+セイクリッドウェポン 命+1攻+2 18`);
+      controller.initialize();
+      this.appendChild(controller);
+    }
+
+  }
+  //
 
   createTestGameDataElement(name: string, size: number, imageIdentifier: string) {
     this.createDataElements();
@@ -49,7 +101,9 @@ export class GameCharacter extends TabletopObject {
     resourceElement.appendChild(mpElement);
 
     //TEST
+    //entyu
     let testElement: DataElement = DataElement.create('情報', '', {}, '情報' + this.identifier);
+    testElement = DataElement.create('情報', '', {}, '情報' + this.identifier);
     this.detailDataElement.appendChild(testElement);
     testElement.appendChild(DataElement.create('説明', 'ここに説明を書く\nあいうえお', { 'type': 'note' }, '説明' + this.identifier));
     testElement.appendChild(DataElement.create('メモ', '任意の文字列\n１\n２\n３\n４\n５', { 'type': 'note' }, 'メモ' + this.identifier));
@@ -73,7 +127,8 @@ export class GameCharacter extends TabletopObject {
     testElement.appendChild(DataElement.create('Lv7', '頑強', {}, 'Lv7' + this.identifier));
     testElement.appendChild(DataElement.create('Lv9', '薙ぎ払い', {}, 'Lv9' + this.identifier));
     testElement.appendChild(DataElement.create('自動', '治癒適正', {}, '自動' + this.identifier));
-
+    
+    //
     let domParser: DOMParser = new DOMParser();
     let gameCharacterXMLDocument: Document = domParser.parseFromString(this.rootDataElement.toXml(), 'application/xml');
 
@@ -86,5 +141,29 @@ export class GameCharacter extends TabletopObject {
 //格闘＝１`);
     palette.initialize();
     this.appendChild(palette);
+
+
+
+//entyu_10
+/*
+    let paletteEx: ChatPalette = new ChatPalette('ChatPalette2_' + this.identifier);
+    paletteEx.setPalette(`チャットパレット2個目：`);
+    paletteEx.initialize();
+    this.appendChild(paletteEx);
+*/
+/*
+    paletteEx: ChatPalette = new ChatPalette('ChatPalette3_' + this.identifier);
+    paletteEx.setPalette(`チャットパレット3個目：`);
+    paletteEx.initialize();
+
+    this.appendChild(paletteEx);
+*/
+//
+
+
+
+    //entyu
+    this.addExtendData();
+
   }
 }

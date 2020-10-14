@@ -1,0 +1,102 @@
+<ng-container *ngIf="!isPieceMode">
+  <ng-container *ngIf="gameDataElement">
+    <ng-container *ngIf="gameDataElement.children.length < 1">
+      <ng-container [ngSwitch]="gameDataElement.type">
+        <ng-container *ngSwitchCase="'numberResource'">
+          <div class="table-cell" style="width:60%;">
+            <ng-container *ngIf="!isTagLocked"><!-- NAME -->
+              <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{name}}</div>
+
+              <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 0.9rem;" size="1"
+                [(ngModel)]="name" placeholder="Value" >
+            </ng-container>
+          </div>
+          <div class="table-cell" >/</div>
+          <div class="table-cell" style="width:20%;">
+              <input style="width:100%;" size="1" type="string" [(ngModel)]="currentValue" placeholder="Value" />
+          </div>
+          <div class="table-cell" >/</div>
+          <div class="table-cell" >
+              <input style="width: 3em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
+          </div>
+          <div class="table-cell" >R</div>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <div class="table-cell_inner-table" style="width:100%;">
+
+            <div class="table-cell_inner-table-title">
+              <ng-container *ngIf="!isTagLocked">
+                <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 1.0rem; font-weight: bold;"
+                  size="1" [(ngModel)]="name" placeholder="Value" />
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="0 < gameDataElement.children.length">
+<!--    <div >{{gameDataElement.children.length}}</div>-->
+
+        <div class="table-cell_inner-table" style="width:100%;">
+  
+          <div class="table-cell_inner-table-title">
+            <ng-container *ngIf="!isTagLocked">
+              <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 1.0rem; font-weight: bold;"
+                size="1" [(ngModel)]="name" placeholder="Value" />
+            </ng-container>
+          </div>
+
+          <div class="table" *ngIf="0 < gameDataElement.children.length">
+            <div game-data-element-buff class="table-row" *ngFor="let childElement of gameDataElement.children"
+              [gameDataElement]="childElement" [isEdit]="isEdit" [isTagLocked]="isTagLocked"></div>
+          </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-container *ngIf="isPieceMode">
+  <ng-container *ngIf="gameDataElement.children.length < 1">
+    <ng-container [ngSwitch]="gameDataElement.type">
+      <ng-container *ngSwitchCase="'numberResource'">
+       {{gameDataElement.name}} / {{gameDataElement.currentValue}} / {{gameDataElement.value}}R 
+<!--          <div class="table-cell" style="width:40%;">
+            <ng-container *ngIf="!isTagLocked">
+              <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{name}}</div>
+
+              <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 0.9rem;" size="1"
+                [(ngModel)]="name" placeholder="Value" >
+            </ng-container>
+          </div>
+          <div class="table-cell" >/</div>
+          <div class="table-cell" style="width:20%;">
+              <input style="width:100%;" size="1" type="string" [(ngModel)]="currentValue" placeholder="Value" />
+          </div>
+          <div class="table-cell" >/</div>
+          <div class="table-cell" >
+              <input style="width: 3em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
+          </div>
+          <div class="table-cell" >R</div>
+-->
+
+      </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="0 < gameDataElement.children.length">
+<!--     <div >{{gameDataElement.children.length}}</div> -->
+     <div game-data-element-buff class="table-row" *ngFor="let childElement of gameDataElement.children"
+      [gameDataElement]="childElement" [isEdit]="isEdit" [isTagLocked]="isTagLocked" [isPieceMode]="isPieceMode"></div>
+    
+  </ng-container>
+</ng-container>
+
+
+<ng-template #editButtons>
+  <button (click)="addElement()"><i class="material-icons">add_circle</i></button>
+  <button (click)="upElement()"><i class="material-icons">arrow_upward</i></button>
+  <br>
+  <button (click)="deleteElement()"><i class="material-icons">remove_circle_outline</i></button>
+  <button (click)="downElement()"><i class="material-icons">arrow_downward</i></button>
+</ng-template>

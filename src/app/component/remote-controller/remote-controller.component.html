@@ -1,0 +1,192 @@
+<div style="float:left; width:50%;">
+  <div class="flex-container">
+   <div style="flex-grow: 0;">
+     <form>
+       <div class="chat-tab">
+         <label *ngFor="let chatTab of chatMessageService.chatTabs">
+           <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
+           <div>{{chatTab.name}}</div>
+         </label>
+       </div>
+     </form>
+     <controller-input [onlyCharacters]="true" [chatTabidentifier]="chatTabidentifier" 
+     [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" (chat)="sendChat($event)" #controllerInput></controller-input>
+<!--
+
+     <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
+-->
+
+     <div *ngIf="isEdit" class="edit-info"><i class="material-icons" style="vertical-align: bottom; size:0.8rem;">info_outline</i> バフ編集中です</div>
+   </div>
+<!-- entyu_3 -->
+   <div *ngIf="!isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
+     <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
+       <ng-container *ngIf="palette">
+         <option *ngFor="let palette of palette.getPalette()" value="{{palette}}">{{palette}}</option>
+       </ng-container>
+     </select>
+   </div>
+   <div *ngIf="isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
+     <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="バフパレット"></textarea>
+   </div>
+   <div style="flex-grow: 0;">
+     <button type="submit" (click)="toggleEditMode()">
+       <span *ngIf="!isEdit">バフパレットの編集</span>
+       <span *ngIf="isEdit">バフパレットを確定</span>
+     </button>
+     <BR>
+     <button type="submit" (click)="remotBuffRoundSelect()">
+       <span>バフR減少/選択</span>
+     </button>
+     <button type="submit" (click)="remotBuffRoundALL()">
+       <span>バフR減少/全員</span>
+     </button>
+     <button type="submit" (click)="remotBuffDeleteZeroRoundSelect()">
+       <span>0R以下消去/選択</span>
+     </button>
+     <button type="submit" (click)="remotBuffDeleteZeroRoundALL()">
+       <span>0R以下消去/全員</span>
+     </button>
+
+   </div>
+ </div>
+<!-- -->
+ <div style="width:100%;" > 
+
+
+   <ng-container *ngIf="selectCharacter">
+     <div class="controller">
+
+
+       <ng-container *ngIf="selectCharacter.buffDataElement">
+        <div class="table">
+           <div class="flex-item" *ngFor="let childElement of selectCharacter.buffDataElement.children">
+             <div class="table-row" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="false"></div>
+           </div>
+         </div>
+       </ng-container>
+
+      </div>
+    </ng-container >
+  </div>
+<!-- -->
+
+<!-- リモコン部-->
+ <div>
+    <div>
+      <div><br>カウンターリモコン</div>
+      <div class="table-cell image-box">
+        <img *ngIf="character.imageFile.url" [src]="character.imageFile.url | safe: 'resourceUrl'" />
+      </div>
+      <input style="width: 5em;   font-size: 1.2em;" size="1" type="number" [(ngModel)]="this.remotNumber" placeholder="Value" />
+<!--    <input style="width: 5em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />-->
+      <button type="submit" (click)="remotChangeValue()">
+        <span>リモコン操作</span>
+      </button>
+
+    </div>
+    <div class="table-cell">
+
+      <div *ngIf="character.rootDataElement">
+<!--  <div >{{character.rootDataElement.name}}</div> -->
+        <div class="controller">
+        <ng-container *ngFor="let data of character.detailDataElement.children;">
+
+          <ng-container  *ngFor="let dataElm of data.children; ">
+            <ng-container *ngIf="dataElm && this.dataTags.includes(dataElm.name)">
+              <ng-container [ngSwitch]="dataElm.attributes['type']">
+                <div>
+      　　　　　　<label *ngSwitchCase="'numberResource'">
+                   <input name="controller" type="radio" value="{{dataElm.name + '現在値'}}" ng-control="options" (click)="remotSelect(dataElm.name,'currentValue',(dataElm.name + '現在値'))" />
+                   <div>{{dataElm.name + '現在値'}}</div>
+　　              </label>
+      　　　　　　<label *ngSwitchCase="'numberResource'">
+                   <input name="controller" type="radio" value="{{dataElm.name + '最大値'}}" ng-control="options" (click)="remotSelect(dataElm.name,'value',(dataElm.name + '最大値'))" />
+                   <div>{{dataElm.name + '最大値'}}</div>
+　　              </label>
+　　　　　　      <label *ngSwitchDefault>
+                   <input name="controller" type="radio" value="{{dataElm.name}}" ng-control="options" (click)="remotSelect(dataElm.name,'value',dataElm.name)" />
+                   <div>{{dataElm.name}}</div>
+　　              </label>
+
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-container >
+
+        </ng-container> 
+        </div>
+        <div>{{remotControllerSelect.identifier}}</div>
+        <div>{{remotControllerSelect.type}}</div>
+        <div>{{remotControllerSelect.name}}</div>
+
+	</div>
+      </div>
+  </div>
+<!--リコモンここまで-->
+
+</div>
+<div style="float:right; width:50%; height:50%">
+
+
+<div class="component">
+  <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
+  <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
+    (click)="selectGameObject(gameObject)" [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
+    <ng-container *ngTemplateOutlet="gameObjectTags; context:{ gameObject: gameObject}"></ng-container>
+  </div>
+</div>
+
+<ng-template #gameObjectTags let-gameObject="gameObject">
+  <div class="inventory-object">
+    <input name="tag_chg_chk" type="checkbox" (change) ="charListChange(gameObject.identifier , $event.target.checked)" [checked]="charList.indexOf(gameObject.identifier) > -1" >
+    <div class="object-name">{{gameObject.name}}
+    </div>
+    <div class="object-tags-box">
+      <div class="table-cell image-box">
+        <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
+      </div>
+      <div class="table-cell">
+        <div *ngIf="gameObject.rootDataElement">
+          <ng-container *ngFor="let dataElm of getInventoryTags(gameObject); trackBy: trackByGameObject">
+            <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm}"></ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #dataElmTag let-dataElm="dataElm">
+  <ng-container *ngIf="dataElm?.name === newLineString"><br></ng-container>
+  <div *ngIf="dataElm && dataElm.name !== newLineString" class="object-tag">
+    <ng-container [ngSwitch]="dataElm.attributes['type']">
+      <ng-container *ngSwitchCase="'numberResource'">
+        <div class="tag-name">{{dataElm.name}}</div>
+        <div style="text-align: center;">
+          <div style="display: inline-block;">
+            <div class="tag-value-box">
+              <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
+              <input class="input tag-value" size="1" [(ngModel)]="dataElm.currentValue" placeholder="" />
+              /<input class="input tag-value" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+
+            </div>
+          </div>
+        </div>
+
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <div class="tag-name">{{dataElm.name}}</div>
+        <div style="text-align: center;">
+          <div style="display: inline-block;">
+            <div class="tag-value-box">
+              <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
+              <input class="input tag-value" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+</div>
+

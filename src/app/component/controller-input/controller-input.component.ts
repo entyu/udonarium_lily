@@ -12,15 +12,14 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
-//entyu
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 
 @Component({
-  selector: 'chat-input',
-  templateUrl: './chat-input.component.html',
-  styleUrls: ['./chat-input.component.css']
+  selector: 'controller-input',
+  templateUrl: './controller-input.component.html',
+  styleUrls: ['./controller-input.component.css']
 })
-export class ChatInputComponent implements OnInit, OnDestroy {
+export class ControllerInputComponent implements OnInit, OnDestroy {
   @ViewChild('textArea', { static: true }) textAreaElementRef: ElementRef;
 
   @Input() onlyCharacters: boolean = false;
@@ -53,8 +52,10 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   set tachieNum(num:  number){ this._tachieNum = num};
 
 //
+
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
   gameHelp: string = '';
+
 
 //entyu_10
   get selectCharacterTachie(){
@@ -79,14 +80,12 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 //entyu_10
 
   get imageFile(): ImageFile {
-    
 //entyu_10
     if( this.selectCharacterTachie ){
       let image:ImageFile = ImageStorage.instance.get(<string>this.selectCharacterTachie.value);
       return image ? image : ImageFile.Empty;
     }
 //
-
     let object = ObjectStore.instance.get(this.sendFrom);
     let image: ImageFile = null;
     if (object instanceof GameCharacter) {
@@ -206,10 +205,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (event && event.keyCode !== 13) return;
 
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
-    
-    console.log('円柱TEST event: KeyboardEvent '+this.sendFrom + '  ' + this.tachieNum);
-    
-    this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom, sendTo: this.sendTo , tachieNum : this.tachieNum});
+    this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom, sendTo: this.sendTo ,tachieNum :this.tachieNum});
 
     this.text = '';
     this.previousWritingLength = this.text.length;

@@ -1,3 +1,13 @@
+<!--entyu_2  -->
+<form>
+  <div class="image-chg">
+    <label *ngFor="let tag of tagList" >
+      <input *ngIf="0 < tag.length" name="image-chg"  type="radio" value="{{tag}}"  [(ngModel)]="selectTag" (change) ="resetBtn()" >
+      <div>{{tag}}</div>
+    </label>
+  </div>
+</form>
+<!--entyu_2  end-->
 <label>
   <div class="drop-zone">
     <div>
@@ -10,9 +20,23 @@
       <br>１ファイルにつき2MBまで</div>
   </div>
 </label>
+<!-- entyu_2 #92--><!-- entyu_2 #92  inputNewTag-->
+<div class="sticky-top">
+  <div>
+    <button (click)="changeTag()">タグを変更</button>
+    <input class="input" maxlength="12" (input)="inputNewTag($event.target.value)" placeholder="新タグ名">
+  </div>
+</div>
 <div id="file-list">
-  <span *ngFor="let file of fileStorageService.images" class="image">
-    <img *ngIf="0 < file.url.length" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
-    <img *ngIf="file.url.length <= 0" src="assets/images/loading.gif" alt="{{file.name}}">
+<!-- entyu_2 #92
+-->
+  <span *ngFor="let file of images" class="image_">
+    <div style="float:left">
+      <img *ngIf="(0 < file.url.length) " [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
+      <img *ngIf="file.url.length <= 0 " src="assets/images/loading.gif" alt="{{file.name}}">
+      <input *ngIf="(0 < file.url.length) " name="tag_chg_chk" type="checkbox" (change) ="onChange(file.identifier , $event.target.checked)" [checked]="identifierList.indexOf(file.identifier) > -1" >
+    </div>
   </span>
+
+<!---->
 </div>

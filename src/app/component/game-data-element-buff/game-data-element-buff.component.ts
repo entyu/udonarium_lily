@@ -9,30 +9,22 @@ import {
 } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
-//entyu_8
-import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
-import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
-import { ModalService } from 'service/modal.service';
-import { PanelService } from 'service/panel.service';
-//
+
 @Component({
-  selector: 'game-data-element, [game-data-element]',
-  templateUrl: './game-data-element.component.html',
-  styleUrls: ['./game-data-element.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'game-data-element-buff, [game-data-element-buff]',
+  templateUrl: './game-data-element-buff.component.html',
+  styleUrls: ['./game-data-element-buff.component.css'],
+//  changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.Default
+
 })
-export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GameDataElementBuffComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() gameDataElement: DataElement = null;
   @Input() isEdit: boolean = false;
   @Input() isTagLocked: boolean = false;
   @Input() isValueLocked: boolean = false;
+  @Input() isPieceMode: boolean = false;
 
-//entyu_8
-  @Input() isImage: boolean = false;
-  @Input() indexNum: number = 0;
-
-//
   private _name: string = '';
   get name(): string { return this._name; }
   set name(name: string) { this._name = name; this.setUpdateTimer(); }
@@ -48,10 +40,6 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   private updateTimer: NodeJS.Timer = null;
 
   constructor(
-//entyu_8
-    private panelService: PanelService,
-    private modalService: ModalService,
-//
     private changeDetector: ChangeDetectorRef
   ) { }
 
@@ -80,44 +68,13 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
 
   }
 
-//entyu_8
-  get imageFileUrl(): string { 
-     let image:ImageFile = ImageStorage.instance.get(<string>this.gameDataElement.value);
-     if (image) return image.url;
-     return '';
-  }
-
-  openModal(name: string = '', isAllowedEmpty: boolean = false) {
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
-//      if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
-      if (!value) return;
-      let element = this.gameDataElement;
-      if (!element) return;
-      element.value = value;
-    });
-  }
-
-//
-
-  addImageElement() {
-//    this.gameDataElement.appendChild(DataElement.create('タグ', '', {}));
-    this.gameDataElement.appendChild(DataElement.create('imageIdentifier', '', { type: 'image' }));
-  }
-
-
   addElement() {
-    this.gameDataElement.appendChild(DataElement.create('タグ', '', {}));
+    this.gameDataElement.appendChild(DataElement.create('TEST', 8 , { 'type': 'numberResource', 'currentValue': '001' }, 'TEST')); // + '_' + character.identifier
   }
 
   deleteElement() {
     this.gameDataElement.destroy();
   }
-
-
-  deleteImageElement() {
-    if( this.gameDataElement.parent.children[0] != this.gameDataElement)    this.gameDataElement.destroy();
-  }
-
 
   upElement() {
     let parentElement = this.gameDataElement.parent;

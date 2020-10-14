@@ -21,7 +21,11 @@ import { TextNote } from '@udonarium/text-note';
 
 import { ContextMenuAction } from './context-menu.service';
 import { PointerCoordinate, PointerDeviceService } from './pointer-device.service';
-
+//entyu_2 #92
+import { ImageTag } from '@udonarium/image-tag';
+//
+//entyu
+//
 type ObjectIdentifier = string;
 type LocationName = string;
 
@@ -68,6 +72,7 @@ export class TabletopService {
     public ngZone: NgZone,
     public pointerDeviceService: PointerDeviceService,
   ) {
+    console.log('円柱 constructor時');
     this.initialize();
   }
 
@@ -75,6 +80,7 @@ export class TabletopService {
     this.refreshCacheAll();
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
+         console.log('UPDATE_GAME_OBJECT' + event);
         if (event.data.identifier === this.currentTable.identifier || event.data.identifier === this.tableSelecter.identifier) {
           this.refreshCache(GameTableMask.aliasName);
           this.refreshCache(Terrain.aliasName);
@@ -91,6 +97,7 @@ export class TabletopService {
       })
       .on('DELETE_GAME_OBJECT', -1000, event => {
         let garbage = ObjectStore.instance.get(event.data.identifier);
+         console.log('DELETE_GAME_OBJECT');
         if (garbage == null || garbage.aliasName.length < 1) {
           this.refreshCacheAll();
         } else {
@@ -100,8 +107,14 @@ export class TabletopService {
       .on('XML_LOADED', event => {
         let xmlElement: Element = event.data.xmlElement;
         // todo:立体地形の上にドロップした時の挙動
+//entyu_con
+        console.log('parseXml todo:立体地形の上にドロップした時の挙動');
+//
         let gameObject = ObjectSerializer.instance.parseXml(xmlElement);
+        console.log('円柱  ObjectSerializer.instance.parseXml '+gameObject);
+        
         if (gameObject instanceof TabletopObject) {
+          console.log('TabletopObject 追加 円柱');
           let pointer = this.calcTabletopLocalCoordinate();
           gameObject.location.x = pointer.x - 25;
           gameObject.location.y = pointer.y - 25;
@@ -110,7 +123,29 @@ export class TabletopService {
           SoundEffect.play(PresetSound.piecePut);
         } else if (gameObject instanceof ChatTab) {
           ChatTabList.instance.addChatTab(gameObject);
+        } 
+/*
+        if ( gameObject instanceof TabletopObject) {//キャラ単体追加
+        }else{
+          let chats: ChatTab[] = ObjectStore.instance.getObjects(ChatTab);
+          for (let chat of chats) {
+            if (chat instanceof ChatTab) {
+              console.log('CHAT更新必要あり 円柱');
+              chat.addExtendData();
+            }
+          }
         }
+*/
+        //entyu_10
+        let objects: TabletopObject[] = ObjectStore.instance.getObjects(GameCharacter);
+        for (let gameObject of objects) {
+          if (gameObject instanceof GameCharacter) {
+            console.log('GameCharacter Load 追加データ確認');
+            let gameCharacter:GameCharacter =  gameObject;
+            gameCharacter.addExtendData();
+          }
+        }        
+
       });
   }
 
@@ -243,8 +278,14 @@ export class TabletopService {
   createTerrain(position: PointerCoordinate): Terrain {
     let url: string = './assets/images/tex.jpg';
     let image: ImageFile = ImageStorage.instance.get(url)
-    if (!image) image = ImageStorage.instance.add(url);
 
+//entyu_2 #92
+//    if (!image) image = ImageStorage.instance.add(url);
+    if (!image) {
+      image = ImageStorage.instance.add(url);
+      ImageTag.create(image.identifier).tag = 'default 地形';
+    }
+//
     let viewTable = this.tableSelecter.viewTable;
     if (!viewTable) return;
 
@@ -289,10 +330,16 @@ export class TabletopService {
     cardStack.posZ = position.z;
 
     let back: string = './assets/images/trump/z02.gif';
-    if (!ImageStorage.instance.get(back)) {
-      ImageStorage.instance.add(back);
-    }
+//entyu_2 #92
+//    if (!ImageStorage.instance.get(back)) {
+//      ImageStorage.instance.add(back);
+//    }
 
+    if (!ImageStorage.instance.get(back)) {
+      const image = ImageStorage.instance.add(back);
+      ImageTag.create(image.identifier).tag = 'default トランプ';
+    }
+//
     let names: string[] = ['c', 'd', 'h', 's'];
 
     for (let name of names) {
@@ -300,7 +347,11 @@ export class TabletopService {
         let trump: string = name + (('00' + i).slice(-2));
         let url: string = './assets/images/trump/' + trump + '.gif';
         if (!ImageStorage.instance.get(url)) {
-          ImageStorage.instance.add(url);
+//entyu_2 #92
+//          ImageStorage.instance.add(url);
+          const image = ImageStorage.instance.add(url);
+          ImageTag.create(image.identifier).tag = 'default トランプ';
+//
         }
         let card = Card.create('カード', url, back);
         cardStack.putOnBottom(card);
@@ -311,7 +362,11 @@ export class TabletopService {
       let trump: string = 'x' + (('00' + i).slice(-2));
       let url: string = './assets/images/trump/' + trump + '.gif';
       if (!ImageStorage.instance.get(url)) {
-        ImageStorage.instance.add(url);
+//entyu_2 #92
+//        ImageStorage.instance.add(url);
+         const image = ImageStorage.instance.add(url);
+        ImageTag.create(image.identifier).tag = 'default トランプ';
+//
       }
       let card = Card.create('カード', url, back);
       cardStack.putOnBottom(card);
@@ -328,10 +383,17 @@ export class TabletopService {
     let bgFileContext = ImageFile.createEmpty('testTableBackgroundImage_image').toContext();
     bgFileContext.url = './assets/images/BG10a_80.jpg';
     testBgFile = ImageStorage.instance.add(bgFileContext);
+//entyu_2 #92
+    ImageTag.create(testBgFile.identifier).tag = 'default';    
+//
     //let testDistanceFile: ImageFile = null;
     //let distanceFileContext = ImageFile.createEmpty('testTableDistanceviewImage_image').toContext();
     //distanceFileContext.url = './assets/images/BG00a1_80.jpg';
     //testDistanceFile = ImageStorage.instance.add(distanceFileContext);
+
+//entyu_2 #92
+    //ImageTag.create(testBgFile.identifier).tag = 'default テーブル';
+//
     gameTable.name = '最初のテーブル';
     gameTable.imageIdentifier = testBgFile.identifier;
     //gameTable.backgroundImageIdentifier = testDistanceFile.identifier;
@@ -350,7 +412,14 @@ export class TabletopService {
     testCharacter = new GameCharacter('testCharacter_1');
     fileContext = ImageFile.createEmpty('testCharacter_1_image').toContext();
     fileContext.url = './assets/images/mon_052.gif';
+//entyu_2
+    fileContext.tag = 'テスト00';
+//
     testFile = ImageStorage.instance.add(fileContext);
+    
+//entyu_2 #92
+    ImageTag.create(testFile.identifier).tag = 'テスト00';    
+//    
     testCharacter.location.x = 5 * 50;
     testCharacter.location.y = 9 * 50;
     testCharacter.initialize();
@@ -365,7 +434,15 @@ export class TabletopService {
     testCharacter = new GameCharacter('testCharacter_3');
     fileContext = ImageFile.createEmpty('testCharacter_3_image').toContext();
     fileContext.url = './assets/images/mon_128.gif';
+//entyu_2
+    fileContext.tag = 'テスト01';
+//
     testFile = ImageStorage.instance.add(fileContext);
+
+//entyu_2 #92
+    ImageTag.create(testFile.identifier).tag = 'テスト01'; 
+//    
+
     testCharacter.location.x = 4 * 50;
     testCharacter.location.y = 2 * 50;
     testCharacter.initialize();
@@ -374,7 +451,15 @@ export class TabletopService {
     testCharacter = new GameCharacter('testCharacter_4');
     fileContext = ImageFile.createEmpty('testCharacter_4_image').toContext();
     fileContext.url = './assets/images/mon_150.gif';
+//entyu_2
+    fileContext.tag = 'テスト01';
+//
     testFile = ImageStorage.instance.add(fileContext);
+
+//entyu_2 #92
+    ImageTag.create(testFile.identifier).tag = 'テスト01';
+//
+
     testCharacter.location.x = 6 * 50;
     testCharacter.location.y = 11 * 50;
     testCharacter.initialize();
@@ -383,7 +468,14 @@ export class TabletopService {
     testCharacter = new GameCharacter('testCharacter_5');
     fileContext = ImageFile.createEmpty('testCharacter_5_image').toContext();
     fileContext.url = './assets/images/mon_211.gif';
+//entyu_2
+    fileContext.tag = 'テスト02';
+//
     testFile = ImageStorage.instance.add(fileContext);
+    
+//entyu_2 #92
+    ImageTag.create(testFile.identifier).tag = 'テスト02'; 
+//
     testCharacter.location.x = 12 * 50;
     testCharacter.location.y = 12 * 50;
     testCharacter.initialize();
@@ -392,7 +484,14 @@ export class TabletopService {
     testCharacter = new GameCharacter('testCharacter_6');
     fileContext = ImageFile.createEmpty('testCharacter_6_image').toContext();
     fileContext.url = './assets/images/mon_135.gif';
+//entyu_2
+    fileContext.tag = 'テスト02';
+//
     testFile = ImageStorage.instance.add(fileContext);
+    
+//entyu_2 #92
+    ImageTag.create(testFile.identifier).tag = 'テスト02';
+//     
     testCharacter.initialize();
     testCharacter.location.x = 5 * 50;
     testCharacter.location.y = 13 * 50;

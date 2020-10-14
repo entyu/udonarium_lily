@@ -20,7 +20,6 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 })
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   sendFrom: string = 'Guest';
-
   get gameType(): string { return this.chatMessageService.gameType; }
   set gameType(gameType: string) { this.chatMessageService.gameType = gameType; }
 
@@ -42,6 +41,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 //
 
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
+
   isAutoScroll: boolean = true;
   scrollToBottomTimer: NodeJS.Timer = null;
 
