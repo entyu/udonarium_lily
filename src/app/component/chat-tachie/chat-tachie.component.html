@@ -1,46 +1,50 @@
-<!--<h2>チャットシステム</h2>-->
-<div class="component">
-<div class="log">
-  <chat-tab *ngIf="chatTab" [chatTab]="chatTab" (onAddMessage)="scrollToBottom()"></chat-tab>
-  <div *ngIf="!chatTab">※チャットタブの内容が更新されました。チャットタブを選択しなおすか、このチャットウィンドウを開きなおしてください。</div>
-</div>
-<div class="sticky-bottom">
+<div>
   <form>
-<!-- entyu -->
+  TEST001{{tachieAreaWidth}}
+  <div id="tachie-component_">
+    <div *ngIf="chatTab">
+      <div class="tachie-image-box" #tachieArea >
+        <img class="tachie-image pos00" #tachie00 *ngIf="0 < imageFileUrl_00.length" [src]="imageFileUrl_00 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*0  ) ) translateY(0%)'}" />
+
+        <img class="tachie-image pos01" #tachie01 *ngIf="0 < imageFileUrl_01.length" [src]="imageFileUrl_01 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*1  ) ) translateY(0%)'}" />
+        <img class="tachie-image pos02" #tachie02 *ngIf="0 < imageFileUrl_02.length" [src]="imageFileUrl_02 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*2  ) ) translateY(0%)'}" />
+        <img class="tachie-image pos03" #tachie03 *ngIf="0 < imageFileUrl_03.length" [src]="imageFileUrl_03 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*3  ) ) translateY(0%)'}" />
+        <img class="tachie-image pos04" #tachie04 *ngIf="0 < imageFileUrl_04.length" [src]="imageFileUrl_04 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*4  ) ) translateY(0%)'}" />
+        <img class="tachie-image pos05" #tachie05 *ngIf="0 < imageFileUrl_05.length" [src]="imageFileUrl_05 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*5  ) ) translateY(0%)'}" />
+        <img class="tachie-image pos06" #tachie06 *ngIf="0 < imageFileUrl_06.length" [src]="imageFileUrl_06 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*6  ) ) translateY(0%)'}" />
+        <img class="tachie-image pos07" #tachie07 *ngIf="0 < imageFileUrl_07.length" [src]="imageFileUrl_07 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*7  ) ) translateY(0%)'}" />
+        <img class="tachie-image pos08" #tachie08 *ngIf="0 < imageFileUrl_08.length" [src]="imageFileUrl_08 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*8  ) ) translateY(0%)'}" />
+        <img class="tachie-image pos09" #tachie09 *ngIf="0 < imageFileUrl_09.length" [src]="imageFileUrl_09 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*9  ) ) translateY(0%)'}" />
+        <img class="tachie-image pos10" #tachie10 *ngIf="0 < imageFileUrl_10.length" [src]="imageFileUrl_10 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*10  ) ) translateY(0%)'}" />
+        <img class="tachie-image pos11" #tachie11 *ngIf="0 < imageFileUrl_11.length" [src]="imageFileUrl_11 | safe: 'resourceUrl'"  
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px -100% )/11*11  ) ) translateY(0%)'}" />
+
+      </div>
+
 <!--
-  {{chatTab.chatMessages.length}}<BR>
-  {{chatTab.pos_num}}<BR>
-  {{chatTab.imageIdentifier[chatTab.pos_num] }}<BR>
-  {{test}}<BR>
-  <ng-container *ngIf="chatTab">
-  <ng-container *ngIf="chatTab.imageIdentifier">
-    {{chatTab.imageIdentifier}}
-    </ng-container>
+[ngStyle]="{'transform': 'translateX(+50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}"
+                    <div class="flex-item" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
+                      <div class="table-row" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                    </div>
 
-  </ng-container>
-    <button type="submit" (click)="testadd()">
-      <span>TEST</span>
-     </button>
-  
-    テスト{{testmess}}<BR>
+           [ngStyle]="{'transform': 'translateX(  calc( ('  +  '0px + 100% )  ) ) translateY(0%)'}" />
 -->
-  <div id="tachie" display="flex" flex-direction="row" justify-content="space-evenly">
-    <ng-container *ngIf="chatTab">
 
-    <img *ngIf="0 < imageFileUrl_00.length" [src]="imageFileUrl_00 | safe: 'resourceUrl'" height="320"/>
-    <img *ngIf="0 < imageFileUrl_01.length" [src]="imageFileUrl_01 | safe: 'resourceUrl'" height="320"/>
-    <img *ngIf="0 < imageFileUrl_02.length" [src]="imageFileUrl_02 | safe: 'resourceUrl'" height="320"/>
-    </ng-container>
+
+
+    </div>
   </div>
 <!-- entyu end -->
-    <div class="chat-tab">
-      <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab">
-        <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
-        <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
-      </label>
-      <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>タブ設定</button>
-    </div>
   </form>
-  <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
 </div>
-<!--<div style="white-space:pre-wrap; font-size: 8px;"><span>{{gameHelp}}</span></div>-->

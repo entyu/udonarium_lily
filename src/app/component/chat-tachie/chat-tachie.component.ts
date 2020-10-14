@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef,   ChangeDetectorRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+
 import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -14,45 +15,41 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 //
 @Component({
-  selector: 'chat-window',
-  templateUrl: './chat-window.component.html',
-  styleUrls: ['./chat-window.component.css']
+  selector: 'chat-tachie',
+  templateUrl: './chat-tachie.component.html',
+  styleUrls: ['./chat-tachie.component.css']
 })
-export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
-  sendFrom: string = 'Guest';
-  get gameType(): string { return this.chatMessageService.gameType; }
-  set gameType(gameType: string) { this.chatMessageService.gameType = gameType; }
+export class ChatTachieComponent implements OnInit, OnDestroy{
 
-  private _chatTabidentifier: string = '';
-  get chatTabidentifier(): string { return this._chatTabidentifier; }
-  set chatTabidentifier(chatTabidentifier: string) {
-    let hasChanged: boolean = this._chatTabidentifier !== chatTabidentifier;
-    this._chatTabidentifier = chatTabidentifier;
-    this.updatePanelTitle();
-    if (hasChanged) {
-      this.scrollToBottom(true);
-    }
-  }
+  @Input() chatTabidentifier: string = '';
 
-//entyu
-  private _teststring: string = 'AAAA';
-  private _teststring2: string = '';
-  private testcount:number = 0;
-//
+  @ViewChild('tachieArea', { read: ElementRef }) tachieArea: ElementRef;  
+  private _tachieAreaWidth = 0;
+  
 
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
 
-  isAutoScroll: boolean = true;
-  scrollToBottomTimer: NodeJS.Timer = null;
-
-//entyu
-  testadd(){
-    this.chatTab.count ++;
+  get tachieAreaWidth():number{ 
+    return this._tachieAreaWidth;
   }
-  get testmess(): string[] { 
-   return this.chatTab.imageIdentifier;
-  } 
 
+  private timerId;
+  
+//óßÇøäGï\é¶ïùéÊìæ
+  ngAfterViewInit() {
+//    console.log('ngAfterViewInit()' + this.tachieArea.nativeElement.offsetWidth);
+    this._tachieAreaWidth = this.tachieArea.nativeElement.offsetWidth;
+    this.changeDetectionRef.detectChanges();
+  }  
+
+  ngAfterViewChecked() {
+//    console.log('ngAfterViewChecked()'  + this.tachieArea.nativeElement.offsetWidth);
+    this._tachieAreaWidth = this.tachieArea.nativeElement.offsetWidth;
+    this.changeDetectionRef.detectChanges();
+  }  
+ 
+//
+//Ç±ÇÃé¿ëïÇÕÇ«Ç§Ç…Ç©ÇµÇΩÇ¢
   get imageFileUrl(): string {  
      let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifierTest);
      if (image) return image.url;
@@ -87,92 +84,79 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
      return '';
   }
 
+  get imageFileUrl_04(): string { 
+     if( ! this.chatTab.imageIdentifier )return '';
+     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[4]);
+     if (image) return image.url;
+     return '';
+  }
+
+  get imageFileUrl_05(): string { 
+     if( ! this.chatTab.imageIdentifier )return '';
+     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[5]);
+     if (image) return image.url;
+     return '';
+  }
+
+  get imageFileUrl_06(): string { 
+     if( ! this.chatTab.imageIdentifier )return '';
+     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[6]);
+     if (image) return image.url;
+     return '';
+  }
+
+  get imageFileUrl_07(): string { 
+     if( ! this.chatTab.imageIdentifier )return '';
+     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[7]);
+     if (image) return image.url;
+     return '';
+  }
+
+  get imageFileUrl_08(): string { 
+     if( ! this.chatTab.imageIdentifier )return '';
+     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[8]);
+     if (image) return image.url;
+     return '';
+  }
+
+  get imageFileUrl_09(): string { 
+     if( ! this.chatTab.imageIdentifier )return '';
+     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[9]);
+     if (image) return image.url;
+     return '';
+  }
+
+  get imageFileUrl_10(): string { 
+     if( ! this.chatTab.imageIdentifier )return '';
+     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[10]);
+     if (image) return image.url;
+     return '';
+  }
+
+  get imageFileUrl_11(): string { 
+     if( ! this.chatTab.imageIdentifier )return '';
+     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[11]);
+     if (image) return image.url;
+     return '';
+  }
+
 //
 
 
   constructor(
     public chatMessageService: ChatMessageService,
+    private changeDetectionRef: ChangeDetectorRef,
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService
   ) { }
 
   ngOnInit() {
-    this.sendFrom = PeerCursor.myCursor.identifier;
-    this._chatTabidentifier = 0 < this.chatMessageService.chatTabs.length ? this.chatMessageService.chatTabs[0].identifier : '';
-
-    EventSystem.register(this)
-      .on('MESSAGE_ADDED', event => {
-        if (event.data.tabIdentifier !== this.chatTabidentifier) return;
-        let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
-        if (message && message.isSendFromSelf) {
-          this.isAutoScroll = true;
-        } else {
-          this.checkAutoScroll();
-        }
-        if (this.isAutoScroll && this.chatTab) this.chatTab.markForRead();
-      });
-    Promise.resolve().then(() => this.updatePanelTitle());
-  }
-
-  ngAfterViewInit() {
-    this.scrollToBottom(true);
+//    this.timerId = setInterval(this.ngAfterViewChecked, 200);
   }
 
   ngOnDestroy() {
+//    clearInterval(this.timerId);
     EventSystem.unregister(this);
-  }
-
-  // @TODO „ÇÑ„ÇäÊñπ„ÅØ„ÇÇ„ÅÜÂ∞ë„ÅóËÄÉ„Åà„ÅüÊñπ„Åå„ÅÑ„ÅÑ„ÅÑ
-  scrollToBottom(isForce: boolean = false) {
-    if (isForce) this.isAutoScroll = true;
-    if (this.scrollToBottomTimer != null || !this.isAutoScroll) return;
-    this.scrollToBottomTimer = setTimeout(() => {
-      if (this.chatTab) this.chatTab.markForRead();
-      this.scrollToBottomTimer = null;
-      this.isAutoScroll = false;
-      if (this.panelService.scrollablePanel) {
-        this.panelService.scrollablePanel.scrollTop = this.panelService.scrollablePanel.scrollHeight;
-        let event = new CustomEvent('scrolltobottom', {});
-        this.panelService.scrollablePanel.dispatchEvent(event);
-      }
-    }, 0);
-  }
-
-  // @TODO
-  checkAutoScroll() {
-    if (!this.panelService.scrollablePanel) return;
-    let top = this.panelService.scrollablePanel.scrollHeight - this.panelService.scrollablePanel.clientHeight;
-    if (top - 150 <= this.panelService.scrollablePanel.scrollTop) {
-      this.isAutoScroll = true;
-    } else {
-      this.isAutoScroll = false;
-    }
-  }
-
-  updatePanelTitle() {
-    if (this.chatTab) {
-      this.panelService.title = '„ÉÅ„É£„ÉÉ„Éà„Ç¶„Ç£„É≥„Éâ„Ç¶ - ' + this.chatTab.name;
-    } else {
-      this.panelService.title = '„ÉÅ„É£„ÉÉ„Éà„Ç¶„Ç£„É≥„Éâ„Ç¶';
-    }
-  }
-
-  onSelectedTab(identifier: string) {
-    this.updatePanelTitle();
-  }
-
-  showTabSetting() {
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 500, height: 350 };
-    let component = this.panelService.open<ChatTabSettingComponent>(ChatTabSettingComponent, option);
-    component.selectedTab = this.chatTab;
-  }
-
-  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number }) {
-    console.log('ÂÜÜÊü± sendChat');
-    if (this.chatTab) {//,value.tachieNum
-      this.chatMessageService.sendMessage(this.chatTab, value.text, value.gameType, value.sendFrom, value.sendTo ,value.tachieNum );
-    }
   }
 
   trackByChatTab(index: number, chatTab: ChatTab) {
