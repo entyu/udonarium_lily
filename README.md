@@ -24,6 +24,8 @@
 
 ### 開発中画面
 
+画像にタグがつけられるようになりました
+
 ![lily_sample](https://user-images.githubusercontent.com/61339319/95869259-26b41380-0da6-11eb-96fa-1e6c6858c531.png)
 
 
