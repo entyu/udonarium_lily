@@ -4,7 +4,7 @@
 </div>
 <!---->
 <form>
-  <div class="image-chg">
+  <div class="image-chg">{{selectTag}}
     <label *ngFor="let tag of tagList" >
       <input *ngIf="0 < tag.length" name="image-chg"  type="radio" value="{{tag}}"  [(ngModel)]="selectTag" (change) ="resetBtn()" >
       <div>{{tag}}</div>
@@ -29,18 +29,16 @@
   <span class="empty" *ngIf="isAllowedEmpty">
     <button (click)="onSelectedFile(empty)">画像なし</button>
   </span>
-<!-- entyu_2
-  <span *ngFor="let file of images" class="image">
-    <img *ngIf="0 < file.url.length && ((selectTag == file.tag) || ('全て' == selectTag))" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
-    <img *ngIf="file.url.length <= 0 && ((selectTag == file.tag) || ('全て' == selectTag))" src="./assets/images/loading.gif" alt="{{file.name}}">
-  </span>
--->
-  <span *ngFor="let file of images" class="image">
+   
+  
+<!--  <ng-container *ngIf="isAllowedEmpty==false">-->
+    <span *ngFor="let file of images" class="image">
     <div style="float:left">
       <img *ngIf="(0 < file.url.length) " [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
       <img *ngIf="file.url.length <= 0 " src="assets/images/loading.gif" alt="{{file.name}}">
     </div>
-  </span>
+    </span>
+<!--  </ng-container>-->
 
 
 <!-- -->

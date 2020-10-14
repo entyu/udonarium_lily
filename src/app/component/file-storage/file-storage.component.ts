@@ -34,9 +34,12 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.selectTag == '全て') return ImageStorage.instance.images;
       for (let imageFile of this.fileStorageService.images){
         let identifier = imageFile.context.identifier;
-        let tag: string = ImageTag.get(identifier).tag;
-        if( tag == this.selectTag ){
-          imageFileList.push(imageFile);
+
+        if( ImageTag.get(identifier) ){//
+          let tag: string = ImageTag.get(identifier).tag;
+          if( tag == this.selectTag ){
+            imageFileList.push(imageFile);
+          }
         }
       }
       return imageFileList;

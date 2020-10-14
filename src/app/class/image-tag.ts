@@ -37,7 +37,7 @@ export class ImageTag extends ObjectNode {
   }
 
   parseInnerXml(element: Element) {
-    // 既存のオブジェクトを更新する
+    // 譌｢蟄倥�ｮ繧ｪ繝悶ず繧ｧ繧ｯ繝医ｒ譖ｴ譁ｰ縺吶ｋ
     let imageTag = ImageTag.get(this.imageIdentifier);
     if (!imageTag) imageTag = ImageTag.create(this.imageIdentifier);
     const context = imageTag.toContext();

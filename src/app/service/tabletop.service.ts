@@ -413,7 +413,7 @@ export class TabletopService {
     fileContext = ImageFile.createEmpty('testCharacter_1_image').toContext();
     fileContext.url = './assets/images/mon_052.gif';
 //entyu_2
-    fileContext.tag = 'テスト00';
+//    fileContext.tag = 'テスト00';
 //
     testFile = ImageStorage.instance.add(fileContext);
     
@@ -435,7 +435,7 @@ export class TabletopService {
     fileContext = ImageFile.createEmpty('testCharacter_3_image').toContext();
     fileContext.url = './assets/images/mon_128.gif';
 //entyu_2
-    fileContext.tag = 'テスト01';
+//    fileContext.tag = 'テスト01';
 //
     testFile = ImageStorage.instance.add(fileContext);
 
@@ -452,7 +452,7 @@ export class TabletopService {
     fileContext = ImageFile.createEmpty('testCharacter_4_image').toContext();
     fileContext.url = './assets/images/mon_150.gif';
 //entyu_2
-    fileContext.tag = 'テスト01';
+//    fileContext.tag = 'テスト01';
 //
     testFile = ImageStorage.instance.add(fileContext);
 
@@ -469,7 +469,7 @@ export class TabletopService {
     fileContext = ImageFile.createEmpty('testCharacter_5_image').toContext();
     fileContext.url = './assets/images/mon_211.gif';
 //entyu_2
-    fileContext.tag = 'テスト02';
+//    fileContext.tag = 'テスト02';
 //
     testFile = ImageStorage.instance.add(fileContext);
     
@@ -485,7 +485,7 @@ export class TabletopService {
     fileContext = ImageFile.createEmpty('testCharacter_6_image').toContext();
     fileContext.url = './assets/images/mon_135.gif';
 //entyu_2
-    fileContext.tag = 'テスト02';
+//    fileContext.tag = 'テスト02';
 //
     testFile = ImageStorage.instance.add(fileContext);
     

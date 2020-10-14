@@ -8,17 +8,15 @@ export enum ImageState {
   URL = 1000,
 }
 
-//entyu_2
 export interface ImageContext {
-//
   identifier: string;
   name: string;
   type: string;
   blob: Blob;
   url: string;
 //entyu_2
-  tag: string;
-  flag: string;
+//  tag: string;
+//  flag: string;
 //  filetag: FileTag;
 //
   thumbnail: ThumbnailContext;
@@ -39,8 +37,8 @@ export class ImageFile {
     type: '',
     url: '',
 //entyu_2
-    tag: '',
-    flag: '',
+//    tag: '',
+//    flag: '',
 //
     thumbnail: {
       blob: null,
@@ -56,11 +54,11 @@ export class ImageFile {
   get thumbnail(): ThumbnailContext { return this.context.thumbnail };
 
 //entyu_2
-  get tag(): string { return this.context.tag };
-  get flag(): string { return this.context.flag };
+//  get tag(): string { return this.context.tag };
+//  get flag(): string { return this.context.flag };
 
-  set tag(tag: string) { this.context.tag = tag};
-  set flag(flag: string) { this.context.flag = flag};
+//  set tag(tag: string) { this.context.tag = tag};
+//  set flag(flag: string) { this.context.flag = flag};
 
 //
   get state(): ImageState {
@@ -135,8 +133,8 @@ export class ImageFile {
     if (!this.context.blob && context.blob) this.context.blob = context.blob;
     if (!this.context.type && context.type) this.context.type = context.type;
 //entyu_2
-    if (!this.context.tag && context.tag) this.context.tag = context.tag;
-    if (!this.context.flag && context.flag) this.context.flag = context.flag;
+//    if (!this.context.tag && context.tag) this.context.tag = context.tag;
+//    if (!this.context.flag && context.flag) this.context.flag = context.flag;
 //
     if (!this.context.url && context.url) {
       if (this.state !== ImageState.URL) window.URL.revokeObjectURL(this.context.url);
@@ -159,8 +157,8 @@ export class ImageFile {
       type: this.context.type,
       url: this.context.url,
 //entyu_2
-      tag: this.context.tag,
-      flag: this.context.flag,
+//      tag: this.context.tag,
+//     flag: this.context.flag,
 //
       thumbnail: {
         blob: this.context.thumbnail.blob,

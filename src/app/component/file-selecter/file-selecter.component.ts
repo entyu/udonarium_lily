@@ -27,13 +27,14 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   searchWord: string = '';
 
   private _searchWord: string;
+  
   private _searchWords: string[];
   get searchWords(): string[] {
     if (this._searchWord !== this.searchWord) {
       this._searchWord = this.searchWord;
       this._searchWords = this.searchWord != null && 0 < this.searchWord.trim().length ? this.searchWord.trim().split(/\s+/) : [];
     }
-    return this._searchWords;
+    return this._searchWords; //
   }
 //
 
@@ -42,14 +43,19 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
 //entyu_2 #92
   get images(): ImageFile[] {
       let imageFileList: ImageFile[] = [];
-      if (this.selectTag == '全て') return ImageStorage.instance.images;
+      if (this.selectTag == '全て') return this.fileStorageService.images;
+
       for (let imageFile of this.fileStorageService.images){
         let identifier = imageFile.context.identifier;
-        let tag: string = ImageTag.get(identifier).tag;
-        if( tag == this.selectTag ){
-          imageFileList.push(imageFile);
+
+        if( ImageTag.get(identifier) ){//
+          let tag: string = ImageTag.get(identifier).tag; //
+          if( tag == this.selectTag ){
+            imageFileList.push(imageFile);
+          }
         }
       }
+
       return imageFileList;
   }
 
@@ -86,8 +92,9 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   identifierList :string[] = [];
   newTagName:string = '';
+
   resetBtn() {
-     this.identifierList = [];
+
   }
 //
 

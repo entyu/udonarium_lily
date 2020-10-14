@@ -200,11 +200,7 @@ export class ImageSharingSystem {
         name: image.name,
         type: '',
         blob: null,
-//entyu2
-        tag: '',
-        flag: '',
-//
-        url: null,
+        url: null, 
         thumbnail: { type: '', blob: null, url: null, }
       };
 
