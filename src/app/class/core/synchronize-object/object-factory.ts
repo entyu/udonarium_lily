@@ -35,7 +35,7 @@ export class ObjectFactory {
   create<T extends GameObject>(alias: string, identifer?: string): T {
     let classConstructor = this.constructorMap.get(alias);
     if (!classConstructor) {
-      console.error(alias + 'という名のＧameObjectクラスは定義されていません');
+      console.error(alias + 'という名のGameObjectクラスは定義されていません');
       return null;
     }
     let gameObject: GameObject = new classConstructor(identifer);
