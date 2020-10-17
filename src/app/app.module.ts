@@ -58,6 +58,8 @@ import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { StandSettingComponent } from './component/stand-setting/stand-setting.component';
+import { StandElementComponent } from './component/stand-element/stand-element.component';
 
 @NgModule({
   declarations: [
@@ -105,6 +107,8 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
     ResizableDirective,
     ChatInputComponent,
     OpenUrlComponent,
+    StandSettingComponent,
+    StandElementComponent,
   ],
   imports: [
     BrowserModule,

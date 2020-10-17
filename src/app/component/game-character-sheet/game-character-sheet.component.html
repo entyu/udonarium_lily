@@ -71,6 +71,10 @@
       <div class="table">
         <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [isTagLocked]="true"></div>
       </div>
+      <div *ngIf="tabletopObject.aliasName === 'character'" style="text-align: right; margin-top: 3px;">
+        <button style="font-size: 11px; color: #444;" (click)="showChatPalette()">チャットパレットを表示</button>
+        <button style="font-size: 11px; color: #444;" (click)="showStandSetting()">立ち絵設定</button>
+      </div>
     </div>
   </ng-container>
 

@@ -8,7 +8,7 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ModalService } from 'service/modal.service';
-import { PanelService } from 'service/panel.service';
+import { PanelOption, PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
 import { UUID } from '@udonarium/core/system/util/uuid';
@@ -16,6 +16,9 @@ import { CardStack } from '@udonarium/card-stack';
 import { Card } from '@udonarium/card';
 import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
+import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
+import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
+import { PointerDeviceService } from 'service/pointer-device.service';
 
 @Component({
   selector: 'game-character-sheet',
@@ -80,7 +83,8 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   constructor(
     private saveDataService: SaveDataService,
     private panelService: PanelService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private pointerDeviceService: PointerDeviceService,
   ) { }
 
   ngOnInit() {
@@ -275,5 +279,21 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     } else {
       this.openModal('imageIdentifier', this.tabletopObject.imageFile && this.tabletopObject.imageFile.url.length > 0)
     }
+  }
+
+  showChatPalette() {
+    if (!(this.tabletopObject instanceof GameCharacter)) return;
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 620, height: 350 };
+    let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
+    component.character = <GameCharacter>this.tabletopObject;
+  }
+
+  showStandSetting() {
+    if (!(this.tabletopObject instanceof GameCharacter)) return;
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 620, height: 650 };
+    let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
+    component.character = <GameCharacter>this.tabletopObject;
   }
 }

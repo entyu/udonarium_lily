@@ -1,0 +1,8 @@
+<div>
+  <ng-container *ngIf="standImage">
+    <img class="stand-image" [src]="standImage.url | safe: 'resourceUrl'">
+    <button class="stand-image-button" (click)="openModal()">画像選択</button>
+  </ng-container>
+  <button (click)="remove()">設定削除</button>
+  <hr style="clear: both;">
+</div>

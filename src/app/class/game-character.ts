@@ -5,6 +5,8 @@ import { TabletopObject } from './tabletop-object';
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { ImageFile } from './core/file-storage/image-file';
 
+import { StandList } from './stand-list';
+
 export interface DialogData {
   text: string;
   color: string;
@@ -38,6 +40,16 @@ export class GameCharacter extends TabletopObject {
       if (child instanceof ChatPalette) return child;
     }
     return null;
+  }
+
+  get standList(): StandList {
+    for (let child of this.children) {
+      if (child instanceof StandList) return child;
+    }
+    let standList = new StandList('StandList_' + this.identifier);
+    standList.initialize();
+    this.appendChild(standList);
+    return standList;
   }
 
   static create(name: string, size: number, imageIdentifier: string): GameCharacter {
@@ -110,5 +122,9 @@ export class GameCharacter extends TabletopObject {
 //格闘＝１`);
     palette.initialize();
     this.appendChild(palette);
+
+    let standList = new StandList('StandList_' + this.identifier);
+    standList.initialize();
+    this.appendChild(standList);
   }
 }

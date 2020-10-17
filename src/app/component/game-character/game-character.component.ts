@@ -29,6 +29,7 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 
 @Component({
   selector: 'game-character',
@@ -395,6 +396,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
+      { name: '立ち絵設定', action: () => { this.showStandSetting(this.gameCharacter) } },
+      ContextMenuSeparator,
       {
         name: '参照URLを開く', action: null,
         subActions: this.gameCharacter.getUrls().map((urlElement) => {
@@ -489,6 +492,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
     component.character = gameObject;
   }
+
+  private showStandSetting(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 620, height: 650 };
+    let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
+    component.character = gameObject;
+  }
+
 
   changeImage(index: number) {
     if (this.gameCharacter.currntImageIndex != index) {

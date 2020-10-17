@@ -18,6 +18,7 @@ import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.compon
 
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
+import { DataElement } from '@udonarium/data-element';
 
 @Component({
   selector: 'chat-input',
@@ -233,6 +234,29 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     let text = this.text;
     if (this.character) {
       text = this.character.chatPalette.evaluate(this.text, this.character.rootDataElement);
+
+      if (this.character.standList) {
+        const standList = this.character.standList;
+        let isUseDfault = true;
+        let defautStands: DataElement[] = [];
+        let matchStands: DataElement[] = [];
+        for (const stand of standList.getElementsByName('stand')) {
+          //Todo 画像指定
+          if (stand.getFirstElementByName('postfix')) {
+            const postfix = stand.getFirstElementByName('postfix').value.toString();
+            if (text.endsWith(postfix)) {
+              isUseDfault = false;
+              matchStands.push(stand);
+            }
+          } else {
+            defautStands.push(stand);
+          }
+          let useStands = (isUseDfault ? defautStands : matchStands);
+          if (useStands.length > 0) {
+            useStands[Math.floor(Math.random() * useStands.length)];
+          }
+        }
+      }
 
       const dialogRegExp = /「([\s\S]+?)」/gm;
       let match;

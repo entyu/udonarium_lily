@@ -1,0 +1,19 @@
+.stand-image-container {
+    display: inline-block;
+    width: 150px;
+}
+.stand-image {
+    width: 150px;
+    object-fit: contain;
+    transform-origin: bottom;
+}
+
+.postfix-text {
+    width: 8em;
+}
+
+.position-indicate {
+    display: inline-block;
+    font-size: smaller;
+    width: 3em;
+}
