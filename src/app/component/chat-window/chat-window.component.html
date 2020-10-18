@@ -6,32 +6,10 @@
 </div>
 <div class="sticky-bottom">
   <form>
-<!-- entyu -->
-<!--
-  {{chatTab.chatMessages.length}}<BR>
-  {{chatTab.pos_num}}<BR>
-  {{chatTab.imageIdentifier[chatTab.pos_num] }}<BR>
-  {{test}}<BR>
-  <ng-container *ngIf="chatTab">
-  <ng-container *ngIf="chatTab.imageIdentifier">
-    {{chatTab.imageIdentifier}}
-    </ng-container>
 
-  </ng-container>
-    <button type="submit" (click)="testadd()">
-      <span>TEST</span>
-     </button>
-  
-    テスト{{testmess}}<BR>
--->
-  <div id="tachie" display="flex" flex-direction="row" justify-content="space-evenly">
-    <ng-container *ngIf="chatTab">
+<!--  -->
 
-    <img *ngIf="0 < imageFileUrl_00.length" [src]="imageFileUrl_00 | safe: 'resourceUrl'" height="320"/>
-    <img *ngIf="0 < imageFileUrl_01.length" [src]="imageFileUrl_01 | safe: 'resourceUrl'" height="320"/>
-    <img *ngIf="0 < imageFileUrl_02.length" [src]="imageFileUrl_02 | safe: 'resourceUrl'" height="320"/>
-    </ng-container>
-  </div>
+<chat-tachie [chatTabidentifier]="chatTabidentifier"></chat-tachie>
 <!-- entyu end -->
     <div class="chat-tab">
       <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab">
