@@ -13,6 +13,7 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { ModalService } from 'service/modal.service';
@@ -274,6 +275,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     //if (gameObject.location.name !== 'graveyard') {
       actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(gameObject) }, disabled: gameObject.location.name === 'graveyard' });
     //}
+    actions.push({ name: '立ち絵設定', action: () => { this.showStandSetting(gameObject) } });
+    actions.push(ContextMenuSeparator);
     actions.push({
       name: '参照URLを開く', action: null,
       subActions: gameObject.getUrls().map((urlElement) => {
@@ -393,6 +396,13 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     this.changeDetector.markForCheck();
   }
 
+  private showStandSetting(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 680, height: 650 };
+    let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
+    component.character = gameObject;
+  }
+  
   trackByGameObject(index: number, gameObject: GameObject) {
     return gameObject ? gameObject.identifier : index;
   }

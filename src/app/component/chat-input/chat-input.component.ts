@@ -20,6 +20,7 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { DataElement } from '@udonarium/data-element';
 import { StandConditionType } from '@udonarium/stand-list';
+import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 
 @Component({
   selector: 'chat-input',
@@ -236,6 +237,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (this.character) {
       text = this.character.chatPalette.evaluate(this.text, this.character.rootDataElement);
       const standList = this.character.standList;
+      let isTextTagMatch = false;
       if (standList) {
         let isUseDfault = true;
         let defautStands: DataElement[] = [];
@@ -255,6 +257,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
               for (let postfix of postfies.split(/[\r\n]+/g)) {
                 if (!postfix || postfix.trim().length == 0) continue;
                 if (text.trim().endsWith(postfix)) {
+                  if (postfix.trim().slice(0, 0) == '@') isTextTagMatch = true;
                   conditionPostfix = true;
                 }
               }
@@ -276,12 +279,17 @@ export class ChatInputComponent implements OnInit, OnDestroy {
                 matchStands.push(stand);
             }
           }
-          const useStands = (isUseDfault && defautStands.length > 0 ? defautStands : matchStands);
-          if (useStands.length > 0) {
-            // 立ち絵表示
-            useStands[Math.floor(Math.random() * useStands.length)];
-          }
         }
+        const useStands = (isUseDfault && defautStands.length > 0 ? defautStands : matchStands);
+        if (useStands.length > 0) {
+          // 立ち絵表示
+          const useStand = useStands[Math.floor(Math.random() * useStands.length)];
+          EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier });
+        }
+      }
+      if (isTextTagMatch) {
+        let split = text.split('@');
+        if (split.length > 1) text = split.slice(0, split.length -2).join('@');
       }
 
       const dialogRegExp = /「([\s\S]+?)」/gm;
@@ -501,6 +509,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       if (!this.onlyCharacters) {
         contextMenuActions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.character) } });
       }
+      contextMenuActions.push({ name: '立ち絵設定', action: () => { this.showStandSetting(this.character) } });
     }
     this.contextMenuService.open(position, contextMenuActions, this.character.name);
   }
@@ -520,6 +529,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
     component.character = gameObject;
   }
+  private showStandSetting(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 680, height: 650 };
+    let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
+    component.character = gameObject;
+  }
+
 
   private allowsChat(gameCharacter: GameCharacter): boolean {
     switch (gameCharacter.location.name) {

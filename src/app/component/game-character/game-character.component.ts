@@ -30,6 +30,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
+import { DataElement } from '@udonarium/data-element';
 
 @Component({
   selector: 'game-character',
@@ -215,6 +216,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   
   ngOnInit() {
     EventSystem.register(this)
+      .on('POPUP_STAND_IMAGE', -1000, event => {
+        if (event.data.characterIdentifier === this.gameCharacter.identifier) {
+          //ToDO 画像効果適用
+          let standElement = ObjectStore.instance.get<DataElement>(event.data.standIdentifier);
+          
+          console.log('Stand Up!!!!!!');
+        }
+      })
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.gameCharacter || !object) return;
