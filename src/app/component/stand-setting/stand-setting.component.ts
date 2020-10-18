@@ -9,8 +9,6 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ModalService } from 'service/modal.service';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 
-import { StandElementComponent } from 'component/stand-element/stand-element.component'
-
 @Component({
   selector: 'app-stand-setting',
   templateUrl: './stand-setting.component.html',
@@ -50,12 +48,28 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() character: GameCharacter = null;
 
   constructor(
-    private panelService: PanelService,
-    private modalService: ModalService
+    private panelService: PanelService
   ) { }
 
   get stands(): DataElement[] {
     return this.character.standList.stands;
+  }
+
+  get imageList(): ImageFile[] {
+    if (!this.character) return [];
+    let ret = [];
+    let dupe = {};
+    const tmp = this.character.imageDataElement.getElementsByName('imageIdentifier');
+    const elements = tmp.concat(this.character.imageDataElement.getElementsByName('faceIcon'));
+    for (let elm of elements) {
+      if (dupe[elm.value]) continue;
+      let file = this.imageElementToFile(elm);
+      if (file) {
+        dupe[elm.value] = true;
+        ret.push(file);
+      }
+    }
+    return ret;
   }
 
   ngOnInit() {
@@ -83,19 +97,8 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.character.standList.add();
   }
 
-  remove(stand: DataElement) {
-    this.character.standList.remove(stand);
-  }
-
-  setStandImage(dataElm: DataElement) {
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: false }).then(value => {
-      if (!value) return;
-      dataElm.value = value;
-    });
-  }
-
-  imageElementToFile(dataElm: DataElement): ImageFile {
-    if (!dataElm) return ImageFile.Empty;
+  private imageElementToFile(dataElm: DataElement): ImageFile {
+    if (!dataElm) return null;
     return ImageStorage.instance.get(<string>dataElm.value);
   }
 }

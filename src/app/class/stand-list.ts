@@ -4,11 +4,11 @@ import { SyncObject } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 
 export enum StandConditionType {
-    Default = 'デフォルト',
-    Postfix = 'チャット末尾',
-    Image = '指定画像',
-    PostfixOrImage = 'チャット末尾 または 指定画像',
-    PostfixAndImage = 'チャット末尾 かつ 指定画像'
+    Default,
+    Postfix,
+    Image,
+    PostfixOrImage,
+    PostfixAndImage
 }
 
 @SyncObject('stand-list')
@@ -30,7 +30,6 @@ export class StandList extends DataElement {
     standElement.appendChild(DataElement.create('targetImageIdentifier', '', { }, 'targetImageIdentifier_' + standElement.identifier));
     standElement.appendChild(DataElement.create('position', 0, { type: 'numberResource', 'currentValue': '100' }, 'position_' + standElement.identifier));
     this.appendChild(standElement);
-    //console.log(this);
   }
 
   remove(stand: DataElement) {

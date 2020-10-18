@@ -1,4 +1,4 @@
-<ng-container *ngFor="let standElement of stands" class="stand-input">
-  <stand-element [standElement]="standElement"></stand-element>
+<ng-container *ngFor="let standElement of stands">
+  <stand-element [standElement]="standElement" [imageList]="imageList"></stand-element>
 </ng-container>
 <button (click)="add()">立ち絵設定追加</button>

@@ -495,7 +495,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   private showStandSetting(gameObject: GameCharacter) {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 620, height: 650 };
+    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 680, height: 650 };
     let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
     component.character = gameObject;
   }

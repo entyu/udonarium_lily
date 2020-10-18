@@ -13,8 +13,11 @@ import { ModalService } from 'service/modal.service';
 })
 export class StandElementComponent implements OnInit {
   @Input() standElement: DataElement = null;
+  @Input() imageList: ImageFile[] = [];
 
   private _imageFile: ImageFile = ImageFile.Empty;
+
+  standConditionType = StandConditionType;
 
   constructor(
     private modalService: ModalService
@@ -46,9 +49,9 @@ export class StandElementComponent implements OnInit {
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('conditionType', StandConditionType.Default, { }, 'conditionType_' + this.standElement.identifier));
   }
 
-  get prefixElement(): DataElement {
+  get postfixElement(): DataElement {
     if (!this.standElement) return null;
-    let elm = this.standElement.getFirstElementByName('prefix');
+    let elm = this.standElement.getFirstElementByName('postfix');
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('postfix', '', { }, 'postfix_' + this.standElement.identifier));
   }
 
@@ -75,14 +78,13 @@ export class StandElementComponent implements OnInit {
       elm.value = value;
     });
   }
-
-  imageElementToFile(dataElm: DataElement): ImageFile {
-    if (!dataElm) return ImageFile.Empty;
-    return ImageStorage.instance.get(<string>dataElm.value);
-  }
  
   remove() {
     if (!this.standElement) return;
     this.standElement.parent.removeChild(this.standElement);
+  }
+
+  selectImage(identifier) {
+    this.targetImageIdentifierElement.value = identifier;
   }
 }

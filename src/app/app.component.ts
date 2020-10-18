@@ -98,6 +98,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';
     let noneIconImage = ImageStorage.instance.add(fileContext);
 
+    fileContext = ImageFile.createEmpty('stand_no_image').toContext();
+    fileContext.url = './assets/images/nc96424.png';
+    ImageStorage.instance.add(fileContext);
+
     AudioPlayer.resumeAudioContext();
     PresetSound.dicePick = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/shoulder-touch1.mp3').identifier;
     PresetSound.dicePut = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/book-stack1.mp3').identifier;

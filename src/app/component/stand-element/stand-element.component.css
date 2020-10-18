@@ -1,11 +1,27 @@
-.stand-image-container {
-    display: inline-block;
-    width: 150px;
+.stand-container {
+    display: flex;
+    flex-direction: row;
 }
+
+.stand-image-container {
+    width: 150px;
+    height: 150px;
+}
+
 .stand-image {
     width: 150px;
+    height: 150px;
     object-fit: contain;
     transform-origin: bottom;
+    z-index: 5;
+}
+
+.stand-image-button {
+    display: block;
+    margin-top: -154px;
+    margin-left: -4px;
+    position: relative;
+    z-index: 10;
 }
 
 .postfix-text {
@@ -17,3 +33,47 @@
     font-size: smaller;
     width: 3em;
 }
+
+.remove-button {
+    font-weight: bolder;
+    color: red;
+    background-color: transparent;
+}
+
+.icon-image-box {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 0.5rem;
+    color: black;
+    filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
+    z-index: 100;
+    margin-top: 1px;
+    margin-left: 1px;
+  }
+  .icon-image-box img {
+    width: 100%;
+    height: 100%;
+    vertical-align: bottom;
+    object-fit: cover;
+    object-position: 50% 0%;
+    border-radius: 0.5rem;
+    border: 2px solid transparent;
+  }
+  .icon-image-box:hover {
+    z-index: 600;
+  }
+  .icon-image-box:hover img {
+    border: 2px dotted rgba(255, 0, 0, 40);
+  }
+  .icon-image-box.current-icon {
+    z-index: 500;
+  }
+  .icon-image-box.current-icon img {
+    border: 2px solid red;
+  }
+  .icon-image-box:not(.current-icon) {
+    z-index: 400;
+  }
