@@ -157,6 +157,11 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   setLocation(locationName: string) {
+    if (locationName == 'graveyard') {
+      SoundEffect.play(PresetSound.sweep);
+    } else {
+      SoundEffect.play(PresetSound.piecePut);
+    }
     this.tabletopObject.setLocation(locationName);
   }
 

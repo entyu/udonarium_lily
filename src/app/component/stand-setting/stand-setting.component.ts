@@ -6,8 +6,6 @@ import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ModalService } from 'service/modal.service';
-import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 
 @Component({
   selector: 'app-stand-setting',

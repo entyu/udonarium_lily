@@ -39,6 +39,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { StandImageService } from 'service/stand-image.service';
 
 @Component({
   selector: 'app-root',
@@ -245,7 +246,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
+    PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
     setTimeout(() => {
       this.panelService.open(PeerMenuComponent, { width: 500, height: 450, left: 100 });
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });

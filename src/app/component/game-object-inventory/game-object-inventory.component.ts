@@ -318,7 +318,14 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         .map((location) => { 
           return {
             name: `${location.alias}`, 
-            action: () => { gameObject.setLocation(location.name); SoundEffect.play(PresetSound.piecePut); }
+            action: () => { 
+              gameObject.setLocation(location.name);
+              if (location.name == 'graveyard') {
+                SoundEffect.play(PresetSound.sweep);
+              } else {
+                SoundEffect.play(PresetSound.piecePut);
+              }
+            }
           } 
         })
     });

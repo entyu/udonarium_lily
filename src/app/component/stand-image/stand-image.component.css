@@ -1,0 +1,19 @@
+.stand-image-container {
+    position: absolute;
+    display: inline-block;
+    bottom: -1%;
+    z-index: 10000;
+}
+
+.stand-image {
+    max-width: 300px;
+    min-width: 150px;
+    max-width: calc(100vw / 6);
+    min-width: calc(100vw / 12);
+}
+
+.is-ghostly {
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+}

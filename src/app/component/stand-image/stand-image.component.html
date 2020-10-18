@@ -1,0 +1,6 @@
+<div *ngIf="isVisible" class="stand-image-container" [style.left]="position + '%'"
+  [ngClass]="{'is-ghostly': isGhostly}" (click)="toGhostly()">
+  <ng-container *ngIf="standImage.url && standImage.url.length > 0">
+    <img class="stand-image" [src]="standImage.url | safe: 'resourceUrl'">
+  </ng-container>
+</div>

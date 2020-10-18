@@ -60,6 +60,9 @@ import { environment } from '../environments/environment';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from './component/stand-setting/stand-setting.component';
 import { StandElementComponent } from './component/stand-element/stand-element.component';
+import { StandImageComponent } from './component/stand-image/stand-image.component';
+
+import { StandImageService } from 'service/stand-image.service';
 
 @NgModule({
   declarations: [
@@ -109,6 +112,7 @@ import { StandElementComponent } from './component/stand-element/stand-element.c
     OpenUrlComponent,
     StandSettingComponent,
     StandElementComponent,
+    StandImageComponent,
   ],
   imports: [
     BrowserModule,
@@ -126,6 +130,7 @@ import { StandElementComponent } from './component/stand-element/stand-element.c
     PanelService,
     PointerDeviceService,
     TabletopService,
+    StandImageService,
   ],
   bootstrap: [AppComponent]
 })

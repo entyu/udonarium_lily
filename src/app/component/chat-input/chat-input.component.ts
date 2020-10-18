@@ -283,6 +283,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         const useStands = (isUseDfault && defautStands.length > 0 ? defautStands : matchStands);
         if (useStands.length > 0) {
           // 立ち絵表示
+          //ToDO 秘話対応
           const useStand = useStands[Math.floor(Math.random() * useStands.length)];
           EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier });
         }

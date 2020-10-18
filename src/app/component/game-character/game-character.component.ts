@@ -9,7 +9,7 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
-  ViewChild, ElementRef
+  ViewChild, ElementRef, ComponentRef
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
@@ -31,6 +31,8 @@ import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { DataElement } from '@udonarium/data-element';
+import { StandImageService } from 'service/stand-image.service';
+import { StandImageComponent } from 'component/stand-image/stand-image.component';
 
 @Component({
   selector: 'game-character',
@@ -134,6 +136,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
   }
 
+  currentStandImageComponentRef: ComponentRef<StandImageComponent> = null;
+
   gridSize: number = 50;
   math = Math;
   stringUtil = StringUtil;
@@ -211,7 +215,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
     private ngZone: NgZone,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private standImageService: StandImageService
   ) { }
   
   ngOnInit() {
@@ -220,8 +225,19 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         if (event.data.characterIdentifier === this.gameCharacter.identifier) {
           //ToDO 画像効果適用
           let standElement = ObjectStore.instance.get<DataElement>(event.data.standIdentifier);
-          
+          let standImageComponentRef = this.standImageService.show(standElement);
+          if (this.currentStandImageComponentRef) {
+            this.currentStandImageComponentRef.destroy();
+          }
+          this.currentStandImageComponentRef = standImageComponentRef;
           console.log('Stand Up!!!!!!');
+        }
+      })
+      .on('FARAWAY_STAND_IMAGE', -1000, event => {
+        if (event.data.characterIdentifier === this.gameCharacter.identifier) {
+          if (this.currentStandImageComponentRef) {
+            this.currentStandImageComponentRef.destroy();
+          }
         }
       })
       .on('UPDATE_GAME_OBJECT', -1000, event => {
@@ -260,6 +276,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   ngAfterViewInit() { }
 
   ngOnDestroy() {
+    if (this.currentStandImageComponentRef) {
+      this.currentStandImageComponentRef.destroy();
+    }
     EventSystem.unregister(this);
   }
 
@@ -514,6 +533,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     if (this.gameCharacter.currntImageIndex != index) {
       this.gameCharacter.currntImageIndex = index;
       SoundEffect.play(PresetSound.surprise);
+      EventSystem.call('FARAWAY_STAND_IMAGE', { characterIdentifier: this.gameCharacter.identifier });
       EventSystem.trigger('UPDATE_INVENTORY', null);
     }
   }
