@@ -307,10 +307,16 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           useStands = (isUseDfault && defautStands.length > 0 ? defautStands : matchStands);
         }
         if (useStands && useStands.length > 0) {
-          // 立ち絵表示
           //ToDO 秘話対応
           const useStand = useStands[Math.floor(Math.random() * useStands.length)];
-          EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier });
+          if (this.sendTo) {
+            // とりあえず立ち絵は秘話時に表示しないがマッチした@以下の切り捨てはする
+            //EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier }, ChatMessageService.findId(this.sendTo).slice(0, 6));
+            //EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier }, PeerCursor.myCursor.peerId);
+          } else {
+            EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier });
+          }
+          //console.log(ChatMessageService.findId(this.sendTo));
         }
       }
       if (textTagMatch != '') {
