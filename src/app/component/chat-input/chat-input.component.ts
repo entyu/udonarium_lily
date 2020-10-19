@@ -69,8 +69,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     return null;
   }
 
+  get hasStand(): boolean {
+    if (!this.character || !this.character.standList) return false;
+    return this.character.standList.getElementsByName('stand').length > 0;
+  }
+
   get standNameList(): string[] {
-    if (!this.character || !this.character.standList) return [];
+    if (!this.hasStand) return [];
     let ret: string[] = [];
     for (let standElement of this.character.standList.getElementsByName('stand')) {
       let nameElement = standElement.getFirstElementByName('name');
@@ -540,7 +545,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       if (!this.onlyCharacters) {
         contextMenuActions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.character) } });
       }
-      contextMenuActions.push({ name: '立ち絵設定', action: () => { this.showStandSetting(this.character) } });
+      contextMenuActions.push({ name: 'スタンド設定', action: () => { this.showStandSetting(this.character) } });
     }
     this.contextMenuService.open(position, contextMenuActions, this.character.name);
   }

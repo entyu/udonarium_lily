@@ -12,6 +12,20 @@
     z-index: 0;
 }
 
+.name-tag {
+  color: #444;
+  background-color: whitesmoke;
+  border: 2px solid #444;
+  border-radius: 24px;
+  padding: 4px 12px;
+  bottom: calc(1vh + 2px);
+  display: inline-block;
+  white-space: nowrap;
+  position: absolute;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
 .inverse {
     transform: scaleX(-1);
   }

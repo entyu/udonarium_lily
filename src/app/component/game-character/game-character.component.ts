@@ -424,7 +424,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
-      { name: '立ち絵設定', action: () => { this.showStandSetting(this.gameCharacter) } },
+      { name: 'スタンド設定', action: () => { this.showStandSetting(this.gameCharacter) } },
       ContextMenuSeparator,
       {
         name: '参照URLを開く', action: null,

@@ -10,16 +10,16 @@
               [ngClass]="{'black-paint': isApplyImageEffect && gameCharacter.isBlackPaint, 'hollow': isApplyImageEffect && gameCharacter.isHollow}">
           </span>
         </div>
-        <button class="stand-image-button" (click)="openModal()">画像選択</button>
+        <button class="stand-image-button" (click)="openModal()">画像変更</button>
       </ng-container>
     </div>
     <div style="display: flex; flex-direction: column; padding-left: 3px; width: 100%">
       <div>
         <ng-container *ngIf="nameElement">
-          <input type="text" [(ngModel)]="nameElement.value" placeholder="名称">　
+          <input type="text" [(ngModel)]="nameElement.value" placeholder="Name">　
         </ng-container>
         <ng-container *ngIf="conditionTypeElement">
-          <b style="font-size: smaller">　条件: </b><select [(ngModel)]="conditionTypeElement.value" style="padding-right: 3px;">
+          <b style="font-size: smaller">　Cond: </b><select [(ngModel)]="conditionTypeElement.value" style="padding-right: 3px;">
             <option value="{{ standConditionType.Default }}">デフォルト</option>
             <option value="{{ standConditionType.Postfix }}">チャット末尾</option>
             <option value="{{ standConditionType.Image }}">指定画像</option>
@@ -36,13 +36,13 @@
       </div>
       <div>
         <ng-container *ngIf="applyImageEffectElement">
-          <label style="margin-right: 2em;">
+          <label style="margin-right: 1em;">
             <input type="checkbox" [(ngModel)]="applyImageEffectElement.value" checked="{{applyImageEffectElement.value ? 'checked' : ''}}" (change)="applyImageEffectElement.value = (applyImageEffectElement.value ? 'applyImageEffect' : '')">
-            <b style="font-size: smaller;">画像効果を適用</b>
+            <b style="font-size: smaller;">画像効果を反映</b>
           </label>
         </ng-container>
         <ng-container *ngIf="heightElement">
-          <span style="white-space: nowrap"><b style="font-size: smaller; display: inline-block; margin-left: 3px">身長(0=個別指定しない): </b>
+          <span style="white-space: nowrap"><b style="font-size: smaller; display: inline-block; margin-left: 3px">Height (0=個別指定しない): </b>
             <input style="width: 160px" type="range" min="0" max="100" [(ngModel)]="heightElement.value">
             <input style="width: 3em; text-align: right;" type="number" min="0" max="100" [(ngModel)]="heightElement.value">
           </span>

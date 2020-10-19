@@ -47,13 +47,13 @@
         <button (click)="showDicebotHelp()">?</button>
       </span>
     </div>
-    <div *ngIf="standNameList.length > 0" style="font-size: smaller;">
-      <b>立ち絵: </b><select style="width: 12em" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}">
-        <option value="" class="not-specified">立ち絵未選択</option>
+    <div *ngIf="hasStand" style="font-size: smaller;">
+      <b>Stand: </b><select style="width: 12em; margin-right: 4px;" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}">
+        <option value="" class="not-specified">未選択</option>
         <option *ngFor="let name of standNameList" value="{{name}}">{{name}}</option>
       </select>
       <span style="white-space: nowrap;">
-        <b>　位置: </b><input style="width: 210px; margin-right: 3px;" type="range" min="0" max="100" [(ngModel)]="character.standList.position">
+        <b>Pos: </b><input style="width: 200px; margin-right: 3px;" type="range" min="0" max="100" [(ngModel)]="character.standList.position">
         <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="character.standList.position"><b>％</b>
       </span>
     </div>
@@ -63,7 +63,7 @@
         <textarea class="chat-input" [placeholder]="!onlyCharacters ? 'Enterで送信　Shift+Enterで改行　チャットパレットの色を優先' : 'Enterで送信　Shift+Enterで改行　白(255,255,255)の場合あなたの色'" [(ngModel)]="text"
           [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
           #textArea></textarea>
-        <button type="submit" (click)="sendChat(null)">SEND</button>
+        <button type="submit" (click)="sendChat(null)"><b>SEND</b></button>
       </form>
     </div>
     <div class="writing-info">

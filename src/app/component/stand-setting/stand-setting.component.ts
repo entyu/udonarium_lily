@@ -77,7 +77,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updatePanelTitle() {
-    this.panelService.title = this.character.name + ' の立ち絵設定';
+    this.panelService.title = this.character.name + ' のスタンド設定';
   }
 
   add() {

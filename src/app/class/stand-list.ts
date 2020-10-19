@@ -15,8 +15,8 @@ export enum StandConditionType {
 
 @SyncObject('stand-list')
 export class StandList extends DataElement {
-  @SyncVar() position = 0;
-  @SyncVar() height = 30;
+  @SyncVar() position = 5;
+  @SyncVar() height = 35;
 
   get standElements(): DataElement[] {
     return this.getElementsByName('stand');
@@ -24,15 +24,13 @@ export class StandList extends DataElement {
 
   add() {
     let imageFile = null;
-    let standElement = DataElement.create('stand');
     if (this.parent instanceof GameCharacter) {
-      imageFile = this.parent.imageFile
+      imageFile = this.parent.imageFile;
     }
     if (!imageFile || imageFile == ImageFile.Empty) {
-      let fileContext = ImageFile.createEmpty('stand_no_image').toContext();
-      fileContext.url = './assets/images/nc96424.png';
-      imageFile = ImageStorage.instance.add(fileContext);
+      imageFile = ImageStorage.instance.get('stand_no_image');
     }
+    let standElement = DataElement.create('stand');
     standElement.appendChild(DataElement.create('name', '', { }, 'name_' + standElement.identifier));
     standElement.appendChild(DataElement.create('imageIdentifier', imageFile.identifier, { type: 'image' }, 'imageIdentifier_' + standElement.identifier));
     standElement.appendChild(DataElement.create('conditionType', StandConditionType.Default, { }, 'conditionType_' + standElement.identifier));
