@@ -3,8 +3,13 @@
   <input style="width: 350px" type="range" min="0" max="100" [(ngModel)]="position">
   <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="position"><b sytle="margin-left: 3px">％</b>
 </div>
+<div class="position-indicate">
+  <b>身長(0=元画像のまま): </b>
+  <input style="width: 350px" type="range" min="0" max="100" [(ngModel)]="height">
+  <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="height">
+</div>
 <hr>
 <ng-container *ngFor="let standElement of standElements">
-  <stand-element [standElement]="standElement" [imageList]="imageList"></stand-element>
+  <stand-element [standElement]="standElement" [imageList]="imageList" [gameCharacter]="character"></stand-element>
 </ng-container>
 <button (click)="add()">立ち絵設定追加</button>

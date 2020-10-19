@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="is-pointer-events-none" >
-        <div class="inverser is-3d" style="pointer-events: none;" [ngClass]="{inverse: isInverse}" >
+        <div class="inverser is-3d" style="pointer-events: none;" [ngClass]="{inverse: isInverse}">
           <span class="aura is-3d" style="pointer-events: none;" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
             <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio" style="pointer-events: none;"
               [ngStyle]="{'transform-origin': '50% ' + ((size * gridSize) + 'px'), 'transform': 'translateY(-10%) scale(1.0,' + (1.0 / heightWidthRatio) + ') translateY(-' + (99 / heightWidthRatio) + '%) rotateZ(' + ((isInverse ? -1 : 1) * roll) + 'deg)'}">

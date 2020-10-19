@@ -522,26 +522,26 @@ input[type='range']::-ms-tooltip {
 }
 
 .aura.black {
-  filter: drop-shadow(0 -4px 4px black);
+  filter: drop-shadow(0 -6px 6px black);
 }
 .aura.blue {
-  filter: drop-shadow(0 -4px 4px #33f);
+  filter: drop-shadow(0 -6px 6px #33f);
 }
 .aura.green {
-  filter: drop-shadow(0 -4px 4px #3f3);
+  filter: drop-shadow(0 -6px 6px #3f3);
 }
 .aura.cyan {
-  filter: drop-shadow(0 -4px 4px #3ff);
+  filter: drop-shadow(0 -6px 6px #3ff);
 }
 .aura.red {
-  filter: drop-shadow(0 -4px 4px #f00);
+  filter: drop-shadow(0 -6px 6px #f00);
 }
 .aura.magenta {
-  filter: drop-shadow(0 -4px 4px #f0f);
+  filter: drop-shadow(0 -6px 6px #f0f);
 }
 .aura.yellow {
-  filter: drop-shadow(0 -4px 4px #ff3);
+  filter: drop-shadow(0 -6px 6px #ff3);
 }
 .aura.white {
-  filter: drop-shadow(0 -4px 4px #fff);
+  filter: drop-shadow(0 -6px 6px #fff);
 }

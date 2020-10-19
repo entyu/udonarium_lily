@@ -51,6 +51,25 @@ export class StandImageComponent implements OnInit {
     */
   }
 
+  get height(): number {
+    if (!this.gameCharacter || !this.standElement) return 0;
+    let elm = this.standElement.getFirstElementByName('height');
+    if ((!elm || +elm.value == 0) && this.gameCharacter.standList) {
+      return this.gameCharacter.standList.height;
+    } 
+    return elm ? +elm.value : 0;
+  }
+
+  get isApplyImageEffect(): boolean {
+    if (!this.standElement || !this.gameCharacter) return false;
+    let elm = this.standElement.getFirstElementByName('applyImageEffect');
+    // 真偽判定のもっといい方法ない？
+    if (elm && elm.value) {
+      return true;
+    }
+    return false;
+  }
+
   toGhostly() {
     this.ngZone.run(() => {
       this.isGhostly = true;

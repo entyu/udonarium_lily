@@ -1,4 +1,3 @@
-import { animate, keyframes, style, transition, trigger } from '@angular/animations'; 
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { PanelService } from 'service/panel.service';
@@ -41,13 +40,23 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   get position(): number {
-    if (!this.character) return 0;
+    if (!this.character || !this.character.standList) return 0;
     return this.character.standList.position;
   }
 
   set position(position: number) {
-    if (!this.character) return;
+    if (!this.character || !this.character.standList) return;
     this.character.standList.position = position;
+  }
+
+  get height(): number {
+    if (!this.character || !this.character.standList) return 0;
+    return this.character.standList.height;
+  }
+
+  set height(height: number) {
+    if (!this.character || !this.character.standList) return;
+    this.character.standList.height = height;
   }
 
   ngOnInit() {

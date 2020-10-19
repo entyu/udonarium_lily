@@ -3,6 +3,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { DataElement } from '@udonarium/data-element';
+import { GameCharacter } from '@udonarium/game-character';
 import { StandConditionType } from '@udonarium/stand-list';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ModalService } from 'service/modal.service';
@@ -15,6 +16,7 @@ import { ModalService } from 'service/modal.service';
 export class StandElementComponent implements OnInit {
   @Input() standElement: DataElement = null;
   @Input() imageList: ImageFile[] = [];
+  @Input() gameCharacter: GameCharacter = null;
 
   private _imageFile: ImageFile = ImageFile.Empty;
 
@@ -50,6 +52,12 @@ export class StandElementComponent implements OnInit {
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('name', '', { }, 'name_' + this.standElement.identifier));
   }
 
+  get heightElement(): DataElement {
+    if (!this.standElement) return null;
+    let elm = this.standElement.getFirstElementByName('height');
+    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('height', 0, { }, 'height_' + this.standElement.identifier));
+  }
+
   get conditionTypeElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('conditionType');
@@ -62,18 +70,24 @@ export class StandElementComponent implements OnInit {
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('postfix', '', { }, 'postfix_' + this.standElement.identifier));
   }
  
-  /*
-  get targetImageIdentifierElement(): DataElement {
+  get applyImageEffectElement() {
     if (!this.standElement) return null;
-    let elm = this.standElement.getFirstElementByName('targetImageIdentifier');
-    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('targetImageIdentifier', '', { }, 'targetImageIdentifier_' + this.standElement.identifier));
+    let elm = this.standElement.getFirstElementByName('applyImageEffect');
+    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('applyImageEffect', '', { }, 'applyImageEffect_' + this.standElement.identifier));
   }
-  */
 
   get positionElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('position');
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('position', 0, { 'currentValue': '' }, 'position_' + this.standElement.identifier));
+  }
+
+  get isApplyImageEffect(): boolean {
+    let elm = this.applyImageEffectElement;
+    if (elm && elm.value) {
+      return true;
+    }
+    return false;
   }
 
   openModal() {

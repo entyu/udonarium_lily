@@ -280,7 +280,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
                 && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
                 for (let postfix of postfies.split(/[\r\n]+/g)) {
                   if (!postfix || postfix.trim().length == 0) continue;
-                  if (text.endsWith(postfix)) {
+                  if (StringUtil.toHalfWidth(text).endsWith(StringUtil.toHalfWidth(postfix))) {
                     if ((postfix.trim().slice(0, 1) == '@' || postfix.trim().slice(0, 1) == '＠') && textTagMatch.length < postfix.trim().length) textTagMatch = postfix.trim();
                     conditionPostfix = true;
                   }

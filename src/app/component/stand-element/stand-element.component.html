@@ -2,7 +2,14 @@
   <div class="stand-container">
     <div class="stand-image-container">
       <ng-container *ngIf="standImage">
-        <img class="stand-image" (dblclick)="openModal()" [src]="standImage.url | safe: 'resourceUrl'">
+        <div class="inverser" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">
+          <span class="aura" [ngClass]="{black: isApplyImageEffect && gameCharacter.aura == 0, blue: isApplyImageEffect && gameCharacter.aura == 1, 
+            green: isApplyImageEffect && gameCharacter.aura == 2, cyan: isApplyImageEffect && gameCharacter.aura == 3, red: isApplyImageEffect && gameCharacter.aura == 4,
+            magenta: isApplyImageEffect && gameCharacter.aura == 5, yellow: isApplyImageEffect && gameCharacter.aura == 6, white: isApplyImageEffect && gameCharacter.aura == 7}">
+            <img class="stand-image" (dblclick)="openModal()" [src]="standImage.url | safe: 'resourceUrl'" 
+              [ngClass]="{'black-paint': isApplyImageEffect && gameCharacter.isBlackPaint, 'hollow': isApplyImageEffect && gameCharacter.isHollow}">
+          </span>
+        </div>
         <button class="stand-image-button" (click)="openModal()">画像選択</button>
       </ng-container>
     </div>
@@ -27,8 +34,22 @@
         </ng-container>
         <button style="float: right" class="remove-button" (click)="remove()">×</button>
       </div>
+      <div>
+        <ng-container *ngIf="applyImageEffectElement">
+          <label style="margin-right: 2em;">
+            <input type="checkbox" [(ngModel)]="applyImageEffectElement.value" checked="{{applyImageEffectElement.value ? 'checked' : ''}}" (change)="applyImageEffectElement.value = (applyImageEffectElement.value ? 'applyImageEffect' : '')">
+            <b style="font-size: smaller;">画像効果を適用</b>
+          </label>
+        </ng-container>
+        <ng-container *ngIf="heightElement">
+          <span style="white-space: nowrap"><b style="font-size: smaller; display: inline-block; margin-left: 3px">身長(0=個別指定しない): </b>
+            <input style="width: 160px" type="range" min="0" max="100" [(ngModel)]="heightElement.value">
+            <input style="width: 3em; text-align: right;" type="number" min="0" max="100" [(ngModel)]="heightElement.value">
+          </span>
+        </ng-container>
+      </div>
       <div *ngIf="postfixElement && (conditionTypeElement.value == standConditionType.Postfix || conditionTypeElement.value == standConditionType.PostfixOrImage || conditionTypeElement.value == standConditionType.PostfixAndImage)">
-        <textarea [(ngModel)]="postfixElement.value" style="width: 100%; margin-top: 3px; height: 2.8rem" placeholder="@チャットテキスト末尾、1行に一つずつ&#13;&#10;@怒り&#13;&#10;@必殺技"></textarea>
+        <textarea [(ngModel)]="postfixElement.value" style="width: 100%; margin-top: 3px; height: 2.4rem" placeholder="@チャットテキスト末尾、1行に一つずつ&#13;&#10;@怒り&#13;&#10;@必殺技"></textarea>
       </div>
       <div *ngIf="conditionTypeElement.value == standConditionType.Image || conditionTypeElement.value == standConditionType.PostfixOrImage || conditionTypeElement.value == standConditionType.PostfixAndImage">
         <div *ngIf="imageList && imageList.length > 0" style="display: flex">

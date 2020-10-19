@@ -6,15 +6,51 @@
     margin-left: -50px;
 }
 
-.stand-image {
-    max-width: 300px;
-    min-width: 150px;
-    max-width: calc(100vw / 6);
-    min-width: calc(100vw / 12);
-}
-
 .is-ghostly {
     opacity: 0.3;
     pointer-events: none;
     z-index: 0;
 }
+
+.inverse {
+    transform: scaleX(-1);
+  }
+  .inverser {
+    transition: transform 132ms 0s ease;
+  }
+  .hollow {
+    opacity: 0.6;
+    filter: blur(1px);
+  }
+  .black-paint {
+    filter: brightness(0);
+  }
+  
+  .aura {
+    transition: filter 0.2s ease-in-out;
+  }
+  
+  .aura.black {
+    filter: drop-shadow(0 -8px 8px black);
+  }
+  .aura.blue {
+    filter: drop-shadow(0 -8px 8px #33f);
+  }
+  .aura.green {
+    filter: drop-shadow(0 -8px 8px #3f3);
+  }
+  .aura.cyan {
+    filter: drop-shadow(0 -8px 8px #3ff);
+  }
+  .aura.red {
+    filter: drop-shadow(0 -8px 8px #f00);
+  }
+  .aura.magenta {
+    filter: drop-shadow(0 -8px 8px #f0f);
+  }
+  .aura.yellow {
+    filter: drop-shadow(0 -8px 8px #ff3);
+  }
+  .aura.white {
+    filter: drop-shadow(0 -8px 8px #fff);
+  }
