@@ -1,6 +1,6 @@
 import { ImageFile } from './core/file-storage/image-file';
 import { ImageStorage } from './core/file-storage/image-storage';
-import { SyncObject } from './core/synchronize-object/decorator';
+import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 
 export enum StandConditionType {
@@ -8,13 +8,15 @@ export enum StandConditionType {
     Postfix,
     Image,
     PostfixOrImage,
-    PostfixAndImage
+    PostfixAndImage,
+    NotConditionStandUp
 }
 
 @SyncObject('stand-list')
 export class StandList extends DataElement {
-    
-  get stands(): DataElement[] {
+  @SyncVar() position = 0;
+
+  get standElements(): DataElement[] {
     return this.getElementsByName('stand');
   }
 
@@ -23,12 +25,11 @@ export class StandList extends DataElement {
     let fileContext = ImageFile.createEmpty('stand_no_image').toContext();
     fileContext.url = './assets/images/nc96424.png';
     let noImageFile = ImageStorage.instance.add(fileContext);
-
+    standElement.appendChild(DataElement.create('name', '', { }, 'name_' + standElement.identifier));
     standElement.appendChild(DataElement.create('imageIdentifier', noImageFile.identifier, { type: 'image' }, 'imageIdentifier_' + standElement.identifier));
     standElement.appendChild(DataElement.create('conditionType', StandConditionType.Default, { }, 'conditionType_' + standElement.identifier));
     standElement.appendChild(DataElement.create('postfix', '', { }, 'postfix_' + standElement.identifier));
-    standElement.appendChild(DataElement.create('targetImageIdentifier', '', { }, 'targetImageIdentifier_' + standElement.identifier));
-    standElement.appendChild(DataElement.create('position', 0, { type: 'numberResource', 'currentValue': '100' }, 'position_' + standElement.identifier));
+    standElement.appendChild(DataElement.create('position', 0, { 'currentValue': '' }, 'position_' + standElement.identifier));
     this.appendChild(standElement);
   }
 

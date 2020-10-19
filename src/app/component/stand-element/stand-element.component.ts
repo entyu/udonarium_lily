@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { UUID } from '@udonarium/core/system/util/uuid';
 import { DataElement } from '@udonarium/data-element';
 import { StandConditionType } from '@udonarium/stand-list';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
@@ -43,6 +44,12 @@ export class StandElementComponent implements OnInit {
     return this._imageFile;
   }
 
+  get nameElement(): DataElement {
+    if (!this.standElement) return null;
+    let elm = this.standElement.getFirstElementByName('name');
+    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('name', '', { }, 'name_' + this.standElement.identifier));
+  }
+
   get conditionTypeElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('conditionType');
@@ -54,17 +61,19 @@ export class StandElementComponent implements OnInit {
     let elm = this.standElement.getFirstElementByName('postfix');
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('postfix', '', { }, 'postfix_' + this.standElement.identifier));
   }
-
+ 
+  /*
   get targetImageIdentifierElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('targetImageIdentifier');
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('targetImageIdentifier', '', { }, 'targetImageIdentifier_' + this.standElement.identifier));
   }
+  */
 
   get positionElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('position');
-    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('position', 0, { type: 'numberResource', 'currentValue': '100' }, 'position_' + this.standElement.identifier));
+    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('position', 0, { 'currentValue': '' }, 'position_' + this.standElement.identifier));
   }
 
   openModal() {
@@ -85,6 +94,33 @@ export class StandElementComponent implements OnInit {
   }
 
   selectImage(identifier) {
-    this.targetImageIdentifierElement.value = identifier;
+    if (!this.standElement) return;
+    let isSelected = false;
+    for (let elm of this.standElement.getElementsByName('targetImageIdentifier')) {
+      let isNothing = true;
+      for (let image of this.imageList) {
+        if (image.identifier == elm.value) {
+          isNothing = false;
+          break;
+        }
+      }
+      if (isNothing) {
+        this.standElement.removeChild(elm);
+      } else if (elm.value == identifier) {
+        isSelected = true;
+        this.standElement.removeChild(elm);
+      }
+    }
+    if (!isSelected) {
+      this.standElement.appendChild(DataElement.create('targetImageIdentifier', identifier, { }, 'targetImageIdentifier_' + UUID.generateUuid()));
+    }
+  }
+
+  isSelectedImage(identifier) {
+    let elms = this.standElement.getElementsByName('targetImageIdentifier');
+    for (let elm of elms) {
+      if (elm.value == identifier) return true;
+    }
+    return false;
   }
 }

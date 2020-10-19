@@ -18,8 +18,8 @@
   </div>
   <div class="table-cell">
     <div>
-      <label style="margin-right: 2px"><input type="checkbox" [(ngModel)]="isUseFaceIcon" checked="{{isUseFaceIcon ? 'checked' : ''}}" (change)="isUseFaceIcon = (isUseFaceIcon ? true : false)" />顔IC</label>
-      <select style="max-width: 10em" [(ngModel)]="sendFrom" [ngStyle]="{'color': color, 'font-weight': (sendFrom != myPeer?.identifier ? 'normal' : 'bolder')}">
+      <label style="margin-right: 2px"><input type="checkbox" [(ngModel)]="isUseFaceIcon" checked="{{isUseFaceIcon ? 'checked' : ''}}" (change)="isUseFaceIcon = (isUseFaceIcon ? true : false)" /><b style="font-size: smaller;">顔IC</b></label>
+      <select style="max-width: 10em" [(ngModel)]="sendFrom" (change)="standName = ''" [ngStyle]="{'color': color, 'font-weight': (sendFrom != myPeer?.identifier ? 'normal' : 'bolder')}">
         <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}" [style.color]="myColor" style="font-weight: bolder;">{{myPeer?.name}}（あなた）</option>
         <option *ngFor="let gameCharacter of gameCharacters" style="font-weight: normal;" [style.color]="gameCharacter.chatPalette && gameCharacter.chatPalette.color && gameCharacter.chatPalette.color != '#ffffff' ? gameCharacter.chatPalette.color : '#444'" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
       </select>
@@ -45,6 +45,16 @@
           </optgroup>
         </select>
         <button (click)="showDicebotHelp()">?</button>
+      </span>
+    </div>
+    <div *ngIf="standNameList.length > 0" style="font-size: smaller;">
+      <b>立ち絵: </b><select style="width: 12em" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}">
+        <option value="" class="not-specified">立ち絵未選択</option>
+        <option *ngFor="let name of standNameList" value="{{name}}">{{name}}</option>
+      </select>
+      <span style="white-space: nowrap;">
+        <b>　位置: </b><input style="width: 210px; margin-right: 3px;" type="range" min="0" max="100" [(ngModel)]="character.standList.position">
+        <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="character.standList.position"><b>％</b>
       </span>
     </div>
     <div>

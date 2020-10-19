@@ -10,37 +10,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 @Component({
   selector: 'app-stand-setting',
   templateUrl: './stand-setting.component.html',
-  styleUrls: ['./stand-setting.component.css'],
-  animations: [
-    trigger('bounceInOut', [
-      transition('void => *', [
-        animate('600ms ease', keyframes([
-          style({ transform: 'scale3d(0, 0, 0)', offset: 0 }),
-          style({ transform: 'scale3d(1.5, 1.5, 1.5)', offset: 0.5 }),
-          style({ transform: 'scale3d(0.75, 0.75, 0.75)', offset: 0.75 }),
-          style({ transform: 'scale3d(1.125, 1.125, 1.125)', offset: 0.875 }),
-          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
-        ]))
-      ]),
-      transition('* => void', [
-        animate(100, style({ transform: 'scale3d(0, 0, 0)' }))
-      ])
-    ]),
-    trigger('slideInOut', [
-      transition('void => *', [
-        animate('600ms ease', keyframes([
-          style({ transform: 'scale3d(0, 1.0, 1.0)', offset: 0 }),
-          style({ transform: 'scale3d(1.5, 1.5, 1.5)', offset: 0.5 }),
-          style({ transform: 'scale3d(0.75, 0.75, 0.75)', offset: 0.75 }),
-          style({ transform: 'scale3d(1.125, 1.125, 1.125)', offset: 0.875 }),
-          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
-        ]))
-      ]),
-      transition('* => void', [
-        animate(100, style({ transform: 'scale3d(0, 1.0, 1.0)' }))
-      ])
-    ]),
-  ]
+  styleUrls: ['./stand-setting.component.css']
 })
 export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() character: GameCharacter = null;
@@ -49,8 +19,8 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     private panelService: PanelService
   ) { }
 
-  get stands(): DataElement[] {
-    return this.character.standList.stands;
+  get standElements(): DataElement[] {
+    return this.character.standList.standElements;
   }
 
   get imageList(): ImageFile[] {
@@ -68,6 +38,16 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     return ret;
+  }
+
+  get position(): number {
+    if (!this.character) return 0;
+    return this.character.standList.position;
+  }
+
+  set position(position: number) {
+    if (!this.character) return;
+    this.character.standList.position = position;
   }
 
   ngOnInit() {

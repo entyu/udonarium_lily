@@ -2,7 +2,8 @@
     position: absolute;
     display: inline-block;
     bottom: -1%;
-    z-index: 10000;
+    z-index: 1000000;
+    margin-left: -50px;
 }
 
 .stand-image {

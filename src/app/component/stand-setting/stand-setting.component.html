@@ -1,4 +1,10 @@
-<ng-container *ngFor="let standElement of stands">
+<div class="position-indicate">
+  <b>位置: </b>
+  <input style="width: 350px" type="range" min="0" max="100" [(ngModel)]="position">
+  <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="position"><b sytle="margin-left: 3px">％</b>
+</div>
+<hr>
+<ng-container *ngFor="let standElement of standElements">
   <stand-element [standElement]="standElement" [imageList]="imageList"></stand-element>
 </ng-container>
 <button (click)="add()">立ち絵設定追加</button>

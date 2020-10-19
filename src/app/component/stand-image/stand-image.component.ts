@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { DataElement } from '@udonarium/data-element';
+import { GameCharacter } from '@udonarium/game-character';
 
 @Component({
   selector: 'stand-image',
@@ -10,9 +11,11 @@ import { DataElement } from '@udonarium/data-element';
   styleUrls: ['./stand-image.component.css']
 })
 export class StandImageComponent implements OnInit {
+  @Input() gameCharacter: GameCharacter;
   @Input() standElement: DataElement;
 
   private _imageFile: ImageFile = ImageFile.Empty;
+
   isGhostly = false;
   isVisible = true;
 
@@ -39,9 +42,13 @@ export class StandImageComponent implements OnInit {
   }
 
   get position(): number {
-    if (!this.standElement) return 0;
+    if (!this.gameCharacter) return 0;
+    return this.gameCharacter.standList.position;
+    //ToDO 位置の個別指定
+    /*
     let elm = this.standElement.getFirstElementByName('position');
     return elm ? +elm.value - 5 : 0;
+    */
   }
 
   toGhostly() {

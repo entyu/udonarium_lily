@@ -48,10 +48,10 @@
     max-height: 50px;
     border-radius: 0.5rem;
     color: black;
-    filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232));
+    /* filter: drop-shadow(1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px 1px 0px rgb(255, 244, 232)) drop-shadow(-1px -1px 0px rgb(255, 244, 232)) drop-shadow(1px -1px 0px rgb(255, 244, 232)); */
     z-index: 100;
     margin-top: 1px;
-    margin-left: 1px;
+    margin-left: 5px;
   }
   .icon-image-box img {
     width: 100%;

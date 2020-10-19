@@ -1,5 +1,6 @@
 import { ComponentFactoryResolver, Injectable, ViewContainerRef } from '@angular/core';
 import { DataElement } from '@udonarium/data-element';
+import { GameCharacter } from '@udonarium/game-character';
 import { StandImageComponent } from 'component/stand-image/stand-image.component';
 
 @Injectable({
@@ -13,9 +14,10 @@ export class StandImageService {
     private componentFactoryResolver: ComponentFactoryResolver
   ) { }
   
-  show(standElement: DataElement) {
+  show(gameCharacter: GameCharacter, standElement: DataElement) {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(StandImageComponent);
     let standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(componentFactory);
+    standImageComponentRef.instance.gameCharacter = gameCharacter;
     standImageComponentRef.instance.standElement = standElement;
     return standImageComponentRef;
   }

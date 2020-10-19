@@ -69,6 +69,19 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     return null;
   }
 
+  get standNameList(): string[] {
+    if (!this.character || !this.character.standList) return [];
+    let ret: string[] = [];
+    for (let standElement of this.character.standList.getElementsByName('stand')) {
+      let nameElement = standElement.getFirstElementByName('name');
+      if (nameElement && nameElement.value && ret.indexOf(nameElement.value.toString()) < 0) {
+        ret.push(nameElement.value.toString());
+      }
+    }
+    return ret.sort();
+  }
+  standName: string = '';
+
   get imageFile(): ImageFile {
     let object = ObjectStore.instance.get(this.sendFrom);
     let image: ImageFile = null;
@@ -237,62 +250,73 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (this.character) {
       text = this.character.chatPalette.evaluate(this.text, this.character.rootDataElement);
       const standList = this.character.standList;
-      let isTextTagMatch = false;
+      let textTagMatch = '';
       if (standList) {
-        let isUseDfault = true;
-        let defautStands: DataElement[] = [];
-        let matchStands: DataElement[] = [];
-        for (const stand of standList.getElementsByName('stand')) {
-          if (!stand.getFirstElementByName('imageIdentifier') || !stand.getFirstElementByName('conditionType')) continue;
-          const conditionType = stand.getFirstElementByName('conditionType').value; 
-          if (conditionType == StandConditionType.Default) {
-            defautStands.push(stand);
-          } else {
-            const postfies = (stand.getFirstElementByName('postfix') ? stand.getFirstElementByName('postfix').value.toString() : null);
-            const targetImageIdentifier = (stand.getFirstElementByName('targetImageIdentifier') ? stand.getFirstElementByName('targetImageIdentifier').value.toString() : null);
-            let conditionPostfix = false;
-            let conditionImage = false;
-            if (postfies 
-              && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
-              for (let postfix of postfies.split(/[\r\n]+/g)) {
-                if (!postfix || postfix.trim().length == 0) continue;
-                if (text.trim().endsWith(postfix)) {
-                  if (postfix.trim().slice(0, 0) == '@') isTextTagMatch = true;
-                  conditionPostfix = true;
-                }
-              }
-            }
-            if (targetImageIdentifier 
-              && (conditionType == StandConditionType.Image || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
-              let identifier = null;
-              if (this.isUseFaceIcon && this.character.faceIcon) {
-                identifier = this.character.faceIcon.identifier;
-              } else {
-                identifier = this.character.imageFile ? this.character.imageFile.identifier : null;
-              }
-              conditionImage = (identifier && identifier == targetImageIdentifier);
-            }
-            if ((conditionPostfix && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage))
-              || (conditionImage && (conditionType == StandConditionType.Image || conditionType == StandConditionType.PostfixOrImage))
-              || (conditionPostfix && conditionImage && conditionType == StandConditionType.PostfixAndImage)) {
-                isUseDfault = false;
-                matchStands.push(stand);
+        let useStands = null;
+        if (this.standName != '') {
+          for (const standElement of standList.standElements) {
+            const nameElement = standElement.getFirstElementByName('name');
+            useStands = [];
+            if (nameElement && nameElement.value.toString().trim() == this.standName.trim()) {
+              useStands.push(standElement);
             }
           }
+        } else {
+          let isUseDfault = true;
+          let defautStands: DataElement[] = [];
+          let matchStands: DataElement[] = [];
+          for (const standElement of standList.standElements) {
+            if (!standElement.getFirstElementByName('imageIdentifier') || !standElement.getFirstElementByName('conditionType')) continue;
+            const conditionType = standElement.getFirstElementByName('conditionType').value;
+            if (conditionType == StandConditionType.NotConditionStandUp) continue;
+            if (conditionType == StandConditionType.Default) {
+              defautStands.push(standElement);
+            } else {
+              const postfies = (standElement.getFirstElementByName('postfix') ? standElement.getFirstElementByName('postfix').value.toString() : null);
+              const targetImageIdentifiers = (standElement.getFirstElementByName('targetImageIdentifier') ? standElement.getElementsByName('targetImageIdentifier').map(e => e.value) : []);
+              let conditionPostfix = false;
+              let conditionImage = false;
+              if (postfies 
+                && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
+                for (let postfix of postfies.split(/[\r\n]+/g)) {
+                  if (!postfix || postfix.trim().length == 0) continue;
+                  if (text.endsWith(postfix)) {
+                    if ((postfix.trim().slice(0, 1) == '@' || postfix.trim().slice(0, 1) == '＠') && textTagMatch.length < postfix.trim().length) textTagMatch = postfix.trim();
+                    conditionPostfix = true;
+                  }
+                }
+              }
+              if (targetImageIdentifiers.length > 0 
+                && (conditionType == StandConditionType.Image || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
+                let identifier = null;
+                if (this.isUseFaceIcon && this.character.faceIcon) {
+                  identifier = this.character.faceIcon.identifier;
+                } else {
+                  identifier = this.character.imageFile ? this.character.imageFile.identifier : null;
+                }
+                conditionImage = (identifier && targetImageIdentifiers.indexOf(identifier) >= 0);
+              }
+              if ((conditionPostfix && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage))
+                || (conditionImage && (conditionType == StandConditionType.Image || conditionType == StandConditionType.PostfixOrImage))
+                || (conditionPostfix && conditionImage && conditionType == StandConditionType.PostfixAndImage)) {
+                  isUseDfault = false;
+                  matchStands.push(standElement);
+              }
+            }
+          }
+          useStands = (isUseDfault && defautStands.length > 0 ? defautStands : matchStands);
         }
-        const useStands = (isUseDfault && defautStands.length > 0 ? defautStands : matchStands);
-        if (useStands.length > 0) {
+        if (useStands && useStands.length > 0) {
           // 立ち絵表示
           //ToDO 秘話対応
           const useStand = useStands[Math.floor(Math.random() * useStands.length)];
           EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier });
         }
       }
-      if (isTextTagMatch) {
-        let split = text.split('@');
-        if (split.length > 1) text = split.slice(0, split.length -2).join('@');
+      if (textTagMatch != '') {
+        text = text.slice(0, text.length - textTagMatch.length);
       }
-
+      
       const dialogRegExp = /「([\s\S]+?)」/gm;
       let match;
       let dialog = [];
@@ -329,20 +353,20 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         this.character.dialog = null;
       }
     }
-
-    this.chat.emit({
-      text: text,
-      gameType: this.gameType,
-      sendFrom: this.sendFrom,
-      sendTo: this.sendTo,
-      color: this.color, 
-      isInverse: this.character ? this.character.isInverse : false,
-      isHollow: this.character ? this.character.isHollow : false,
-      isBlackPaint: this.character ? this.character.isBlackPaint : false,
-      aura: this.character ? this.character.aura : -1,
-      isUseFaceIcon: this.isUseFaceIcon
-    });
-
+    if (text != '') {
+      this.chat.emit({
+        text: text,
+        gameType: this.gameType,
+        sendFrom: this.sendFrom,
+        sendTo: this.sendTo,
+        color: this.color, 
+        isInverse: this.character ? this.character.isInverse : false,
+        isHollow: this.character ? this.character.isHollow : false,
+        isBlackPaint: this.character ? this.character.isBlackPaint : false,
+        aura: this.character ? this.character.aura : -1,
+        isUseFaceIcon: this.isUseFaceIcon
+      });
+    }
     this.text = '';
     this.previousWritingLength = this.text.length;
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
@@ -532,7 +556,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   }
   private showStandSetting(gameObject: GameCharacter) {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 680, height: 650 };
+    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 720, height: 650 };
     let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
     component.character = gameObject;
   }

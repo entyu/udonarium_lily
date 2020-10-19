@@ -8,33 +8,37 @@
     </div>
     <div style="display: flex; flex-direction: column; padding-left: 3px; width: 100%">
       <div>
+        <ng-container *ngIf="nameElement">
+          <input type="text" [(ngModel)]="nameElement.value" placeholder="名称">　
+        </ng-container>
         <ng-container *ngIf="conditionTypeElement">
-          <select [(ngModel)]="conditionTypeElement.value" style="padding-right: 3px;">
-            <option value="{{ standConditionType.Default }}">条件なし</option>
+          <b style="font-size: smaller">　条件: </b><select [(ngModel)]="conditionTypeElement.value" style="padding-right: 3px;">
+            <option value="{{ standConditionType.Default }}">デフォルト</option>
             <option value="{{ standConditionType.Postfix }}">チャット末尾</option>
             <option value="{{ standConditionType.Image }}">指定画像</option>
             <option value="{{ standConditionType.PostfixOrImage }}">チャット末尾 または 指定画像</option>
             <option value="{{ standConditionType.PostfixAndImage }}">チャット末尾 かつ 指定画像</option>
+            <option value="{{ standConditionType.NotConditionStandUp }}">選択時のみ</option>
           </select>
         </ng-container>
-        <ng-container *ngIf="positionElement">
+        <ng-container *ngIf="false">
           <span style="white-space: nowrap"><b style="font-size: 11px; display: inline-block; margin-left: 3px">Pos: </b><input type="range" min="0" max="100" [(ngModel)]="positionElement.value">
           <span class="position-indicate">{{ positionElement.value }}%</span></span>
         </ng-container>
         <button style="float: right" class="remove-button" (click)="remove()">×</button>
       </div>
       <div *ngIf="postfixElement && (conditionTypeElement.value == standConditionType.Postfix || conditionTypeElement.value == standConditionType.PostfixOrImage || conditionTypeElement.value == standConditionType.PostfixAndImage)">
-        <textarea [(ngModel)]="postfixElement.value" style="width: 100%; margin-top: 3px; height: 2.8rem" placeholder="@チャットテキスト末尾、1行に一つずつ&#13;&#10;@怒り&#13;&#10;@必殺"></textarea>
+        <textarea [(ngModel)]="postfixElement.value" style="width: 100%; margin-top: 3px; height: 2.8rem" placeholder="@チャットテキスト末尾、1行に一つずつ&#13;&#10;@怒り&#13;&#10;@必殺技"></textarea>
       </div>
-      <div *ngIf="targetImageIdentifierElement && (conditionTypeElement.value == standConditionType.Image || conditionTypeElement.value == standConditionType.PostfixOrImage || conditionTypeElement.value == standConditionType.PostfixAndImage)">
+      <div *ngIf="conditionTypeElement.value == standConditionType.Image || conditionTypeElement.value == standConditionType.PostfixOrImage || conditionTypeElement.value == standConditionType.PostfixAndImage">
         <div *ngIf="imageList && imageList.length > 0" style="display: flex">
           <ng-container *ngFor="let image of imageList">
-            <div *ngIf="0 < image.url.length" class="icon-image-box" [ngClass]="{'current-icon': targetImageIdentifierElement.value == image.identifier}">
+            <div *ngIf="0 < image.url.length" class="icon-image-box" [ngClass]="{'current-icon': isSelectedImage(image.identifier)}">
               <img [src]="image.url | safe: 'resourceUrl'" [alt]="image.name" (click)="selectImage(image.identifier)" />
             </div>
           </ng-container>
         </div>
-        <div *ngIf="!imageList || imageList.length == 0">キャラクター画像、顔ICがありません</div>
+        <div *ngIf="!imageList || imageList.length == 0">キャラクター画像、顔ICが設定されていません</div>
       </div>
     </div>
   </div>

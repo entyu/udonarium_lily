@@ -225,7 +225,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         if (event.data.characterIdentifier === this.gameCharacter.identifier) {
           //ToDO 画像効果適用
           let standElement = ObjectStore.instance.get<DataElement>(event.data.standIdentifier);
-          let standImageComponentRef = this.standImageService.show(standElement);
+          let standImageComponentRef = this.standImageService.show(this.gameCharacter, standElement);
           if (this.currentStandImageComponentRef) {
             this.currentStandImageComponentRef.destroy();
           }
@@ -523,7 +523,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   private showStandSetting(gameObject: GameCharacter) {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 680, height: 650 };
+    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 720, height: 650 };
     let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
     component.character = gameObject;
   }
