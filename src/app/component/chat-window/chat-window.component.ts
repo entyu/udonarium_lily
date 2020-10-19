@@ -53,6 +53,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
    return this.chatTab.imageIdentifier;
   } 
 
+/*
   get imageFileUrl(): string {  
      let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifierTest);
      if (image) return image.url;
@@ -86,7 +87,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
      if (image) return image.url;
      return '';
   }
-
+*/
 //
 
 

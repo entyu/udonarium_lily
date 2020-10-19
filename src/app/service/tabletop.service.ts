@@ -107,6 +107,7 @@ export class TabletopService {
       .on('XML_LOADED', event => {
         let xmlElement: Element = event.data.xmlElement;
         // todo:立体地形の上にドロップした時の挙動
+
 //entyu_con
         console.log('parseXml todo:立体地形の上にドロップした時の挙動');
 //
@@ -122,7 +123,9 @@ export class TabletopService {
           this.placeToTabletop(gameObject);
           SoundEffect.play(PresetSound.piecePut);
         } else if (gameObject instanceof ChatTab) {
+
           ChatTabList.instance.addChatTab(gameObject);
+
         } 
 /*
         if ( gameObject instanceof TabletopObject) {//キャラ単体追加
@@ -206,7 +209,6 @@ export class TabletopService {
     this.terrainCache.refresh();
     this.textNoteCache.refresh();
     this.diceSymbolCache.refresh();
-
     this.clearMap();
   }
 

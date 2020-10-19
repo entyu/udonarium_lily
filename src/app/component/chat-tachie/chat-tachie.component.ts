@@ -23,7 +23,7 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
 
   @Input() chatTabidentifier: string = '';
 
-  @ViewChild('tachieArea', { read: ElementRef }) tachieArea: ElementRef;  
+  @ViewChild('tachieArea', { read: ElementRef }) private tachieArea: ElementRef;  
   private _tachieAreaWidth = 0;
   
 
@@ -33,29 +33,63 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
     return this._tachieAreaWidth;
   }
 
+  private _tachieHeight = 300;
+  get tachieHeight(): number { return this._tachieHeight; }
+  private _disp : boolean = true;
+  
+  
+  
+
   private timerId;
   
 //óßÇøäGï\é¶ïùéÊìæ
   ngAfterViewInit() {
-//    console.log('ngAfterViewInit()' + this.tachieArea.nativeElement.offsetWidth);
     this._tachieAreaWidth = this.tachieArea.nativeElement.offsetWidth;
     this.changeDetectionRef.detectChanges();
   }  
 
   ngAfterViewChecked() {
-//    console.log('ngAfterViewChecked()'  + this.tachieArea.nativeElement.offsetWidth);
     this._tachieAreaWidth = this.tachieArea.nativeElement.offsetWidth;
     this.changeDetectionRef.detectChanges();
   }  
+
+//z-indexéÊìæ
+
+  private _zindexOffset = 10;
+
+  get zIndex_00(): number { return this.chatTab.tachieZindex(0) + this._zindexOffset; }
+  get zIndex_01(): number { return this.chatTab.tachieZindex(1) + this._zindexOffset; }
+  get zIndex_02(): number { return this.chatTab.tachieZindex(2) + this._zindexOffset; }
+  get zIndex_03(): number { return this.chatTab.tachieZindex(3) + this._zindexOffset; }
+  get zIndex_04(): number { return this.chatTab.tachieZindex(4) + this._zindexOffset; }
+  get zIndex_05(): number { return this.chatTab.tachieZindex(5) + this._zindexOffset; }
+  get zIndex_06(): number { return this.chatTab.tachieZindex(6) + this._zindexOffset; }
+  get zIndex_07(): number { return this.chatTab.tachieZindex(7) + this._zindexOffset; }
+  get zIndex_08(): number { return this.chatTab.tachieZindex(8) + this._zindexOffset; }
+  get zIndex_09(): number { return this.chatTab.tachieZindex(9) + this._zindexOffset; }
+  get zIndex_10(): number { return this.chatTab.tachieZindex(10) + this._zindexOffset; }
+  get zIndex_11(): number { return this.chatTab.tachieZindex(11) + this._zindexOffset; }
+
+  private _opacity = 0.5
+
+  get opacity_00(): number { if( this.chatTab.tachieZindex(0) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_01(): number { if( this.chatTab.tachieZindex(1) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_02(): number { if( this.chatTab.tachieZindex(2) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_03(): number { if( this.chatTab.tachieZindex(3) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_04(): number { if( this.chatTab.tachieZindex(4) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_05(): number { if( this.chatTab.tachieZindex(5) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_06(): number { if( this.chatTab.tachieZindex(6) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_07(): number { if( this.chatTab.tachieZindex(7) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_08(): number { if( this.chatTab.tachieZindex(8) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_09(): number { if( this.chatTab.tachieZindex(9) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_10(): number { if( this.chatTab.tachieZindex(10) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_11(): number { if( this.chatTab.tachieZindex(11) == 11 ){return 1;}else{ return this._opacity ;}  }
+
+
+ 
  
 //
 //Ç±ÇÃé¿ëïÇÕÇ«Ç§Ç…Ç©ÇµÇΩÇ¢
-  get imageFileUrl(): string {  
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifierTest);
-     if (image) return image.url;
-     return '';;
-  }
-
   get imageFileUrl_00(): string { 
      if( ! this.chatTab.imageIdentifier )return '';
      let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[0]);

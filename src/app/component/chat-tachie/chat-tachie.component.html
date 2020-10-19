@@ -1,41 +1,52 @@
 <div>
   <form>
-  TEST001{{tachieAreaWidth}}
+<!--  TEST001{{tachieAreaWidth}} -->
   <div id="tachie-component_">
-    <div *ngIf="chatTab">
-      <div class="tachie-image-box" #tachieArea >
+    <div class="tachie-image-box" #tachieArea >
+      <div *ngIf="chatTab">
         <img class="tachie-image pos00" #tachie00 *ngIf="0 < imageFileUrl_00.length" [src]="imageFileUrl_00 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 0  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 0  ) ) translateY(0%)',
+           'z-index': zIndex_00 , 'opacity': opacity_00 }" />
         <img class="tachie-image pos01" #tachie01 *ngIf="0 < imageFileUrl_01.length" [src]="imageFileUrl_01 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 1  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 1  ) ) translateY(0%)',
+           'z-index': zIndex_01 , 'opacity': opacity_01 }" />
         <img class="tachie-image pos02" #tachie02 *ngIf="0 < imageFileUrl_02.length" [src]="imageFileUrl_02 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 2  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 2  ) ) translateY(0%)',
+           'z-index': zIndex_02 , 'opacity': opacity_02 }" />
         <img class="tachie-image pos03" #tachie03 *ngIf="0 < imageFileUrl_03.length" [src]="imageFileUrl_03 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 3  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 3  ) ) translateY(0%)',
+           'z-index': zIndex_03 , 'opacity': opacity_03 }" />
         <img class="tachie-image pos04" #tachie04 *ngIf="0 < imageFileUrl_04.length" [src]="imageFileUrl_04 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 4  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 4  ) ) translateY(0%)',
+           'z-index': zIndex_04 , 'opacity': opacity_04 }" />
         <img class="tachie-image pos05" #tachie05 *ngIf="0 < imageFileUrl_05.length" [src]="imageFileUrl_05 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 5  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 5  ) ) translateY(0%)',
+           'z-index': zIndex_05 , 'opacity': opacity_05 }" />
         <img class="tachie-image pos06" #tachie06 *ngIf="0 < imageFileUrl_06.length" [src]="imageFileUrl_06 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 6  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 6  ) ) translateY(0%)',
+           'z-index': zIndex_06 , 'opacity': opacity_06 }" />
         <img class="tachie-image pos07" #tachie07 *ngIf="0 < imageFileUrl_07.length" [src]="imageFileUrl_07 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 7  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 7  ) ) translateY(0%)',
+           'z-index': zIndex_07 , 'opacity': opacity_07 }" />
         <img class="tachie-image pos08" #tachie08 *ngIf="0 < imageFileUrl_08.length" [src]="imageFileUrl_08 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 8  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 8  ) ) translateY(0%)',
+           'z-index': zIndex_08 , 'opacity': opacity_08 }" />
         <img class="tachie-image pos09" #tachie09 *ngIf="0 < imageFileUrl_09.length" [src]="imageFileUrl_09 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 9  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 9  ) ) translateY(0%)',
+           'z-index': zIndex_09 , 'opacity': opacity_09 }" />
         <img class="tachie-image pos10" #tachie10 *ngIf="0 < imageFileUrl_10.length" [src]="imageFileUrl_10 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 10  ) ) translateY(0%)'}" />
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 10  ) ) translateY(0%)',
+           'z-index': zIndex_10 , 'opacity': opacity_10 }" />
         <img class="tachie-image pos11" #tachie11 *ngIf="0 < imageFileUrl_11.length" [src]="imageFileUrl_11 | safe: 'resourceUrl'"  
-           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 11  ) ) translateY(0%)'}" />
-
+           [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 11  ) ) translateY(0%)',
+           'z-index': zIndex_11 , 'opacity': opacity_11 }" />
+<!-- 
+           + 'z-index: '+ zIndex_00 }" />
+-->
       </div>
 
 <!--
 [ngStyle]="{'transform': 'translateX(+50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}"
-                    <div class="flex-item" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
-                      <div class="table-row" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
-                    </div>
 
            [ngStyle]="{'transform': 'translateX(  calc( ('  +  '0px + 100% )  ) ) translateY(0%)'}" />
 -->
@@ -44,6 +55,8 @@
 
     </div>
   </div>
-<!-- entyu end -->
+<!--  {{chatTab.imageIdentifierZpos}}  -->
+  <div>
+  </div>
   </form>
 </div>

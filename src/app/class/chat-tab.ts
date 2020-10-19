@@ -14,15 +14,44 @@ export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() name: string = 'タブ';
 //entyu
   @SyncVar() pos_num: number = -1;
-
-
   @SyncVar() imageIdentifier: string[] = ['a','b','c','d','e','f','g','h','i','j','k','l'];
   @SyncVar() imageIdentifierZpos: number[] = [0,1,2,3,4,5,6,7,8,9,10,11];
+
   @SyncVar() count:number = 0;
-  @SyncVar() imageIdentifierTest: string = 'test';//'testCharacter_1_image';
+  @SyncVar() imageIdentifierDummy: string = 'test';//通信のどうきのために使わなくても書かなきゃだめっぽい？;
   
   get chatMessages(): ChatMessage[] { return <ChatMessage[]>this.children; }
 
+  get imageZposList( ): number[] {
+    let ret:number[] = this.imageIdentifierZpos.slice();
+    return ret;
+  }
+  
+//entyu_21
+
+  tachieZindex( toppos : number ):number {
+    let index = this.imageIdentifierZpos.indexOf( Number(toppos) );
+    return index;
+  }
+
+  replaceTachieZindex( toppos : number ){
+//  console.log( 'imageIdentifierZpos before ' + this.imageIdentifierZpos ); 
+    let index = this.imageIdentifierZpos.indexOf( Number(toppos) );
+//  console.log( 'index = ' + index ); 
+    if( index >= 0 ){
+      this.imageIdentifierZpos.splice(index,1);
+      this.imageIdentifierZpos.push( Number(toppos) );
+      console.log( 'imageIdentifierZpos = ' + this.imageIdentifierZpos ); 
+    }
+  }
+
+//entyu_21
+  private _dispCharctorIcon: boolean = true;
+  get dispCharctorIcon(): boolean { return this._dispCharctorIcon; }
+  set dispCharctorIcon( flag : boolean) { this._dispCharctorIcon = flag; }
+
+ 
+//
   private _unreadLength: number = 0;
   get unreadLength(): number { return this._unreadLength; }
   get hasUnread(): boolean { return 0 < this.unreadLength; }
@@ -58,9 +87,8 @@ export class ChatTab extends ObjectNode implements InnerXml {
         this.pos_num = message[key];
         if( 0 <= this.pos_num && this.pos_num < this.imageIdentifier.length ){
            this.imageIdentifier[this.pos_num] = message['imageIdentifier'];
-           this.imageIdentifierTest = message['imageIdentifier'];
-//           this.imageIdentifier[this.pos_num] =            
-
+           this.replaceTachieZindex(this.pos_num);
+           this.imageIdentifierDummy = message['imageIdentifier'];//同期方法がすこぶる怪しい後で確認
         }
       }
 //

@@ -91,9 +91,7 @@ export class ChatMessageService {
     }else{
       imgIndex = 0;
     }
-    
-    console.log('‰~’Œ '+tachieNum +' '+imgIndex + ' ' + chatTab);
-    
+        
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.id,
       to: this.findId(sendTo),
