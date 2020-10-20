@@ -33,12 +33,24 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
     return this._tachieAreaWidth;
   }
 
-  private _tachieHeight = 300;
-  get tachieHeight(): number { return this._tachieHeight; }
-  private _disp : boolean = true;
+  public tachieHeightValue = 250;
+
+  get tachieAreaHeight() : number {
+    if( this.chatTab ){
+      if( this.chatTab.tachieDispFlag ){
+        return this.tachieHeightValue;
+      }
+    }
+    return 0;
+  }
   
   
-  
+  /*
+  get tachieDispFlag(): boolean { return this._tachieDispFlag; }
+  set tachieDispFlag(tachieDispFlag: boolean) {
+    this._tachieDispFlag = tachieDispFlag;
+  }
+*/  
 
   private timerId;
   

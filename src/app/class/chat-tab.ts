@@ -28,11 +28,13 @@ export class ChatTab extends ObjectNode implements InnerXml {
   }
   
 //entyu_21
-
   tachieZindex( toppos : number ):number {
     let index = this.imageIdentifierZpos.indexOf( Number(toppos) );
     return index;
   }
+
+//  public tachieDispFlag : boolean = true;
+  public tachieDispFlag = 1;
 
   replaceTachieZindex( toppos : number ){
 //  console.log( 'imageIdentifierZpos before ' + this.imageIdentifierZpos ); 
