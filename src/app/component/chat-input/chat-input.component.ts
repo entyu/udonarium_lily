@@ -259,9 +259,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       if (standList) {
         let useStands = null;
         if (this.standName != '') {
+          useStands = [];
           for (const standElement of standList.standElements) {
             const nameElement = standElement.getFirstElementByName('name');
-            useStands = [];
             if (nameElement && nameElement.value.toString().trim() == this.standName.trim()) {
               useStands.push(standElement);
             }
