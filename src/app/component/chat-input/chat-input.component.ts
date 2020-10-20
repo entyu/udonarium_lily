@@ -262,7 +262,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           useStands = [];
           for (const standElement of standList.standElements) {
             const nameElement = standElement.getFirstElementByName('name');
-            if (nameElement && nameElement.value.toString().trim() == this.standName.trim()) {
+            if (nameElement && nameElement.value.toString() == this.standName) {
               useStands.push(standElement);
             }
           }
@@ -284,9 +284,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
               if (postfies 
                 && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
                 for (let postfix of postfies.split(/[\r\n]+/g)) {
-                  if (!postfix || postfix.trim().length == 0) continue;
+                  if (!postfix || postfix.length == 0) continue;
                   if (StringUtil.toHalfWidth(text).endsWith(StringUtil.toHalfWidth(postfix))) {
-                    if ((postfix.trim().slice(0, 1) == '@' || postfix.trim().slice(0, 1) == '＠') && textTagMatch.length < postfix.trim().length) textTagMatch = postfix.trim();
+                    if ((postfix.slice(0, 1) == '@' || postfix.slice(0, 1) == '＠') && textTagMatch.length < postfix.length) textTagMatch = postfix;
                     conditionPostfix = true;
                   }
                 }
