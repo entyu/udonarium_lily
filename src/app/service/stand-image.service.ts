@@ -16,24 +16,22 @@ export class StandImageService {
   ) { }
   
   show(gameCharacter: GameCharacter, standElement: DataElement, color: string=null) {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(StandImageComponent);
-    if (StandImageService.CurrentStandImageShowing[gameCharacter.identifier]) {
-      StandImageService.CurrentStandImageShowing[gameCharacter.identifier].destroy();
-      delete StandImageService.CurrentStandImageShowing[gameCharacter.identifier];
+    for (let [identifier, standImageComponentRef] of Object.entries(StandImageService.CurrentStandImageShowing)) {
+      let instance = (<ComponentRef<StandImageComponent>>standImageComponentRef).instance;
+      if (instance.isVisible && gameCharacter.identifier != identifier) {
+        (<ComponentRef<StandImageComponent>>standImageComponentRef).instance.toGhostly();
+      } else {
+        (<ComponentRef<StandImageComponent>>standImageComponentRef).destroy();
+        delete StandImageService.CurrentStandImageShowing[identifier];
+      }
     }
     if (gameCharacter.location.name != 'graveyard') {
-      for (let [key, value] of Object.entries(StandImageService.CurrentStandImageShowing)) {
-        if (value) {
-          (<ComponentRef<StandImageComponent>>value).instance.toGhostly();
-        }
-      }
-      let standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(componentFactory);
+      const standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(StandImageComponent));
       standImageComponentRef.instance.gameCharacter = gameCharacter;
       standImageComponentRef.instance.standElement = standElement;
       standImageComponentRef.instance.color = color ? color : gameCharacter.chatPalette.color;
       StandImageService.CurrentStandImageShowing[gameCharacter.identifier] = standImageComponentRef;
     }
-    //return standImageComponentRef;
   }
 }
     
