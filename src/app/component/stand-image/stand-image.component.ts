@@ -1,3 +1,4 @@
+import { trigger, transition, animate, keyframes, style } from '@angular/animations';
 import { NgZone } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -8,7 +9,23 @@ import { GameCharacter } from '@udonarium/game-character';
 @Component({
   selector: 'stand-image',
   templateUrl: './stand-image.component.html',
-  styleUrls: ['./stand-image.component.css']
+  styleUrls: ['./stand-image.component.css'],
+  animations: [
+    trigger('standInOut', [
+      transition('void => *', [
+        animate('132ms cubic-bezier(.21,.97,.75,1.25)', keyframes([
+          style({ transform: 'translateY(48px) scale(0.9)', offset: 0 }),
+          style({ transform: 'translateY(0px) scale(1.0)', offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate('132ms ease-out', keyframes([
+          style({ transform: 'translateY(0px) scale(1.0)', offset: 0 }),
+          style({ transform: 'translateY(96px) scale(0.9)', offset: 1.0 })
+        ]))
+      ])
+    ])
+  ]
 })
 export class StandImageComponent implements OnInit {
   @Input() gameCharacter: GameCharacter;

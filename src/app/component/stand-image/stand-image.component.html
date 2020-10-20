@@ -1,4 +1,4 @@
-<div *ngIf="isVisible" class="stand-image-container" [style.left]="position + '%'" [style.height]="height == 0 ? '' : height + 'vh'"
+<div @standInOut *ngIf="isVisible" class="stand-image-container" [style.left]="position + '%'" [style.height]="height == 0 ? '' : height + 'vh'"
   [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard}" (click)="toGhostly(); toBackyard()">
   <ng-container *ngIf="gameCharacter && standImage.url && standImage.url.length > 0">
     <div class="inverser" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">
@@ -10,6 +10,8 @@
       </span>
     </div>
   </ng-container>
-  <span *ngIf="gameCharacter && gameCharacter.name" class="name-tag" [style.color]="color ? color : '#444'"
-  [style.border-color]="color ? color : '#444'"><b>{{ gameCharacter.name }}</b></span>
 </div>
+<span *ngIf="isVisible && gameCharacter && gameCharacter.name" class="name-tag" [style.color]="color ? color : '#444'" 
+  [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard}"
+  [style.left]="position + '%'"
+  [style.border-color]="color ? color : '#444'"><b>{{ gameCharacter.name }}</b></span>
