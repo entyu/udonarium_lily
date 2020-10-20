@@ -22,17 +22,16 @@ export class StandList extends DataElement {
     return this.getElementsByName('stand');
   }
 
-  add() {
-    let imageFile = null;
-    if (this.parent instanceof GameCharacter) {
-      imageFile = this.parent.imageFile;
-    }
-    if (!imageFile || imageFile == ImageFile.Empty) {
-      imageFile = ImageStorage.instance.get('stand_no_image');
-    }
+  add(identifier: string) {
+    //if (this.parent instanceof GameCharacter) {
+     // imageFile = this.parent.imageFile;
+    //}
+    //if (!imageFile || imageFile == ImageFile.Empty) {
+    //  imageFile = ImageStorage.instance.get('stand_no_image');
+    //}
     let standElement = DataElement.create('stand');
     standElement.appendChild(DataElement.create('name', '', { }, 'name_' + standElement.identifier));
-    standElement.appendChild(DataElement.create('imageIdentifier', imageFile.identifier, { type: 'image' }, 'imageIdentifier_' + standElement.identifier));
+    standElement.appendChild(DataElement.create('imageIdentifier', identifier ? identifier : 'stand_no_image', { type: 'image' }, 'imageIdentifier_' + standElement.identifier));
     standElement.appendChild(DataElement.create('conditionType', StandConditionType.Default, { }, 'conditionType_' + standElement.identifier));
     standElement.appendChild(DataElement.create('height', 0, { }, 'height_' + standElement.identifier));
     standElement.appendChild(DataElement.create('applyImageEffect', '', { }, 'applyImageEffect_' + standElement.identifier));

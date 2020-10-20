@@ -81,7 +81,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   add() {
-    this.character.standList.add();
+    this.character.standList.add(this.character.imageFile.identifier);
   }
 
   private imageElementToFile(dataElm: DataElement): ImageFile {
