@@ -254,8 +254,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on('FAREWELL_STAND_IMAGE', -1000, event => {
         this.standImageService.farewell(event.data.characterIdentifier);
       })
-      .on('FAREWELL_STAND_IMAGE_ALL', -1000, event => {
-        this.standImageService.farewellAll();
+      .on('DESTORY_STAND_IMAGE_ALL', -1000, event => {
+        this.standImageService.destroyAll();
       });
   }
 
@@ -356,7 +356,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   farewellStandAll() {
-    EventSystem.trigger('FAREWELL_STAND_IMAGE_ALL', null);
+    EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null);
   }
 
   diceAllOpne() {

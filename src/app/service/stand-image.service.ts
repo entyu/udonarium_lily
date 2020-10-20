@@ -38,13 +38,12 @@ export class StandImageService {
   farewell(identifier: GameCharacter | string) {
     if (identifier instanceof GameCharacter) identifier = identifier.identifier;
     const standImageComponentRef = StandImageService.CurrentStandImageShowing[identifier];
-    if (standImageComponentRef) {
-      standImageComponentRef.destroy();
-      delete StandImageService.CurrentStandImageShowing[identifier];
+    if (standImageComponentRef && standImageComponentRef.instance) {
+      standImageComponentRef.instance.isVisible = false;
     }
   }
 
-  farewellAll() {
+  destroyAll() {
     for (let [identifier, standImageComponentRef] of Object.entries(StandImageService.CurrentStandImageShowing)) {
       if (!standImageComponentRef) continue;
       (<ComponentRef<StandImageComponent>>standImageComponentRef).destroy();
