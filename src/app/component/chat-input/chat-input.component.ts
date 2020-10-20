@@ -319,7 +319,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
             //EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier }, ChatMessageService.findId(this.sendTo).slice(0, 6));
             //EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier }, PeerCursor.myCursor.peerId);
           } else {
-            EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier });
+            EventSystem.call('POPUP_STAND_IMAGE', { 
+              characterIdentifier: this.character.identifier, 
+              standIdentifier: useStand.identifier, 
+              color: this.character.chatPalette ? this.character.chatPalette.color : null
+            });
           }
           //console.log(ChatMessageService.findId(this.sendTo));
         }

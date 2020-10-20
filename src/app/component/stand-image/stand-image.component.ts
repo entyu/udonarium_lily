@@ -13,6 +13,7 @@ import { GameCharacter } from '@udonarium/game-character';
 export class StandImageComponent implements OnInit {
   @Input() gameCharacter: GameCharacter;
   @Input() standElement: DataElement;
+  @Input() color: string;
 
   private _imageFile: ImageFile = ImageFile.Empty;
 

@@ -15,7 +15,7 @@ export class StandImageService {
     private componentFactoryResolver: ComponentFactoryResolver
   ) { }
   
-  show(gameCharacter: GameCharacter, standElement: DataElement) {
+  show(gameCharacter: GameCharacter, standElement: DataElement, color: string=null) {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(StandImageComponent);
     if (StandImageService.CurrentStandImageShowing[gameCharacter.identifier]) {
       StandImageService.CurrentStandImageShowing[gameCharacter.identifier].destroy();
@@ -30,6 +30,7 @@ export class StandImageService {
       let standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(componentFactory);
       standImageComponentRef.instance.gameCharacter = gameCharacter;
       standImageComponentRef.instance.standElement = standElement;
+      standImageComponentRef.instance.color = color ? color : gameCharacter.chatPalette.color;
       StandImageService.CurrentStandImageShowing[gameCharacter.identifier] = standImageComponentRef;
     }
     //return standImageComponentRef;
