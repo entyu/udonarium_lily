@@ -252,8 +252,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.standImageService.show(gameCharacter, standElement, event.data.color ? event.data.color : null);
       })
       .on('FAREWELL_STAND_IMAGE', -1000, event => {
-        console.log(event.data.characterIdentifier)
         this.standImageService.farewell(event.data.characterIdentifier);
+      })
+      .on('FAREWELL_STAND_IMAGE_ALL', -1000, event => {
+        this.standImageService.farewellAll();
       });
   }
 
@@ -351,6 +353,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
       { name: '真上から視る', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', 'top') }
     ], '視点リセット');
+  }
+
+  farewellStandAll() {
+    EventSystem.trigger('FAREWELL_STAND_IMAGE_ALL', null);
   }
 
   diceAllOpne() {

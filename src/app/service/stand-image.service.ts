@@ -17,6 +17,7 @@ export class StandImageService {
   
   show(gameCharacter: GameCharacter, standElement: DataElement, color: string=null) {
     for (let [identifier, standImageComponentRef] of Object.entries(StandImageService.CurrentStandImageShowing)) {
+      if (!standImageComponentRef) continue;
       const instance = (<ComponentRef<StandImageComponent>>standImageComponentRef).instance;
       if (instance.isVisible && gameCharacter.identifier != identifier) {
         (<ComponentRef<StandImageComponent>>standImageComponentRef).instance.toGhostly();
@@ -39,6 +40,14 @@ export class StandImageService {
     const standImageComponentRef = StandImageService.CurrentStandImageShowing[identifier];
     if (standImageComponentRef) {
       standImageComponentRef.destroy();
+      delete StandImageService.CurrentStandImageShowing[identifier];
+    }
+  }
+
+  farewellAll() {
+    for (let [identifier, standImageComponentRef] of Object.entries(StandImageService.CurrentStandImageShowing)) {
+      if (!standImageComponentRef) continue;
+      (<ComponentRef<StandImageComponent>>standImageComponentRef).destroy();
       delete StandImageService.CurrentStandImageShowing[identifier];
     }
   }

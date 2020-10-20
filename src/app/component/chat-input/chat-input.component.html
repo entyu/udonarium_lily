@@ -48,13 +48,14 @@
       </span>
     </div>
     <div *ngIf="hasStand" style="font-size: smaller;">
-      <b style="margin-left: 3px;">Stand: </b><select style="width: 12em; margin-right: 4px;" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}">
+      <label style="margin-right: 2px"><input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" /><b style="font-size: smaller;">Stand: </b></label>
+      <select style="width: 8em; margin-right: 6px;" (change)="isUseStandImage = true" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}">
         <option value="" class="not-specified">未選択</option>
         <option *ngFor="let name of standNameList" value="{{name}}">{{name}}</option>
       </select>
-      <span style="white-space: nowrap;">
-        <b>Pos: </b><input style="width: 200px; margin-right: 3px;" type="range" min="0" max="100" [(ngModel)]="character.standList.position">
-        <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="character.standList.position"><b>％</b>
+      <span style="white-space: nowrap; margin-left: 1em; display: inline-block">
+        <b style="font-size: smaller;">Pos: </b><input style="width: 220px" (change)="isUseStandImage = true" type="range" min="0" max="100" [(ngModel)]="character.standList.position">
+        <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" (change)="isUseStandImage = true" [(ngModel)]="character.standList.position"><b style="font-size: smaller;">％</b>
       </span>
     </div>
     <div>

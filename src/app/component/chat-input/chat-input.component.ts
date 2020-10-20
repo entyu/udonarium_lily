@@ -60,6 +60,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   gameHelp: string|string[] = '';
 
   isUseFaceIcon: boolean = true;
+  isUseStandImage: boolean = true;
   
   get character(): GameCharacter {
     let object = ObjectStore.instance.get(this.sendFrom);
@@ -256,7 +257,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       text = this.character.chatPalette.evaluate(this.text, this.character.rootDataElement);
       const standList = this.character.standList;
       let textTagMatch = '';
-      if (standList) {
+      if (this.isUseStandImage && standList) {
         let useStands = null;
         if (this.standName != '') {
           useStands = [];
