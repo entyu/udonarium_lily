@@ -368,7 +368,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         this.character.dialog = null;
       }
     }
-    if (text != '') {
+    if (text.trim() != '') {
       this.chat.emit({
         text: text,
         gameType: this.gameType,
