@@ -39,6 +39,10 @@
     color: red;
     background-color: transparent;
 }
+.remove-button:hover {
+  background-color: #eee;
+}
+
 
 .icon-image-box {
     position: relative;

@@ -157,6 +157,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   setLocation(locationName: string) {
+    EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: this.tabletopObject.identifier });
     if (locationName == 'graveyard') {
       SoundEffect.play(PresetSound.sweep);
     } else {

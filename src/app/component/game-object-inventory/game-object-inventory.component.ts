@@ -319,6 +319,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
           return {
             name: `${location.alias}`, 
             action: () => { 
+              EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: gameObject.identifier });
               gameObject.setLocation(location.name);
               if (location.name == 'graveyard') {
                 SoundEffect.play(PresetSound.sweep);

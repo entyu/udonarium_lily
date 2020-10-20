@@ -428,18 +428,21 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       { name: 'テーブルから移動', action: null, subActions: [
         {
           name: '共有インベントリ', action: () => {
+            EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: this.gameCharacter.identifier });
             this.gameCharacter.setLocation('common');
             SoundEffect.play(PresetSound.piecePut);
           }
         },
         {
           name: '個人インベントリ', action: () => {
+            EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: this.gameCharacter.identifier });
             this.gameCharacter.setLocation(Network.peerId);
             SoundEffect.play(PresetSound.piecePut);
           }
         },
         {
           name: '墓場', action: () => {
+            EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: this.gameCharacter.identifier });
             this.gameCharacter.setLocation('graveyard');
             SoundEffect.play(PresetSound.sweep);
           }
@@ -505,7 +508,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     if (this.gameCharacter.currntImageIndex != index) {
       this.gameCharacter.currntImageIndex = index;
       SoundEffect.play(PresetSound.surprise);
-      EventSystem.call('FARAWAY_STAND_IMAGE', { characterIdentifier: this.gameCharacter.identifier });
+      EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: this.gameCharacter.identifier });
       EventSystem.trigger('UPDATE_INVENTORY', null);
     }
   }

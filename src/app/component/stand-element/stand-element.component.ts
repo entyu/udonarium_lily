@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { EventSystem } from '@udonarium/core/system';
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
@@ -136,5 +137,13 @@ export class StandElementComponent implements OnInit {
       if (elm.value == identifier) return true;
     }
     return false;
+  }
+
+  testStandUp() {
+    EventSystem.trigger('POPUP_STAND_IMAGE', { 
+      characterIdentifier: this.gameCharacter.identifier, 
+      standIdentifier: this.standElement.identifier, 
+      color: this.gameCharacter.chatPalette ? this.gameCharacter.chatPalette.color : null
+    });
   }
 }

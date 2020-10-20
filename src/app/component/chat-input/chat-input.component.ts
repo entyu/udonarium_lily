@@ -246,7 +246,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   sendChat(event: KeyboardEvent) {
     if (event) event.preventDefault();
 
-    if (!this.text.length) return;
+    //if (!this.text.length) return;
     if (event && event.keyCode !== 13) return;
 
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;

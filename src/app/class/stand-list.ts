@@ -1,16 +1,14 @@
 import { ImageFile } from './core/file-storage/image-file';
-import { ImageStorage } from './core/file-storage/image-storage';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
-import { GameCharacter } from './game-character';
 
 export enum StandConditionType {
-    Default,
-    Postfix,
-    Image,
-    PostfixOrImage,
-    PostfixAndImage,
-    NotConditionStandUp
+    Default = 1,
+    Postfix = 2,
+    Image = 3,
+    PostfixOrImage = 4,
+    PostfixAndImage = 5,
+    NotConditionStandUp = 6
 }
 
 @SyncObject('stand-list')
@@ -23,16 +21,11 @@ export class StandList extends DataElement {
   }
 
   add(identifier: string) {
-    //if (this.parent instanceof GameCharacter) {
-     // imageFile = this.parent.imageFile;
-    //}
-    //if (!imageFile || imageFile == ImageFile.Empty) {
-    //  imageFile = ImageStorage.instance.get('stand_no_image');
-    //}
+    let condition = this.getFirstElementByName('stand') ? StandConditionType.NotConditionStandUp : StandConditionType.Default;
     let standElement = DataElement.create('stand');
     standElement.appendChild(DataElement.create('name', '', { }, 'name_' + standElement.identifier));
-    standElement.appendChild(DataElement.create('imageIdentifier', identifier ? identifier : 'stand_no_image', { type: 'image' }, 'imageIdentifier_' + standElement.identifier));
-    standElement.appendChild(DataElement.create('conditionType', StandConditionType.Default, { }, 'conditionType_' + standElement.identifier));
+    standElement.appendChild(DataElement.create('imageIdentifier', identifier && identifier != ImageFile.Empty.identifier ? identifier : 'stand_no_image', { type: 'image' }, 'imageIdentifier_' + standElement.identifier));
+    standElement.appendChild(DataElement.create('conditionType', condition, { }, 'conditionType_' + standElement.identifier));
     standElement.appendChild(DataElement.create('height', 0, { }, 'height_' + standElement.identifier));
     standElement.appendChild(DataElement.create('applyImageEffect', '', { }, 'applyImageEffect_' + standElement.identifier));
     standElement.appendChild(DataElement.create('postfix', '', { }, 'postfix_' + standElement.identifier));

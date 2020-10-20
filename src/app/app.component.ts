@@ -251,10 +251,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         let gameCharacter = ObjectStore.instance.get<GameCharacter>(event.data.characterIdentifier);
         this.standImageService.show(gameCharacter, standElement, event.data.color ? event.data.color : null);
       })
-      .on('FARAWAY_STAND_IMAGE', -1000, event => {
-          //if (this.currentStandImageComponentRef) {
-          //  this.currentStandImageComponentRef.destroy();
-          //}
+      .on('FAREWELL_STAND_IMAGE', -1000, event => {
+        console.log(event.data.characterIdentifier)
+        this.standImageService.farewell(event.data.characterIdentifier);
       });
   }
 

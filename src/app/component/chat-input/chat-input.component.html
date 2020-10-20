@@ -48,7 +48,7 @@
       </span>
     </div>
     <div *ngIf="hasStand" style="font-size: smaller;">
-      <b>Stand: </b><select style="width: 12em; margin-right: 4px;" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}">
+      <b style="margin-left: 3px;">Stand: </b><select style="width: 12em; margin-right: 4px;" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}">
         <option value="" class="not-specified">未選択</option>
         <option *ngFor="let name of standNameList" value="{{name}}">{{name}}</option>
       </select>

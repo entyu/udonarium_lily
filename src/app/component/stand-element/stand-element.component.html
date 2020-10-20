@@ -16,10 +16,10 @@
     <div style="display: flex; flex-direction: column; padding-left: 3px; width: 100%">
       <div>
         <ng-container *ngIf="nameElement">
-          <input type="text" [(ngModel)]="nameElement.value" placeholder="Name">　
+          <input type="text" style="width: 7em" [(ngModel)]="nameElement.value" placeholder="Name">　
         </ng-container>
         <ng-container *ngIf="conditionTypeElement">
-          <b style="font-size: smaller">　Cond: </b><select [(ngModel)]="conditionTypeElement.value" style="padding-right: 3px;">
+          <b style="font-size: smaller">　Cond: </b><select [(ngModel)]="conditionTypeElement.value">
             <option value="{{ standConditionType.Default }}">デフォルト</option>
             <option value="{{ standConditionType.Postfix }}">チャット末尾</option>
             <option value="{{ standConditionType.Image }}">指定画像</option>
@@ -32,6 +32,7 @@
           <span style="white-space: nowrap"><b style="font-size: 11px; display: inline-block; margin-left: 3px">Pos: </b><input type="range" min="0" max="100" [(ngModel)]="positionElement.value">
           <span class="position-indicate">{{ positionElement.value }}%</span></span>
         </ng-container>
+        <button style="font-size: 9px; margin-left: 1em;" (click)="testStandUp()"><b>テスト (自分だけ見る)</b></button>
         <button style="float: right" class="remove-button" (click)="remove()">×</button>
       </div>
       <div>

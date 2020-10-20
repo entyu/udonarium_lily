@@ -1,11 +1,11 @@
 <div *ngIf="isVisible" class="stand-image-container" [style.left]="position + '%'" [style.height]="height == 0 ? '' : height + 'vh'"
   [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard}" (click)="toGhostly(); toBackyard()">
   <ng-container *ngIf="gameCharacter && standImage.url && standImage.url.length > 0">
-    <div class="inverser" style="position: absolute;" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">
+    <div class="inverser" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">
       <span class="aura" [ngClass]="{black: isApplyImageEffect && gameCharacter.aura == 0, blue: isApplyImageEffect && gameCharacter.aura == 1, 
         green: isApplyImageEffect && gameCharacter.aura == 2, cyan: isApplyImageEffect && gameCharacter.aura == 3, red: isApplyImageEffect && gameCharacter.aura == 4,
         magenta: isApplyImageEffect && gameCharacter.aura == 5, yellow: isApplyImageEffect && gameCharacter.aura == 6, white: isApplyImageEffect && gameCharacter.aura == 7}">
-        <img class="stand-image" [style.height]="height == 0 ? '' : height + 'vh'" [src]="standImage.url | safe: 'resourceUrl'" 
+        <img class="stand-image" [style.height]="height > 0 ? height + 'vh' : 'auto'" [src]="standImage.url | safe: 'resourceUrl'" 
           [ngClass]="{'black-paint': isApplyImageEffect && gameCharacter.isBlackPaint, 'hollow': isApplyImageEffect && gameCharacter.isHollow}">
       </span>
     </div>
