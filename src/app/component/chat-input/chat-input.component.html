@@ -25,19 +25,23 @@
 <!-- entyu_10-->
 
     <div >
-      <div class="table-cell">
-        立ち絵 
-      </div>
       <div class="tachie-tag table-cell">
         <ng-container *ngIf="1 >= selectCharacterTachieNum">
           <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
           min="0" max="0" [(ngModel)]="tachieNum" />
            0/0 立ち絵
+
         </ng-container>
         <ng-container *ngIf="1 < selectCharacterTachieNum">
           <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
           min="0" max="{{selectCharacterTachieNum -1}}" [(ngModel)]="tachieNum" />
-         {{tachieNum}}/{{selectCharacterTachieNum - 1}} 
+         {{tachieNum}}/{{selectCharacterTachieNum - 1}} 立ち絵
+            <ng-container *ngIf="selectCharacterTachie.currentValue.length > 0"> 
+              {{selectCharacterTachie.currentValue}}
+            </ng-container>
+            <ng-container *ngIf="selectCharacterTachie.currentValue.length <= 0"> 
+            </ng-container>
+
         </ng-container>
 
       </div>
