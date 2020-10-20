@@ -77,6 +77,12 @@ export class StandElementComponent implements OnInit {
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('applyImageEffect', '', { }, 'applyImageEffect_' + this.standElement.identifier));
   }
 
+  get applyRollElement() {
+    if (!this.standElement) return null;
+    let elm = this.standElement.getFirstElementByName('applyRoll');
+    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('applyRoll', '', { }, 'applyRoll_' + this.standElement.identifier));
+  }
+
   get positionElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('position');
@@ -85,6 +91,14 @@ export class StandElementComponent implements OnInit {
 
   get isApplyImageEffect(): boolean {
     let elm = this.applyImageEffectElement;
+    if (elm && elm.value) {
+      return true;
+    }
+    return false;
+  }
+
+  get isApplyRoll(): boolean {
+    let elm = this.applyRollElement;
     if (elm && elm.value) {
       return true;
     }

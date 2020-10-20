@@ -37,14 +37,20 @@
       </div>
       <div>
         <ng-container *ngIf="applyImageEffectElement">
-          <label style="margin-right: 1em;">
+          <label style="margin-right: 0.6em;">
             <input type="checkbox" [(ngModel)]="applyImageEffectElement.value" checked="{{applyImageEffectElement.value ? 'checked' : ''}}" (change)="applyImageEffectElement.value = (applyImageEffectElement.value ? 'applyImageEffect' : '')">
-            <b style="font-size: smaller;">画像効果を反映</b>
+            <b style="font-size: smaller;">画像効果</b>
+          </label>
+        </ng-container>
+        <ng-container *ngIf="applyRollElement">
+          <label style="margin-right: 0.6em;">
+            <input type="checkbox" [(ngModel)]="applyRollElement.value" checked="{{applyRollElement.value ? 'checked' : ''}}" (change)="applyRollElement.value = (applyRollElement.value ? 'applyRoll' : '')">
+            <b style="font-size: smaller;">回転</b>
           </label>
         </ng-container>
         <ng-container *ngIf="heightElement">
           <span style="white-space: nowrap"><b style="font-size: smaller; display: inline-block; margin-left: 3px">Height (0=個別指定しない): </b>
-            <input style="width: 160px" type="range" min="0" max="100" [(ngModel)]="heightElement.value">
+            <input style="width: 140px" type="range" min="0" max="100" [(ngModel)]="heightElement.value">
             <input style="width: 3em; text-align: right;" type="number" min="0" max="100" [(ngModel)]="heightElement.value">
           </span>
         </ng-container>

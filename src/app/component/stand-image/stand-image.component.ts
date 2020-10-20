@@ -1,5 +1,5 @@
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
-import { NgZone } from '@angular/core';
+import { ElementRef, NgZone, ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
@@ -32,11 +32,14 @@ export class StandImageComponent implements OnInit {
   @Input() standElement: DataElement;
   @Input() color: string;
 
+  @ViewChild('standImageElement', { static: false }) standImageElement: ElementRef;
+
   private _imageFile: ImageFile = ImageFile.Empty;
 
   isGhostly = false;
   isBackyard = false;
   isVisible = true;
+  standImageTransformOrigin = 'center';
 
   constructor(
     private ngZone: NgZone
@@ -89,6 +92,25 @@ export class StandImageComponent implements OnInit {
     return false;
   }
 
+  get isApplyRoll(): boolean {
+    if (!this.standElement || !this.gameCharacter) return false;
+    let elm = this.standElement.getFirstElementByName('applyRoll');
+    if (elm && elm.value) {
+      return true;
+    }
+    return false;
+  }
+
+  calcStandImageTransformOrigin(): string {
+    if (!this.standImageElement) return 'center';
+    const width = this.standImageElement.nativeElement.naturalWidth;
+    console.log(width);
+    const height = this.standImageElement.nativeElement.naturalHeight;
+    let ratio = (width > height ? (height / width - 0.5) : (1 - width / (height * 2)));
+    if (ratio > 0.66) ratio = 0.66;
+    return 'center ' + (ratio * 100) + '%';
+  } 
+
   toGhostly() {
     this.ngZone.run(() => {
       this.isGhostly = true;
@@ -99,5 +121,9 @@ export class StandImageComponent implements OnInit {
     this.ngZone.run(() => {
       this.isBackyard = true;
     });
+  }
+
+  onImageLoad() {
+    this.standImageTransformOrigin = this.calcStandImageTransformOrigin();
   }
 }
