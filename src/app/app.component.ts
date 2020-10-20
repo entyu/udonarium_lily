@@ -40,6 +40,8 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { StandImageService } from 'service/stand-image.service';
+import { GameCharacter } from '@udonarium/game-character';
+import { DataElement } from '@udonarium/data-element';
 
 @Component({
   selector: 'app-root',
@@ -61,7 +63,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private appConfigService: AppConfigService,
     private saveDataService: SaveDataService,
     private ngZone: NgZone,
-    private contextMenuService: ContextMenuService
+    private contextMenuService: ContextMenuService,
+    private standImageService: StandImageService
   ) {
 
     this.ngZone.runOutsideAngular(() => {
@@ -242,6 +245,20 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       })
       .on('DISCONNECT_PEER', event => {
         this.lazyNgZoneUpdate(event.isSendFromSelf);
+      })
+      .on('POPUP_STAND_IMAGE', -1000, event => {
+        let standElement = ObjectStore.instance.get<DataElement>(event.data.standIdentifier);
+        let gameCharacter = ObjectStore.instance.get<GameCharacter>(event.data.characterIdentifier);
+        let standImageComponentRef = this.standImageService.show(gameCharacter, standElement);
+        //if (this.currentStandImageComponentRef) {
+        //  this.currentStandImageComponentRef.destroy();
+        //}
+        //this.currentStandImageComponentRef = standImageComponentRef;
+      })
+      .on('FARAWAY_STAND_IMAGE', -1000, event => {
+          //if (this.currentStandImageComponentRef) {
+          //  this.currentStandImageComponentRef.destroy();
+          //}
       });
   }
 

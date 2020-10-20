@@ -8,8 +8,10 @@
 
 .is-ghostly {
     opacity: 0.3;
-    pointer-events: none;
-    z-index: 0;
+}
+.backyard {
+  pointer-events: none;
+  z-index: 0;
 }
 
 .name-tag {

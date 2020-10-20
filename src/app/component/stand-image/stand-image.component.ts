@@ -17,6 +17,7 @@ export class StandImageComponent implements OnInit {
   private _imageFile: ImageFile = ImageFile.Empty;
 
   isGhostly = false;
+  isBackyard = false;
   isVisible = true;
 
   constructor(
@@ -73,6 +74,12 @@ export class StandImageComponent implements OnInit {
   toGhostly() {
     this.ngZone.run(() => {
       this.isGhostly = true;
+    });
+  }
+
+  toBackyard() {
+    this.ngZone.run(() => {
+      this.isBackyard = true;
     });
   }
 }
