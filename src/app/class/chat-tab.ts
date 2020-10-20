@@ -26,7 +26,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     let ret:number[] = this.imageIdentifierZpos.slice();
     return ret;
   }
-  
+
 //entyu_21
   tachieZindex( toppos : number ):number {
     let index = this.imageIdentifierZpos.indexOf( Number(toppos) );

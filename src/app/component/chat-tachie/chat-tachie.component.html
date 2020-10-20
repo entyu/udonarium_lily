@@ -50,20 +50,19 @@
            [ngStyle]="{'transform': 'translateX(  calc( ('  +  '0px + 100% )  ) ) translateY(0%)'}" />
 -->
 
-
-
     </div>
   </div>
 <!--  {{chatTab.imageIdentifierZpos}}  -->
     <div>
+      立ち絵表示:
       <ng-container *ngIf="chatTab">
   　    <input type="checkbox" value="tachieDispFlag"  [(ngModel)]="chatTab.tachieDispFlag" name="tachieDispFlag">
       </ng-container>
       <ng-container *ngIf="!chatTab">
         <input type="checkbox">
       </ng-container>
-      立ち絵表示:
-      
+　　　/サイズ:
+      <input [(ngModel)]="tachieHeightValue" type="number" min="{{minTachieSize}}" max="{{maxTachieSize}}" name="tachieHeight" (change)="chkHeight($event.target.value)"/>
     </div>
   </form>
 </div>

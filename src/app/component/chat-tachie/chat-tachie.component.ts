@@ -34,7 +34,16 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
   }
 
   public tachieHeightValue = 250;
-
+  public minTachieSize = 100;
+  public maxTachieSize = 500;
+  
+  chkHeight( newNum ){
+    
+    if( newNum <= this.minTachieSize) this.tachieHeightValue = this.minTachieSize;
+    if( newNum >= this.maxTachieSize) this.tachieHeightValue = this.maxTachieSize;
+    
+  }
+  
   get tachieAreaHeight() : number {
     if( this.chatTab ){
       if( this.chatTab.tachieDispFlag ){
