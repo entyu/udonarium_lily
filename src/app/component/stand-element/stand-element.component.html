@@ -21,8 +21,8 @@
         <ng-container *ngIf="conditionTypeElement">
           <b style="font-size: smaller">　Cond: </b><select [(ngModel)]="conditionTypeElement.value">
             <option value="{{ standConditionType.Default }}">デフォルト</option>
-            <option value="{{ standConditionType.Postfix }}">チャット末尾</option>
             <option value="{{ standConditionType.Image }}">指定画像</option>
+            <option value="{{ standConditionType.Postfix }}">チャット末尾</option>
             <option value="{{ standConditionType.PostfixOrImage }}">チャット末尾 または 指定画像</option>
             <option value="{{ standConditionType.PostfixAndImage }}">チャット末尾 かつ 指定画像</option>
             <option value="{{ standConditionType.NotConditionStandUp }}">選択時のみ</option>
