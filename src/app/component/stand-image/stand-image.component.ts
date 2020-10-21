@@ -104,9 +104,8 @@ export class StandImageComponent implements OnInit {
   calcStandImageTransformOrigin(): string {
     if (!this.standImageElement) return 'center';
     const width = this.standImageElement.nativeElement.naturalWidth;
-    console.log(width);
     const height = this.standImageElement.nativeElement.naturalHeight;
-    let ratio = (width > height ? (height / width - 0.5) : (1 - width / (height * 2)));
+    let ratio = 1 - width / (height * 2);
     if (ratio > 0.66) ratio = 0.66;
     return 'center ' + (ratio * 100) + '%';
   } 
