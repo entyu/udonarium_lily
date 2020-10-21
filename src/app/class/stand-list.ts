@@ -4,8 +4,8 @@ import { DataElement } from './data-element';
 
 export enum StandConditionType {
     Default = 1,
-    Postfix = 2,
-    Image = 3,
+    Image = 2,
+    Postfix = 3,
     PostfixOrImage = 4,
     PostfixAndImage = 5,
     NotConditionStandUp = 6
