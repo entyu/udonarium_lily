@@ -121,7 +121,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
 //entyu_3 
-  //      { name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } },
+      { name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } },
 //
       ContextMenuSeparator,
       {
