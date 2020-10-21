@@ -2,13 +2,15 @@
   <div class="stand-container">
     <div class="stand-image-container">
       <ng-container *ngIf="standImage">
-        <div class="inverser" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">
-          <span class="aura" [ngClass]="{black: isApplyImageEffect && gameCharacter.aura == 0, blue: isApplyImageEffect && gameCharacter.aura == 1, 
-            green: isApplyImageEffect && gameCharacter.aura == 2, cyan: isApplyImageEffect && gameCharacter.aura == 3, red: isApplyImageEffect && gameCharacter.aura == 4,
-            magenta: isApplyImageEffect && gameCharacter.aura == 5, yellow: isApplyImageEffect && gameCharacter.aura == 6, white: isApplyImageEffect && gameCharacter.aura == 7}">
-            <img class="stand-image" (dblclick)="openModal()" [src]="standImage.url | safe: 'resourceUrl'" 
-              [ngClass]="{'black-paint': isApplyImageEffect && gameCharacter.isBlackPaint, 'hollow': isApplyImageEffect && gameCharacter.isHollow}">
-          </span>
+        <div [ngStyle]="{'transform': isApplyRoll ? 'rotate(' + gameCharacter.roll + 'deg)' : ''}">
+          <div class="inverser" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">
+            <span class="aura" [ngClass]="{black: isApplyImageEffect && gameCharacter.aura == 0, blue: isApplyImageEffect && gameCharacter.aura == 1, 
+              green: isApplyImageEffect && gameCharacter.aura == 2, cyan: isApplyImageEffect && gameCharacter.aura == 3, red: isApplyImageEffect && gameCharacter.aura == 4,
+              magenta: isApplyImageEffect && gameCharacter.aura == 5, yellow: isApplyImageEffect && gameCharacter.aura == 6, white: isApplyImageEffect && gameCharacter.aura == 7}">
+              <img class="stand-image" (dblclick)="openModal()" [src]="standImage.url | safe: 'resourceUrl'" 
+                [ngClass]="{'black-paint': isApplyImageEffect && gameCharacter.isBlackPaint, 'hollow': isApplyImageEffect && gameCharacter.isHollow}">
+            </span>
+          </div>
         </div>
         <button class="stand-image-button" (click)="openModal()">画像変更</button>
       </ng-container>
@@ -56,7 +58,7 @@
         </ng-container>
       </div>
       <div *ngIf="postfixElement && (conditionTypeElement.value == standConditionType.Postfix || conditionTypeElement.value == standConditionType.PostfixOrImage || conditionTypeElement.value == standConditionType.PostfixAndImage)">
-        <textarea [(ngModel)]="postfixElement.value" style="width: 100%; margin-top: 3px; height: 2.4rem" placeholder="@チャットテキスト末尾、1行に一つずつ&#13;&#10;@怒り&#13;&#10;@必殺技"></textarea>
+        <textarea [(ngModel)]="postfixElement.value" style="width: 100%; margin-top: 3px; height: 2.4rem" placeholder="1行に一つ、冒頭@を付けるとマッチ時にテキストから切り取り&#13;&#10;@怒り&#13;&#10;@必殺技"></textarea>
       </div>
       <div *ngIf="conditionTypeElement.value == standConditionType.Image || conditionTypeElement.value == standConditionType.PostfixOrImage || conditionTypeElement.value == standConditionType.PostfixAndImage">
         <div *ngIf="imageList && imageList.length > 0" style="display: flex">
