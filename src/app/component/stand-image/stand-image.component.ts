@@ -14,14 +14,14 @@ import { GameCharacter } from '@udonarium/game-character';
     trigger('standInOut', [
       transition('void => *', [
         animate('132ms cubic-bezier(.21,.97,.75,1.25)', keyframes([
-          style({ transform: 'translateY(48px) scale(0.9)', offset: 0 }),
-          style({ transform: 'translateY(0px) scale(1.0)', offset: 1.0 })
+          style({ opacity: 0.6, transform: 'translateY(48px) scale(0.9)', offset: 0 }),
+          style({ opacity: 1.0, transform: 'translateY(0px) scale(1.0)', offset: 1.0 })
         ]))
       ]),
       transition('* => void', [
         animate('132ms ease-out', keyframes([
           style({ transform: 'translateY(0px) scale(1.0)', offset: 0 }),
-          style({ transform: 'translateY(96px) scale(0.9)', offset: 1.0 })
+          style({ opacity: 0, transform: 'translateY(96px) scale(0.9)', offset: 1.0 })
         ]))
       ])
     ])

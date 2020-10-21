@@ -8,7 +8,7 @@
 }
 
 .is-ghostly {
-    opacity: 0.3;
+    opacity: 0.4;
 }
 .backyard {
   pointer-events: none;
@@ -31,10 +31,14 @@
   z-index: 1000005;
 }
 .name-tag.is-ghostly {
-  opacity: 0.3;
+  opacity: 0.4;
 }
 .name-tag.backyard {
   z-index: 1;
+}
+
+.is-ghostly.backyard {
+  opacity: 0.25;
 }
 
 .inverse {
