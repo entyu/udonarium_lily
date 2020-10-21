@@ -85,7 +85,6 @@ export class ChatMessageService {
 //entyu_8
     let img;
     let imgIndex;
-
     if( tachieNum > 0 ){
       imgIndex = tachieNum;
     }else{

@@ -108,7 +108,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     if (this.chatTab) {
       let text = this.palette.evaluate(value.text, this.character.rootDataElement);
 //entyu
-      this.chatMessageService.sendMessage(this.chatTab, value.text, value.gameType, value.sendFrom, value.sendTo ,value.tachieNum);
+      this.chatMessageService.sendMessage(this.chatTab, text, value.gameType, value.sendFrom, value.sendTo ,value.tachieNum);
 //      this.chatMessageService.sendMessage(this.chatTab, text, value.gameType, value.sendFrom, value.sendTo);
     }
   }

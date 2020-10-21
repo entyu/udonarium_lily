@@ -77,6 +77,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
     let chat = new ChatMessage();
     for (let key in message) {
+      console.log('addMessage:'+key);
       if (key === 'identifier') continue;
       if (key === 'tabIdentifier') continue;
       if (key === 'text') {
@@ -92,11 +93,13 @@ export class ChatTab extends ObjectNode implements InnerXml {
            this.replaceTachieZindex(this.pos_num);
            this.imageIdentifierDummy = message['imageIdentifier'];//同期方法がすこぶる怪しい後で確認
         }
+        continue;//v0.02.2で追加20201021
       }
 //
       chat.setAttribute(key, message[key]);
     }
     chat.initialize();
+ 
     EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
     this.appendChild(chat);
     return chat;
