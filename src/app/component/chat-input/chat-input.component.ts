@@ -271,6 +271,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           let isUseDfault = true;
           let defautStands: DataElement[] = [];
           let matchStands: DataElement[] = [];
+          // 優先順位を「それ以外→デフォルト」から変更する過程の効率悪い処理
+          let maxPriority = 1;
           for (const standElement of standList.standElements) {
             if (!standElement.getFirstElementByName('imageIdentifier') || !standElement.getFirstElementByName('conditionType')) continue;
             const conditionType = standElement.getFirstElementByName('conditionType').value;
@@ -307,10 +309,18 @@ export class ChatInputComponent implements OnInit, OnDestroy {
                 || (conditionPostfix && conditionImage && conditionType == StandConditionType.PostfixAndImage)) {
                   isUseDfault = false;
                   matchStands.push(standElement);
+                  if (maxPriority < +conditionType) maxPriority = +conditionType;
               }
             }
           }
-          useStands = (isUseDfault && defautStands.length > 0 ? defautStands : matchStands);
+          if (isUseDfault) {
+            useStands = defautStands;
+          } else {
+            useStands = matchStands.filter(elm => {
+              let value = elm.getFirstElementByName('conditionType').value;
+              return +value == maxPriority;
+            });
+          }
         }
         if (useStands && useStands.length > 0) {
           //ToDO 秘話対応
@@ -572,7 +582,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   }
   private showStandSetting(gameObject: GameCharacter) {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 720, height: 650 };
+    let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 720, height: 700 };
     let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
     component.character = gameObject;
   }

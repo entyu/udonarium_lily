@@ -8,8 +8,11 @@
   <input style="width: 350px" type="range" min="0" max="100" [(ngModel)]="height">
   <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="height">
 </div>
+<div style="font-size: smaller" class="description">
+<b>※</b>優先順位は、手動選択→「<b style="white-space: nowrap;">チャット末尾 かつ 指定画像</b>」→「<b style="white-space: nowrap;">チャット末尾 または 指定画像</b>」→「<b style="white-space: nowrap;">チャット末尾</b>」→「<b style="white-space: nowrap;">指定画像</b>」、どの条件も満たさない場合「<b style="white-space: nowrap;">デフォルト</b>」、複数ある場合はランダム。
+</div>
 <hr>
 <ng-container *ngFor="let standElement of standElements">
   <stand-element [standElement]="standElement" [imageList]="imageList" [gameCharacter]="character"></stand-element>
 </ng-container>
-<button (click)="add()">スタンド設定追加</button>
+<button (click)="add()">スタンド設定の追加</button>
