@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
@@ -6,18 +6,30 @@ import { ImageFile, ImageState } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { MimeType } from '@udonarium/core/file-storage/mime-type';
 import { GameObject } from '@udonarium/core/synchronize-object/game-object';
+import { PromiseQueue } from '@udonarium/core/system/util/promise-queue';
 import { XmlUtil } from '@udonarium/core/system/util/xml-util';
 import { DataSummarySetting } from '@udonarium/data-summary-setting';
 import { Room } from '@udonarium/room';
 
 import * as Beautify from 'vkbeautify';
 
+type UpdateCallback = (percent: number) => void;
+
 @Injectable({
   providedIn: 'root'
 })
 export class SaveDataService {
+  private static queue: PromiseQueue = new PromiseQueue('SaveDataServiceQueue');
 
-  saveRoom(fileName: string = 'ルームデータ') {
+  constructor(
+    private ngZone: NgZone
+  ) { }
+
+  saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
+    return SaveDataService.queue.add((resolve, reject) => resolve(this._saveRoomAsync(fileName, updateCallback)));
+  }
+
+  private _saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
     let files: File[] = [];
     let roomXml = this.convertToXml(new Room());
     let chatXml = this.convertToXml(ChatTabList.instance);
@@ -29,17 +41,31 @@ export class SaveDataService {
     files = files.concat(this.searchImageFiles(roomXml));
     files = files.concat(this.searchImageFiles(chatXml));
 
-    FileArchiver.instance.save(files, this.appendTimestamp(fileName));
+    return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 
-  saveGameObject(gameObject: GameObject, fileName: string = 'xml_data') {
+  saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
+    return SaveDataService.queue.add((resolve, reject) => resolve(this._saveGameObjectAsync(gameObject, fileName, updateCallback)));
+  }
+
+  private _saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
     let files: File[] = [];
     let xml: string = this.convertToXml(gameObject);
 
     files.push(new File([xml], 'data.xml', { type: 'text/plain' }));
     files = files.concat(this.searchImageFiles(xml));
 
-    FileArchiver.instance.save(files, this.appendTimestamp(fileName));
+    return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
+  }
+
+  private saveAsync(files: File[], zipName: string, updateCallback?: UpdateCallback): Promise<void> {
+    let progresPercent = -1;
+    return FileArchiver.instance.saveAsync(files, zipName, meta => {
+      let percent = meta.percent | 0;
+      if (percent <= progresPercent) return;
+      progresPercent = percent;
+      this.ngZone.run(() => updateCallback(progresPercent));
+    });
   }
 
   private convertToXml(gameObject: GameObject): string {

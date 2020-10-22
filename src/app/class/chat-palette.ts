@@ -1,6 +1,7 @@
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectContext } from './core/synchronize-object/game-object';
 import { ObjectNode } from './core/synchronize-object/object-node';
+import { StringUtil } from './core/system/util/string-util';
 
 import { DataElement } from './data-element';
 import { PeerCursor } from './peer-cursor';
@@ -69,7 +70,6 @@ export class ChatPalette extends ObjectNode {
     } else {
       evaluate = line.palette;
     }
-    //evaluate = StringUtil.toHalfWidth(evaluate);
 
     console.log(evaluate);
     let limit = 128;
@@ -78,7 +78,9 @@ export class ChatPalette extends ObjectNode {
     while (isContinue) {
       loop++;
       isContinue = false;
-      evaluate = evaluate.replace(/[\{｛]\s*([^\{｛\}｝]+)\s*[\}｝]/g, (match, name) => {
+      evaluate = evaluate.replace(/[{｛]\s*([^{}｛｝]+)\s*[}｝]/g, (match, name) => {
+        name = StringUtil.toHalfWidth(name);
+        console.log(name);
         isContinue = true;
         //name = StringUtil.toHalfWidth(name).toLocaleLowerCase();
         let ret: number|string = '';
@@ -141,11 +143,10 @@ export class ChatPalette extends ObjectNode {
   }
 
   private parseVariable(palette: string): PaletteVariable {
-    //palette = StringUtil.toHalfWidth(palette);
-    let array = /^\s*\/\/([^=＝\{｛\}｝\s]+)\s*[=＝]\s*(.*)\s*/gi.exec(palette);
+    let array = /^\s*[/／]{2}([^=＝{}｛｝\s]+)\s*[=＝]\s*(.+)\s*/gi.exec(palette);
     if (!array) return null;
     let variable: PaletteVariable = {
-      name: array[1],
+      name: StringUtil.toHalfWidth(array[1]),
       value: array[2]
     }
     return variable;

@@ -15,8 +15,8 @@ export class ImageSharingSystem {
 
   private sendTaskMap: Map<string, BufferSharingTask<ImageContext[]>> = new Map();
   private receiveTaskMap: Map<string, BufferSharingTask<ImageContext[]>> = new Map();
-  private maxSendTransmission: number = 1;
-  private maxReceiveTransmission: number = 4;
+  private maxSendTask: number = 2;
+  private maxReceiveTask: number = 4;
 
   private constructor() {
     console.log('FileSharingSystem ready...');
@@ -55,7 +55,7 @@ export class ImageSharingSystem {
           ImageStorage.instance.synchronize(event.sendFrom);
         }
 
-        if (request.length < 1 || this.isReceiveTransmission()) {
+        if (request.length < 1 || this.isLimitReceiveTask()) {
           return;
         }
         this.request(request, event.sendFrom);
@@ -72,11 +72,11 @@ export class ImageSharingSystem {
             randomRequest.push({ identifier: item.identifier, state: item.state });
         }
 
-        if (this.isSendTransmission() === false && 0 < randomRequest.length) {
+        if (this.isLimitSendTask() === false && 0 < randomRequest.length && !this.existsSendTask(event.data.receiver)) {
           // 送信
           let updateImages: ImageContext[] = this.makeSendUpdateImages(randomRequest);
           console.log('REQUEST_FILE_RESOURE ImageStorageService Send!!! ' + event.data.receiver + ' -> ' + updateImages.length);
-          this.startSendTransmission(updateImages, event.data.receiver);
+          this.startSendTask(updateImages, event.data.receiver);
         } else {
           // 中継
           let candidatePeers: string[] = event.data.candidatePeers;
@@ -108,7 +108,7 @@ export class ImageSharingSystem {
           console.warn('CANCEL_TASK_ ' + identifier);
           EventSystem.call('CANCEL_TASK_' + identifier, null, event.sendFrom);
         } else {
-          this.startReceiveTransmission(identifier);
+          this.startReceiveTask(identifier);
         }
       });
   }
@@ -117,9 +117,10 @@ export class ImageSharingSystem {
     EventSystem.unregister(this);
   }
 
-  private async startSendTransmission(updateImages: ImageContext[], sendTo: string) {
+  private async startSendTask(updateImages: ImageContext[], sendTo: string) {
     let identifier = updateImages.length === 1 ? updateImages[0].identifier : UUID.generateUuid();
-    this.sendTaskMap.set(identifier, null);
+    let task = BufferSharingTask.createSendTask<ImageContext[]>(identifier, sendTo);
+    this.sendTaskMap.set(task.identifier, task);
     EventSystem.call('START_FILE_TRANSMISSION', { taskIdentifier: identifier }, sendTo);
 
     /* hotfix issue #1 */
@@ -132,40 +133,41 @@ export class ImageSharingSystem {
     }
     /* */
 
-    let task = await BufferSharingTask.createSendTask(updateImages, sendTo, identifier);
-    this.sendTaskMap.set(task.identifier, task);
-
     task.onfinish = (task, data) => {
-      this.stopSendTransmission(task.identifier);
+      this.stopSendTask(task.identifier);
       ImageStorage.instance.synchronize();
     }
+
+    task.start(updateImages);
   }
 
-  private startReceiveTransmission(identifier: string) {
+  private startReceiveTask(identifier: string) {
     let task = BufferSharingTask.createReceiveTask<ImageContext[]>(identifier);
     this.receiveTaskMap.set(identifier, task);
     task.onfinish = (task, data) => {
-      this.stopReceiveTransmission(task.identifier);
+      this.stopReceiveTask(task.identifier);
       if (data) EventSystem.trigger('UPDATE_FILE_RESOURE', { identifier: task.identifier, updateImages: data });
       ImageStorage.instance.synchronize();
     }
-    console.log('startFileTransmission => ', this.receiveTaskMap.size);
+
+    task.start();
+    console.log('startReceiveTask => ', this.receiveTaskMap.size);
   }
 
-  private stopSendTransmission(identifier: string) {
+  private stopSendTask(identifier: string) {
     let task = this.sendTaskMap.get(identifier);
     if (task) { task.cancel(); }
     this.sendTaskMap.delete(identifier);
 
-    console.log('stopSendTransmission => ', this.sendTaskMap.size);
+    console.log('stopSendTask => ', this.sendTaskMap.size);
   }
 
-  private stopReceiveTransmission(identifier: string) {
+  private stopReceiveTask(identifier: string) {
     let task = this.receiveTaskMap.get(identifier);
     if (task) { task.cancel(); }
     this.receiveTaskMap.delete(identifier);
 
-    console.log('stopReceiveTransmission => ', this.receiveTaskMap.size);
+    console.log('stopReceiveTask => ', this.receiveTaskMap.size);
   }
 
   private request(request: CatalogItem[], peer: string) {
@@ -231,12 +233,19 @@ export class ImageSharingSystem {
     return 0 < this.sendTaskMap.size || 0 < this.receiveTaskMap.size;
   }
 
-  private isSendTransmission(): boolean {
-    return this.maxSendTransmission <= this.sendTaskMap.size;
+  private isLimitSendTask(): boolean {
+    return this.maxSendTask <= this.sendTaskMap.size;
   }
 
-  private isReceiveTransmission(): boolean {
-    return this.maxReceiveTransmission <= this.receiveTaskMap.size;
+  private isLimitReceiveTask(): boolean {
+    return this.maxReceiveTask <= this.receiveTaskMap.size;
+  }
+
+  private existsSendTask(peer: string): boolean {
+    for (let task of this.sendTaskMap.values()) {
+      if (task && task.sendTo === peer) return true;
+    }
+    return false;
   }
 }
 

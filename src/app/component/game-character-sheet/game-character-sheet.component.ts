@@ -80,6 +80,9 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   networkService = Network;
   MAX_IMAGE_ICON_COUNT = 5;
 
+  isSaveing: boolean = false;
+  progresPercent: number = 0;
+
   constructor(
     private saveDataService: SaveDataService,
     private panelService: PanelService,
@@ -147,13 +150,22 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  saveToXML() {
-    if (!this.tabletopObject) return;
+  async saveToXML() {
+    if (!this.tabletopObject || this.isSaveing) return;
+    this.isSaveing = true;
+    this.progresPercent = 0;
 
     let element = this.tabletopObject.getElement('name', this.tabletopObject.commonDataElement);
     let objectName: string = element ? <string>element.value : '';
 
-    this.saveDataService.saveGameObject(this.tabletopObject, 'xml_' + objectName);
+    await this.saveDataService.saveGameObjectAsync(this.tabletopObject, 'xml_' + objectName, percent => {
+      this.progresPercent = percent;
+    });
+
+    setTimeout(() => {
+      this.isSaveing = false;
+      this.progresPercent = 0;
+    }, 500);
   }
 
   setLocation(locationName: string) {

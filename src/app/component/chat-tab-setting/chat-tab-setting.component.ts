@@ -28,6 +28,9 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   get isDeleted(): boolean { return this.selectedTab ? ObjectStore.instance.get(this.selectedTab.identifier) == null : false; }
   get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
 
+  isSaveing: boolean = false;
+  progresPercent: number = 0;
+
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
@@ -60,11 +63,21 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     ChatTabList.instance.addChatTab('タブ');
   }
 
-  save() {
-    if (!this.selectedTab) return;
+  async save() {
+    if (!this.selectedTab || this.isSaveing) return;
+    this.isSaveing = true;
+    this.progresPercent = 0;
+
     let fileName: string = 'chat_' + this.selectedTab.name;
 
-    this.saveDataService.saveGameObject(this.selectedTab, fileName);
+    await this.saveDataService.saveGameObjectAsync(this.selectedTab, fileName, percent => {
+      this.progresPercent = percent;
+    });
+
+    setTimeout(() => {
+      this.isSaveing = false;
+      this.progresPercent = 0;
+    }, 500);
   }
 
   delete() {
