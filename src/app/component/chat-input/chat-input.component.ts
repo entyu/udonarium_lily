@@ -22,6 +22,8 @@ import { DataElement } from '@udonarium/data-element';
 import { StandConditionType } from '@udonarium/stand-list';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 
+import * as lzbase62 from 'lzbase62/lzbase62.min.js';
+
 @Component({
   selector: 'chat-input',
   templateUrl: './chat-input.component.html',
@@ -323,35 +325,38 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           }
         }
         if (useStands && useStands.length > 0) {
-          //ToDO 秘話対応
-          const useStand = useStands[Math.floor(Math.random() * useStands.length)];
+          const sendObj = {
+            characterIdentifier: this.character.identifier, 
+            standIdentifier: useStands[Math.floor(Math.random() * useStands.length)].identifier, 
+            color: this.character.chatPalette ? this.character.chatPalette.color : null
+          };
           if (this.sendTo) {
-            // とりあえず立ち絵は秘話時に表示しないがマッチした@以下の切り捨てはする
-            //EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier }, ChatMessageService.findId(this.sendTo).slice(0, 6));
-            //EventSystem.call('POPUP_STAND_IMAGE', { characterIdentifier: this.character.identifier, standIdentifier: useStand.identifier }, PeerCursor.myCursor.peerId);
+            // ほんとにこれでええんか？　仕様変わったら動かなくなるよな
+            const targetId = Network.peerContext.room ?
+                ChatMessageService.findId(this.sendTo) + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
+              : ChatMessageService.findId(this.sendTo);
+            EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetId);
+            EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
           } else {
-            EventSystem.call('POPUP_STAND_IMAGE', { 
-              characterIdentifier: this.character.identifier, 
-              standIdentifier: useStand.identifier, 
-              color: this.character.chatPalette ? this.character.chatPalette.color : null
-            });
+            EventSystem.call('POPUP_STAND_IMAGE', sendObj);
           }
-          //console.log(ChatMessageService.findId(this.sendTo));
         }
       }
       if (textTagMatch != '') {
         text = text.slice(0, text.length - textTagMatch.length);
       }
       
+      //ToDo 💭はEvant機能使うようにする
       const dialogRegExp = /「([\s\S]+?)」/gm;
       let match;
       let dialog = [];
       while ((match = dialogRegExp.exec(text)) !== null) {
         dialog.push(match[1]);
       }
-      if (dialog) {
-        //連続吹き出し
-        const dialogs = [...dialog, null];
+      if (dialog.length > 0) {
+        //連続💭とりあえずやめる（複数表示できないかな）
+        //const dialogs = [...dialog, null];
+        const dialogs = [dialog.join("\n\n"), null];
         const gameCharacter = this.character;
         const color = this.color;
         const peerId = PeerCursor.myCursor.peerId;
@@ -360,7 +365,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         const image_identifier = gameCharacter.imageFile ? gameCharacter.imageFile.identifier : null;
         const icon_identifier = gameCharacter.faceIcon ? gameCharacter.faceIcon.identifier : null;
         if (gameCharacter.dialogTimeOutId) clearTimeout(gameCharacter.dialogTimeOutId);
-        gameCharacter.dialog = null;
+        gameCharacter.dialog = null; //秘話バレしないようにいったん下す
         for (let i = 0; i < dialogs.length; i++) {
           gameCharacter.dialogTimeOutId = setTimeout(() => {
             gameCharacter.dialog = dialogs[i] ? { 
@@ -376,7 +381,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 6000 : 0));
         }
       } else {
-        this.character.dialog = null;
+        //this.character.dialog = null;
       }
     }
     if (text.trim() != '') {

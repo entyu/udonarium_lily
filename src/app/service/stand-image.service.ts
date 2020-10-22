@@ -32,11 +32,12 @@ export class StandImageService {
         delete StandImageService.currentStandImageShowing[identifier];
       }
     }
-    if (isNewbee) {
+    if (isNewbee && gameCharacter.location.name != 'graveyard') {
       const standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(StandImageComponent));
       standImageComponentRef.instance.gameCharacter = gameCharacter;
       standImageComponentRef.instance.standElement = standElement;
       standImageComponentRef.instance.color = color ? color : gameCharacter.chatPalette.color;
+      standImageComponentRef.instance.toFront();
       StandImageService.currentStandImageShowing[gameCharacter.identifier] = standImageComponentRef;
     }
   }

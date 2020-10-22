@@ -39,7 +39,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   isGhostly = false;
   isBackyard = false;
-  isVisible = true;
+  isVisible = false;
   standImageTransformOrigin = 'center';
 
   group = '';
@@ -49,9 +49,6 @@ export class StandImageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this._timeoutId = setTimeout(() => {
-      this.isVisible = false;
-    }, 12000);
   }
 
   get standImage(): ImageFile {
