@@ -16,17 +16,23 @@ export class StandImageService {
   ) { }
   
   show(gameCharacter: GameCharacter, standElement: DataElement, color: string=null) {
+    let isNewbee = true;
     for (let [identifier, standImageComponentRef] of Object.entries(StandImageService.currentStandImageShowing)) {
       if (!standImageComponentRef) continue;
       const instance = (<ComponentRef<StandImageComponent>>standImageComponentRef).instance;
       if (instance.isVisible && gameCharacter.identifier != identifier) {
-        (<ComponentRef<StandImageComponent>>standImageComponentRef).instance.toGhostly();
+        instance.toGhostly();
+      } else if (gameCharacter.identifier == identifier && gameCharacter.location.name != 'graveyard') {
+        instance.standElement = standElement;
+        instance.color = color ? color : gameCharacter.chatPalette.color;
+        instance.toFront();
+        isNewbee = false;
       } else {
         (<ComponentRef<StandImageComponent>>standImageComponentRef).destroy();
         delete StandImageService.currentStandImageShowing[identifier];
       }
     }
-    if (gameCharacter.location.name != 'graveyard') {
+    if (isNewbee) {
       const standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(StandImageComponent));
       standImageComponentRef.instance.gameCharacter = gameCharacter;
       standImageComponentRef.instance.standElement = standElement;

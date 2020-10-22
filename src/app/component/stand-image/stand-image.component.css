@@ -9,6 +9,7 @@
 
 .is-ghostly {
     opacity: 0.4;
+    z-index: 900000;
 }
 .backyard {
   pointer-events: none;
@@ -32,6 +33,7 @@
 }
 .name-tag.is-ghostly {
   opacity: 0.4;
+  z-index: 900005;
 }
 .name-tag.backyard {
   z-index: 1;

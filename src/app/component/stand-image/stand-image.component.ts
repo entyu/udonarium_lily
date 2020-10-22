@@ -1,5 +1,5 @@
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
-import { ElementRef, NgZone, ViewChild } from '@angular/core';
+import { ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
@@ -27,7 +27,7 @@ import { GameCharacter } from '@udonarium/game-character';
     ])
   ]
 })
-export class StandImageComponent implements OnInit {
+export class StandImageComponent implements OnInit, OnDestroy {
   @Input() gameCharacter: GameCharacter;
   @Input() standElement: DataElement;
   @Input() color: string;
@@ -35,18 +35,21 @@ export class StandImageComponent implements OnInit {
   @ViewChild('standImageElement', { static: false }) standImageElement: ElementRef;
 
   private _imageFile: ImageFile = ImageFile.Empty;
+  private _timeoutId;
 
   isGhostly = false;
   isBackyard = false;
   isVisible = true;
   standImageTransformOrigin = 'center';
 
+  group = '';
+
   constructor(
     private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
-    setTimeout(() => {
+    this._timeoutId = setTimeout(() => {
       this.isVisible = false;
     }, 12000);
   }
@@ -61,6 +64,12 @@ export class StandImageComponent implements OnInit {
       }
     }
     return this._imageFile;
+  }
+
+  ngOnDestroy(): void {
+    if (this._timeoutId) {
+      clearTimeout(this._timeoutId);
+    }
   }
 
   get position(): number {
@@ -120,6 +129,21 @@ export class StandImageComponent implements OnInit {
     this.ngZone.run(() => {
       this.isBackyard = true;
     });
+  }
+
+  toFront(group='') {
+    this.ngZone.run(() => {
+      this.isGhostly = false;
+      this.isBackyard = false;
+      this.group = group;
+      this.isVisible = true;
+    });
+    if (this._timeoutId) {
+      clearTimeout(this._timeoutId);
+    }
+    this._timeoutId = setTimeout(() => {
+      this.isVisible = false;
+    }, 12000);
   }
 
   onImageLoad() {

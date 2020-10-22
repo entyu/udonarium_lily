@@ -1,4 +1,4 @@
-<div @standInOut *ngIf="isVisible" class="stand-image-container" [style.left]="position + '%'" [style.height]="height == 0 ? '' : height + 'vh'"
+<div [@standInOut]="group" *ngIf="isVisible" class="stand-image-container" [style.left]="position + '%'" [style.height]="height == 0 ? '' : height + 'vh'"
   [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard}" (click)="toGhostly(); toBackyard()">
   <ng-container *ngIf="gameCharacter && standImage.url && standImage.url.length > 0">
     <div [ngStyle]="{'transform-origin': standImageTransformOrigin, 'transform': isApplyRoll ? ('rotate(' + gameCharacter.roll + 'deg)') : ''}">
