@@ -139,7 +139,9 @@ export class StandImageComponent implements OnInit, OnDestroy {
       clearTimeout(this._timeoutId);
     }
     this._timeoutId = setTimeout(() => {
-      this.isVisible = false;
+      this.ngZone.run(() => {
+        this.isVisible = false;
+      });
     }, 12000);
   }
 
