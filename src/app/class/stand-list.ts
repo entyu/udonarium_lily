@@ -1,5 +1,6 @@
 import { ImageFile } from './core/file-storage/image-file';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
+import { StringUtil } from './core/system/util/string-util';
 import { DataElement } from './data-element';
 
 export enum StandConditionType {
@@ -9,6 +10,11 @@ export enum StandConditionType {
     PostfixOrImage = 4,
     PostfixAndImage = 5,
     NotConditionStandUp = 6
+}
+
+export interface StandInfo {
+  standElementIdentifier: string,
+  matchMostLongText: string
 }
 
 @SyncObject('stand-list')
@@ -36,5 +42,81 @@ export class StandList extends DataElement {
 
   remove(stand: DataElement) {
     this.removeChild(stand);
+  }
+
+  matchStandInfo(text: string, image: ImageFile | string, standName: string=null): StandInfo {
+    const imageIdentifier = (image instanceof ImageFile) ? image.identifier : image;
+    let textTagMatch = '';
+    let useStands = [];
+
+    //if (standName) {
+    for (const standElement of this.standElements) {
+      const nameElement = standElement.getFirstElementByName('name');
+      if (nameElement && nameElement.value.toString() == standName) {
+        useStands.push(standElement);
+      }
+    }
+    //} else {
+    let maxPriority = 1;
+    let isUseDfault = true;  
+    let defautStands: DataElement[] = [];
+    let matchStands: DataElement[] = [];
+    // 優先順位を「それ以外→デフォルト」から変更する過程の効率悪い処理
+    
+    for (const standElement of this.standElements) {
+      if (!standElement.getFirstElementByName('imageIdentifier') || !standElement.getFirstElementByName('conditionType')) continue;
+      const conditionType = standElement.getFirstElementByName('conditionType').value;
+      if (conditionType == StandConditionType.NotConditionStandUp) continue;
+      if (conditionType == StandConditionType.Default) {
+        defautStands.push(standElement);
+      } else {
+        const postfies = (standElement.getFirstElementByName('postfix') ? standElement.getFirstElementByName('postfix').value.toString() : null);
+        const targetImageIdentifiers = (standElement.getFirstElementByName('targetImageIdentifier') ? standElement.getElementsByName('targetImageIdentifier').map(e => e.value) : []);
+        let conditionPostfix = false;
+        let conditionImage = false;
+        if (postfies 
+          && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
+          for (let postfix of postfies.split(/[\r\n]+/g)) {
+            if (!postfix || postfix.length == 0) continue;
+            if (StringUtil.toHalfWidth(text).toUpperCase().endsWith(StringUtil.toHalfWidth(postfix).toUpperCase())) {
+              if ((postfix.slice(0, 1) == '@' || postfix.slice(0, 1) == '＠') && textTagMatch.length < postfix.length) textTagMatch = postfix;
+              conditionPostfix = true;
+            }
+          }
+        }
+        if (targetImageIdentifiers.length > 0 
+          && (conditionType == StandConditionType.Image || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
+          conditionImage = (imageIdentifier && targetImageIdentifiers.indexOf(imageIdentifier) >= 0);
+        }
+        if ((conditionPostfix && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage))
+          || (conditionImage && (conditionType == StandConditionType.Image || conditionType == StandConditionType.PostfixOrImage))
+          || (conditionPostfix && conditionImage && conditionType == StandConditionType.PostfixAndImage)) {
+            isUseDfault = false;
+            matchStands.push(standElement);
+            if (maxPriority < +conditionType) maxPriority = +conditionType;
+        }
+      }
+    }
+
+    if (!standName) {
+      if (isUseDfault) {
+        useStands = defautStands;
+      } else {
+        useStands = matchStands.filter(elm => {
+          let value = elm.getFirstElementByName('conditionType').value;
+          return +value == maxPriority;
+        });
+      }
+    }
+    //}
+
+    let ret: StandInfo = {
+      standElementIdentifier: null,
+      matchMostLongText: textTagMatch
+    }; 
+    if (useStands && useStands.length > 0) {
+      ret.standElementIdentifier = useStands[Math.floor(Math.random() * useStands.length)].identifier;
+    }
+    return ret;
   }
 }

@@ -257,77 +257,20 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     let text = this.text;
     if (this.character) {
       text = this.character.chatPalette.evaluate(this.text, this.character.rootDataElement);
-      const standList = this.character.standList;
-      let textTagMatch = '';
-      if (this.isUseStandImage && standList) {
-        let useStands = null;
-        if (this.standName != '') {
-          useStands = [];
-          for (const standElement of standList.standElements) {
-            const nameElement = standElement.getFirstElementByName('name');
-            if (nameElement && nameElement.value.toString() == this.standName) {
-              useStands.push(standElement);
-            }
-          }
+      // 立ち絵
+      if (this.character.standList) {
+        let imageIdentifier = null;
+        if (this.isUseFaceIcon && this.character.faceIcon) {
+          imageIdentifier = this.character.faceIcon.identifier;
         } else {
-          let isUseDfault = true;
-          let defautStands: DataElement[] = [];
-          let matchStands: DataElement[] = [];
-          // 優先順位を「それ以外→デフォルト」から変更する過程の効率悪い処理
-          let maxPriority = 1;
-          for (const standElement of standList.standElements) {
-            if (!standElement.getFirstElementByName('imageIdentifier') || !standElement.getFirstElementByName('conditionType')) continue;
-            const conditionType = standElement.getFirstElementByName('conditionType').value;
-            if (conditionType == StandConditionType.NotConditionStandUp) continue;
-            if (conditionType == StandConditionType.Default) {
-              defautStands.push(standElement);
-            } else {
-              const postfies = (standElement.getFirstElementByName('postfix') ? standElement.getFirstElementByName('postfix').value.toString() : null);
-              const targetImageIdentifiers = (standElement.getFirstElementByName('targetImageIdentifier') ? standElement.getElementsByName('targetImageIdentifier').map(e => e.value) : []);
-              let conditionPostfix = false;
-              let conditionImage = false;
-              if (postfies 
-                && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
-                for (let postfix of postfies.split(/[\r\n]+/g)) {
-                  if (!postfix || postfix.length == 0) continue;
-                  if (StringUtil.toHalfWidth(text).toLocaleUpperCase().endsWith(StringUtil.toHalfWidth(postfix).toLocaleUpperCase())) {
-                    if ((postfix.slice(0, 1) == '@' || postfix.slice(0, 1) == '＠') && textTagMatch.length < postfix.length) textTagMatch = postfix;
-                    conditionPostfix = true;
-                  }
-                }
-              }
-              if (targetImageIdentifiers.length > 0 
-                && (conditionType == StandConditionType.Image || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
-                let identifier = null;
-                if (this.isUseFaceIcon && this.character.faceIcon) {
-                  identifier = this.character.faceIcon.identifier;
-                } else {
-                  identifier = this.character.imageFile ? this.character.imageFile.identifier : null;
-                }
-                conditionImage = (identifier && targetImageIdentifiers.indexOf(identifier) >= 0);
-              }
-              if ((conditionPostfix && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage))
-                || (conditionImage && (conditionType == StandConditionType.Image || conditionType == StandConditionType.PostfixOrImage))
-                || (conditionPostfix && conditionImage && conditionType == StandConditionType.PostfixAndImage)) {
-                  isUseDfault = false;
-                  matchStands.push(standElement);
-                  if (maxPriority < +conditionType) maxPriority = +conditionType;
-              }
-            }
-          }
-          if (isUseDfault) {
-            useStands = defautStands;
-          } else {
-            useStands = matchStands.filter(elm => {
-              let value = elm.getFirstElementByName('conditionType').value;
-              return +value == maxPriority;
-            });
-          }
+          imageIdentifier = this.character.imageFile ? this.character.imageFile.identifier : null;
         }
-        if (useStands && useStands.length > 0) {
+
+        const standInfo = this.character.standList.matchStandInfo(text, imageIdentifier, this.standName);
+        if (standInfo.standElementIdentifier) {
           const sendObj = {
             characterIdentifier: this.character.identifier, 
-            standIdentifier: useStands[Math.floor(Math.random() * useStands.length)].identifier, 
+            standIdentifier: standInfo.standElementIdentifier, 
             color: this.character.chatPalette ? this.character.chatPalette.color : null
           };
           if (this.sendTo) {
@@ -341,11 +284,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
             EventSystem.call('POPUP_STAND_IMAGE', sendObj);
           }
         }
+        if (standInfo.matchMostLongText) {
+          text = text.slice(0, text.length - standInfo.matchMostLongText.length);
+        }
       }
-      if (textTagMatch != '') {
-        text = text.slice(0, text.length - textTagMatch.length);
-      }
-      
+
       //ToDo 💭はEvant機能使うようにする
       const dialogRegExp = /「([\s\S]+?)」/gm;
       let match;
