@@ -521,7 +521,8 @@ export class DiceBot extends GameObject {
       imageIdentifier: '',
       tag: isSecret ? 'system secret' : 'system',
       name: isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>',
-      text: result
+      text: result,
+      color: originalMessage.color
     };
 
     if (originalMessage.to != null && 0 < originalMessage.to.length) {
