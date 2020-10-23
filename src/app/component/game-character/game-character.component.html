@@ -62,12 +62,14 @@
           <div *ngIf="isListen" [@fadeAndScaleInOut]="'in'" class="is-3d" style="transform-origin: center bottom;" [style.color]="!isEmote && isWhisper ? '#ccc' : dialogColor">
             <div class="is-3d">
               <p class="is-3d chat-bubble-buyo" [style.border-color]="dialogColor" style="position: absolute; backface-visibility: hidden" 
-                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box"
+                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"
+                [style.text-align]="dialogText.length < 5 ? 'center' : 'start'"><span class="face-icon-box"
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
                   <img class="face-icon" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
                 </span>{{ dialogText }}</p>
               <p class="is-3d chat-bubble-buyo back" [style.border-color]="dialogColor" style="backface-visibility: hidden; transform: rotateY(-180deg)"
-                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box"
+                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"
+                [style.text-align]="dialogText.length < 5 ? 'center' : 'start'"><span class="face-icon-box"
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
                   <img class="face-icon" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
                 </span>{{ dialogText }}</p>

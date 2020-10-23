@@ -143,35 +143,36 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   heightWidthRatio = 1.5;
 
   set dialog(dialog) {
-    if (this.dialogTimeOutId) {
-      clearTimeout(this.dialogTimeOutId);
-      clearInterval(this.chatIntervalId);
-    } 
+    if (!this.gameCharacter) return;
+    clearTimeout(this.dialogTimeOutId);
+    clearInterval(this.chatIntervalId);
     const text = StringUtil.cr(dialog.text);
-    this._text = '';
+    const speechDelay = 1000 / text.length > 36 ? 1000 / text.length : 36; 
+    this.gameCharacter.text = text.slice(0, 1);
     this.dialogTimeOutId = setTimeout(() => {
       this._dialog = null;
+      this.gameCharacter.text = '';
       this.changeDetector.markForCheck();
-    }, text.length * 36 > 12000 ? text.length * 36 : 12000);
+    }, text.length * speechDelay > 12000 ? text.length * speechDelay : 12000);
     this._dialog = dialog;
-    let count = 0;
+    let count = 1;
     if (this.isEmote) {
-      this._text = text;
+      this.gameCharacter.text = text;
       this.changeDetector.markForCheck();
     }  else {
       this.chatIntervalId = setInterval(() => {
         count++;
-        this._text = text.slice(0, count);
+        this.gameCharacter.text = text.slice(0, count);
         this.changeDetector.markForCheck();
         if (count >= text.length) {
           clearInterval(this.chatIntervalId);
         }
-      }, 36);
+      }, speechDelay);
     }
   }
 
   get dialogText(): string {
-    return this._text;
+    return this.gameCharacter.text;
   }
 
   get dialog() {
@@ -181,7 +182,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   private _dialog = null;
   private dialogTimeOutId = null;
   private chatIntervalId = null;
-  private _text = '';
 
   get chatBubbleXDeg():number {
     //console.log(this.viewRotateX)
@@ -297,7 +297,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         if (this.gameCharacter && this.gameCharacter.identifier == event.data.characterIdentifier) {
           this.ngZone.run(() => {
             this._dialog = null;
-            this._text = '';
+            this.gameCharacter.text = '';
             this.changeDetector.markForCheck();
           });
           clearTimeout(this.dialogTimeOutId);
@@ -321,6 +321,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   ngOnDestroy() {
     clearTimeout(this.dialogTimeOutId);
     clearInterval(this.chatIntervalId);
+    if (!this.gameCharacter) this.gameCharacter.text = '';
     EventSystem.unregister(this);
   }
 
@@ -537,7 +538,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   onMoved() {
     // とりあえず移動したら💭消す
-    EventSystem.call('FAREWELL_CHAT_BALLOON', { characterIdentifier: this.gameCharacter.identifier });
+    if (this.gameCharacter && this.gameCharacter.text) {
+      EventSystem.call('FAREWELL_CHAT_BALLOON', { characterIdentifier: this.gameCharacter.identifier });
+    }
     SoundEffect.play(PresetSound.piecePut);
   }
 

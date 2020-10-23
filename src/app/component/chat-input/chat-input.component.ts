@@ -289,7 +289,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         }
       }
 
-      //ToDo 💭はEvant機能使うようにする
+      //💭はEvant機能使うようにする
       const dialogRegExp = /「([\s\S]+?)」/gm;
       let match;
       let dialog = [];
@@ -299,21 +299,15 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       if (dialog.length > 0) {
         //連続💭とりあえずやめる（複数表示できないかな）
         //const dialogs = [...dialog, null];
-        const dialogs = [dialog.join("\n\n"), null];
-        const gameCharacter = this.character;
-        const color = this.color;
-        const peerId = PeerCursor.myCursor.peerId;
-        const sendTo = ChatMessageService.findId(this.sendTo);
-        const isUseFaceIcon = this.isUseFaceIcon;
-        const image_identifier = gameCharacter.imageFile ? gameCharacter.imageFile.identifier : null;
-        const icon_identifier = gameCharacter.faceIcon ? gameCharacter.faceIcon.identifier : null;
+        //const gameCharacter = this.character;
+        //const color = this.color;
         
         const dialogObj = {
           characterIdentifier: this.character.identifier, 
           text: dialog.join("\n\n"),
-          faceIconIdentifier: (this.isUseFaceIcon && gameCharacter.faceIcon) ? gameCharacter.faceIcon.identifier : null,
-          color: this.character.chatPalette ? this.character.chatPalette.color : PeerCursor.CHAT_DEFAULT_COLOR,
-          secret: this.sendTo ? true : false 
+          faceIconIdentifier: (this.isUseFaceIcon && this.character.faceIcon) ? this.character.faceIcon.identifier : null,
+          color: this.color,
+          secret: this.sendTo ? true : false
         };
         if (this.sendTo) {
           const targetId = Network.peerContext.room ?
@@ -324,11 +318,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         } else {
           EventSystem.call('POPUP_CHAT_BALLOON', dialogObj);
         }
-      } else {
+      } else if (StringUtil.cr(text).trim() && this.character.text) {
         EventSystem.call('FAREWELL_CHAT_BALLOON', { characterIdentifier: this.character.identifier });
       }
     }
-    if (StringUtil.cr(text).trim() != '') {
+    if (StringUtil.cr(text).trim()) {
       this.chat.emit({
         text: text,
         gameType: this.gameType,
