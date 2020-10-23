@@ -1,7 +1,7 @@
 <div class="position-indicate">
   <b>Pos: </b>
   <input style="width: 350px" type="range" min="0" max="100" [(ngModel)]="position">
-  <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="position"><b sytle="margin-left: 3px">％</b>
+  <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="position"><b sytle="margin-left: 3px; margin-right: 1em ">％　</b>
 </div>
 <div class="position-indicate">
   <b>Height (0=元画像のまま): </b> 
@@ -9,7 +9,7 @@
   <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="height">
 </div>
 <div style="font-size: smaller" class="description">
-<b>※</b>優先順位は、手動選択→「<b style="white-space: nowrap;">チャット末尾 かつ 指定画像</b>」→「<b style="white-space: nowrap;">チャット末尾 または 指定画像</b>」→「<b style="white-space: nowrap;">チャット末尾</b>」→「<b style="white-space: nowrap;">指定画像</b>」、どの条件も満たさない場合「<b style="white-space: nowrap;">デフォルト</b>」、複数ある場合はランダム。
+<b>※</b>優先順位は、<b style="white-space: nowrap;">手動選択</b>→「<b style="white-space: nowrap;">チャット末尾 かつ 指定画像</b>」→「<b style="white-space: nowrap;">チャット末尾 または 指定画像</b>」→「<b style="white-space: nowrap;">チャット末尾</b>」→「<b style="white-space: nowrap;">指定画像</b>」、どの条件も満たさない場合「<b style="white-space: nowrap;">デフォルト</b>」、複数ある場合はランダム。
 </div>
 <hr>
 <ng-container *ngFor="let standElement of standElements">
