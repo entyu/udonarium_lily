@@ -324,6 +324,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         } else {
           EventSystem.call('POPUP_CHAT_BALLOON', dialogObj);
         }
+      } else {
+        EventSystem.call('FAREWELL_CHAT_BALLOON', { characterIdentifier: this.character.identifier });
       }
     }
     if (StringUtil.cr(text).trim() != '') {
