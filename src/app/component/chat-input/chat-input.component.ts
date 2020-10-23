@@ -324,29 +324,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         } else {
           EventSystem.call('POPUP_CHAT_BALLOON', dialogObj);
         }
-        /*
-        if (gameCharacter.dialogTimeOutId) clearTimeout(gameCharacter.dialogTimeOutId);
-        //gameCharacter.dialog = null; //秘話バレしないようにいったん下す Eevent機能使えば不要
-        for (let i = 0; i < dialogs.length; i++) {
-          gameCharacter.dialogTimeOutId = setTimeout(() => {
-            gameCharacter.dialog = dialogs[i] ? { 
-              text: dialogs[i], 
-              color: color, 
-              emote: StringUtil.isEmote(dialogs[i]), 
-              from: peerId, 
-              to: sendTo, 
-              isUseFaceIcon: isUseFaceIcon,
-              image_identifier: image_identifier,
-              icon_identifier: icon_identifier
-            } : null;
-          }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 6000 : 0));
-        }
-         */
-      } else {
-        //this.character.dialog = null;
       }
     }
-    if (text.trim() != '') {
+    if (StringUtil.cr(text).trim() != '') {
       this.chat.emit({
         text: text,
         gameType: this.gameType,
