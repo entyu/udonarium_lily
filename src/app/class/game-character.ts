@@ -3,20 +3,8 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
 import { UUID } from '@udonarium/core/system/util/uuid';
-import { ImageFile } from './core/file-storage/image-file';
 
 import { StandList } from './stand-list';
-
-export interface DialogData {
-  text: string;
-  color: string;
-  emote?: boolean;
-  from?: string;
-  to?: string;
-  isUseFaceIcon?: boolean;
-  image_identifier?: string;
-  icon_identifier?: string;
-}
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
@@ -28,9 +16,6 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
-  @SyncVar() dialog: DialogData = { text: '', color: '#444444' };
-
-  dialogTimeOutId = null;
 
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }

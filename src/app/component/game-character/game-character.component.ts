@@ -123,10 +123,12 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set isUseIconToOverviewImage(isUseIconToOverviewImage: boolean) { this.gameCharacter.isUseIconToOverviewImage = isUseIconToOverviewImage; }
 
   get faceIcon(): ImageFile { return this.gameCharacter.faceIcon; }
+  
   get dialogFaceIcon(): ImageFile {
-    if (!this.gameCharacter.dialog || !this.gameCharacter.dialog.icon_identifier) return null;
-    return ImageStorage.instance.get(<string>this.gameCharacter.dialog.icon_identifier);
+    if (!this.dialog || !this.dialog.faceIconIdentifier) return null;
+    return ImageStorage.instance.get(<string>this.dialog.faceIconIdentifier);
   }
+
   get shadowImageFile(): ImageFile { return this.gameCharacter.shadowImageFile; }
 
   get elevation(): number {
@@ -139,6 +141,47 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   viewRotateX = 50;
   viewRotateZ = 10;
   heightWidthRatio = 1.5;
+
+  set dialog(dialog) {
+    if (this.dialogTimeOutId) {
+      clearTimeout(this.dialogTimeOutId);
+      clearInterval(this.chatIntervalId);
+    } 
+    const text = StringUtil.cr(dialog.text);
+    this._text = '';
+    this.dialogTimeOutId = setTimeout(() => {
+      this._dialog = null;
+      this.changeDetector.markForCheck();
+    }, text.length * 36 > 12000 ? text.length * 36 : 12000);
+    this._dialog = dialog;
+    let count = 0;
+    if (this.isEmote) {
+      this._text = text;
+      this.changeDetector.markForCheck();
+    }  else {
+      this.chatIntervalId = setInterval(() => {
+        count++;
+        this._text = text.slice(0, count);
+        this.changeDetector.markForCheck();
+        if (count >= text.length) {
+          clearInterval(this.chatIntervalId);
+        }
+      }, 36);
+    }
+  }
+
+  get dialogText(): string {
+    return this._text;
+  }
+
+  get dialog() {
+    return this._dialog;
+  }
+
+  private _dialog = null;
+  private dialogTimeOutId = null;
+  private chatIntervalId = null;
+  private _text = '';
 
   get chatBubbleXDeg():number {
     //console.log(this.viewRotateX)
@@ -156,7 +199,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   @ViewChild('characterImage') characterImage: ElementRef;
   @ViewChild('chatBubble') chatBubble: ElementRef;
   
-
   get characterImageHeight(): number {
     if (!this.characterImage) return 0;
     let ratio = this.characterImage.nativeElement.naturalHeight / this.characterImage.nativeElement.naturalWidth;
@@ -190,15 +232,23 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   get isListen(): boolean {
-    if (this.gameCharacter && this.gameCharacter.dialog) {
-      if (!this.gameCharacter.dialog.to) return true;
-      return PeerCursor.myCursor.peerId == this.gameCharacter.dialog.from || Network.peerContext.id == this.gameCharacter.dialog.to;
-    } 
-    return false;
+    return (this.dialog && this.dialog.text && this.dialog.text.trim().length > 0);
   }
 
   get isWhisper(): boolean {
-    return (this.gameCharacter && this.gameCharacter.dialog && this.gameCharacter.dialog.to && this.gameCharacter.dialog.to.length > 0);
+    return this.dialog && this.dialog.secret;
+  }
+
+  get isEmote(): boolean {
+    return this.dialog && StringUtil.isEmote(this.dialog.text);
+  }
+
+  get isUseFaceIcon(): ImageFile {
+    return this.dialog && this.dialog.faceIconIdentifier;
+  }
+
+  get dialogColor(): string {
+    return (this.dialog && this.dialog.color) ? this.dialog.color : PeerCursor.CHAT_DEFAULT_COLOR;
   }
 
   movableOption: MovableOption = {};
@@ -234,7 +284,27 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           this.viewRotateZ = event.data['z'];
           this.changeDetector.markForCheck();
         });
-      });
+      })
+      .on('POPUP_CHAT_BALLOON', -1000, event => {
+        if (this.gameCharacter && this.gameCharacter.identifier == event.data.characterIdentifier) {
+          this.ngZone.run(() => {
+            this.dialog = event.data;
+            this.changeDetector.markForCheck();
+          });
+        }
+      })
+      .on('FAREWELL_CHAT_BALLOON', -1000, event => {
+        if (this.gameCharacter && this.gameCharacter.identifier == event.data.characterIdentifier) {
+          this.ngZone.run(() => {
+            this._dialog = null;
+            this._text = '';
+            this.changeDetector.markForCheck();
+          });
+          clearTimeout(this.dialogTimeOutId);
+          clearInterval(this.chatIntervalId);
+        }
+      })
+      ;
       
     this.movableOption = {
       tabletopObject: this.gameCharacter,
@@ -244,13 +314,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.rotableOption = {
       tabletopObject: this.gameCharacter
     };
-
-    if (this.gameCharacter) this.gameCharacter.dialog = null;
   }
 
   ngAfterViewInit() { }
 
   ngOnDestroy() {
+    clearTimeout(this.dialogTimeOutId);
+    clearInterval(this.chatIntervalId);
     EventSystem.unregister(this);
   }
 
@@ -466,9 +536,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   onMoved() {
-    if (this.gameCharacter && this.gameCharacter.dialog) {
-      this.gameCharacter.dialog = null;
-    }
+    // とりあえず移動したら💭消す
+    EventSystem.call('FAREWELL_CHAT_BALLOON', { characterIdentifier: this.gameCharacter.identifier });
     SoundEffect.play(PresetSound.piecePut);
   }
 

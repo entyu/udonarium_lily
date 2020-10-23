@@ -271,10 +271,10 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           const sendObj = {
             characterIdentifier: this.character.identifier, 
             standIdentifier: standInfo.standElementIdentifier, 
-            color: this.character.chatPalette ? this.character.chatPalette.color : null
+            color: this.character.chatPalette ? this.character.chatPalette.color : PeerCursor.CHAT_DEFAULT_COLOR
           };
           if (this.sendTo) {
-            // ほんとにこれでええんか？　仕様変わったら動かなくなるよな
+            // ほんとにこれでええんか？
             const targetId = Network.peerContext.room ?
                 ChatMessageService.findId(this.sendTo) + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
               : ChatMessageService.findId(this.sendTo);
@@ -307,8 +307,26 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         const isUseFaceIcon = this.isUseFaceIcon;
         const image_identifier = gameCharacter.imageFile ? gameCharacter.imageFile.identifier : null;
         const icon_identifier = gameCharacter.faceIcon ? gameCharacter.faceIcon.identifier : null;
+        
+        const dialogObj = {
+          characterIdentifier: this.character.identifier, 
+          text: dialog.join("\n\n"),
+          faceIconIdentifier: (this.isUseFaceIcon && gameCharacter.faceIcon) ? gameCharacter.faceIcon.identifier : null,
+          color: this.character.chatPalette ? this.character.chatPalette.color : PeerCursor.CHAT_DEFAULT_COLOR,
+          secret: this.sendTo ? true : false 
+        };
+        if (this.sendTo) {
+          const targetId = Network.peerContext.room ?
+              ChatMessageService.findId(this.sendTo) + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
+            : ChatMessageService.findId(this.sendTo);
+          EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, targetId);
+          EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, PeerCursor.myCursor.peerId);
+        } else {
+          EventSystem.call('POPUP_CHAT_BALLOON', dialogObj);
+        }
+        /*
         if (gameCharacter.dialogTimeOutId) clearTimeout(gameCharacter.dialogTimeOutId);
-        gameCharacter.dialog = null; //秘話バレしないようにいったん下す
+        //gameCharacter.dialog = null; //秘話バレしないようにいったん下す Eevent機能使えば不要
         for (let i = 0; i < dialogs.length; i++) {
           gameCharacter.dialogTimeOutId = setTimeout(() => {
             gameCharacter.dialog = dialogs[i] ? { 
@@ -323,6 +341,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
             } : null;
           }, 6000 * i + 300 + ((dialogs.length < 3 && i == dialogs.length - 1) ? 6000 : 0));
         }
+         */
       } else {
         //this.character.dialog = null;
       }

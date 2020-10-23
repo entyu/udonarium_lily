@@ -30,7 +30,7 @@ export class ChatPalette extends ObjectNode {
       && localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY) != '#ffffff') {
       return localStorage.getItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY);
     }
-    return '#444444';
+    return PeerCursor.CHAT_DEFAULT_COLOR;
   }
   set color(color: string) {
     this.paletteColor = color;

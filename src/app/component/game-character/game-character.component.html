@@ -60,19 +60,19 @@
           </div>
         </div>
         <div #chatBubble class="chat-bubble is-3d" 
-          [ngStyle]="{'bottom': (chatBubbleAltitude - (gameCharacter.dialog.emote ? gridSize / 2 : 0) - 4) + 'px', 'transform': 'translateX(-50%) translateX(' + (size * gridSize / 2) +'px) rotateY(' + (rotate + viewRotateZ) + 'deg) rotateX(' + (chatBubbleXDeg) + 'deg)'}">
-          <div *ngIf="isListen" [@fadeAndScaleInOut]="'in'" class="is-3d" style="transform-origin: center bottom;" [style.color]="!gameCharacter.dialog.emote && isWhisper ? '#ccc' : gameCharacter.dialog.color">
+          [ngStyle]="{'bottom': (chatBubbleAltitude - (isEmote ? gridSize / 2 : 0) - 4) + 'px', 'transform': 'translateX(-50%) translateX(' + (size * gridSize / 2) +'px) rotateY(' + (rotate + viewRotateZ) + 'deg) rotateX(' + (chatBubbleXDeg) + 'deg)'}">
+          <div *ngIf="isListen" [@fadeAndScaleInOut]="'in'" class="is-3d" style="transform-origin: center bottom;" [style.color]="!isEmote && isWhisper ? '#ccc' : dialogColor">
             <div class="is-3d">
-              <p class="is-3d chat-bubble-buyo" [style.border-color]="gameCharacter.dialog.color" style="position: absolute; backface-visibility: hidden" 
-                [ngClass]="{'emote': gameCharacter.dialog.emote, 'is-whisper': isWhisper}"><span class="face-icon-box"
-                  *ngIf="!gameCharacter.dialog.emote && gameCharacter.dialog.isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
-                  <img class="face-icon" [style.border-color]="gameCharacter.dialog.color" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
-                </span>{{ stringUtil.cr(gameCharacter.dialog.text) }}</p>
-              <p class="is-3d chat-bubble-buyo back" [style.border-color]="gameCharacter.dialog.color" style="backface-visibility: hidden; transform: rotateY(-180deg)"
-                [ngClass]="{'emote': gameCharacter.dialog.emote, 'is-whisper': isWhisper}"><span class="face-icon-box"
-                  *ngIf="!gameCharacter.dialog.emote && gameCharacter.dialog.isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
-                  <img class="face-icon" [style.border-color]="gameCharacter.dialog.color" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
-                </span>{{ stringUtil.cr(gameCharacter.dialog.text) }}</p>
+              <p class="is-3d chat-bubble-buyo" [style.border-color]="dialogColor" style="position: absolute; backface-visibility: hidden" 
+                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box"
+                  *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
+                  <img class="face-icon" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
+                </span>{{ dialogText }}</p>
+              <p class="is-3d chat-bubble-buyo back" [style.border-color]="dialogColor" style="backface-visibility: hidden; transform: rotateY(-180deg)"
+                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box"
+                  *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
+                  <img class="face-icon" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
+                </span>{{ dialogText }}</p>
             </div>
           </div>
         </div>
