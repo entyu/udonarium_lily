@@ -190,11 +190,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 615, height: 350 };
     let component = this.panelService.open<RemoteControllerComponent>(RemoteControllerComponent, option);
     component.character = gameObject;
-
-//    let coordinate = this.pointerDeviceService.pointers[0];
-//    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 615, height: 350 };
-//    let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
-//    component.character = gameObject;
   }
 //
 
