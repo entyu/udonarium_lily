@@ -47,6 +47,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   private _imageFile: ImageFile = ImageFile.Empty;
   private _timeoutId;
+  private _dialogTimeoutId;
 
   isGhostly = false;
   isBackyard = false;
@@ -56,19 +57,34 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   private naturalWidth = 0;
   private naturalHeight = 0;
-
+  
+  isSpeaking = false;
   group = '';
 
   constructor(
     private ngZone: NgZone
   ) { }
 
+  onSpeaking(event: AnimationEvent) {
+    this.isSpeaking = true;
+    clearTimeout(this._dialogTimeoutId);
+    this._dialogTimeoutId = setTimeout(() => {
+      this.isSpeaking = false;
+    }, 72);
+  }
+
   ngOnInit(): void {
   }
 
   get standImage(): ImageFile {
     if (!this.standElement) return this._imageFile;
-    let elm = this.standElement.getFirstElementByName('imageIdentifier');
+    let elm = null;
+    if (this.isSpeaking) {
+      elm = this.standElement.getFirstElementByName('speakingImageIdentifier');
+    }
+    if (!elm || !elm.value || elm.value == ImageFile.Empty.identifier) {
+      elm = this.standElement.getFirstElementByName('imageIdentifier');
+    }
     if (elm) {
       if (this._imageFile.identifier !== elm.value) { 
         let file: ImageFile = ImageStorage.instance.get(<string>elm.value);
@@ -79,9 +95,8 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this._timeoutId) {
-      clearTimeout(this._timeoutId);
-    }
+    clearTimeout(this._timeoutId);
+    clearTimeout(this._dialogTimeoutId);
   }
 
   get position(): number {
@@ -103,21 +118,6 @@ export class StandImageComponent implements OnInit, OnDestroy {
     return elm ? +elm.value : 0;
   }
 
-  //とりあえず
-  get dialogBoxCssBottom(): string {
-    const height = (this.height == 0) ?
-      this.naturalHeight
-      : document.documentElement.offsetHeight * this.height / 100;
-    return (height / 3.4 + 48) + 'px';
-    /*
-    if (this.height == 0) {
-      return (this.naturalHeight / 3.4 + 48) + 'px';
-    } else {
-      return 'calc(' + this.height / 3.4 + 'vh + 48px)';
-    }
-    */
-  }
-
   get imageHeight(): number {
     return (this.height == 0) ?
       this.naturalHeight
@@ -129,7 +129,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   get dialogBoxCssLeft(): string {
-    return 'calc(' + (this.imageWidth / 2.8) + 'px + ' + this.position + '%)';
+    return 'calc(' + (32 + this.imageWidth / 2.8) + 'px + ' + this.position + '%)';
   }
 
   get dialogBoxMaxWidth(): string {
@@ -139,7 +139,11 @@ export class StandImageComponent implements OnInit, OnDestroy {
     return (screenRatio * 100) + '%';
   }
 
-
+  get dialogBoxCssBottom(): string {
+    let ret = this.imageHeight / 3.4;
+    if (ret < 48) ret = 48;
+    return ret + 'px';
+  }
 
   get isApplyImageEffect(): boolean {
     if (!this.standElement || !this.gameCharacter) return false;
@@ -154,6 +158,15 @@ export class StandImageComponent implements OnInit, OnDestroy {
   get isApplyRoll(): boolean {
     if (!this.standElement || !this.gameCharacter) return false;
     let elm = this.standElement.getFirstElementByName('applyRoll');
+    if (elm && elm.value) {
+      return true;
+    }
+    return false;
+  }
+
+  get isApplyDialog(): boolean {
+    if (!this.standElement || !this.gameCharacter) return false;
+    let elm = this.standElement.getFirstElementByName('applyDialog');
     if (elm && elm.value) {
       return true;
     }
@@ -186,9 +199,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
       this.group = group;
       this.isVisible = true;
     });
-    if (this._timeoutId) {
-      clearTimeout(this._timeoutId);
-    }
+    clearTimeout(this._timeoutId);
     this._timeoutId = setTimeout(() => {
       this.ngZone.run(() => {
         this.isVisible = false;

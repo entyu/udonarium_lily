@@ -236,7 +236,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   get isListen(): boolean {
-    return (this.dialog && this.dialog.text && this.dialog.text.trim().length > 0);
+    return (this.dialog && this.dialog.text && !this.dialog.dialogTest && this.dialog.text.trim().length > 0);
   }
 
   get isWhisper(): boolean {

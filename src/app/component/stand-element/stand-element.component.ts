@@ -20,6 +20,7 @@ export class StandElementComponent implements OnInit {
   @Input() gameCharacter: GameCharacter = null;
 
   private _imageFile: ImageFile = ImageFile.Empty;
+  private _speakingImageFile: ImageFile = ImageFile.Empty;
 
   standConditionType = StandConditionType;
 
@@ -45,6 +46,20 @@ export class StandElementComponent implements OnInit {
       this.standElement.appendChild(DataElement.create('imageIdentifier', this._imageFile.identifier, { type: 'image' }, 'imageIdentifier_' + this.standElement.identifier));
     }
     return this._imageFile;
+  }
+
+  get speakingImage(): ImageFile {
+    if (!this.standElement) return this._speakingImageFile;
+    let elm = this.standElement.getFirstElementByName('speakingImageIdentifier');
+    if (elm) {
+      if (this._speakingImageFile.identifier !== elm.value) { 
+        let file: ImageFile = ImageStorage.instance.get(<string>elm.value);
+        this._speakingImageFile = file ? file : ImageFile.Empty;
+      }
+    } else {
+      this.standElement.appendChild(DataElement.create('speakingImageIdentifier', this._speakingImageFile.identifier, { type: 'image' }, 'speakingImageIdentifier_' + this.standElement.identifier));
+    }
+    return this._speakingImageFile;
   }
 
   get nameElement(): DataElement {
@@ -83,6 +98,12 @@ export class StandElementComponent implements OnInit {
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('applyRoll', '', { }, 'applyRoll_' + this.standElement.identifier));
   }
 
+  get applyDialogElement() {
+    if (!this.standElement) return null;
+    let elm = this.standElement.getFirstElementByName('applyDialog');
+    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('applyDialog', '', { }, 'applyDialog_' + this.standElement.identifier));
+  }
+
   get positionElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('position');
@@ -105,13 +126,22 @@ export class StandElementComponent implements OnInit {
     return false;
   }
 
-  openModal() {
-    if (!this.standElement) return;
-    let elm = this.standElement.getFirstElementByName('imageIdentifier');
-    if (!elm) {
-      elm = <DataElement>this.standElement.appendChild(DataElement.create('imageIdentifier', '', { type: 'image' }, 'imageIdentifier_' + this.standElement.identifier));
+  get isApplyDialog(): boolean {
+    let elm = this.applyDialogElement;
+    if (elm && elm.value) {
+      return true;
     }
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: false }).then(value => {
+    return false;
+  }
+
+
+  openModal(name='imageIdentifier', isAllowedEmpty=false) {
+    if (!this.standElement) return;
+    let elm = this.standElement.getFirstElementByName(name);
+    if (!elm) {
+      elm = <DataElement>this.standElement.appendChild(DataElement.create(name, '', { type: 'image' }, name + '_' + this.standElement.identifier));
+    }
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
       if (!value) return;
       elm.value = value;
     });
@@ -158,6 +188,12 @@ export class StandElementComponent implements OnInit {
       characterIdentifier: this.gameCharacter.identifier, 
       standIdentifier: this.standElement.identifier, 
       color: this.gameCharacter.chatPalette ? this.gameCharacter.chatPalette.color : null
+    });
+    EventSystem.trigger('POPUP_CHAT_BALLOON', { 
+      characterIdentifier: this.gameCharacter.identifier, 
+      text: 'テストテストテストテストテストテストテストテストテストテストテストテストテストテスト', 
+      color: this.gameCharacter.chatPalette ? this.gameCharacter.chatPalette.color : null,
+      dialogTest: true
     });
   }
 }
