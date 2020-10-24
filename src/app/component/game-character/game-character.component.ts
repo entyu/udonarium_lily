@@ -79,13 +79,13 @@ import { StandSettingComponent } from 'component/stand-setting/stand-setting.com
       ])
     ]),
     trigger('fadeAndScaleInOut', [
-      transition('void => *', [
+      transition('void => *, false => true', [
         animate('200ms ease-in-out', keyframes([
           style({ transform: 'scale3d(0, 0, 0)', opacity: 0  }),
           style({ transform: 'scale3d(1.0, 1.0, 1.0)', opacity: 0.8 }),
         ]))
       ]),
-      transition('* => void', [
+      transition('* => void, true => false', [
         animate('100ms ease-in-out', style({ transform: 'scale3d(0, 0, 0)', opacity: 0 }))
       ])
     ])
@@ -147,16 +147,20 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     clearTimeout(this.dialogTimeOutId);
     clearInterval(this.chatIntervalId);
     const text = StringUtil.cr(dialog.text);
-    const speechDelay = 1000 / text.length > 36 ? 1000 / text.length : 36; 
-    this.gameCharacter.text = text.slice(0, 1);
+    const isEmote = StringUtil.isEmote(text);
+    let speechDelay = 1000 / text.length > 36 ? 1000 / text.length : 36;
+    if (speechDelay > 200) speechDelay = 200;
+    if (isEmote) this.gameCharacter.text = text.slice(0, 1); // Emoteでない場合は最初の一文字は出しておく
     this.dialogTimeOutId = setTimeout(() => {
       this._dialog = null;
       this.gameCharacter.text = '';
+      this.gameCharacter.isEmote = false; 
       this.changeDetector.markForCheck();
     }, text.length * speechDelay > 12000 ? text.length * speechDelay : 12000);
     this._dialog = dialog;
+    this.gameCharacter.isEmote = isEmote;
     let count = 1;
-    if (this.isEmote) {
+    if (isEmote) {
       this.gameCharacter.text = text;
       this.changeDetector.markForCheck();
     }  else {
@@ -240,6 +244,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   get isEmote(): boolean {
+    return this.gameCharacter.isEmote;
     return this.dialog && StringUtil.isEmote(this.dialog.text);
   }
 
@@ -298,6 +303,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           this.ngZone.run(() => {
             this._dialog = null;
             this.gameCharacter.text = '';
+            this.gameCharacter.isEmote = false;
             this.changeDetector.markForCheck();
           });
           clearTimeout(this.dialogTimeOutId);
@@ -321,7 +327,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   ngOnDestroy() {
     clearTimeout(this.dialogTimeOutId);
     clearInterval(this.chatIntervalId);
-    if (!this.gameCharacter) this.gameCharacter.text = '';
+    if (this.gameCharacter) {
+      this.gameCharacter.text = '';
+      this.gameCharacter.isEmote = false;
+    }
     EventSystem.unregister(this);
   }
 

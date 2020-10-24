@@ -1,4 +1,5 @@
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
+import { ThrowStmt } from '@angular/compiler';
 import { ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -24,6 +25,16 @@ import { GameCharacter } from '@udonarium/game-character';
           style({ opacity: 0, transform: 'translateY(96px) scale(0.9)', offset: 1.0 })
         ]))
       ])
+    ]),
+    trigger('dialogShake', [
+      transition(':increment', [
+        animate('19ms ease', keyframes([
+          style({ transform: 'translateX(1px)' })
+        ])),
+        animate('19ms ease', keyframes([
+          style({ transform: 'translateX(-1px)' })
+        ]))
+      ])
     ])
   ]
 })
@@ -41,6 +52,9 @@ export class StandImageComponent implements OnInit, OnDestroy {
   isBackyard = false;
   isVisible = false;
   standImageTransformOrigin = 'center';
+
+  private naturalWidth = 0;
+  private naturalHeight = 0;
 
   group = '';
 
@@ -88,6 +102,39 @@ export class StandImageComponent implements OnInit, OnDestroy {
     return elm ? +elm.value : 0;
   }
 
+  //とりあえず
+  get dialogBoxCssBottom(): string {
+    const height = (this.height == 0) ?
+      this.naturalHeight
+      : document.documentElement.offsetHeight * this.height / 100;
+    return (height / 3.4 + 48) + 'px';
+    /*
+    if (this.height == 0) {
+      return (this.naturalHeight / 3.4 + 48) + 'px';
+    } else {
+      return 'calc(' + this.height / 3.4 + 'vh + 48px)';
+    }
+    */
+  }
+
+  get dialogBoxCssLeft(): string {
+    const height = (this.height == 0) ?
+        this.naturalHeight
+      : document.documentElement.offsetHeight * this.height / 100;
+    const ratio = this.naturalWidth / this.naturalHeight;
+    return 'calc(' + (height * ratio / 3) + 'px + ' + this.position + '%)';
+  }
+
+  get dialogBoxMaxWidth(): string {
+    const height = (this.height == 0) ?
+      this.naturalHeight
+      : document.documentElement.offsetHeight * this.height / 100;
+    let screenRatio = (height * this.naturalWidth / this.naturalHeight) / document.documentElement.clientWidth;
+    screenRatio = screenRatio / 2;
+    if (screenRatio < 0.14) screenRatio = 0.14;  
+    return (screenRatio * 100) + '%';
+  }
+
   get isApplyImageEffect(): boolean {
     if (!this.standElement || !this.gameCharacter) return false;
     let elm = this.standElement.getFirstElementByName('applyImageEffect');
@@ -109,9 +156,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   calcStandImageTransformOrigin(): string {
     if (!this.standImageElement) return 'center';
-    const width = this.standImageElement.nativeElement.naturalWidth;
-    const height = this.standImageElement.nativeElement.naturalHeight;
-    let ratio = 1 - width / (height * 2);
+    let ratio = 1 - this.naturalWidth / (this.naturalHeight * 2);
     if (ratio > 0.66) ratio = 0.66;
     return 'center ' + (ratio * 100) + '%';
   } 
@@ -146,6 +191,8 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   onImageLoad() {
+    this.naturalWidth = this.standImageElement.nativeElement.naturalWidth;
+    this.naturalHeight = this.standImageElement.nativeElement.naturalHeight;
     this.standImageTransformOrigin = this.calcStandImageTransformOrigin();
   }
 }

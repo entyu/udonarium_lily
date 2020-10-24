@@ -1,12 +1,15 @@
 <div [@standInOut]="group" *ngIf="isVisible" class="stand-image-container" [style.left]="position + '%'" [style.height]="height == 0 ? '' : height + 'vh'"
   [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard}" (click)="toGhostly(); toBackyard()">
   <ng-container *ngIf="gameCharacter && standImage.url && standImage.url.length > 0">
+    
     <div [ngStyle]="{'transform-origin': standImageTransformOrigin, 'transform': isApplyRoll ? ('rotate(' + gameCharacter.roll + 'deg)') : ''}">
       <div class="inverser" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">
         <span class="aura" [ngClass]="{black: isApplyImageEffect && gameCharacter.aura == 0, blue: isApplyImageEffect && gameCharacter.aura == 1, 
           green: isApplyImageEffect && gameCharacter.aura == 2, cyan: isApplyImageEffect && gameCharacter.aura == 3, red: isApplyImageEffect && gameCharacter.aura == 4,
           magenta: isApplyImageEffect && gameCharacter.aura == 5, yellow: isApplyImageEffect && gameCharacter.aura == 6, white: isApplyImageEffect && gameCharacter.aura == 7}">
-          <img (load)="onImageLoad()" class="stand-image" [style.height]="height > 0 ? height + 'vh' : 'auto'" [src]="standImage.url | safe: 'resourceUrl'" 
+          <img (load)="onImageLoad()" class="stand-image" 
+            [style.height]="height > 0 ? height + 'vh' : 'auto'"
+            [src]="standImage.url | safe: 'resourceUrl'" 
             #standImageElement 
             [ngClass]="{'black-paint': isApplyImageEffect && gameCharacter.isBlackPaint, 'hollow': isApplyImageEffect && gameCharacter.isHollow}">
         </span>
@@ -14,7 +17,16 @@
     </div>
   </ng-container>
 </div>
-<span *ngIf="isVisible && gameCharacter && gameCharacter.name" class="name-tag" [style.color]="color ? color : '#444'" 
+<span *ngIf="isVisible && gameCharacter && gameCharacter.name" class="name-tag" 
+  [style.color]="color ? color : '#444'" 
   [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard}"
   [style.left]="position + '%'"
   [style.border-color]="color ? color : '#444'"><b>{{ gameCharacter.name }}</b></span>
+<div [@dialogShake]="gameCharacter.text.length" *ngIf="isVisible && !isBackyard && gameCharacter && gameCharacter.text" class="name-tag"
+  style="margin-left: 12px; min-width: 5em; white-space: pre-wrap"
+  [style.color]="color ? color : '#444'"
+  [style.bottom]="dialogBoxCssBottom"
+  [style.left]="dialogBoxCssLeft"
+  [style.max-width]="dialogBoxMaxWidth"
+  [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard}"
+  [style.border-color]="color ? color : '#444'">{{ gameCharacter.text }}</div>

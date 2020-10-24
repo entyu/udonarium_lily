@@ -18,6 +18,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() isDropShadow: boolean = true;
 
   text = '';
+  isEmote = false;
 
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
