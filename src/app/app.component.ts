@@ -251,7 +251,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on('POPUP_STAND_IMAGE', -1000, event => {
         let standElement = ObjectStore.instance.get<DataElement>(event.data.standIdentifier);
         let gameCharacter = ObjectStore.instance.get<GameCharacter>(event.data.characterIdentifier);
-        this.standImageService.show(gameCharacter, standElement, event.data.color ? event.data.color : null);
+        this.standImageService.show(gameCharacter, standElement, event.data.color ? event.data.color : null, event.data.secret);
       })
       .on('FAREWELL_STAND_IMAGE', -1000, event => {
         this.standImageService.farewell(event.data.characterIdentifier);

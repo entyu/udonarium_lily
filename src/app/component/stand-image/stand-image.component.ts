@@ -51,6 +51,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   isGhostly = false;
   isBackyard = false;
   isVisible = false;
+  isSecret = false;
   standImageTransformOrigin = 'center';
 
   private naturalWidth = 0;
@@ -117,23 +118,28 @@ export class StandImageComponent implements OnInit, OnDestroy {
     */
   }
 
+  get imageHeight(): number {
+    return (this.height == 0) ?
+      this.naturalHeight
+    : document.documentElement.offsetHeight * this.height / 100;
+  }
+
+  get imageWidth(): number {
+    return (this.imageHeight * this.naturalWidth / this.naturalHeight);
+  }
+
   get dialogBoxCssLeft(): string {
-    const height = (this.height == 0) ?
-        this.naturalHeight
-      : document.documentElement.offsetHeight * this.height / 100;
-    const ratio = this.naturalWidth / this.naturalHeight;
-    return 'calc(' + (height * ratio / 3) + 'px + ' + this.position + '%)';
+    return 'calc(' + (this.imageWidth / 2.8) + 'px + ' + this.position + '%)';
   }
 
   get dialogBoxMaxWidth(): string {
-    const height = (this.height == 0) ?
-      this.naturalHeight
-      : document.documentElement.offsetHeight * this.height / 100;
-    let screenRatio = (height * this.naturalWidth / this.naturalHeight) / document.documentElement.clientWidth;
+    let screenRatio = this.imageWidth / document.documentElement.clientWidth;
     screenRatio = screenRatio / 2;
     if (screenRatio < 0.14) screenRatio = 0.14;  
     return (screenRatio * 100) + '%';
   }
+
+
 
   get isApplyImageEffect(): boolean {
     if (!this.standElement || !this.gameCharacter) return false;

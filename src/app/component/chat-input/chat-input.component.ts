@@ -271,9 +271,10 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           const sendObj = {
             characterIdentifier: this.character.identifier, 
             standIdentifier: standInfo.standElementIdentifier, 
-            color: this.character.chatPalette ? this.character.chatPalette.color : PeerCursor.CHAT_DEFAULT_COLOR
+            color: this.character.chatPalette ? this.character.chatPalette.color : PeerCursor.CHAT_DEFAULT_COLOR,
+            secret: this.sendTo ? true : false
           };
-          if (this.sendTo) {
+          if (sendObj.secret) {
             // ほんとにこれでええんか？
             const targetId = Network.peerContext.room ?
                 ChatMessageService.findId(this.sendTo) + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)

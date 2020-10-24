@@ -15,7 +15,7 @@ export class StandImageService {
     private componentFactoryResolver: ComponentFactoryResolver
   ) { }
   
-  show(gameCharacter: GameCharacter, standElement: DataElement, color: string=null) {
+  show(gameCharacter: GameCharacter, standElement: DataElement, color: string=null, isSecret=false) {
     let isNewbee = true;
     for (let [identifier, standImageComponentRef] of Object.entries(StandImageService.currentStandImageShowing)) {
       if (!standImageComponentRef) continue;
@@ -25,6 +25,7 @@ export class StandImageService {
       } else if (gameCharacter.identifier == identifier && gameCharacter.location.name != 'graveyard') {
         instance.standElement = standElement;
         instance.color = color ? color : gameCharacter.chatPalette.color;
+        instance.isSecret = isSecret;
         instance.toFront();
         isNewbee = false;
       } else {
@@ -37,6 +38,7 @@ export class StandImageService {
       standImageComponentRef.instance.gameCharacter = gameCharacter;
       standImageComponentRef.instance.standElement = standElement;
       standImageComponentRef.instance.color = color ? color : gameCharacter.chatPalette.color;
+      standImageComponentRef.instance.isSecret = isSecret;
       standImageComponentRef.instance.toFront();
       StandImageService.currentStandImageShowing[gameCharacter.identifier] = standImageComponentRef;
     }
