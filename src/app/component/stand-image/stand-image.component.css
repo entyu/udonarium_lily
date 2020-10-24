@@ -59,7 +59,7 @@
   font-weight: bold;
   border: none;
   background: none;
-  -webkit-text-stroke: 2px rgb(240, 218, 189);
+  -webkit-text-stroke: 2px whitesmoke;
 }
 
 .emote.emote-secret {
