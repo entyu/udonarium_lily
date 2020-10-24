@@ -35,7 +35,8 @@ import { GameCharacter } from '@udonarium/game-character';
           style({ transform: 'translateX(-1px)' })
         ]))
       ])
-    ])
+    ]),
+
   ]
 })
 export class StandImageComponent implements OnInit, OnDestroy {
@@ -66,11 +67,13 @@ export class StandImageComponent implements OnInit, OnDestroy {
   ) { }
 
   onSpeaking(event: AnimationEvent) {
-    this.isSpeaking = true;
-    clearTimeout(this._dialogTimeoutId);
-    this._dialogTimeoutId = setTimeout(() => {
-      this.isSpeaking = false;
-    }, 72);
+    if (this.isSpeakable) {
+      clearTimeout(this._dialogTimeoutId);
+      this.isSpeaking = true;
+      this._dialogTimeoutId = setTimeout(() => {
+        this.isSpeaking = false;
+      }, 200);
+    }
   }
 
   ngOnInit(): void {
@@ -92,6 +95,12 @@ export class StandImageComponent implements OnInit, OnDestroy {
       }
     }
     return this._imageFile;
+  }
+
+  get isSpeakable(): boolean {
+    if (!this.standElement) return false;
+    let elm = this.standElement.getFirstElementByName('speakingImageIdentifier');
+    return elm && elm.value && elm.value !== ImageFile.Empty.identifier;
   }
 
   ngOnDestroy(): void {

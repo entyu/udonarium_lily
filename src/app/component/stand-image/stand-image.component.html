@@ -43,4 +43,4 @@
   [style.max-width]="dialogBoxMaxWidth"
   [style.font-size.px]="imageWidth / 30 > 14 ? imageWidth / 30 : 14"
   [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret}"
-  [style.border-color]="color ? color : '#444'"><div [@dialogShake]="gameCharacter.text.length" (@dialogShake.start)="onSpeaking($event)">{{ gameCharacter.text }}</div></div>
+  [style.border-color]="color ? color : '#444'"><div style="width: 100%" [@dialogShake]="gameCharacter.text.length" (@dialogShake.start)="onSpeaking($event)">{{ gameCharacter.text }}</div></div>

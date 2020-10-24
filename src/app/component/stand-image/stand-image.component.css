@@ -20,7 +20,7 @@
   color: #444;
   background-color: whitesmoke;
   border: 2px solid #444;
-  border-radius: 24px;
+  border-radius: 24px 24px 24px 24px;
   padding: 4px 12px;
   bottom: 2px;
   display: inline-block;
@@ -47,8 +47,9 @@
   filter: grayscale(80%);
 }
 
+
 .name-tag.dialog-secret {
-  border-radius: 24px 12px;
+  border-radius: 24px 12px 24px 12px;
   background: rgba(85, 85, 85, 0.9);
   box-shadow: 0px 0px 2px 0px #ccc; 
 }
@@ -75,9 +76,38 @@
 .emote.is-ghostly {
   z-index: 900005;
 }
+/* 吹き出しのベロがカッコよくならないのでとりあえずコメントアウト
+.dialog:after {
+  box-sizing: border-box;
+  content: '';
+  position: absolute;
+  margin: 0px;
+  padding: 0px;
+  line-height: 1;
+	vertical-align: baseline;
+  left: -10px;
+  margin-left: -10px;
+  margin-top: -14px;
+  border: 10px solid transparent;
+  border-right-color: inherit;
+}
+*/
+/*
+.dialog-secret:before {
+  position: absolute;
+  border: none;
+  color: #555;
+  text-shadow: 0px 0px 2px #ccc;
+  content: '。〇';
+  margin-left: -36px;
+  margin-top: 8%;
+  font-weight: bold;
+  font-size: 16px;
+}
+*/
 
 .chat-bubble-buyo {
-  transform-origin: left center;
+  transform-origin: 5% center;
   transition: transform .2s ease;
   animation: chat-bubble-buyo 1.2s ease-in-out 0.1s infinite alternate;
   transform: scale3d(0.9, 0.9, 0.9);

@@ -342,8 +342,8 @@
   box-sizing: border-box;
   display: inline-block;
   max-width: 100%;
-  min-width: 120px;
-  font-size: 12px;
+  min-width: 160px;
+  font-size: 11px;
   background: linear-gradient(-30deg, rgba(240, 218, 189, 0.9), rgba(255, 244, 232, 0.9));
   border: 1px solid;
   border-radius: 24px;
@@ -366,7 +366,7 @@
 
 .chat-bubble p.is-whisper {
   border-radius: 24px 12px;
-  /* font-size: 11px; */
+  font-size: 11px; 
   background: rgba(85, 85, 85, 0.8);
   box-shadow: 0px 0px 2px 0px #ccc;
 }
@@ -395,7 +395,7 @@
   border: 8px solid transparent;
   border-top-color: inherit;
 }
-
+/*
 .chat-bubble p.emote:after {
   border-top-color: transparent;
 }
@@ -409,7 +409,7 @@
   font-weight: bold;
   bottom: -10px;
 }
-
+*/
 .chat-bubble p.is-whisper.emote:after {
   content: none;
 }
