@@ -11,6 +11,12 @@ import { Jukebox } from '@udonarium/Jukebox';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 
+//entyu_30
+import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
+import { PointerDeviceService } from 'service/pointer-device.service';
+
+//
+
 @Component({
   selector: 'app-jukebox',
   templateUrl: './jukebox.component.html',
@@ -33,6 +39,9 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
+//entyu_30
+    private pointerDeviceService: PointerDeviceService,
+// 
     private ngZone: NgZone
   ) { }
 
@@ -78,4 +87,16 @@ export class JukeboxComponent implements OnInit, OnDestroy {
       this.ngZone.run(() => { });
     }, 100);
   }
+
+//entyu30
+  openCutInList() {
+//    this.modalService.open(CutInListComponent);
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 500, height: 350 };
+    this.panelService.open<CutInListComponent>(CutInListComponent, option);
+    
+    
+  }
+//
+
 }

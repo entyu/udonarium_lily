@@ -37,7 +37,7 @@ export class CutInListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ジュークボックス');
+    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'カットインリスト');
     this.auditionPlayer.volumeType = VolumeType.AUDITION;
     EventSystem.register(this)
       .on('*', event => {

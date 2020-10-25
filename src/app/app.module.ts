@@ -55,6 +55,10 @@ import { SafePipe } from 'pipe/safe.pipe';
 import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
 import { ControllerInputComponent } from 'component/controller-input/controller-input.component';  
 //
+//entyu_30
+import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
+//
+
 import { AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { ContextMenuService } from 'service/context-menu.service';
@@ -100,6 +104,9 @@ import { AppComponent } from './app.component';
     GameTableSettingComponent,
     GameTableComponent,
     JukeboxComponent,
+//entyu_30
+    CutInListComponent,
+//
     LobbyComponent,
     ModalComponent,
     OverviewPanelComponent,
