@@ -15,6 +15,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
 //entyu
   @SyncVar() pos_num: number = -1;
   @SyncVar() imageIdentifier: string[] = ['a','b','c','d','e','f','g','h','i','j','k','l'];
+  @SyncVar() imageCharactorName: string[] = ['#0','#1','#2','#3','#4','#5','#6','#7','#8','#9','#10','#11'];
   @SyncVar() imageIdentifierZpos: number[] = [0,1,2,3,4,5,6,7,8,9,10,11];
 
   @SyncVar() count:number = 0;
@@ -25,6 +26,15 @@ export class ChatTab extends ObjectNode implements InnerXml {
   get imageZposList( ): number[] {
     let ret:number[] = this.imageIdentifierZpos.slice();
     return ret;
+  }
+
+  getImageCharactorPos(name:string){
+    for (let i = 0; i < this.imageCharactorName.length ; i++) {
+      if( name == this.imageCharactorName[i] ){
+        return i;
+      }
+    }
+    return -1;
   }
 
 //entyu_21
@@ -80,6 +90,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
       console.log('addMessage:'+key);
       if (key === 'identifier') continue;
       if (key === 'tabIdentifier') continue;
+      
       if (key === 'text') {
         chat.value = message[key];
         continue;
@@ -89,9 +100,25 @@ export class ChatTab extends ObjectNode implements InnerXml {
       if (key === 'imagePos') {
         this.pos_num = message[key];
         if( 0 <= this.pos_num && this.pos_num < this.imageIdentifier.length ){
-           this.imageIdentifier[this.pos_num] = message['imageIdentifier'];
-           this.replaceTachieZindex(this.pos_num);
+           let oldpos = this.getImageCharactorPos(message['name']);
+           if( oldpos >= 0 ){ //同名キャラの古い位置を消去 && ( oldpos != this.pos_num
+              this.imageIdentifier[oldpos] = '';
+              this.imageCharactorName[oldpos] = '';
+           }
+           //非表示コマンド
+           let hideCommand = message['text'].match(new RegExp('[@＠][HhＨｈ][IiＩｉ][DdＤｄ][EeＥｅ]$'));
+           console.log('hideCommand' + hideCommand);
+           if( hideCommand ){
+
+           }else{
+           
+             this.imageIdentifier[this.pos_num] = message['imageIdentifier'];
+             this.imageCharactorName[this.pos_num] =message['name'];
+             this.replaceTachieZindex(this.pos_num);
+           
+           }
            this.imageIdentifierDummy = message['imageIdentifier'];//同期方法がすこぶる怪しい後で確認
+           
         }
         continue;//v0.02.2で追加20201021
       }
