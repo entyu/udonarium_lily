@@ -80,7 +80,6 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       this.standElementComponents.forEach(standElementComponent => {
         standElementComponent.isSpeaking = this.isSpeaking;
       });
-
     }, 3600);
   }
 
