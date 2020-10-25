@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { PanelService } from 'service/panel.service';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { StandElementComponent } from 'component/stand-element/stand-element.component';
 
 @Component({
   selector: 'app-stand-setting',

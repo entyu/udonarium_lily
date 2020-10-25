@@ -13,6 +13,6 @@
 </div>
 <hr>
 <ng-container *ngFor="let standElement of standElements">
-  <stand-element [standElement]="standElement" [imageList]="imageList" [gameCharacter]="character"></stand-element>
+  <stand-element #standElementComponent [standElement]="standElement" [imageList]="imageList" [gameCharacter]="character"></stand-element>
 </ng-container>
 <button (click)="add()">スタンド設定の追加</button>

@@ -7,6 +7,7 @@ import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { StandConditionType } from '@udonarium/stand-list';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
+import { accessSync } from 'fs';
 import { ModalService } from 'service/modal.service';
 
 @Component({
@@ -18,9 +19,10 @@ export class StandElementComponent implements OnInit {
   @Input() standElement: DataElement = null;
   @Input() imageList: ImageFile[] = [];
   @Input() gameCharacter: GameCharacter = null;
+  @Input() isSpeaking: boolean = false;
 
   private _imageFile: ImageFile = ImageFile.Empty;
-  private _speakingImageFile: ImageFile = ImageFile.Empty;
+  //private _speakingImageFile: ImageFile = ImageFile.Empty;
 
   standConditionType = StandConditionType;
 
@@ -33,8 +35,41 @@ export class StandElementComponent implements OnInit {
 
   get standImage(): ImageFile {
     if (!this.standElement) return this._imageFile;
-    let elm = this.standElement.getFirstElementByName('imageIdentifier');
+    let elm = null;
+    if (this.isSpeaking) {
+      elm = this.standElement.getFirstElementByName('speakingImageIdentifier');
+      if (!elm) {
+        elm = this.standElement.appendChild(DataElement.create('speakingImageIdentifier', ImageFile.Empty.identifier, { type: 'image' }, 'speakingImageIdentifier_' + this.standElement.identifier));
+      }
+    }
+    if (!elm || !elm.value || elm.value == ImageFile.Empty.identifier) {
+      elm = this.standElement.getFirstElementByName('imageIdentifier');
+    }
     if (elm) {
+      if (this._imageFile.identifier !== elm.value) { 
+        let file: ImageFile = ImageStorage.instance.get(<string>elm.value);
+        this._imageFile = file ? file : ImageFile.Empty;
+      }
+    } else {
+      let fileContext = ImageFile.createEmpty('stand_no_image').toContext();
+      fileContext.url = './assets/images/nc96424.png';
+      this._imageFile = ImageStorage.instance.add(fileContext);
+      this.standElement.appendChild(DataElement.create('imageIdentifier', this._imageFile.identifier, { type: 'image' }, 'imageIdentifier_' + this.standElement.identifier));
+    }
+    return this._imageFile;
+  }
+  /*
+  get standImage(): ImageFile {
+    if (!this.standElement) return this._imageFile;
+    let elm = null;
+    if (this.isSpeaking) {
+      elm = this.standElement.getFirstElementByName('speakingImageIdentifier');
+      if (!elm) {
+        this.standElement.appendChild(DataElement.create('speakingImageIdentifier', this._imageFile.identifier, { type: 'image' }, 'speakingImageIdentifier_' + this.standElement.identifier));
+      }
+    }
+    if (!elm || !elm.value || elm.value == ImageFile.Empty.identifier) {
+      elm = this.standElement.getFirstElementByName('imageIdentifier');
       if (this._imageFile.identifier !== elm.value) { 
         let file: ImageFile = ImageStorage.instance.get(<string>elm.value);
         this._imageFile = file ? file : ImageFile.Empty;
@@ -61,7 +96,7 @@ export class StandElementComponent implements OnInit {
     }
     return this._speakingImageFile;
   }
-
+  */
   get nameElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('name');
@@ -134,8 +169,14 @@ export class StandElementComponent implements OnInit {
     return false;
   }
 
+  get isSpeakable(): boolean {
+    if (!this.standElement) return false;
+    const elm = this.standElement.getFirstElementByName('speakingImageIdentifier');
+    return elm && elm.value && elm.value !== ImageFile.Empty.identifier;
+  }
 
   openModal(name='imageIdentifier', isAllowedEmpty=false) {
+    this.isSpeaking = false;
     if (!this.standElement) return;
     let elm = this.standElement.getFirstElementByName(name);
     if (!elm) {
@@ -147,6 +188,11 @@ export class StandElementComponent implements OnInit {
     });
   }
  
+  openSpeakingModal() {
+    this.openModal('speakingImageIdentifier', true);
+    this.isSpeaking = true;
+  }
+
   remove() {
     if (!this.standElement) return;
     this.standElement.parent.removeChild(this.standElement);

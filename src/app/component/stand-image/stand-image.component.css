@@ -91,7 +91,6 @@
   bottom: -25px;
   border: 12px solid transparent;
   border-top-color: inherit;
-  opacity: 0.9;
 }
 
 @supports (-moz-user-select: -moz-none) {
