@@ -3,35 +3,74 @@
 <div>BGM音量：<input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" /></div>
 -->
 カットインリストテスト
-<hr/>
-<div>
-  <div *ngFor="let audio of audios" class="box">
-    <button *ngIf="audio !== auditionPlayer?.audio || auditionPlayer?.paused" (click)="play(audio)" [disabled]="!audio.isReady" >試聴/再生</button>
-    <button *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" (click)="stop()" [disabled]="!audio.isReady" >試聴/停止</button>
-    <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady" >BGM/再生</button>
-    <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady" >BGM/停止</button>
-    <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused">【試聴中】</span>
-    <span *ngIf="audio === jukebox?.audio">【BGM】</span>
-    <span>{{audio.name}}</span>
-  </div>
-  <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div>
-</div>
-
-<label>
-<!--
-  <div class="drop-zone">
+<div class="flex-container">
+  <div class="flex-item no-grow">
     <div>
-      <i class="material-icons large-font">playlist_add</i>
+      <button (click)="createCutIn()">新しいカットインを作る</button>
     </div>
-    <div>ここに音楽をドロップ</div>
-    <div class="small-font">またはここをクリックして選択</div>
-    <input type="file" style="display: none;" (change)="handleFileSelect($event)" multiple accept="audio/*"/>
-    <div class="small-font">
-      <br>１ファイルにつき10MBまで</div>
+    <select style="width: 15em;" size="20" (change)="selectCutIn($event.target.value)" [ngModel]="selectedCutIn?.identifier">
+      <option *ngFor="let cutIn of getCutIns()" value="{{cutIn.identifier}}">{{cutIn.name}}</option>
+    </select>
   </div>
--->
-</label>
-<div style="font-size: 12px;">※注釈01</div>
-<div style="font-size: 12px;">※注釈02</div>
-<div style="font-size: 12px;">※注釈03</div>
-<div style="font-size: 12px;">※注釈04</div>
+  <div class="flex-item">
+    <ng-container *ngIf="!isEmpty || selectedCutIn">
+      <div class="images-select">
+        <div>
+          画像
+          <div (click)="openCutInImageModal()"  style="height:120px;" >
+            <img height="120" [src]="cutInImage.url | safe: 'resourceUrl'">
+          </div>
+        </div>
+        <div>
+        </div>
+      </div>
+      <div>名称 :
+        <input [(ngModel)]="cutInName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
+      <div>
+        元サイズで表示：<input type="checkbox" [(ngModel)]="cutInOriginalSize" name="cutInOriginalSize" [attr.disabled]="!isEditable ? '' : null"/>
+      </div>
+      <div>
+        Width :<input [(ngModel)]="cutInWidth" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
+      </div>
+      <div>
+        Height :<input [(ngModel)]="cutInHeight" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
+      </div>
+      <div>
+        <input [(ngModel)]="cutInX_Pos" type="range" min="0" max="100" name="cutInX_PosWidth" [attr.disabled]="!isEditable ? '' : null"/>
+        X位置 :<input [(ngModel)]="cutInX_Pos" type="number" min="0" max="100" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
+      </div>
+      <div>
+        <input [(ngModel)]="cutInY_Pos" type="range" min="0" max="100" name="cutInX_PosWidth" [attr.disabled]="!isEditable ? '' : null"/>
+        Y位置 :<input [(ngModel)]="cutInY_Pos" type="number" min="0" max="100" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
+      </div>
+      <div>
+        ループ再生：<input type="checkbox" [(ngModel)]="cutInIsLoop" name="cutInIsLoop" [attr.disabled]="!isEditable ? '' : null"/>
+      </div>
+      <div>
+        再生時間 :<input [(ngModel)]="cutInOutTime" type="number" min="0" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
+      </div>
+      <div>
+        タグ名称 :<input [(ngModel)]="cutInTagName" placeholder="タグ名称" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
+
+      <div>
+        Youtube再生 :<input type="checkbox" [(ngModel)]="cutInUseOutUrl" name="cutInUseOutUrl" [attr.disabled]="!isEditable ? '' : null"/>
+      </div>
+      <div>
+        URL :<input [(ngModel)]="cutInOutUrl" placeholder="cutInOutUrl" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
+
+      <hr/>
+      <div>
+        <ng-container *ngIf="!isDeleted">
+          <button (click)="save()">保存</button>
+          <button class="danger" (click)="delete()" [attr.disabled]="getCutIns().length <= 0 ? '' : null">削除</button>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<ng-container *ngIf="isEmpty">
+  <div style="font-size: 12px;">※カットインが１つも作成されていません。「新しいカットインを作る」から新しいカットインを作成することができます。</div>
+</ng-container>

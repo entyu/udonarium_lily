@@ -11,6 +11,8 @@ import { GameTableMask } from './game-table-mask';
 import { Terrain } from './terrain';
 import { TextNote } from './text-note';
 
+import { CutIn } from './cut-in';
+
 @SyncObject('room')
 export class Room extends GameObject implements InnerXml {
   // GameObject Lifecycle
@@ -28,6 +30,10 @@ export class Room extends GameObject implements InnerXml {
     objects = objects.concat(ObjectStore.instance.getObjects(CardStack));
     objects = objects.concat(ObjectStore.instance.getObjects(Card).filter((obj) => { return obj.parent === null }));
     objects = objects.concat(ObjectStore.instance.getObjects(DiceSymbol));
+//entyu_30
+    objects = objects.concat(ObjectStore.instance.getObjects(CutIn));
+//
+
     for (let object of objects) {
       xml += object.toXml();
     }
@@ -44,6 +50,10 @@ export class Room extends GameObject implements InnerXml {
     objects = objects.concat(ObjectStore.instance.getObjects(CardStack));
     objects = objects.concat(ObjectStore.instance.getObjects(Card));
     objects = objects.concat(ObjectStore.instance.getObjects(DiceSymbol));
+
+//entyu_30
+    objects = objects.concat(ObjectStore.instance.getObjects(CutIn));
+//
     for (let object of objects) {
       object.destroy();
     }
