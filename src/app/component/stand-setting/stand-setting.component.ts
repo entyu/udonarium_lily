@@ -14,6 +14,10 @@ import { StandElementComponent } from 'component/stand-element/stand-element.com
 })
 export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() character: GameCharacter = null;
+　@ViewChildren(StandElementComponent) standElementComponents: QueryList<StandElementComponent>;
+
+  private _intervalId;
+  private isSpeaking = false;
 
   constructor(
     private panelService: PanelService
@@ -71,9 +75,17 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this._intervalId = setInterval(() => {
+      this.isSpeaking = !this.isSpeaking;
+      this.standElementComponents.forEach(standElementComponent => {
+        standElementComponent.isSpeaking = this.isSpeaking;
+      });
+
+    }, 3600);
   }
 
   ngOnDestroy() {
+    clearInterval(this._intervalId)
     EventSystem.unregister(this);
   }
 

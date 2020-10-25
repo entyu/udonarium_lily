@@ -13,8 +13,8 @@
               </span>
             </div>
           </div>
-          <button class="stand-image-button" (click)="openModal()" style="font-size: smaller; padding: 2px 3px;"><b>画像変更</b></button>
-          <div *ngIf="isSpeakable" (click)="isSpeaking = !isSpeaking" style="position: absolute; margin-top: -26px; margin-left: 120px; font-size: 22px; cursor: pointer;">{{ isSpeaking ? '😃' : '🤐' }}</div>
+          <button class="stand-image-button" (click)="openModal()" style="font-size: smaller; padding: 2px 3px;"><b>{{ isSpeakable ? '通常' : '' }}画像変更</b></button>
+          <div *ngIf="isSpeakable" style="position: absolute; margin-top: -26px; margin-left: 120px; font-size: 22px; cursor: pointer;">{{ isSpeaking ? '😃' : '🤐' }}</div>
         </div>
       </ng-container>
     </div>
