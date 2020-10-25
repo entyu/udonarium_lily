@@ -150,13 +150,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     const isEmote = StringUtil.isEmote(text);
     let speechDelay = 1000 / text.length > 36 ? 1000 / text.length : 36;
     if (speechDelay > 200) speechDelay = 200;
-    if (isEmote) this.gameCharacter.text = text.slice(0, 1); // Emoteでない場合は最初の一文字は出しておく
+    if (!isEmote) this.gameCharacter.text = text.slice(0, 1); // Emoteでない場合は最初の一文字は出しておく
     this.dialogTimeOutId = setTimeout(() => {
       this._dialog = null;
       this.gameCharacter.text = '';
       this.gameCharacter.isEmote = false; 
       this.changeDetector.markForCheck();
-    }, text.length * speechDelay > 12000 ? text.length * speechDelay : 12000);
+    }, text.length * speechDelay + 4000 > 12000 ? text.length * speechDelay + 4000 : 12000);
     this._dialog = dialog;
     this.gameCharacter.isEmote = isEmote;
     let count = 1;
@@ -176,6 +176,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   get dialogText(): string {
+    if (!this.gameCharacter || !this.gameCharacter.text) return '';
     return this.gameCharacter.text;
   }
 

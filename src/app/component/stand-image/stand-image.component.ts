@@ -67,9 +67,17 @@ export class StandImageComponent implements OnInit, OnDestroy {
   ) { }
 
   onSpeaking(event: AnimationEvent) {
+    if (this.isApplyDialog && this.gameCharacter && this.gameCharacter.text) {
+      clearTimeout(this._timeoutId);
+      this._timeoutId = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.isVisible = false;
+        });
+      }, 12000);
+    }
     if (this.isSpeakable) {
       clearTimeout(this._dialogTimeoutId);
-      this.isSpeaking = true;
+      if (this.gameCharacter && this.gameCharacter.text) this.isSpeaking = true;
       this._dialogTimeoutId = setTimeout(() => {
         this.isSpeaking = false;
       }, 200);
@@ -112,10 +120,6 @@ export class StandImageComponent implements OnInit, OnDestroy {
     if (!this.gameCharacter) return 0;
     return this.gameCharacter.standList.position;
     //ToDO 位置の個別指定
-    /*
-    let elm = this.standElement.getFirstElementByName('position');
-    return elm ? +elm.value - 5 : 0;
-    */
   }
 
   get height(): number {
