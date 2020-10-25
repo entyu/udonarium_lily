@@ -138,7 +138,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   get dialogBoxCssLeft(): string {
-    return 'calc(' + (32 + this.imageWidth / 2.8) + 'px + ' + this.position + '%)';
+    return 'calc(' + (this.imageWidth * 0.66 - 67) + 'px + ' + this.position + '%)';
   }
 
   get dialogBoxMaxWidth(): string {
@@ -149,7 +149,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   get dialogBoxCssBottom(): string {
-    let ret = this.imageHeight / 3.4;
+    let ret = this.imageHeight * 0.66;
     if (ret < 48) ret = 48;
     return ret + 'px';
   }

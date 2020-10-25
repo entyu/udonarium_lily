@@ -47,7 +47,9 @@
   filter: grayscale(80%);
 }
 
-
+.name-tag.dialog {
+  border-radius: 24px 24px 24px 12px;
+}
 .name-tag.dialog-secret {
   border-radius: 24px 12px 24px 12px;
   background: rgba(85, 85, 85, 0.9);
@@ -76,7 +78,29 @@
 .emote.is-ghostly {
   z-index: 900005;
 }
-/* 吹き出しのベロがカッコよくならないのでとりあえずコメントアウト
+
+.dialog:after {
+  box-sizing: border-box;
+  content: '';
+  position: absolute;
+  margin: 0px;
+  padding: 0px;
+  line-height: 1;
+	vertical-align: baseline;
+  left: 16px;
+  margin-left: -12px;
+  bottom: -24px;
+  border: 12px solid transparent;
+  border-top-color: inherit;
+}
+
+@supports (-moz-user-select: -moz-none) {
+  /* 汚いけどとりあえず */
+  .dialog:after {
+    bottom: -38px !important;
+  }
+}
+/* 吹き出しの横向きベロがカッコよくならないのでとりあえずコメントアウト
 .dialog:after {
   box-sizing: border-box;
   content: '';
@@ -107,7 +131,7 @@
 */
 
 .chat-bubble-buyo {
-  transform-origin: 5% center;
+  transform-origin: 12px calc(100% + 12px);
   transition: transform .2s ease;
   animation: chat-bubble-buyo 1.2s ease-in-out 0.1s infinite alternate;
   transform: scale3d(0.9, 0.9, 0.9);

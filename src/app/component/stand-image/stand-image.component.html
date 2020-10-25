@@ -34,13 +34,12 @@
   [style.border-color]="color ? color : '#444'"><b>{{ gameCharacter.name }}</b></span>
 <div *ngIf="isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
   (click)="toGhostly(); toBackyard();"
-  style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; text-align: justify;"
+  style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; font-size: 14px;"
   [style.visibility]="isApplyDialog ? 'visible' : 'hidden'"
   [style.pointer-events]="isApplyDialog ? 'auto' : 'none'"
   [style.color]="isSecret ? '#ccc' : (color ? color : '#444')"
   [style.bottom]="dialogBoxCssBottom"
   [style.left]="dialogBoxCssLeft"
   [style.max-width]="dialogBoxMaxWidth"
-  [style.font-size.px]="imageWidth / 30 > 14 ? imageWidth / 30 : 14"
   [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret}"
   [style.border-color]="color ? color : '#444'"><div style="width: 100%" [@dialogShake]="gameCharacter.text.length" (@dialogShake.start)="onSpeaking($event)">{{ gameCharacter.text }}</div></div>
