@@ -156,7 +156,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       this.gameCharacter.text = '';
       this.gameCharacter.isEmote = false; 
       this.changeDetector.markForCheck();
-    }, text.length * speechDelay + 4000 > 12000 ? text.length * speechDelay + 4000 : 12000);
+    }, text.length * speechDelay + 6000 > 12000 ? text.length * speechDelay + 6000 : 12000);
     this._dialog = dialog;
     this.gameCharacter.isEmote = isEmote;
     let count = 1;
