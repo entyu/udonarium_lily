@@ -3,9 +3,11 @@
   .chat-bubble p:after {
     bottom: -28px !important;
   }
+   /*
   .chat-bubble p.is-whisper:after {
-    bottom: -11px !important;
+    bottom: -11px !important; 
   }
+  */
 }
 
 .is-grab {

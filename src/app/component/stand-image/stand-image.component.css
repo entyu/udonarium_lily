@@ -53,7 +53,6 @@
 .name-tag.dialog-secret {
   border-radius: 24px 12px 24px 12px;
   background: rgba(85, 85, 85, 0.9);
-  box-shadow: 0px 0px 2px 0px #ccc; 
 }
 
 .emote {
@@ -97,7 +96,7 @@
 @supports (-moz-user-select: -moz-none) {
   /* 汚いけどとりあえず */
   .dialog:after {
-    bottom: -38px !important;
+    bottom: -39px !important;
   }
 }
 /* 吹き出しの横向きベロがカッコよくならないのでとりあえずコメントアウト
