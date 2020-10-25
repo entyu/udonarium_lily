@@ -86,11 +86,12 @@
   padding: 0px;
   line-height: 1;
 	vertical-align: baseline;
-  left: 16px;
+  left: 17px;
   margin-left: -12px;
-  bottom: -24px;
+  bottom: -25px;
   border: 12px solid transparent;
   border-top-color: inherit;
+  opacity: 0.9;
 }
 
 @supports (-moz-user-select: -moz-none) {
