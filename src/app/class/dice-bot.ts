@@ -1,11 +1,19 @@
+import { ChatMessageService } from 'service/chat-message.service';
 import { ChatMessage, ChatMessageContext } from './chat-message';
 import { ChatTab } from './chat-tab';
 import { SyncObject } from './core/synchronize-object/decorator';
 import { GameObject } from './core/synchronize-object/game-object';
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { EventSystem } from './core/system';
+import { Network } from './core/system';
 import { PromiseQueue } from './core/system/util/promise-queue';
 import { StringUtil } from './core/system/util/string-util';
+import { DataElement } from './data-element';
+import { GameCharacter } from './game-character';
+import { PeerCursor } from './peer-cursor';
+import { StandConditionType } from './stand-list';
+
+import * as lzbase62 from 'lzbase62/lzbase62.min.js';
 
 declare var Opal
 
@@ -524,6 +532,45 @@ export class DiceBot extends GameObject {
       text: result,
       color: originalMessage.color
     };
+
+    // ダイスボットへのスタンドの反応
+    if (originalMessage.standIdentifier && !isSecret && !originalMessage.standName) {
+      const gameCharacter = ObjectStore.instance.get(originalMessage.characterIdentifier);
+      if (gameCharacter instanceof GameCharacter) {
+        /*
+        let oldConditionType = StandConditionType.Default;
+        let originalMatch = <DataElement>ObjectStore.instance.get(originalMessage.standIdentifier);
+        if (originalMatch && originalMatch.getFirstElementByName('conditionType')) {
+          oldConditionType = +originalMatch.getFirstElementByName('conditionType').value;   
+        }
+        */
+        const standInfo = gameCharacter.standList.matchStandInfo(result, originalMessage.imageIdentifier);
+        if (standInfo && standInfo.standElementIdentifier) {
+          const diceBotMatch = <DataElement>ObjectStore.instance.get(standInfo.standElementIdentifier);
+          if (diceBotMatch && diceBotMatch.getFirstElementByName('conditionType')) {
+            const conditionType = +diceBotMatch.getFirstElementByName('conditionType').value
+            if (conditionType == StandConditionType.Postfix || StandConditionType.PostfixOrImage || StandConditionType.PostfixAndImage) {
+              const sendObj = {
+                characterIdentifier: gameCharacter.identifier, 
+                standIdentifier: standInfo.standElementIdentifier, 
+                color: originalMessage.color,
+                secret: originalMessage.to ? true : false
+              };
+              if (sendObj.secret) {
+                // いろいろとこれでええの？
+                const targetId = Network.peerContext.room ?
+                  originalMessage.to + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
+                  : originalMessage.to;
+                EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetId);
+                EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+              } else {
+                EventSystem.call('POPUP_STAND_IMAGE', sendObj);
+              }
+            }
+          }
+        }
+      }
+    }
 
     if (originalMessage.to != null && 0 < originalMessage.to.length) {
       diceBotMessage.to = originalMessage.to;

@@ -56,7 +56,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   set text(text: string) { this._text = text; this.textChange.emit(text); }
 
   @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string,
-     color?: string, isInverse?:boolean, isHollow?: boolean, isBlackPaint?: boolean, aura?: number, isUseFaceIcon?: boolean }>();
+     color?: string, isInverse?:boolean, isHollow?: boolean, isBlackPaint?: boolean, aura?: number, isUseFaceIcon?: boolean, characterIdentifier?: string, standIdentifier?: string, standName?: string }>();
 
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
   gameHelp: string|string[] = '';
@@ -255,6 +255,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
 
     let text = this.text;
+    let standIdentifier = null;
     if (this.character) {
       text = this.character.chatPalette.evaluate(this.text, this.character.rootDataElement);
       // 立ち絵
@@ -268,6 +269,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
         const standInfo = this.character.standList.matchStandInfo(text, imageIdentifier, this.standName);
         if (standInfo.standElementIdentifier) {
+          standIdentifier = standInfo.standElementIdentifier;
           const sendObj = {
             characterIdentifier: this.character.identifier, 
             standIdentifier: standInfo.standElementIdentifier, 
@@ -334,7 +336,10 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         isHollow: this.character ? this.character.isHollow : false,
         isBlackPaint: this.character ? this.character.isBlackPaint : false,
         aura: this.character ? this.character.aura : -1,
-        isUseFaceIcon: this.isUseFaceIcon
+        isUseFaceIcon: this.isUseFaceIcon,
+        characterIdentifier: this.character ? this.character.identifier : null,
+        standIdentifier: standIdentifier,
+        standName: this.standName
       });
     }
     this.text = '';
