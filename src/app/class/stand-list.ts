@@ -35,7 +35,7 @@ export class StandList extends DataElement {
     standElement.appendChild(DataElement.create('height', 0, { }, 'height_' + standElement.identifier));
     standElement.appendChild(DataElement.create('applyImageEffect', '', { }, 'applyImageEffect_' + standElement.identifier));
     standElement.appendChild(DataElement.create('applyRoll', '', { }, 'applyRoll_' + standElement.identifier));
-    standElement.appendChild(DataElement.create('applyDialog', 0, { }, 'applyDialog_' + standElement.identifier));
+    standElement.appendChild(DataElement.create('applyDialog', 'applyDialog', { }, 'applyDialog_' + standElement.identifier));
     standElement.appendChild(DataElement.create('postfix', '', { }, 'postfix_' + standElement.identifier));
     standElement.appendChild(DataElement.create('position', 0, { 'currentValue': '' }, 'position_' + standElement.identifier));
     standElement.appendChild(DataElement.create('speakingImageIdentifier', '', { type: 'image' }, 'speakingImageIdentifier_' + standElement.identifier));

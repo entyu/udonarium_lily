@@ -101,7 +101,7 @@ export class StandElementComponent implements OnInit {
   get applyDialogElement() {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('applyDialog');
-    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('applyDialog', '', { }, 'applyDialog_' + this.standElement.identifier));
+    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('applyDialog', 'applyDialog', { }, 'applyDialog_' + this.standElement.identifier));
   }
 
   get positionElement(): DataElement {

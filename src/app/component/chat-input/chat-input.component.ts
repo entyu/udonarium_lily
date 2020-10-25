@@ -256,7 +256,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
     let text = this.text;
     let standIdentifier = null;
-    if (this.character) {
+    // 空文字でもスタンド反応するのは便利かと思ったがメッセージ送信後にもう一度エンター押すだけで誤爆するので指定時のみ
+    if (this.character && (StringUtil.cr(text).trim() || this.standName)) {
       text = this.character.chatPalette.evaluate(this.text, this.character.rootDataElement);
       // 立ち絵
       if (this.character.standList) {
