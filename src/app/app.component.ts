@@ -278,6 +278,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let option: PanelOption = { width: 450, height: 600, left: 100 }
     switch (componentName) {
       case 'PeerMenuComponent':
+        option.width = 520;
         component = PeerMenuComponent;
         break;
       case 'ChatWindowComponent':
