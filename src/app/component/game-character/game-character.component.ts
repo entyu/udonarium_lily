@@ -146,8 +146,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     if (!this.gameCharacter) return;
     clearTimeout(this.dialogTimeOutId);
     clearInterval(this.chatIntervalId);
-    const text = StringUtil.cr(dialog.text);
+    let text = StringUtil.cr(dialog.text);
     const isEmote = StringUtil.isEmote(text);
+    if (!isEmote) text = text.replace(/[。、]{3}/g, '…').replace(/[。、]{2}/g, '‥').replace(/(。|[\r\n]+)/g, "$1                ").trimEnd();
     let speechDelay = 1000 / text.length > 36 ? 1000 / text.length : 36;
     if (speechDelay > 200) speechDelay = 200;
     if (!isEmote) this.gameCharacter.text = text.slice(0, 1); // Emoteでない場合は最初の一文字は出しておく
@@ -156,7 +157,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       this.gameCharacter.text = '';
       this.gameCharacter.isEmote = false; 
       this.changeDetector.markForCheck();
-    }, text.length * speechDelay + 6000 > 12000 ? text.length * speechDelay + 6000 : 12000);
+    //}, text.length * speechDelay + 6000 > 12000 ? text.length * speechDelay + 6000 : 12000);
+    }, text.length * speechDelay + 6000);
     this._dialog = dialog;
     this.gameCharacter.isEmote = isEmote;
     let count = 1;
@@ -177,7 +179,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   get dialogText(): string {
     if (!this.gameCharacter || !this.gameCharacter.text) return '';
-    return this.gameCharacter.text;
+    const ary = this.gameCharacter.text.replace(/。/g, "。\n").split(/[\r\n]+/g).filter(str => str.trim());
+    return ary.length > 0 ? ary.reverse()[0].trim() : '';
+  }
+
+  get dialogChatBubbleMinWidth(): number {
+    let max = (this.gameCharacter.size + 1.6) * this.gridSize;
+    let dynamic = this.dialogText.length * 11 + 24;
+    return max < dynamic ? max : dynamic; 
   }
 
   get dialog() {

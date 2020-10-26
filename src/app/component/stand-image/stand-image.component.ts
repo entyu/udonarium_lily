@@ -1,5 +1,5 @@
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
-import { ThrowStmt } from '@angular/compiler';
+import { ArrayType, ThrowStmt } from '@angular/compiler';
 import { ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -67,7 +67,8 @@ export class StandImageComponent implements OnInit, OnDestroy {
   ) { }
 
   onSpeaking(event: AnimationEvent) {
-    if (this.isApplyDialog && this.gameCharacter && this.gameCharacter.text) {
+    //ToDOキャラクターの吹き出し表示に合わせる
+    if (this.gameCharacter && this.gameCharacter.text && (this.isApplyDialog || this.isSpeakable)) {
       clearTimeout(this._timeoutId);
       this._timeoutId = setTimeout(() => {
         this.ngZone.run(() => {
@@ -84,7 +85,10 @@ export class StandImageComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {
+  get dialogText(): string {
+    if (!this.gameCharacter || !this.gameCharacter.text) return '';
+    const ary = this.gameCharacter.text.replace(/。/g, "。\n").split(/[\r\n]+/g).filter(str => str.trim());
+    return ary.length > 0 ? ary.reverse()[0].trim() : '';
   }
 
   get standImage(): ImageFile {
@@ -109,6 +113,9 @@ export class StandImageComponent implements OnInit, OnDestroy {
     if (!this.standElement) return false;
     let elm = this.standElement.getFirstElementByName('speakingImageIdentifier');
     return elm && elm.value && elm.value !== ImageFile.Empty.identifier;
+  }
+
+  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {

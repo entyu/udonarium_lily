@@ -61,16 +61,16 @@
           [ngStyle]="{'bottom': (chatBubbleAltitude - (isEmote ? gridSize / 2 : 0) - 4) + 'px', 'transform': 'translateX(-50%) translateX(' + (size * gridSize / 2) +'px) rotateY(' + (rotate + viewRotateZ) + 'deg) rotateX(' + (chatBubbleXDeg) + 'deg)'}">
           <div *ngIf="isListen" [@fadeAndScaleInOut]="isEmote" class="is-3d" style="transform-origin: center bottom;" [style.color]="!isEmote && isWhisper ? '#ccc' : dialogColor">
             <div class="is-3d">
-              <p class="is-3d chat-bubble-buyo" [style.border-color]="dialogColor" style="position: absolute; backface-visibility: hidden" 
+              <p class="is-3d chat-bubble-buyo" [style.min-width.px]="dialogChatBubbleMinWidth" [style.border-color]="dialogColor" style="position: absolute; backface-visibility: hidden" 
                 [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box"
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
                   <img class="face-icon" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
-                </span>{{ dialogText.trim() }}</p>
-              <p class="is-3d chat-bubble-buyo back" [style.border-color]="dialogColor" style="backface-visibility: hidden; transform: rotateY(-180deg)"
+                </span>{{ dialogText }}</p>
+              <p class="is-3d chat-bubble-buyo back" [style.min-width.px]="dialogChatBubbleMinWidth" [style.border-color]="dialogColor" style="backface-visibility: hidden; transform: rotateY(-180deg)"
                 [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box"
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
                   <img class="face-icon" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
-                </span>{{ dialogText.trim() }}</p>
+                </span>{{ dialogText }}</p>
             </div>
           </div>
         </div>

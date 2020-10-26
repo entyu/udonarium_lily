@@ -77,16 +77,17 @@ export class GameCharacter extends TabletopObject {
     this.detailDataElement.appendChild(testElement);
     testElement.appendChild(DataElement.create('説明', 'ここに説明を書く\nあいうえお', { 'type': 'note' }, '説明' + this.identifier));
     testElement.appendChild(DataElement.create('メモ', '任意の文字列\n１\n２\n３\n４\n５', { 'type': 'note' }, 'メモ' + this.identifier));
+    testElement.appendChild(DataElement.create('参照URL', 'https://www.example.com', { 'type': 'url' }, '参照URL' + this.identifier));
 
     //TEST
     testElement = DataElement.create('能力', '', {}, '能力' + this.identifier);
     this.detailDataElement.appendChild(testElement);
-    testElement.appendChild(DataElement.create('器用度', 24, { 'type': 'simpleNumber' }, '器用度' + this.identifier));
-    testElement.appendChild(DataElement.create('敏捷度', 24, { 'type': 'simpleNumber' }, '敏捷度' + this.identifier));
-    testElement.appendChild(DataElement.create('筋力', 24, { 'type': 'simpleNumber' }, '筋力' + this.identifier));
-    testElement.appendChild(DataElement.create('生命力', 24, { 'type': 'simpleNumber' }, '生命力' + this.identifier));
-    testElement.appendChild(DataElement.create('知力', 24, { 'type': 'simpleNumber' }, '知力' + this.identifier));
-    testElement.appendChild(DataElement.create('精神力', 24, { 'type': 'simpleNumber' }, '精神力' + this.identifier));
+    testElement.appendChild(DataElement.create('器用度', 24, { 'type': 'abilityScore', 'currentValue': 'div6' }, '器用度' + this.identifier));
+    testElement.appendChild(DataElement.create('敏捷度', 24, { 'type': 'abilityScore', 'currentValue': 'div6' }, '敏捷度' + this.identifier));
+    testElement.appendChild(DataElement.create('筋力', 24, { 'type': 'abilityScore', 'currentValue': 'div6' }, '筋力' + this.identifier));
+    testElement.appendChild(DataElement.create('生命力', 24, { 'type': 'abilityScore', 'currentValue': 'div6' }, '生命力' + this.identifier));
+    testElement.appendChild(DataElement.create('知力', 24, { 'type': 'abilityScore', 'currentValue': 'div6' }, '知力' + this.identifier));
+    testElement.appendChild(DataElement.create('精神力', 24, { 'type': 'abilityScore', 'currentValue': 'div6' }, '精神力' + this.identifier));
 
     //TEST
     testElement = DataElement.create('戦闘特技', '', {}, '戦闘特技' + this.identifier);
