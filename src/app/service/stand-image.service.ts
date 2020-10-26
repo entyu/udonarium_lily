@@ -9,7 +9,7 @@ import { StandImageComponent } from 'component/stand-image/stand-image.component
 export class StandImageService {
 
   static defaultParentViewContainerRef: ViewContainerRef;
-  static currentStandImageShowing: {} = {};
+  static currentStandImageShowing = new Map<string, ComponentRef<StandImageComponent>>();
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver
@@ -17,9 +17,12 @@ export class StandImageService {
   
   show(gameCharacter: GameCharacter, standElement: DataElement, color: string=null, isSecret=false) {
     let isNewbee = true;
-    for (let [identifier, standImageComponentRef] of Object.entries(StandImageService.currentStandImageShowing)) {
+    for (const pair of StandImageService.currentStandImageShowing) {
+      // 型を厳密にやりつつkey, valueをもう少し楽にイテレートできないか？
+      const identifier = pair[0];
+      const standImageComponentRef = pair[1];
       if (!standImageComponentRef) continue;
-      const instance = (<ComponentRef<StandImageComponent>>standImageComponentRef).instance;
+      const instance = standImageComponentRef.instance;
       if (instance.isVisible && gameCharacter.identifier != identifier) {
         instance.toGhostly();
       } else if (gameCharacter.identifier == identifier && gameCharacter.location.name != 'graveyard') {
@@ -29,7 +32,7 @@ export class StandImageService {
         instance.toFront();
         isNewbee = false;
       } else {
-        (<ComponentRef<StandImageComponent>>standImageComponentRef).destroy();
+        standImageComponentRef.destroy();
         delete StandImageService.currentStandImageShowing[identifier];
       }
     }
@@ -53,9 +56,12 @@ export class StandImageService {
   }
 
   destroyAll() {
-    for (let [identifier, standImageComponentRef] of Object.entries(StandImageService.currentStandImageShowing)) {
+    for (const pair of StandImageService.currentStandImageShowing) {
+      // 型を厳密にやりつつkey, valueをもう少し楽にイテレートできないか？
+      const identifier = pair[0];
+      const standImageComponentRef = pair[1];
       if (!standImageComponentRef) continue;
-      (<ComponentRef<StandImageComponent>>standImageComponentRef).destroy();
+      standImageComponentRef.destroy();
       delete StandImageService.currentStandImageShowing[identifier];
     }
   }
