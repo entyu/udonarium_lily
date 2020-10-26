@@ -148,7 +148,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     clearInterval(this.chatIntervalId);
     let text = StringUtil.cr(dialog.text);
     const isEmote = StringUtil.isEmote(text);
-    if (!isEmote) text = text.replace(/[。、]{3}/g, '…').replace(/[。、]{2}/g, '‥').replace(/(。|[\r\n]+)/g, "$1                ").trimEnd();
+    if (!isEmote) text = text.replace(/[。、]{3}/g, '…').replace(/[。、]{2}/g, '‥').replace(/(。|[\r\n]+)/g, "$1                ").trimEnd(); //改行や。のあと時間を置くためのダーティハック
     let speechDelay = 1000 / text.length > 36 ? 1000 / text.length : 36;
     if (speechDelay > 200) speechDelay = 200;
     if (!isEmote) this.gameCharacter.text = text.slice(0, 1); // Emoteでない場合は最初の一文字は出しておく
