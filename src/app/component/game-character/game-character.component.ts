@@ -79,13 +79,13 @@ import { StandSettingComponent } from 'component/stand-setting/stand-setting.com
       ])
     ]),
     trigger('fadeAndScaleInOut', [
-      transition('void => *, false <=> true', [
+      transition('void => *, true => false', [
         animate('200ms ease-in-out', keyframes([
           style({ transform: 'scale3d(0, 0, 0)', opacity: 0  }),
           style({ transform: 'scale3d(1.0, 1.0, 1.0)', opacity: 0.8 }),
         ]))
       ]),
-      transition('* => void, true <=> false', [
+      transition('* => void, true => false', [
         animate('100ms ease-in-out', style({ transform: 'scale3d(0, 0, 0)', opacity: 0 }))
       ])
     ])
