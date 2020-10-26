@@ -1,5 +1,5 @@
 <div class="table" [ngClass]="{ 'direct-message': isDirect }">
-  <div class="table-cell imagebox" (contextmenu)="onContextMenu($event)">
+  <div class="table-cell imagebox" (contextmenu)="onContextMenu($event)" style="cursor: context-menu;">
     <div *ngIf="!character; else isCharacter" class="imagebox">
       <img *ngIf="0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
     </div>
