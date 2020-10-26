@@ -33,7 +33,7 @@ export class StandImageService {
         isNewbee = false;
       } else {
         standImageComponentRef.destroy();
-        delete StandImageService.currentStandImageShowing[identifier];
+        StandImageService.currentStandImageShowing.delete(identifier);
       }
     }
     if (isNewbee && gameCharacter.location.name != 'graveyard') {
@@ -43,13 +43,13 @@ export class StandImageService {
       standImageComponentRef.instance.color = color ? color : gameCharacter.chatPalette.color;
       standImageComponentRef.instance.isSecret = isSecret;
       standImageComponentRef.instance.toFront();
-      StandImageService.currentStandImageShowing[gameCharacter.identifier] = standImageComponentRef;
+      StandImageService.currentStandImageShowing.set(gameCharacter.identifier, standImageComponentRef);
     }
   }
 
   farewell(identifier: GameCharacter | string) {
     if (identifier instanceof GameCharacter) identifier = identifier.identifier;
-    const standImageComponentRef = StandImageService.currentStandImageShowing[identifier];
+    const standImageComponentRef = StandImageService.currentStandImageShowing.get(identifier);
     if (standImageComponentRef && standImageComponentRef.instance) {
       standImageComponentRef.instance.isVisible = false;
     }
@@ -62,7 +62,7 @@ export class StandImageService {
       const standImageComponentRef = pair[1];
       if (!standImageComponentRef) continue;
       standImageComponentRef.destroy();
-      delete StandImageService.currentStandImageShowing[identifier];
+      StandImageService.currentStandImageShowing.delete(identifier);
     }
   }
 }
