@@ -27,6 +27,12 @@
       <div>名称 :
         <input [(ngModel)]="cutInName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
       </div>
+
+      <div>音楽データ :
+        <button (click)="openCutInBgmModal()">設定</button>
+        <span *ngIf="!isEditable" >{{this.cutInAudioName}}</span>LINK:
+
+      </div>
       <div>
         元サイズで表示：<input type="checkbox" [(ngModel)]="cutInOriginalSize" name="cutInOriginalSize" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
@@ -58,7 +64,7 @@
         Youtube再生 :<input type="checkbox" [(ngModel)]="cutInUseOutUrl" name="cutInUseOutUrl" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
       <div>
-        URL :<input [(ngModel)]="cutInOutUrl" placeholder="cutInOutUrl" [attr.disabled]="!isEditable ? '' : null" />
+        URL :<input [(ngModel)]="cutInOutUrl" placeholder="URL" [attr.disabled]="!isEditable ? '' : null" />
       </div>
 
       <hr/>

@@ -78,6 +78,8 @@ export class CutInListComponent implements OnInit, OnDestroy {
   get cutInAudioIdentifier(): string { return this.isEditable ? this.selectedCutIn.audioIdentifier : '' ; }
   set cutInAudioIdentifier(cutInAudioIdentifier: string) { if (this.isEditable) this.selectedCutIn.audioIdentifier = cutInAudioIdentifier; }
 
+  get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
+
 
 
   get cutInImage(): ImageFile {
@@ -85,7 +87,6 @@ export class CutInListComponent implements OnInit, OnDestroy {
     let file = ImageStorage.instance.get(this.selectedCutIn.imageIdentifier);
     return file ? file : ImageFile.Empty;
   }
-  
   
   
 //  get cutInList(): CutInList { return ObjectStore.instance.get<CutInList>('CutInList'); }
@@ -184,6 +185,24 @@ export class CutInListComponent implements OnInit, OnDestroy {
       this.selectedCutIn.imageIdentifier = value;
     });
   }
+
+  openCutInBgmModal() {
+    this.modalService.open<string>(FileSelecterComponent).then(value => {
+      if (!this.selectedCutIn || !value) return;
+      this.selectedCutIn.audioIdentifier = value;
+    });
+
+/*
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
+      if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
+      let element = this.tabletopObject.imageDataElement.getFirstElementByName(name);
+      if (!element) return;
+      element.value = value;
+    });
+*/
+  }
+
+
 
 /*
   restore() {
