@@ -23,6 +23,7 @@ import { StandConditionType } from '@udonarium/stand-list';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 
 import * as lzbase62 from 'lzbase62/lzbase62.min.js';
+import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 
 @Component({
   selector: 'chat-input',
@@ -389,9 +390,22 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     e.stopPropagation();
     e.preventDefault();
 
-    if (!this.pointerDeviceService.isAllowedToOpenContextMenu || !this.character) return;
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
 
     let position = this.pointerDeviceService.pointers[0];
+    if (!this.character) {
+      this.contextMenuService.open(
+        position, 
+        [
+          { name: '接続情報', action: () => {
+            this.panelService.open(PeerMenuComponent, { width: 520, height: 450, top: position.y - 100, left: position.x - 100 });
+          } }
+        ],
+        PeerCursor.myCursor.name
+      );
+      return;
+    }
+    
     let contextMenuActions: ContextMenuAction[] = [
       { name: '「」を入力', 
         action: () => {
