@@ -185,7 +185,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   get dialogChatBubbleMinWidth(): number {
     let max = (this.gameCharacter.size + 1.8) * this.gridSize;
-    let dynamic = this.dialogText.length * 11 + 52;
+    let existIcon = this.isUseFaceIcon && this.dialogFaceIcon && this.dialogFaceIcon.url;
+    let dynamic = this.dialogText.length * 11 + 52 + (existIcon ? 32 : 0);
     return max < dynamic ? max : dynamic; 
   }
 
