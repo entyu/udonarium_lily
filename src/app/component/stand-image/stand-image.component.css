@@ -1,10 +1,9 @@
 .stand-image-container {
-    position: absolute;
-    display: inline-block;
-    bottom: -1%;
-    z-index: 1000000;
-    margin-left: -50px;
-    transition: opacity 0.1s ease-in;
+  position: absolute;
+  display: inline-block;
+  bottom: -1%;
+  z-index: 1000000;
+  transition: opacity 0.1s ease-in;
 }
 
 .is-ghostly {
@@ -28,7 +27,6 @@
   position: absolute;
   font-size: 16px;
   opacity: 0.9;
-  margin-left: -37px;
   z-index: 1000005;
 }
 .name-tag.is-ghostly {

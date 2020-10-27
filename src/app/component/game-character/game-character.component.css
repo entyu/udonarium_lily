@@ -362,8 +362,10 @@
   font-weight: bold;
   border: none;
   background: none;
-  min-width: 200px;
+  min-width: 300px;
   -webkit-text-stroke: 1px rgb(240, 218, 189);
+  letter-spacing: -8px;
+  white-space: nowrap;
 }
 
 .chat-bubble p.is-whisper {
@@ -396,6 +398,10 @@
   bottom: -17px;
   border: 8px solid transparent;
   border-top-color: inherit;
+}
+
+.chat-bubble p.emote:after {
+  border: 0px none transparent;
 }
 /*
 .chat-bubble p.emote:after {

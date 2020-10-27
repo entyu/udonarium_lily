@@ -36,7 +36,17 @@ import { GameCharacter } from '@udonarium/game-character';
         ]))
       ])
     ]),
-
+    trigger('fadeAndScaleInOut', [
+      transition('void => *, true => false', [
+        animate('200ms ease-in-out', keyframes([
+          style({ transform: 'scale3d(0, 0, 0)', opacity: 0  }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', opacity: 0.9 }),
+        ]))
+      ]),
+      transition('* => void, true => false', [
+        animate('100ms ease-in-out', style({ transform: 'scale3d(0, 0, 0)', opacity: 0 }))
+      ])
+    ])
   ]
 })
 export class StandImageComponent implements OnInit, OnDestroy {
@@ -149,8 +159,8 @@ export class StandImageComponent implements OnInit, OnDestroy {
     return (this.imageHeight * this.naturalWidth / this.naturalHeight);
   }
 
-  get dialogBoxCssLeft(): string {
-    return 'calc(' + (this.imageWidth * 0.66 - 67) + 'px + ' + this.position + '%)';
+  get dialogBoxLeft(): string {
+    return 'calc(' + (this.imageWidth * 0.66 - this.imageWidth / 2 - 12) + 'px + ' + this.position + '%)';
   }
 
   get dialogBoxMaxWidth(): string {
@@ -160,10 +170,16 @@ export class StandImageComponent implements OnInit, OnDestroy {
     return (screenRatio * 100) + '%';
   }
 
-  get dialogBoxCssBottom(): string {
+  get dialogBoxCssBottom(): number {
     let ret = this.imageHeight * 0.66;
     if (ret < 48) ret = 48;
-    return ret + 'px';
+    return ret;
+  }
+
+  get nameTagCSSMarginLeft(): number {
+    let offset = (this.imageWidth / 2) - this.position * document.documentElement.clientWidth / 100;
+    if (offset < 32) offset = 32;
+    return (-this.imageWidth / 2) + offset;
   }
 
   get isApplyImageEffect(): boolean {

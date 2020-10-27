@@ -1,7 +1,10 @@
-<div [@standInOut]="group" *ngIf="isVisible" class="stand-image-container" [style.left]="position + '%'" [style.height]="height == 0 ? '' : height + 'vh'"
+<div [@standInOut]="group" *ngIf="isVisible" class="stand-image-container"
+  [style.left]="position + '%'"
+  [style.height]="height == 0 ? '' : height + 'vh'"
+  [style.margin-left.px]="-imageWidth / 2"
   [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard, secret: isSecret}" (click)="toGhostly(); toBackyard()">
   <ng-container *ngIf="gameCharacter && standImage.url && standImage.url.length > 0">
-    <div *ngIf="!isBackyard && gameCharacter.isEmote" 
+    <div @fadeAndScaleInOut *ngIf="!isBackyard && gameCharacter.isEmote" 
       class="emote chat-bubble-buyo"
       style="position: absolute; pointer-events: none; text-align: center; margin-top: -1em"
       [style.visibility]="isApplyDialog ? 'visible' : 'hidden'"
@@ -31,15 +34,17 @@
   [style.color]="color ? color : '#444'" 
   [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard}"
   [style.left]="position + '%'"
-  [style.border-color]="color ? color : '#444'"><b>{{ gameCharacter.name }}</b></span>
-<div *ngIf="isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
+  [style.border-color]="color ? color : '#444'"
+  [style.margin-left.px]="nameTagCSSMarginLeft"
+  ><b>{{ gameCharacter.name }}</b></span>
+<div @fadeAndScaleInOut *ngIf="isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
   (click)="toGhostly(); toBackyard();"
   style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; font-size: 14px;"
   [style.visibility]="isApplyDialog ? 'visible' : 'hidden'"
   [style.pointer-events]="isApplyDialog ? 'auto' : 'none'"
   [style.color]="isSecret ? '#ccc' : (color ? color : '#444')"
-  [style.bottom]="dialogBoxCssBottom"
-  [style.left]="dialogBoxCssLeft"
+  [style.left]="dialogBoxLeft"
+  [style.bottom.px]="dialogBoxCssBottom"
   [style.max-width]="dialogBoxMaxWidth"
   [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret}"
   [style.border-color]="color ? color : '#444'"><div style="width: 100%" [@dialogShake]="dialogText.length" (@dialogShake.start)="onSpeaking($event)">{{ dialogText }}</div></div>
