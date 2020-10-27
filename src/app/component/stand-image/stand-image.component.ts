@@ -67,8 +67,8 @@ export class StandImageComponent implements OnInit, OnDestroy {
   ) { }
 
   onSpeaking(event: AnimationEvent) {
-    //ToDOキャラクターの吹き出し表示に合わせる
-    if (this.gameCharacter && this.gameCharacter.text && (this.isApplyDialog || this.isSpeakable)) {
+    //キャラクターの吹き出し表示に合わせる
+    if (this.gameCharacter && this.gameCharacter.text && (this.isApplyDialog || this.isSpeakable || this.gameCharacter.isShowChatBubble)) {
       clearTimeout(this._timeoutId);
       this._timeoutId = setTimeout(() => {
         this.ngZone.run(() => {

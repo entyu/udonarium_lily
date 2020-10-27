@@ -16,6 +16,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
+  @SyncVar() isShowChatBubble: boolean = true;
 
   text = '';
   isEmote = false;
