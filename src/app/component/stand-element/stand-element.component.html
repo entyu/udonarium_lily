@@ -14,7 +14,7 @@
             </div>
           </div>
           <button class="stand-image-button" (click)="openModal()" style="font-size: smaller; padding: 2px 3px;"><b>{{ isSpeakable ? '通常' : '' }}画像変更</b></button>
-          <div *ngIf="isSpeakable" style="position: absolute; margin-top: -26px; margin-left: 120px; font-size: 22px; filter: grayscale(100%); opacity: 0.7; cursor: default;">{{ isSpeaking ? '😃' : '🤐' }}</div>
+          <div *ngIf="isSpeakable" style="position: absolute; margin-top: -26px; margin-left: 120px; font-size: 22px; filter: grayscale(100%); opacity: 0.5; cursor: default;">{{ isSpeaking ? '😃' : '🤐' }}</div>
         </div>
       </ng-container>
     </div>

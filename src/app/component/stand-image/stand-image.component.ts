@@ -87,8 +87,9 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   get dialogText(): string {
     if (!this.gameCharacter || !this.gameCharacter.text) return '';
-    const ary = this.gameCharacter.text.replace(/。/g, "。\n\n").split(/[\r\n]{2,}/g).filter(str => str.trim());
-    return ary.length > 0 ? ary.reverse()[0].trim() : '';
+    return this.gameCharacter.text.replace(/[\r\n]{2,}/g, "\n\n").replace(/                            /g, '').trim();
+    //const ary = this.gameCharacter.text.replace(/。/g, "。\n\n").split(/[\r\n]{2,}/g).filter(str => str.trim());
+    //return ary.length > 0 ? ary.reverse()[0].trim() : '';
   }
 
   get standImage(): ImageFile {
