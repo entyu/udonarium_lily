@@ -1,6 +1,7 @@
 import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { PeerCursor } from '@udonarium/peer-cursor';
 
 interface ContextMenuPoint {
   x: number,
@@ -42,6 +43,8 @@ export class ContextMenuService {
   title: string = '';
   actions: ContextMenuAction[] = [];
   position: ContextMenuPoint = { x: 0, y: 0 };
+  titleColor: string = PeerCursor.CHAT_DEFAULT_COLOR;
+  titleBold: boolean = false;
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver
@@ -51,7 +54,7 @@ export class ContextMenuService {
     return this.panelComponentRef ? true : false;
   }
 
-  open(position: ContextMenuPoint, actions: ContextMenuAction[], title?: string, parentViewContainerRef?: ViewContainerRef) {
+  open(position: ContextMenuPoint, actions: ContextMenuAction[], title?: string, parentViewContainerRef?: ViewContainerRef, titleColor?: string, titleBold?: boolean) {
     this.close();
     if (!parentViewContainerRef) {
       parentViewContainerRef = ContextMenuService.defaultParentViewContainerRef;
@@ -74,6 +77,12 @@ export class ContextMenuService {
       childPanelService.position.x = position.x;
       childPanelService.position.y = position.y;
     }
+    if (titleColor) {
+      childPanelService.titleColor = titleColor;
+    } else {
+      childPanelService.titleColor = PeerCursor.CHAT_DEFAULT_COLOR;
+    }
+    childPanelService.titleBold = titleBold;
 
     childPanelService.title = title != null ? title : '';
 

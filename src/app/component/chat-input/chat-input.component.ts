@@ -18,8 +18,6 @@ import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.compon
 
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { DataElement } from '@udonarium/data-element';
-import { StandConditionType } from '@udonarium/stand-list';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 
 import * as lzbase62 from 'lzbase62/lzbase62.min.js';
@@ -398,10 +396,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         position, 
         [
           { name: '接続情報', action: () => {
-            this.panelService.open(PeerMenuComponent, { width: 520, height: 450, top: position.y - 100, left: position.x - 100 });
+            this.panelService.open(PeerMenuComponent, { width: 520, height: 600, top: position.y - 100, left: position.x - 100 });
           } }
         ],
-        PeerCursor.myCursor.name
+        PeerCursor.myCursor.name, 
+        null,
+        PeerCursor.myCursor.color,
+        true
       );
       return;
     }

@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, O
 import { ContextMenuAction, ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopObject } from '@udonarium/tabletop-object';
+import { PeerCursor } from '@udonarium/peer-cursor';
 
 @Component({
   selector: 'context-menu',
@@ -14,6 +15,8 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() title: string = '';
   @Input() actions: ContextMenuAction[] = [];
+  @Input() titleColor: string = PeerCursor.CHAT_DEFAULT_COLOR;
+  @Input() titleBold = false;
 
   @Input() isSubmenu: boolean = false;
 
@@ -50,6 +53,8 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.isSubmenu) {
       this.title = this.contextMenuService.title;
       this.actions = this.contextMenuService.actions;
+      this.titleColor = this.contextMenuService.titleColor;
+      this.titleBold = this.contextMenuService.titleBold;
     }
   }
 
