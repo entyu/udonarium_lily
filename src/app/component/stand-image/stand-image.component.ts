@@ -159,15 +159,21 @@ export class StandImageComponent implements OnInit, OnDestroy {
     return (this.imageHeight * this.naturalWidth / this.naturalHeight);
   }
 
-  get dialogBoxLeft(): string {
-    return 'calc(' + (this.imageWidth * 0.66 - this.imageWidth / 2 - 12) + 'px + ' + this.position + '%)';
+  get dialogBoxCSSLeft(): number {
+    return (this.imageWidth * (this.position > 50 ? 0.33 : 0.66) - this.imageWidth / 2 - 12)
+     + (this.position * document.documentElement.clientWidth / 100) 
+     - (this.position > 50 ? this.dialogBoxCSSMaxWidth : 0);
   }
 
-  get dialogBoxMaxWidth(): string {
+  get dialogBoxCSSRight(): number {
+    return document.documentElement.clientWidth - this.dialogBoxCSSLeft - this.dialogBoxCSSMaxWidth;
+  }
+
+  get dialogBoxCSSMaxWidth(): number {
     let screenRatio = this.imageWidth / document.documentElement.clientWidth;
     screenRatio = screenRatio / 2;
     if (screenRatio < 0.14) screenRatio = 0.14;  
-    return (screenRatio * 100) + '%';
+    return (screenRatio * document.documentElement.clientWidth);
   }
 
   get dialogBoxCssBottom(): number {

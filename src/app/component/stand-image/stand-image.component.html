@@ -39,12 +39,12 @@
   ><b>{{ gameCharacter.name }}</b></span>
 <div @fadeAndScaleInOut *ngIf="isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
   (click)="toGhostly(); toBackyard();"
-  style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; font-size: 14px;"
+  style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; font-size: 14px; pointer-events: none;"
   [style.visibility]="isApplyDialog ? 'visible' : 'hidden'"
-  [style.pointer-events]="isApplyDialog ? 'auto' : 'none'"
   [style.color]="isSecret ? '#ccc' : (color ? color : '#444')"
-  [style.left]="dialogBoxLeft"
+  [style.left.px]="dialogBoxCSSLeft"
   [style.bottom.px]="dialogBoxCssBottom"
-  [style.max-width]="dialogBoxMaxWidth"
-  [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret}"
+  [style.max-width.px]="dialogBoxCSSMaxWidth"
+  [ngStyle]="{left: (position <= 50 ? dialogBoxCSSLeft + 'px' : 'auto'), right: (position > 50 ? dialogBoxCSSRight + 'px' : 'auto'), 'transform-origin': position <= 50 ? '12px calc(100% + 12px)' : 'calc(100% - 12px) calc(100% + 12px)'}"
+  [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret, 'is-position-right': position <= 50, 'is-position-left': position > 50}"
   [style.border-color]="color ? color : '#444'"><div style="width: 100%" [@dialogShake]="dialogText.length" (@dialogShake.start)="onSpeaking($event)">{{ dialogText }}</div></div>

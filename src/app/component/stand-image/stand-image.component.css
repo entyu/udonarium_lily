@@ -52,6 +52,12 @@
   border-radius: 24px 12px 24px 12px;
   background: rgba(85, 85, 85, 0.9);
 }
+.name-tag.dialog.is-position-left {
+  border-radius: 24px 24px 12px 24px;
+}
+.name-tag.dialog.dialog-secret.is-position-left {
+  border-radius: 12px 24px 12px 24px;
+}
 
 .emote {
   text-align: center;
@@ -76,7 +82,7 @@
   z-index: 900005;
 }
 
-.dialog:after {
+.dialog.is-position-right:after {
   box-sizing: border-box;
   content: '';
   position: absolute;
@@ -84,16 +90,30 @@
   padding: 0px;
   line-height: 1;
 	vertical-align: baseline;
-  left: 17px;
-  margin-left: -12px;
   bottom: -25px;
   border: 12px solid transparent;
   border-top-color: inherit;
+  left: 17px;
+  margin-left: -12px;
+}
+.dialog.is-position-left:before {
+  box-sizing: border-box;
+  content: '';
+  position: absolute;
+  margin: 0px;
+  padding: 0px;
+  line-height: 1;
+	vertical-align: baseline;
+  bottom: -25px;
+  border: 12px solid transparent;
+  border-top-color: inherit;
+  right: 17px;
+  margin-right: -12px;
 }
 
 @supports (-moz-user-select: -moz-none) {
   /* 汚いけどとりあえず */
-  .dialog:after {
+  .dialog.is-position-right:after, .dialog.is-position-left:before {
     bottom: -39px !important;
   }
 }
@@ -128,7 +148,7 @@
 */
 
 .chat-bubble-buyo {
-  transform-origin: 12px calc(100% + 12px);
+  /* transform-origin: 12px calc(100% + 12px); */
   transition: transform .2s ease;
   animation: chat-bubble-buyo 1.2s ease-in-out 0.1s infinite alternate;
   transform: scale3d(0.9, 0.9, 0.9);
