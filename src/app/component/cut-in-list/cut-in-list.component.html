@@ -29,8 +29,13 @@
       </div>
 
       <div>音楽データ :
-        <button (click)="openCutInBgmModal()">設定</button>
-        <span *ngIf="!isEditable" >{{this.cutInAudioName}}</span>LINK:
+        <button (click)="openCutInBgmModal()">設定</button><br>
+　　　　LINK:<span *ngIf="isCutInBgmUploaded()" >OK：</span><span *ngIf="!isCutInBgmUploaded()" >NG：</span><br>
+        <ng-container *ngIf="!isCutInBgmUploaded()">
+          <span *ngIf="cutInAudioName.length>0 " >音楽ファイルがアップされていません</span>
+          <span *ngIf="cutInAudioName.length<=0 " >音楽ファイルが設定されていません</span><br>
+        </ng-container>
+        <span *ngIf="isEditable" >{{cutInAudioName}}</span>
 
       </div>
       <div>

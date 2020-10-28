@@ -57,6 +57,7 @@ import { ControllerInputComponent } from 'component/controller-input/controller-
 //
 //entyu_30
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
+import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 //
 
 import { AppConfigService } from 'service/app-config.service';
@@ -106,6 +107,7 @@ import { AppComponent } from './app.component';
     JukeboxComponent,
 //entyu_30
     CutInListComponent,
+    CutInBgmComponent,
 //
     LobbyComponent,
     ModalComponent,

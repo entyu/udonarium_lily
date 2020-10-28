@@ -4,29 +4,27 @@ import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-play
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-//import { EventSystem } from '@udonarium/core/system';
 import { Jukebox } from '@udonarium/Jukebox';
 
 import { ModalService } from 'service/modal.service';
-import { PanelService } from 'service/panel.service';
+import { PanelOption, PanelService } from 'service/panel.service';
 
 
-//import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 //import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
-////import { GameTable, GridType, FilterType } from '@udonarium/game-table';
 import { CutIn } from '@udonarium/cut-in';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
+import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 //import { ModalService } from 'service/modal.service';
 //import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
-
+import { PointerDeviceService } from 'service/pointer-device.service';
 
 @Component({
   selector: 'app-cut-in-list',
@@ -117,6 +115,7 @@ export class CutInListComponent implements OnInit, OnDestroy {
   private lazyUpdateTimer: NodeJS.Timer = null;
 */
   constructor(
+    private pointerDeviceService: PointerDeviceService,//
     private modalService: ModalService,
     private saveDataService: SaveDataService,
     private panelService: PanelService,
@@ -163,14 +162,6 @@ export class CutInListComponent implements OnInit, OnDestroy {
     this.saveDataService.saveGameObject(this.selectedCutIn, 'cut_' + this.selectedCutIn.name);
   }
 
-/*
-  allsave(){
-    if ( this.getCutIns.length <= 0) return;
-    for( let i = 0 ; i<this.getCutIns.length ; i++){
-      this.saveDataService.saveGameObject(this.getCutIns[i] , 'cut_');
-    }
-  }
-*/
   delete() {
     if (!this.isEmpty && this.selectedCutIn) {
 //      this.selectedCutInXml = this.selectedCutIn.toXml();
@@ -187,63 +178,38 @@ export class CutInListComponent implements OnInit, OnDestroy {
   }
 
   openCutInBgmModal() {
-    this.modalService.open<string>(FileSelecterComponent).then(value => {
+    if (!this.isSelected) return;
+    this.modalService.open<string>(CutInBgmComponent).then(value => {
+      console.log('CUTIN '+ value);
+      if (!this.selectedCutIn || !value) return;
+
+      this.cutInAudioIdentifier = value;
+      
+      let audio = AudioStorage.instance.get(value);
+      if( audio ){
+        this.cutInAudioName = audio.name;
+        console.log('cutInAudioName'+ this.cutInAudioName);
+      }
+    });
+  }
+
+  isCutInBgmUploaded() {
+    if (!this.isSelected) return false;
+
+    let audio = AudioStorage.instance.get( this.cutInAudioIdentifier );
+    return audio ? true : false ;
+  }
+
+
+/*
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 600, height: 600 };
+    this.panelService.open<CutInBgmComponent>(CutInBgmComponent, option);
+*/
+/*
+    this.modalService.open<string>(CuiInBgmComponent).then(value => {
       if (!this.selectedCutIn || !value) return;
       this.selectedCutIn.audioIdentifier = value;
     });
-
-/*
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
-      if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
-      let element = this.tabletopObject.imageDataElement.getFirstElementByName(name);
-      if (!element) return;
-      element.value = value;
-    });
 */
   }
-
-
-
-/*
-  restore() {
-    if (this.selectedTable && this.selectedTableXml) {
-      let restoreTable = ObjectSerializer.instance.parseXml(this.selectedTableXml);
-      this.selectGameTable(restoreTable.identifier);
-      this.selectedTableXml = '';
-    }
-  }
-*/
-
-
-/*
-  play(audio: AudioFile) {
-    this.auditionPlayer.play(audio);
-  }
-
-  stop() {
-    this.auditionPlayer.stop();
-  }
-
-  playBGM(audio: AudioFile) {
-    this.jukebox.play(audio.identifier, true);
-  }
-
-  stopBGM(audio: AudioFile) {
-    if (this.jukebox.audio === audio) this.jukebox.stop();
-  }
-
-  handleFileSelect(event: Event) {
-    let files = (<HTMLInputElement>event.target).files;
-    if (files.length) FileArchiver.instance.load(files);
-  }
-
-  private lazyNgZoneUpdate() {
-    if (this.lazyUpdateTimer !== null) return;
-    this.lazyUpdateTimer = setTimeout(() => {
-      this.lazyUpdateTimer = null;
-      this.ngZone.run(() => { });
-    }, 100);
-  }
-*/
-
-}
