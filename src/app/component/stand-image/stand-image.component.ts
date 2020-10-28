@@ -40,7 +40,7 @@ import { GameCharacter } from '@udonarium/game-character';
       transition('void => *, true => false', [
         animate('200ms ease-in-out', keyframes([
           style({ transform: 'scale3d(0, 0, 0)', opacity: 0  }),
-          style({ transform: 'scale3d(1.0, 1.0, 1.0)', opacity: 0.9 }),
+          style({ transform: 'scale3d(0.9, 0.9, 0.9)', opacity: 0.9 }),
         ]))
       ]),
       transition('* => void, true => false', [
