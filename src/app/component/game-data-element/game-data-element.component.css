@@ -188,3 +188,7 @@ input[type='range']::-ms-thumb {
 input[type='range']::-ms-tooltip {
   display: none;
 }
+
+.modeifire-type {
+  font-size: smaller;
+}
