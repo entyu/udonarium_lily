@@ -78,6 +78,13 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
 
+/*
+  get volume(): number { return AudioPlayer.volume; }
+  set volume(volume: number) { AudioPlayer.volume = volume; }
+
+  get auditionVolume(): number { return AudioPlayer.auditionVolume; }
+  set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; }
+*/
 
 
   get cutInImage(): ImageFile {
@@ -102,11 +109,6 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   
 /*
-  get volume(): number { return AudioPlayer.volume; }
-  set volume(volume: number) { AudioPlayer.volume = volume; }
-
-  get auditionVolume(): number { return AudioPlayer.auditionVolume; }
-  set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; }
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
@@ -193,6 +195,7 @@ export class CutInListComponent implements OnInit, OnDestroy {
     });
   }
 
+
   isCutInBgmUploaded() {
     if (!this.isSelected) return false;
 
@@ -200,6 +203,42 @@ export class CutInListComponent implements OnInit, OnDestroy {
     return audio ? true : false ;
   }
 
+
+  previewCutIn(){
+    
+    //jukuと同じにする
+  }
+  stoppreviewCutIn(){
+    
+    //jukuと同じにする
+    
+  }
+
+  playCutIn(){ //通常BGMの駆動は保留
+    
+    if(!this.isSelected) return;
+    
+    let isBgm = this.isCutInBgmUploaded();
+    
+    this.selectedCutIn.playAll(isBgm);
+  }
+
+  stopCutIn(){
+    
+    if(!this.isSelected) return;
+    
+    let tag = this.cutInTagName;
+
+    this.selectedCutIn.stopAll();
+    
+//    for( let audio  of this.audios ){
+//      if( audio.tagName == tag ){
+//        audio.stopAll();
+//      }
+ //     
+//    }
+    
+  }
 
 /*
     let coordinate = this.pointerDeviceService.pointers[0];

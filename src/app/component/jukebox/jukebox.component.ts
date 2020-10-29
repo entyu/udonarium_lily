@@ -69,7 +69,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
     this.auditionPlayer.stop();
   }
 
-  playBGM(audio: AudioFile) {
+  playBGM(audio: AudioFile) { //memoこっちが全体
     this.jukebox.play(audio.identifier, true);
   }
 

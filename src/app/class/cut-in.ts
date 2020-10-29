@@ -53,27 +53,48 @@ export class CutIn extends GameObject {
     super.onStoreRemoved();
     this._stop();
   }
+  
+  
+//  playAll(identifier: string, isLoop: boolean = false) {
+  playAll( isBgm : boolean ) {
+//    let audio = AudioStorage.instance.get(Identifier);
 
-  play(identifier: string, isLoop: boolean = false) {
-    let audio = AudioStorage.instance.get(identifier);
-    if (!audio || !audio.isReady) return;
-    this.audioIdentifier = identifier;
+//音楽分
+    console.log('CUTIN playAll() CALL'); //entyu_30
+    if (!this.audio || !this.audio.isReady) return;
+
+    console.log('CUTIN playAll()2'+this.audio.name);
+
     this.isPlaying = true;
-    this.isLoop = isLoop;
     this._play();
   }
 
   private _play() {
+    console.log('CUTIN _play() CALL');
+    
     this._stop();
+
     if (!this.audio || !this.audio.isReady) {
       this.playAfterFileUpdate();
       return;
     }
+
+    console.log('CUTIN _play()2 CALL');
     this.audioPlayer.loop = true;
     this.audioPlayer.play(this.audio);
   }
 
+  stopAll() {
+
+    console.log('CUTIN stopAll() CALL'); //entyu_30
+
+//    this.audioIdentifier = '';
+    this.isPlaying = false;
+    this._stop();
+  }
+
   private _stop() {
+    console.log('CUTIN _stop() CALL');
     this.unregisterEvent()
     this.audioPlayer.stop();
   }
@@ -81,11 +102,14 @@ export class CutIn extends GameObject {
   private playAfterFileUpdate() {
     EventSystem.register(this)
       .on('UPDATE_AUDIO_RESOURE', -100, event => {
+        console.log('CUTIN playAfterFileUpdate' ); //entyu_30
         this._play();
       });
   }
 
   private unlockAfterUserInteraction() {
+    console.log('CUTIN unlockAfterUserInteraction() CALL'); //entyu_30
+
     let callback = () => {
       document.body.removeEventListener('touchstart', callback, true);
       document.body.removeEventListener('mousedown', callback, true);
@@ -102,36 +126,24 @@ export class CutIn extends GameObject {
 
   // override
   apply(context: ObjectContext) {
+    console.log('CUTIN apply() CALL'); //entyu_30
+    
     let audioIdentifier = this.audioIdentifier;
     let isPlaying = this.isPlaying;
     super.apply(context);
     if ((audioIdentifier !== this.audioIdentifier || !isPlaying) && this.isPlaying) {
+       console.log('--audioIdentifier' + audioIdentifier); //entyu_30
+       console.log('--this.audioIdentifier' + this.audioIdentifier); //entyu_30
+       console.log('--isPlaying' + isPlaying); //entyu_30
+       console.log('--this.isPlaying' + this.isPlaying); //entyu_30
+      
       this._play();
     } else if (isPlaying !== this.isPlaying && !this.isPlaying) {
+       console.log('--isPlaying' + isPlaying); //entyu_30
+       console.log('--this.isPlaying' + this.isPlaying); //entyu_30
       this._stop();
     }
   }
+  
 
 }
-
-//テーブルからの流用で削除分
-/*
-  get terrains(): Terrain[] {
-    let terrains: Terrain[] = [];
-    this.children.forEach(object => {
-      if (object instanceof Terrain) terrains.push(object);
-    });
-    return terrains;
-  }
-*/
-
-/*
-  get masks(): GameTableMask[] {
-    let masks: GameTableMask[] = [];
-    this.children.forEach(object => {
-      if (object instanceof GameTableMask) masks.push(object);
-    });
-    return masks;
-  }
-*/
-

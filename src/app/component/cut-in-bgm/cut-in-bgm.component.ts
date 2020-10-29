@@ -57,11 +57,11 @@ export class CutInBgmComponent implements OnInit, OnDestroy {
     this.stop();
   }
 
-  play(audio: AudioFile) {
+  play(audio: AudioFile) {//試聴
     this.auditionPlayer.play(audio);
   }
 
-  stop() {
+  stop() {//試聴
     this.auditionPlayer.stop();
   }
   
