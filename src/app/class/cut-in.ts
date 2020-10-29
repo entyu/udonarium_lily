@@ -55,6 +55,12 @@ export class CutIn extends GameObject {
   }
   
   
+  stopByCloseCloseCutIn(){
+    console.log('CUTIN stopByCloseCloseCutIn() CALL 自分だけ停止');
+    this._stop();
+  }
+  
+  
 //  playAll(identifier: string, isLoop: boolean = false) {
   playAll( isBgm : boolean ) {
 //    let audio = AudioStorage.instance.get(Identifier);
@@ -84,10 +90,10 @@ export class CutIn extends GameObject {
     this.audioPlayer.play(this.audio);
   }
 
+
   stopAll() {
 
     console.log('CUTIN stopAll() CALL'); //entyu_30
-
 //    this.audioIdentifier = '';
     this.isPlaying = false;
     this._stop();

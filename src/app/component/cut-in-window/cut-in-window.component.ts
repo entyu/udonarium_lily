@@ -9,8 +9,6 @@ import { Jukebox } from '@udonarium/Jukebox';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 
-
-
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
@@ -27,73 +25,72 @@ import { SaveDataService } from 'service/save-data.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 @Component({
-  selector: 'app-cut-in-list',
-  templateUrl: './cut-in-list.component.html',
-  styleUrls: ['./cut-in-list.component.css']
+  selector: 'app-cut-in-window',
+  templateUrl: './cut-in-window.component.html',
+  styleUrls: ['./cut-in-window.component.css']
 })
-export class CutInListComponent implements OnInit, OnDestroy {
+export class CutInWindowComponent implements OnInit, OnDestroy {
   
   minSize: number = 10;
   maxSize: number = 1200;
   
-  get cutInName(): string { return this.isEditable ? this.myCutIn.name : '' ; }
-  set cutInName(cutInName: string) { if (this.isEditable) this.myCutIn.name = cutInName; }
 
-  get cutInWidth(): number { return this.isEditable ? this.myCutIn.width : 0 ; }
-  set cutInWidth(cutInWidth: number) { if (this.isEditable) this.myCutIn.width = cutInWidth; }
+  get cutInName(): string { return this.myCutIn ? this.myCutIn.name : '' ; }
+  set cutInName(cutInName: string) { if (this.myCutIn) this.myCutIn.name = cutInName; }
 
-  get cutInHeight(): number { return this.isEditable ? this.myCutIn.height : 0 ; }
-  set cutInHeight(cutInHeight: number) { if (this.isEditable) this.myCutIn.height = cutInHeight; }
+  get cutInWidth(): number { return this.myCutIn ? this.myCutIn.width : 0 ; }
+  set cutInWidth(cutInWidth: number) { if (this.myCutIn) this.myCutIn.width = cutInWidth; }
 
-  get cutInX_Pos(): number { return this.isEditable ? this.myCutIn.x_pos : 0 ; }
-  set cutInX_Pos(cutInX_Pos: number) { if (this.isEditable) this.myCutIn.x_pos = cutInX_Pos; }
+  get cutInHeight(): number { return this.myCutIn ? this.myCutIn.height : 0 ; }
+  set cutInHeight(cutInHeight: number) { if (this.myCutIn) this.myCutIn.height = cutInHeight; }
 
-  get cutInY_Pos(): number { return this.isEditable ? this.myCutIn.y_pos : 0 ; }
-  set cutInY_Pos(cutInY_Pos: number) { if (this.isEditable) this.myCutIn.y_pos = cutInY_Pos; }
+  get cutInX_Pos(): number { return this.myCutIn ? this.myCutIn.x_pos : 0 ; }
+  set cutInX_Pos(cutInX_Pos: number) { if (this.myCutIn) this.myCutIn.x_pos = cutInX_Pos; }
 
-  get cutInOriginalSize(): boolean { return this.isEditable ? this.myCutIn.originalSize : false ; }
-  set cutInOriginalSize(cutInOriginalSize: boolean) { if (this.isEditable) this.myCutIn.originalSize = cutInOriginalSize; }
+  get cutInY_Pos(): number { return this.myCutIn ? this.myCutIn.y_pos : 0 ; }
+  set cutInY_Pos(cutInY_Pos: number) { if (this.myCutIn) this.myCutIn.y_pos = cutInY_Pos; }
 
-  get cutInIsLoop(): boolean { return this.isEditable ? this.myCutIn.isLoop : false ; }
-  set cutInIsLoop(cutInIsLoop: boolean) { if (this.isEditable) this.myCutIn.isLoop = cutInIsLoop; }
+  get cutInOriginalSize(): boolean { return this.myCutIn ? this.myCutIn.originalSize : false ; }
+  set cutInOriginalSize(cutInOriginalSize: boolean) { if (this.myCutIn) this.myCutIn.originalSize = cutInOriginalSize; }
 
-  get cutInOutTime(): number { return this.isEditable ? this.myCutIn.outTime : 0 ; }
-  set cutInOutTime(cutInOutTime: number) { if (this.isEditable) this.myCutIn.outTime = cutInOutTime; }
+  get cutInIsLoop(): boolean { return this.myCutIn ? this.myCutIn.isLoop : false ; }
+  set cutInIsLoop(cutInIsLoop: boolean) { if (this.myCutIn) this.myCutIn.isLoop = cutInIsLoop; }
 
-  get cutInUseOutUrl(): boolean { return this.isEditable ? this.myCutIn.useOutUrl : false ; }
-  set cutInUseOutUrl(cutInUseOutUrl: boolean) { if (this.isEditable) this.myCutIn.useOutUrl = cutInUseOutUrl; }
+  get cutInOutTime(): number { return this.myCutIn ? this.myCutIn.outTime : 0 ; }
+  set cutInOutTime(cutInOutTime: number) { if (this.myCutIn) this.myCutIn.outTime = cutInOutTime; }
 
-  get cutInOutUrl(): string { return this.isEditable ? this.myCutIn.outUrl : '' ; }
-  set cutInOutUrl(cutInOutUrl: string) { if (this.isEditable) this.myCutIn.outUrl = cutInOutUrl; }
+  get cutInUseOutUrl(): boolean { return this.myCutIn ? this.myCutIn.useOutUrl : false ; }
+  set cutInUseOutUrl(cutInUseOutUrl: boolean) { if (this.myCutIn) this.myCutIn.useOutUrl = cutInUseOutUrl; }
 
-  get cutInTagName(): string { return this.isEditable ? this.myCutIn.tagName : '' ; }
-  set cutInTagName(cutInTagName: string) { if (this.isEditable) this.myCutIn.tagName = cutInTagName; }
+  get cutInOutUrl(): string { return this.myCutIn ? this.myCutIn.outUrl : '' ; }
+  set cutInOutUrl(cutInOutUrl: string) { if (this.myCutIn) this.myCutIn.outUrl = cutInOutUrl; }
 
-  get cutInAudioName(): string { return this.isEditable ? this.myCutIn.audioName : '' ; }
-  set cutInAudioName(cutInAudioName: string) { if (this.isEditable) this.myCutIn.audioName = cutInAudioName; }
+  get cutInTagName(): string { return this.myCutIn ? this.myCutIn.tagName : '' ; }
+  set cutInTagName(cutInTagName: string) { if (this.myCutIn) this.myCutIn.tagName = cutInTagName; }
 
-  get cutInAudioIdentifier(): string { return this.isEditable ? this.myCutIn.audioIdentifier : '' ; }
-  set cutInAudioIdentifier(cutInAudioIdentifier: string) { if (this.isEditable) this.myCutIn.audioIdentifier = cutInAudioIdentifier; }
+  get cutInAudioName(): string { return this.myCutIn ? this.myCutIn.audioName : '' ; }
+  set cutInAudioName(cutInAudioName: string) { if (this.myCutIn) this.myCutIn.audioName = cutInAudioName; }
+
+  get cutInAudioIdentifier(): string { return this.myCutIn ? this.myCutIn.audioIdentifier : '' ; }
+  set cutInAudioIdentifier(cutInAudioIdentifier: string) { if (this.myCutIn) this.myCutIn.audioIdentifier = cutInAudioIdentifier; }
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
-
-  get cutInImage(): ImageFile {
-    if (!this.selectedCutIn) return ImageFile.Empty;
-    let file = ImageStorage.instance.get(this.selectedCutIn.imageIdentifier);
-    return file ? file : ImageFile.Empty;
-  }
+/*
   
-//  get cutInList(): CutInList { return ObjectStore.instance.get<CutInList>('CutInList'); }
+
+
+*/
+  get isEmpty(): boolean { return this.myCutIn ? false : true ; }
 
   private lazyUpdateTimer: NodeJS.Timer = null;
-  myCutIn: CutIn = null;
+  _myCutIn: CutIn = null;
 
-  get isSelected(): boolean { return this.selectedCutIn ? true : false; }
-  get isEditable(): boolean {
-    return !this.isEmpty && this.isSelected;
+  get cutInImage(): ImageFile {
+    if (!this.myCutIn) return ImageFile.Empty;
+    let file = ImageStorage.instance.get(this.myCutIn.imageIdentifier);
+    return file ? file : ImageFile.Empty;
   }
-//  get isEmpty(): boolean { return this.cutInSelecter ? (this.cutInSelecter.viewCutIn ? false : true) : true; }
-  get isEmpty(): boolean { return false ; }
+
 
   constructor(
     private pointerDeviceService: PointerDeviceService,//
@@ -104,53 +101,28 @@ export class CutInListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'カットインリスト');
+    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'カットイン【' + this.cutInName + '】');
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
-    this.stop();
+    this.myCutIn.stopByCloseCloseCutIn();
   }
 
 
-  myCutIn(identifier: string) {
-    this.myCutIn = ObjectStore.instance.get<CutIn>(identifier);
+  
+//  ObjectStore.instance.get<CutIn>(identifier)
+  
+  set myCutIn(cutIn: CutIn) {
+    this.myCutIn = cutIn;
   }
+  get myCutIn(): CutIn{
+    return this.myCutIn ;
+  }
+
 
   get CutIns(): CutIn[] {
     return ObjectStore.instance.getObjects(CutIn);
   }
  
-  closeWindow(){
-    
-    
-  }
-
-  playCutIn(){
-    if( !this.selectedCutIn )return;
-    //タグチェック
-    
-
-    this.selectedCutIn.pray();
-    
-  }
-
-  stopCutIn(){
-    if( !this.selectedCutIn )return;
-    //タグチェック
-    this.selectedCutIn.stop();
-    
-  }
-
-/*
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 600, height: 600 };
-    this.panelService.open<CutInBgmComponent>(CutInBgmComponent, option);
-*/
-/*
-    this.modalService.open<string>(CuiInBgmComponent).then(value => {
-      if (!this.selectedCutIn || !value) return;
-      this.selectedCutIn.audioIdentifier = value;
-    });
-*/
   }

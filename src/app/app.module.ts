@@ -58,6 +58,7 @@ import { ControllerInputComponent } from 'component/controller-input/controller-
 //entyu_30
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
+import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 //
 
 import { AppConfigService } from 'service/app-config.service';
@@ -108,6 +109,7 @@ import { AppComponent } from './app.component';
 //entyu_30
     CutInListComponent,
     CutInBgmComponent,
+    CutInWindowComponent,
 //
     LobbyComponent,
     ModalComponent,
