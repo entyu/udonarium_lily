@@ -168,6 +168,7 @@ export class CutInListComponent implements OnInit, OnDestroy {
     if (!this.isEmpty && this.selectedCutIn) {
 //      this.selectedCutInXml = this.selectedCutIn.toXml();
       this.selectedCutIn.destroy();
+      this.selectedCutIn = null;
     }
   }
 

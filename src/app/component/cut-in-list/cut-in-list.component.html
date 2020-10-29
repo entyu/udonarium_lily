@@ -12,7 +12,7 @@
       <option *ngFor="let cutIn of getCutIns()" value="{{cutIn.identifier}}">{{cutIn.name}}</option>
     </select>
   </div>
-  <div class="flex-item">
+  <div class="flex-item" style="width:380px">
     <ng-container *ngIf="!isEmpty || selectedCutIn">
       <div class="images-select">
         <div>
@@ -28,7 +28,7 @@
         <input [(ngModel)]="cutInName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
       </div>
 
-      <div>音楽データ :
+      <div >音楽データ :
         <button (click)="openCutInBgmModal()">設定</button><br>
 
         <button  (click)="playCutIn()" [disabled]="" >カットイン/再生</button>
@@ -40,8 +40,8 @@
           <span *ngIf="cutInAudioName.length>0 " >音楽ファイルがアップされていません</span>
           <span *ngIf="cutInAudioName.length<=0 " >音楽ファイルが設定されていません</span><br>
         </ng-container>
-        <span *ngIf="isEditable" >{{cutInAudioName}}</span><br>
-        <span *ngIf="isEditable" >{{cutInAudioIdentifier}}</span>
+        <ng-container *ngIf="isEditable" >{{cutInAudioName}}</ng-container><br>
+<!--        <ng-container *ngIf="isEditable" >{{cutInAudioIdentifier}}</ng-container>-->
 
       </div>
       <div>
