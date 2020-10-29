@@ -219,6 +219,45 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                 DiceBot.diceBotInfosIndexed.push(group);
               }
             });
+        } else {
+          DiceBot.diceBotInfos.forEach((info) => {
+            let normalize = info.game.normalize('NFKD');
+            for (let replaceData of DiceBot.replaceData) {
+              if (replaceData[2] && info.game === replaceData[0]) {
+                normalize = replaceData[1];
+                info.game = replaceData[2];
+              }
+              normalize = normalize.split(replaceData[0].normalize('NFKD')).join(replaceData[1].normalize('NFKD'));
+            }
+            normalize = normalize.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60))
+              .replace(/第(.+?)版/g, 'タイ$1ハン')
+              .replace(/[・!?！？\s　:：=＝\/／（）\(\)]+/g, '')
+              .replace(/([アカサタナハマヤラワ])ー+/g, '$1ア')
+              .replace(/([イキシチニヒミリ])ー+/g, '$1イ')
+              .replace(/([ウクスツヌフムユル])ー+/g, '$1ウ')
+              .replace(/([エケセテネヘメレ])ー+/g, '$1エ')
+              .replace(/([オコソトノホモヨロ])ー+/g, '$1オ')
+              .replace(/ン+ー+/g, 'ン')
+              .replace(/ン+/g, 'ン');
+            info.sort_key = info.lang ? info.lang : normalize.normalize('NFKD');
+            //return info;
+            //console.log(info.index + ': ' + normalize);
+          });
+          DiceBot.diceBotInfos.sort((a, b) => {
+            return a.sort_key == b.sort_key ? 0 
+            : a.sort_key < b.sort_key ? -1 : 1;
+          });
+          let sentinel = DiceBot.diceBotInfos[0].sort_key[0];
+          let group = { index: sentinel, infos: [] };
+          for (let info of DiceBot.diceBotInfos) {
+            if ((info.lang ? info.lang : info.sort_key[0]) !== sentinel) {
+              sentinel = info.lang ? info.lang : info.sort_key[0];
+              DiceBot.diceBotInfosIndexed.push(group);
+              group = { index: sentinel, infos: [] };
+            }
+            group.infos.push({ script: info.script, game: info.game });
+          }
+          DiceBot.diceBotInfosIndexed.push(group);
         }
         Network.setApiKey(event.data.webrtc.key);
         Network.open();
