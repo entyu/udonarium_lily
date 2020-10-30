@@ -8,7 +8,11 @@
   <br>※最後に使った色とニックネームをブラウザに保存、<br>　色を初期値に戻す際は白(255,255,255)を選択。</span>
 </div>
 <div>
-  <span>あなたのID：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.id}}</span>
+  <span>あなたのID：<span>
+    <input *ngIf="networkService.isOpen" class="id-input" type="text" value="{{ networkService.peerContext.id }}" readonly>
+    <button *ngIf="isAbleClipboardCopy" (click)="copyPeerId()" [disabled]="isCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
+    <span [@fadeInOut]="isCopied" class="copied" [style.color]="myPeerColor"> クリップボードにコピーしました。</span>
+  </span>
   <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
   </span>
 </div>

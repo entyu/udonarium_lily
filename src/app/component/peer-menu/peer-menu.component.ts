@@ -10,11 +10,20 @@ import { LobbyComponent } from 'component/lobby/lobby.component';
 import { AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'peer-menu',
   templateUrl: './peer-menu.component.html',
-  styleUrls: ['./peer-menu.component.css']
+  styleUrls: ['./peer-menu.component.css'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter, false => true', [
+        animate('100ms ease-in-out', style({ opacity: 1.0 })),
+        animate('800ms ease-in-out', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -22,6 +31,9 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   networkService = Network
   gameRoomService = ObjectStore.instance;
   help: string = '';
+  isCopied = false;
+
+  private _timeOutId;
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
@@ -68,6 +80,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    clearTimeout(this._timeOutId);
     EventSystem.unregister(this);
   }
 
@@ -185,5 +198,20 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   findPeerColor(peerId: string) {
     const peerCursor = PeerCursor.find(peerId);
     return peerCursor ? peerCursor.color : '';
+  }
+
+  copyPeerId() {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(this.networkService.peerContext.id);
+      this.isCopied = true;
+      clearTimeout(this._timeOutId);
+      this._timeOutId = setTimeout(() => {
+        this.isCopied = false;
+      }, 1000);
+    }
+  }
+
+  isAbleClipboardCopy(): boolean {
+    return navigator.clipboard ? true : false;
   }
 }

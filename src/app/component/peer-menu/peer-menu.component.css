@@ -19,3 +19,24 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+.id-input {
+  font-weight: bold;
+  width: 4.6em;
+  text-align: center;
+  background-color: transparent;
+  border-color: transparent;
+  border-radius: 3px;
+  border-style: solid;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.id-input:active, .id-input:hover {
+  border-color: #444;
+}
+
+.copied {
+  font-size: smaller;
+  opacity: 0;
+}
