@@ -343,7 +343,7 @@ export class DiceBot extends GameObject {
 
   public static replaceData: [string, string, string?][] = [
     ['新クトゥルフ', 'シンクトウルフシンワTRPG', '新クトゥルフ神話TRPG'],
-    ['クトゥルフ神話TRPG', 'クトウルフシンワTRPG', '(旧)クトゥルフ神話TRPG'],
+    ['クトゥルフ神話TRPG', 'クトウルフシンワTRPG', '(旧) クトゥルフ神話TRPG'],
     ['克蘇魯神話', '克蘇魯的呼喚', '克蘇魯的呼喚'],
     ['克蘇魯神話第7版', '克蘇魯的呼喚 第七版', '克蘇魯的呼喚 第七版'],
     ['トーグ', 'トオク', 'TORG'],
