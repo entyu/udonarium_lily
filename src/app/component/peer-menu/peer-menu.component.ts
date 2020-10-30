@@ -18,7 +18,7 @@ import { animate, keyframes, style, transition, trigger } from '@angular/animati
   styleUrls: ['./peer-menu.component.css'],
   animations: [
     trigger('fadeInOut', [
-      transition(':enter, false => true', [
+      transition('false => true', [
         animate('100ms ease-in-out', style({ opacity: 1.0 })),
         animate('800ms ease-in-out', style({ opacity: 0 }))
       ])
