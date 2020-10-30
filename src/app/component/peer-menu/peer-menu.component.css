@@ -20,16 +20,38 @@
   background-size: cover;
 }
 
-.id-input {
-  font-weight: bold;
-  width: 4.6em;
-  text-align: center;
-  background-color: transparent;
+.id-spacer  {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  height: 0;
+  padding: 0 3px;
+  box-sizing: border-box;
   border-color: transparent;
   border-radius: 3px;
+  border-width: 2px;
   border-style: solid;
+  font-family: Cambria, Georgia;
   font-size: larger;
-  font-weight: bold;
+  font-weight: bolder;
+}
+
+.id-input {
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+  color: #444;
+  font-family: Cambria, Georgia;
+  font-size: larger;
+  padding: 2px;
+  box-sizing: border-box;
+  border-color: transparent;
+  border-radius: 3px;
+  border-width: 2px;
+  border-style: solid;
+  font-weight: bolder;
 }
 
 .id-input:active, .id-input:hover {

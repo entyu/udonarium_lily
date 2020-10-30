@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
@@ -10,7 +10,7 @@ import { LobbyComponent } from 'component/lobby/lobby.component';
 import { AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
-import { animate, keyframes, style, transition, trigger } from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'peer-menu',
@@ -19,13 +19,15 @@ import { animate, keyframes, style, transition, trigger } from '@angular/animati
   animations: [
     trigger('fadeInOut', [
       transition('false => true', [
-        animate('100ms ease-in-out', style({ opacity: 1.0 })),
-        animate('800ms ease-in-out', style({ opacity: 0 }))
+        animate('50ms ease-in-out', style({ opacity: 1.0 })),
+        animate('900ms ease-in-out', style({ opacity: 0 }))
       ])
     ])
   ]
 })
 export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('idInput') idInput: ElementRef;
+  @ViewChild('idSpacer') idSpacer: ElementRef;
 
   targetPeerId: string = '';
   networkService = Network
@@ -76,6 +78,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     EventSystem.register(this)
       .on('OPEN_NETWORK', event => {
         this.ngZone.run(() => { });
+        this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
       });
   }
 

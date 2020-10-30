@@ -10,9 +10,12 @@
 <div>
   <span>あなたのID：<span>
     <ng-container *ngIf="networkService.isOpen">
-      <input class="id-input" type="text" value="{{ networkService.peerContext.id }}" readonly>
+      <span style="display: inline-block;">
+        <span #idSpacer class="id-spacer">{{ networkService.peerContext.id }}</span>
+        <input #idInput class="id-input" type="text" value="{{ networkService.peerContext.id }}" readonly>
+      </span>
       <button *ngIf="isAbleClipboardCopy" (click)="copyPeerId()" [disabled]="isCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
-      <span [@fadeInOut]="isCopied" class="copied" [style.color]="myPeerColor"> クリップボードにコピーしました。</span>
+      <span [@fadeInOut]="isCopied" class="copied" [style.color]="myPeerColor"> {{ isCopied ? 'クリップボードにコピーしました。' : '' }}</span>
     </ng-container>
   </span>
   <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
