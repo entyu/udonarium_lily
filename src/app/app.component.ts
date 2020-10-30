@@ -39,6 +39,10 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
 
+//
+import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
+//
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -257,8 +261,18 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       }, 100);
     }
   }
-}
 
+  openCutInWindow() {
+
+//    option.top = (this.openPanelCount % 10 + 1) * 20;
+//    option.left = 100 + (this.openPanelCount % 20 + 1) * 5;
+    let component: { new(...args: any[]): any } = null;
+    let option: PanelOption = { width: 450, height: 600, top: 450, left: 300 };
+    component = CutInWindowComponent;
+    this.panelService.open(component, option);
+
+  }
+}
 PanelService.UIPanelComponentClass = UIPanelComponent;
 ContextMenuService.ContextMenuComponentClass = ContextMenuComponent;
 ModalService.ModalComponentClass = ModalComponent;

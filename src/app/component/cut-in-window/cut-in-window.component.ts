@@ -34,8 +34,8 @@ export class CutInWindowComponent implements OnInit, OnDestroy {
   minSize: number = 10;
   maxSize: number = 1200;
   
-
-  get cutInName(): string { return this.myCutIn ? this.myCutIn.name : '' ; }
+/*
+  get cutInName(CutIn): string { return this.myCutIn ? this.myCutIn.name : '' ; }
   set cutInName(cutInName: string) { if (this.myCutIn) this.myCutIn.name = cutInName; }
 
   get cutInWidth(): number { return this.myCutIn ? this.myCutIn.width : 0 ; }
@@ -71,25 +71,29 @@ export class CutInWindowComponent implements OnInit, OnDestroy {
   get cutInAudioName(): string { return this.myCutIn ? this.myCutIn.audioName : '' ; }
   set cutInAudioName(cutInAudioName: string) { if (this.myCutIn) this.myCutIn.audioName = cutInAudioName; }
 
-  get cutInAudioIdentifier(): string { return this.myCutIn ? this.myCutIn.audioIdentifier : '' ; }
-  set cutInAudioIdentifier(cutInAudioIdentifier: string) { if (this.myCutIn) this.myCutIn.audioIdentifier = cutInAudioIdentifier; }
+//  get isEmpty(): boolean { return this.myCutIn ? false : true ; }
 
-  get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
-/*
   
 
 
 */
-  get isEmpty(): boolean { return this.myCutIn ? false : true ; }
+
 
   private lazyUpdateTimer: NodeJS.Timer = null;
-  _myCutIn: CutIn = null;
+//  _myCutIn: CutIn = null;
 
-  get cutInImage(): ImageFile {
-    if (!this.myCutIn) return ImageFile.Empty;
-    let file = ImageStorage.instance.get(this.myCutIn.imageIdentifier);
-    return file ? file : ImageFile.Empty;
+
+  get cutInAudioIdentifier(): string { return this.myCutIn ? this.myCutIn.audioIdentifier : '' ; }
+  set cutInAudioIdentifier(cutInAudioIdentifier: string) { if (this.myCutIn) this.myCutIn.audioIdentifier = cutInAudioIdentifier; }
+
+  get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
+
+
+  getCutIns(): CutIn[] {
+    return ObjectStore.instance.getObjects(CutIn);
   }
+
+
 
 
   constructor(
@@ -101,7 +105,7 @@ export class CutInWindowComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'カットイン【' + this.cutInName + '】');
+    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'カットイン' );
   }
 
   ngOnDestroy() {
@@ -124,5 +128,6 @@ export class CutInWindowComponent implements OnInit, OnDestroy {
   get CutIns(): CutIn[] {
     return ObjectStore.instance.getObjects(CutIn);
   }
+
  
-  }
+}

@@ -6,12 +6,19 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
 import { EventSystem } from './core/system';
 
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+
+//import { AppComponent } from '../app.component';
+
+//import { PanelOption, PanelService } from 'service/panel.service';
+//import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
+
 
 //import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 //import { ObjectNode } from './core/synchronize-object/object-node';
 //import { EventSystem } from './core/system';
 //import { Terrain } from './terrain';
-
 
 
 @SyncObject('cut-in')
@@ -42,6 +49,12 @@ export class CutIn extends GameObject {
   private audioPlayer: AudioPlayer = new AudioPlayer();
 
 
+  get cutInImage(): ImageFile {
+    if (!this.imageIdentifier) return ImageFile.Empty;
+    let file = ImageStorage.instance.get(this.imageIdentifier);
+    return file ? file : ImageFile.Empty;
+  }
+
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
@@ -54,6 +67,7 @@ export class CutIn extends GameObject {
     this._stop();
   }
   
+//  
   
   stopByCloseCloseCutIn(){
     console.log('CUTIN stopByCloseCloseCutIn() CALL 自分だけ停止');
@@ -73,6 +87,7 @@ export class CutIn extends GameObject {
 
     this.isPlaying = true;
     this._play();
+    
   }
 
   private _play() {
@@ -85,11 +100,18 @@ export class CutIn extends GameObject {
       return;
     }
 
+    let id = this.identifier ;
+/*
+    let option: PanelOption = { left: 250, top: 175, width: 600, height: 350 };
+    let component = this.panelService.open<CutInWindowComponent>(CutInWindowComponent, option);
+//    component.myCutIn = this;
+*/
+//  AppComponent.openCutInWindow( this.identifier );
+
     console.log('CUTIN _play()2 CALL');
     this.audioPlayer.loop = true;
     this.audioPlayer.play(this.audio);
   }
-
 
   stopAll() {
 
