@@ -294,6 +294,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
       //💭はEvant機能使うようにする
       const dialogRegExp = /「([\s\S]+?)」/gm;
+      // const dialogRegExp = /(?:^|[^\￥])「([\s\S]+?[^\￥])」/gm; 
+      //ToDO ちゃんとパースする
       let match;
       let dialog = [];
       while ((match = dialogRegExp.exec(text)) !== null) {
