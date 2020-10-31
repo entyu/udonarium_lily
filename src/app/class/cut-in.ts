@@ -1,3 +1,5 @@
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+
 import { AudioFile } from './core/file-storage/audio-file';
 import { AudioPlayer } from './core/file-storage/audio-player';
 import { AudioStorage } from './core/file-storage/audio-storage';
@@ -12,7 +14,8 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 //import { AppComponent } from '../app.component';
 
 //import { PanelOption, PanelService } from 'service/panel.service';
-//import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
+import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
+import { ModalService } from 'service/modal.service';
 
 
 //import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
@@ -67,24 +70,29 @@ export class CutIn extends GameObject {
     this._stop();
   }
   
-//  
   
   stopByCloseCloseCutIn(){
     console.log('CUTIN stopByCloseCloseCutIn() CALL 自分だけ停止');
     this._stop();
   }
   
+
+  openCutInWindow() {
+    return;
+//    this.modalService.open<string>(CutInWindowComponent).then(value => {    });
+  }
+
   
 //  playAll(identifier: string, isLoop: boolean = false) {
   playAll( isBgm : boolean ) {
-//    let audio = AudioStorage.instance.get(Identifier);
 
 //音楽分
     console.log('CUTIN playAll() CALL'); //entyu_30
+
     if (!this.audio || !this.audio.isReady) return;
 
     console.log('CUTIN playAll()2'+this.audio.name);
-
+    
     this.isPlaying = true;
     this._play();
     
@@ -95,18 +103,16 @@ export class CutIn extends GameObject {
     
     this._stop();
 
+    EventSystem.trigger('START_CUT_IN', { cutInIdentifier : this.identifier });
+
     if (!this.audio || !this.audio.isReady) {
       this.playAfterFileUpdate();
       return;
     }
 
     let id = this.identifier ;
-/*
-    let option: PanelOption = { left: 250, top: 175, width: 600, height: 350 };
-    let component = this.panelService.open<CutInWindowComponent>(CutInWindowComponent, option);
-//    component.myCutIn = this;
-*/
-//  AppComponent.openCutInWindow( this.identifier );
+
+    this.openCutInWindow();//保留
 
     console.log('CUTIN _play()2 CALL');
     this.audioPlayer.loop = true;
@@ -123,6 +129,8 @@ export class CutIn extends GameObject {
 
   private _stop() {
     console.log('CUTIN _stop() CALL');
+    EventSystem.trigger('STOP_CUT_IN', { cutInIdentifier : this.identifier });
+
     this.unregisterEvent()
     this.audioPlayer.stop();
   }
@@ -164,7 +172,6 @@ export class CutIn extends GameObject {
        console.log('--this.audioIdentifier' + this.audioIdentifier); //entyu_30
        console.log('--isPlaying' + isPlaying); //entyu_30
        console.log('--this.isPlaying' + this.isPlaying); //entyu_30
-      
       this._play();
     } else if (isPlaying !== this.isPlaying && !this.isPlaying) {
        console.log('--isPlaying' + isPlaying); //entyu_30

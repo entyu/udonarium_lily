@@ -138,6 +138,15 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PeerCursor.myCursor.imageIdentifier = noneIconImage.identifier;
 
     EventSystem.register(this)
+      .on('START_CUT_IN', event => { 
+        console.log( 'カットインイベント_スタート' + event.data.cutInIdentifier );
+        this.panelService.open(CutInWindowComponent, { width: 100, height: 100, left: 300 ,top: 100});
+        
+      })  //entyu_30
+      .on('STOP_CUT_IN', event => { 
+        console.log('カットインイベント_ストップ'  + event.data.cutInIdentifier); 
+        
+      })  //entyu_30
       .on('UPDATE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('DELETE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('SYNCHRONIZE_AUDIO_LIST', event => { if (event.isSendFromSelf) this.lazyNgZoneUpdate(false); })
@@ -262,8 +271,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  openCutInWindow() {
-
+/*
+  cutInStart() {
 //    option.top = (this.openPanelCount % 10 + 1) * 20;
 //    option.left = 100 + (this.openPanelCount % 20 + 1) * 5;
     let component: { new(...args: any[]): any } = null;
@@ -272,6 +281,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.panelService.open(component, option);
 
   }
+*/
 }
 PanelService.UIPanelComponentClass = UIPanelComponent;
 ContextMenuService.ContextMenuComponentClass = ContextMenuComponent;
