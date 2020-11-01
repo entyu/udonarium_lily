@@ -168,7 +168,6 @@
   vertical-align: bottom;
   object-fit: contain;
   object-position: bottom left;
-  border-radius: 1em;
 }
 
 .character-image-box.has-icon {
@@ -185,6 +184,7 @@
   height: 100%;
   object-fit: cover;
   object-position: 50% 0%;
+  border-radius: 1em;
 }
 
 .character-image {

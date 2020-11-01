@@ -61,7 +61,7 @@
         </ng-container>
         <button (click)="openSpeakingModal()" style="font-size: 9px" [style.font-weight]="isSpeakable ? 'bolder' : 'normal'">口パクアニメ (APNGなど)</button>
         <ng-container *ngIf="heightElement">
-          <span style="white-space: nowrap"><b style="font-size: smaller; display: inline-block; margin-left: 3px">Height (0=個別指定しない): </b>
+          <br><span style="white-space: nowrap"><b style="font-size: smaller; display: inline-block; margin-left: 3px">Height (0=個別指定しない): </b>
             <input style="width: 260px" type="range" min="0" max="100" [(ngModel)]="heightElement.value">
             <input style="width: 3em; text-align: right;" type="number" min="0" max="100" [(ngModel)]="heightElement.value">
           </span>
