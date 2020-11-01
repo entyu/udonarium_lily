@@ -17,6 +17,8 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { GameCharacter } from '@udonarium/game-character';
+import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
 
 @Component({
   selector: 'overview-panel',
@@ -47,10 +49,23 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   @Input() left: number = 0;
   @Input() top: number = 0;
 
+  private _imageFile: ImageFile = ImageFile.Empty;
+
   get imageUrl(): string {
     if (!this.tabletopObject) return '';
     if (this.isUseIcon) {
       return this.tabletopObject.faceIcon.url;
+    }
+    if (this.tabletopObject instanceof GameCharacter && this.tabletopObject.standList && this.tabletopObject.standList.overviewIndex > -1) {
+      const standElement = this.tabletopObject.standList.standElements[this.tabletopObject.standList.overviewIndex];
+      if (!standElement) return '';
+      const element = standElement.getFirstElementByName('imageIdentifier')
+      if (!element) return '';
+      if (this._imageFile.identifier != element.value) {
+        const file: ImageFile = ImageStorage.instance.get(<string>element.value);
+        this._imageFile = file ? file : ImageFile.Empty;
+      }
+      return this._imageFile.url;
     }
     return this.tabletopObject.imageFile ? this.tabletopObject.imageFile.url : '';
   }
@@ -59,8 +74,58 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     return (this.tabletopObject instanceof GameCharacter && this.tabletopObject.isUseIconToOverviewImage && this.tabletopObject.faceIcon && 0 < this.tabletopObject.faceIcon.url.length);
   }
 
+  get roll(): number {
+    if (this.tabletopObject instanceof GameCharacter) {
+      if (this.tabletopObject.standList && this.tabletopObject.standList.overviewIndex > -1) {
+        const standElement = this.tabletopObject.standList.standElements[this.tabletopObject.standList.overviewIndex];
+        if (!standElement) return 0;
+        const element = standElement.getFirstElementByName('applyRoll');
+        return (element && element.value) ? this.tabletopObject.roll : 0;
+      }
+      return this.tabletopObject.roll;
+    }
+    return 0;
+  }
+
+  get applyImageEffect(): boolean {
+    if (this.tabletopObject instanceof GameCharacter) {
+      if (this.tabletopObject.standList && this.tabletopObject.standList.overviewIndex > -1) {
+        const standElement = this.tabletopObject.standList.standElements[this.tabletopObject.standList.overviewIndex];
+        if (!standElement) return false;
+        const element = standElement.getFirstElementByName('applyImageEffect');
+        return (element && element.value) ? true : false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  get isInverse(): boolean {
+    if (this.tabletopObject instanceof GameCharacter) {
+      return this.applyImageEffect ? this.tabletopObject.isInverse : false;
+    }
+    return false;
+  }
+
+  get isHollow(): boolean {
+    if (this.tabletopObject instanceof GameCharacter) {
+      return this.applyImageEffect ? this.tabletopObject.isHollow : false;
+    }
+    return false;
+  }
+
+  get isBlackPaint(): boolean {
+    if (this.tabletopObject instanceof GameCharacter) {
+      return this.applyImageEffect ? this.tabletopObject.isBlackPaint : false;
+    }
+    return false;
+  }
+
   get aura(): number {
-    return this.tabletopObject instanceof GameCharacter ? this.tabletopObject.aura : -1;
+    if (this.tabletopObject instanceof GameCharacter) {
+      return this.applyImageEffect ? this.tabletopObject.aura : -1;
+    }
+    return -1;
   }
 
   get inventoryDataElms(): DataElement[] { return this.tabletopObject ? this.getInventoryTags(this.tabletopObject) : []; }

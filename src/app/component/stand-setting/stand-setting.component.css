@@ -5,3 +5,20 @@
 .description {
     font-size: smaller;
 }
+
+.remove-button {
+    font-weight: bolder;
+    color: red;
+    background-color: transparent;
+    font-size: smaller;
+}
+.remove-button:hover {
+  background-color: #eee;
+}
+
+.overview-selecter {
+  border: 2px solid red;
+  border-radius: 8px;
+  padding-top: 2px;
+  padding-bottom: 4px;
+}

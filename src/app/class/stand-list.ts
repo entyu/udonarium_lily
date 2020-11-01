@@ -21,6 +21,7 @@ export interface StandInfo {
 export class StandList extends DataElement {
   @SyncVar() position = 5;
   @SyncVar() height = 35;
+  @SyncVar() overviewIndex = -1;
 
   get standElements(): DataElement[] {
     return this.getElementsByName('stand');
