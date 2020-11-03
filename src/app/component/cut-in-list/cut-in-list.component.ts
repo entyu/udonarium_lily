@@ -5,6 +5,7 @@ import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { Jukebox } from '@udonarium/Jukebox';
+import { CutInLauncher } from '@udonarium/cut-in-launcher';
 
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -35,6 +36,8 @@ export class CutInListComponent implements OnInit, OnDestroy {
   
   minSize: number = 10;
   maxSize: number = 1200;
+
+  get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
   
   get cutInName(): string { return this.isEditable ? this.selectedCutIn.name : '' ; }
   set cutInName(cutInName: string) { if (this.isEditable) this.selectedCutIn.name = cutInName; }
@@ -216,22 +219,23 @@ export class CutInListComponent implements OnInit, OnDestroy {
   }
 
   playCutIn(){ //通常BGMの駆動は保留
-    
     if(!this.isSelected) return;
+    this.cutInLauncher.startCutIn( this.selectedCutIn );
     
+/*
+    if(!this.isSelected) return;
     let isBgm = this.isCutInBgmUploaded();
-    
     this.selectedCutIn.playAll(isBgm);
+*/
   }
 
   stopCutIn(){
-    
     if(!this.isSelected) return;
-    
+    this.cutInLauncher.stopCutIn( this.selectedCutIn );
+/*    
     let tag = this.cutInTagName;
-
     this.selectedCutIn.stopAll();
-    
+*/    
 //    for( let audio  of this.audios ){
 //      if( audio.tagName == tag ){
 //        audio.stopAll();
