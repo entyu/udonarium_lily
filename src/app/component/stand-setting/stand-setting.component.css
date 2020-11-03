@@ -1,25 +1,24 @@
 .position-indicate {
-    display: inline-block;
-    font-size: smaller;
+  display: inline-block;
+  font-size: smaller;
 }
 .description {
-    font-size: smaller;
+  font-size: smaller;
 }
 
 .remove-button {
-    font-weight: bolder;
-    color: red;
-    background-color: transparent;
-    font-size: smaller;
-}
-.remove-button:hover {
-  background-color: #eee;
+  display: inline-block;
+  font-weight: bolder;
+  color: red;
+  font-size: smaller;
+  margin-top: -4px;
+  margin-right: -1px;
 }
 
 .overview-selecter {
   border: 2px solid red;
   border-radius: 8px;
-  padding-top: 2px;
+  padding-top: 1px;
   padding-bottom: 4px;
 }
 
