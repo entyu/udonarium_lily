@@ -3,8 +3,6 @@ import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { Jukebox } from '@udonarium/Jukebox';
 
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -12,17 +10,21 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
-//import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
+import { CutInLauncher } from '@udonarium/cut-in-launcher';
 
-import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
-import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
+//import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
+//import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 //import { ModalService } from 'service/modal.service';
 //import { PanelService } from 'service/panel.service';
-import { SaveDataService } from 'service/save-data.service';
+//import { SaveDataService } from 'service/save-data.service';
 
-import { PointerDeviceService } from 'service/pointer-device.service';
+//import { PointerDeviceService } from 'service/pointer-device.service';
+
+import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
+
 
 @Component({
   selector: 'app-cut-in-window',
@@ -33,100 +35,87 @@ export class CutInWindowComponent implements OnInit, OnDestroy {
   
   minSize: number = 10;
   maxSize: number = 1200;
-  
-/*
-  get cutInName(CutIn): string { return this.myCutIn ? this.myCutIn.name : '' ; }
-  set cutInName(cutInName: string) { if (this.myCutIn) this.myCutIn.name = cutInName; }
-
-  get cutInWidth(): number { return this.myCutIn ? this.myCutIn.width : 0 ; }
-  set cutInWidth(cutInWidth: number) { if (this.myCutIn) this.myCutIn.width = cutInWidth; }
-
-  get cutInHeight(): number { return this.myCutIn ? this.myCutIn.height : 0 ; }
-  set cutInHeight(cutInHeight: number) { if (this.myCutIn) this.myCutIn.height = cutInHeight; }
-
-  get cutInX_Pos(): number { return this.myCutIn ? this.myCutIn.x_pos : 0 ; }
-  set cutInX_Pos(cutInX_Pos: number) { if (this.myCutIn) this.myCutIn.x_pos = cutInX_Pos; }
-
-  get cutInY_Pos(): number { return this.myCutIn ? this.myCutIn.y_pos : 0 ; }
-  set cutInY_Pos(cutInY_Pos: number) { if (this.myCutIn) this.myCutIn.y_pos = cutInY_Pos; }
-
-  get cutInOriginalSize(): boolean { return this.myCutIn ? this.myCutIn.originalSize : false ; }
-  set cutInOriginalSize(cutInOriginalSize: boolean) { if (this.myCutIn) this.myCutIn.originalSize = cutInOriginalSize; }
-
-  get cutInIsLoop(): boolean { return this.myCutIn ? this.myCutIn.isLoop : false ; }
-  set cutInIsLoop(cutInIsLoop: boolean) { if (this.myCutIn) this.myCutIn.isLoop = cutInIsLoop; }
-
-  get cutInOutTime(): number { return this.myCutIn ? this.myCutIn.outTime : 0 ; }
-  set cutInOutTime(cutInOutTime: number) { if (this.myCutIn) this.myCutIn.outTime = cutInOutTime; }
-
-  get cutInUseOutUrl(): boolean { return this.myCutIn ? this.myCutIn.useOutUrl : false ; }
-  set cutInUseOutUrl(cutInUseOutUrl: boolean) { if (this.myCutIn) this.myCutIn.useOutUrl = cutInUseOutUrl; }
-
-  get cutInOutUrl(): string { return this.myCutIn ? this.myCutIn.outUrl : '' ; }
-  set cutInOutUrl(cutInOutUrl: string) { if (this.myCutIn) this.myCutIn.outUrl = cutInOutUrl; }
-
-  get cutInTagName(): string { return this.myCutIn ? this.myCutIn.tagName : '' ; }
-  set cutInTagName(cutInTagName: string) { if (this.myCutIn) this.myCutIn.tagName = cutInTagName; }
-
-  get cutInAudioName(): string { return this.myCutIn ? this.myCutIn.audioName : '' ; }
-  set cutInAudioName(cutInAudioName: string) { if (this.myCutIn) this.myCutIn.audioName = cutInAudioName; }
-
-//  get isEmpty(): boolean { return this.myCutIn ? false : true ; }
-
-  
-
-
-*/
-
 
   private lazyUpdateTimer: NodeJS.Timer = null;
-//  _myCutIn: CutIn = null;
-
-
-  get cutInAudioIdentifier(): string { return this.myCutIn ? this.myCutIn.audioIdentifier : '' ; }
-  set cutInAudioIdentifier(cutInAudioIdentifier: string) { if (this.myCutIn) this.myCutIn.audioIdentifier = cutInAudioIdentifier; }
+  readonly audioPlayer: AudioPlayer = new AudioPlayer();
+  private cutInTimeOut = null ;
+  
+  cutIn: CutIn = null;
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
-
+  get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
 
   getCutIns(): CutIn[] {
     return ObjectStore.instance.getObjects(CutIn);
   }
+  
+  startCutIn(){
+    if( !this.cutIn )return;
+    console.log('CutInWin ' + this.cutIn.name );
+    
+    let audio = this.cutIn.audio ;
+    if( audio ){
+      this.audioPlayer.loop = this.cutIn.isLoop;
+      this.audioPlayer.play( audio );
+    }
+    
+    if( this.cutIn.outTime > 0){
+      this.cutInTimeOut = setTimeout(() => {
+        this.cutInTimeOut = null;
+        this.panelService.close();
+      }, this.cutIn.outTime * 1000);
+    }
+  }
 
-
-
+  stopCutIn(){
+     this.audioPlayer.stop();
+  }
+  
 
   constructor(
-    private pointerDeviceService: PointerDeviceService,//
     private modalService: ModalService,
-    private saveDataService: SaveDataService,
     private panelService: PanelService,
     private ngZone: NgZone
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'カットイン' );
+    EventSystem.register(this)
+      .on('START_CUT_IN', event => { 
+        console.log('カットインウィンドウ>Event:START_CUT_IN ' + this.cutIn.name );
+        if( this.cutIn ){
+          if( this.cutIn.identifier == event.data.cutIn.identifier || this.cutIn.tagName == event.data.cutIn.tagName){
+            this.panelService.close();
+          }
+        }
+      })
+      .on('STOP_CUT_IN', event => { 
+        console.log('カットインウィンドウ>Event: ' + this.cutIn.name );
+        if( this.cutIn ){
+          if( this.cutIn.identifier == event.data.cutIn.identifier ){
+            this.panelService.close();
+          }
+        }
+      });
+
   }
 
   ngOnDestroy() {
-    EventSystem.unregister(this);
-    this.myCutIn.stopByCloseCloseCutIn();
+      if( this.cutInTimeOut ){
+        clearTimeout(this.cutInTimeOut);
+        this.cutInTimeOut = null;
+      }
+      
+      this.stopCutIn();
+      EventSystem.unregister(this);
+      
   }
 
-
-  
-//  ObjectStore.instance.get<CutIn>(identifier)
-  
-  set myCutIn(cutIn: CutIn) {
-    this.myCutIn = cutIn;
-  }
-  get myCutIn(): CutIn{
-    return this.myCutIn ;
-  }
-
-
-  get CutIns(): CutIn[] {
-    return ObjectStore.instance.getObjects(CutIn);
+  private lazyNgZoneUpdate() {
+    if (this.lazyUpdateTimer !== null) return;
+    this.lazyUpdateTimer = setTimeout(() => {
+      this.lazyUpdateTimer = null;
+      this.ngZone.run(() => { });
+    }, 100);
   }
 
  

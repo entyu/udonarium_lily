@@ -19,6 +19,7 @@ import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 //
+import { CutIn } from '@udonarium/cut-in';
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
 //
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
@@ -56,7 +57,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
   private openPanelCount: number = 0;
-
+  
+  dispcounter : number = 10 ;
+  
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
@@ -93,7 +96,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     jukebox.initialize();
 
 //
-    let cutInLauncher: CutInLauncher = new CutInLauncher('CutInLauncher');
+    let cutInLauncher = new CutInLauncher('CutInLauncher');
     cutInLauncher.initialize();
 //
 
@@ -146,12 +149,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     EventSystem.register(this)
       .on('START_CUT_IN', event => { 
-        console.log( 'カットインイベント_スタート' + event.data.cutInIdentifier );
-        this.panelService.open(CutInWindowComponent, { width: 100, height: 100, left: 300 ,top: 100});
-        
+        this.startCutIn( event.data.cutIn );
       })  //entyu_30
       .on('STOP_CUT_IN', event => { 
-        console.log('カットインイベント_ストップ'  + event.data.cutInIdentifier); 
+        if( ! event.data.cutIn ) return;
+        console.log('カットインイベント_ストップ'  + event.data.cutIn.name ); 
         
       })  //entyu_30
       .on('UPDATE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
@@ -196,10 +198,64 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.panelService.open(PeerMenuComponent, { width: 500, height: 450, left: 100 });
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
     }, 0);
+    //entyu_30
+    setInterval(() => {
+      this.dispcounter = this.dispcounter +1;
+      if( this.dispcounter >100 )this.dispcounter = 0;
+    }, 200 );
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+  }
+
+  startCutIn( cutIn : CutIn ){
+    if( ! cutIn ) return;
+    console.log( 'カットインイベント_スタート' + cutIn.name );
+    let option: PanelOption = { width: 200, height: 100, left: 300 ,top: 100};
+    option.title = 'カットイン : ' + cutIn.name ;
+    
+    console.log( '画面領域 w:' + window.innerWidth + ' h:'+ window.innerHeight );
+    
+    let cutin_w = cutIn.width;
+    let cutin_h = cutIn.height;
+    
+    if( cutIn.originalSize ){
+      let imageurl = cutIn.cutInImage.url;
+      if( imageurl.length > 0 ){
+        console.log( 'originalSize URL :' + imageurl);
+        cutIn.imageIdentifier
+
+        let img_dummy = new Image();
+        let img = new Image();
+        img_dummy.src =  imageurl;
+        img.src = imageurl;
+        cutin_w = img.width;
+        cutin_h = img.height;
+        
+      }
+    }
+    console.log( '画面領域サイズ w:' + cutin_w + ' h:'+ cutin_h );
+    
+    let margin_w = window.innerWidth - cutin_w ;
+    let margin_h = window.innerHeight - cutin_h - 25 ;
+    
+    if( margin_w < 0 )margin_w = 0 ;
+    if( margin_h < 0 )margin_h = 0 ;
+    
+    let margin_x = margin_w * cutIn.x_pos / 100;
+    let margin_y = margin_h * cutIn.y_pos / 100;
+    
+    option.width = cutin_w ;
+    option.height = cutin_h + 25 ;
+    option.left = margin_x ;
+    option.top = margin_y;
+    option.isCutIn = true;
+
+    let component = this.panelService.open(CutInWindowComponent, option);
+    component.cutIn = cutIn; //ChatWindowComponent;CutInWindowComponent
+    component.startCutIn();
+    
   }
 
   open(componentName: string) {

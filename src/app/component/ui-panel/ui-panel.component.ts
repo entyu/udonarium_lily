@@ -92,7 +92,16 @@ export class UIPanelComponent implements OnInit {
       this.height = this.preHeight;
     }
   }
-
+  
+  get padding_(): string {
+    if( this.panelService.isCutIn )return '0px';
+    else return '8px';
+  }
+    
+  get isCutIn(): boolean {
+    return this.panelService.isCutIn ;
+  }
+  
   close() {
     if (this.panelService) this.panelService.close();
   }

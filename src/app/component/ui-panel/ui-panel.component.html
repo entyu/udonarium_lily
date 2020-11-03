@@ -8,8 +8,20 @@
     </div>
     {{panelService.title}}
   </div>
-  <div class="scrollable-panel" #scrollablePanel>
-    <ng-content></ng-content>
-    <div #content></div>
-  </div>
+<!--
+  <ng-container *ngIf="0" >
+    <div class="cut-in-panel" #scrollablePanel>
+      <ng-content></ng-content>
+      <div #content></div>
+    </div>
+  </ng-container>
+-->
+    <div class="scrollable-panel" [ngStyle]="{ 'padding': padding_ }" #scrollablePanel  >
+      <ng-content></ng-content>
+      <div #content></div>
+    </div>
+
+<!--
+  </ng-container>
+-->
 </div>

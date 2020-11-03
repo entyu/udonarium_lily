@@ -28,6 +28,18 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.cut-in--panel {
+  box-sizing: border-box;
+  overflow: auto;
+  position: absolute;
+  top: 25px;
+  bottom: 0;
+  width: 100%;
+  padding: 0px;
+  overscroll-behavior: contain; 
+/*  -webkit-overflow-scrolling: touch; */
+}
+
 .title {
   overflow: hidden;
   white-space: nowrap;

@@ -37,6 +37,7 @@ export class CutInLauncher extends GameObject {
   @SyncVar() launchTimeStamp: number = 0;
   @SyncVar() launchIsStart: boolean = false;
   
+  reloadDummy : number = 5;
   
   startCutIn( cutIn : CutIn ){
     this.launchCutInIdentifier = cutIn.identifier;
@@ -68,11 +69,18 @@ export class CutInLauncher extends GameObject {
   }
   
   startSelfCutIn( ){
-    EventSystem.trigger('START_CUT_IN', { cutInIdentifier : this.launchCutInIdentifier });
+    let cutIn_ = ObjectStore.instance.get(this.launchCutInIdentifier);
+    EventSystem.trigger('START_CUT_IN', { cutIn : cutIn_ });
   }
 
   stopSelfCutIn( ){
-    EventSystem.trigger('STOP_CUT_IN', { cutInIdentifier : this.launchCutInIdentifier });
+    let cutIn_ = ObjectStore.instance.get(this.launchCutInIdentifier);
+    EventSystem.trigger('STOP_CUT_IN', { cutIn : cutIn_ });
+  }
+
+  stopSelfCutInByIdentifier( identifier : string ){
+    let cutIn_ = ObjectStore.instance.get( identifier );
+    EventSystem.trigger('STOP_CUT_IN', { cutIn : cutIn_ });
   }
 
   getCutIns(): CutIn[] {
@@ -83,23 +91,11 @@ export class CutInLauncher extends GameObject {
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
-/*
-    EventSystem.register(this)
-      .on('SELECT_GAME_TABLE', event => {
-        console.log('SELECT_GAME_TABLE ' + this.identifier);
-
-        if (this.viewTable) this.viewTable.selected = false;
-        this.viewTableIdentifier = event.data.identifier;
-        if (this.viewTable) this.viewTable.selected = true;
-      });
-*/
   }
 
   // GameObject Lifecycle
   onStoreRemoved() {
-
     super.onStoreRemoved();
-//    EventSystem.unregister(this);
   }
 
 
@@ -107,19 +103,10 @@ export class CutInLauncher extends GameObject {
   apply(context: ObjectContext) {
     console.log('CutInLauncher apply() CALL'); //entyu_30
 
-
     let launchCutInIdentifier = this.launchCutInIdentifier;
     let launchIsStart = this.launchIsStart;
     let launchTimeStamp = this.launchTimeStamp;
     super.apply(context);
-    
-//    console.log('old launchCutInIdentifier:' + launchCutInIdentifier);
-//    console.log('old launchIsStart:' + launchIsStart);
-//    console.log('old launchTimeStamp:' + launchTimeStamp);
-
-//    console.log('launchCutInIdentifier:' + this.launchCutInIdentifier);
-//    console.log('launchIsStart:' + this.launchIsStart);
-//    console.log('launchTimeStamp:' + this.launchTimeStamp);
     
     if( launchCutInIdentifier !== this.launchCutInIdentifier || 
         launchIsStart !== this.launchIsStart ||
@@ -132,28 +119,4 @@ export class CutInLauncher extends GameObject {
     }
   }
 
-/*
-    let audioIdentifier = this.audioIdentifier;
-    let isPlaying = this.isPlaying;
-    super.apply(context);
-    if ((audioIdentifier !== this.audioIdentifier || !isPlaying) && this.isPlaying) {
-      this._play();
-    } else if (isPlaying !== this.isPlaying && !this.isPlaying) {
-      this._stop();
-    }
-*/
-
-/*
-  get viewTable(): GameTable {
-    let table: GameTable = ObjectStore.instance.get<GameTable>(this.viewTableIdentifier);
-    if (!table) {
-      table = ObjectStore.instance.getObjects<GameTable>(GameTable)[0];
-      if (table && (this.viewTableIdentifier.length < 1 || ObjectStore.instance.isDeleted(this.viewTableIdentifier))) {
-        this.viewTableIdentifier = table.identifier;
-        EventSystem.trigger('SELECT_GAME_TABLE', { identifier: table.identifier });
-      }
-    }
-    return table;
-  }
-*/
 }

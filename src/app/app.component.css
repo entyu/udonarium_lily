@@ -1,3 +1,9 @@
+.dummydisp {
+  position: absolute;
+  color: rgba(30, 30, 30, 0.0);
+  font-size: 10px;
+}
+
 nav ul {
     list-style:none;
     padding: 0px;

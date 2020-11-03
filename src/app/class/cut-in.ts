@@ -29,7 +29,7 @@ export class CutIn extends GameObject {
   @SyncVar() name: string = 'カットイン';
   @SyncVar() width: number = 480;
   @SyncVar() height: number = 320;
-  @SyncVar() originalSize: boolean = false;
+  @SyncVar() originalSize: boolean = true;
   @SyncVar() x_pos: number = 50;
   @SyncVar() y_pos: number = 50;
   
@@ -61,31 +61,26 @@ export class CutIn extends GameObject {
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
-    this.unlockAfterUserInteraction();
+//    this.unlockAfterUserInteraction();
   }
 
   // GameObject Lifecycle
   onStoreRemoved() {
     super.onStoreRemoved();
-    this._stop();
+//    this._stop();
   }
   
-  
+/*  
   stopByCloseCloseCutIn(){
     console.log('CUTIN stopByCloseCloseCutIn() CALL 自分だけ停止');
     this._stop();
   }
-  
-
-  openCutInWindow() {
-    return;
-//    this.modalService.open<string>(CutInWindowComponent).then(value => {    });
-  }
+*/  
 
   
 //  playAll(identifier: string, isLoop: boolean = false) {
+/*
   playAll( isBgm : boolean ) {
-
 //音楽分
     console.log('CUTIN playAll() CALL'); //entyu_30
 
@@ -134,7 +129,9 @@ export class CutIn extends GameObject {
     this.unregisterEvent()
     this.audioPlayer.stop();
   }
+*/
 
+/*
   private playAfterFileUpdate() {
     EventSystem.register(this)
       .on('UPDATE_AUDIO_RESOURE', -100, event => {
@@ -142,7 +139,9 @@ export class CutIn extends GameObject {
         this._play();
       });
   }
+*/
 
+/*
   private unlockAfterUserInteraction() {
     console.log('CUTIN unlockAfterUserInteraction() CALL'); //entyu_30
 
@@ -159,8 +158,9 @@ export class CutIn extends GameObject {
   private unregisterEvent() {
     EventSystem.unregister(this, 'UPDATE_AUDIO_RESOURE');
   }
-
+*/
   // override
+/*
   apply(context: ObjectContext) {
     console.log('CUTIN apply() CALL'); //entyu_30
     
@@ -172,13 +172,13 @@ export class CutIn extends GameObject {
        console.log('--this.audioIdentifier' + this.audioIdentifier); //entyu_30
        console.log('--isPlaying' + isPlaying); //entyu_30
        console.log('--this.isPlaying' + this.isPlaying); //entyu_30
-      this._play();
+//      this._play();
     } else if (isPlaying !== this.isPlaying && !this.isPlaying) {
        console.log('--isPlaying' + isPlaying); //entyu_30
        console.log('--this.isPlaying' + this.isPlaying); //entyu_30
-      this._stop();
+//      this._stop();
     }
   }
-  
+*/  
 
 }
