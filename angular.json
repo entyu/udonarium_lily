@@ -23,7 +23,7 @@
               "src/favicon.ico",
               "src/assets",
               "src/manifest.webmanifest",
-              "src/manifest.webmanifest"
+              "src/card.png"
             ],
             "styles": [
               "src/styles.css"
