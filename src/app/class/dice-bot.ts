@@ -543,11 +543,12 @@ export class DiceBot extends GameObject {
       tag: isSecret ? 'system secret' : 'system',
       name: isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>',
       text: result,
-      color: originalMessage.color
+      color: originalMessage.color,
+      isUseStandImage: originalMessage. isUseStandImage
     };
 
     // ダイスボットへのスタンドの反応
-    if (originalMessage.standIdentifier && !isSecret && !originalMessage.standName) {
+    if (!isSecret && !originalMessage.standName && originalMessage.isUseStandImage) {
       const gameCharacter = ObjectStore.instance.get(originalMessage.characterIdentifier);
       if (gameCharacter instanceof GameCharacter) {
         /*
@@ -561,8 +562,8 @@ export class DiceBot extends GameObject {
         if (standInfo && standInfo.standElementIdentifier) {
           const diceBotMatch = <DataElement>ObjectStore.instance.get(standInfo.standElementIdentifier);
           if (diceBotMatch && diceBotMatch.getFirstElementByName('conditionType')) {
-            const conditionType = +diceBotMatch.getFirstElementByName('conditionType').value
-            if (conditionType == StandConditionType.Postfix || StandConditionType.PostfixOrImage || StandConditionType.PostfixAndImage) {
+            const conditionType = +diceBotMatch.getFirstElementByName('conditionType').value;
+            if (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage) {
               const sendObj = {
                 characterIdentifier: gameCharacter.identifier, 
                 standIdentifier: standInfo.standElementIdentifier, 

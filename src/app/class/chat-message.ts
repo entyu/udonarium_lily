@@ -24,6 +24,7 @@ export interface ChatMessageContext {
   characterIdentifier?: string;
   standIdentifier?: string;
   standName?: string;
+  isUseStandImage?: boolean;
 }
 
 @SyncObject('chat')
@@ -43,6 +44,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() characterIdentifier: string;
   @SyncVar() standIdentifier: string;
   @SyncVar() standName: string;
+  @SyncVar() isUseStandImage: boolean;
 
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value }

@@ -123,7 +123,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string,
-    color?: string, isInverse?:boolean, isHollow?: boolean, isBlackPaint?: boolean, aura?: number, isUseFaceIcon?: boolean, characterIdentifier?: string, standIdentifier?: string, standName?: string }) {
+    color?: string, isInverse?:boolean, isHollow?: boolean, isBlackPaint?: boolean, aura?: number, isUseFaceIcon?: boolean, characterIdentifier?: string, standIdentifier?: string, standName?: string, isUseStandImage?: boolean }) {
     if (this.chatTab) {
       let text = this.palette.evaluate(value.text, this.character.rootDataElement);
       this.chatMessageService.sendMessage(
@@ -140,7 +140,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         value.isUseFaceIcon,
         value.characterIdentifier,
         value.standIdentifier,
-        value.standName
+        value.standName,
+        value.isUseStandImage
       );
       this.filterText = '';
     }

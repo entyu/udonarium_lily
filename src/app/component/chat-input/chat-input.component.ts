@@ -54,8 +54,18 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get text(): string { return this._text };
   set text(text: string) { this._text = text; this.textChange.emit(text); }
 
-  @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string,
-     color?: string, isInverse?:boolean, isHollow?: boolean, isBlackPaint?: boolean, aura?: number, isUseFaceIcon?: boolean, characterIdentifier?: string, standIdentifier?: string, standName?: string }>();
+  @Output() chat = new EventEmitter<{ 
+    text: string, gameType: string, sendFrom: string, sendTo: string,
+    color?: string, 
+    isInverse?:boolean, 
+    isHollow?: boolean, 
+    isBlackPaint?: boolean, 
+    aura?: number, 
+    isUseFaceIcon?: boolean, 
+    characterIdentifier?: string, 
+    standIdentifier?: string, 
+    standName?: string,
+    isUseStandImage?: boolean }>();
 
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
   gameHelp: string|string[] = '';
@@ -268,7 +278,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         }
 
         const standInfo = this.character.standList.matchStandInfo(text, imageIdentifier, this.standName);
-        if (standInfo.standElementIdentifier) {
+        if (this.isUseStandImage && standInfo.standElementIdentifier) {
           standIdentifier = standInfo.standElementIdentifier;
           const sendObj = {
             characterIdentifier: this.character.identifier, 
@@ -341,7 +351,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         isUseFaceIcon: this.isUseFaceIcon,
         characterIdentifier: this.character ? this.character.identifier : null,
         standIdentifier: standIdentifier,
-        standName: this.standName
+        standName: this.standName,
+        isUseStandImage: this.isUseStandImage 
       });
     }
     this.text = '';
