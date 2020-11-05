@@ -4,7 +4,7 @@ img {
 }
 .dummydisp {
   position: absolute;
-  color: rgba(30, 30, 30, 0.8);
+  color: rgba(30, 30, 30, 0.0);
   font-size: 10px;
   max-hight: 5px;
 }
