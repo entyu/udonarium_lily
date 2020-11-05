@@ -9,6 +9,7 @@
 .is-ghostly {
     opacity: 0.5;
     z-index: 900000;
+    filter: brightness(0.5);
 }
 .backyard {
   pointer-events: none;

@@ -80,6 +80,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
         this.ngZone.run(() => { });
         this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
       });
+    this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
   }
 
   ngOnDestroy() {
