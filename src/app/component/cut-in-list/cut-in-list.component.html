@@ -2,9 +2,6 @@
 <div>試聴音量：<input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" /></div>
 <div>BGM音量：<input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" /></div>
 -->
-カットインリストテスト
-{{cutInLauncher}}
-{{cutInLauncher.test}}
 <div class="flex-container">
   <div class="flex-item no-grow">
     <div>
@@ -40,8 +37,9 @@
 　　　　LINK:<span *ngIf="isCutInBgmUploaded()" >OK：</span><span *ngIf="!isCutInBgmUploaded()" >NG：</span><br>
         <ng-container *ngIf="!isCutInBgmUploaded()">
           <span *ngIf="cutInAudioName.length>0 " >音楽ファイルがアップされていません</span>
-          <span *ngIf="cutInAudioName.length<=0 " >音楽ファイルが設定されていません</span><br>
+          <span *ngIf="cutInAudioName.length<=0 " >音楽ファイルが設定されていません</span>
         </ng-container>
+        <br>
         <ng-container *ngIf="isEditable" >{{cutInAudioName}}</ng-container><br>
 <!--        <ng-container *ngIf="isEditable" >{{cutInAudioIdentifier}}</ng-container>-->
 
@@ -72,14 +70,14 @@
       <div>
         タグ名称 :<input [(ngModel)]="cutInTagName" placeholder="タグ名称" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null" />
       </div>
-
+<!--
       <div>
         Youtube再生 :<input type="checkbox" [(ngModel)]="cutInUseOutUrl" name="cutInUseOutUrl" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
       <div>
         URL :<input [(ngModel)]="cutInOutUrl" placeholder="URL" [attr.disabled]="!isEditable ? '' : null" />
       </div>
-
+-->
       <hr/>
       <div>
         <ng-container *ngIf="!isDeleted">

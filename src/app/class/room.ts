@@ -35,7 +35,9 @@ export class Room extends GameObject implements InnerXml {
 //
 
     for (let object of objects) {
+      
       xml += object.toXml();
+      
     }
     return xml;
   }

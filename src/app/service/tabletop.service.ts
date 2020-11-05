@@ -412,7 +412,7 @@ export class TabletopService {
     // @ts-ignore
     if(character.buffDataElement.children){
       for (let dataElm of character.buffDataElement.children){
-        dataElm.appendChild(DataElement.create(name, round , { 'type': 'numberResource', 'currentValue': subcom }, ));
+        dataElm.appendChild(DataElement.create(name, round , { 'type': 'numberResource', 'currentValue': subcom }, name + '_' + character.identifier ));
         return;
       }
     }

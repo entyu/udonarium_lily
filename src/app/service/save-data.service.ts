@@ -69,6 +69,7 @@ export class SaveDataService {
 
   private convertToXml(gameObject: GameObject): string {
     let xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>';
+//    return xmlDeclaration + '\n' + gameObject.toXml();
     return xmlDeclaration + '\n' + Beautify.xml(gameObject.toXml(), 2);
   }
 

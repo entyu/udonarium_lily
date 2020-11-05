@@ -56,8 +56,8 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
 
   left : number = 0;
   top : number = 0;
-  width : number = 100;
-  height : number = 100;
+  width : number = 0;
+  height : number = 0;
   
   minSize: number = 10;
   maxSize: number = 1200;
@@ -129,9 +129,19 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   
   
   ngAfterViewInit() {
+    this.calcCutInSize();
+
+    if( this.cutIn ){
+      setTimeout(() => {
+        this.moveCutInPos();
+      },200);
+    }
+  }
+
+  calcCutInSize(){
     
     if( this.cutIn ){
-
+      
       let cutin_w = this.cutIn.width;
       let cutin_h = this.cutIn.height;
     
@@ -170,18 +180,30 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
       this.height = cutin_h + 25 ;
       this.left = margin_x ;
       this.top = margin_y;
-      setTimeout(() => {      
-        this.moveCutInPos();
-      });
     }
-    
   }
-
+  
+  //画像が読み込めていなかったら500ms間隔で位置移動再実行
+  counter = 0;
   moveCutInPos(){
+
+    if( this.width == 0 && this.height == 0 && this.left == 0 && this.top == 0 && this.counter < 200){
+//    if( this.counter < 10){
+      this.counter = this.counter +1 ;
+      setTimeout(() => {
+        console.log('ウィンドウ位置の再計算');
+        this.calcCutInSize();
+        this.moveCutInPos();
+      },500);
+    }else{
+      
       this.panelService.width = this.width ;
       this.panelService.height = this.height ;
       this.panelService.left = this.left ;
       this.panelService.top = this.top ;
+      
+    }
+
   }
 
   ngOnDestroy() {

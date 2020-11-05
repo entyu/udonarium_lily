@@ -64,6 +64,7 @@ export class GameCharacter extends TabletopObject {
     if( isbuff.length == 0 ){
       let buffElement: DataElement = DataElement.create('バフ/デバフ', '', {}, 'バフ/デバフ' + this.identifier);
       this.buffDataElement.appendChild(buffElement);
+//      buffElement.appendChild(DataElement.create('テストバフ1', 3, { 'type': 'numberResource', 'currentValue': '防+1' }, 'テストバフ1_' + this.identifier));
     }
     if( this.remoteController == null){
       let controller: BuffPalette = new BuffPalette('RemotController_' + this.identifier);
@@ -74,7 +75,6 @@ export class GameCharacter extends TabletopObject {
       controller.initialize();
       this.appendChild(controller);
     }
-
   }
   //
 
@@ -140,26 +140,6 @@ export class GameCharacter extends TabletopObject {
 //格闘＝１`);
     palette.initialize();
     this.appendChild(palette);
-
-
-
-//entyu_10
-/*
-    let paletteEx: ChatPalette = new ChatPalette('ChatPalette2_' + this.identifier);
-    paletteEx.setPalette(`チャットパレット2個目：`);
-    paletteEx.initialize();
-    this.appendChild(paletteEx);
-*/
-/*
-    paletteEx: ChatPalette = new ChatPalette('ChatPalette3_' + this.identifier);
-    paletteEx.setPalette(`チャットパレット3個目：`);
-    paletteEx.initialize();
-
-    this.appendChild(paletteEx);
-*/
-//
-
-
 
     //entyu
     this.addExtendData();
