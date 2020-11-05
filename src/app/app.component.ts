@@ -59,6 +59,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private openPanelCount: number = 0;
   
   dispcounter : number = 10 ;
+//  dummyImage : ImageFile = null ;
   
   constructor(
     private modalService: ModalService,
@@ -215,6 +216,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let option: PanelOption = { width: 200, height: 100, left: 300 ,top: 100};
     option.title = 'カットイン : ' + cutIn.name ;
     
+//    this.dummyImage = cutIn.cutInImage;
+    
     console.log( '画面領域 w:' + window.innerWidth + ' h:'+ window.innerHeight );
     
     let cutin_w = cutIn.width;
@@ -224,7 +227,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       let imageurl = cutIn.cutInImage.url;
       if( imageurl.length > 0 ){
         console.log( 'originalSize URL :' + imageurl);
-        cutIn.imageIdentifier
 
         let img_dummy = new Image();
         let img = new Image();
@@ -251,6 +253,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     option.left = margin_x ;
     option.top = margin_y;
     option.isCutIn = true;
+    option.cutInIdentifier = cutIn.identifier;
 
     let component = this.panelService.open(CutInWindowComponent, option);
     component.cutIn = cutIn; //ChatWindowComponent;CutInWindowComponent

@@ -13,6 +13,7 @@ export interface PanelOption {
   height?: number;
   
   isCutIn?: boolean; //entyu_30
+  cutInIdentifier?: string;
 }
 
 @Injectable()
@@ -28,6 +29,7 @@ export class PanelService {
   width: number = 100;
   height: number = 100;
   isCutIn: boolean = false ; //entyu_30
+  cutInIdentifier: string = '';
 
   scrollablePanel: HTMLDivElement = null;
 
@@ -65,6 +67,10 @@ export class PanelService {
       if (option.isCutIn){
          console.log( 'option.isCutIn' + option.isCutIn );
          childPanelService.isCutIn = option.isCutIn;  //entyu_30
+      }
+      if (option.cutInIdentifier){
+         console.log( 'option.cutInIdentifier :' + option.cutInIdentifier );
+         childPanelService.cutInIdentifier = option.cutInIdentifier;  //entyu_30
       }
     }
     panelComponentRef.onDestroy(() => {

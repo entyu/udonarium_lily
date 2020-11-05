@@ -64,7 +64,6 @@ export class GameCharacter extends TabletopObject {
     if( isbuff.length == 0 ){
       let buffElement: DataElement = DataElement.create('バフ/デバフ', '', {}, 'バフ/デバフ' + this.identifier);
       this.buffDataElement.appendChild(buffElement);
-      buffElement.appendChild(DataElement.create('テストバフ1', 3, { 'type': 'numberResource', 'currentValue': '防+1' }, 'テストバフ1_' + this.identifier));
     }
     if( this.remoteController == null){
       let controller: BuffPalette = new BuffPalette('RemotController_' + this.identifier);

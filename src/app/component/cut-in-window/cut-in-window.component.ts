@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
@@ -15,6 +15,9 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
 
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
+
+
 //import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 //import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 //import { ModalService } from 'service/modal.service';
@@ -30,8 +33,31 @@ import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
   selector: 'app-cut-in-window',
   templateUrl: './cut-in-window.component.html',
   styleUrls: ['./cut-in-window.component.css']
+/*
+  providers: [
+    PanelService,
+  ],
+  animations: [
+    trigger('flyInOut', [
+      transition('void => *', [
+        animate('100ms ease-out', keyframes([
+          style({ transform: 'scale(0.8, 0.8)', opacity: '0', offset: 0 }),
+          style({ transform: 'scale(1.0, 1.0)', opacity: '1', offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate(100, style({ transform: 'scale(0, 0)' }))
+      ])
+    ])
+  ]
+*/
 })
-export class CutInWindowComponent implements OnInit, OnDestroy {
+export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
+
+  left : number = 0;
+  top : number = 0;
+  width : number = 100;
+  height : number = 100;
   
   minSize: number = 10;
   maxSize: number = 1200;
@@ -75,6 +101,7 @@ export class CutInWindowComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
+    private changeDetectionRef: ChangeDetectorRef,
     private ngZone: NgZone
   ) { }
 
@@ -97,6 +124,64 @@ export class CutInWindowComponent implements OnInit, OnDestroy {
         }
       });
 
+  }
+  
+  
+  
+  ngAfterViewInit() {
+    
+    if( this.cutIn ){
+
+      let cutin_w = this.cutIn.width;
+      let cutin_h = this.cutIn.height;
+    
+      if( this.cutIn.originalSize ){
+        let imageurl = this.cutIn.cutInImage.url;
+        if( imageurl.length > 0 ){
+          console.log( 'CutInWindow originalSize URL :' + imageurl);
+
+          let img = new Image();
+          img.src = imageurl;
+          cutin_w = img.width;
+          cutin_h = img.height;
+         
+        }
+      }
+    
+      let margin_w = window.innerWidth - cutin_w ;
+      let margin_h = window.innerHeight - cutin_h - 25 ;
+    
+      if( margin_w < 0 )margin_w = 0 ;
+      if( margin_h < 0 )margin_h = 0 ;
+    
+      let margin_x = margin_w * this.cutIn.x_pos / 100;
+      let margin_y = margin_h * this.cutIn.y_pos / 100;
+/*
+      console.log( 'EventSystem.trigger > CUT_IN_PANEL_POS_CHANGE ');
+      EventSystem.trigger('CUT_IN_PANEL_POS_CHANGE', 
+         { width : cutin_w , 
+           height : cutin_h + 25 , 
+           left : margin_x ,
+           top : margin_y ,
+           cutInIdentifier : this.cutIn.identifier });
+*/
+
+      this.width = cutin_w ;
+      this.height = cutin_h + 25 ;
+      this.left = margin_x ;
+      this.top = margin_y;
+      setTimeout(() => {      
+        this.moveCutInPos();
+      });
+    }
+    
+  }
+
+  moveCutInPos(){
+      this.panelService.width = this.width ;
+      this.panelService.height = this.height ;
+      this.panelService.left = this.left ;
+      this.panelService.top = this.top ;
   }
 
   ngOnDestroy() {

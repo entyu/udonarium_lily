@@ -25,6 +25,7 @@ import { PointerCoordinate, PointerDeviceService } from './pointer-device.servic
 import { ImageTag } from '@udonarium/image-tag';
 //
 //entyu
+import { DataElement } from '@udonarium/data-element';
 //
 type ObjectIdentifier = string;
 type LocationName = string;
@@ -406,12 +407,24 @@ export class TabletopService {
     tableSelecter.viewTableIdentifier = gameTable.identifier;
   }
 
+  //バフ追加
+  addBuffRound(character :GameCharacter,name:string,subcom:string,round:number){
+    // @ts-ignore
+    if(character.buffDataElement.children){
+      for (let dataElm of character.buffDataElement.children){
+        dataElm.appendChild(DataElement.create(name, round , { 'type': 'numberResource', 'currentValue': subcom }, ));
+        return;
+      }
+    }
+  }
+
   makeDefaultTabletopObjects() {
     let testCharacter: GameCharacter = null;
     let testFile: ImageFile = null;
     let fileContext: ImageContext = null;
 
     testCharacter = new GameCharacter('testCharacter_1');
+
     fileContext = ImageFile.createEmpty('testCharacter_1_image').toContext();
     fileContext.url = './assets/images/mon_052.gif';
 //entyu_2
@@ -426,14 +439,17 @@ export class TabletopService {
     testCharacter.location.y = 9 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('モンスターA', 1, testFile.identifier);
+    this.addBuffRound( testCharacter ,'テストバフ1' , '防+1' , 3);
 
     testCharacter = new GameCharacter('testCharacter_2');
+
     testCharacter.location.x = 8 * 50;
     testCharacter.location.y = 8 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('モンスターB', 1, testFile.identifier);
 
     testCharacter = new GameCharacter('testCharacter_3');
+
     fileContext = ImageFile.createEmpty('testCharacter_3_image').toContext();
     fileContext.url = './assets/images/mon_128.gif';
 //entyu_2
@@ -451,6 +467,7 @@ export class TabletopService {
     testCharacter.createTestGameDataElement('モンスターC', 3, testFile.identifier);
 
     testCharacter = new GameCharacter('testCharacter_4');
+
     fileContext = ImageFile.createEmpty('testCharacter_4_image').toContext();
     fileContext.url = './assets/images/mon_150.gif';
 //entyu_2
@@ -466,8 +483,10 @@ export class TabletopService {
     testCharacter.location.y = 11 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターA', 1, testFile.identifier);
+    this.addBuffRound( testCharacter ,'テストバフ2' , '攻撃+10' , 1);
 
     testCharacter = new GameCharacter('testCharacter_5');
+
     fileContext = ImageFile.createEmpty('testCharacter_5_image').toContext();
     fileContext.url = './assets/images/mon_211.gif';
 //entyu_2
@@ -482,8 +501,10 @@ export class TabletopService {
     testCharacter.location.y = 12 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターB', 1, testFile.identifier);
+    this.addBuffRound( testCharacter ,'テストバフ2' , '攻撃+10' , 1);
 
     testCharacter = new GameCharacter('testCharacter_6');
+
     fileContext = ImageFile.createEmpty('testCharacter_6_image').toContext();
     fileContext.url = './assets/images/mon_135.gif';
 //entyu_2
@@ -498,6 +519,7 @@ export class TabletopService {
     testCharacter.location.x = 5 * 50;
     testCharacter.location.y = 13 * 50;
     testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
+    this.addBuffRound( testCharacter ,'テストバフ3' , '回避+5' , 1);
   }
 
   getContextMenuActionsForCreateObject(position: PointerCoordinate): ContextMenuAction[] {

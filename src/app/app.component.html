@@ -58,8 +58,12 @@
       </li>
     </ul>
   </nav>
-  <span class="dummydisp">{{dispcounter}}</span>
-
+  <div class="dummydisp" >{{dispcounter}}</div>
+<!--
+  <div class="dummydisp" *ngIf="dummyImage" >
+    <img  [src]="dummyImage.url | safe: 'resourceUrl'">
+  </div>  
+-->
 </ui-panel>
 <div #modalLayer></div>
 <network-indicator class="networkIndicator"></network-indicator>

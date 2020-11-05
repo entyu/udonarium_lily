@@ -2,6 +2,9 @@ import { animate, keyframes, style, transition, trigger } from '@angular/animati
 import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+//
+import { EventSystem, Network } from '@udonarium/core/system';
+//
 
 @Component({
   selector: 'ui-panel',
@@ -54,11 +57,44 @@ export class UIPanelComponent implements OnInit {
     public panelService: PanelService,
     private pointerDeviceService: PointerDeviceService
   ) { }
-
+  
+  
+  
+  
   ngOnInit() {
     this.panelService.scrollablePanel = this.scrollablePanel.nativeElement;
+/*
+    EventSystem.register(this)
+      .on('CUT_IN_PANEL_POS_CHANGE', event => { 
+//        console.log('EVENT:CUT_IN_PANEL_POS_CHANGE :' + this.title);
+        if( this.isCutIn ){
+          if( event.data.cutInIdentifier == this.panelService.cutInIdentifier && ( this.panelService.cutInIdentifier.length > 0 ) ){
+            
+            console.log('EVENT:CUT_IN_PANEL_POS_CHANGE >movePanel()');
+            console.log( 'left:' + event.data.left + ' top:' + event.data.top + ' width:'+ event.data.width + ' height:'+ event.data.height);
+            this.movePanel( event.data.left , event.data.top , event.data.width , event.data.height );
+          }
+        }
+      });
+*/
   }
+  
+/*
+  movePanel( left : number , top : number , width : number , height : number){
+      let panel = this.draggablePanel.nativeElement;
 
+      this.left = left;
+      this.top = top;
+      this.width = width;
+      this.height = height;
+
+      panel.style.left = this.left + 'px';
+      panel.style.top = this.top + 'px';
+      panel.style.width = this.width + 'px';
+      panel.style.height = this.height + 'px';
+
+  }
+*/  
   toggleFullScreen() {
     let panel = this.draggablePanel.nativeElement;
     if (panel.offsetLeft <= 0
