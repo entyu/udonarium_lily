@@ -17,6 +17,17 @@
   /*width :100%;*/
   box-sizing: border-box;
   }
+
+.table-cell-2 {
+  display:table-cell;
+  vertical-align: middle;
+  padding: 0.0em 0.0em 0.0em 0.0em;
+  /*border:1px solid #0000FF;*/
+  /*border-bottom:1px dotted #888;*/
+  /*box-sizing: border-box;*/
+}
+
+
 .table-cell {
   display:table-cell;
   vertical-align: bottom;
