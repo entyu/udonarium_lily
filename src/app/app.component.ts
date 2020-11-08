@@ -401,11 +401,22 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   resetPointOfView() {
-    let position = this.pointerDeviceService.pointers[0];
-    this.contextMenuService.open(position, [
+    this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
       { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
       { name: '真上から視る', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', 'top') }
     ], '視点リセット');
+  }
+
+  standSetteings() {
+    const isCanBeGone = StandImageService.isCanBeGone; 
+    this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
+      { name: `${ isCanBeGone ? '☐' : '☑' }透明化、自動消去しない`, 
+        action: () => {
+          StandImageService.isCanBeGone = !isCanBeGone;
+        }
+      },
+      { name: '表示スタンドを全て消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
+    ], 'スタンド設定');
   }
 
   farewellStandAll() {

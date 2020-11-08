@@ -6,6 +6,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
+import { StandImageService } from 'service/stand-image.service';
 
 @Component({
   selector: 'stand-image',
@@ -93,6 +94,10 @@ export class StandImageComponent implements OnInit, OnDestroy {
         this.isSpeaking = false;
       }, 200);
     }
+  }
+
+  get isCanBeGone(): boolean {
+    return StandImageService.isCanBeGone;
   }
 
   get dialogText(): string {

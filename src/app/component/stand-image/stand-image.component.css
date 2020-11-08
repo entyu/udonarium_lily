@@ -7,10 +7,13 @@
 }
 
 .is-ghostly {
-    opacity: 0.5;
-    z-index: 900000;
-    filter: brightness(0.5);
+  z-index: 900000;
 }
+.is-can-be-gone.is-ghostly {
+  opacity: 0.5;
+  filter: brightness(0.5);
+}
+
 .backyard {
   pointer-events: none;
   z-index: 0;
@@ -31,14 +34,17 @@
   z-index: 1000005;
 }
 .name-tag.is-ghostly {
-  opacity: 0.5;
   z-index: 900005;
 }
+.is-can-be-gone.name-tag.is-ghostly {
+  opacity: 0.5;
+} 
+
 .name-tag.backyard {
   z-index: 1;
 }
 
-.is-ghostly.backyard {
+.is-can-be-gone.is-ghostly.backyard {
   opacity: 0.25;
 }
 

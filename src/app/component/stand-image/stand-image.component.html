@@ -1,8 +1,8 @@
-<div [@standInOut]="group" *ngIf="isVisible" class="stand-image-container"
+<div [@standInOut]="group" *ngIf="isVisible || !isCanBeGone" class="stand-image-container"
   [style.left]="position + '%'"
   [style.height]="height == 0 ? '' : height + 'vh'"
   [style.margin-left.px]="-imageWidth / 2"
-  [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard, secret: isSecret}" (click)="toGhostly(); toBackyard()">
+  [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, secret: isSecret}" (click)="toGhostly(); toBackyard()">
   <ng-container *ngIf="gameCharacter && standImage.url && standImage.url.length > 0">
     <div @fadeAndScaleInOut *ngIf="!isBackyard && gameCharacter.isEmote" 
       class="emote chat-bubble-buyo"
@@ -29,10 +29,10 @@
     </div>
   </ng-container>
 </div>
-<span *ngIf="isVisible && gameCharacter && gameCharacter.name" class="name-tag"
+<span *ngIf="(isVisible || !isCanBeGone) && gameCharacter && gameCharacter.name" class="name-tag"
   style="pointer-events: none;" 
   [style.color]="color ? color : '#444'" 
-  [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard}"
+  [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard}"
   [style.left]="position + '%'"
   [style.border-color]="color ? color : '#444'"
   [style.margin-left.px]="nameTagCSSMarginLeft"
@@ -46,5 +46,5 @@
   [style.bottom.px]="dialogBoxCssBottom"
   [style.max-width.px]="dialogBoxCSSMaxWidth"
   [ngStyle]="{left: (position <= 50 ? dialogBoxCSSLeft + 'px' : 'auto'), right: (position > 50 ? dialogBoxCSSRight + 'px' : 'auto'), 'transform-origin': position <= 50 ? '12px calc(100% + 12px)' : 'calc(100% - 12px) calc(100% + 12px)'}"
-  [ngClass]="{'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret, 'is-position-right': position <= 50, 'is-position-left': position > 50}"
+  [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret, 'is-position-right': position <= 50, 'is-position-left': position > 50}"
   [style.border-color]="color ? color : '#444'"><div style="width: 100%" [@dialogShake]="dialogText.length" (@dialogShake.start)="onSpeaking($event)">{{ dialogText }}</div></div>
