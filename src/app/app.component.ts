@@ -38,10 +38,10 @@ import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { StandImageService } from 'service/stand-image.service';
 import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from '@udonarium/data-element';
+import { StandImageComponent } from 'component/stand-image/stand-image.component';
 
 @Component({
   selector: 'app-root',
@@ -408,21 +408,21 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   standSetteings() {
-    const isCanBeGone = StandImageService.isCanBeGone; 
+    const isCanBeGone = StandImageComponent.isCanBeGone; 
     this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
       { name: `${ isCanBeGone ? '☐' : '☑' }透明化、自動消去しない`, 
         action: () => {
-          StandImageService.isCanBeGone = !isCanBeGone;
+          StandImageComponent.isCanBeGone = !isCanBeGone;
         }
       },
       { name: '表示スタンドを全て消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
     ], 'スタンド設定');
   }
-
+/*
   farewellStandAll() {
     EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null);
   }
-
+*/
   diceAllOpne() {
     if (confirm('「一斉公開しない」設定ではないダイスをすべて公開します。\nよろしいですか？')) {
       EventSystem.trigger('DICE_ALL_OPEN', null);

@@ -10,7 +10,6 @@ export class StandImageService {
 
   static defaultParentViewContainerRef: ViewContainerRef;
   static currentStandImageShowing = new Map<string, ComponentRef<StandImageComponent>>();
-  static isCanBeGone = true;
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver
@@ -32,7 +31,7 @@ export class StandImageService {
         instance.isSecret = isSecret;
         instance.toFront();
         isNewbee = false;
-      } else if (StandImageService.isCanBeGone) {
+      } else if (StandImageComponent.isCanBeGone) {
         standImageComponentRef.destroy();
         StandImageService.currentStandImageShowing.delete(identifier);
       }

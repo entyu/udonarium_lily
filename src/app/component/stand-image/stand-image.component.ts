@@ -57,6 +57,8 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   @ViewChild('standImageElement', { static: false }) standImageElement: ElementRef;
 
+  static isCanBeGone = true;
+
   private _imageFile: ImageFile = ImageFile.Empty;
   private _timeoutId;
   private _dialogTimeoutId;
@@ -97,7 +99,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   get isCanBeGone(): boolean {
-    return StandImageService.isCanBeGone;
+    return StandImageComponent.isCanBeGone;
   }
 
   get dialogText(): string {
