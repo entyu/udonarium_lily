@@ -28,6 +28,8 @@
     <option value="{{networkService.peerId}}">個人インベントリ</option>
     <option value="graveyard">墓地</option>
   </select>
+    <input type="checkbox" value="hideInventory"  [(ngModel)]="tabletopObject.hideInventory" name="hideInventory" (click)="clickHide()">
+    テーブルインベントリ非表示
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">

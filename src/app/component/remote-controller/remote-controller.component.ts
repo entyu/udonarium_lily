@@ -6,7 +6,6 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, O
 import { ChatPalette } from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-//import { EventSystem } from '@udonarium/core/system';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { DiceBot } from '@udonarium/dice-bot';
 import { GameCharacter } from '@udonarium/game-character';
@@ -66,7 +65,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   chatTabidentifier: string = '';
 
   remotNumber: number = 0;
-
+  
+  disptimer = null;
+  
   selectCharacter = null;
   
   remotControllerSelect: RemotControllerSelect ={
@@ -220,14 +221,17 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
       });
     this.inventoryTypes = ['table', 'common', Network.peerId, 'graveyard'];
 //------------------------
+
+    this.disptimer = setInterval(() => {
+      this.changeDetector.detectChanges();
+    }, 200 );
+
   }
-
-
-
 
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+    this.disptimer = null;
     if (this.isEdit) this.toggleEditMode();
   }
 
@@ -313,7 +317,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     }
   }
 
-  getInventory(inventoryType: string) {
+        
+
+  getInventory(inventoryType : string) {
     switch (inventoryType) {
       case 'table':
         return this.inventoryService.tableInventory;
@@ -327,7 +333,16 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   }
 
   getGameObjects(inventoryType: string): TabletopObject[] {
-    return this.getInventory(inventoryType).tabletopObjects;
+    switch (inventoryType) {
+      case 'table':
+      let tableCharacterList_dest = [] ;
+      let tableCharacterList_scr = this.inventoryService.tableInventory.tabletopObjects;
+      for (let character of tableCharacterList_scr) {
+        let character_ : GameCharacter = <GameCharacter>character;
+        if( !character_.hideInventory ) tableCharacterList_dest.push( <TabletopObject>character );
+      }
+      return tableCharacterList_dest;
+    }
   }
 
   getInventoryTags(gameObject: GameCharacter): DataElement[] {

@@ -10,6 +10,8 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
+import { GameCharacter } from '@udonarium/game-character'; //
+
 @Component({
   selector: 'game-character-sheet',
   templateUrl: './game-character-sheet.component.html',
@@ -87,7 +89,15 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         break;
     }
   }
-
+  
+  clickHide(){
+/*
+    let char : GameCharacter = <GameCharacter>this.tabletopObject;
+    console.log('clickHide : '+ char.hideInventory);
+    this.tabletopObject.setLocation('table');
+*/
+  }
+  
   saveToXML() {
     if (!this.tabletopObject) return;
 

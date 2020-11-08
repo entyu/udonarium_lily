@@ -32,6 +32,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   selectedIdentifier: string = '';
 
   isEdit: boolean = false;
+  disptimer = null;
 
   get sortTag(): string { return this.inventoryService.sortTag; }
   set sortTag(sortTag: string) { this.inventoryService.sortTag = sortTag; }
@@ -75,13 +76,20 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         }
       });
     this.inventoryTypes = ['table', 'common', Network.peerId, 'graveyard'];
+
   }
 
   ngAfterViewInit() {
+    this.disptimer = setInterval(() => {
+      this.changeDetector.detectChanges();
+    }, 200 );
+    //操作を検知して更新する方式に変えたい
+    
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+    this.disptimer = null;
   }
 
   getTabTitle(inventoryType: string) {
@@ -111,7 +119,21 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   getGameObjects(inventoryType: string): TabletopObject[] {
-    return this.getInventory(inventoryType).tabletopObjects;
+//
+    switch (inventoryType) {
+      case 'table':
+        
+        let tableCharacterList_dest = [] ;
+        let tableCharacterList_scr = this.inventoryService.tableInventory.tabletopObjects;
+        for (let character of tableCharacterList_scr) {
+          let character_ : GameCharacter = <GameCharacter>character;
+          if( !character_.hideInventory ) tableCharacterList_dest.push( <TabletopObject>character );
+        }
+        return tableCharacterList_dest;
+
+      default:
+        return this.getInventory(inventoryType).tabletopObjects;
+    }
   }
 
   getInventoryTags(gameObject: GameCharacter): DataElement[] {

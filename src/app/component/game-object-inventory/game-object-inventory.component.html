@@ -2,14 +2,23 @@
   <ng-container *ngTemplateOutlet="inventoryTab"></ng-container>
   <ng-container *ngTemplateOutlet="inventoryViewSetting"></ng-container>
   <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
+
+  <!-- -->
+<!--    <ng-container *ngIf="!gameObject.hideInventory && gameObject.location.name == 'table'"> -->
   <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
     (click)="selectGameObject(gameObject)" [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
     <ng-container *ngTemplateOutlet="gameObjectTags; context:{ gameObject: gameObject}"></ng-container>
   </div>
+
+<!--    </ng-container> -->
+  <!-- -->
+<!--
+-->
   <div *ngIf="selectTab === 'graveyard'" style="padding-top: 6px;">
     <button class="danger" (click)="cleanInventory()" [attr.disabled]="getGameObjects(selectTab).length < 1 ? '' : null">墓場を空にする</button>
   </div>
 </div>
+
 <ng-template #inventoryTab>
   <form class="is-sticky-top">
     <div class="tab">
@@ -50,7 +59,7 @@
   </ng-container>
 </ng-template>
 <ng-template #gameObjectTags let-gameObject="gameObject">
-  <div class="inventory-object">
+  <div class="inventory-object" >
     <div class="object-name">{{gameObject.name}}
       <button style="font-size: 0.8em; padding: 2px 5px;" *ngIf="selectedIdentifier === gameObject.identifier" (click)="onContextMenu($event, gameObject)">
         <i class="material-icons" style="font-size: 1em;">settings</i>
