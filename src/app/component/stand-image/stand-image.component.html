@@ -1,50 +1,52 @@
-<div [@standInOut]="group" *ngIf="isVisible || !isCanBeGone" class="stand-image-container"
-  [style.left]="position + '%'"
-  [style.height]="height == 0 ? '' : height + 'vh'"
-  [style.margin-left.px]="-imageWidth / 2"
-  [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, secret: isSecret}" (click)="toGhostly(); toBackyard()">
-  <ng-container *ngIf="gameCharacter && standImage.url && standImage.url.length > 0">
-    <div @fadeAndScaleInOut *ngIf="!isBackyard && gameCharacter.isEmote" 
-      class="emote chat-bubble-buyo"
-      style="position: absolute; pointer-events: none; text-align: center; margin-top: -1em"
-      [style.visibility]="isApplyDialog ? 'visible' : 'hidden'"
-      [style.width.px]="imageWidth"
-      [style.font-size.px]="imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16"
-      [style.color]="color ? color : '#444'"
-      [ngClass]="{'emote-secret': isSecret}">{{ gameCharacter.text }}</div>
-    <div [ngStyle]="{'transform-origin': standImageTransformOrigin, 'transform': isApplyRoll ? ('rotate(' + gameCharacter.roll + 'deg)') : ''}">
-      <div class="inverser" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">
-        <div class="aura" [ngClass]="{black: isApplyImageEffect && gameCharacter.aura == 0, blue: isApplyImageEffect && gameCharacter.aura == 1, 
-          green: isApplyImageEffect && gameCharacter.aura == 2, cyan: isApplyImageEffect && gameCharacter.aura == 3, red: isApplyImageEffect && gameCharacter.aura == 4,
-          magenta: isApplyImageEffect && gameCharacter.aura == 5, yellow: isApplyImageEffect && gameCharacter.aura == 6, white: isApplyImageEffect && gameCharacter.aura == 7}">
-          <div class="color-fillter">
-          <img (load)="onImageLoad()" class="stand-image" 
-            [style.height]="height > 0 ? height + 'vh' : 'auto'"
-            [src]="standImage.url | safe: 'resourceUrl'" 
-            #standImageElement 
-            [ngClass]="{'black-paint': isApplyImageEffect && gameCharacter.isBlackPaint, 'hollow': isApplyImageEffect && gameCharacter.isHollow}">
+<div [style.visibility]="isShowStand ? 'visible' : 'hidden'" [style.pointer-events]="isShowStand ? 'auto' : 'none'">
+  <div [@standInOut]="group" *ngIf="isVisible || !isCanBeGone" class="stand-image-container"
+    [style.left]="position + '%'"
+    [style.height]="height == 0 ? '' : height + 'vh'"
+    [style.margin-left.px]="-imageWidth / 2"
+    [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, secret: isSecret}" (click)="toGhostly(); toBackyard()">
+    <ng-container *ngIf="gameCharacter && standImage.url && standImage.url.length > 0">
+      <div @fadeAndScaleInOut *ngIf="!isBackyard && gameCharacter.isEmote" 
+        class="emote chat-bubble-buyo"
+        style="position: absolute; pointer-events: none; text-align: center; margin-top: -1em"
+        [style.visibility]="isApplyDialog ? 'visible' : 'hidden'"
+        [style.width.px]="imageWidth"
+        [style.font-size.px]="imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16"
+        [style.color]="color ? color : '#444'"
+        [ngClass]="{'emote-secret': isSecret}">{{ gameCharacter.text }}</div>
+      <div [ngStyle]="{'transform-origin': standImageTransformOrigin, 'transform': isApplyRoll ? ('rotate(' + gameCharacter.roll + 'deg)') : ''}">
+        <div class="inverser" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">
+          <div class="aura" [ngClass]="{black: isApplyImageEffect && gameCharacter.aura == 0, blue: isApplyImageEffect && gameCharacter.aura == 1, 
+            green: isApplyImageEffect && gameCharacter.aura == 2, cyan: isApplyImageEffect && gameCharacter.aura == 3, red: isApplyImageEffect && gameCharacter.aura == 4,
+            magenta: isApplyImageEffect && gameCharacter.aura == 5, yellow: isApplyImageEffect && gameCharacter.aura == 6, white: isApplyImageEffect && gameCharacter.aura == 7}">
+            <div class="color-fillter">
+            <img (load)="onImageLoad()" class="stand-image" 
+              [style.height]="height > 0 ? height + 'vh' : 'auto'"
+              [src]="standImage.url | safe: 'resourceUrl'" 
+              #standImageElement 
+              [ngClass]="{'black-paint': isApplyImageEffect && gameCharacter.isBlackPaint, 'hollow': isApplyImageEffect && gameCharacter.isHollow}">
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </ng-container>
+    </ng-container>
+  </div>
+  <span *ngIf="isShowStand && (isVisible || !isCanBeGone) && isShowNameTag && gameCharacter && gameCharacter.name" class="name-tag"
+    style="pointer-events: none;" 
+    [style.color]="color ? color : '#444'" 
+    [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard}"
+    [style.left]="position + '%'"
+    [style.border-color]="color ? color : '#444'"
+    [style.margin-left.px]="nameTagCSSMarginLeft"
+    ><b>{{ gameCharacter.name }}</b></span>
+  <div @fadeAndScaleInOut *ngIf="isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
+    (click)="toGhostly(); toBackyard();"
+    style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; font-size: 14px; pointer-events: none;"
+    [style.visibility]="isShowStand && isApplyDialog ? 'visible' : 'hidden'"
+    [style.color]="isSecret ? '#ccc' : (color ? color : '#444')"
+    [style.left.px]="dialogBoxCSSLeft"
+    [style.bottom.px]="dialogBoxCssBottom"
+    [style.max-width.px]="dialogBoxCSSMaxWidth"
+    [ngStyle]="{left: (position <= 50 ? dialogBoxCSSLeft + 'px' : 'auto'), right: (position > 50 ? dialogBoxCSSRight + 'px' : 'auto'), 'transform-origin': position <= 50 ? '12px calc(100% + 12px)' : 'calc(100% - 12px) calc(100% + 12px)'}"
+    [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret, 'is-position-right': position <= 50, 'is-position-left': position > 50}"
+    [style.border-color]="color ? color : '#444'"><div style="width: 100%" [@dialogShake]="dialogText.length" (@dialogShake.start)="onSpeaking($event)">{{ dialogText }}</div></div>
 </div>
-<span *ngIf="(isVisible || !isCanBeGone) && gameCharacter && gameCharacter.name" class="name-tag"
-  style="pointer-events: none;" 
-  [style.color]="color ? color : '#444'" 
-  [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard}"
-  [style.left]="position + '%'"
-  [style.border-color]="color ? color : '#444'"
-  [style.margin-left.px]="nameTagCSSMarginLeft"
-  ><b>{{ gameCharacter.name }}</b></span>
-<div @fadeAndScaleInOut *ngIf="isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
-  (click)="toGhostly(); toBackyard();"
-  style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; font-size: 14px; pointer-events: none;"
-  [style.visibility]="isApplyDialog ? 'visible' : 'hidden'"
-  [style.color]="isSecret ? '#ccc' : (color ? color : '#444')"
-  [style.left.px]="dialogBoxCSSLeft"
-  [style.bottom.px]="dialogBoxCssBottom"
-  [style.max-width.px]="dialogBoxCSSMaxWidth"
-  [ngStyle]="{left: (position <= 50 ? dialogBoxCSSLeft + 'px' : 'auto'), right: (position > 50 ? dialogBoxCSSRight + 'px' : 'auto'), 'transform-origin': position <= 50 ? '12px calc(100% + 12px)' : 'calc(100% - 12px) calc(100% + 12px)'}"
-  [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret, 'is-position-right': position <= 50, 'is-position-left': position > 50}"
-  [style.border-color]="color ? color : '#444'"><div style="width: 100%" [@dialogShake]="dialogText.length" (@dialogShake.start)="onSpeaking($event)">{{ dialogText }}</div></div>

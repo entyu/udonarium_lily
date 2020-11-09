@@ -57,6 +57,8 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   @ViewChild('standImageElement', { static: false }) standImageElement: ElementRef;
 
+  static isShowStand = true;
+  static isShowNameTag = true;
   static isCanBeGone = true;
 
   private _imageFile: ImageFile = ImageFile.Empty;
@@ -96,6 +98,14 @@ export class StandImageComponent implements OnInit, OnDestroy {
         this.isSpeaking = false;
       }, 200);
     }
+  }
+
+  get isShowStand(): boolean {
+    return StandImageComponent.isShowStand;
+  }
+
+  get isShowNameTag(): boolean {
+    return StandImageComponent.isShowNameTag;
   }
 
   get isCanBeGone(): boolean {

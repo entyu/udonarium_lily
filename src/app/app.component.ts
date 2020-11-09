@@ -408,9 +408,21 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   standSetteings() {
+    const isShowStand = StandImageComponent.isShowStand;
+    const isShowNameTag = StandImageComponent.isShowNameTag;
     const isCanBeGone = StandImageComponent.isCanBeGone; 
     this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
-      { name: `${ isCanBeGone ? '☐' : '☑' }透明化、自動消去しない`, 
+      { name: `${ isShowStand ? '☑' : '☐' }スタンドを表示`, 
+        action: () => {
+          StandImageComponent.isShowStand = !isShowStand;
+        }
+      },
+      { name: `${ isShowNameTag ? '☑' : '☐' }ネームタグを表示`, 
+        action: () => {
+          StandImageComponent.isShowNameTag = !isShowNameTag;
+        }
+      },
+      { name: `${ isCanBeGone ? '☑' : '☐' }半透明化、自動退去`, 
         action: () => {
           StandImageComponent.isCanBeGone = !isCanBeGone;
         }
