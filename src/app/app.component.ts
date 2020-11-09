@@ -427,7 +427,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           StandImageComponent.isCanBeGone = !isCanBeGone;
         }
       },
-      { name: '表示スタンドを全て消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
+      { name: 'スタンドを全て消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
     ], 'スタンド設定');
   }
 /*
