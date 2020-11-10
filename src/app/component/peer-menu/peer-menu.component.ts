@@ -78,9 +78,9 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     EventSystem.register(this)
       .on('OPEN_NETWORK', event => {
         this.ngZone.run(() => { });
-        this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
+        if (this.idInput && this.idInput.nativeElement) this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
       });
-    this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
+    if (this.idInput && this.idInput.nativeElement) this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
   }
 
   ngOnDestroy() {
