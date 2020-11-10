@@ -276,9 +276,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         } else {
           imageIdentifier = this.character.imageFile ? this.character.imageFile.identifier : null;
         }
-
+        
         const standInfo = this.character.standList.matchStandInfo(text, imageIdentifier, this.standName);
-        if (this.isUseStandImage && standInfo.standElementIdentifier) {
+        if (standInfo.farewell) {
+          this.farewellStand();
+        } else if (this.isUseStandImage && standInfo.standElementIdentifier) {
           standIdentifier = standInfo.standElementIdentifier;
           const sendObj = {
             characterIdentifier: this.character.identifier, 
@@ -297,6 +299,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
             EventSystem.call('POPUP_STAND_IMAGE', sendObj);
           }
         }
+
         if (standInfo.matchMostLongText) {
           text = text.slice(0, text.length - standInfo.matchMostLongText.length);
         }
@@ -543,7 +546,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.contextMenuService.open(position, contextMenuActions, this.character.name);
   }
 
-  onFarewellStand() {
+  farewellStand() {
     if (this.character) {
       const sendObj = {
         characterIdentifier: this.character.identifier

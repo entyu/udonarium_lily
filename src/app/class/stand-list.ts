@@ -14,7 +14,8 @@ export enum StandConditionType {
 
 export interface StandInfo {
   standElementIdentifier: string,
-  matchMostLongText: string
+  matchMostLongText: string,
+  farewell?: boolean
 }
 
 @SyncObject('stand-list')
@@ -50,7 +51,16 @@ export class StandList extends DataElement {
   matchStandInfo(text: string, image: ImageFile | string, standName: string=null): StandInfo {
     const imageIdentifier = (image instanceof ImageFile) ? image.identifier : image;
     let textTagMatch = '';
+    let farewell = false;
     let useStands = [];
+
+    // 退去コマンド
+    ['＠退去', '@farewell'].forEach((command) => {
+      if (StringUtil.toHalfWidth(text).toUpperCase().endsWith(StringUtil.toHalfWidth(command).toUpperCase())) {
+        if ((command.slice(0, 1) == '@' || command.slice(0, 1) == '＠') && textTagMatch.length < command.length) textTagMatch = command;
+        farewell = true;
+      }
+    });
 
     //if (standName) {
     for (const standElement of this.standElements) {
@@ -115,7 +125,8 @@ export class StandList extends DataElement {
 
     let ret: StandInfo = {
       standElementIdentifier: null,
-      matchMostLongText: textTagMatch
+      matchMostLongText: textTagMatch,
+      farewell: farewell
     }; 
     if (useStands && useStands.length > 0) {
       ret.standElementIdentifier = useStands[Math.floor(Math.random() * useStands.length)].identifier;

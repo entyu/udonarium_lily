@@ -57,7 +57,7 @@
         <b style="font-size: smaller;">Pos: </b><input style="width: 186px" (change)="isUseStandImage = true" type="range" min="0" max="100" [(ngModel)]="character.standList.position">
         <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" (change)="isUseStandImage = true" [(ngModel)]="character.standList.position"><b style="font-size: smaller;">％</b>
       </span>
-      <button style="margin-left: 1.3em; font-size: smaller;" type="button" (click)="onFarewellStand()">退去</button>
+      <button style="margin-left: 1.3em; font-size: smaller;" type="button" (click)="farewellStand()">退去</button>
     </div>
     <div>
       <form>
