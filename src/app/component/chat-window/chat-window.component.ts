@@ -10,6 +10,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 //entyu
+import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 //
@@ -167,6 +168,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 500, height: 350 };
     let component = this.panelService.open<ChatTabSettingComponent>(ChatTabSettingComponent, option);
     component.selectedTab = this.chatTab;
+  }
+
+  showDiceTableSetting() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 500, height: 350 };
+    let component = this.panelService.open<DiceTableSettingComponent>(DiceTableSettingComponent, option);
   }
 
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number }) {

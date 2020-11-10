@@ -13,6 +13,7 @@ import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.compon
 import { ChatTabSettingComponent } from 'component/chat-tab-setting/chat-tab-setting.component';
 import { ChatTabComponent } from 'component/chat-tab/chat-tab.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
+
 //entyu_21
 import { ChatTachieComponent } from 'component/chat-tachie/chat-tachie.component';
 //
@@ -59,7 +60,9 @@ import { ControllerInputComponent } from 'component/controller-input/controller-
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
+import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 //
+
 
 import { AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
@@ -110,7 +113,9 @@ import { AppComponent } from './app.component';
     CutInListComponent,
     CutInBgmComponent,
     CutInWindowComponent,
+    DiceTableSettingComponent,
 //
+    
     LobbyComponent,
     ModalComponent,
     OverviewPanelComponent,

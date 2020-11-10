@@ -1,0 +1,37 @@
+<div class="flex-container">
+  <div class="flex-item no-grow">
+    <div>
+      <button (click)="createDiceTable()">新しい表を作る</button>
+    </div>
+    <select style="width: 10em;" size="15" (change)="selectDiceTable($event.target.value)" [ngModel]="selectedTable?.identifier">
+      <option *ngFor="let diceTable of getDiceTables()" value="{{diceTable.identifier}}">{{diceTable.name}}</option>
+    </select>
+  </div>
+  <div class="flex-item">
+    <div><span style="width: 5em;display:inline-block;">表タイトル :</span>
+      <input [(ngModel)]="tableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+    </div>
+    <div><span style="width: 5em;display:inline-block;">判定ダイス :</span>
+      <input [(ngModel)]="tableDice" placeholder="Dice" [attr.disabled]="!isEditable ? '' : null" />
+    </div>
+
+    <div><span style="width: 5em;display:inline-block;">コマンド :</span>
+      <input [(ngModel)]="tableCommand" placeholder="Command" [attr.disabled]="!isEditable ? '' : null" />
+    </div>
+
+<!--入力部 -->
+    <textarea class="dice-table" style="resize: none;" [(ngModel)]="selectedTable.table" placeholder="ダイス表"></textarea>
+<!--入力部ここまで -->
+
+    <hr/>
+    <div>
+      <ng-container *ngIf="!isDeleted">
+        <button (click)="save()">保存</button>
+        <button class="danger" (click)="delete()" [attr.disabled]="getDiceTables().length <= 1 ? '' : null">削除</button>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="isEmpty">
+  <div style="font-size: 12px;">※ダイス表が１つも作成されていません。「新しい表を作る」から新しいダイス表を作成することができます。</div>
+</ng-container>

@@ -44,6 +44,7 @@ import { SaveDataService } from 'service/save-data.service';
 
 //
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
+import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 //
 
 @Component({
@@ -58,7 +59,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private lazyUpdateTimer: NodeJS.Timer = null;
   private openPanelCount: number = 0;
   
-  dispcounter : number = 10 ;
+  dispcounter : number = 10 ;//表示更新用ダミー
 //  dummyImage : ImageFile = null ;
   
   constructor(

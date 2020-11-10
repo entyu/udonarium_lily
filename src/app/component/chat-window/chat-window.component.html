@@ -17,6 +17,7 @@
         <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
       </label>
       <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>タブ設定</button>
+      <button class="tab-setting small-font" (click)="showDiceTableSetting()"><i class="material-icons small-font">settings</i>ダイス表設定</button>
     </div>
   </form>
   <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
