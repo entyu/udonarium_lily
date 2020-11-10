@@ -127,7 +127,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   helpStandSteeing() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 430 };
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 440 };
     let textView = this.panelService.open(TextViewComponent, option);
     textView.title = 'スタンド設定ヘルプ';
     textView.text = 
