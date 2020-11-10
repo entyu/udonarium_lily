@@ -8,26 +8,26 @@
     </select>
   </div>
   <div class="flex-item">
-    <div><span style="width: 5em;display:inline-block;">表タイトル :</span>
+    <div><span style="width: 7em;display:inline-block;">表タイトル :</span>
       <input [(ngModel)]="tableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
     </div>
-    <div><span style="width: 5em;display:inline-block;">判定ダイス :</span>
+    <div><span style="width: 7em;display:inline-block;">判定ダイス :</span>
       <input [(ngModel)]="tableDice" placeholder="Dice" [attr.disabled]="!isEditable ? '' : null" />
     </div>
 
-    <div><span style="width: 5em;display:inline-block;">コマンド :</span>
+    <div><span style="width: 7em;display:inline-block;">起動コマンド :</span>
       <input [(ngModel)]="tableCommand" placeholder="Command" [attr.disabled]="!isEditable ? '' : null" />
     </div>
 
 <!--入力部 -->
-    <textarea class="dice-table" style="resize: none;" [(ngModel)]="selectedTable.table" placeholder="ダイス表"></textarea>
+    <textarea class="dice-table" style="resize: none;" [(ngModel)]="tableText" placeholder="ダイス表"></textarea>
 <!--入力部ここまで -->
 
     <hr/>
     <div>
       <ng-container *ngIf="!isDeleted">
         <button (click)="save()">保存</button>
-        <button class="danger" (click)="delete()" [attr.disabled]="getDiceTables().length <= 1 ? '' : null">削除</button>
+        <button class="danger" (click)="delete()" [attr.disabled]="getDiceTables().length <= 0 ? '' : null">削除</button>
       </ng-container>
     </div>
   </div>

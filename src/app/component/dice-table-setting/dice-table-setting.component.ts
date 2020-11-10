@@ -10,6 +10,8 @@ import { SaveDataService } from 'service/save-data.service';
 
 import { DiceTable } from '@udonarium/dice-table';
 
+import { DiceTablePalette } from '@udonarium/chat-palette';
+
 @Component({
   selector: 'dice-table-setting',
   templateUrl: './dice-table-setting.component.html',
@@ -26,7 +28,23 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   get tableCommand(): string { return this.isEditable ? this.selectedTable.command : '' ; }
   set tableCommand(tableCommand: string) { if (this.isEditable) this.selectedTable.command = tableCommand; }
 
-//  get tableSelecter(): TableSelecter { return ObjectStore.instance.get<Table>('tableSelecter'); }
+  get tableText(): string { 
+    return this.isEditable ? this.selectedTable.text : '' ; 
+    }
+  set tableText(tableText: string) { 
+    if(this.isEditable)console.log(tableText); 
+    if (this.isEditable) this.selectedTable.text = tableText+''; 
+  }
+
+  get diceTablePalette(): DiceTablePalette {
+    if(!this.isEditable)return null;
+    
+    for (let child of this.selectedTable.children) {
+      if (child instanceof DiceTablePalette) return child;
+    }
+    return null;
+  }
+
 
   selectedTable: DiceTable = null;
 
@@ -53,23 +71,11 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ダイス表設定');
-//    this.selectedTable = this.tableSelecter.viewTable;
-/*
-    EventSystem.register(this)
-      .on('DELETE_GAME_OBJECT', 1000, event => {
-        if (!this.selectedTable || event.data.identifier !== this.selectedTable.identifier) return;
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (object !== null) {
-          this.selectedTableXml = object.toXml();
-        }
-      });
-*/
   }
 
   ngAfterViewInit() { }
 
   ngOnDestroy() {
-//    EventSystem.unregister(this);
   }
 
   selectDiceTable(identifier: string) {
@@ -82,48 +88,18 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   
   
   createDiceTable() {
-    let diceTable = new DiceTable();
-    diceTable.name = '白紙のダイス表';
-    diceTable.initialize();
+    let diceTable = DiceTable.create();
     this.selectDiceTable(diceTable.identifier);
   }
 
   save() {
     if (!this.selectedTable) return;
-    this.selectedTable.selected = true;
     this.saveDataService.saveGameObject(this.selectedTable, 'dice_table_' + this.selectedTable.name);
   }
 
   delete() {
     if (!this.isEmpty && this.selectedTable) {
-//      this.selectedTableXml = this.selectedTable.toXml();
       this.selectedTable.destroy();
     }
   }
-/*
-  restore() {
-    if (this.selectedTable && this.selectedTableXml) {
-      let restoreTable = ObjectSerializer.instance.parseXml(this.selectedTableXml);
-      this.selectGameTable(restoreTable.identifier);
-      this.selectedTableXml = '';
-    }
-  }
-*/
-/*
-  openBgImageModal() {
-    if (this.isDeleted) return;
-    this.modalService.open<string>(FileSelecterComponent).then(value => {
-      if (!this.selectedTable || !value) return;
-      this.selectedTable.imageIdentifier = value;
-    });
-  }
-
-  openDistanceViewImageModal() {
-    if (this.isDeleted) return;
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: true }).then(value => {
-      if (!this.selectedTable || !value) return;
-      this.selectedTable.backgroundImageIdentifier = value;
-    });
-  }
-*/
 }

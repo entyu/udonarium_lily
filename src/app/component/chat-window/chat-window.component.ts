@@ -172,7 +172,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showDiceTableSetting() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 500, height: 350 };
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 200, width: 500, height: 400 };
     let component = this.panelService.open<DiceTableSettingComponent>(DiceTableSettingComponent, option);
   }
 

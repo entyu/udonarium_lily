@@ -117,3 +117,8 @@ export class ChatPalette extends ObjectNode {
 @SyncObject('buff-palette')
 export class BuffPalette extends ChatPalette {
 }
+
+
+@SyncObject('dice-table-palette')
+export class DiceTablePalette extends ChatPalette {
+}
