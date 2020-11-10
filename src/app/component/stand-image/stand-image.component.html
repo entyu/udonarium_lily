@@ -1,5 +1,5 @@
 <div [style.visibility]="isShowStand ? 'visible' : 'hidden'" [style.pointer-events]="isShowStand ? 'auto' : 'none'">
-  <div [@standInOut]="group" *ngIf="isVisible || !isCanBeGone" class="stand-image-container"
+  <div [@standInOut]="group" *ngIf="!isFarewell && (isVisible || !isCanBeGone)" class="stand-image-container"
     [style.left]="position + '%'"
     [style.height]="height == 0 ? '' : height + 'vh'"
     [style.margin-left.px]="-imageWidth / 2"
@@ -8,7 +8,7 @@
       <div @fadeAndScaleInOut *ngIf="!isBackyard && gameCharacter.isEmote" 
         class="emote chat-bubble-buyo"
         style="position: absolute; pointer-events: none; text-align: center; margin-top: -1em"
-        [style.visibility]="isApplyDialog ? 'visible' : 'hidden'"
+        [style.visibility]="isShowStand && isApplyDialog ? 'visible' : 'hidden'"
         [style.width.px]="imageWidth"
         [style.font-size.px]="imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16"
         [style.color]="color ? color : '#444'"
@@ -30,7 +30,7 @@
       </div>
     </ng-container>
   </div>
-  <span *ngIf="isShowStand && (isVisible || !isCanBeGone) && isShowNameTag && gameCharacter && gameCharacter.name" class="name-tag"
+  <span *ngIf="isShowStand && !isFarewell && (isVisible || !isCanBeGone) && isShowNameTag && gameCharacter && gameCharacter.name" class="name-tag"
     style="pointer-events: none;" 
     [style.color]="color ? color : '#444'" 
     [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard}"
@@ -38,7 +38,7 @@
     [style.border-color]="color ? color : '#444'"
     [style.margin-left.px]="nameTagCSSMarginLeft"
     ><b>{{ gameCharacter.name }}</b></span>
-  <div @fadeAndScaleInOut *ngIf="isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
+  <div @fadeAndScaleInOut *ngIf="!isFarewell && isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
     (click)="toGhostly(); toBackyard();"
     style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; font-size: 14px; pointer-events: none;"
     [style.visibility]="isShowStand && isApplyDialog ? 'visible' : 'hidden'"

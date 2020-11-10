@@ -31,7 +31,7 @@ export class StandImageService {
         instance.isSecret = isSecret;
         instance.toFront();
         isNewbee = false;
-      } else if (StandImageComponent.isCanBeGone) {
+      } else if (instance.isFarewell || StandImageComponent.isCanBeGone) {
         standImageComponentRef.destroy();
         StandImageService.currentStandImageShowing.delete(identifier);
       }
@@ -51,7 +51,7 @@ export class StandImageService {
     if (identifier instanceof GameCharacter) identifier = identifier.identifier;
     const standImageComponentRef = StandImageService.currentStandImageShowing.get(identifier);
     if (standImageComponentRef && standImageComponentRef.instance) {
-      standImageComponentRef.instance.isVisible = false;
+      standImageComponentRef.instance.foFarewell();
     }
   }
 

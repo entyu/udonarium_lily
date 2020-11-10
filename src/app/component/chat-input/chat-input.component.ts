@@ -324,7 +324,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           color: this.color,
           secret: this.sendTo ? true : false
         };
-        if (this.sendTo) {
+        if (dialogObj.secret) {
           const targetId = Network.peerContext.room ?
               ChatMessageService.findId(this.sendTo) + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
             : ChatMessageService.findId(this.sendTo);
@@ -543,6 +543,24 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.contextMenuService.open(position, contextMenuActions, this.character.name);
   }
 
+  onFarewellStand() {
+    if (this.character) {
+      const sendObj = {
+        characterIdentifier: this.character.identifier
+      };
+      if (this.sendTo) {
+        // ほんとにこれでええんか？
+        const targetId = Network.peerContext.room ?
+            ChatMessageService.findId(this.sendTo) + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
+          : ChatMessageService.findId(this.sendTo);
+        EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, targetId);
+        EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+      } else {
+        EventSystem.call('FAREWELL_STAND_IMAGE', sendObj);
+      }
+    }
+  }
+
   private showDetail(gameObject: GameCharacter) {
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'キャラクターシート';
@@ -558,13 +576,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     let component = this.panelService.open<ChatPaletteComponent>(ChatPaletteComponent, option);
     component.character = gameObject;
   }
+
   private showStandSetting(gameObject: GameCharacter) {
     let coordinate = this.pointerDeviceService.pointers[0];
     let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 730, height: 572 };
     let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
     component.character = gameObject;
   }
-
 
   private allowsChat(gameCharacter: GameCharacter): boolean {
     switch (gameCharacter.location.name) {

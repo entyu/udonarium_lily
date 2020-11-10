@@ -65,6 +65,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   private _timeoutId;
   private _dialogTimeoutId;
 
+  isFarewell = false;
   isGhostly = false;
   isBackyard = false;
   isVisible = false;
@@ -254,6 +255,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   toFront(group='') {
     this.ngZone.run(() => {
+      this.isFarewell = false;
       this.isGhostly = false;
       this.isBackyard = false;
       this.group = group;
@@ -265,6 +267,13 @@ export class StandImageComponent implements OnInit, OnDestroy {
         this.isVisible = false;
       });
     }, 12000);
+  }
+
+  foFarewell() {
+    this.ngZone.run(() => {
+      this.isFarewell = true;
+      this.isVisible = false;
+    });
   }
 
   onImageLoad() {
