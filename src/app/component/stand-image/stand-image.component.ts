@@ -269,7 +269,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
     }, 12000);
   }
 
-  foFarewell() {
+  toFarewell() {
     this.ngZone.run(() => {
       this.isFarewell = true;
       this.isVisible = false;

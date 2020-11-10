@@ -51,7 +51,7 @@ export class StandImageService {
     if (identifier instanceof GameCharacter) identifier = identifier.identifier;
     const standImageComponentRef = StandImageService.currentStandImageShowing.get(identifier);
     if (standImageComponentRef && standImageComponentRef.instance) {
-      standImageComponentRef.instance.foFarewell();
+      standImageComponentRef.instance.toFarewell();
     }
   }
 
