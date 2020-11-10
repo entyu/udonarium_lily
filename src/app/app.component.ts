@@ -33,7 +33,7 @@ import { TextViewComponent } from 'component/text-view/text-view.component';
 import { UIPanelComponent } from 'component/ui-panel/ui-panel.component';
 import { AppConfig, AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
-import { ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -417,17 +417,18 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           StandImageComponent.isShowStand = !isShowStand;
         }
       },
-      { name: `${ isShowNameTag ? '☑' : '☐' }ネームタグを表示`, 
+      { name: `${ isShowNameTag ? '☑' : '☐' }スタンドにネームタグを表示`, 
         action: () => {
           StandImageComponent.isShowNameTag = !isShowNameTag;
         }
       },
-      { name: `${ isCanBeGone ? '☑' : '☐' }半透明化、自動退去`, 
+      { name: `${ isCanBeGone ? '☑' : '☐' }半透明化、自動退去する`, 
         action: () => {
           StandImageComponent.isCanBeGone = !isCanBeGone;
         }
       },
-      { name: 'スタンドを全て消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
+      ContextMenuSeparator,
+      { name: '現在表示中のスタンドを全て消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
     ], 'スタンド設定');
   }
 /*
