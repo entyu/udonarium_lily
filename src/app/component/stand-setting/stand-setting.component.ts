@@ -131,7 +131,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     let textView = this.panelService.open(TextViewComponent, option);
     textView.title = 'スタンド設定ヘルプ';
     textView.text = 
-`　チャットを送信時にスタンドが表示される条件を設定できます。　
+`　チャットの送信時にスタンドが表示される条件を設定できます。　
 　スタンドに名称を設定した場合、チャットウィンドウ、チャットパネルのリストに表示され、選択可能になります。
 　また、特別な条件として常に、チャットテキストの末尾が"@退去"または"@farewell"の場合は、そのキャラクターのスタンドを退去させます。
 
@@ -147,8 +147,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 　どの条件も満たさない場合「デフォルト」のものが使用され、同じ優先順位の条件が複数ある場合はランダムで1つが選択されます。
 
 　チャット末尾条件では全角半角、アルファべットの大文字小文字は区別されません。
-　また、"@退去"、"@farewell"による退去時、あるいは"@笑い"のように先頭が"@"で始まる条件を設定している場合、そのキャラクターでの送信時に、条件に一致するチャットテキスト末尾の@以下は切り落とされます。
-`;
+　また、"@退去"、"@farewell"による退去時、あるいは"@笑い"のように先頭が"@"で始まる条件を設定している場合、そのキャラクターでの送信時に、条件に一致するチャットテキスト末尾の@以下は切り落とされます。`;
   }
 
   private imageElementToFile(dataElm: DataElement): ImageFile {
