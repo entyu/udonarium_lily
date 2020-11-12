@@ -1,13 +1,14 @@
 <div class="flex-container">
   <div class="flex-item no-grow">
     <div>
-      <button (click)="createDiceTable()">新しい表を作る</button>
+      <button (click)="createDiceTable()" [attr.disabled]="this.isEdit ? '' : null">新しい表を作る</button>
     </div>
-    <select style="width: 10em;" size="15" (change)="selectDiceTable($event.target.value)" [ngModel]="selectedTable?.identifier">
+    <select style="width: 10em;" size="15" (change)="selectDiceTable($event.target.value)" 
+    [ngModel]="selectedTable?.identifier"  [attr.disabled]="this.isEdit ? '' : null">
       <option *ngFor="let diceTable of getDiceTables()" value="{{diceTable.identifier}}">{{diceTable.name}}</option>
     </select>
   </div>
-  <div class="flex-item">
+  <div class="flex-item-">
     <div><span style="width: 7em;display:inline-block;">表タイトル :</span>
       <input [(ngModel)]="tableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
     </div>
@@ -18,20 +19,41 @@
     <div><span style="width: 7em;display:inline-block;">起動コマンド :</span>
       <input [(ngModel)]="tableCommand" placeholder="Command" [attr.disabled]="!isEditable ? '' : null" />
     </div>
-
-<!--入力部 -->
-    <textarea class="dice-table" style="resize: none;" [(ngModel)]="tableText" placeholder="ダイス表"></textarea>
-<!--入力部ここまで -->
-
-    <hr/>
-    <div>
-      <ng-container *ngIf="!isDeleted">
-        <button (click)="save()">保存</button>
-        <button class="danger" (click)="delete()" [attr.disabled]="getDiceTables().length <= 0 ? '' : null">削除</button>
-      </ng-container>
+    <div *ngIf="isEdit" class="edit-info">
+      <i class="material-icons" style="vertical-align: bottom; size:0.8rem;">info_outline</i> ダイス表編集中です
     </div>
+<!--入力部 -->
+    <div *ngIf="!isEdit" style="flex-grow: 1; height: 0; min-height: 150px;">
+      <select class="palette" style="overflow-y: auto;" size="5" >
+        <ng-container *ngIf="selectedTable">
+          <ng-container *ngIf="selectedTable.diceTablePalette">
+            <option *ngFor="let palette of selectedTable.diceTablePalette.getPalette()" value="{{palette}}">{{palette}}</option>
+          </ng-container>
+        </ng-container>
+      </select>
+    </div>
+    <div *ngIf="isEdit" style="flex-grow: 1; height: 0; min-height: 150px;">
+      <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="ダイス表"></textarea>
+    </div>
+    <div style="flex-grow: 0;">
+      <button type="submit" (click)="toggleEditMode()" [attr.disabled]="!isEditable ? '' : null">
+        <span *ngIf="!isEdit">ダイス表の編集</span>
+        <span *ngIf="isEdit">ダイス表を確定</span>
+      </button>
+    </div>
+  <hr/>
+  <div>
+    <ng-container *ngIf="!isDeleted">
+      <button (click)="save()">保存</button>
+      <button class="danger" (click)="delete()" [attr.disabled]="getDiceTables().length <= 0 ? '' : null">削除</button>
+    </ng-container>
   </div>
-</div>
 <ng-container *ngIf="isEmpty">
   <div style="font-size: 12px;">※ダイス表が１つも作成されていません。「新しい表を作る」から新しいダイス表を作成することができます。</div>
 </ng-container>
+
+  </div>
+
+<!--入力部ここまで -->
+</div>
+

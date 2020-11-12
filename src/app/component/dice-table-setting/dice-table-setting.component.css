@@ -1,3 +1,24 @@
+.edit-info {
+  width: 100%;
+  text-align: center;
+  color: #CCC;
+  background-color: rgba(30, 30, 30, 0.8);
+}
+.palette {
+/*.input {*/
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Verdana, Meiryo, sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+
 .dice-table {
 /*.input {*/
   box-sizing: border-box;
