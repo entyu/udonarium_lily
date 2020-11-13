@@ -71,7 +71,7 @@
         <textarea [(ngModel)]="postfixElement.value" style="width: 100%; margin-top: 3px; height: 2.4rem" placeholder="1行に一つ、冒頭@を付けるとマッチ時にテキストから切り取り&#13;&#10;@怒り&#13;&#10;@必殺技"></textarea>
       </div>
       <div *ngIf="conditionTypeElement.value == standConditionType.Image || conditionTypeElement.value == standConditionType.PostfixOrImage || conditionTypeElement.value == standConditionType.PostfixAndImage">
-        <div *ngIf="imageList && imageList.length > 0" style="display: flex">
+        <div *ngIf="imageList && imageList.length > 0" style="display: flex; flex-wrap: wrap; margin-right: -30px;">
           <ng-container *ngFor="let image of imageList">
             <div *ngIf="0 < image.url.length" class="icon-image-box" [ngClass]="{'current-icon': isSelectedImage(image.identifier)}">
               <img [src]="image.url | safe: 'resourceUrl'" [alt]="image.name" (click)="selectImage(image.identifier)" />
