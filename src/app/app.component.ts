@@ -42,6 +42,8 @@ import { StandImageService } from 'service/stand-image.service';
 import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from '@udonarium/data-element';
 import { StandImageComponent } from 'component/stand-image/stand-image.component';
+import { DiceRollTable } from '@udonarium/dice-roll-table';
+import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 
 @Component({
   selector: 'app-root',
@@ -99,6 +101,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     ChatTabList.instance.addChatTab('メインタブ', 'MainTab');
     ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
+
+    let sampleDiceRollTable = new DiceRollTable();
+    sampleDiceRollTable.initialize();
+    sampleDiceRollTable.name = 'サンプルダイスボット表'
+    sampleDiceRollTable.command = 'SAMPLE'
+    sampleDiceRollTable.dice = '1d2';
+    sampleDiceRollTable.table = `1:これはダイスボット表のサンプルです
+2:数字:結果のように記述します\\n\nで改行します`;
+
+    DiceRollTableList.instance.addDiceRollTable(sampleDiceRollTable);
 
     let fileContext = ImageFile.createEmpty('none_icon').toContext();
     fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';
