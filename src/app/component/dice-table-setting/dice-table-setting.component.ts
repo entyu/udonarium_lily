@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit , Input , Output , EventEmitter } from '@angular/core';
 
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -8,8 +8,8 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
+import { DiceBot } from '@udonarium/dice-bot';
 import { DiceTable } from '@udonarium/dice-table';
-
 import { DiceTablePalette } from '@udonarium/chat-palette';
 
 @Component({
@@ -18,6 +18,27 @@ import { DiceTablePalette } from '@udonarium/chat-palette';
   styleUrls: ['./dice-table-setting.component.css']
 })
 export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  @Input('gameType') _gameType: string = '';
+  @Output() gameTypeChange = new EventEmitter<string>();
+  get gameType(): string { 
+    return this.isEditable ? this.selectedTable.diceTablePalette.dicebot : '' ;
+  }
+  set gameType(gameType: string) { 
+    if( this.isEditable ){
+      this.selectedTable.diceTablePalette.dicebot = gameType ;
+      this._gameType = gameType; this.gameTypeChange.emit(gameType); 
+    }
+  }
+
+  loadDiceBot(gameType: string) {
+    console.log('onChangeGameType ready');
+    DiceBot.getHelpMessage(gameType).then(help => {
+      console.log('onChangeGameType done\n' + help);
+    });
+  }
+
+  get diceBotInfos() { return DiceBot.diceBotInfos }
 
   get tableName(): string { return this.isEditable ? this.selectedTable.name : '' ; }
   set tableName(tableName: string) { if (this.isEditable) this.selectedTable.name = tableName; }

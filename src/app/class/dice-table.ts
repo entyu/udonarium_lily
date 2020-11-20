@@ -40,12 +40,12 @@ export class DiceTable extends ObjectNode{ //GameObject {
 
     palette.setPalette(
 `ダイス表入力例：
-1:ダイス表チャート例：森
-2:ダイス表チャート例：海
-3:ダイス表チャート例：平地
-4:ダイス表チャート例：沼
-5:ダイス表チャート例：空
-6:ダイス表チャート例：山`);
+1:ダイス表チャート例【森】
+2:ダイス表チャート例【海】
+3:ダイス表チャート例【平地】
+4:ダイス表チャート例【沼】
+5:ダイス表チャート例【空】
+6:ダイス表チャート例【山】`);
     palette.initialize();
     
     diceTable.appendChild(palette);

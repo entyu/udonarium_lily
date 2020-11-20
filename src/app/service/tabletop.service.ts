@@ -527,6 +527,7 @@ export class TabletopService {
     let diceTable = DiceTable.create();
     diceTable.name = 'サンプルダイス表';
     
+    
   }
 
   getContextMenuActionsForCreateObject(position: PointerCoordinate): ContextMenuAction[] {

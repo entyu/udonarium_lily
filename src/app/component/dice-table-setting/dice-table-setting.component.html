@@ -12,13 +12,21 @@
     <div><span style="width: 7em;display:inline-block;">表タイトル :</span>
       <input [(ngModel)]="tableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
     </div>
-    <div><span style="width: 7em;display:inline-block;">判定ダイス :</span>
+    <div><span style="width: 7em;display:inline-block;">ダイス :</span>
       <input [(ngModel)]="tableDice" placeholder="Dice" [attr.disabled]="!isEditable ? '' : null" />
     </div>
 
-    <div><span style="width: 7em;display:inline-block;">起動コマンド :</span>
+    <div><span style="width: 7em;display:inline-block;">コマンド :</span>
       <input [(ngModel)]="tableCommand" placeholder="Command" [attr.disabled]="!isEditable ? '' : null" />
     </div>
+    <div>
+      <select style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType"
+        [ngModelOptions]="{standalone: true}" [attr.disabled]="!isEditable ? '' : null" >
+        <option value="">ダイスボット指定なし</option>
+        <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
+      </select>
+    </div>
+
     <div *ngIf="isEdit" class="edit-info">
       <i class="material-icons" style="vertical-align: bottom; size:0.8rem;">info_outline</i> ダイス表編集中です
     </div>
