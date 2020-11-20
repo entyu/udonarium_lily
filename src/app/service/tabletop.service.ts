@@ -26,6 +26,9 @@ import { ImageTag } from '@udonarium/image-tag';
 //
 //entyu
 import { DataElement } from '@udonarium/data-element';
+import { DiceTable } from '@udonarium/dice-table';
+import { DiceTablePalette } from '@udonarium/chat-palette';
+
 //
 type ObjectIdentifier = string;
 type LocationName = string;
@@ -520,6 +523,10 @@ export class TabletopService {
     testCharacter.location.y = 13 * 50;
     testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
     this.addBuffRound( testCharacter ,'テストバフ3' , '回避+5' , 1);
+    
+    let diceTable = DiceTable.create();
+    diceTable.name = 'サンプルダイス表';
+    
   }
 
   getContextMenuActionsForCreateObject(position: PointerCoordinate): ContextMenuAction[] {
