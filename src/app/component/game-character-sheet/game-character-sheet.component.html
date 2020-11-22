@@ -30,6 +30,27 @@
   </select>
     <input type="checkbox" value="hideInventory"  [(ngModel)]="tabletopObject.hideInventory" name="hideInventory" (click)="clickHide()">
     テーブルインベントリ非表示
+
+  <div>
+    ポップアップ横幅
+    <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
+      min="270" max="800" [(ngModel)]="tabletopObject.overViewWidth" />
+     <input [(ngModel)]="tabletopObject.overViewWidth" type="number" 
+      min="270" max="800" name="popWidth" (change)="chkPopWidth($event.target.value)"
+      style="color: #555;"/>
+  </div>
+  <div>
+    ポップアップ縦幅最大
+    <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
+      min="250" max="1000" [(ngModel)]="tabletopObject.overViewMaxHeight" />
+
+     <input [(ngModel)]="tabletopObject.overViewMaxHeight" type="number" 
+      min="250" max="1000" name="popWidth" (change)="chkPopMaxHeight($event.target.value)"
+      style="color: #555;"/>
+<!--
+-->
+  </div>
+
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">

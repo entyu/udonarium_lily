@@ -73,7 +73,7 @@
 </ng-template>
 
 <ng-template #overviewCharacter let-character="character">
-  <div class="component-content character-grid-container is-middle-size">
+  <div class="component-content character-grid-container is-middle-size" >
     <div class="title-bg-area title-background"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
     </div>
@@ -87,7 +87,8 @@
     <div class="void-area is-pointer-events-none"></div>
     <div class="dataElm-area component-background"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
-      <div class="grid-container-root" *ngIf="hasDataElms">
+      <div class="grid-container-root" *ngIf="hasDataElms"   
+      [ngStyle]="{'width': overViewCharacterWidth + 'px','max-height': overViewCharacterMaxHeight +'px'}">
         <!--<ng-container *ngFor="let dataElm of dataElms">-->
         <ng-container *ngFor="let dataElm of inventoryDataElms">
           <ng-container *ngIf="dataElm && dataElm.name !== newLineString">

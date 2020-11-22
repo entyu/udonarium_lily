@@ -17,6 +17,8 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
+import { GameCharacter } from '@udonarium/game-character'; //
+
 @Component({
   selector: 'overview-panel',
   templateUrl: './overview-panel.component.html',
@@ -156,4 +158,29 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   private getInventoryTags(gameObject: TabletopObject): DataElement[] {
     return this.inventoryService.tableInventory.dataElementMap.get(gameObject.identifier);
   }
+  
+  get overViewCharacterWidth() : number {
+    
+    let character = <GameCharacter>this.tabletopObject;
+    if( ! character ) return 270;
+    let width = character.overViewWidth ;
+    if( width < 270 ) width = 270;
+    if( width > 800 ) width = 800;
+    
+    return width;
+  }
+
+  get overViewCharacterMaxHeight() : number {
+    
+    let character = <GameCharacter>this.tabletopObject;
+    if( ! character ) return 250;
+    let maxHeight = character.overViewMaxHeight ;
+    if( maxHeight < 270 ) maxHeight = 270;
+    if( maxHeight > 800 ) maxHeight = 800;
+    
+    return maxHeight;
+    
+  }
+
+  
 }

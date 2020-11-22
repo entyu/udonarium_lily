@@ -27,7 +27,7 @@
 }
 
 .is-middle-size .grid-container-root {
-  width: 270px;
+  width: 270px;/**/
 }
 
 .is-small-size .grid-container-root {
@@ -210,7 +210,7 @@
 
 .grid-container-root {
   padding: 0.5em 1.2em;
-  max-height: 250px;
+  max-height: 250px;/**/
   overflow: hidden auto;
   box-sizing: border-box;
   border-left: solid 1px #999;

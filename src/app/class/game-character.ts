@@ -10,7 +10,9 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
 
-  @SyncVar() hideInventory: boolean = false;//entyu_31
+  @SyncVar() hideInventory: boolean = false;//entyu
+  @SyncVar() overViewWidth: number = 270;//entyu
+  @SyncVar() overViewMaxHeight: number = 250;//entyu
 
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
