@@ -216,8 +216,10 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('textArea.offsetHeight' + textArea.offsetHeight);
     if (textArea.scrollHeight > textArea.offsetHeight) {
         console.log('更新');
-
+        
         textArea.style.height = textArea.scrollHeight + 'px';
+        textArea.style.height = (this.height * this.gridSize - 27 ) + 'px';
+        
         this.oldScrollHeight = textArea.scrollHeight;
         this.oldOffsetHeight = textArea.offsetHeight;
     }

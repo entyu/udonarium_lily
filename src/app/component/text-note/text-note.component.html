@@ -9,11 +9,14 @@
 
 <!--      <div class="textarea-scroll"  style = "overflow:hidden auto;" [style.max-height.px]="height * gridSize - 27" id="scroll" > -->
       <div class="textarea-scroll"  style = "overflow:hidden auto;"  id="scroll" >
-        <textarea (input)="calcFitHeight();" #textArea class="textarea"  [ngClass]="{}"
-        [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false" id="text-area" style="height:auto"></textarea>
+        <textarea (input)="calcFitHeight();" #textArea class="textarea" 
+        [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false" id="text-area" style = "overflow:hidden auto;"
+        [style.max-height.px]="height * gridSize - 27" ></textarea>
 <!--
         [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}" 
 ‚‚³•Ï‰»‚È‚µ‚Ì‹¤—Lƒƒ‚‚ðì‚ë‚¤‚Æ‚µ‚½‚ª‹Zp“IŒŸ“¢‚ª•K—v‚È‚Ì‚Å•Û—¯‚Æ‚·‚é
+ [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}"
+
 -->
 
       </div>
