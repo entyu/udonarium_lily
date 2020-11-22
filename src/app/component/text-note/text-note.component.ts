@@ -25,9 +25,35 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() is3D: boolean = false;
 
   get title(): string { return this.textNote.title; }
-  get text(): string { this.calcFitHeightIfNeeded(); return this.textNote.text; }
-  set text(text: string) { this.calcFitHeightIfNeeded(); this.textNote.text = text; }
-  get fontSize(): number { this.calcFitHeightIfNeeded(); return this.textNote.fontSize; }
+
+//高さ変化なしの共有メモを作ろうとしたが技術的検討が必要なので保留とする
+
+  oldText : string = '';
+  oldFontSize : number = 9;
+  get text(): string { 
+    console.log('get text');  
+    
+    if( this.oldText != this.textNote.text){
+      this.calcFitHeightIfNeeded(); 
+    }
+    this.oldText == this.textNote.text;
+    return this.textNote.text;  
+    }
+  set text(text: string) { 
+    console.log('set text'); 
+    this.calcFitHeightIfNeeded(); 
+    this.textNote.text = text;
+    this.oldText = text;
+    }
+  get fontSize(): number { 
+    console.log('get fontSize');
+    
+    if( this.oldFontSize != this.textNote.fontSize ){
+      this.calcFitHeightIfNeeded(); 
+    }
+    this.oldFontSize = this.textNote.fontSize;
+    return this.textNote.fontSize; 
+    }
   get imageFile(): ImageFile { return this.textNote.imageFile; }
   get rotate(): number { return this.textNote.rotate; }
   set rotate(rotate: number) { this.textNote.rotate = rotate; }
@@ -88,10 +114,11 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   onDragstart(e) {
     e.stopPropagation();
     e.preventDefault();
-  }
+  }  
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(e: any) {
+    console.log('e.id onMouseDown:' + e.target.id );
     if (this.isSelected) return;
     e.preventDefault();
     this.textNote.toTopmost();
@@ -101,21 +128,27 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
       return;
     }
-
     this.addMouseEventListeners();
   }
 
   onMouseUp(e: any) {
-    if (this.pointerDeviceService.isAllowedToOpenContextMenu) {
-      let selection = window.getSelection();
-      if (!selection.isCollapsed) selection.removeAllRanges();
-      this.textAreaElementRef.nativeElement.focus();
-    }
-    this.removeMouseEventListeners();
-    e.preventDefault();
+    console.log('e.id onMouseUp:' + e.target.id );
+
+      if (this.pointerDeviceService.isAllowedToOpenContextMenu) {
+        console.log('TEST');
+        let selection = window.getSelection();
+        if (!selection.isCollapsed) selection.removeAllRanges();
+
+//        if( e.target.id != 'scroll'){
+          this.textAreaElementRef.nativeElement.focus();
+//        }
+      }
+      this.removeMouseEventListeners();
+      e.preventDefault();
   }
 
   onRotateMouseDown(e: any) {
+    console.log('e.id onRotateMouseDown:' + e.target.id );
     e.stopPropagation();
     e.preventDefault();
   }
@@ -168,12 +201,27 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  oldScrollHeight = 0;
+  oldOffsetHeight = 0;
+  
   calcFitHeight() {
+    console.log('calcFitHeight');
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
+    
+//    if( ( this.oldScrollHeight == 0 ) && ( this.oldOffsetHeight == 0)){
+//      textArea.style.height = '0';
+//    }
     textArea.style.height = '0';
+    console.log('textArea.scrollHeight' + textArea.scrollHeight);
+    console.log('textArea.offsetHeight' + textArea.offsetHeight);
     if (textArea.scrollHeight > textArea.offsetHeight) {
-      textArea.style.height = textArea.scrollHeight + 'px';
+        console.log('更新');
+
+        textArea.style.height = textArea.scrollHeight + 'px';
+        this.oldScrollHeight = textArea.scrollHeight;
+        this.oldOffsetHeight = textArea.offsetHeight;
     }
+
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {

@@ -4,10 +4,19 @@
   <div class="component-content is-3d is-pointer-events-auto"
     [style.width.px]="width * gridSize">
     <div class="upright-transform is-3d is-bg-color is-bg-texture"
-      [style.background-image]="'url(' + imageFile?.url + ')' | safe: 'style'" [style.width.px]="width * gridSize" [style.min-height.px]="height * gridSize">
+      [style.background-image]="'url(' + imageFile?.url + ')' | safe: 'style'" [style.width.px]="width * gridSize" [style.min-height.px]="height * gridSize" >
       <div *ngIf="title.length" class="title is-black-background is-pointer-events-none">{{title}}</div>
-      <textarea (input)="calcFitHeight();" #textArea class="textarea" [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}"
-        [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false"></textarea>
+
+<!--      <div class="textarea-scroll"  style = "overflow:hidden auto;" [style.max-height.px]="height * gridSize - 27" id="scroll" > -->
+      <div class="textarea-scroll"  style = "overflow:hidden auto;"  id="scroll" >
+        <textarea (input)="calcFitHeight();" #textArea class="textarea"  [ngClass]="{}"
+        [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false" id="text-area" style="height:auto"></textarea>
+<!--
+        [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}" 
+‚‚³•Ï‰»‚È‚µ‚Ì‹¤—Lƒƒ‚‚ðì‚ë‚¤‚Æ‚µ‚½‚ª‹Zp“IŒŸ“¢‚ª•K—v‚È‚Ì‚Å•Û—¯‚Æ‚·‚é
+-->
+
+      </div>
     </div>
     <div class="rotate-grab of-left-top">
       <i class="material-icons">autorenew</i>
@@ -18,3 +27,29 @@
   </div>
 </div>
 </div>
+
+
+<!--
+<div class="component is-3d is-pointer-events-none"
+  appMovable [movable.option]="movableOption" [movable.disable]="isSelected" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
+  <div class="is-3d" appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
+  <div class="component-content is-3d is-pointer-events-auto"
+    [style.width.px]="width * gridSize">
+    <div class="upright-transform is-3d is-bg-color is-bg-texture"
+      [style.background-image]="'url(' + imageFile?.url + ')' | safe: 'style'" [style.width.px]="width * gridSize" [style.min-height.px]="height * gridSize" [style.max-height.px]="height * gridSize">
+      <div *ngIf="title.length" class="title is-black-background is-pointer-events-none">{{title}}</div>
+      <textarea (input)="calcFitHeight();" #textArea class="textarea" [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}"
+        [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false"
+        style = "overflow:hidden auto;" [style.max-height.px]="height * gridSize - 27" ></textarea>
+    </div>
+    <div class="rotate-grab of-left-top">
+      <i class="material-icons">autorenew</i>
+    </div>
+    <div class="rotate-grab of-right-top">
+      <i class="material-icons">autorenew</i>
+    </div>
+  </div>
+</div>
+</div>
+-->
+
