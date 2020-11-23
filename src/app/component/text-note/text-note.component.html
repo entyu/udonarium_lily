@@ -7,19 +7,11 @@
       [style.background-image]="'url(' + imageFile?.url + ')' | safe: 'style'" [style.width.px]="width * gridSize" [style.min-height.px]="height * gridSize" >
       <div *ngIf="title.length" class="title is-black-background is-pointer-events-none">{{title}}</div>
 
-<!--      <div class="textarea-scroll"  style = "overflow:hidden auto;" [style.max-height.px]="height * gridSize - 27" id="scroll" > -->
-      <div class="textarea-scroll"  style = "overflow:hidden auto;"  id="scroll" >
         <textarea (input)="calcFitHeight();" #textArea class="textarea" 
-        [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false" id="text-area" style = "overflow:hidden auto;"
-        [style.max-height.px]="height * gridSize - 27" ></textarea>
-<!--
-        [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}" 
-‚‚³•Ï‰»‚È‚µ‚Ì‹¤—Lƒƒ‚‚ðì‚ë‚¤‚Æ‚µ‚½‚ª‹Zp“IŒŸ“¢‚ª•K—v‚È‚Ì‚Å•Û—¯‚Æ‚·‚é
- [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}"
-
--->
-
-      </div>
+        [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false" id="text-area" 
+        style = "overflow:hidden auto;"
+        ></textarea>
+       
     </div>
     <div class="rotate-grab of-left-top">
       <i class="material-icons">autorenew</i>
@@ -30,7 +22,6 @@
   </div>
 </div>
 </div>
-
 
 <!--
 <div class="component is-3d is-pointer-events-none"

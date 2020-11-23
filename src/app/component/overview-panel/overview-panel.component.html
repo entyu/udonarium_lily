@@ -58,11 +58,11 @@
 </ng-template>
 
 <ng-template #overviewNote let-note="note">
-  <div class="component-content is-large-size"
-    [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
-    <div class="component-title title-background">{{note.title}}</div>
-    <div class="component-background text-note-container">
-      <div style="position: relative;">
+  <div class="component-content is-large-size" [ngStyle]="{'max-width': 1000 + 'px','width': overViewNoteWidth + 'px'}" 
+    [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }" >
+    <div class="component-title title-background"  [ngStyle]="{'max-width': 1000 + 'px'}" >{{note.title}}</div>
+    <div class="component-background text-note-container" [ngStyle]="{'width': overViewNoteWidth + 'px','max-height': overViewNoteMaxHeight +'px'}">
+      <div style="position: relative; width:100%">
         <div class="is-fill">
           <textarea class="textarea" [(ngModel)]="note.text" spellcheck="false"></textarea>
         </div>

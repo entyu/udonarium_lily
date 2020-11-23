@@ -212,18 +212,29 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 //      textArea.style.height = '0';
 //    }
     textArea.style.height = '0';
-    console.log('textArea.scrollHeight' + textArea.scrollHeight);
-    console.log('textArea.offsetHeight' + textArea.offsetHeight);
-    if (textArea.scrollHeight > textArea.offsetHeight) {
+    if( ! this.textNote.limitHeight ){
+      console.log('textArea.scrollHeight' + textArea.scrollHeight);
+      console.log('textArea.offsetHeight' + textArea.offsetHeight);
+      if (textArea.scrollHeight > textArea.offsetHeight) {
         console.log('更新');
         
         textArea.style.height = textArea.scrollHeight + 'px';
-        textArea.style.height = (this.height * this.gridSize - 27 ) + 'px';
-        
         this.oldScrollHeight = textArea.scrollHeight;
         this.oldOffsetHeight = textArea.offsetHeight;
+      }
+    }else{
+      let textAreaHeight = textArea.scrollHeight;
+      let textAreaMax = this.height * this.gridSize  - 2;
+      
+      if( textAreaMax < this.gridSize ) textAreaMax = this.gridSize - 2;
+      if( this.title.length ){ 
+        textAreaMax -= 32 ;
+      }else{
+        textAreaMax -= 2 ;
+      }
+      if( textAreaHeight > textAreaMax ) textAreaHeight = textAreaMax;
+      textArea.style.height = textAreaHeight + 'px';
     }
-
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {

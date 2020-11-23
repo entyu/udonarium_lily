@@ -91,11 +91,11 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
   
   clickHide(){
-/*
-    let char : GameCharacter = <GameCharacter>this.tabletopObject;
-    console.log('clickHide : '+ char.hideInventory);
-    this.tabletopObject.setLocation('table');
-*/
+    //処理なし
+  }
+
+  clickLimitHeight(){
+    //処理なし
   }
 
   chkPopWidth( width ){

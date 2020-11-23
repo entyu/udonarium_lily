@@ -9,6 +9,10 @@ export class TextNote extends TabletopObject {
   @SyncVar() zindex: number = 0;
   @SyncVar() password: string = '';
 
+  @SyncVar() limitHeight: boolean = false;
+  @SyncVar() overViewWidth: number = 250;
+  @SyncVar() overViewMaxHeight: number = 250;
+
   get width(): number { return this.getCommonValue('width', 1); }
   get height(): number { return this.getCommonValue('height', 1); }
   get fontSize(): number { return this.getCommonValue('fontsize', 1); }
