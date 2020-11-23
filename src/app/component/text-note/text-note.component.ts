@@ -81,6 +81,14 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     EventSystem.register(this)
+      .on('RESIZE_NOTE_OBJECT', -1000, event => {
+        console.log('resize');
+        let object = ObjectStore.instance.get(event.data.identifier);
+        if (!this.textNote || !object) return;
+        if (this.textNote === object ) {
+          this.calcFitHeight();
+        }
+      })
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.textNote || !object) return;

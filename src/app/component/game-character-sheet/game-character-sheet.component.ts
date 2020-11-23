@@ -95,7 +95,10 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   clickLimitHeight(){
-    //処理なし
+    //高さが更新されない場合があるので雑だがこの方法で処理する
+    setTimeout(() => { 
+      EventSystem.trigger('RESIZE_NOTE_OBJECT', {identifier :this.tabletopObject.identifier })
+    }, 100);
   }
 
   chkPopWidth( width ){
