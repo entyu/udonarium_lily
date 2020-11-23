@@ -28,8 +28,8 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
   get diceRollTableCommand(): string { return this.selectedDiceRollTable.command; }
   set diceRollTableCommand(command: string) { if (this.isEditable) this.selectedDiceRollTable.command = command; }
 
-  get diceRollTableText(): string { return this.selectedDiceRollTable.text; }
-  set diceRollTableText(text: string) { if (this.isEditable) this.selectedDiceRollTable.text = text; }
+  get diceRollTableText(): string { return <string>this.selectedDiceRollTable.value; }
+  set diceRollTableText(text: string) { if (this.isEditable) this.selectedDiceRollTable.value = text; }
 
   get diceRollTables(): DiceRollTable[] { return DiceRollTableList.instance.children as DiceRollTable[]; }
   get isEmpty(): boolean { return this.diceRollTables.length < 1 }

@@ -1,7 +1,5 @@
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
-import { ObjectContext } from './core/synchronize-object/game-object';
 import { ObjectNode } from './core/synchronize-object/object-node';
-import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
 import { StringUtil } from './core/system/util/string-util';
 
 export interface DiceRollTableRow {
@@ -13,11 +11,10 @@ export class DiceRollTable extends ObjectNode {
   @SyncVar() name: string = '';
   @SyncVar() command: string = '';
   @SyncVar() dice: string = '';
-  @SyncVar() text: string = '';
 
   parseText(): DiceRollTableRow[] {
-    if (!this.text) return [];
-    return this.text.split(/[\r\n]+/).map(row => {
+    if (!this.value) return [];
+    return (<string>this.value).split(/[\r\n]+/).map(row => {
       row = row.trim();
       if (row.match(/([0-9０-９]+)\s*[\-―‐－~～]\s*([0-9０-９]+)\s*[:：](.*)/)) {
         const start = +StringUtil.toHalfWidth(RegExp.$1);
