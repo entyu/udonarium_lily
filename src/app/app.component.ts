@@ -103,13 +103,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     ChatTabList.instance.addChatTab('メインタブ', 'MainTab');
     ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
 
-    let sampleDiceRollTable = new DiceRollTable();
+    let sampleDiceRollTable = new DiceRollTable('SampleDiceRollTable');
     sampleDiceRollTable.initialize();
     sampleDiceRollTable.name = 'サンプルダイスボット表'
     sampleDiceRollTable.command = 'SAMPLE'
-    sampleDiceRollTable.dice = '1d4';
-    sampleDiceRollTable.value = "1:これはダイスボット表のサンプルです\n2:1行に1つづつ\n3:数字:結果のように記述します\n4:\\\\n\\nで改行します";
-
+    sampleDiceRollTable.dice = '1d6';
+    sampleDiceRollTable.value = "1:これはダイスボット表のサンプルです\n2:数字と対応する結果を1行に1つづつ:（コロン）で区切り\n3:数字:結果のように記述します\n4:\\\\n\\nで改行します\n5-6:また、-（ハイフン）で区切って数字の範囲を指定可能です。";
     DiceRollTableList.instance.addDiceRollTable(sampleDiceRollTable);
 
     let fileContext = ImageFile.createEmpty('none_icon').toContext();
@@ -358,7 +357,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         break;
       case 'DiceRollTableSettingComponent':
         component = DiceRollTableSettingComponent;
-        option = { width: 520, height: 460 };
+        option = { width: 645, height: 460 };
         break;
     }
     if (component) {
