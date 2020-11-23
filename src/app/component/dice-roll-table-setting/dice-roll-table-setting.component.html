@@ -1,28 +1,28 @@
-<!--
-<div style="margin-bottom: 12px;">
-  <button style="float: right;" (click)="helpDiceRollTableSeting()">?</button>
-  ダイスボット表を設定します。
-</div>
-<div *ngFor="let diceRollTable of diceRollTables; let i = index">
-  <dice-roll-table [diceRollTable]="diceRollTable" style="width: 100%;"></dice-roll-table>
-</div>
-<hr>
-<button (click)="add()">ダイスボット表の追加</button>
--->
-
 <div class="flex-container">
   <div class="flex-item no-grow">
     <div>
-      <button (click)="create()">ダイスボット表の追加</button>
+      <button style="font-size: smaller; margin-bottom: 3px" (click)="create()">ダイスボット表の追加</button>
     </div>
-    <select style="width: 14em;" size="10" (change)="onChangeDiceRollTable($event.target.value)">
+    <select #diceRollTableSelecter style="width: 14em;" size="16" (change)="onChangeDiceRollTable($event.target.value)">
       <option *ngFor="let diceRollTable of diceRollTables" value="{{ diceRollTable.identifier }}">{{ diceRollTable.name }}</option>
     </select>
   </div>
   <div class="flex-item">
     <ng-container *ngIf="!isEmpty && selectedDiceRollTable">
-      <div>name :
-        <input [(ngModel)]="diceRollTableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+      <div style="font-size: smaller;">
+        <div style="margin-bottom: 3px;">
+          <b>name: </b> 
+          <input [(ngModel)]="diceRollTableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+        </div>
+        <div>
+          <b>command: </b>
+          <input style="width: 7em" [(ngModel)]="diceRollTableCommand" placeholder="Command" [attr.disabled]="!isEditable ? '' : null" />
+          <b style="margin-left: 1em;">dice: </b>
+          <input style="width: 3.3em; text-align: center" [(ngModel)]="diceRollTableDice" placeholder="Dice" [attr.disabled]="!isEditable ? '' : null" />
+        </div>
+      </div>
+      <div>
+        <textarea style="width: 100%; height: 21em; margin-top: 3px; resize: vertical;" [(ngModel)]="diceRollTableText"></textarea>
       </div>
       <hr/>
       <div>

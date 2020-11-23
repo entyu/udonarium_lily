@@ -6,7 +6,7 @@ import { StringUtil } from './core/system/util/string-util';
 
 export interface DiceRollTableRow {
   range: { start: number, end: number },
-  text: string
+  result: string
 }
 @SyncObject('dice-roll-table')
 export class DiceRollTable extends ObjectNode {
@@ -15,7 +15,7 @@ export class DiceRollTable extends ObjectNode {
   @SyncVar() dice: string = '';
   @SyncVar() text: string = '';
 
-  parseTable(): DiceRollTableRow[] {
+  parseText(): DiceRollTableRow[] {
     if (!this.text) return [];
     return this.text.split(/[\r\n]+/).map(row => {
       row = row.trim();
@@ -23,13 +23,13 @@ export class DiceRollTable extends ObjectNode {
         const start = +StringUtil.toHalfWidth(RegExp.$1);
         const end = +StringUtil.toHalfWidth(RegExp.$2);
         if (start <= end) {
-          return {range: { start: start, end: end }, text: RegExp.$3};
+          return {range: { start: start, end: end }, result: RegExp.$3};
         } else {
-          return {range: { start: end, end: start }, text: RegExp.$3};
+          return {range: { start: end, end: start }, result: RegExp.$3};
         }
       } else if (row.match(/([0-9０-９]+)\s*[:：](.*)/)) {
         const num = +StringUtil.toHalfWidth(RegExp.$1);
-        return {range: { start: num, end: num }, text: RegExp.$2};
+        return {range: { start: num, end: num }, result: RegExp.$2};
       } else {
         return null;
       }

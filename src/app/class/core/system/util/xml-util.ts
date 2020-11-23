@@ -1,20 +1,22 @@
 export namespace XmlUtil {
-  const encodePattern = /&|<|>|"|'/g;
+  const encodePattern = /&|<|>|"|'|\n/g;
   const encodeMap = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
     '\"': '&quot;',
     '\'': '&apos;',
+    "\n": '&#xA;',
   };
 
-  const decodePattern = /&amp;|&lt;|&gt;|&quot;|&apos;/g;
+  const decodePattern = /&amp;|&lt;|&gt;|&quot;|&apos;|&#xA;/g;
   const decodeMap = {
     '&amp;': '&',
     '&lt;': '<',
     '&gt;': '>',
     '&quot;': '\"',
     '&apos;': '\'',
+    '&#xA;': "\n",
   };
 
   const sanitizePattern = /((?:[\0-\x08\x0B\f\x0E-\x1F\uFFFD\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]))/g;

@@ -14,6 +14,7 @@ import { PeerCursor } from './peer-cursor';
 import { StandConditionType } from './stand-list';
 
 import * as lzbase62 from 'lzbase62/lzbase62.min.js';
+import { DiceRollTableList } from './dice-roll-table-list';
 
 declare var Opal
 
@@ -498,6 +499,36 @@ export class DiceBot extends GameObject {
             return;
           }
           let finalResult: DiceRollResult = { result: '', isSecret: false };
+          //ダイスボット表
+          for (const diceRollTable of DiceRollTableList.instance.diceRollTables) {
+            let isUseDiceRollTable = false;
+            let isSecret = false;
+            if (diceRollTable.command && rollText.trim().toUpperCase() === 'S' + diceRollTable.command.trim().toUpperCase()) {
+              isUseDiceRollTable = true;
+              isSecret = true;
+            } else if (diceRollTable.command && rollText.trim().toUpperCase() === diceRollTable.command.trim().toUpperCase()) {
+              isUseDiceRollTable = true;
+            }
+            if (isUseDiceRollTable) {
+              for (let i = 0; i < repeat && i < 32; i++) {
+                let rollResult = await DiceBot.diceRollAsync(diceRollTable.dice, 'DiceBot', repeat);
+                if (rollResult.result.length < 1 || !/\s＞\s(\d+)$/.test(rollResult.result.trim())) break;
+                let rollResultNumber: number = +RegExp.$1;
+                let isRowMatch = false;
+                for (const diceRollTableRow of diceRollTable.parseText()) {
+                  if (diceRollTableRow.range.start <= rollResultNumber && rollResultNumber <= diceRollTableRow.range.end) {
+                    finalResult.result += (`(${rollResultNumber}) ` + StringUtil.cr(diceRollTableRow.result));
+                    finalResult.isSecret = finalResult.isSecret || isSecret;
+                    isRowMatch = true;
+                    break;
+                  }
+                }
+                if (!isRowMatch) finalResult.result += (`(${rollResultNumber} 結果なし) `);
+                if (1 < repeat) finalResult.result += ` #${i + 1}\n`;
+              }
+              break;
+            }
+          }
           //TODO システムダイスも並列に
           if (DiceBot.apiUrl) {
             finalResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
@@ -13,12 +13,23 @@ import { SaveDataService } from 'service/save-data.service';
   templateUrl: './dice-roll-table-setting.component.html',
   styleUrls: ['./dice-roll-table-setting.component.css']
 })
-export class DiceRollTableSettingComponent implements OnInit, OnDestroy {
+export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('diceRollTableSelecter') diceRollTableSelecter: ElementRef<HTMLSelectElement>;
+
   selectedDiceRollTable: DiceRollTable = null;
   selectedDiceRollTableXml: string = '';
 
   get diceRollTableName(): string { return this.selectedDiceRollTable.name; }
-  set diceRollTableName(selectedDiceRollTable: string) { if (this.isEditable) this.selectedDiceRollTable.name = selectedDiceRollTable; }
+  set diceRollTableName(name: string) { if (this.isEditable) this.selectedDiceRollTable.name = name; }
+
+  get diceRollTableDice(): string { return this.selectedDiceRollTable.dice; }
+  set diceRollTableDice(dice: string) { if (this.isEditable) this.selectedDiceRollTable.dice = dice; }
+
+  get diceRollTableCommand(): string { return this.selectedDiceRollTable.command; }
+  set diceRollTableCommand(command: string) { if (this.isEditable) this.selectedDiceRollTable.command = command; }
+
+  get diceRollTableText(): string { return this.selectedDiceRollTable.text; }
+  set diceRollTableText(text: string) { if (this.isEditable) this.selectedDiceRollTable.text = text; }
 
   get diceRollTables(): DiceRollTable[] { return DiceRollTableList.instance.children as DiceRollTable[]; }
   get isEmpty(): boolean { return this.diceRollTables.length < 1 }
@@ -34,7 +45,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy {
     private saveDataService: SaveDataService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ダイスボット表設定');
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', 1000, event => {
@@ -44,6 +55,14 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy {
           this.selectedDiceRollTableXml = object.toXml();
         }
       });
+  }
+
+  ngAfterViewInit() {
+    const diceRollTables = DiceRollTableList.instance.diceRollTables;
+    if (diceRollTables.length > 0) {
+      this.onChangeDiceRollTable(diceRollTables[0].identifier);
+      this.diceRollTableSelecter.nativeElement.selectedIndex = 0;
+    }
   }
 
   ngOnDestroy() {

@@ -9,7 +9,7 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
-  ViewChild, ElementRef, ComponentRef
+  ViewChild, ElementRef
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
