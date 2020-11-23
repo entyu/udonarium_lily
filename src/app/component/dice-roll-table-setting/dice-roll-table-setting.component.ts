@@ -1,21 +1,116 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { EventSystem } from '@udonarium/core/system';
+import { DiceRollTable } from '@udonarium/dice-roll-table';
+import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
+import { ModalService } from 'service/modal.service';
+import { PanelService } from 'service/panel.service';
+import { SaveDataService } from 'service/save-data.service';
 
 @Component({
-  selector: 'app-dice-roll-table-setting',
+  selector: 'dice-roll-table-setting',
   templateUrl: './dice-roll-table-setting.component.html',
   styleUrls: ['./dice-roll-table-setting.component.css']
 })
-export class DiceRollTableSettingComponent implements OnInit {
+export class DiceRollTableSettingComponent implements OnInit, OnDestroy {
+  selectedDiceRollTable: DiceRollTable = null;
+  selectedDiceRollTableXml: string = '';
 
-  constructor() { }
+  get diceRollTableName(): string { return this.selectedDiceRollTable.name; }
+  set diceRollTableName(selectedDiceRollTable: string) { if (this.isEditable) this.selectedDiceRollTable.name = selectedDiceRollTable; }
+
+  get diceRollTables(): DiceRollTable[] { return DiceRollTableList.instance.children as DiceRollTable[]; }
+  get isEmpty(): boolean { return this.diceRollTables.length < 1 }
+  get isDeleted(): boolean { return this.selectedDiceRollTable ? ObjectStore.instance.get(this.selectedDiceRollTable.identifier) == null : false; }
+  get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
+
+  isSaveing: boolean = false;
+  progresPercent: number = 0;
+
+  constructor(
+    private modalService: ModalService,
+    private panelService: PanelService,
+    private saveDataService: SaveDataService
+  ) { }
 
   ngOnInit(): void {
+    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ダイスボット表設定');
+    EventSystem.register(this)
+      .on('DELETE_GAME_OBJECT', 1000, event => {
+        if (!this.selectedDiceRollTable || event.data.identifier !== this.selectedDiceRollTable.identifier) return;
+        let object = ObjectStore.instance.get(event.data.identifier);
+        if (object !== null) {
+          this.selectedDiceRollTableXml = object.toXml();
+        }
+      });
   }
 
-  add() {
+  ngOnDestroy() {
+    EventSystem.unregister(this);
+  }
 
+  onChangeDiceRollTable(identifier: string) {
+    this.selectedDiceRollTable = ObjectStore.instance.get<DiceRollTable>(identifier);
+    this.selectedDiceRollTableXml = '';
+  }
+
+  create() {
+    DiceRollTableList.instance.addDiceRollTable('ダイスボット表');
   }
   
+  async save() {
+    if (!this.selectedDiceRollTable || this.isSaveing) return;
+    this.isSaveing = true;
+    this.progresPercent = 0;
+
+    let fileName: string = 'diceRollTable_' + this.selectedDiceRollTable.name;
+
+    await this.saveDataService.saveGameObjectAsync(this.selectedDiceRollTable, fileName, percent => {
+      this.progresPercent = percent;
+    });
+
+    setTimeout(() => {
+      this.isSaveing = false;
+      this.progresPercent = 0;
+    }, 500);
+  }
+
+  delete() {
+    if (!this.isEmpty && this.selectedDiceRollTable) {
+      this.selectedDiceRollTableXml = this.selectedDiceRollTable.toXml();
+      this.selectedDiceRollTable.destroy();
+    }
+  }
+
+  restore() {
+    if (this.selectedDiceRollTable && this.selectedDiceRollTableXml) {
+      let restoreTable = <DiceRollTable>ObjectSerializer.instance.parseXml(this.selectedDiceRollTableXml);
+      DiceRollTableList.instance.addDiceRollTable(restoreTable);
+      this.selectedDiceRollTableXml = '';
+    }
+  }
+
+  upTabIndex() {
+    if (!this.selectedDiceRollTable) return;
+    let parentElement = this.selectedDiceRollTable.parent;
+    let index: number = parentElement.children.indexOf(this.selectedDiceRollTable);
+    if (0 < index) {
+      let prevElement = parentElement.children[index - 1];
+      parentElement.insertBefore(this.selectedDiceRollTable, prevElement);
+    }
+  }
+
+  downTabIndex() {
+    if (!this.selectedDiceRollTable) return;
+    let parentElement = this.selectedDiceRollTable.parent;
+    let index: number = parentElement.children.indexOf(this.selectedDiceRollTable);
+    if (index < parentElement.children.length - 1) {
+      let nextElement = parentElement.children[index + 1];
+      parentElement.insertBefore(nextElement, this.selectedDiceRollTable);
+    }
+  }
+
   helpDiceRollTableSeting() {
 
   }

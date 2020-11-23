@@ -44,6 +44,7 @@ import { DataElement } from '@udonarium/data-element';
 import { StandImageComponent } from 'component/stand-image/stand-image.component';
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
+import { DiceRollTableSettingComponent } from 'component/dice-roll-table-setting/dice-roll-table-setting.component';
 
 @Component({
   selector: 'app-root',
@@ -107,8 +108,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     sampleDiceRollTable.name = 'サンプルダイスボット表'
     sampleDiceRollTable.command = 'SAMPLE'
     sampleDiceRollTable.dice = '1d2';
-    sampleDiceRollTable.table = `1:これはダイスボット表のサンプルです
-2:数字:結果のように記述します\\n\nで改行します`;
+    sampleDiceRollTable.table = "1:これはダイスボット表のサンプルです\n2:数字:結果のように記述します\\nで改行します";
 
     DiceRollTableList.instance.addDiceRollTable(sampleDiceRollTable);
 
@@ -356,6 +356,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       case 'GameObjectInventoryComponent':
         component = GameObjectInventoryComponent;
         break;
+      case 'DiceRollTableSettingComponent':
+        component = DiceRollTableSettingComponent;
+        option.width = 590;
+        break;
     }
     if (component) {
       option.top = (this.openPanelCount % 10 + 1) * 20;
@@ -412,6 +416,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  openDiceRollTable() {
+
+  }
+
   resetPointOfView() {
     this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
       { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
@@ -424,23 +432,23 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     const isShowNameTag = StandImageComponent.isShowNameTag;
     const isCanBeGone = StandImageComponent.isCanBeGone; 
     this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
-      { name: `${ isShowStand ? '☑' : '☐' }スタンドを表示`, 
+      { name: `${ isShowStand ? '☑' : '☐' }スタンド表示`, 
         action: () => {
           StandImageComponent.isShowStand = !isShowStand;
         }
       },
-      { name: `${ isShowNameTag ? '☑' : '☐' }スタンドにネームタグを表示`, 
+      { name: `${ isShowNameTag ? '☑' : '☐' }ネームタグ表示`, 
         action: () => {
           StandImageComponent.isShowNameTag = !isShowNameTag;
         }
       },
-      { name: `${ isCanBeGone ? '☑' : '☐' }半透明化、自動退去する`, 
+      { name: `${ isCanBeGone ? '☑' : '☐' }透明化、自動退去`, 
         action: () => {
           StandImageComponent.isCanBeGone = !isCanBeGone;
         }
       },
       ContextMenuSeparator,
-      { name: '現在表示中のスタンドを全て消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
+      { name: '表示スタンド全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
     ], 'スタンド設定');
   }
 /*

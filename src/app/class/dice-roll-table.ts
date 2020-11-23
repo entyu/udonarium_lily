@@ -1,6 +1,7 @@
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
+import { ObjectContext } from './core/synchronize-object/game-object';
 import { ObjectNode } from './core/synchronize-object/object-node';
-import { InnerXml } from './core/synchronize-object/object-serializer';
+import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
 import { StringUtil } from './core/system/util/string-util';
 
 export interface DiceRollTableRow {
@@ -8,13 +9,11 @@ export interface DiceRollTableRow {
   text: string
 }
 @SyncObject('dice-roll-table')
-export class DiceRollTable extends ObjectNode implements InnerXml {
+export class DiceRollTable extends ObjectNode {
   @SyncVar() name: string = '';
   @SyncVar() command: string = '';
   @SyncVar() dice: string = '';
   @SyncVar() table: string = '';
-
-  editingTable = '';
 
   parseTable(): DiceRollTableRow[] {
     if (!this.table) return [];

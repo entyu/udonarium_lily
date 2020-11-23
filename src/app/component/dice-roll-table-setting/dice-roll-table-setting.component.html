@@ -1,6 +1,49 @@
-<div style="margin-bottom: 4px;">
+<!--
+<div style="margin-bottom: 12px;">
   <button style="float: right;" (click)="helpDiceRollTableSeting()">?</button>
-
+  ダイスボット表を設定します。
+</div>
+<div *ngFor="let diceRollTable of diceRollTables; let i = index">
+  <dice-roll-table [diceRollTable]="diceRollTable" style="width: 100%;"></dice-roll-table>
 </div>
 <hr>
 <button (click)="add()">ダイスボット表の追加</button>
+-->
+
+<div class="flex-container">
+  <div class="flex-item no-grow">
+    <div>
+      <button (click)="create()">ダイスボット表の追加</button>
+    </div>
+    <select style="width: 14em;" size="10" (change)="onChangeDiceRollTable($event.target.value)">
+      <option *ngFor="let diceRollTable of diceRollTables" value="{{ diceRollTable.identifier }}">{{ diceRollTable.name }}</option>
+    </select>
+  </div>
+  <div class="flex-item">
+    <ng-container *ngIf="!isEmpty && selectedDiceRollTable">
+      <div>name :
+        <input [(ngModel)]="diceRollTableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
+      <hr/>
+      <div>
+        <ng-container *ngIf="!isDeleted">
+          <button (click)="upTabIndex()">↑</button>
+          <button (click)="downTabIndex()">↓</button>
+          <button [disabled]="isSaveing" (click)="save()">
+            <div style="position: relative;">
+              <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
+              <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
+            </div>
+          </button>
+          <button class="danger" (click)="delete()">削除</button>
+        </ng-container>
+        <ng-container *ngIf="isDeleted">
+          <button (click)="restore()">元に戻す</button>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<ng-container *ngIf="isEmpty">
+  <div style="font-size: 12px;">※ダイスボット表がありません。</div>
+</ng-container>

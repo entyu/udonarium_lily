@@ -8,6 +8,8 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
+import { DiceRollTable } from '@udonarium/dice-roll-table';
+import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { DiceSymbol, DiceType } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { GameTable } from '@udonarium/game-table';
@@ -110,6 +112,8 @@ export class TabletopService {
           SoundEffect.play(PresetSound.piecePut);
         } else if (gameObject instanceof ChatTab) {
           ChatTabList.instance.addChatTab(gameObject);
+        } else if (gameObject instanceof DiceRollTable) {
+          DiceRollTableList.instance.addDiceRollTable(gameObject);
         }
       });
   }
