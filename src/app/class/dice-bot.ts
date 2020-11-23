@@ -551,15 +551,22 @@ export class DiceBot extends GameObject {
     if (!isSecret && !originalMessage.standName && originalMessage.isUseStandImage) {
       const gameCharacter = ObjectStore.instance.get(originalMessage.characterIdentifier);
       if (gameCharacter instanceof GameCharacter) {
-        /*
-        let oldConditionType = StandConditionType.Default;
-        let originalMatch = <DataElement>ObjectStore.instance.get(originalMessage.standIdentifier);
-        if (originalMatch && originalMatch.getFirstElementByName('conditionType')) {
-          oldConditionType = +originalMatch.getFirstElementByName('conditionType').value;   
-        }
-        */
         const standInfo = gameCharacter.standList.matchStandInfo(result, originalMessage.imageIdentifier);
-        if (standInfo && standInfo.standElementIdentifier) {
+        if (standInfo.farewell) {
+          const sendObj = {
+            characterIdentifier: gameCharacter.identifier
+          };
+          if (originalMessage.to) {
+            // ほんとにこれでええんか？
+            const targetId = Network.peerContext.room ?
+              originalMessage.to + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
+              : originalMessage.to;
+            EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, targetId);
+            EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+          } else {
+            EventSystem.call('FAREWELL_STAND_IMAGE', sendObj);
+          }
+        } else if (standInfo && standInfo.standElementIdentifier) {
           const diceBotMatch = <DataElement>ObjectStore.instance.get(standInfo.standElementIdentifier);
           if (diceBotMatch && diceBotMatch.getFirstElementByName('conditionType')) {
             const conditionType = +diceBotMatch.getFirstElementByName('conditionType').value;
@@ -582,6 +589,9 @@ export class DiceBot extends GameObject {
               }
             }
           }
+        }
+        if (standInfo.matchMostLongText && diceBotMessage.text) {
+          diceBotMessage.text = diceBotMessage.text.slice(0, diceBotMessage.text.length - standInfo.matchMostLongText.length);
         }
       }
     }
