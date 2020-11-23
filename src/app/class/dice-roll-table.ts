@@ -13,11 +13,11 @@ export class DiceRollTable extends ObjectNode {
   @SyncVar() name: string = '';
   @SyncVar() command: string = '';
   @SyncVar() dice: string = '';
-  @SyncVar() table: string = '';
+  @SyncVar() text: string = '';
 
   parseTable(): DiceRollTableRow[] {
-    if (!this.table) return [];
-    return this.table.split(/[\r\n]+/).map(row => {
+    if (!this.text) return [];
+    return this.text.split(/[\r\n]+/).map(row => {
       row = row.trim();
       if (row.match(/([0-9０-９]+)\s*[\-―‐－~～]\s*([0-9０-９]+)\s*[:：](.*)/)) {
         const start = +StringUtil.toHalfWidth(RegExp.$1);

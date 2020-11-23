@@ -108,7 +108,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     sampleDiceRollTable.name = 'サンプルダイスボット表'
     sampleDiceRollTable.command = 'SAMPLE'
     sampleDiceRollTable.dice = '1d2';
-    sampleDiceRollTable.table = "1:これはダイスボット表のサンプルです\n2:数字:結果のように記述します\\nで改行します";
+    sampleDiceRollTable.text = "1:これはダイスボット表のサンプルです\n2:数字:結果のように記述します\\nで改行します";
 
     DiceRollTableList.instance.addDiceRollTable(sampleDiceRollTable);
 
