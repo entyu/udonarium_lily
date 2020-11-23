@@ -50,7 +50,7 @@
 </ng-container>
 <ng-container *ngIf="tabletopObject.aliasName === 'text-note'">
     <input type="checkbox" value="limitHeight"  [(ngModel)]="tabletopObject.limitHeight" name="limitHeight" (click)="clickLimitHeight()">
-   高さを設定heghtに制限
+   height設定値に高さを制限
   <div>
     ポップアップ横幅
     <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
@@ -68,10 +68,6 @@
       style="color: #555;"/>
   </div>
 </ng-container>
-
-{{tabletopObject.aliasName}}
-
-
 <div *ngIf="tabletopObject" class="flex-container">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">
     <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name"
