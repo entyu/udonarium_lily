@@ -29,7 +29,7 @@ export class DiceRollTableList extends ObjectNode implements InnerXml {
       diceRollTable.name = name;
       diceRollTable.initialize();
     }
-    this.appendChild(diceRollTable);
+    return this.appendChild(diceRollTable);
   }
 
   parseInnerXml(element: Element) {

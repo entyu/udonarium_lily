@@ -357,7 +357,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         break;
       case 'DiceRollTableSettingComponent':
         component = DiceRollTableSettingComponent;
-        option = { width: 645, height: 460 };
+        option = { width: 645, height: 470 };
         break;
     }
     if (component) {

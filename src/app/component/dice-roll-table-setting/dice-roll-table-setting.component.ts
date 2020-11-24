@@ -58,10 +58,12 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
   }
 
   ngAfterViewInit() {
-    const diceRollTables = DiceRollTableList.instance.diceRollTables;
-    if (diceRollTables.length > 0) {
-      this.onChangeDiceRollTable(diceRollTables[0].identifier);
-      this.diceRollTableSelecter.nativeElement.selectedIndex = 0;
+    //const diceRollTables = DiceRollTableList.instance.diceRollTables;
+    if (this.diceRollTables.length > 0) {
+      setTimeout(() => {
+        this.onChangeDiceRollTable(this.diceRollTables[0].identifier);
+        this.diceRollTableSelecter.nativeElement.selectedIndex = 0;
+      });
     }
   }
 
@@ -74,8 +76,16 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
     this.selectedDiceRollTableXml = '';
   }
 
-  create() {
-    DiceRollTableList.instance.addDiceRollTable('ダイスボット表');
+  create(name: string = 'ダイスボット表'): DiceRollTable {
+    return DiceRollTableList.instance.addDiceRollTable(name)
+  }
+
+  add() {
+    const diceRollTable = this.create('ダイスボット表');
+    setTimeout(() => {
+      this.onChangeDiceRollTable(diceRollTable.identifier);
+      this.diceRollTableSelecter.nativeElement.value = diceRollTable.identifier;
+    })
   }
   
   async save() {
@@ -83,7 +93,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
     this.isSaveing = true;
     this.progresPercent = 0;
 
-    let fileName: string = 'diceRollTable_' + this.selectedDiceRollTable.name;
+    let fileName: string = 'rollTable_' + this.selectedDiceRollTable.name;
 
     await this.saveDataService.saveGameObjectAsync(this.selectedDiceRollTable, fileName, percent => {
       this.progresPercent = percent;

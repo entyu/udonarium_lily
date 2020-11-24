@@ -38,7 +38,7 @@ export class SaveDataService {
     let summarySetting = this.convertToXml(DataSummarySetting.instance);
     files.push(new File([roomXml], 'data.xml', { type: 'text/plain' }));
     files.push(new File([chatXml], 'chat.xml', { type: 'text/plain' }));
-    files.push(new File([diceRollTableXml], 'diceRollTable.xml', { type: 'text/plain' }));
+    files.push(new File([diceRollTableXml], 'rollTable.xml', { type: 'text/plain' }));
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));
 
     files = files.concat(this.searchImageFiles(roomXml));
