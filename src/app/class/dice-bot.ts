@@ -531,7 +531,7 @@ export class DiceBot extends GameObject {
                     break;
                   }
                 }
-                if (!isRowMatch) finalResult.result += (`(${rollResultNumber} 結果なし) `);
+                if (!isRowMatch) finalResult.result += (`[${rollResultNumber}] (結果なし)`);
                 if (1 < repeat) finalResult.result += ` #${i + 1}\n`;
               }
               break;

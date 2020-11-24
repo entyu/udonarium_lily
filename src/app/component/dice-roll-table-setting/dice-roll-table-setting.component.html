@@ -3,7 +3,7 @@
     <div>
       <button style="font-size: smaller; margin-bottom: 3px" (click)="add()">ダイスボット表の追加</button>
     </div>
-    <select #diceRollTableSelecter style="width: 14em;" size="16" (change)="onChangeDiceRollTable($event.target.value)">
+    <select #diceRollTableSelecter style="width: 14em;" size="15" (change)="onChangeDiceRollTable($event.target.value)">
       <option *ngFor="let diceRollTable of diceRollTables" value="{{ diceRollTable.identifier }}">{{ diceRollTable.name }}</option>
     </select>
   </div>

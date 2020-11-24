@@ -16,17 +16,18 @@ export class DiceRollTable extends ObjectNode {
     if (!this.value) return [];
     return (<string>this.value).split(/[\r\n]+/).map(row => {
       row = row.trim();
-      if (row.match(/([0-9０-９]+)\s*[\-―‐－~～]\s*([0-9０-９]+)\s*[:：](.*)/)) {
-        const start = +StringUtil.toHalfWidth(RegExp.$1);
-        const end = +StringUtil.toHalfWidth(RegExp.$2);
+      let match = null;
+      if (match = row.match(/^([\d０-９]+)\s*[\-―－~～]\s*([\d０-９]+)\s*[:：](.+)$/)) {
+        const start = +StringUtil.toHalfWidth(match[1]);
+        const end = +StringUtil.toHalfWidth(match[2]);
         if (start <= end) {
-          return {range: { start: start, end: end }, result: RegExp.$3};
+          return {range: { start: start, end: end }, result: match[3].trim()};
         } else {
-          return {range: { start: end, end: start }, result: RegExp.$3};
+          return {range: { start: end, end: start }, result: match[3].trim()};
         }
-      } else if (row.match(/([0-9０-９]+)\s*[:：](.*)/)) {
-        const num = +StringUtil.toHalfWidth(RegExp.$1);
-        return {range: { start: num, end: num }, result: RegExp.$2};
+      } else if (match = row.match(/^([\d０-９]+)\s*[:：](.+)$/)) {
+        const num = +StringUtil.toHalfWidth(match[1]);
+        return {range: { start: num, end: num }, result: match[2].trim()};
       } else {
         return null;
       }
