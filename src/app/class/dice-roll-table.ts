@@ -17,17 +17,17 @@ export class DiceRollTable extends ObjectNode {
     return (<string>this.value).split(/[\r\n]+/).map(row => {
       row = row.trim();
       let match = null;
-      if (match = row.match(/^([\d０-９]+)\s*[\-―－~～]\s*([\d０-９]+)\s*[:：](.+)$/)) {
+      if (match = row.match(/([\d０-９]+)[\s　]*[\-―－~～][\s　]*([\d０-９]+)[\s　]*[:：](.+)/)) {
         const start = +StringUtil.toHalfWidth(match[1]);
         const end = +StringUtil.toHalfWidth(match[2]);
         if (start <= end) {
-          return {range: { start: start, end: end }, result: match[3].trim()};
+          return {range: { start: start, end: end }, result: match[3]};
         } else {
-          return {range: { start: end, end: start }, result: match[3].trim()};
+          return {range: { start: end, end: start }, result: match[3]};
         }
-      } else if (match = row.match(/^([\d０-９]+)\s*[:：](.+)$/)) {
+      } else if (match = row.match(/([\d０-９]+)[\s　]*[:：](.+)/)) {
         const num = +StringUtil.toHalfWidth(match[1]);
-        return {range: { start: num, end: num }, result: match[2].trim()};
+        return {range: { start: num, end: num }, result: match[2]};
       } else {
         return null;
       }
