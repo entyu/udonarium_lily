@@ -514,24 +514,28 @@ export class DiceBot extends GameObject {
             }
             if (isDiceRollTableMatch) {
               finalResult.isDiceRollTable = true;
-              finalResult.tableName = (diceRollTable.name && diceRollTable.name.length > 0) ? diceRollTable.name : 'ダイスボット表';
+              finalResult.tableName = (diceRollTable.name && diceRollTable.name.length > 0) ? diceRollTable.name : '(無名のダイスボット表)';
               finalResult.isSecret = isSecret;
+              const diceRollTableRows = diceRollTable.parseText();
               for (let i = 0; i < repeat && i < 32; i++) {
-                let rollResult = await DiceBot.diceRollAsync(diceRollTable.dice, 'DiceBot', repeat);
-                let rollResultNumber: number = 0;
-                if (rollResult.result.length > 0 && /\s＞\s(\d+)$/.test(rollResult.result.trim())) {
-                  rollResultNumber = +RegExp.$1;
+                let rollResult = await DiceBot.diceRollAsync(diceRollTable.dice, 'DiceBot', 1);
+                if (rollResult.result) rollResult.result = rollResult.result.replace('DiceBot : ', '').replace(/[＞]/g, s => '→').trim();
+                let rollResultNumber = 0;
+                let match = null;
+                if (rollResult.result.length > 0 && (match = rollResult.result.match(/\s→\s(?:成功数)?(\d+)$/))) {
+                  rollResultNumber = +match[1];
                 }
                 let isRowMatch = false;
-                for (const diceRollTableRow of diceRollTable.parseText()) {
-                  if (diceRollTableRow.range.start <= rollResultNumber && rollResultNumber <= diceRollTableRow.range.end) {
-                    finalResult.result += (`[${rollResultNumber}] ` + StringUtil.cr(diceRollTableRow.result));
-                    
+                for (const diceRollTableRow of diceRollTableRows) {
+                  if ((!diceRollTableRow.range.start || diceRollTableRow.range.start <= rollResultNumber) 
+                    && (!diceRollTableRow.range.end || rollResultNumber <= diceRollTableRow.range.end)) {
+                    //finalResult.result += (`[${rollResultNumber}] ` + StringUtil.cr(diceRollTableRow.result));
+                    finalResult.result += ('🎲 ' + rollResult.result + "\n" + StringUtil.cr(diceRollTableRow.result));
                     isRowMatch = true;
                     break;
                   }
                 }
-                if (!isRowMatch) finalResult.result += (`[${rollResultNumber}] (結果なし)`);
+                if (!isRowMatch) finalResult.result += ('🎲 ' + rollResult.result + "\n" + '(結果なし)');
                 if (1 < repeat) finalResult.result += ` #${i + 1}\n`;
               }
               break;
@@ -571,8 +575,7 @@ export class DiceBot extends GameObject {
     let isSecret: boolean = rollResult.isSecret;
 
     if (result.length < 1) return;
-
-    result = result.replace(/[＞]/g, s => '→').trim();
+    if (!rollResult.isDiceRollTable) result = result.replace(/[＞]/g, s => '→').trim();
 
     let diceBotMessage: ChatMessageContext = {
       identifier: '',
