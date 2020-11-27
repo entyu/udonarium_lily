@@ -10,15 +10,20 @@
   <div class="flex-item">
     <ng-container *ngIf="!isEmpty && selectedDiceRollTable">
       <div style="font-size: smaller;">
+        <button style="float: right;" (click)="helpDiceRollTable()">?</button>
         <div style="margin-bottom: 3px;">
           <b>name: </b> 
-          <input style="width: 14em" [(ngModel)]="diceRollTableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+          <input style="width: 60%; min-width: 5em" [(ngModel)]="diceRollTableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
         </div>
         <div>
-          <b>command: </b>
-          <input style="width: 7em" [(ngModel)]="diceRollTableCommand" placeholder="Command" [attr.disabled]="!isEditable ? '' : null" />
-          <b style="margin-left: 1em;">dice: </b>
-          <input style="width: 3.3em; text-align: center" [(ngModel)]="diceRollTableDice" placeholder="Dice" [attr.disabled]="!isEditable ? '' : null" />
+          <span style="white-space: nowrap">
+            <b>command: </b>
+            <input style="width: 7em" [(ngModel)]="diceRollTableCommand" placeholder="Command" [attr.disabled]="!isEditable ? '' : null" />
+          </span>
+          <span style="white-space: nowrap; margin-left: 1em">  
+            <b>dice: </b>
+            <input style="width: 3.3em; text-align: center" [(ngModel)]="diceRollTableDice" placeholder="Dice" [attr.disabled]="!isEditable ? '' : null" />
+          </span>
         </div>
       </div>
       <div>

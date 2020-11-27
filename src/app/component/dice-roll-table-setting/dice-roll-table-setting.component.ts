@@ -4,8 +4,10 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
+import { TextViewComponent } from 'component/text-view/text-view.component';
 import { ModalService } from 'service/modal.service';
-import { PanelService } from 'service/panel.service';
+import { PanelOption, PanelService } from 'service/panel.service';
+import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
 
 @Component({
@@ -40,6 +42,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
   progresPercent: number = 0;
 
   constructor(
+    private pointerDeviceService: PointerDeviceService,
     private modalService: ModalService,
     private panelService: PanelService,
     private saveDataService: SaveDataService
@@ -140,7 +143,29 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
     }
   }
 
-  helpDiceRollTableSeting() {
+  helpDiceRollTable() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 380 };
+    let textView = this.panelService.open(TextViewComponent, option);
+    textView.title = 'ダイスボット表ヘルプ';
+    textView.text = 
+`　名前、コマンド、振るダイスを設定し、ダイスの結果で表を参照し表示します。
+　表は1行ごとに数字と結果を:（コロン）で区切り「数字:結果」の形で記述します（よって、ダイスは最後に一つの数字を返すものである必要があります、バラバラロール nBm の成功数にも対応しています）。
+　
+　-（ハイフン）または～で区切って数字の範囲を指定することもできます。
+　表に「\\n」と書くと、そこで改行します（\\nは表示されません）。
 
+例）
+　name: 遭遇艦種　
+　command: ShipType　　dice: 1d6
+
+　　1:戦艦
+　　2:空母
+　　3:重巡洋艦
+　　4:軽巡洋艦
+　　5-6:駆逐艦
+
+　表を引く際は上から順に判定します、上記の例では最後を「1-6:駆逐艦」などとしても同じ結果になります（が、分かりやすい記述をお勧めします）。
+`;
   }
 }
