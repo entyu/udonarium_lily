@@ -506,10 +506,11 @@ export class DiceBot extends GameObject {
           let isDiceRollTableMatch = false;
           for (const diceRollTable of DiceRollTableList.instance.diceRollTables) {
             let isSecret = false;
-            if (diceRollTable.command && rollText.trim().toUpperCase() === 'S' + diceRollTable.command.trim().toUpperCase()) {
+            const command = StringUtil.toHalfWidth(diceRollTable.command);
+            if (command && rollText.trim().toUpperCase() === 'S' + command.trim().toUpperCase()) {
               isDiceRollTableMatch = true;
               isSecret = true;
-            } else if (diceRollTable.command && rollText.trim().toUpperCase() === diceRollTable.command.trim().toUpperCase()) {
+            } else if (command && rollText.trim().toUpperCase() === command.trim().toUpperCase()) {
               isDiceRollTableMatch = true;
             }
             if (isDiceRollTableMatch) {
