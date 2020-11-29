@@ -145,11 +145,12 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
 
   helpDiceRollTable() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 420 };
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 460 };
     let textView = this.panelService.open(TextViewComponent, option);
     textView.title = 'ダイスボット表ヘルプ';
     textView.text = 
 `　名前、コマンド、振るダイスを設定し、ダイスの数字で表を参照し、表示します。
+　チャットでコマンドを送信することにより、ダイスボットと同様に結果が送信されます、なおコマンドには英数、記号のみ使用可能です。
 　表は1行ごとに数字と結果を:（コロン）で区切り「数字:結果」の形で記述します（よって、ダイスは最後に一つの数字を返すものである必要があります、バラバラロール nBm の成功数にも対応しています）。
 　
 　-（ハイフン）または～で区切って数字の範囲を指定することもできます。
