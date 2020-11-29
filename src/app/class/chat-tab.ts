@@ -43,7 +43,6 @@ export class ChatTab extends ObjectNode implements InnerXml {
     return index;
   }
 
-//  public tachieDispFlag : boolean = true;
   public tachieDispFlag = 1;
 
   replaceTachieZindex( toppos : number ){
@@ -62,8 +61,6 @@ export class ChatTab extends ObjectNode implements InnerXml {
   get dispCharctorIcon(): boolean { return this._dispCharctorIcon; }
   set dispCharctorIcon( flag : boolean) { this._dispCharctorIcon = flag; }
 
- 
-//
   private _unreadLength: number = 0;
   get unreadLength(): number { return this._unreadLength; }
   get hasUnread(): boolean { return 0 < this.unreadLength; }
@@ -120,7 +117,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
            this.imageIdentifierDummy = message['imageIdentifier'];//同期方法がすこぶる怪しい後で確認
            
         }
-        continue;//v0.02.2で追加20201021
+        continue;
       }
 //
       chat.setAttribute(key, message[key]);

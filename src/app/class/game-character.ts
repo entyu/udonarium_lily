@@ -10,27 +10,24 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
 
-  @SyncVar() hideInventory: boolean = false;//entyu
-  @SyncVar() overViewWidth: number = 270;//entyu
-  @SyncVar() overViewMaxHeight: number = 250;//entyu
+  @SyncVar() hideInventory: boolean = false;
+  @SyncVar() overViewWidth: number = 270;
+  @SyncVar() overViewMaxHeight: number = 250;
 
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
 
-//entyu_3
   get chatPalette(): ChatPalette {
     for (let child of this.children) {
       if (child instanceof ChatPalette) return child;
     }
     return null;
   }
-//
   
   TestExec() {
     console.log('TestExec');
  
   }  
-//entyu_3
   get remoteController(): BuffPalette {
     for (let child of this.children) {
       if (child instanceof BuffPalette){
@@ -40,7 +37,6 @@ export class GameCharacter extends TabletopObject {
     return null;
   }
 
-//
   static create(name: string, size: number, imageIdentifier: string): GameCharacter {
     let gameCharacter: GameCharacter = new GameCharacter();
     gameCharacter.createDataElements();
@@ -50,10 +46,7 @@ export class GameCharacter extends TabletopObject {
     return gameCharacter;
   }
 
-  //entyu
   addExtendData(){
-    //entyu
-//    console.log('ENTYU addExtendData CALL!!!');
     
     this.addBuffDataElement();
 //  this.createDataElements();
@@ -80,7 +73,6 @@ export class GameCharacter extends TabletopObject {
       this.appendChild(controller);
     }
   }
-  //
 
   createTestGameDataElement(name: string, size: number, imageIdentifier: string) {
     this.createDataElements();
@@ -104,7 +96,6 @@ export class GameCharacter extends TabletopObject {
     resourceElement.appendChild(mpElement);
 
     //TEST
-    //entyu
     let testElement: DataElement = DataElement.create('情報', '', {}, '情報' + this.identifier);
     testElement = DataElement.create('情報', '', {}, '情報' + this.identifier);
     this.detailDataElement.appendChild(testElement);
@@ -145,8 +136,6 @@ export class GameCharacter extends TabletopObject {
     palette.initialize();
     this.appendChild(palette);
 
-    //entyu
     this.addExtendData();
-
   }
 }

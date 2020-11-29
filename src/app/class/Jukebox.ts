@@ -29,10 +29,8 @@ export class Jukebox extends GameObject {
   }
 
   play(identifier: string, isLoop: boolean = false) {
-    console.log('JUKE play() CALL'); //entyu_30
     let audio = AudioStorage.instance.get(identifier);
     if (!audio || !audio.isReady) return;
-    console.log('JUKE play() CALL > NOT return'); //entyu_30
 
     this.audioIdentifier = identifier;
     this.isPlaying = true;
@@ -41,8 +39,6 @@ export class Jukebox extends GameObject {
   }
 
   private _play() {
-    console.log('JUKE _play() CALL'); //entyu_30
-
     this._stop();
     if (!this.audio || !this.audio.isReady) {
       this.playAfterFileUpdate();
@@ -53,7 +49,6 @@ export class Jukebox extends GameObject {
   }
 
   stop() {
-    console.log('JUKE stop() CALL'); //entyu_30
 
     this.audioIdentifier = '';
     this.isPlaying = false;
@@ -61,26 +56,21 @@ export class Jukebox extends GameObject {
   }
 
   private _stop() {
-    console.log('JUKE _stop() CALL'); //entyu_30
 
     this.unregisterEvent()
     this.audioPlayer.stop();
   }
 
   private playAfterFileUpdate() {
-    console.log('JUKE playAfterFileUpdate() CALL'); //entyu_30
 
     EventSystem.register(this)
       .on('UPDATE_AUDIO_RESOURE', -100, event => {
-        console.log('JUKE CALLBACK 01'); //entyu_30
         this._play();
       });
   }
 
   private unlockAfterUserInteraction() {
-    console.log('JUKE unlockAfterUserInteraction() CALL'); //entyu_30
     let callback = () => {
-      console.log('JUKE unlockAfterUserInteraction 02'); //entyu_30
       document.body.removeEventListener('touchstart', callback, true);
       document.body.removeEventListener('mousedown', callback, true);
       this.audioPlayer.stop();
@@ -96,7 +86,6 @@ export class Jukebox extends GameObject {
 
   // override
   apply(context: ObjectContext) {
-    console.log('JUKE apply() CALL'); //entyu_30
 
     let audioIdentifier = this.audioIdentifier;
     let isPlaying = this.isPlaying;

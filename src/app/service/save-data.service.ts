@@ -89,7 +89,6 @@ export class SaveDataService {
     let imageElements = xmlElement.ownerDocument.querySelectorAll('*[type="image"]');
 
     for (let i = 0; i < imageElements.length; i++) {
-      console.log( '円柱 SAVE 00:'+imageElements[i].innerHTML);
       let identifier = imageElements[i].innerHTML;
       images[identifier] = ImageStorage.instance.get(identifier);
     }
@@ -99,12 +98,10 @@ export class SaveDataService {
     for (let i = 0; i < imageElements.length; i++) {
       let identifier = imageElements[i].getAttribute('imageIdentifier');
       if (identifier) images[identifier] = ImageStorage.instance.get(identifier);
-      console.log( '円柱 SAVE 1:'+identifier);
       let backgroundImageIdentifier = imageElements[i].getAttribute('backgroundImageIdentifier');
       if (backgroundImageIdentifier) images[backgroundImageIdentifier] = ImageStorage.instance.get(backgroundImageIdentifier);
     }
     for (let identifier in images) {
-      console.log( '円柱 SAVE 2:'+images[identifier]+ '/' + identifier);
       let image = images[identifier];
 //entyu_2 #92
 //      if (image && image.state === ImageState.COMPLETE) {

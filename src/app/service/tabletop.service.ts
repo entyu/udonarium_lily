@@ -24,12 +24,9 @@ import { PointerCoordinate, PointerDeviceService } from './pointer-device.servic
 //entyu_2 #92
 import { ImageTag } from '@udonarium/image-tag';
 //
-//entyu
 import { DataElement } from '@udonarium/data-element';
 import { DiceTable } from '@udonarium/dice-table';
 import { DiceTablePalette } from '@udonarium/chat-palette';
-
-//
 type ObjectIdentifier = string;
 type LocationName = string;
 
@@ -111,15 +108,12 @@ export class TabletopService {
       .on('XML_LOADED', event => {
         let xmlElement: Element = event.data.xmlElement;
         // todo:立体地形の上にドロップした時の挙動
-
-//entyu_con
         console.log('parseXml todo:立体地形の上にドロップした時の挙動');
-//
+
         let gameObject = ObjectSerializer.instance.parseXml(xmlElement);
-        console.log('円柱  ObjectSerializer.instance.parseXml '+gameObject);
         
         if (gameObject instanceof TabletopObject) {
-          console.log('TabletopObject 追加 円柱');
+          console.log('TabletopObject 追加');
           let pointer = this.calcTabletopLocalCoordinate();
           gameObject.location.x = pointer.x - 25;
           gameObject.location.y = pointer.y - 25;

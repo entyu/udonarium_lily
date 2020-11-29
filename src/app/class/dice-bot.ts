@@ -391,7 +391,6 @@ export class DiceBot extends GameObject {
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
           let finalResult: DiceRollResult = { result: '', isSecret: false };
           for (let i = 0; i < repeat && i < 32; i++) {
-//            console.log('rollTable.diceTablePalette.dicebot' + rollTable.diceTablePalette.dicebot);          
             let rollResult = await DiceBot.diceRollAsync(rollText, rollTable.diceTablePalette.dicebot);
             if (rollResult.result.length < 1) break;
 

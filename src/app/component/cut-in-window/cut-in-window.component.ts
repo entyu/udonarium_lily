@@ -17,15 +17,6 @@ import { CutInLauncher } from '@udonarium/cut-in-launcher';
 
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 
-
-//import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
-//import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
-//import { ModalService } from 'service/modal.service';
-//import { PanelService } from 'service/panel.service';
-//import { SaveDataService } from 'service/save-data.service';
-
-//import { PointerDeviceService } from 'service/pointer-device.service';
-
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 
 

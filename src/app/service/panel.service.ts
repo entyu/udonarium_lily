@@ -65,11 +65,9 @@ export class PanelService {
       if (option.width) childPanelService.width = option.width;
       if (option.height) childPanelService.height = option.height;
       if (option.isCutIn){
-         console.log( 'option.isCutIn' + option.isCutIn );
          childPanelService.isCutIn = option.isCutIn;  //entyu_30
       }
       if (option.cutInIdentifier){
-         console.log( 'option.cutInIdentifier :' + option.cutInIdentifier );
          childPanelService.cutInIdentifier = option.cutInIdentifier;  //entyu_30
       }
     }
