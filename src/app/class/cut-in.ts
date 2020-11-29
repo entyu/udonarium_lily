@@ -9,7 +9,7 @@ export class CutIn extends ObjectNode {
   @SyncVar() posX: number = 50;
   @SyncVar() posY: number = 50;
 
-  @SyncVar() imageIdentifier: string = null;
+  @SyncVar() imageIdentifier: string = 'stand_no_image';
 
   get conditionTexts(): string[] {
     if (!this.value) return [];
