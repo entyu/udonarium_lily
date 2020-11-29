@@ -101,6 +101,9 @@
   border: solid 6px #FFCC80;
   border-radius: 25px;
 }
+.pedestal-inner.not-inventory {
+  border-color: #80CCEE;
+}
 
 .pedestal-outer {
   backface-visibility: hidden;
