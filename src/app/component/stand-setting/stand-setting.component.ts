@@ -125,6 +125,34 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  upStandIndex(standElement: DataElement) {
+    let parentElement = this.character.standList;
+    let index: number = parentElement.children.indexOf(standElement);
+    if (0 < index) {
+      let prevElement = parentElement.children[index - 1];
+      parentElement.insertBefore(standElement, prevElement);
+      if (this.character.standList.overviewIndex == index) {
+        this.character.standList.overviewIndex -= 1;
+      } else if (this.character.standList.overviewIndex == index - 1) {
+        this.character.standList.overviewIndex += 1;
+      } 
+    }
+  }
+
+  downStandIndex(standElement: DataElement) {
+    let parentElement = this.character.standList;
+    let index: number = parentElement.children.indexOf(standElement);
+    if (index < parentElement.children.length - 1) {
+      let nextElement = parentElement.children[index + 1];
+      parentElement.insertBefore(nextElement, standElement);
+      if (this.character.standList.overviewIndex == index) {
+        this.character.standList.overviewIndex += 1;
+      } else if (this.character.standList.overviewIndex == index + 1) {
+        this.character.standList.overviewIndex -= 1;
+      } 
+    }
+  }
+
   helpStandSeteing() {
     let coordinate = this.pointerDeviceService.pointers[0];
     let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 440 };
