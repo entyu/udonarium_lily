@@ -1,26 +1,28 @@
 <div class="component is-3d is-pointer-events-none is-grab" [style.width.px]="size * gridSize"
   appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
-  <div class="component-content is-pointer-events-auto"
-    appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-    <img [@inverse]="state" @slidInOut *ngIf="imageFile" class="card-image" [src]="(isFront ? frontImage.url : backImage.url) | safe: 'resourceUrl'">
-    <div *ngIf="!isFront && hasOwner" class="name-tag is-nowrap has-length-limit is-black-background" [ngStyle]="{'background-color': ownerColor, 'transform': 'translateY(-75%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-      <span><b>{{ownerName}}</b></span>
+  <div @slidInOut class="is-pointer-events-none">
+    <div class="component-content is-pointer-events-auto"
+      appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
+      <img [@inverse]="state" *ngIf="imageFile" class="card-image" [src]="(isFront ? frontImage.url : backImage.url) | safe: 'resourceUrl'">
+      <div *ngIf="!isFront && hasOwner" class="name-tag is-nowrap has-length-limit is-black-background" [ngStyle]="{'background-color': ownerColor, 'transform': 'translateY(-75%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+        <span><b>{{ownerName}}</b></span>
+      </div>
+      <img *ngIf="isHand && frontImage" class="card-image thumbnail-transform is-translucent" [src]="frontImage.url | safe: 'resourceUrl'">
+      <ng-container *ngIf="!isIconHidden">
+        <div class="rotate-grab of-left-top">
+          <i class="material-icons">autorenew</i>
+        </div>
+        <div class="rotate-grab of-left-bottom">
+          <i class="material-icons">autorenew</i>
+        </div>
+        <div class="rotate-grab of-right-bottom">
+          <i class="material-icons">autorenew</i>
+        </div>
+        <div class="rotate-grab of-right-top">
+          <i class="material-icons">autorenew</i>
+        </div>
+        <div class="border-bg is-pointer-events-none"></div>
+      </ng-container>
     </div>
-    <img *ngIf="isHand && frontImage" class="card-image thumbnail-transform is-translucent" [src]="frontImage.url | safe: 'resourceUrl'">
-    <ng-container *ngIf="!isIconHidden">
-      <div class="rotate-grab of-left-top">
-        <i class="material-icons">autorenew</i>
-      </div>
-      <div class="rotate-grab of-left-bottom">
-        <i class="material-icons">autorenew</i>
-      </div>
-      <div class="rotate-grab of-right-bottom">
-        <i class="material-icons">autorenew</i>
-      </div>
-      <div class="rotate-grab of-right-top">
-        <i class="material-icons">autorenew</i>
-      </div>
-      <div class="border-bg is-pointer-events-none"></div>
-    </ng-container>
   </div>
 </div>
