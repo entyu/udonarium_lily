@@ -8,7 +8,7 @@
   <div class="position-indicate">
     <b>Height (0=元画像のまま): </b> 
     <input style="width: 350px" type="range" min="0" max="100" [(ngModel)]="height">
-    <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="height">
+    <input style="width: 3em; text-align: right; margin-right: 3px;" type="number" min="0" max="100" [(ngModel)]="height"><b sytle="margin-left: 3px; margin-right: 1em ">％</b>
   </div>
 </div>
 <div class="overview-selecter" [style.border-color]="overviewIndex == -1 ? 'red' : 'transparent'" style="padding: 0px">

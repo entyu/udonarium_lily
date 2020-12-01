@@ -104,7 +104,7 @@ export class StandElementComponent implements OnInit {
   get positionElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('position');
-    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('position', 0, { 'currentValue': '' }, 'position_' + this.standElement.identifier));
+    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('position', 0, { 'currentValue': 0 }, 'position_' + this.standElement.identifier));
   }
 
   get isApplyImageEffect(): boolean {
