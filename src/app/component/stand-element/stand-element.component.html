@@ -60,14 +60,14 @@
             <b style="display: inline-block; margin-left: 3px">Height (0=指定なし): </b>
             <input style="width: 130px" type="range" min="0" max="100" [(ngModel)]="heightElement.value">
             <input style="width: 3em; text-align: right;" type="number" min="0" max="100" [(ngModel)]="heightElement.value">
-            <b style="display: inline-block; margin-left: 3px">%</b>
+            <b style="display: inline-block; font-size: smaller; margin-left: 3px">%</b>
           </span>
         </ng-container>
         <ng-container *ngIf="positionElement">
           <span style="white-space: nowrap; margin-left: 0.8em; font-size: smaller">
             <b style="display: inline-block; margin-left: 3px">AdjY: </b>
-            <input type="number" min="-100" max="100" style="width: 3.5em; text-align: right" [(ngModel)]="positionElement.currentValue">
-            <b style="display: inline-block; margin-left: 3px">%</b>
+            <input type="number" min="-100" max="100" style="width: 3.4em; text-align: right" [(ngModel)]="positionElement.currentValue">
+            <b style="display: inline-block; font-size: smaller; margin-left: 3px">%</b>
           </span>
         </ng-container>
       </div>
