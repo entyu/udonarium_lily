@@ -1,8 +1,10 @@
-<div [style.visibility]="isShowStand ? 'visible' : 'hidden'" [style.pointer-events]="isShowStand ? 'auto' : 'none'">
+<div [style.visibility]="isShowStand ? 'visible' : 'hidden'" 
+  [style.pointer-events]="isShowStand ? 'auto' : 'none'">
   <div [@standInOut]="group" *ngIf="!isFarewell && (isVisible || !isCanBeGone)" class="stand-image-container"
     [style.left]="position + '%'"
     [style.height]="height == 0 ? '' : height + 'vh'"
     [style.margin-left.px]="-imageWidth / 2"
+    [style.margin-bottom.px]="posY"
     [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, secret: isSecret}" (click)="toGhostly(); toBackyard()">
     <ng-container *ngIf="gameCharacter && standImage.url && standImage.url.length > 0">
       <div @fadeAndScaleInOut *ngIf="!isBackyard && gameCharacter.isEmote" 
@@ -35,6 +37,7 @@
     [style.color]="color ? color : '#444'" 
     [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard}"
     [style.left]="position + '%'"
+    [style.margin-bottom.px]="posY > 0 ? posY : 0"
     [style.border-color]="color ? color : '#444'"
     [style.margin-left.px]="nameTagCSSMarginLeft"
     ><b>{{ gameCharacter.name }}</b></span>
@@ -46,6 +49,7 @@
     [style.left.px]="dialogBoxCSSLeft"
     [style.bottom.px]="dialogBoxCssBottom"
     [style.max-width.px]="dialogBoxCSSMaxWidth"
+    [style.margin-bottom.px]="posY"
     [ngStyle]="{left: (position <= 50 ? dialogBoxCSSLeft + 'px' : 'auto'), right: (position > 50 ? dialogBoxCSSRight + 'px' : 'auto'), 'transform-origin': position <= 50 ? '12px calc(100% + 12px)' : 'calc(100% - 12px) calc(100% + 12px)'}"
     [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret, 'is-position-right': position <= 50, 'is-position-left': position > 50}"
     [style.border-color]="color ? color : '#444'"><div style="width: 100%" [@dialogShake]="dialogText.length" (@dialogShake.start)="onSpeaking($event)">{{ dialogText }}</div></div>

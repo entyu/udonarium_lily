@@ -158,6 +158,13 @@ export class StandImageComponent implements OnInit, OnDestroy {
     //ToDO 位置の個別指定
   }
 
+  get posY(): number {
+    if (!this.gameCharacter) return 0;
+    let elm = this.standElement.getFirstElementByName('position');
+    const posYPercent = (elm && elm.currentValue) ? +elm.currentValue : 0;
+    return this.imageHeight * posYPercent / 100;
+  }
+
   get height(): number {
     if (!this.gameCharacter || !this.standElement) return 0;
     let elm = this.standElement.getFirstElementByName('height');

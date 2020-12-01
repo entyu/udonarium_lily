@@ -1,7 +1,7 @@
 .stand-image-container {
   position: absolute;
   display: inline-block;
-  bottom: -1%;
+  bottom: -0.1%;
   z-index: 1000000;
   transition: opacity 0.1s ease-in;
 }

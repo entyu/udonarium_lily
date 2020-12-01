@@ -24,7 +24,7 @@
           <input type="text" style="width: 7em" [(ngModel)]="nameElement.value" placeholder="Name">　
         </ng-container>
         <ng-container *ngIf="conditionTypeElement">
-          <b style="font-size: smaller">　Cond: </b><select [(ngModel)]="conditionTypeElement.value">
+          <b style="font-size: smaller">　Cond: </b><select style="width: 15em" [(ngModel)]="conditionTypeElement.value">
             <option value="{{ standConditionType.Default }}">デフォルト</option>
             <option value="{{ standConditionType.Image }}">指定画像</option>
             <option value="{{ standConditionType.Postfix }}">チャット末尾</option>
@@ -33,12 +33,7 @@
             <option value="{{ standConditionType.NotConditionStandUp }}">選択時のみ</option>
           </select>
         </ng-container>
-        <ng-container *ngIf="false">
-          <span style="white-space: nowrap"><b style="font-size: 11px; display: inline-block; margin-left: 3px">Pos: </b><input type="range" min="0" max="100" [(ngModel)]="positionElement.value">
-          <span class="position-indicate">{{ positionElement.value }}%</span></span>
-        </ng-container>
         <button style="font-size: 9px; margin-left: 1em;" (click)="testStandUp()"><b>テスト (自分だけ見る)</b></button>
-        <!-- <button style="float: right" class="remove-button" (click)="remove()">×</button> -->
       </div>
       <div>
         <ng-container *ngIf="applyImageEffectElement">
@@ -61,9 +56,18 @@
         </ng-container>
         <button (click)="openSpeakingModal()" style="font-size: 9px" [style.font-weight]="isSpeakable ? 'bolder' : 'normal'">口パクアニメ (APNGなど)</button>
         <ng-container *ngIf="heightElement">
-          <br><span style="white-space: nowrap"><b style="font-size: smaller; display: inline-block; margin-left: 3px">Height (0=個別指定しない): </b>
-            <input style="width: 260px" type="range" min="0" max="100" [(ngModel)]="heightElement.value">
+          <br><span style="white-space: nowrap; font-size: smaller">
+            <b style="display: inline-block; margin-left: 3px">Height (0=指定なし): </b>
+            <input style="width: 130px" type="range" min="0" max="100" [(ngModel)]="heightElement.value">
             <input style="width: 3em; text-align: right;" type="number" min="0" max="100" [(ngModel)]="heightElement.value">
+            <b style="display: inline-block; margin-left: 3px">%</b>
+          </span>
+        </ng-container>
+        <ng-container *ngIf="positionElement">
+          <span style="white-space: nowrap; margin-left: 0.8em; font-size: smaller">
+            <b style="display: inline-block; margin-left: 3px">PosY: </b>
+            <input type="number" min="-100" max="100" style="width: 3.5em; text-align: right" [(ngModel)]="positionElement.currentValue">
+            <b style="display: inline-block; margin-left: 3px">%</b>
           </span>
         </ng-container>
       </div>
