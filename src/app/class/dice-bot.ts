@@ -198,6 +198,7 @@ export class DiceBot extends GameObject {
     { script: 'Cthulhu7th_ChineseTraditional', game: '克蘇魯神話第7版' },
     { script: 'Cthulhu_ChineseTraditional', game: '克蘇魯神話' },
     { script: 'KillDeathBusiness_Korean', game: 'Kill Death Business (한국어)' },
+    { script: 'Ido', game: 'イドの証明' },//身内用追加円柱
     { script: 'Nechronica_Korean', game: '네크로니카' },
     { script: 'DoubleCross_Korean', game: '더블크로스2nd,3rd' },
     { script: 'DetatokoSaga_Korean', game: '데타토코 사가' },
@@ -542,6 +543,7 @@ export class DiceBot extends GameObject {
   }
 
   private static loadScriptAsync(path: string): Promise<void> {
+    console.log(path);
     return new Promise<void>((resolve, reject) => {
       let head = document.head;
       let script = document.createElement('script');
