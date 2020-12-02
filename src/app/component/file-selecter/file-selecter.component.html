@@ -4,10 +4,11 @@
 </div>
 <!---->
 <form>
-  <div class="image-chg">{{selectTag}}
+  <div class="image-chg">
     <label *ngFor="let tag of tagList" >
-      <input *ngIf="0 < tag.length" name="image-chg"  type="radio" value="{{tag}}"  [(ngModel)]="selectTag" (change) ="resetBtn()" >
-      <div>{{tag}}</div>
+      <input name="image-chg"  type="radio" value="{{tag}}"  [(ngModel)]="selectTag" (change) ="resetBtn()" >
+      <div *ngIf= "tag.length == 0" >未設定</div>
+      <div *ngIf= "tag.length > 0" >{{tag}}</div>
     </label>
   </div>
 </form>

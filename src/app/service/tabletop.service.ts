@@ -384,7 +384,7 @@ export class TabletopService {
     bgFileContext.url = './assets/images/BG10a_80.jpg';
     testBgFile = ImageStorage.instance.add(bgFileContext);
 //entyu_2 #92
-    ImageTag.create(testBgFile.identifier).tag = 'default';    
+    ImageTag.create(testBgFile.identifier).tag = '背景';    
 //
     //let testDistanceFile: ImageFile = null;
     //let distanceFileContext = ImageFile.createEmpty('testTableDistanceviewImage_image').toContext();
@@ -430,7 +430,7 @@ export class TabletopService {
     testFile = ImageStorage.instance.add(fileContext);
     
 //entyu_2 #92
-    ImageTag.create(testFile.identifier).tag = 'テスト00';    
+    ImageTag.create(testFile.identifier).tag = 'モンスター';    
 //    
     testCharacter.location.x = 5 * 50;
     testCharacter.location.y = 9 * 50;
@@ -455,7 +455,7 @@ export class TabletopService {
     testFile = ImageStorage.instance.add(fileContext);
 
 //entyu_2 #92
-    ImageTag.create(testFile.identifier).tag = 'テスト01'; 
+    ImageTag.create(testFile.identifier).tag = 'モンスター'; 
 //    
 
     testCharacter.location.x = 4 * 50;
@@ -473,7 +473,7 @@ export class TabletopService {
     testFile = ImageStorage.instance.add(fileContext);
 
 //entyu_2 #92
-    ImageTag.create(testFile.identifier).tag = 'テスト01';
+    ImageTag.create(testFile.identifier).tag = '';
 //
 
     testCharacter.location.x = 6 * 50;
@@ -492,7 +492,7 @@ export class TabletopService {
     testFile = ImageStorage.instance.add(fileContext);
     
 //entyu_2 #92
-    ImageTag.create(testFile.identifier).tag = 'テスト02'; 
+    ImageTag.create(testFile.identifier).tag = ''; 
 //
     testCharacter.location.x = 12 * 50;
     testCharacter.location.y = 12 * 50;
@@ -510,7 +510,7 @@ export class TabletopService {
     testFile = ImageStorage.instance.add(fileContext);
     
 //entyu_2 #92
-    ImageTag.create(testFile.identifier).tag = 'テスト02';
+    ImageTag.create(testFile.identifier).tag = '';
 //     
     testCharacter.initialize();
     testCharacter.location.x = 5 * 50;

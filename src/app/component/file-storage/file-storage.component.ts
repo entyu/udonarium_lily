@@ -40,6 +40,10 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
           if( tag == this.selectTag ){
             imageFileList.push(imageFile);
           }
+        }else{//タグ未設定の場合 画像投下直後は ImageTag.get(identifier) は空文字ではなく該当なしとなるため
+          if( this.selectTag == '' ){
+            imageFileList.push(imageFile);
+          }
         }
       }
       return imageFileList;
@@ -67,6 +71,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     
     let tags2:  string[] = Array.from(new Set(tags));
     tags2.unshift('全て');
+    tags2.unshift('');
     return tags2;
     
   }
@@ -75,22 +80,31 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
 //
   inputNewTag(newTag: string) { 
-    this.newTagName = newTag
+    this.newTagName = newTag;
   }
 
   changeTag(){
-     for (let identifier of this.identifierList) {
-        const imageTag = ImageTag.get(identifier);
-        imageTag ? imageTag : ImageTag.create(identifier);
-        imageTag.tag = this.newTagName;
+
+   if( this.newTagName == '全て' ) return; //表示上混乱するタグの禁止
+    
+   for (let identifier of this.identifierList) {
+     const imageTag = ImageTag.get(identifier);
+     imageTag ? imageTag : ImageTag.create(identifier);
+     
+     if( this.newTagName == '未設定' ){ 
+       imageTag.tag = '';
+     }else{
+       imageTag.tag = this.newTagName;
      }
-  }
+   }
+   
+ }
 
 ////
 
 
 //entyu_2
-  selectTag :string = '全て';
+  selectTag :string = '';
   identifierList :string[] = [];
   newTagName:string = '';
   resetBtn() {
