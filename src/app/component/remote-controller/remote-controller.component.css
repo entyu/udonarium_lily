@@ -365,6 +365,12 @@ input[type='range']::-ms-tooltip {
   font-size: 1.0rem;
 }
 
+.table {
+  display: table;
+  width: 100%;
+}
+
+
 .table-cell {
   display: table-cell;
 }
@@ -437,6 +443,15 @@ input[type='range']::-ms-tooltip {
   width: 10px;
 }
 
+.tag-slash {
+  font-size: 1.0em;
+  min-width: 0.1em;
+  max-width: 0.1em;
+  text-align: center;
+  font-family: inherit;
+}
+
+
 .tag-value {
   font-size: 1.0em;
   font-weight: bold;
@@ -445,7 +460,6 @@ input[type='range']::-ms-tooltip {
   max-width: 12em;
   text-align: center;
   font-family: inherit;
-
 }
 
 /*entyu_5*/

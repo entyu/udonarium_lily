@@ -51,6 +51,7 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
   get tachieNum(): number { return this._tachieNum };
   set tachieNum(num:  number){ this._tachieNum = num};
 
+  @Output() hideChkEvent = new EventEmitter<boolean>();
 //
 
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
@@ -267,7 +268,15 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
         + this.gameHelp;
     });
   }
-
+  
+  buffHideIsChk = false; 
+  //親コンポーネントにもCHKBOX情報を渡す、作りが悪いがチャット入力部流用のためひとまずこのまま
+  buffHideChkChange( chk ){
+    console.log('buffHideChkChange:' + chk );
+    this.hideChkEvent.emit(chk);
+    this.buffHideIsChk = chk;
+  }
+ 
   private allowsChat(gameCharacter: GameCharacter): boolean {
     switch (gameCharacter.location.name) {
       case 'table':

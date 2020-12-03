@@ -61,7 +61,16 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   set sendFrom(sendFrom: string) {
     this.onSelectedCharacter(sendFrom);
   }
-
+  
+  public buffAreaIsHide = false;
+  hideChkBoxEvent( eventValue : boolean) {
+    this.buffAreaIsHide = eventValue;
+  }
+  public controllerAreaIsHide = false;
+  controllerHideChkChange( eventValue : boolean ){
+    this.controllerAreaIsHide = eventValue;
+  }
+  
   chatTabidentifier: string = '';
 
   remotNumber: number = 0;
@@ -96,22 +105,16 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
   constructor(
     public chatMessageService: ChatMessageService,
-//    private panelService: PanelService
     private panelService: PanelService,
-
-//--------------
-//    private ngZone: NgZone,
-
 
     private changeDetector: ChangeDetectorRef,
     private inventoryService: GameObjectInventoryService,
     private contextMenuService: ContextMenuService,
     private pointerDeviceService: PointerDeviceService 
 
-//--------------
-
   ) { }  
 
+  
   remotChangeValue(){
     let text :string ='';
     let gameObjects = this.getGameObjects(this.selectTab);
@@ -158,6 +161,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     }
 
   }
+
 
   remotSelect( identifier : string , type : string , name : string ){
     this.remotControllerSelect.identifier = identifier;
@@ -258,7 +262,8 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     if (this.doubleClickTimer && this.text === line) {
       clearTimeout(this.doubleClickTimer);
       this.doubleClickTimer = null;
-      this.controllerInputComponent.sendChat(null);
+//      this.controllerInputComponent.sendChat(null);
+      this.sendChat(null);
     } else {
       this.text = line;
       this.doubleClickTimer = setTimeout(() => { this.doubleClickTimer = null }, 400);
