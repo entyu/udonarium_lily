@@ -110,8 +110,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   get standListWithGroup(): StandGroup[] {
     if (!this.hasStand) return [];
-    let ret: {};
-    //let tmp = new Map<string, string[]>();
+    let ret = {};
     const nameElements = this.character.standList.standElements.map((standElement) => standElement.getFirstElementByName('name')).filter(e => e);
     nameElements.sort((a, b) => a.currentValue === b.currentValue ? 0 : a.currentValue > b.currentValue ? -1 : 1);
     for (const nameElement of nameElements) {
@@ -123,9 +122,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         }
       }
     }
-    const keys = Object.keys(ret);
-    console.log(keys);
-    return keys && keys.length > 0 ? Object.keys(ret).map((group) => { return { name: group, stands: ret[group] } }).filter(e => e.stands && e.stands.length > 0) : [];
+    return Object.keys(ret).sort().map((group) => { return { name: group, stands: ret[group].sort() } }).filter(e => e.stands.length > 0);
   }
 
   get imageFile(): ImageFile {

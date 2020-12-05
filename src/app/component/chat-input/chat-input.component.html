@@ -51,10 +51,7 @@
       <label style="margin-right: 2px"><input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" /><b style="font-size: smaller;">Stand: </b></label>
       <select style="width: 8em; margin-right: 6px;" (change)="isUseStandImage = true" [(ngModel)]="standName" [ngModelOptions]="{standalone: true}" [ngClass]="{'not-specified': standName == ''}">
         <option value="" class="not-specified">未選択</option>
-        <!-- <option *ngFor="let name of standNameList" value="{{name}}">{{name}}</option> -->
-        <optgroup *ngFor="let group of standListWithGroup" label="{{group.name}}">
-          <option *ngFor="let stand of group.stands" value="{{stand}}">{{stand}}</option>
-        </optgroup>
+        <option *ngFor="let name of standNameList" value="{{name}}">{{name}}</option>
       </select>
       <span style="white-space: nowrap; margin-left: 1em; display: inline-block">
         <b style="font-size: smaller;">Pos: </b><input style="width: 186px" (change)="isUseStandImage = true" type="range" min="0" max="100" [(ngModel)]="character.standList.position">
