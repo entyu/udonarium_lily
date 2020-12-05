@@ -65,7 +65,11 @@
 .name-tag.dialog.dialog-secret.is-position-left {
   border-radius: 12px 24px 12px 24px;
 }
-
+/*
+.stand-image-container, .name-tag {
+  transition: left 0.1s linear;
+}
+*/
 .emote {
   text-align: center;
   font-size: 48px;

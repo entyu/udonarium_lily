@@ -155,16 +155,16 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   helpStandSeteing() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 540 };
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 590 };
     let textView = this.panelService.open(TextViewComponent, option);
     textView.title = 'スタンド設定ヘルプ';
     textView.text = 
 `　キャラクターのスタンドの位置と画像の高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にスタンドが表示される条件を設定できます。
-　画像の高さは個別指定も可能、0とした場合は全体の設定が使用されます。
+　画像の位置と高さは個別指定も可能です、位置の個別指定はチェックなし、高さは0とした場合に全体の設定が使用されます。
 
 　また、縦位置調整(AdjY)は、スタンド画像の高さに対する相対指定となります（例えば、-50%とすると画像の下半分が画面端より下に隠れます）。
 　
-　スタンドに名前を設定した場合、チャットウィンドウ、チャットパネルのリストに表示され、選択可能になります。
+　スタンドに名前を設定した場合、チャットウィンドウ、チャットパネルのリストに表示され、選択可能になります。また、グループ（Grp）を設定した場合、異なるグループでは同じキャラクターであっても登場、退去のアニメーションが行われます。
 　条件の「指定画像」はチャット送信時のキャラクター画像あるいは顔ICです。また、特別な条件として常に、チャットテキストの末尾が"@退去"または"@farewell"の場合は、そのキャラクターのスタンドを退去させます。
 
 　優先順位は高いものから

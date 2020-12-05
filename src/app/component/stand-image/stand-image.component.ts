@@ -14,13 +14,13 @@ import { StandImageService } from 'service/stand-image.service';
   styleUrls: ['./stand-image.component.css'],
   animations: [
     trigger('standInOut', [
-      transition('void => *', [
+      transition('void => *,:increment,:decrement', [
         animate('132ms cubic-bezier(.21,.97,.75,1.25)', keyframes([
           style({ opacity: 0.6, transform: 'translateY(48px) scale(0.9)', offset: 0 }),
           style({ opacity: 1.0, transform: 'translateY(0px) scale(1.0)', offset: 1.0 })
         ]))
       ]),
-      transition('* => void', [
+      transition('* => void,:increment,:decrement', [
         animate('132ms ease-out', keyframes([
           style({ transform: 'translateY(0px) scale(1.0)', offset: 0 }),
           style({ opacity: 0, transform: 'translateY(96px) scale(0.9)', offset: 1.0 })
@@ -76,7 +76,6 @@ export class StandImageComponent implements OnInit, OnDestroy {
   private naturalHeight = 0;
   
   isSpeaking = false;
-  group = '';
 
   constructor(
     private ngZone: NgZone
@@ -152,15 +151,33 @@ export class StandImageComponent implements OnInit, OnDestroy {
     clearTimeout(this._dialogTimeoutId);
   }
 
+  get group(): string {
+    if (!this.gameCharacter) return '';
+    let elm = this.standElement.getFirstElementByName('name');
+    return elm.currentValue && elm.currentValue.toString().length > 0 ? elm.currentValue.toString() : '';
+  }
+
+  get groupValue(): number {
+    // セキュリティ目的のハッシュではないのでとりあえず
+    let hash = 0;
+    const str = this.group;
+    for (let i = 0; i < str.length; i++) {
+      let chr = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0;
+    }
+    return hash;
+  }
+
   get position(): number {
     if (!this.gameCharacter) return 0;
-    return this.gameCharacter.standList.position;
-    //ToDO 位置の個別指定
+    let elm = this.standElement.getFirstElementByName('position');
+    return elm && elm.currentValue ? +elm.value :this.gameCharacter.standList.position;
   }
 
   get adjustY(): number {
     if (!this.gameCharacter) return 0;
-    let elm = this.standElement.getFirstElementByName('position');
+    let elm = this.standElement.getFirstElementByName('height');
     const posYPercent = (elm && elm.currentValue) ? +elm.currentValue : 0;
     return this.imageHeight * posYPercent / 100;
   }
@@ -260,12 +277,11 @@ export class StandImageComponent implements OnInit, OnDestroy {
     });
   }
 
-  toFront(group='') {
+  toFront() {
     this.ngZone.run(() => {
       this.isFarewell = false;
       this.isGhostly = false;
       this.isBackyard = false;
-      this.group = group;
       this.isVisible = true;
     });
     clearTimeout(this._timeoutId);
