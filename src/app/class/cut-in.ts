@@ -1,3 +1,4 @@
+import { ImageFile } from './core/file-storage/image-file';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 
@@ -9,7 +10,7 @@ export class CutIn extends ObjectNode {
   @SyncVar() posX: number = 50;
   @SyncVar() posY: number = 50;
 
-  @SyncVar() imageIdentifier: string = 'stand_no_image';
+  @SyncVar() imageIdentifier: string = ImageFile.Empty.identifier;
 
   get conditionTexts(): string[] {
     if (!this.value) return [];
