@@ -43,15 +43,14 @@
         <input name="buff_hide_chk" type="checkbox" 
         (change) ="buffHideChkChange($event.target.checked)" >
   </div>
-</div>
+    <form>
+      <div  [hidden] = "buffHideIsChk">
+        <textarea class="controller-input" placeholder="Enterで送信" [(ngModel)]="text"
+          [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
+            #textArea></textarea>
+        <button type="submit" (click)="sendChat(null)">実行</button>
+      </div>
+    </form>
 <div>
   
-  <form>
-    <ng-container *ngIf="! buffHideIsChk ">
-      <textarea class="controller-input" placeholder="Enterで送信" [(ngModel)]="text"
-        [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
-      #textArea></textarea>
-      <button type="submit" (click)="sendChat(null)">実行</button>
-    </ng-container>
-  </form>
 </div>

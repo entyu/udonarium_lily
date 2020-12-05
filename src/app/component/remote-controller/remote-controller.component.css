@@ -476,15 +476,6 @@ input[type='range']::-ms-tooltip {
   background-color: rgba(240,218,189, 0.8);
   color: #444;
 
-  /*
-  border-top: 1px solid #444;
-  border-bottom: 1px solid #444;
-  */
-
-  /*
-  background-color: rgba(70, 70, 70, 0.8);
-  color: #CCC;
-  */
 
 }
 
@@ -505,4 +496,20 @@ input[type='range']::-ms-tooltip {
   box-sizing: border-box;
 }
 
+.sticky-top-left {
+  float: left;
+  position: sticky;
+  top : 0;
+  width: 20em;
+  
+  background-color: rgba(240,218,189, 0.8);
+  border-top:1px dotted #666;
+  padding:5px 5px;
+  margin-top: 0;
+}
+
+.controller-right {
+  position: absorute;
+  margin-left: 20em;
+}
 

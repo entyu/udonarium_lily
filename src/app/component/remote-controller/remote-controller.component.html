@@ -1,5 +1,4 @@
-<div class="table" >
-  <div class="table-cell" style="width:20em;">
+<div class="table sticky-top-left" >
     <div class="flex-container">
       <div style="flex-grow: 0;">
         <form>
@@ -22,6 +21,14 @@
 <!-- entyu_3 -->
           <div *ngIf="!isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
             <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPlette>
+  <form>
+    <ng-container *ngIf="! buffHideIsChk ">
+      <textarea class="controller-input" placeholder="Enterで送信" [(ngModel)]="text"
+        [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)" 
+      #textArea></textarea>
+      <button type="submit" (click)="sendChat(null)">実行</button>
+    </ng-container>
+  </form>
 
 
             <ng-container *ngIf="palette">
@@ -112,35 +119,22 @@
             </ng-container >
           </ng-container> 
         </div>
-        <div>{{remotControllerSelect.identifier}}</div>
-        <div>{{remotControllerSelect.type}}</div>
-        <div>{{remotControllerSelect.name}}</div>
       </div>
     </ng-container>
-  </div>
+</div>
 
-<div class="table-cell" >
-  <div class="component">
+<div class="controller-right" >
     <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
     <div 
      *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
      [ngClass]="{'box': true, 'selected': 0 }" >
-<!--      (contextmenu)="onContextMenu($event, gameObject)" 
- (click)="selectGameObject(gameObject)"  -->
       <ng-container *ngTemplateOutlet="gameObjectTags; context:{ gameObject: gameObject}"></ng-container>
     </div>
-  </div>
 </div>
 
 <!-- インベントリ -->
 <ng-template #gameObjectTags let-gameObject="gameObject">
   <div class="inventory-object">
-<!--
-    <input name="tag_chg_chk" type="checkbox" 
-    (change) ="charListChange(gameObject.identifier , $event.target.checked)" 
-    [checked]="charList.indexOf(gameObject.identifier) > -1" >
-    <div class="object-name">{{gameObject.name}}</div>
--->
     <div class="object-tags-box">
       <div>
         <input name="tag_chg_chk" type="checkbox" 

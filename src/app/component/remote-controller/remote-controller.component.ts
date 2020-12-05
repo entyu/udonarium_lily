@@ -262,8 +262,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     if (this.doubleClickTimer && this.text === line) {
       clearTimeout(this.doubleClickTimer);
       this.doubleClickTimer = null;
-//      this.controllerInputComponent.sendChat(null);
-      this.sendChat(null);
+      this.controllerInputComponent.sendChat(null);
     } else {
       this.text = line;
       this.doubleClickTimer = setTimeout(() => { this.doubleClickTimer = null }, 400);
@@ -511,6 +510,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     for (let character of gameCharacters){
       if(character.buffDataElement.children){
         for (let dataElm of character.buffDataElement.children){
+
 /*
           let isOld = false;
           for (let data of dataElm.children){

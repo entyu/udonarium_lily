@@ -235,7 +235,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   private showRemoteController(gameObject: GameCharacter) {
 //      this.panelService.open(RemoteControllerComponent, { width: 700, height: 400, left: 100, top: 450 });
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 615, height: 350 };
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 700, height: 600 };
     let component = this.panelService.open<RemoteControllerComponent>(RemoteControllerComponent, option);
     component.character = gameObject;
 
