@@ -23,6 +23,11 @@ import { StandSettingComponent } from 'component/stand-setting/stand-setting.com
 import * as lzbase62 from 'lzbase62/lzbase62.min.js';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 
+interface StandGroup {
+  name: string,
+  stands: string[]
+}
+
 @Component({
   selector: 'chat-input',
   templateUrl: './chat-input.component.html',
@@ -83,13 +88,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   get hasStand(): boolean {
     if (!this.character || !this.character.standList) return false;
-    return this.character.standList.getElementsByName('stand').length > 0;
+    return this.character.standList.standElements.length > 0;
   }
 
   get standNameList(): string[] {
     if (!this.hasStand) return [];
     let ret: string[] = [];
-    for (let standElement of this.character.standList.getElementsByName('stand')) {
+    for (let standElement of this.character.standList.standElements) {
       let nameElement = standElement.getFirstElementByName('name');
       if (nameElement && nameElement.value && ret.indexOf(nameElement.value.toString()) < 0) {
         ret.push(nameElement.value.toString());
@@ -98,6 +103,27 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     return ret.sort();
   }
   standName: string = '';
+
+  get standListNoGroup(): [] {
+    return [];
+  }
+
+  get standListWithGroup(): StandGroup[] {
+    if (!this.hasStand) return [];
+    let ret = {};
+    const nameElements = this.character.standList.standElements.map((standElement) => standElement.getFirstElementByName('name')).filter(e => e);
+    nameElements.sort((a, b) => a.currentValue === b.currentValue ? 0 : a.currentValue > b.currentValue ? -1 : 1);
+    for (const nameElement of nameElements) {
+      if (nameElement && nameElement.value) {
+        const groupName = (nameElement.currentValue && nameElement.currentValue.toString().length > 0) ? nameElement.currentValue.toString() : '';
+        if (groupName) {
+          if (!ret[groupName]) ret[groupName] = [];
+          if (ret[groupName].indexOf(nameElement.value.toString()) < 0) ret[groupName].push(nameElement.value.toString());
+        }
+      }
+    }
+    return Object.keys(ret).sort().map((group) => { return { name: group, stands: ret[group].sort() } }).filter(e => e.stands.length > 0);
+  }
 
   get imageFile(): ImageFile {
     let object = ObjectStore.instance.get(this.sendFrom);

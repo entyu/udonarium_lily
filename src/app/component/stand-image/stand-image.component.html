@@ -1,6 +1,6 @@
 <div [style.visibility]="isShowStand ? 'visible' : 'hidden'" 
   [style.pointer-events]="isShowStand ? 'auto' : 'none'">
-  <div [@standInOut]="group" *ngIf="!isFarewell && (isVisible || !isCanBeGone)" class="stand-image-container"
+  <div [@standInOut]="groupValue" *ngIf="!isFarewell && (isVisible || !isCanBeGone)" class="stand-image-container"
     [style.left]="position + '%'"
     [style.height]="height == 0 ? '' : height + 'vh'"
     [style.margin-left.px]="-imageWidth / 2"

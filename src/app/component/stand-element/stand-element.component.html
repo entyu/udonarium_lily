@@ -21,7 +21,10 @@
     <div style="display: flex; flex-direction: column; padding-left: 3px; width: 100%">
       <div>
         <ng-container *ngIf="nameElement">
-          <input type="text" style="width: 7em" [(ngModel)]="nameElement.value" placeholder="Name">　
+          <span style="font-size: smaller;">
+            <input type="text" style="width: 7em" [(ngModel)]="nameElement.value" placeholder="Name">
+            <b style="margin-left: 1em;">Tag: </b><input type="text" style="width: 3em" [(ngModel)]="nameElement.currentValue" placeholder="Tag">
+          </span>
         </ng-container>
         <ng-container *ngIf="conditionTypeElement">
           <b style="font-size: smaller">　Cond: </b><select style="width: 15.5em" [(ngModel)]="conditionTypeElement.value">
@@ -33,7 +36,6 @@
             <option value="{{ standConditionType.NotConditionStandUp }}">選択時のみ</option>
           </select>
         </ng-container>
-        <button style="font-size: 9px; margin-left: 1em;" (click)="testStandUp()"><b>テスト (自分だけ見る)</b></button>
       </div>
       <div>
         <ng-container *ngIf="applyImageEffectElement">
@@ -55,6 +57,18 @@
           </label>
         </ng-container>
         <button (click)="openSpeakingModal()" style="font-size: 9px" [style.font-weight]="isSpeakable ? 'bolder' : 'normal'">口パクアニメ (APNGなど)</button>
+        <ng-container *ngIf="positionElement">
+          <br><button style="font-size: 9px; margin-right: 1em;" (click)="testStandUp()"><b>テスト (自分だけ見る)</b></button>
+          <label style="margin-right: 0.3em;">
+            <input type="checkbox" [(ngModel)]="positionElement.currentValue" checked="{{positionElement.currentValue ? 'checked' : ''}}" (change)="positionElement.currentValue = (positionElement.currentValue ? 'posSpecialize' : '')">
+            <b style="font-size: smaller;">Pos個別指定: </b>
+          </label>
+          <span style="white-space: nowrap; font-size: smaller">
+            <input style="width: 140px" type="range" min="0" max="100" [(ngModel)]="positionElement.value" [disabled]="!positionElement.currentValue">
+            <input style="width: 3em; text-align: right;" type="number" min="0" max="100" [(ngModel)]="positionElement.value" [disabled]="!positionElement.currentValue">
+            <b style="display: inline-block; font-size: smaller; margin-left: 3px">%</b>
+          </span>
+        </ng-container>
         <ng-container *ngIf="heightElement">
           <br><span style="white-space: nowrap; font-size: smaller">
             <b style="display: inline-block; margin-left: 3px">Height (0=指定なし): </b>
@@ -62,11 +76,9 @@
             <input style="width: 3em; text-align: right;" type="number" min="0" max="100" [(ngModel)]="heightElement.value">
             <b style="display: inline-block; font-size: smaller; margin-left: 3px">%</b>
           </span>
-        </ng-container>
-        <ng-container *ngIf="positionElement">
           <span style="white-space: nowrap; margin-left: 0.8em; font-size: smaller">
             <b style="display: inline-block; margin-left: 3px">AdjY: </b>
-            <input type="number" min="-100" max="100" style="width: 3.4em; text-align: right" [(ngModel)]="positionElement.currentValue">
+            <input type="number" min="-100" max="100" style="width: 3.4em; text-align: right" [(ngModel)]="heightElement.currentValue">
             <b style="display: inline-block; font-size: smaller; margin-left: 3px">%</b>
           </span>
         </ng-container>

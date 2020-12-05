@@ -34,12 +34,12 @@ export class StandList extends DataElement {
     standElement.appendChild(DataElement.create('name', '', { }, 'name_' + standElement.identifier));
     standElement.appendChild(DataElement.create('imageIdentifier', identifier && identifier != ImageFile.Empty.identifier ? identifier : 'stand_no_image', { type: 'image' }, 'imageIdentifier_' + standElement.identifier));
     standElement.appendChild(DataElement.create('conditionType', condition, { }, 'conditionType_' + standElement.identifier));
-    standElement.appendChild(DataElement.create('height', 0, { }, 'height_' + standElement.identifier));
+    standElement.appendChild(DataElement.create('height', 0, { 'currentValue': 0 }, 'height_' + standElement.identifier));
     standElement.appendChild(DataElement.create('applyImageEffect', '', { }, 'applyImageEffect_' + standElement.identifier));
     standElement.appendChild(DataElement.create('applyRoll', '', { }, 'applyRoll_' + standElement.identifier));
     standElement.appendChild(DataElement.create('applyDialog', 'applyDialog', { }, 'applyDialog_' + standElement.identifier));
     standElement.appendChild(DataElement.create('postfix', '', { }, 'postfix_' + standElement.identifier));
-    standElement.appendChild(DataElement.create('position', 0, { 'currentValue': 0 }, 'position_' + standElement.identifier));
+    standElement.appendChild(DataElement.create('position', 0, { 'currentValue': '' }, 'position_' + standElement.identifier));
     standElement.appendChild(DataElement.create('speakingImageIdentifier', '', { type: 'image' }, 'speakingImageIdentifier_' + standElement.identifier));
     this.appendChild(standElement);
   }
