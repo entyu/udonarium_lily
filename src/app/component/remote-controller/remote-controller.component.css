@@ -513,3 +513,19 @@ input[type='range']::-ms-tooltip {
   margin-left: 20em;
 }
 
+
+
+.tab-setting {
+  background-color: transparent;
+  color: #444; 
+  border: solid 1px #555;
+  padding: 2px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tab-setting:hover {
+  background-color: #888;
+  color: #eee;
+  border: solid 1px #555;
+}

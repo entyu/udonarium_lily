@@ -55,6 +55,8 @@ import { SafePipe } from 'pipe/safe.pipe';
 //entyu_3
 import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
 import { ControllerInputComponent } from 'component/controller-input/controller-input.component';  
+import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component'; 
+
 //
 //entyu_30
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
@@ -62,8 +64,6 @@ import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 //
-
-
 import { AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { ContextMenuService } from 'service/context-menu.service';
@@ -94,6 +94,7 @@ import { AppComponent } from './app.component';
 //entyu_3
     RemoteControllerComponent,
     ControllerInputComponent,
+    GameCharacterBuffViewComponent,
 //
     FileSelecterComponent,
     FileStorageComponent,

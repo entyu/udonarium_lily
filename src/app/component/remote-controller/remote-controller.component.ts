@@ -25,7 +25,10 @@ import { GameCharacterSheetComponent } from 'component/game-character-sheet/game
 import { ContextMenuAction, ContextMenuService, ContextMenuSeparator } from 'service/context-menu.service';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
- 
+
+import { GameDataElementBuffComponent } from 'component/game-data-element-buff/game-data-element-buff.component'; 
+
+import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component'; 
 
 //-----------------
 
@@ -598,7 +601,12 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     return gameObject ? gameObject.identifier : index;
   }
 
-//----------------
-
+  buffEdit( characterName :string){
+      let coordinate = this.pointerDeviceService.pointers[0];
+      let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 500 };
+      let textView = this.panelService.open(GameCharacterBuffViewComponent, option);
+//      textView.title = characterName + 'のバフ編集';
+    
+  }
 
 }

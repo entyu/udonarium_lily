@@ -62,21 +62,6 @@
       </div>
     </div>
     <hr>
-<!-- バフ表示　消し
-   <ng-container *ngIf="selectCharacter">
-     <div class="controller">
-       <ng-container *ngIf="selectCharacter.buffDataElement">
-        <div class="table">
-           <div class="flex-item" *ngFor="let childElement of selectCharacter.buffDataElement.children">
-             <div class="table-row" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="false"></div>
-           </div>
-         </div>
-       </ng-container>
-      </div>
-    </ng-container >
-   </div>
-           -->
-<!-- リモコン部 -->
 
     <div style="width:100%;">カウンターリモコン
       <div style="float:right;text-align:right;">隠す
@@ -105,7 +90,7 @@
                   <input name="controller" type="radio" value="{{dataElm.name + '現在値'}}" ng-control="options" (click)="remotSelect(dataElm.name,'currentValue',(dataElm.name + '現在値'))" />
                    <div>{{dataElm.name + '現在値'}}</div>
 　                </label>
-    　　　  　　　<label *ngSwitchCase="'numberResource'">
+                  <label *ngSwitchCase="'numberResource'">
                     <input name="controller" type="radio" value="{{dataElm.name + '最大値'}}" ng-control="options" (click)="remotSelect(dataElm.name,'value',(dataElm.name + '最大値'))" />
                     <div>{{dataElm.name + '最大値'}}</div>
                   </label>
@@ -134,13 +119,15 @@
 
 <!-- インベントリ -->
 <ng-template #gameObjectTags let-gameObject="gameObject">
-  <div class="inventory-object">
+  <div class="inventory-object " >
+
     <div class="object-tags-box">
       <div>
         <input name="tag_chg_chk" type="checkbox" 
         (change) ="charListChange(gameObject.identifier , $event.target.checked)" 
         [checked]="charList.indexOf(gameObject.identifier) > -1" >
         <span class="object-name">{{gameObject.name}}</span>
+        <button class="tab-setting small-font" (click)="buffEdit( gameObject.name )"><i class="material-icons small-font">settings</i>バフ編集</button>
       </div>
       <div class="table">
         <div class="table-cell image-box">
@@ -185,6 +172,8 @@
         </div>
 
       </ng-container>
+      <ng-container *ngSwitchCase="'note'">
+      </ng-container>
       <ng-container *ngSwitchDefault>
         <div class="tag-name">{{dataElm.name}}</div>
         <div style="text-align: center;">
@@ -199,3 +188,20 @@
     </ng-container>
   </div>
 </ng-template>
+
+
+<!-- バフ表示　消し
+   <ng-container *ngIf="selectCharacter">
+     <div class="controller">
+       <ng-container *ngIf="selectCharacter.buffDataElement">
+        <div class="table">
+           <div class="flex-item" *ngFor="let childElement of selectCharacter.buffDataElement.children">
+             <div class="table-row" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="false"></div>
+           </div>
+         </div>
+       </ng-container>
+      </div>
+    </ng-container >
+   </div>
+           -->
+<!-- リモコン部 -->
