@@ -15,11 +15,11 @@
                 [(ngModel)]="name" placeholder="Value" >
               </ng-container>
             </div>
-            <div class="table-cell" >/</div>
-            <div class="table-cell" style="width:20%;">
+            <div class="table-cell" style="width:0px;">/</div>
+            <div class="table-cell" style="width:30%;">
               <input style="width:100%;" size="1" type="string" [(ngModel)]="currentValue" placeholder="Value" />
             </div>
-            <div class="table-cell" >/</div>
+            <div class="table-cell" style="width:0px;">/</div>
             <div class="table-cell" >
               <input style="width: 3em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
             </div>
@@ -27,12 +27,15 @@
           </div>
         </ng-container>
         <ng-container *ngSwitchDefault>
-          <div class="table-cell_inner-table" style="width:100%;">
+          <div class="table" style="width:100%;">
 
-            <div class="table-cell_inner-table-title">
+            <div class="table-cell_inner-table-title" >
               <ng-container *ngIf="!isTagLocked">
+                <div class="inputLock" >{{gameDataElement.name}}</div>
+<!--
                 <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 1.0rem; font-weight: bold;"
                   size="1" [(ngModel)]="name" placeholder="Value" />
+-->
               </ng-container>
             </div>
           </div>
@@ -41,12 +44,15 @@
     </ng-container>
 
     <ng-container *ngIf="0 < gameDataElement.children.length">
-        <div class="table-cell_inner-table" style="width:100%;">
+        <div class="table" style="width:100%;">
   
           <div class="table-cell_inner-table-title">
             <ng-container *ngIf="!isTagLocked">
+                <div class="inputLock" >{{gameDataElement.name}}</div>
+<!--
               <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 1.0rem; font-weight: bold;"
                 size="1" [(ngModel)]="name" placeholder="Value" />
+-->
             </ng-container>
           </div>
 

@@ -84,6 +84,23 @@ input, textarea, select{
   box-sizing: border-box;
 }
 
+.inputLock{
+/*.input {*/
+  background: none;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+
+  color: #444;
+  font-family: Cambria, Georgia;
+  font-size: 1.0em;
+  padding: 2px;
+  box-sizing: border-box;
+  width:100%;
+  min-width:10px; 
+  font-weight: bold;
+}
+
 input:hover, textarea:hover, select:hover  {
   background: #EEE;
 }

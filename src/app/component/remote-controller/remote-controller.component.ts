@@ -603,7 +603,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
   buffEdit( gameCharacter :GameCharacter){
       let coordinate = this.pointerDeviceService.pointers[0];
-      let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 380, height: 300 };
+      let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 420, height: 300 };
       option.title = gameCharacter.name + 'のバフ編集';
       let component = this.panelService.open(GameCharacterBuffViewComponent, option);
       component.character = gameCharacter;
