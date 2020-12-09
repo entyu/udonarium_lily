@@ -113,4 +113,11 @@ export class GameDataElementBuffComponent implements OnInit, OnDestroy, AfterVie
       this.updateTimer = null;
     }, 66);
   }
+  
+  deletBuff( data : DataElement ){
+//    let data = data;
+    console.log('TEST' + data.name);
+    data.destroy();
+
+  }
 }

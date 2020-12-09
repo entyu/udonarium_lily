@@ -601,11 +601,12 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     return gameObject ? gameObject.identifier : index;
   }
 
-  buffEdit( characterName :string){
+  buffEdit( gameCharacter :GameCharacter){
       let coordinate = this.pointerDeviceService.pointers[0];
-      let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 500 };
-      let textView = this.panelService.open(GameCharacterBuffViewComponent, option);
-//      textView.title = characterName + 'のバフ編集';
+      let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 380, height: 300 };
+      option.title = gameCharacter.name + 'のバフ編集';
+      let component = this.panelService.open(GameCharacterBuffViewComponent, option);
+      component.character = gameCharacter;
     
   }
 

@@ -462,7 +462,6 @@ input[type='range']::-ms-tooltip {
   font-family: inherit;
 }
 
-/*entyu_5*/
 .flex-item {
   margin: 5px 0px;
   padding: 10px;
@@ -475,8 +474,6 @@ input[type='range']::-ms-tooltip {
   background-color: rgba(234,201,157, 0.8);
   background-color: rgba(240,218,189, 0.8);
   color: #444;
-
-
 }
 
 .table {

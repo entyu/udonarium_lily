@@ -3,6 +3,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 
+import { TabletopObject } from '@udonarium/tabletop-object';
+import { GameCharacter } from '@udonarium/game-character';
+
 @Component({
   selector: 'game-character-buff-view',
   templateUrl: './game-character-buff-view.component.html',
@@ -10,8 +13,10 @@ import { PanelService } from 'service/panel.service';
 })
 export class GameCharacterBuffViewComponent implements OnInit {
 
-  @Input() text: string = '';
-  @Input() title: string = '';
+//  @Input() title: string = '';
+
+  @Input() character: TabletopObject = null;
+
   constructor(
     private panelService: PanelService,
     private modalService: ModalService

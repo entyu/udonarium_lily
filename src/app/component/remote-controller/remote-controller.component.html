@@ -127,7 +127,7 @@
         (change) ="charListChange(gameObject.identifier , $event.target.checked)" 
         [checked]="charList.indexOf(gameObject.identifier) > -1" >
         <span class="object-name">{{gameObject.name}}</span>
-        <button class="tab-setting small-font" (click)="buffEdit( gameObject.name )"><i class="material-icons small-font">settings</i>バフ編集</button>
+        <button class="tab-setting small-font" (click)="buffEdit( gameObject )">バフ編集</button>
       </div>
       <div class="table">
         <div class="table-cell image-box">

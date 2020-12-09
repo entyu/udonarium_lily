@@ -3,23 +3,28 @@
     <ng-container *ngIf="gameDataElement.children.length < 1">
       <ng-container [ngSwitch]="gameDataElement.type">
         <ng-container *ngSwitchCase="'numberResource'">
-          <div class="table-cell" style="width:60%;">
-            <ng-container *ngIf="!isTagLocked"><!-- NAME -->
-              <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{name}}</div>
+          <div class="table-cell" style="border-bottom:none;">
+            <button (click)="deletBuff(gameDataElement)" style="width:5em;">削除</button>
+          </div>
+          <div class="table table-cell" style="" style="border-bottom:none">
+            <div class="table-cell" style="width:60%;">
+              <ng-container *ngIf="!isTagLocked"><!-- NAME -->
+                <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{name}}</div>
 
-              <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 0.9rem;" size="1"
+                <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 0.9rem;" size="1"
                 [(ngModel)]="name" placeholder="Value" >
-            </ng-container>
-          </div>
-          <div class="table-cell" >/</div>
-          <div class="table-cell" style="width:20%;">
+              </ng-container>
+            </div>
+            <div class="table-cell" >/</div>
+            <div class="table-cell" style="width:20%;">
               <input style="width:100%;" size="1" type="string" [(ngModel)]="currentValue" placeholder="Value" />
-          </div>
-          <div class="table-cell" >/</div>
-          <div class="table-cell" >
+            </div>
+            <div class="table-cell" >/</div>
+            <div class="table-cell" >
               <input style="width: 3em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
+            </div>
+            <div class="table-cell" >R</div>
           </div>
-          <div class="table-cell" >R</div>
         </ng-container>
         <ng-container *ngSwitchDefault>
           <div class="table-cell_inner-table" style="width:100%;">
@@ -36,8 +41,6 @@
     </ng-container>
 
     <ng-container *ngIf="0 < gameDataElement.children.length">
-<!--    <div >{{gameDataElement.children.length}}</div>-->
-
         <div class="table-cell_inner-table" style="width:100%;">
   
           <div class="table-cell_inner-table-title">
@@ -52,6 +55,8 @@
               [gameDataElement]="childElement" [isEdit]="isEdit" [isTagLocked]="isTagLocked"></div>
           </div>
       </div>
+<!--    
+-->
     </ng-container>
   </ng-container>
 </ng-container>

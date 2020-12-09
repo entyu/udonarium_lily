@@ -1,1 +1,11 @@
-<span><pre class="text">TEST</pre></span>
+   <ng-container *ngIf="character">
+     <div class="controller">
+       <ng-container *ngIf="character.buffDataElement">
+        <div class="table">
+           <div class="flex-item" *ngFor="let childElement of character.buffDataElement.children">
+             <div class="table-row" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="false"></div>
+           </div>
+         </div>
+       </ng-container>
+      </div>
+   </ng-container >

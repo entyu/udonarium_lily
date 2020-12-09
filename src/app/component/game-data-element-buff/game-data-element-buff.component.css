@@ -68,7 +68,9 @@
   box-sizing: border-box;
 }
 
-input, button, textarea, select{
+/*button*/
+
+input, textarea, select{
 /*.input {*/
   background: none;
   border: none;
