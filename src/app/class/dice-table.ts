@@ -14,7 +14,7 @@ export interface TableVariable {
 
 
 @SyncObject('dice-table')
-export class DiceTable extends ObjectNode{ //GameObject {
+export class DiceTable extends ObjectNode{ 
 
   @SyncVar() name: string = 'ダイス表';
   @SyncVar() command: string = 'SAMPLE';

@@ -14,9 +14,7 @@ import { ChatTabSettingComponent } from 'component/chat-tab-setting/chat-tab-set
 import { ChatTabComponent } from 'component/chat-tab/chat-tab.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 
-//entyu_21
 import { ChatTachieComponent } from 'component/chat-tachie/chat-tachie.component';
-//
 
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { DiceSymbolComponent } from 'component/dice-symbol/dice-symbol.component';
@@ -26,9 +24,9 @@ import { GameCharacterGeneratorComponent } from 'component/game-character-genera
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { GameCharacterComponent } from 'component/game-character/game-character.component';
 import { GameDataElementComponent } from 'component/game-data-element/game-data-element.component';
-//entyu_5
+
 import { GameDataElementBuffComponent } from 'component/game-data-element-buff/game-data-element-buff.component';
-//
+
 import { GameObjectInventoryComponent } from 'component/game-object-inventory/game-object-inventory.component';
 import { GameTableMaskComponent } from 'component/game-table-mask/game-table-mask.component';
 import { GameTableSettingComponent } from 'component/game-table-setting/game-table-setting.component';
@@ -52,18 +50,16 @@ import { ResizableDirective } from 'directive/resizable.directive';
 import { RotableDirective } from 'directive/rotable.directive';
 import { TooltipDirective } from 'directive/tooltip.directive';
 import { SafePipe } from 'pipe/safe.pipe';
-//entyu_3
+
 import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
 import { ControllerInputComponent } from 'component/controller-input/controller-input.component';  
 import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component'; 
 
-//
-//entyu_30
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
-//
+
 import { AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { ContextMenuService } from 'service/context-menu.service';
@@ -87,35 +83,34 @@ import { AppComponent } from './app.component';
     ChatTabComponent,
     ChatTabSettingComponent,
     ChatWindowComponent,
-//enty_21    
+
     ChatTachieComponent,
-//    
+
     ContextMenuComponent,
-//entyu_3
+
     RemoteControllerComponent,
     ControllerInputComponent,
     GameCharacterBuffViewComponent,
-//
+
     FileSelecterComponent,
     FileStorageComponent,
     GameCharacterGeneratorComponent,
     GameCharacterSheetComponent,
     GameCharacterComponent,
     GameDataElementComponent,
-//entyu_5
+
     GameDataElementBuffComponent,
-//
+
     GameObjectInventoryComponent,
     GameTableMaskComponent,
     GameTableSettingComponent,
     GameTableComponent,
     JukeboxComponent,
-//entyu_30
+
     CutInListComponent,
     CutInBgmComponent,
     CutInWindowComponent,
     DiceTableSettingComponent,
-//
     
     LobbyComponent,
     ModalComponent,

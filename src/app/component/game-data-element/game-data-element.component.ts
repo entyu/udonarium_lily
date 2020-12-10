@@ -9,13 +9,13 @@ import {
 } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
-//entyu_8
+
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
-//
+
 @Component({
   selector: 'game-data-element, [game-data-element]',
   templateUrl: './game-data-element.component.html',
@@ -28,11 +28,9 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   @Input() isTagLocked: boolean = false;
   @Input() isValueLocked: boolean = false;
 
-//entyu_8
   @Input() isImage: boolean = false;
   @Input() indexNum: number = 0;
 
-//
   private _name: string = '';
   get name(): string { return this._name; }
   set name(name: string) { this._name = name; this.setUpdateTimer(); }
@@ -48,10 +46,8 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   private updateTimer: NodeJS.Timer = null;
 
   constructor(
-//entyu_8
     private panelService: PanelService,
     private modalService: ModalService,
-//
     private changeDetector: ChangeDetectorRef
   ) { }
 
@@ -80,7 +76,6 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
 
   }
 
-//entyu_8
   get imageFileUrl(): string { 
      let image:ImageFile = ImageStorage.instance.get(<string>this.gameDataElement.value);
      if (image) return image.url;
@@ -97,10 +92,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     });
   }
 
-//
-
   addImageElement() {
-//    this.gameDataElement.appendChild(DataElement.create('タグ', '', {}));
     this.gameDataElement.appendChild(DataElement.create('imageIdentifier', '', { type: 'image' }));
   }
 

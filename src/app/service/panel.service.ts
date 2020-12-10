@@ -12,7 +12,7 @@ export interface PanelOption {
   width?: number;
   height?: number;
   
-  isCutIn?: boolean; //entyu_30
+  isCutIn?: boolean; //この方式でよいか検討のこと
   cutInIdentifier?: string;
 }
 
@@ -28,7 +28,7 @@ export class PanelService {
   top: number = 0;
   width: number = 100;
   height: number = 100;
-  isCutIn: boolean = false ; //entyu_30
+  isCutIn: boolean = false ; //この方式でよいか検討のこと
   cutInIdentifier: string = '';
 
   scrollablePanel: HTMLDivElement = null;
@@ -65,10 +65,10 @@ export class PanelService {
       if (option.width) childPanelService.width = option.width;
       if (option.height) childPanelService.height = option.height;
       if (option.isCutIn){
-         childPanelService.isCutIn = option.isCutIn;  //entyu_30
+         childPanelService.isCutIn = option.isCutIn;  //この方式でよいか検討のこと
       }
       if (option.cutInIdentifier){
-         childPanelService.cutInIdentifier = option.cutInIdentifier;  //entyu_30
+         childPanelService.cutInIdentifier = option.cutInIdentifier;  //この方式でよいか検討のこと
       }
     }
     panelComponentRef.onDestroy(() => {

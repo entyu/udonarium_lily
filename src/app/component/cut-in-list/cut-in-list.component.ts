@@ -15,14 +15,12 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
-//import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+
 import { EventSystem, Network } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
-//import { ModalService } from 'service/modal.service';
-//import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -81,24 +79,12 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
 
-/*
-  get volume(): number { return AudioPlayer.volume; }
-  set volume(volume: number) { AudioPlayer.volume = volume; }
-
-  get auditionVolume(): number { return AudioPlayer.auditionVolume; }
-  set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; }
-*/
-
-
   get cutInImage(): ImageFile {
     if (!this.selectedCutIn) return ImageFile.Empty;
     let file = ImageStorage.instance.get(this.selectedCutIn.imageIdentifier);
     return file ? file : ImageFile.Empty;
   }
   
-  
-//  get cutInList(): CutInList { return ObjectStore.instance.get<CutInList>('CutInList'); }
-
   private lazyUpdateTimer: NodeJS.Timer = null;
   selectedCutIn: CutIn = null;
 
@@ -106,19 +92,9 @@ export class CutInListComponent implements OnInit, OnDestroy {
   get isEditable(): boolean {
     return !this.isEmpty && this.isSelected;
   }
-//  get isEmpty(): boolean { return this.cutInSelecter ? (this.cutInSelecter.viewCutIn ? false : true) : true; }
+
   get isEmpty(): boolean { return false ; }
 
-
-  
-/*
-
-  get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
-  get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
-
-  readonly auditionPlayer: AudioPlayer = new AudioPlayer();
-  private lazyUpdateTimer: NodeJS.Timer = null;
-*/
   constructor(
     private pointerDeviceService: PointerDeviceService,//
     private modalService: ModalService,
@@ -129,24 +105,15 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'カットインリスト');
-/*
-    this.auditionPlayer.volumeType = VolumeType.AUDITION;
-    EventSystem.register(this)
-      .on('*', event => {
-        if (event.eventName.startsWith('FILE_')) this.lazyNgZoneUpdate();
-      });
-*/
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
-//    this.stop();
   }
 
 
   selectCutIn(identifier: string) {
     this.selectedCutIn = ObjectStore.instance.get<CutIn>(identifier);
-//    this.selectedCutInXml = '';
   }
 
   getCutIns(): CutIn[] {
@@ -169,7 +136,6 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   delete() {
     if (!this.isEmpty && this.selectedCutIn) {
-//      this.selectedCutInXml = this.selectedCutIn.toXml();
       this.selectedCutIn.destroy();
       this.selectedCutIn = null;
     }
@@ -209,51 +175,22 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
 
   previewCutIn(){
-    
     //jukuと同じにする
   }
   stoppreviewCutIn(){
-    
     //jukuと同じにする
-    
   }
 
-  playCutIn(){ //通常BGMの駆動は保留
+  playCutIn(){ //現状通常BGM(ジュークボックス)と平行で鳴る＞止めるかどうか検討したが現状このまま
     if(!this.isSelected) return;
     this.cutInLauncher.startCutIn( this.selectedCutIn );
     
-/*
-    if(!this.isSelected) return;
-    let isBgm = this.isCutInBgmUploaded();
-    this.selectedCutIn.playAll(isBgm);
-*/
   }
 
   stopCutIn(){
     if(!this.isSelected) return;
     this.cutInLauncher.stopCutIn( this.selectedCutIn );
-/*    
-    let tag = this.cutInTagName;
-    this.selectedCutIn.stopAll();
-*/    
-//    for( let audio  of this.audios ){
-//      if( audio.tagName == tag ){
-//        audio.stopAll();
-//      }
- //     
-//    }
     
   }
 
-/*
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 600, height: 600 };
-    this.panelService.open<CutInBgmComponent>(CutInBgmComponent, option);
-*/
-/*
-    this.modalService.open<string>(CuiInBgmComponent).then(value => {
-      if (!this.selectedCutIn || !value) return;
-      this.selectedCutIn.audioIdentifier = value;
-    });
-*/
   }

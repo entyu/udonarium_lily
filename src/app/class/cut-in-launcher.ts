@@ -89,7 +89,7 @@ export class CutInLauncher extends GameObject {
 
   // override
   apply(context: ObjectContext) {
-    console.log('CutInLauncher apply() CALL'); //entyu_30
+    console.log('CutInLauncher apply() CALL');
 
     let launchCutInIdentifier = this.launchCutInIdentifier;
     let launchIsStart = this.launchIsStart;

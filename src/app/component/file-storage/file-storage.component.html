@@ -1,4 +1,3 @@
-<!--entyu_2  -->
 <form>
   <div class="image-chg">
     <label *ngFor="let tag of tagList" >
@@ -8,7 +7,6 @@
     </label>
   </div>
 </form>
-<!--entyu_2  end-->
 <label>
   <div class="drop-zone">
     <div>
@@ -21,7 +19,6 @@
       <br>１ファイルにつき2MBまで</div>
   </div>
 </label>
-<!-- entyu_2 #92--><!-- entyu_2 #92  inputNewTag-->
 <div class="sticky-top">
   <div>
     <button (click)="changeTag()">タグを変更</button>
@@ -29,8 +26,6 @@
   </div>
 </div>
 <div id="file-list">
-<!-- entyu_2 #92
--->
   <span *ngFor="let file of images" class="image_">
     <div style="float:left">
       <img *ngIf="(0 < file.url.length) " [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
@@ -38,6 +33,4 @@
       <input *ngIf="(0 < file.url.length) " name="tag_chg_chk" type="checkbox" (change) ="onChange(file.identifier , $event.target.checked)" [checked]="identifierList.indexOf(file.identifier) > -1" >
     </div>
   </span>
-
-<!---->
 </div>

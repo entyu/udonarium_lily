@@ -37,8 +37,8 @@ export class TabletopObject extends ObjectNode {
   get imageDataElement(): DataElement { return this.getElement('image'); }
   get commonDataElement(): DataElement { return this.getElement('common'); }
   get detailDataElement(): DataElement { return this.getElement('detail'); }
-//entyu_5
-  get buffDataElement(): DataElement { return this.getElement('buff'); }
+
+  get buffDataElement(): DataElement { return this.getElement('buff'); }//リリィにてバフ機能用の追加
 
 
   addBuffDataElement(){ 

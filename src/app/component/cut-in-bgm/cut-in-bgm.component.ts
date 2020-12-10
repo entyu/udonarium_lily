@@ -10,12 +10,8 @@ import { Jukebox } from '@udonarium/Jukebox';
 
 import { ModalService } from 'service/modal.service';
 
-
-//entyu_30
-//import { PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { PanelOption, PanelService } from 'service/panel.service';
-//
 
 @Component({
   selector: 'app-cut-in-bgm',
@@ -48,7 +44,6 @@ export class CutInBgmComponent implements OnInit, OnDestroy {
     this.auditionPlayer.volumeType = VolumeType.AUDITION;
     EventSystem.register(this)
       .on('*', event => {
-//        if (event.eventName.startsWith('FILE_')) this.lazyNgZoneUpdate();
       });
   }
 
@@ -57,11 +52,11 @@ export class CutInBgmComponent implements OnInit, OnDestroy {
     this.stop();
   }
 
-  play(audio: AudioFile) {//試聴
+  play(audio: AudioFile) {
     this.auditionPlayer.play(audio);
   }
 
-  stop() {//試聴
+  stop() {
     this.auditionPlayer.stop();
   }
   
@@ -73,7 +68,6 @@ export class CutInBgmComponent implements OnInit, OnDestroy {
     console.log('file.identifier' + file.identifier);
     console.log('file.name' + file.name);
     
-//    EventSystem.call('SELECT_FILE', { fileIdentifier: file.identifier }, Network.peerId);
     this.modalService.resolve(file.identifier);
   }
   

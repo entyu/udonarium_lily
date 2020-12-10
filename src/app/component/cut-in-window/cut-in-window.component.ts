@@ -116,9 +116,7 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
       });
 
   }
-  
-  
-  
+    
   ngAfterViewInit() {
     this.calcCutInSize();
 
@@ -179,7 +177,6 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   moveCutInPos(){
 
     if( this.width == 0 && this.height == 0 && this.left == 0 && this.top == 0 && this.counter < 200){
-//    if( this.counter < 10){
       this.counter = this.counter +1 ;
       setTimeout(() => {
         console.log('ウィンドウ位置の再計算');

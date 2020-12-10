@@ -12,7 +12,6 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
-//entyu
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 
 @Component({
@@ -46,17 +45,14 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get text(): string { return this._text };
   set text(text: string) { this._text = text; this.textChange.emit(text); }
 
-//entyu
   @Input('tachieNum') _tachieNum: number = 0;  
   @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number }>();
   get tachieNum(): number { return this._tachieNum };
   set tachieNum(num:  number){ this._tachieNum = num};
 
-//
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
   gameHelp: string = '';
 
-//entyu_10
   get selectCharacterTachie(){
     let object = ObjectStore.instance.get(this.sendFrom);
     if (object instanceof GameCharacter) {
@@ -76,16 +72,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     }
     return 0;
   }
-//entyu_10
 
   get imageFile(): ImageFile {
     
-//entyu_10
     if( this.selectCharacterTachie ){
       let image:ImageFile = ImageStorage.instance.get(<string>this.selectCharacterTachie.value);
       return image ? image : ImageFile.Empty;
     }
-//
 
     let object = ObjectStore.instance.get(this.sendFrom);
     let image: ImageFile = null;

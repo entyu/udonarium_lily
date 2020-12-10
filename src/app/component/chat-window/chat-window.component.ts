@@ -9,11 +9,10 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
-//entyu
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
-//
+
 @Component({
   selector: 'chat-window',
   templateUrl: './chat-window.component.html',
@@ -36,61 +35,21 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-//entyu
-  private _teststring: string = 'AAAA';
-  private _teststring2: string = '';
+//  private _teststring: string = 'AAAA';
+//  private _teststring2: string = '';
   private testcount:number = 0;
-//
+
 
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
   isAutoScroll: boolean = true;
   scrollToBottomTimer: NodeJS.Timer = null;
 
-//entyu
   testadd(){
     this.chatTab.count ++;
   }
   get testmess(): string[] { 
    return this.chatTab.imageIdentifier;
   } 
-
-/*
-  get imageFileUrl(): string {  
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifierTest);
-     if (image) return image.url;
-     return '';;
-  }
-
-  get imageFileUrl_00(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[0]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_01(): string { 
-  if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[1]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_02(): string { 
-  if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[2]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_03(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[3]);
-     if (image) return image.url;
-     return '';
-  }
-*/
-//
-
 
   constructor(
     public chatMessageService: ChatMessageService,
@@ -177,8 +136,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number }) {
-    console.log('円柱 sendChat');
-    if (this.chatTab) {//,value.tachieNum
+    if (this.chatTab) {
       this.chatMessageService.sendMessage(this.chatTab, value.text, value.gameType, value.sendFrom, value.sendTo ,value.tachieNum );
     }
   }

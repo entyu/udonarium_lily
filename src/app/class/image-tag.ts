@@ -1,4 +1,4 @@
-//entyu_2 #92
+//本家 PR#92より
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { ObjectStore } from './core/synchronize-object/object-store';

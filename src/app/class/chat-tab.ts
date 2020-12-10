@@ -4,22 +4,20 @@ import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
 import { EventSystem } from './core/system';
 
-//entyu
 import { ImageFile } from './core/file-storage/image-file';
 import { ImageStorage } from './core/file-storage/image-storage';
-//
 
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() name: string = 'タブ';
-//entyu
+
   @SyncVar() pos_num: number = -1;
   @SyncVar() imageIdentifier: string[] = ['a','b','c','d','e','f','g','h','i','j','k','l'];
   @SyncVar() imageCharactorName: string[] = ['#0','#1','#2','#3','#4','#5','#6','#7','#8','#9','#10','#11'];
   @SyncVar() imageIdentifierZpos: number[] = [0,1,2,3,4,5,6,7,8,9,10,11];
 
   @SyncVar() count:number = 0;
-  @SyncVar() imageIdentifierDummy: string = 'test';//通信のどうきのために使わなくても書かなきゃだめっぽい？;
+  @SyncVar() imageIdentifierDummy: string = 'test';//通信開始ために使わなくても書かなきゃだめっぽい後日見直し
   
   get chatMessages(): ChatMessage[] { return <ChatMessage[]>this.children; }
 
@@ -37,7 +35,6 @@ export class ChatTab extends ObjectNode implements InnerXml {
     return -1;
   }
 
-//entyu_21
   tachieZindex( toppos : number ):number {
     let index = this.imageIdentifierZpos.indexOf( Number(toppos) );
     return index;
@@ -46,9 +43,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
   public tachieDispFlag = 1;
 
   replaceTachieZindex( toppos : number ){
-//  console.log( 'imageIdentifierZpos before ' + this.imageIdentifierZpos ); 
     let index = this.imageIdentifierZpos.indexOf( Number(toppos) );
-//  console.log( 'index = ' + index ); 
     if( index >= 0 ){
       this.imageIdentifierZpos.splice(index,1);
       this.imageIdentifierZpos.push( Number(toppos) );
@@ -56,7 +51,6 @@ export class ChatTab extends ObjectNode implements InnerXml {
     }
   }
 
-//entyu_21
   private _dispCharctorIcon: boolean = true;
   get dispCharctorIcon(): boolean { return this._dispCharctorIcon; }
   set dispCharctorIcon( flag : boolean) { this._dispCharctorIcon = flag; }
@@ -93,12 +87,12 @@ export class ChatTab extends ObjectNode implements InnerXml {
         continue;
       }
       if (message[key] == null || message[key] === '') continue;
-//entyu
+
       if (key === 'imagePos') {
         this.pos_num = message[key];
         if( 0 <= this.pos_num && this.pos_num < this.imageIdentifier.length ){
            let oldpos = this.getImageCharactorPos(message['name']);
-           if( oldpos >= 0 ){ //同名キャラの古い位置を消去 && ( oldpos != this.pos_num
+           if( oldpos >= 0 ){ //同名キャラの古い位置を消去
               this.imageIdentifier[oldpos] = '';
               this.imageCharactorName[oldpos] = '';
            }
@@ -114,12 +108,12 @@ export class ChatTab extends ObjectNode implements InnerXml {
              this.replaceTachieZindex(this.pos_num);
            
            }
-           this.imageIdentifierDummy = message['imageIdentifier'];//同期方法がすこぶる怪しい後で確認
+           this.imageIdentifierDummy = message['imageIdentifier'];//同期方法が無理やり感がある、後日
            
         }
         continue;
       }
-//
+
       chat.setAttribute(key, message[key]);
     }
     chat.initialize();

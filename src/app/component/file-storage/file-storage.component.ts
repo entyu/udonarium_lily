@@ -6,9 +6,9 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { EventSystem, Network } from '@udonarium/core/system';
 
 import { PanelService } from 'service/panel.service';
-//entyu_2 #92
-import { ImageTag } from '@udonarium/image-tag';
-//
+
+import { ImageTag } from '@udonarium/image-tag';//本家PR #92より
+
 @Component({
   selector: 'file-storage',
   templateUrl: './file-storage.component.html',
@@ -16,8 +16,8 @@ import { ImageTag } from '@udonarium/image-tag';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
-//entyu_2 #92
 
+//本家PR #92より
   searchWord: string = '';
   private _searchWord: string;
   private _searchWords: string[];
@@ -78,7 +78,6 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   
   fileStorageService = ImageStorage.instance;
 
-//
   inputNewTag(newTag: string) { 
     this.newTagName = newTag;
   }
@@ -100,10 +99,6 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
    
  }
 
-////
-
-
-//entyu_2
   selectTag :string = '';
   identifierList :string[] = [];
   newTagName:string = '';
@@ -129,8 +124,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-//entyu_2 #92
-//
+//本家PR #92より
   constructor(
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService
@@ -160,8 +154,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   onSelectedFile(file: ImageFile) {
     console.log('onSelectedFile', file);
     EventSystem.call('SELECT_FILE', { fileIdentifier: file.identifier }, Network.peerId);
-//entyu_2 #92
-    this.selectedFile = file;
-//
+
+    this.selectedFile = file;//本家PR #92より
   }
 }

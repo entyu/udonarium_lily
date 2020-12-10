@@ -1,8 +1,3 @@
-<!-- entyu_2 #92
-<div class="sticky-top">
-  検索: <input [(ngModel)]="searchWord" placeholder="部分一致で検索 スペース区切りで複数指定" />
-</div>
-<!---->
 <form>
   <div class="image-chg">
     <label *ngFor="let tag of tagList" >
@@ -12,35 +7,14 @@
     </label>
   </div>
 </form>
-<!-- entyu_2 
-<div class="image-chg">
-  <label *ngFor="let tag of tagList">
-    <input *ngIf="0 < tag.length" name="image-chg" type="radio" value="{{tag}}" ng-control="options" [(ngModel)]="selectTag">
-    <div>{{tag}}</div>
-  </label>
-</div>
-<!-- -->
-<!--
-<form>
-</form>
--->
-
-<!-- entyu_2 -->
 <div id="file-list">
   <span class="empty" *ngIf="isAllowedEmpty">
     <button (click)="onSelectedFile(empty)">画像なし</button>
   </span>
-   
-  
-<!--  <ng-container *ngIf="isAllowedEmpty==false">-->
     <span *ngFor="let file of images" class="image">
     <div style="float:left">
       <img *ngIf="(0 < file.url.length) " [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
       <img *ngIf="file.url.length <= 0 " src="assets/images/loading.gif" alt="{{file.name}}">
     </div>
     </span>
-<!--  </ng-container>-->
-
-
-<!-- -->
 </div>

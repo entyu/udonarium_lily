@@ -10,10 +10,9 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
-//entyu
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
-//
+
 @Component({
   selector: 'chat-tachie',
   templateUrl: './chat-tachie.component.html',
@@ -53,14 +52,6 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
     return 0;
   }
   
-  
-  /*
-  get tachieDispFlag(): boolean { return this._tachieDispFlag; }
-  set tachieDispFlag(tachieDispFlag: boolean) {
-    this._tachieDispFlag = tachieDispFlag;
-  }
-*/  
-
   private timerId;
   
 //óßÇøäGï\é¶ïùéÊìæ
@@ -75,7 +66,6 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
   }  
 
 //z-indexéÊìæ
-
   private _zindexOffset = 10;
 
   get zIndex_00(): number { return this.chatTab.tachieZindex(0) + this._zindexOffset; }
@@ -107,10 +97,7 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
   get opacity_11(): number { if( this.chatTab.tachieZindex(11) == 11 ){return 1;}else{ return this._opacity ;}  }
 
 
- 
- 
-//
-//Ç±ÇÃé¿ëïÇÕÇ«Ç§Ç…Ç©ÇµÇΩÇ¢
+//Ç±ÇÃé¿ëïÇÕå„Ç≈Ç«Ç§Ç…Ç©ÇµÇΩÇ¢
   get imageFileUrl_00(): string { 
      if( ! this.chatTab.imageIdentifier )return '';
      let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[0]);
@@ -195,8 +182,6 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
      return '';
   }
 
-//
-
 
   constructor(
     public chatMessageService: ChatMessageService,
@@ -206,11 +191,9 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
   ) { }
 
   ngOnInit() {
-//    this.timerId = setInterval(this.ngAfterViewChecked, 200);
   }
 
   ngOnDestroy() {
-//    clearInterval(this.timerId);
     EventSystem.unregister(this);
   }
 

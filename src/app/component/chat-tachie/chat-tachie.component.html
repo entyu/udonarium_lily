@@ -1,6 +1,5 @@
 <div>
   <form>
-<!--  TEST001{{tachieAreaWidth}} [ngStyle]="{'height': tatieAreaHeight + ' + 150px' }"-->
   <div id="tachie-component_">
     <div class="tachie-image-box" #tachieArea [ngStyle]="{'height': tachieAreaHeight + 'px' }">
       <ng-container *ngIf="chatTab" >
@@ -43,16 +42,8 @@
            'z-index': zIndex_11 , 'opacity': opacity_11 ,'height': tachieAreaHeight + 'px'}" />
       </ng-container>
     </ng-container>
-
-<!--
-[ngStyle]="{'transform': 'translateX(+50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}"
-
-           [ngStyle]="{'transform': 'translateX(  calc( ('  +  '0px + 100% )  ) ) translateY(0%)'}" />
--->
-
     </div>
   </div>
-<!--  {{chatTab.imageIdentifierZpos}}  -->
     <div>
       立ち絵表示:
       <ng-container *ngIf="chatTab">

@@ -11,7 +11,7 @@ import { DataSummarySetting } from '@udonarium/data-summary-setting';
 import { Room } from '@udonarium/room';
 
 import * as Beautify from 'vkbeautify';
-//entyu_2 #92
+//本家PR #92より
 import { ImageTagList } from '@udonarium/image-tag-list';
 //
 @Injectable({
@@ -27,7 +27,7 @@ export class SaveDataService {
     files.push(new File([roomXml], 'data.xml', { type: 'text/plain' }));
     files.push(new File([chatXml], 'chat.xml', { type: 'text/plain' }));
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));
-//entyu_2 #92
+//本家PR #92より
 //    files = files.concat(this.searchImageFiles(roomXml));
 //    files = files.concat(this.searchImageFiles(chatXml));
 
@@ -51,7 +51,7 @@ export class SaveDataService {
     let xml: string = this.convertToXml(gameObject);
 
     files.push(new File([xml], 'data.xml', { type: 'text/plain' }));
-//entyu_2   #92
+//本家PR #92より
 //    files = files.concat(this.searchImageFiles(xml));
     let images: ImageFile[] = [];
     images = images.concat(this.searchImageFiles(xml));
@@ -73,13 +73,13 @@ export class SaveDataService {
     return xmlDeclaration + '\n' + Beautify.xml(gameObject.toXml(), 2);
   }
 
-//entyu_2   #92
+//本家PR #92より
 //  private searchImageFiles(xml: string): File[] {
   private searchImageFiles(xml: string): ImageFile[] {
 //
     let xmlElement: Element = XmlUtil.xml2element(xml);
 
-//entyu_2   #92
+//本家PR #92より
 //    let files: File[] = [];
     let files: ImageFile[] = [];
 //
@@ -103,7 +103,7 @@ export class SaveDataService {
     }
     for (let identifier in images) {
       let image = images[identifier];
-//entyu_2 #92
+//本家PR #92より
 //      if (image && image.state === ImageState.COMPLETE) {
 //        files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
 //      }

@@ -1,6 +1,5 @@
-//entyu_3
 import { ChatPalette,BuffPalette } from './chat-palette';
-//
+
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
@@ -49,7 +48,6 @@ export class GameCharacter extends TabletopObject {
   addExtendData(){
     
     this.addBuffDataElement();
-//  this.createDataElements();
     
     let istachie = this.detailDataElement.getElementsByName('立ち絵位置');
     if( istachie.length == 0 ){
@@ -61,13 +59,12 @@ export class GameCharacter extends TabletopObject {
     if( isbuff.length == 0 ){
       let buffElement: DataElement = DataElement.create('バフ/デバフ', '', {}, 'バフ/デバフ' + this.identifier);
       this.buffDataElement.appendChild(buffElement);
-//      buffElement.appendChild(DataElement.create('テストバフ1', 3, { 'type': 'numberResource', 'currentValue': '防+1' }, 'テストバフ1_' + this.identifier));
     }
     if( this.remoteController == null){
       let controller: BuffPalette = new BuffPalette('RemotController_' + this.identifier);
       controller.setPalette(`コントローラ入力例：
-バークメイル A 3
-クリティカルレイ A 3
+マッスルベアー DB+2 3
+クリティカルレイ A 18
 セイクリッドウェポン 命+1攻+2 18`);
       controller.initialize();
       this.appendChild(controller);

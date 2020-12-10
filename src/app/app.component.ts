@@ -18,10 +18,10 @@ import { DiceBot } from '@udonarium/dice-bot';
 import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-//
+
 import { CutIn } from '@udonarium/cut-in';
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
-//
+
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
@@ -42,10 +42,10 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
 
-//
+
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
-//
+
 
 @Component({
   selector: 'app-root',
@@ -59,9 +59,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private lazyUpdateTimer: NodeJS.Timer = null;
   private openPanelCount: number = 0;
   
-  dispcounter : number = 10 ;//表示更新用ダミー
-//  dummyImage : ImageFile = null ;
-  
+  dispcounter : number = 10 ;//表示更新用ダミーカットインを閉じるときに無理やり更新させている。
+    
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
@@ -97,10 +96,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let jukebox: Jukebox = new Jukebox('Jukebox');
     jukebox.initialize();
 
-//
     let cutInLauncher = new CutInLauncher('CutInLauncher');
     cutInLauncher.initialize();
-//
 
     let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
     soundEffect.initialize();
@@ -152,12 +149,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     EventSystem.register(this)
       .on('START_CUT_IN', event => { 
         this.startCutIn( event.data.cutIn );
-      })  //entyu_30
+      })  
       .on('STOP_CUT_IN', event => { 
         if( ! event.data.cutIn ) return;
         console.log('カットインイベント_ストップ'  + event.data.cutIn.name ); 
         
-      })  //entyu_30
+      })  
       .on('UPDATE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('DELETE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('SYNCHRONIZE_AUDIO_LIST', event => { if (event.isSendFromSelf) this.lazyNgZoneUpdate(false); })
@@ -200,7 +197,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.panelService.open(PeerMenuComponent, { width: 500, height: 450, left: 100 });
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
     }, 0);
-    //entyu_30
     setInterval(() => {
       this.dispcounter = this.dispcounter +1;
       if( this.dispcounter >100 )this.dispcounter = 0;
@@ -216,8 +212,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     console.log( 'カットインイベント_スタート' + cutIn.name );
     let option: PanelOption = { width: 200, height: 100, left: 300 ,top: 100};
     option.title = 'カットイン : ' + cutIn.name ;
-    
-//    this.dummyImage = cutIn.cutInImage;
     
     console.log( '画面領域 w:' + window.innerWidth + ' h:'+ window.innerHeight );
     
@@ -257,7 +251,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     option.cutInIdentifier = cutIn.identifier;
 
     let component = this.panelService.open(CutInWindowComponent, option);
-    component.cutIn = cutIn; //ChatWindowComponent;CutInWindowComponent
+    component.cutIn = cutIn;
     component.startCutIn();
     
   }
@@ -338,17 +332,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-/*
-  cutInStart() {
-//    option.top = (this.openPanelCount % 10 + 1) * 20;
-//    option.left = 100 + (this.openPanelCount % 20 + 1) * 5;
-    let component: { new(...args: any[]): any } = null;
-    let option: PanelOption = { width: 450, height: 600, top: 450, left: 300 };
-    component = CutInWindowComponent;
-    this.panelService.open(component, option);
-
-  }
-*/
 }
 PanelService.UIPanelComponentClass = UIPanelComponent;
 ContextMenuService.ContextMenuComponentClass = ContextMenuComponent;

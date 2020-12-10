@@ -20,13 +20,9 @@
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
 
-<!--
-      <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
-　-->
 
           <div class="rotate-inner is-3d">
-<!--entyu_5-->
-          <!-- 表示条件もう少しなんとか考えたほうがいい　バフ表示-->
+<!-- バフ表示-->
         <div *ngIf="this.gameCharacter.buffDataElement" >
 
           <ng-container *ngIf="this.gameCharacter.buffDataElement.children.length == 1">
@@ -47,7 +43,6 @@
           </ng-container>
         </div>
            
-<!--entyu_5-->
 
 <!--名前表示-->
               <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"

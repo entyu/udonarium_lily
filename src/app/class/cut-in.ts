@@ -14,11 +14,6 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { ModalService } from 'service/modal.service';
 
-//import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
-//import { ObjectNode } from './core/synchronize-object/object-node';
-//import { EventSystem } from './core/system';
-//import { Terrain } from './terrain';
-
 
 @SyncObject('cut-in')
 export class CutIn extends GameObject {
@@ -29,24 +24,22 @@ export class CutIn extends GameObject {
   @SyncVar() x_pos: number = 50;
   @SyncVar() y_pos: number = 50;
   
+  //主にジュークボックス機能を参考に作成
   @SyncVar() imageIdentifier: string = 'imageIdentifier';
-  @SyncVar() audioIdentifier: string = '';//jukeより
+  @SyncVar() audioIdentifier: string = '';
   @SyncVar() audioName: string = '';
   @SyncVar() startTime: number = 0;
   @SyncVar() tagName: string = '';
   @SyncVar() selected: boolean = false;
-  @SyncVar() isLoop: boolean = false;//jukeより
+  @SyncVar() isLoop: boolean = false;
   @SyncVar() outTime: number = 0;
 
   @SyncVar() useOutUrl: boolean = false;
   @SyncVar() outUrl: string = '';
-
-  @SyncVar() isPlaying: boolean = false;//jukeより
-
+  @SyncVar() isPlaying: boolean = false;
 
   get audio(): AudioFile { return AudioStorage.instance.get(this.audioIdentifier); }
   private audioPlayer: AudioPlayer = new AudioPlayer();
-
 
   get cutInImage(): ImageFile {
     if (!this.imageIdentifier) return ImageFile.Empty;

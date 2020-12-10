@@ -1,6 +1,4 @@
-//import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ElementRef, Input, ViewChild } from '@angular/core';
-//import { ElementRef, Input, ViewChild , NgZone} from '@angular/core';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ChatPalette } from '@udonarium/chat-palette';
@@ -12,9 +10,8 @@ import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ControllerInputComponent } from 'component/controller-input/controller-input.component';
 import { ChatMessageService } from 'service/chat-message.service';
-//import { PanelService } from 'service/panel.service';
 import { PanelOption, PanelService } from 'service/panel.service';
-//-----------------
+
 import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 import { DataElement } from '@udonarium/data-element';
 import { SortOrder } from '@udonarium/data-summary-setting';
@@ -27,10 +24,7 @@ import { GameObjectInventoryService } from 'service/game-object-inventory.servic
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 import { GameDataElementBuffComponent } from 'component/game-data-element-buff/game-data-element-buff.component'; 
-
 import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component'; 
-
-//-----------------
 
 class RemotControllerSelect {
     identifier:string;
@@ -43,8 +37,6 @@ class RemotControllerSelect {
   templateUrl: './remote-controller.component.html',
   styleUrls: ['./remote-controller.component.css']
   
-//    changeDetection: ChangeDetectionStrategy.OnPush
- 
 })
 export class RemoteControllerComponent implements OnInit, OnDestroy {
   @ViewChild('controllerInput', { static: true }) controllerInputComponent: ControllerInputComponent;
@@ -176,9 +168,6 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
   charListChange(charName:string, checked : boolean) {
 
-//    const imageTag = ImageTag.get(fileName);
-//    if( !imageTag ) ImageTag.create(fileName);
-
     if (checked) {
        if (this.charList.indexOf(charName) < 0) { 
           this.charList.push(charName);
@@ -205,8 +194,6 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
         }
       });
 
-//------------------------
-//    Promise.resolve().then(() => this.panelService.title = 'インベントリ');
     EventSystem.register(this)
       .on('SELECT_TABLETOP_OBJECT', -1000, event => {
         if (ObjectStore.instance.get(event.data.identifier) instanceof TabletopObject) {
@@ -227,7 +214,6 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
         }
       });
     this.inventoryTypes = ['table', 'common', Network.peerId, 'graveyard'];
-//------------------------
 
     this.disptimer = setInterval(() => {
       this.changeDetector.detectChanges();
@@ -287,7 +273,6 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     }
   }
 
-//----------------
 
   inventoryTypes: string[] = ['table', 'common', 'graveyard'];
   selectTab: string = 'table';
@@ -363,13 +348,10 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     let aliasName: string = gameObject.aliasName;
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
 
-//entyu_5    
     this.selectCharacter = gameObject;
-//
   }
 
 
-//entyu_5    
 
   remotBuffRound(gameCharacters :GameCharacter[]){
     let text :string ='';
@@ -452,7 +434,6 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
             num = parseInt(oldNumS);
             if( num <= 0){
               data.destroy();
-              //バフ消去
             }
           }
         }

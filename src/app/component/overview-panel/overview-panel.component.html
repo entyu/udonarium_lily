@@ -89,7 +89,7 @@
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
       <div class="grid-container-root" *ngIf="hasDataElms"   
       [ngStyle]="{'width': overViewCharacterWidth + 'px','max-height': overViewCharacterMaxHeight +'px'}">
-        <!--<ng-container *ngFor="let dataElm of dataElms">-->
+
         <ng-container *ngFor="let dataElm of inventoryDataElms">
           <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
             <div class="grid-container">

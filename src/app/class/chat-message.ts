@@ -16,7 +16,7 @@ export interface ChatMessageContext {
   tag?: string;
   dicebot?: string;
   imageIdentifier?: string;
-//entyu
+
   imagePos?: number;
 }
 
@@ -29,9 +29,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() tag: string;
   @SyncVar() dicebot: string;
   @SyncVar() imageIdentifier: string;
-//entyu
   @SyncVar() imagePos: number;
-//
+
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value }
   get timestamp(): number {

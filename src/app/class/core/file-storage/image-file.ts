@@ -14,11 +14,6 @@ export interface ImageContext {
   type: string;
   blob: Blob;
   url: string;
-//entyu_2
-//  tag: string;
-//  flag: string;
-//  filetag: FileTag;
-//
   thumbnail: ThumbnailContext;
 }
 
@@ -29,17 +24,12 @@ export interface ThumbnailContext {
 }
 
 export class ImageFile {
-//  private context: ImageContext = {
   context: ImageContext = {
     identifier: '',
     name: '',
     blob: null,
     type: '',
     url: '',
-//entyu_2
-//    tag: '',
-//    flag: '',
-//
     thumbnail: {
       blob: null,
       type: '',
@@ -53,14 +43,6 @@ export class ImageFile {
   get url(): string { return this.context.url ? this.context.url : this.context.thumbnail.url; };
   get thumbnail(): ThumbnailContext { return this.context.thumbnail };
 
-//entyu_2
-//  get tag(): string { return this.context.tag };
-//  get flag(): string { return this.context.flag };
-
-//  set tag(tag: string) { this.context.tag = tag};
-//  set flag(flag: string) { this.context.flag = flag};
-
-//
   get state(): ImageState {
     if (!this.url && !this.blob) return ImageState.NULL;
     if (this.url && !this.blob) return ImageState.URL;
@@ -132,10 +114,6 @@ export class ImageFile {
     if (!this.context.name && context.name) this.context.name = context.name;
     if (!this.context.blob && context.blob) this.context.blob = context.blob;
     if (!this.context.type && context.type) this.context.type = context.type;
-//entyu_2
-//    if (!this.context.tag && context.tag) this.context.tag = context.tag;
-//    if (!this.context.flag && context.flag) this.context.flag = context.flag;
-//
     if (!this.context.url && context.url) {
       if (this.state !== ImageState.URL) window.URL.revokeObjectURL(this.context.url);
       this.context.url = context.url;
@@ -156,10 +134,6 @@ export class ImageFile {
       blob: this.context.blob,
       type: this.context.type,
       url: this.context.url,
-//entyu_2
-//      tag: this.context.tag,
-//     flag: this.context.flag,
-//
       thumbnail: {
         blob: this.context.thumbnail.blob,
         type: this.context.thumbnail.type,
@@ -192,7 +166,6 @@ export class ImageFile {
         var dstHeight = image.height * scale;
         canvas.width = image.width;//dstWidth;
         canvas.height = image.height;//dstHeight;
-        //render.drawImage(image, 0, 0, image.width, image.height, 0, 0, dstWidth, dstHeight);
 
         render.drawImage(image, 0, 0);
         CanvasUtil.resize(canvas, dstWidth, dstHeight, true);
