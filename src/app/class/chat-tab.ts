@@ -94,7 +94,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
       }
       if (message[key] == null || message[key] === '') continue;
 //entyu
-      if (key === 'imagePos') {
+      if (key === 'imagePos' && !(message['to'] != null && message['to'] !== '')) {
         this.pos_num = message[key];
         if( 0 <= this.pos_num && this.pos_num < this.imageIdentifier.length ){
            let oldpos = this.getImageCharactorPos(message['name']);
