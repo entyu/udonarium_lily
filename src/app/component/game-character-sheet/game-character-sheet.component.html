@@ -29,7 +29,7 @@
       <option value="{{networkService.peerId}}">個人インベントリ</option>
       <option value="graveyard">墓地</option>
       </select>
-    <div class="extra-setting">
+    <div class="extra-setting" style="width:400px;">
       <div >
         テーブルインベントリ非表示
         <input type="checkbox" value="hideInventory"  [(ngModel)]="tabletopObject.hideInventory" name="hideInventory" (click)="clickHide()">
@@ -40,7 +40,7 @@
       </div>
       
       <div >
-        <div style="width:500px;display:inline;color: #555;">ポップアップ横幅</div>
+        ポップアップ横幅
           <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
           min="270" max="1000" [(ngModel)]="tabletopObject.overViewWidth" />
           <input [(ngModel)]="tabletopObject.overViewWidth" type="number" style="width:12em;"
@@ -48,7 +48,7 @@
           style="color: #555;"/>
       </div >
       <div >
-        <span style="width:50em;">ポップアップ縦幅最大</span>
+        ポップアップ縦幅最大
        
          <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
           min="250" max="1000" [(ngModel)]="tabletopObject.overViewMaxHeight" />
@@ -59,23 +59,28 @@
     </div>
   </ng-container>
   <ng-container *ngIf="tabletopObject.aliasName === 'text-note'">
-    <input type="checkbox" value="limitHeight"  [(ngModel)]="tabletopObject.limitHeight" name="limitHeight" (click)="clickLimitHeight()">
-   height設定値に高さを制限
-    <div>
-      ポップアップ横幅
+
+  <div class="extra-setting" style="width:400px;">
+      <div >
+        height設定値に高さを制限
+        <input type="checkbox" value="limitHeight"  [(ngModel)]="tabletopObject.limitHeight" name="limitHeight" (click)="clickLimitHeight()">
+      </div>
+      <div>
+        ポップアップ横幅
         <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
-        min="250" max="800" [(ngModel)]="tabletopObject.overViewWidth" />
-       <input [(ngModel)]="tabletopObject.overViewWidth" type="number" 
-        min="250" max="800" name="popWidth" (change)="chkPopWidth($event.target.value)"
+        min="250" max="1000" [(ngModel)]="tabletopObject.overViewWidth" />
+        <input [(ngModel)]="tabletopObject.overViewWidth" type="number" 
+        min="250" max="1000" name="popWidth" (change)="chkPopWidth($event.target.value)"
         style="color: #555;"/>
-    </div>
-    <div>
+      </div>
+      <div>
       ポップアップ縦幅最大
       <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
         min="250" max="1000" [(ngModel)]="tabletopObject.overViewMaxHeight" />
        <input [(ngModel)]="tabletopObject.overViewMaxHeight" type="number" 
         min="250" max="1000" name="popWidth" (change)="chkPopMaxHeight($event.target.value)"
         style="color: #555;"/>
+      </div>
     </div>
   </ng-container>
 </div>

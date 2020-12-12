@@ -45,12 +45,23 @@
            
 
 <!--–¼‘O•\Ž¦-->
+ 
+            <ng-container *ngIf="this.gameCharacter.nonTalkFlag">
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'
+                ,'background-color': 'rgba(255,255,255, 0.6)' , 'color' : '#333' ,  'border': 'solid 1px #555' }">
+                <div class="fornt-tag has-length-limit is-3d" >{{name}}</div>
+                <div class="back-tag has-length-limit is-3d" >{{name}}</div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="!this.gameCharacter.nonTalkFlag">
               <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
                 <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
                 <div class="back-tag has-length-limit is-3d">{{name}}</div>
-
               </div>
+            </ng-container>
 
             <img class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'">
 

@@ -86,7 +86,7 @@ input {
   width :100%;  
 }
 .extra-setting {
-/*  text-align:left;*/
+  text-align:right;
 }
 
 .table-cell {

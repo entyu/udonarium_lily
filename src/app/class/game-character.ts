@@ -10,6 +10,7 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() roll: number = 0;
 
   @SyncVar() hideInventory: boolean = false;
+  @SyncVar() nonTalkFlag: boolean = false;
   @SyncVar() overViewWidth: number = 270;
   @SyncVar() overViewMaxHeight: number = 250;
 

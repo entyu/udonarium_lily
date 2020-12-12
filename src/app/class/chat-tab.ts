@@ -96,9 +96,15 @@ export class ChatTab extends ObjectNode implements InnerXml {
               this.imageIdentifier[oldpos] = '';
               this.imageCharactorName[oldpos] = '';
            }
-           //非表示コマンド
-           let hideCommand = message['text'].match(new RegExp('[@＠][HhＨｈ][IiＩｉ][DdＤｄ][EeＥｅ]$'));
-           console.log('hideCommand' + hideCommand);
+           //非表示コマンド\s
+           
+           let splitMessage = message['text'].split(/\s+/);
+           let hideCommand = null;
+           console.log('splitMessage' + splitMessage);
+           if( splitMessage ){
+             hideCommand = splitMessage[ splitMessage.length -1 ].match(new RegExp('[@＠][HhＨｈ][IiＩｉ][DdＤｄ][EeＥｅ]$'));
+             console.log('hideCommand' + hideCommand);
+           }
            if( hideCommand ){
 
            }else{
