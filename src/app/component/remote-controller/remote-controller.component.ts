@@ -121,7 +121,11 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
     for (let identifier of this.charList){
       let object = ObjectStore.instance.get(identifier);
+            
       if (object instanceof GameCharacter) {
+
+        if( object.hideInventory ) continue; //チェックボックスが入ったままで非表示に変化した対象の除外のため
+
         let data = object.detailDataElement.getFirstElementByName(this.remotControllerSelect.identifier);
         if( data ){
           let oldNumS:string = '';
@@ -386,10 +390,12 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     let mess = '';
 
     for (let identifier of this.charList){
-      let object = ObjectStore.instance.get(identifier);
+      let object : GameCharacter = <GameCharacter>ObjectStore.instance.get(identifier);
       if (object instanceof GameCharacter) {
-         gameCharactars.push(object);
-         text = text + '[' + object.name + ']';
+        if( object.hideInventory ) continue; //非表示対象の除外のため
+
+        gameCharactars.push(object);
+        text = text + '[' + object.name + ']';
       }
     }
     if( gameCharactars.length > 0){
@@ -409,6 +415,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
     for (let object of gameObjects){
       if (object instanceof GameCharacter) {
+        let charcter : GameCharacter = <GameCharacter>object;
+        if( charcter.hideInventory ) continue; //非表示対象の除外のため
+
          gameCharactars.push(object);
          text = text + '[' + object.name + ']';
       }
@@ -424,6 +433,8 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     let text :string ='';
     if( gameCharacters.length <= 0 ) return;
     for (let character of gameCharacters){
+      if( character.hideInventory ) continue; //非表示対象の除外のため
+
       if(character.buffDataElement.children){
         for (let dataElm of character.buffDataElement.children){
           for (let data  of dataElm.children){
@@ -453,6 +464,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     for (let identifier of this.charList){
       let object = ObjectStore.instance.get(identifier);
       if (object instanceof GameCharacter) {
+         let charcter : GameCharacter = <GameCharacter>object;
+         if( charcter.hideInventory ) continue; //非表示対象の除外のため
+
          gameCharactars.push(object);
          text = text + '[' + object.name + ']';
       }
@@ -474,6 +488,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
     for (let object of gameObjects){
       if (object instanceof GameCharacter) {
+        let charcter_ : GameCharacter = <GameCharacter>object;
+        if( charcter_.hideInventory ) continue; //非表示対象の除外のため
+
          gameCharactars.push(object);
          text = text + '[' + object.name + ']';
       }
@@ -559,8 +576,10 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     for (let identifier of this.charList){
       let object = ObjectStore.instance.get(identifier);
       if (object instanceof GameCharacter) {
-         gameCharactars.push(object);
-         text = text + '[' + object.name + ']';
+        if( object.hideInventory ) continue; //非表示対象の除外のため
+
+        gameCharactars.push(object);
+        text = text + '[' + object.name + ']';
       }
     }
     if( gameCharactars.length > 0){
