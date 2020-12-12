@@ -89,6 +89,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
       if (message[key] == null || message[key] === '') continue;
 
       if (key === 'imagePos') {
+        if (message['to'] != null && message['to'] !== '') { continue; } // 秘話時に立ち絵の更新をかけない
         this.pos_num = message[key];
         if( 0 <= this.pos_num && this.pos_num < this.imageIdentifier.length ){
            let oldpos = this.getImageCharactorPos(message['name']);
