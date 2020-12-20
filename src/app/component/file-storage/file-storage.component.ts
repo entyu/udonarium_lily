@@ -83,17 +83,24 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   changeTag(){
-
+   
    if( this.newTagName == '全て' ) return; //表示上混乱するタグの禁止
-    
+   
+   let changeableImages = this.images; 
+   
    for (let identifier of this.identifierList) {
-     const imageTag = ImageTag.get(identifier);
-     imageTag ? imageTag : ImageTag.create(identifier);
      
-     if( this.newTagName == '未設定' ){ 
-       imageTag.tag = '';
-     }else{
-       imageTag.tag = this.newTagName;
+     for( let changeableImage of changeableImages ){
+       if( changeableImage.context.identifier == identifier ){
+         const imageTag = ImageTag.get(identifier);
+         imageTag ? imageTag : ImageTag.create(identifier);
+     
+         if( this.newTagName == '未設定' ){ 
+           imageTag.tag = '';
+         }else{
+          imageTag.tag = this.newTagName;
+         }
+       }
      }
    }
    
