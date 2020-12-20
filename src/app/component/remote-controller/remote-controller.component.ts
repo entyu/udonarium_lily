@@ -44,7 +44,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   @Input() character: GameCharacter = null;
 
   get palette(): ChatPalette { return this.character.remoteController; }
-
+  errorMessageBuff ='';
+  errorMessageController ='';
+  
   private _gameType: string = '';
   get gameType(): string { return this._gameType };
   set gameType(gameType: string) {
@@ -116,8 +118,10 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
     if( gameObjects.length <= 0 ) return;
     if( ! this.chatTab)  return;
-    if (this.remotControllerSelect.identifier == '')return;
-
+    if (this.remotControllerSelect.identifier == ''){
+      this.errorMessageController = '変更項目が未選択です';
+      return;
+    }
 
     for (let identifier of this.charList){
       let object = ObjectStore.instance.get(identifier);
@@ -157,6 +161,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
       if( this.remotNumber < 0) hugou = ''
       let mess = '[' +this.remotControllerSelect.name + ']変更[' + hugou +this.remotNumber + ']＞' + text;
       this.chatMessageService.sendMessage(this.chatTab, mess, this.gameType, this.sendFrom, this.sendTo ,this.controllerInputComponent.tachieNum);
+      this.errorMessageController = '';
+    }else{
+      this.errorMessageController = '対象キャラクターが未選択です';
     }
 
   }
@@ -586,6 +593,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
       this.remotAddBuffRound(gameCharactars,buffname,sub,round);
       let mess = 'バフを付与 ' + bufftext + ' > ' + text;
       this.chatMessageService.sendMessage(this.chatTab, mess, this.gameType, this.sendFrom, this.sendTo ,value.tachieNum ); 
+      this.errorMessageBuff = '';
+    }else{
+      this.errorMessageBuff = '対象が未選択です';
     }
 
   }
