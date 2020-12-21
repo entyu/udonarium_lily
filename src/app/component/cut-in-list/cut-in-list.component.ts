@@ -40,7 +40,11 @@ export class CutInListComponent implements OnInit, OnDestroy {
   get cutInName(): string { return this.isEditable ? this.selectedCutIn.name : '' ; }
   set cutInName(cutInName: string) { if (this.isEditable) this.selectedCutIn.name = cutInName; }
 
-  get cutInWidth(): number { return this.isEditable ? this.selectedCutIn.width : 0 ; }
+  get cutInWidth(): number { 
+//    if( !this.isEditable ) return 0;
+//    if( this.isEditable )
+    return this.isEditable ? this.selectedCutIn.width : 0 ; 
+  }
   set cutInWidth(cutInWidth: number) { if (this.isEditable) this.selectedCutIn.width = cutInWidth; }
 
   get cutInHeight(): number { return this.isEditable ? this.selectedCutIn.height : 0 ; }
@@ -183,6 +187,18 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   playCutIn(){ //現状通常BGM(ジュークボックス)と平行で鳴る＞止めるかどうか検討したが現状このまま
     if(!this.isSelected) return;
+
+    if( this.selectedCutIn.originalSize ){
+      let imageurl = this.selectedCutIn.cutInImage.url;
+      if( imageurl.length > 0 ){
+        console.log( 'CutInWindow originalSize URL :' + imageurl);
+        let img = new Image();
+        img.src = imageurl;
+        this.selectedCutIn.width = img.width;
+        this.selectedCutIn.height = img.height;
+      }
+    }
+
     this.cutInLauncher.startCutIn( this.selectedCutIn );
     
   }

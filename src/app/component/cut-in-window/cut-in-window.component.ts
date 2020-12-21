@@ -118,21 +118,21 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   }
     
   ngAfterViewInit() {
-    this.calcCutInSize();
 
     if( this.cutIn ){
       setTimeout(() => {
         this.moveCutInPos();
-      },200);
+      },0);
     }
   }
 
-  calcCutInSize(){
+  moveCutInPos(){
     
     if( this.cutIn ){
       
       let cutin_w = this.cutIn.width;
       let cutin_h = this.cutIn.height;
+/*
     
       if( this.cutIn.originalSize ){
         let imageurl = this.cutIn.cutInImage.url;
@@ -146,7 +146,7 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
          
         }
       }
-    
+*/    
       let margin_w = window.innerWidth - cutin_w ;
       let margin_h = window.innerHeight - cutin_h - 25 ;
     
@@ -170,27 +170,12 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
       this.left = margin_x ;
       this.top = margin_y;
     }
-  }
   
-  //画像が読み込めていなかったら500ms間隔で位置移動再実行
-  counter = 0;
-  moveCutInPos(){
 
-    if( this.width == 0 && this.height == 0 && this.left == 0 && this.top == 0 && this.counter < 200){
-      this.counter = this.counter +1 ;
-      setTimeout(() => {
-        console.log('ウィンドウ位置の再計算');
-        this.calcCutInSize();
-        this.moveCutInPos();
-      },500);
-    }else{
-      
-      this.panelService.width = this.width ;
-      this.panelService.height = this.height ;
-      this.panelService.left = this.left ;
-      this.panelService.top = this.top ;
-      
-    }
+    this.panelService.width = this.width ;
+    this.panelService.height = this.height ;
+    this.panelService.left = this.left ;
+    this.panelService.top = this.top ;
 
   }
 

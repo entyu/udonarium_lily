@@ -217,7 +217,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     
     let cutin_w = cutIn.width;
     let cutin_h = cutIn.height;
-    
+
+/*    
     if( cutIn.originalSize ){
       let imageurl = cutIn.cutInImage.url;
       if( imageurl.length > 0 ){
@@ -232,6 +233,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         
       }
     }
+*/
     console.log( '画面領域サイズ w:' + cutin_w + ' h:'+ cutin_h );
     
     let margin_w = window.innerWidth - cutin_w ;
