@@ -41,8 +41,6 @@ export class CutInListComponent implements OnInit, OnDestroy {
   set cutInName(cutInName: string) { if (this.isEditable) this.selectedCutIn.name = cutInName; }
 
   get cutInWidth(): number { 
-//    if( !this.isEditable ) return 0;
-//    if( this.isEditable )
     return this.isEditable ? this.selectedCutIn.width : 0 ; 
   }
   set cutInWidth(cutInWidth: number) { if (this.isEditable) this.selectedCutIn.width = cutInWidth; }

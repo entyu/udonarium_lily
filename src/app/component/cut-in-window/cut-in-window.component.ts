@@ -47,8 +47,8 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
 
   left : number = 0;
   top : number = 0;
-  width : number = 0;
-  height : number = 0;
+  width : number = 200;
+  height : number = 150;
   
   minSize: number = 10;
   maxSize: number = 1200;
@@ -132,21 +132,7 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
       
       let cutin_w = this.cutIn.width;
       let cutin_h = this.cutIn.height;
-/*
-    
-      if( this.cutIn.originalSize ){
-        let imageurl = this.cutIn.cutInImage.url;
-        if( imageurl.length > 0 ){
-          console.log( 'CutInWindow originalSize URL :' + imageurl);
 
-          let img = new Image();
-          img.src = imageurl;
-          cutin_w = img.width;
-          cutin_h = img.height;
-         
-        }
-      }
-*/    
       let margin_w = window.innerWidth - cutin_w ;
       let margin_h = window.innerHeight - cutin_h - 25 ;
     
@@ -155,20 +141,14 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
     
       let margin_x = margin_w * this.cutIn.x_pos / 100;
       let margin_y = margin_h * this.cutIn.y_pos / 100;
-/*
-      console.log( 'EventSystem.trigger > CUT_IN_PANEL_POS_CHANGE ');
-      EventSystem.trigger('CUT_IN_PANEL_POS_CHANGE', 
-         { width : cutin_w , 
-           height : cutin_h + 25 , 
-           left : margin_x ,
-           top : margin_y ,
-           cutInIdentifier : this.cutIn.identifier });
-*/
 
       this.width = cutin_w ;
       this.height = cutin_h + 25 ;
       this.left = margin_x ;
       this.top = margin_y;
+    }else{
+      
+      console.log("カットインが未定義で再生された");
     }
   
 

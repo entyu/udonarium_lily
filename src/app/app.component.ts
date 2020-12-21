@@ -218,23 +218,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let cutin_w = cutIn.width;
     let cutin_h = cutIn.height;
 
-/*    
-    if( cutIn.originalSize ){
-      let imageurl = cutIn.cutInImage.url;
-      if( imageurl.length > 0 ){
-        console.log( 'originalSize URL :' + imageurl);
-
-        let img_dummy = new Image();
-        let img = new Image();
-        img_dummy.src =  imageurl;
-        img.src = imageurl;
-        cutin_w = img.width;
-        cutin_h = img.height;
-        
-      }
-    }
-*/
-    console.log( '画面領域サイズ w:' + cutin_w + ' h:'+ cutin_h );
+    console.log( '画像サイズ w:' + cutin_w + ' h:'+ cutin_h );
     
     let margin_w = window.innerWidth - cutin_w ;
     let margin_h = window.innerHeight - cutin_h - 25 ;
