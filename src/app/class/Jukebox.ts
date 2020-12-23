@@ -13,7 +13,7 @@ export class Jukebox extends GameObject {
   @SyncVar() isPlaying: boolean = false;
 
   get audio(): AudioFile { return AudioStorage.instance.get(this.audioIdentifier); }
-
+  
   private audioPlayer: AudioPlayer = new AudioPlayer();
 
   // GameObject Lifecycle
@@ -29,6 +29,7 @@ export class Jukebox extends GameObject {
   }
 
   play(identifier: string, isLoop: boolean = false) {
+
     let audio = AudioStorage.instance.get(identifier);
     if (!audio || !audio.isReady) return;
 

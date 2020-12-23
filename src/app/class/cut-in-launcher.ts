@@ -24,6 +24,7 @@ export class CutInLauncher extends GameObject {
   @SyncVar() launchCutInIdentifier: string  = '';
   @SyncVar() launchTimeStamp: number = 0;
   @SyncVar() launchIsStart: boolean = false;
+  @SyncVar() stopBlankTagCutInTimeStamp: number = 0;
   
   reloadDummy : number = 5;
   
@@ -42,6 +43,13 @@ export class CutInLauncher extends GameObject {
 
     this.stopSelfCutIn();
   }
+
+  stopBlankTagCutIn( ){
+    this.stopBlankTagCutInTimeStamp = this.stopBlankTagCutInTimeStamp + 1;
+    EventSystem.trigger('STOP_CUT_IN_BY_BGM', {  });
+  }
+
+
   
   sameTagCutIn( cutIn : CutIn ): CutIn[] {
     
@@ -65,6 +73,8 @@ export class CutInLauncher extends GameObject {
     let cutIn_ = ObjectStore.instance.get(this.launchCutInIdentifier);
     EventSystem.trigger('STOP_CUT_IN', { cutIn : cutIn_ });
   }
+
+
 
   stopSelfCutInByIdentifier( identifier : string ){
     let cutIn_ = ObjectStore.instance.get( identifier );
@@ -94,6 +104,8 @@ export class CutInLauncher extends GameObject {
     let launchCutInIdentifier = this.launchCutInIdentifier;
     let launchIsStart = this.launchIsStart;
     let launchTimeStamp = this.launchTimeStamp;
+    let stopBlankTagCutInTimeStamp = this.stopBlankTagCutInTimeStamp;
+    
     super.apply(context);
     
     if( launchCutInIdentifier !== this.launchCutInIdentifier || 
@@ -105,6 +117,11 @@ export class CutInLauncher extends GameObject {
         this.stopSelfCutIn();
       }
     }
+    if( stopBlankTagCutInTimeStamp !== this.stopBlankTagCutInTimeStamp ){
+      console.log('データ伝搬で検知 無タグカットイン停止のトリガー');
+      EventSystem.trigger('STOP_CUT_IN_BY_BGM', {  });
+    }
+    
   }
 
 }

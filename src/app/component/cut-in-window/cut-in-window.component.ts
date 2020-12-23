@@ -106,6 +106,15 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
           }
         }
       })
+      .on('STOP_CUT_IN_BY_BGM', event => { 
+        if( this.cutIn ){
+          let audio = AudioStorage.instance.get( this.cutIn.audioIdentifier );
+
+          if( this.cutIn.tagName == '' && audio ){
+            this.panelService.close();
+          }
+        }
+      })
       .on('STOP_CUT_IN', event => { 
         console.log('カットインウィンドウ>Event: ' + this.cutIn.name );
         if( this.cutIn ){
@@ -114,7 +123,6 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
           }
         }
       });
-
   }
     
   ngAfterViewInit() {

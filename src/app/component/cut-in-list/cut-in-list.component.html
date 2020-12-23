@@ -63,8 +63,17 @@
         再生時間 :<input [(ngModel)]="cutInOutTime" type="number" min="0" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
       </div>
       <div>
-        タグ名称 :<input [(ngModel)]="cutInTagName" placeholder="タグ名称" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null" />
+        タグ名称 :<input [(ngModel)]="cutInTagName" placeholder="" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null" />
       </div>
+      <div>
+<p style="font-size:0.4em">※カットインの挙動<br>
+タグ名称が同名のカットインは先に再生しているものを停止します(タグ空欄含む)<br>
+タグ名称が空欄で音楽が設定されている場合、ジュークボックスのBGMを停止します<br>
+また、そのようなカットインはジュークボックスでBGMを再生すると停止します<br>
+銃撃音のSE等、BGMと同時再生したいカットインはタグを設定してください<br>
+</p>
+      </div>
+
 <!-- 動画再生は後日検討。youtubeより.mp4に対法した方が実装上は良いのかも知れない
       <div>
         Youtube再生 :<input type="checkbox" [(ngModel)]="cutInUseOutUrl" name="cutInUseOutUrl" [attr.disabled]="!isEditable ? '' : null"/>

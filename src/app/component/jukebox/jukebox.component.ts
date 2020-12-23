@@ -14,6 +14,8 @@ import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component'
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 
+import { CutInLauncher } from '@udonarium/cut-in-launcher';
+
 @Component({
   selector: 'app-jukebox',
   templateUrl: './jukebox.component.html',
@@ -29,6 +31,8 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
+
+  get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
 
   readonly auditionPlayer: AudioPlayer = new AudioPlayer();
   private lazyUpdateTimer: NodeJS.Timer = null;
@@ -63,7 +67,13 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   }
 
   playBGM(audio: AudioFile) { //memoこっちが全体
+    
+    //タグなしのBGM付きカットインはジュークボックスと同時に鳴らさないようにする
+    //BGM駆動のためのインスタンスを別にしているため現状この処理で止める
+    this.cutInLauncher.stopBlankTagCutIn();
+    
     this.jukebox.play(audio.identifier, true);
+    
   }
 
   stopBGM(audio: AudioFile) {

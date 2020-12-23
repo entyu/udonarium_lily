@@ -81,6 +81,8 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
 
+  get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
+
   get cutInImage(): ImageFile {
     if (!this.selectedCutIn) return ImageFile.Empty;
     let file = ImageStorage.instance.get(this.selectedCutIn.imageIdentifier);
@@ -183,7 +185,7 @@ export class CutInListComponent implements OnInit, OnDestroy {
     //jukuと同じにする
   }
 
-  playCutIn(){ //現状通常BGM(ジュークボックス)と平行で鳴る＞止めるかどうか検討したが現状このまま
+  playCutIn(){ 
     if(!this.isSelected) return;
 
     if( this.selectedCutIn.originalSize ){
@@ -196,7 +198,14 @@ export class CutInListComponent implements OnInit, OnDestroy {
         this.selectedCutIn.height = img.height;
       }
     }
-
+    
+    //同名タグが再生中の場合そのタグのカットインを停止してから生成
+    //無タグ、かつ音楽が指定されている場合　jukebox　を停止する
+    //タグ名有りの場合、音楽が設定されていない場合　jukebox　は停止しない
+    if( this.isCutInBgmUploaded() && ( this.cutInTagName == '' ) ){
+      this.jukebox.stop();
+    }
+    
     this.cutInLauncher.startCutIn( this.selectedCutIn );
     
   }
