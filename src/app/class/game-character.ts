@@ -37,10 +37,11 @@ export class GameCharacter extends TabletopObject {
     return null;
   }
 
-  static create(name: string, size: number, imageIdentifier: string): GameCharacter {
+  static create(name: string, size: number, imageIdentifier: string ): GameCharacter {
     let gameCharacter: GameCharacter = new GameCharacter();
     gameCharacter.createDataElements();
     gameCharacter.initialize();
+
     gameCharacter.createTestGameDataElement(name, size, imageIdentifier);
 
     return gameCharacter;
@@ -95,7 +96,6 @@ export class GameCharacter extends TabletopObject {
 
     //TEST
     let testElement: DataElement = DataElement.create('情報', '', {}, '情報' + this.identifier);
-    testElement = DataElement.create('情報', '', {}, '情報' + this.identifier);
     this.detailDataElement.appendChild(testElement);
     testElement.appendChild(DataElement.create('説明', 'ここに説明を書く\nあいうえお', { 'type': 'note' }, '説明' + this.identifier));
     testElement.appendChild(DataElement.create('メモ', '任意の文字列\n１\n２\n３\n４\n５', { 'type': 'note' }, 'メモ' + this.identifier));
@@ -136,4 +136,72 @@ export class GameCharacter extends TabletopObject {
 
     this.addExtendData();
   }
+
+
+  createTestGameDataElementExtendSample(name: string, size: number, imageIdentifier: string) {
+    this.createDataElements();
+
+    let nameElement: DataElement = DataElement.create('name', name, {}, 'name_' + this.identifier);
+    let sizeElement: DataElement = DataElement.create('size', size, {}, 'size_' + this.identifier);
+
+    if (this.imageDataElement.getFirstElementByName('imageIdentifier')) {
+      this.imageDataElement.getFirstElementByName('imageIdentifier').value = imageIdentifier;
+    }
+
+//    let resourceElement: DataElement = DataElement.create('リソース', '', {}, 'リソース' + this.identifier);
+//    let hpElement: DataElement = DataElement.create('HP', 200, { 'type': 'numberResource', 'currentValue': '200' }, 'HP_' + this.identifier);
+//    let mpElement: DataElement = DataElement.create('MP', 100, { 'type': 'numberResource', 'currentValue': '100' }, 'MP_' + this.identifier);
+
+    this.commonDataElement.appendChild(nameElement);
+    this.commonDataElement.appendChild(sizeElement);
+
+//    this.detailDataElement.appendChild(resourceElement);
+//    resourceElement.appendChild(hpElement);
+//    resourceElement.appendChild(mpElement);
+
+    //TEST
+    let testElement: DataElement = DataElement.create('情報', '', {}, '情報' + this.identifier);
+    this.detailDataElement.appendChild(testElement);
+    testElement.appendChild(DataElement.create('説明', 
+`このキャラクターはキャラクターBの補助用のコマを作るときのサンプルです。
+まず、このキャラクターはキャラクターシートの設定で「テーブルインベントリ非表示」「発言をしない」のチェックが入っています。
+このように設定したキャラクターは「非表示」で足元のサークルの色が青に変わり、テーブルインベントリやリリィ追加機能のカウンターリモコンに表示されなくなります。
+戦闘非参加キャラを立ち絵やコマのためにテーブルに出したい場合に使用できます。
+また、プロフ等の追加情報を表示するためのコマ等、発言が不要な場合、「発言をしない」のチェックを入れることでチャットタブ等のリストに表示されなくなります。
+部位数が10あるモンスターの駒を出したけど頭だけ喋ればいい、等の場合に使います。このチェックをONにするとコマの上のキャラ名が白地に黒文字に変わります。
+次に、ポップアップのサイズ設定です。リリィではキャラクターシートからポップアップの横幅、最大縦幅を変更可能な様に拡張しています。
+これで遊ぶ仲間が許してくれれば、数千文字のプロフィールを書いても大丈夫です。\n
+なお、ポップアップする項目の設定は インベントリ＞設定＞表示項目 で行います。
+リリィでは説明のため初期の項目に情報をに追加しているので、情報の子項目のこの文章である「説明」と「持ち物」が表示されています。
+定義されていても持っていない項目は表示されないのでこのコマからはHPや能力値を削っています。
+ゲームごとに使いやすいように使ってください。
+`, { 'type': 'note' }, '説明' + this.identifier));
+    testElement.appendChild(DataElement.create('持ち物', 
+`こういった文章も見やすくなります。
+アイテム1：3個　効果〇〇
+アイテム2：3個　効果パーティ内一人のHPをXXする
+アイテム3：3個　効果敵一人の魔法を△する
+アイテム4：3個　効果A
+アイテム5：3個　効果B`,
+ { 'type': 'note' }, '持ち物' + this.identifier));
+
+    let domParser: DOMParser = new DOMParser();
+    let gameCharacterXMLDocument: Document = domParser.parseFromString(this.rootDataElement.toXml(), 'application/xml');
+
+    let palette: ChatPalette = new ChatPalette('ChatPalette_' + this.identifier);
+    palette.setPalette(`チャットパレット入力例：
+2d6+1 ダイスロール
+１ｄ２０＋{敏捷}＋｛格闘｝　{name}の格闘！
+//敏捷=10+{敏捷A}
+//敏捷A=10
+//格闘＝１`);
+    palette.initialize();
+    this.appendChild(palette);
+    this.addExtendData();
+
+    
+
+
+  }
+
 }

@@ -26,8 +26,6 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get title(): string { return this.textNote.title; }
 
-//高さ変化なしの共有メモを作ろうとしたが技術的検討が必要なので保留とする
-
   oldText : string = '';
   oldFontSize : number = 9;
   get text(): string { 
