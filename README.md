@@ -30,7 +30,7 @@ https://github.com/TK11235/udonarium
 ## サーバ設置
 ユーザ自身でWebサーバを用意し、そのサーバにユドナリウムリリィを設置して利用することができます。  
 
-1. リリース版　https://github.com/entyu/udonarium_lily/releases/tag/%EF%BD%961.00.1　をダウンロードして解凍し、Webサーバに配置してください。  
+1. リリース版　https://github.com/entyu/udonarium_lily/releases/download/%EF%BD%961.00.1/udonarium_lily-v1.00.1.zip　をダウンロードして解凍し、Webサーバに配置してください。  
 **開発者向けのソースコードをダウンロードしないように注意して下さい。**
 1. [SkyWay](https://webrtc.ecl.ntt.com/)のAPIキーを取得し、APIキー情報を`assets/config.yaml`に記述します。
 1. サーバに配置したユドナリウムの`index.html`にアクセスして動作することを確認してみてください。  
