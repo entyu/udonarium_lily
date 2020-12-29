@@ -10,14 +10,9 @@
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/TK11235/udonarium/blob/master/LICENSE)
 
-## 追加予定機能
 
 ### 立ち絵
-どどんとふ様式の大きめなチャット立ち絵を追加したい。
-
 ### カウンターリモコン
-テーブルのコマのステータスを増減させるウィンドウ
-
 ### バフデバフ表示
 バフかけようのウィンドウを用意し、そこから各キャラクターに補助魔法をかけます。
 かかっている補助はキャラクターコマ丈夫に表示されます。
@@ -35,7 +30,7 @@ https://github.com/TK11235/udonarium
 ## サーバ設置
 ユーザ自身でWebサーバを用意し、そのサーバにユドナリウムリリィを設置して利用することができます。  
 
-1. リリース版（**udonarium_lily.zip**）＊まだ改造が終わっていません　をダウンロードして解凍し、Webサーバに配置してください。  
+1. リリース版　https://github.com/entyu/udonarium_lily/releases/tag/%EF%BD%961.00.1　をダウンロードして解凍し、Webサーバに配置してください。  
 **開発者向けのソースコードをダウンロードしないように注意して下さい。**
 1. [SkyWay](https://webrtc.ecl.ntt.com/)のAPIキーを取得し、APIキー情報を`assets/config.yaml`に記述します。
 1. サーバに配置したユドナリウムの`index.html`にアクセスして動作することを確認してみてください。  
