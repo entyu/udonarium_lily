@@ -11,15 +11,14 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/TK11235/udonarium/blob/master/LICENSE)
 
 
-### 立ち絵
-### カウンターリモコン
-### バフデバフ表示
-バフかけようのウィンドウを用意し、そこから各キャラクターに補助魔法をかけます。
-かかっている補助はキャラクターコマ丈夫に表示されます。
+■立ち絵
+■カウンターリモコン
+■バフデバフ表示
+■ダイス表
+■画像タグ
+■ポップアップ等のUI調整機能
 
-### 開発中画面
-
-画像にタグがつけられるようになりました
+を追加実装しています。
 
 ![lily_sample](https://user-images.githubusercontent.com/61339319/95869259-26b41380-0da6-11eb-96fa-1e6c6858c531.png)
 
