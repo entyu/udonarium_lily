@@ -22,6 +22,7 @@ import { StandSettingComponent } from 'component/stand-setting/stand-setting.com
 
 import * as lzbase62 from 'lzbase62/lzbase62.min.js';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
+import { ChatTab } from '@udonarium/chat-tab';
 
 interface StandGroup {
   name: string,
@@ -38,6 +39,10 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   @Input() onlyCharacters: boolean = false;
   @Input() chatTabidentifier: string = '';
+  get isUseStandImageOnChatTab(): boolean {
+    const chatTab = <ChatTab>ObjectStore.instance.get(this.chatTabidentifier);
+    return chatTab && chatTab.isUseStandImage;
+  }
 
   @Input('gameType') _gameType: string = '';
   @Output() gameTypeChange = new EventEmitter<string>();
@@ -283,7 +288,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   sendChat(event: KeyboardEvent) {
     if (event) event.preventDefault();
-
     //if (!this.text.length) return;
     if (event && event.keyCode !== 13) return;
 
@@ -306,7 +310,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         const standInfo = this.character.standList.matchStandInfo(text, imageIdentifier, this.standName);
         if (standInfo.farewell) {
           this.farewellStand();
-        } else if (this.isUseStandImage && standInfo.standElementIdentifier) {
+        } else if (this.isUseStandImage && this.isUseStandImageOnChatTab && standInfo.standElementIdentifier) {
           standIdentifier = standInfo.standElementIdentifier;
           const sendObj = {
             characterIdentifier: this.character.identifier, 

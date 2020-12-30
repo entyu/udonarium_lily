@@ -7,6 +7,7 @@ import { EventSystem } from './core/system';
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() name: string = 'タブ';
+  @SyncVar() isUseStandImage: boolean = true;
   get chatMessages(): ChatMessage[] { return <ChatMessage[]>this.children; }
 
   private _unreadLength: number = 0;

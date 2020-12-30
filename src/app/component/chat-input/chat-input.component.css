@@ -114,3 +114,7 @@ option {
   color: black;
   background-color: white;
 }
+
+.disabled-stand {
+  color: grey;
+}
