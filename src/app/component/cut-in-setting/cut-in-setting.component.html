@@ -1,0 +1,18 @@
+<div style="margin-bottom: 4px;">
+  <button style="float: right">?</button>
+  <div style="display: flex; flex-direction: row; flex-wrap: wrap">
+    <div *ngFor="let standElement of standElements; let i = index" style="width: 700px">
+      <div style="display: flex; flex-direction: row; justify-content: space-between">
+        <div style="margin-left: -1em; margin-right: -1em;">
+          
+        </div>
+        <div style="text-align: right; width: 3em;">
+          <button class="remove-button danger" >×</button>
+          <button class="remove-button" style="margin-top: 5px" >↑</button>
+          <button class="remove-button" style="margin-top: 2px" >↓</button>
+        </div>
+      </div>
+      <hr>
+    </div>
+  </div>
+  <button (click)="add()">カットイン設定の追加</button>
