@@ -45,6 +45,7 @@ import { StandImageComponent } from 'component/stand-image/stand-image.component
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { DiceRollTableSettingComponent } from 'component/dice-roll-table-setting/dice-roll-table-setting.component';
+import { CutInSettingComponent } from 'component/cut-in-setting/cut-in-setting.component';
 
 @Component({
   selector: 'app-root',
@@ -359,6 +360,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         component = DiceRollTableSettingComponent;
         option = { width: 645, height: 475 };
         break;
+      case 'CutInSettingComponent':
+        component = CutInSettingComponent;
+        option = { width: 645, height: 475 };
+        break;
     }
     if (component) {
       option.top = (this.openPanelCount % 10 + 1) * 20;
@@ -415,8 +420,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  openDiceRollTable() {
-
+  toolBox() {
+    this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
+      { name: 'カットイン', materialIcon: 'movie_creation', action: () => this.open('CutInSettingComponent') },
+      { name: 'ダイスボット表', materialIcon: 'table_rows', action: () => this.open('DiceRollTableSettingComponent') }
+    ], 'ツールボックス');
   }
 
   resetPointOfView() {

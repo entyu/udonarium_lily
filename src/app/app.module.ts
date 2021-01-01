@@ -64,6 +64,8 @@ import { StandImageComponent } from './component/stand-image/stand-image.compone
 
 import { StandImageService } from 'service/stand-image.service';
 import { DiceRollTableSettingComponent } from './component/dice-roll-table-setting/dice-roll-table-setting.component';
+import { CutInComponent } from './component/cut-in/cut-in.component';
+import { CutInSettingComponent } from './component/cut-in-setting/cut-in-setting.component';
 
 @NgModule({
   declarations: [
@@ -114,7 +116,9 @@ import { DiceRollTableSettingComponent } from './component/dice-roll-table-setti
     StandSettingComponent,
     StandElementComponent,
     StandImageComponent,
-    DiceRollTableSettingComponent
+    DiceRollTableSettingComponent,
+    CutInComponent,
+    CutInSettingComponent
   ],
   imports: [
     BrowserModule,
