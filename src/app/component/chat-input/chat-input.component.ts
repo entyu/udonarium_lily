@@ -4,6 +4,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
+import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
 import { DiceBot } from '@udonarium/dice-bot';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -11,6 +12,7 @@ import { TextViewComponent } from 'component/text-view/text-view.component';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { TabletopService } from 'service/tabletop.service';
 
 import { ContextMenuSeparator, ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
@@ -113,6 +115,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     return [];
   }
 
+  // 未使用
   get standListWithGroup(): StandGroup[] {
     if (!this.hasStand) return [];
     let ret = {};
@@ -192,8 +195,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   private writingEventInterval: NodeJS.Timer = null;
   private previousWritingLength: number = 0;
-  writingPeers: Map<string, NodeJS.Timer> = new Map();
+
+  //writingPeers: Map<string, NodeJS.Timer> = new Map();
+  writingPeers: Map<string, ResettableTimeout> = new Map();
   writingPeerNameAndColors: { name: string, color: string }[] = [];
+  //writingPeerNames: string[] = [];
 
   get diceBotInfos() { return DiceBot.diceBotInfos }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
@@ -204,6 +210,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     public chatMessageService: ChatMessageService,
+    private tabletopService: TabletopService,
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
     private contextMenuService: ContextMenuService
@@ -214,9 +221,10 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       .on('MESSAGE_ADDED', event => {
         if (event.data.tabIdentifier !== this.chatTabidentifier) return;
         let message = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
-        let sendFrom = message ? message.from : '?';
+        let peerCursor = ObjectStore.instance.getObjects<PeerCursor>(PeerCursor).find(obj => obj.userId === message.from);
+        let sendFrom = peerCursor ? peerCursor.peerId : '?';
         if (this.writingPeers.has(sendFrom)) {
-          clearTimeout(this.writingPeers.get(sendFrom));
+          this.writingPeers.get(sendFrom).stop();
           this.writingPeers.delete(sendFrom);
           this.updateWritingPeerNameAndColors();
         }
@@ -236,36 +244,48 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       })
       .on('DISCONNECT_PEER', event => {
         let object = ObjectStore.instance.get(this.sendTo);
-        if (object instanceof PeerCursor && object.peerId === event.data.peer) {
+        if (object instanceof PeerCursor && object.peerId === event.data.peerId) {
           this.sendTo = '';
         }
       })
       .on<string>('WRITING_A_MESSAGE', event => {
         if (event.isSendFromSelf || event.data !== this.chatTabidentifier) return;
-        this.ngZone.run(() => {
-          if (this.writingPeers.has(event.sendFrom)) clearTimeout(this.writingPeers.get(event.sendFrom));
-          this.writingPeers.set(event.sendFrom, setTimeout(() => {
+        if (!this.writingPeers.has(event.sendFrom)) {
+          this.writingPeers.set(event.sendFrom, new ResettableTimeout(() => {
             this.writingPeers.delete(event.sendFrom);
+            //this.updateWritingPeerNames();
             this.updateWritingPeerNameAndColors();
+            this.ngZone.run(() => { });
           }, 2000));
-          this.updateWritingPeerNameAndColors();
-        });
+        }
+        this.writingPeers.get(event.sendFrom).reset();
+        //this.updateWritingPeerNames();
+        this.updateWritingPeerNameAndColors();
+        this.tabletopService.addBatch(() => this.ngZone.run(() => { }), this);
       });
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+    this.tabletopService.removeBatch(this);
   }
 
   private updateWritingPeerNameAndColors() {
     this.writingPeerNameAndColors = Array.from(this.writingPeers.keys()).map(peerId => {
-      let peer = PeerCursor.find(peerId);
+      let peer = PeerCursor.findByPeerId(peerId);
       return {
         name: (peer ? peer.name : ''),
         color: (peer ? peer.color : PeerCursor.CHAT_TRANSPARENT_COLOR),
       };
     });
   }
+  
+  //private updateWritingPeerNames() {
+  //  this.writingPeerNames = Array.from(this.writingPeers.keys()).map(peerId => {
+  //    let peer = PeerCursor.findByPeerId(peerId);
+  //    return peer ? peer.name : '';
+  //  });
+  //}
 
   onInput() {
     if (this.writingEventInterval === null && this.previousWritingLength <= this.text.length) {
@@ -273,8 +293,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       if (this.isDirect) {
         let object = ObjectStore.instance.get(this.sendTo);
         if (object instanceof PeerCursor) {
-          let peer = PeerContext.create(object.peerId);
-          if (peer) sendTo = peer.id;
+          let peer = PeerContext.parse(object.peerId);
+          if (peer) sendTo = peer.peerId;
         }
       }
       EventSystem.call('WRITING_A_MESSAGE', this.chatTabidentifier, sendTo);
@@ -320,8 +340,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           };
           if (sendObj.secret) {
             // ほんとにこれでええんか？
-            const targetId = Network.peerContext.room ?
-                ChatMessageService.findId(this.sendTo) + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
+            const targetId = Network.peerContext.isRoom ?
+                ChatMessageService.findId(this.sendTo) + Network.peerContext.roomId + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
               : ChatMessageService.findId(this.sendTo);
             EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetId);
             EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
@@ -358,8 +378,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           secret: this.sendTo ? true : false
         };
         if (dialogObj.secret) {
-          const targetId = Network.peerContext.room ?
-              ChatMessageService.findId(this.sendTo) + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
+          const targetId = Network.peerContext.isRoom ?
+              ChatMessageService.findId(this.sendTo) + Network.peerContext.roomId + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
             : ChatMessageService.findId(this.sendTo);
           EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, targetId);
           EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, PeerCursor.myCursor.peerId);
@@ -583,8 +603,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       };
       if (this.sendTo) {
         // ほんとにこれでええんか？
-        const targetId = Network.peerContext.room ?
-            ChatMessageService.findId(this.sendTo) + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
+        const targetId = Network.peerContext.isRoom ?
+            ChatMessageService.findId(this.sendTo) + Network.peerContext.roomId + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
           : ChatMessageService.findId(this.sendTo);
         EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, targetId);
         EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
@@ -626,7 +646,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         return false;
       default:
         for (const conn of Network.peerContexts) {
-          if (conn.isOpen && gameCharacter.location.name === conn.fullstring) {
+          if (conn.isOpen && gameCharacter.location.name === conn.peerId) {
             return false;
           }
         }

@@ -11,8 +11,8 @@
   <span>あなたのID：<span>
     <ng-container *ngIf="networkService.isOpen">
       <span style="display: inline-block;">
-        <span #idSpacer class="id-spacer">{{ networkService.peerContext.id }}</span>
-        <input #idInput class="id-input" type="text" value="{{ networkService.peerContext.id }}" readonly>
+        <span #idSpacer class="id-spacer">{{ networkService.peerContext.userId }}</span>
+        <input #idInput class="id-input" type="text" value="{{ networkService.peerContext.userId }}" readonly>
       </span>
       <button *ngIf="isAbleClipboardCopy" (click)="copyPeerId()" [disabled]="isCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
       <span [@fadeInOut]="isCopied" class="copied" [style.color]="myPeerColor"> {{ isCopied ? 'クリップボードにコピーしました。' : '' }}</span>
@@ -22,34 +22,34 @@
   </span>
 </div>
 <!--<div>host ID:{{networkService.hostPeerID}}</div>-->
-<ng-container *ngIf="18 < networkService.peerId.length">
+<ng-container *ngIf="networkService.peerContext.isRoom">
   <hr/>
   <div>
-    <span>ルーム名：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.roomName}}/{{networkService.peerContext.room}}</span></span>
+    <span>ルーム名：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.roomName}}/{{networkService.peerContext.roomId}}</span></span>
   </div>
   <div>
     <span>パスワード：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.password}}</span></span>
   </div>
 </ng-container>
 <hr/>
-<div *ngFor="let conn of networkService.peerContexts">
+<div *ngFor="let context of networkService.peerContexts">
   <div>
-    <span *ngIf="!conn.isOpen">[接続中]</span>
-    <span>他の参加者：{{conn.id}} [<b [style.color]="findPeerColor(conn.fullstring)">{{findPeerName(conn.fullstring)}}</b>]</span>
+    <span *ngIf="!context.isOpen">[接続中]</span>
+    <span>他の参加者：{{findUserId(context.peerId)}} [<b [style.color]="findPeerColor(context.peerId)">{{findPeerName(context.peerId)}}</b>]</span>
   </div>
 </div>
 <div>
-  <ng-container *ngIf="networkService.peerId.length <= 18">
-    <input [(ngModel)]="targetPeerId" placeholder="接続したい相手のID" name="targetPeerId" />
+  <ng-container *ngIf="!networkService.peerContext.isRoom">
+    <input [(ngModel)]="targetUserId" placeholder="接続したい相手のID" name="targetUserId" />
     <button (click)="connectPeer()" [disabled]="!networkService.isOpen">プライベート接続</button><br>
   </ng-container>
   <button *ngIf="networkService.peerIds.length <= 1" (click)="showLobby()" [disabled]="!networkService.isOpen">ロビー（ルーム一覧）を表示</button>
 </div>
 <div><span style="font-size: 12px;">{{help}}</span></div>
-<ng-container *ngIf="networkService.peerId.length <= 18">
+<ng-container *ngIf="!networkService.peerContext.isRoom">
   <div style="font-size: 12px;" *ngIf="networkService.peerContexts.length < 1">※プライベート接続を使用する場合は、お互いのIDをユドナリウム外で共有してください。</div>
   <div style="font-size: 12px;" *ngIf="networkService.peerContexts.length < 1">※一人で動作確認を行いたい場合はブラウザを2つ開くと良いと思います。</div>
 </ng-container>
-<ng-container *ngIf="18 < networkService.peerId.length">
+<ng-container *ngIf="networkService.peerContext.isRoom">
   <div style="font-size: 12px;">※ルーム機能を利用している時はプライベート接続を利用できません。</div>
 </ng-container>

@@ -1,9 +1,11 @@
 import { setZeroTimeout } from '../util/zero-timeout';
 import { Connection, ConnectionCallback } from './connection';
-import { IPeerContext } from './peer-context';
+import { IPeerContext, PeerContext } from './peer-context';
 import { SkyWayConnection } from './skyway-connection';
 
 type QueueItem = { data: any, sendTo: string };
+
+const unknownContext = PeerContext.parse('???');
 
 export class Network {
   private static _instance: Network
@@ -12,11 +14,11 @@ export class Network {
     return Network._instance;
   }
 
-  get peerId(): string { return this.connection ? this.connection.peerId : '???'; }
+  get peerId(): string { return this.connection ? this.connection.peerId : unknownContext.peerId; }
   get peerIds(): string[] { return this.connection ? this.connection.peerIds.concat() : []; }
 
   get peerContexts(): IPeerContext[] { return this.connection ? this.connection.peerContexts.concat() : []; }
-  get peerContext(): IPeerContext { return this.connection ? this.connection.peerContext : null; }
+  get peerContext(): IPeerContext { return this.connection ? this.connection.peerContext : unknownContext; }
 
   get isOpen(): boolean { return this.connection && this.connection.peerContext ? this.connection.peerContext.isOpen : false; }
 
@@ -36,14 +38,14 @@ export class Network {
   }
 
   open(peerId?: string)
-  open(peerId: string, roomId: string, roomName: string, password: string)
+  open(userId: string, roomId: string, roomName: string, password: string)
   open(...args: any[]) {
     if (this.connection && this.connection.peerContext) {
       console.warn('It is already opened.');
       this.close();
     }
 
-    console.log('PeerRoom ready...', args);
+    console.log('Network open...', args);
     this.connection = this.initializeConnection();
     this.connection.open.apply(this.connection, args);
 

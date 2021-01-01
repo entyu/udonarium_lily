@@ -26,11 +26,11 @@ export class ObjectSynchronizer {
     EventSystem.register(this)
       .on('CONNECT_PEER', 2, event => {
         if (!event.isSendFromSelf) return;
-        console.log('CONNECT_PEER GameRoomService !!!', event.data.peer);
-        this.sendCatalog(event.data.peer);
+        console.log('CONNECT_PEER GameRoomService !!!', event.data.peerId);
+        this.sendCatalog(event.data.peerId);
       })
       .on('DISCONNECT_PEER', event => {
-        this.removePeerMap(event.data.peer);
+        this.removePeerMap(event.data.peerId);
       })
       .on<CatalogItem[]>('SYNCHRONIZE_GAME_OBJECT', event => {
         if (event.isSendFromSelf) return;
@@ -176,10 +176,10 @@ export class ObjectSynchronizer {
     }
 
     for (let peerContext of peerContexts) {
-      let tasks = this.peerMap.get(peerContext.fullstring);
+      let tasks = this.peerMap.get(peerContext.peerId);
       if (peerContext.isOpen && tasks && tasks.length < min) {
         min = tasks.length;
-        selectPeerId = peerContext.fullstring;
+        selectPeerId = peerContext.peerId;
       }
     }
     return selectPeerId;
