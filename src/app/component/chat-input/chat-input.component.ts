@@ -339,12 +339,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
             secret: this.sendTo ? true : false
           };
           if (sendObj.secret) {
-            // ほんとにこれでええんか？
-            const targetId = Network.peerContext.isRoom ?
-                ChatMessageService.findId(this.sendTo) + Network.peerContext.roomId + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
-              : ChatMessageService.findId(this.sendTo);
-            EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetId);
-            EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+            const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
+            if (targetPeer) {
+              EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetPeer.peerId);
+              EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+            }
           } else {
             EventSystem.call('POPUP_STAND_IMAGE', sendObj);
           }
@@ -378,11 +377,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           secret: this.sendTo ? true : false
         };
         if (dialogObj.secret) {
-          const targetId = Network.peerContext.isRoom ?
-              ChatMessageService.findId(this.sendTo) + Network.peerContext.roomId + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
-            : ChatMessageService.findId(this.sendTo);
-          EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, targetId);
-          EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, PeerCursor.myCursor.peerId);
+          const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
+          if (targetPeer) {
+            EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, targetPeer.peerId);
+            EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, PeerCursor.myCursor.peerId);
+          }
         } else {
           EventSystem.call('POPUP_CHAT_BALLOON', dialogObj);
         }
@@ -602,12 +601,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         characterIdentifier: this.character.identifier
       };
       if (this.sendTo) {
-        // ほんとにこれでええんか？
-        const targetId = Network.peerContext.isRoom ?
-            ChatMessageService.findId(this.sendTo) + Network.peerContext.roomId + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
-          : ChatMessageService.findId(this.sendTo);
-        EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, targetId);
-        EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+        const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
+        if (targetPeer) {
+          EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, targetPeer.peerId);
+          EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+        }
       } else {
         EventSystem.call('FAREWELL_STAND_IMAGE', sendObj);
       }
