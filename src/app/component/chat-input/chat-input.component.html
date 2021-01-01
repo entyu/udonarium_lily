@@ -55,6 +55,29 @@
         <button type="submit" (click)="sendChat(null)">SEND</button>
       </form>
     </div>
+    <input type="color" name="color" list="color-list">
+      <datalist id="color-list">
+      <option value="#000000">
+      <option value="#FF0000">
+      <option value="#999999">
+      <option value="#990000">
+      <option value="#FF6633">
+
+      <option value="#669933">
+      <option value="#00CC33">
+      <option value="#009966">
+      <option value="#33CCFF">
+      <option value="#0099FF">
+
+      <option value="#3366FF">
+      <option value="#003399">
+      <option value="#9933CC">
+      <option value="#663366">
+      <option value="#FF66FF">
+    </datalist>
+      
+      
+      
     <div class="writing-info">
       <ng-container *ngIf="0 < writingPeerNames.length">
         <span *ngFor="let peerName of writingPeerNames; index as i" style="font-weight: bold;">{{peerName}}<span
