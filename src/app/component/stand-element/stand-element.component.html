@@ -70,7 +70,7 @@
           <span style="white-space: nowrap; font-size: smaller">
             <input style="width: 140px" type="range" min="0" max="100" [(ngModel)]="positionElement.value" [disabled]="!positionElement.currentValue">
             <input style="width: 3em; text-align: right;" type="number" min="0" max="100" [(ngModel)]="positionElement.value" [disabled]="!positionElement.currentValue">
-            <b style="display: inline-block; font-size: smaller; margin-left: 3px">%</b>
+            <b style="display: inline-block; font-size: smaller; margin-left: 3px" [ngClass]="{'disabled-text': !positionElement.currentValue }">%</b>
           </span>
         </ng-container>
         <ng-container *ngIf="heightElement">
