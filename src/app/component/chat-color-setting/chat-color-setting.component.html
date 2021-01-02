@@ -1,0 +1,76 @@
+<div id="file-list">
+  <div class="table">
+    <div class="table-cell">
+      <div>第1色</div>
+      <input type="color" name="color01" list="color-list_01" (change)="changeColor($event.target.value,0)" value="{{this.chatColorCode(0)}}">
+      <datalist id="color-list_01">
+        <option value="#000000">
+        <option value="#FF0000">
+        <option value="#999999">
+        <option value="#990000">
+        <option value="#FF6633">
+
+        <option value="#669933">
+        <option value="#00CC33">
+        <option value="#009966">
+        <option value="#33CCFF">
+        <option value="#0099FF">
+
+        <option value="#3366FF">
+        <option value="#003399">
+        <option value="#9933CC">
+        <option value="#663366">
+        <option value="#FF66FF">
+      </datalist>
+    </div>
+
+    <div class="table-cell">
+      <div>第2色</div>
+      <input type="color" name="color02" list="color-list_02"  (change)="changeColor($event.target.value,1)" value="{{this.chatColorCode(1)}}">
+      <datalist id="color-list_02">
+        <option value="#000000">
+        <option value="#FF0000">
+        <option value="#999999">
+        <option value="#990000">
+        <option value="#FF6633">
+
+        <option value="#669933">
+        <option value="#00CC33">
+        <option value="#009966">
+        <option value="#33CCFF">
+        <option value="#0099FF">
+
+        <option value="#3366FF">
+        <option value="#003399">
+        <option value="#9933CC">
+        <option value="#663366">
+        <option value="#FF66FF">
+      </datalist>
+    </div>
+
+    <div class="table-cell">
+      <div>第3色</div>
+      <input type="color" name="color03" list="color-list_03" (change)="changeColor($event.target.value,2)" value="{{this.chatColorCode(2)}}">
+      <datalist id="color-list_03">
+        <option value="#000000">
+        <option value="#FF0000">
+        <option value="#999999">
+        <option value="#990000">
+        <option value="#FF6633">
+
+        <option value="#669933">
+        <option value="#00CC33">
+        <option value="#009966">
+        <option value="#33CCFF">
+        <option value="#0099FF">
+
+        <option value="#3366FF">
+        <option value="#003399">
+        <option value="#9933CC">
+        <option value="#663366">
+        <option value="#FF66FF">
+      </datalist>
+    </div>
+
+  </div>
+</div>

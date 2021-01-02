@@ -8,6 +8,8 @@ import { DiceBot } from '@udonarium/dice-bot';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { TextViewComponent } from 'component/text-view/text-view.component';
+import { ChatColorSettingComponent } from 'component/chat-color-setting/chat-color-setting.component';
+
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -52,6 +54,98 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
   gameHelp: string = '';
+
+  colorSelectNo_ = 0;
+
+  @Input() isChatWindow: boolean = false;
+
+
+  get colorSelectNo(){
+    return this.colorSelectNo_;
+  }
+
+  set colorSelectNo( num : number ){
+    if( num < 0){
+      this.colorSelectNo_ = 0;
+    }else if( num > 2){
+      this.colorSelectNo_ = 2;
+    }else{
+      this.colorSelectNo_ = num ;
+    }
+  }
+  
+  get colorSelectorBoxBorder_0(){
+    if( 0 == this.colorSelectNo ) return '3px';
+    return '1px';
+  }
+
+  get colorSelectorBoxBorder_1(){
+    if( 1 == this.colorSelectNo ) return '3px';
+    return '1px';
+  }
+
+  get colorSelectorBoxBorder_2(){
+    if( 2 == this.colorSelectNo ) return '3px';
+    return '1px';
+  }
+  
+  get colorSelectorRadius_0(){
+    if( 0 == this.colorSelectNo ) return '9px';
+    return '0px';
+  }
+
+  get colorSelectorRadius_1(){
+    if( 1 == this.colorSelectNo ) return '9px';
+    return '0px';
+  }
+
+  get colorSelectorRadius_2(){
+    if( 2 == this.colorSelectNo ) return '9px';
+    return '0px';
+  }
+  
+  charactorChatColor(num){
+    let object = ObjectStore.instance.get(this.sendFrom);
+    if (object instanceof GameCharacter) {
+      return object.chatColorCode[num];
+    }else{
+      return '#000000';
+    }
+  }
+  
+  get charactorChatColor_0(){
+    return this.charactorChatColor(0);
+  }
+
+  get charactorChatColor_1(){
+    return this.charactorChatColor(1);
+  }
+
+  get charactorChatColor_2(){
+    return this.charactorChatColor(2);
+  }
+  
+  playerChatColor(num){
+    return this.myPeer.chatColorCode[num];
+  }
+  
+  get playerChatColor_0(){
+    return this.playerChatColor(0);
+  }
+
+  get playerChatColor_1(){
+    return this.playerChatColor(1);
+  }
+
+  get playerChatColor_2(){
+    return this.playerChatColor(2);
+  }
+  
+
+  setColorNum( num : number ){
+    this.colorSelectNo = num ;
+//    console.log('設定'+ this.colorSelectNo);
+  }
 
   get selectCharacterTachie(){
     let object = ObjectStore.instance.get(this.sendFrom);
@@ -264,6 +358,31 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         + this.gameHelp;
     });
   }
+
+  shoeColorSetting(){
+    
+    if(this.isChatWindow){
+        let coordinate = this.pointerDeviceService.pointers[0];
+        let title = '色設定';
+        let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
+        let component = this.panelService.open<ChatColorSettingComponent>(ChatColorSettingComponent, option);
+        component.tabletopObject = null;
+    }else{
+
+      let object = ObjectStore.instance.get(this.sendFrom);
+      if (object instanceof GameCharacter) {
+      
+        let coordinate = this.pointerDeviceService.pointers[0];
+        let title = '色設定';
+        if (object.name.length) title += ' - ' + object.name;
+        let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
+        let component = this.panelService.open<ChatColorSettingComponent>(ChatColorSettingComponent, option);
+        component.tabletopObject = object;
+      }
+    }
+    
+  }
+
 
   private allowsChat(gameCharacter: GameCharacter): boolean {
     switch (gameCharacter.location.name) {

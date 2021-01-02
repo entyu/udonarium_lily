@@ -13,6 +13,8 @@ export class PeerCursor extends GameObject {
 
   static myCursor: PeerCursor = null;
   private static hash: { [peerId: string]: string } = {};
+  chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
+
 
   get isMine(): boolean { return (PeerCursor.myCursor && PeerCursor.myCursor === this); }
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }

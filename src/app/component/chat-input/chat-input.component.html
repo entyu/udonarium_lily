@@ -22,9 +22,38 @@
       </select>
       <button (click)="showDicebotHelp()">?</button>
     </div>
-<!-- 立ち絵ここから-->
+    <div>
+
+
 
     <div >
+      <div class="table-cell" *ngIf="isChatWindow">
+          <div class="color" (click)="setColorNum(0);"
+          [ngStyle]="{'background-color': playerChatColor_0 ,'border':'solid ' + colorSelectorBoxBorder_0 + ' #666666' , 'border-radius': colorSelectorRadius_0 }"
+          ></div>
+          <div class="color" (click)="setColorNum(1);"
+          [ngStyle]="{'background-color': playerChatColor_1 ,'border':'solid ' + colorSelectorBoxBorder_1 + ' #666666' , 'border-radius': colorSelectorRadius_1 }"
+          ></div>
+          <div class="color" (click)="setColorNum(2);"
+          [ngStyle]="{'background-color': playerChatColor_2 ,'border':'solid ' + colorSelectorBoxBorder_2 + ' #666666' , 'border-radius': colorSelectorRadius_2 }"
+          ></div>
+      </div>
+      <div class="table-cell" *ngIf="!isChatWindow">
+          <div class="color" (click)="setColorNum(0);"
+          [ngStyle]="{'background-color': charactorChatColor_0 ,'border':'solid ' + colorSelectorBoxBorder_0 + ' #666666' , 'border-radius': colorSelectorRadius_0 }"
+          ></div>
+          <div class="color" (click)="setColorNum(1);"
+          [ngStyle]="{'background-color': charactorChatColor_1 ,'border':'solid ' + colorSelectorBoxBorder_1 + ' #666666' , 'border-radius': colorSelectorRadius_1 }"
+          ></div>
+          <div class="color" (click)="setColorNum(2);"
+          [ngStyle]="{'background-color': charactorChatColor_2 ,'border':'solid ' + colorSelectorBoxBorder_2 + ' #666666' , 'border-radius': colorSelectorRadius_2 }"
+          ></div>
+      </div>
+      <div class="table-cell">
+          <button class="color-setting small-font" (click)="shoeColorSetting();"><i class="material-icons small-font">settings</i>色設定</button>
+      </div>
+
+<!-- 立ち絵ここから-->
       <div class="tachie-tag table-cell">
         <ng-container *ngIf="1 >= selectCharacterTachieNum">
           <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
@@ -55,29 +84,6 @@
         <button type="submit" (click)="sendChat(null)">SEND</button>
       </form>
     </div>
-    <input type="color" name="color" list="color-list">
-      <datalist id="color-list">
-      <option value="#000000">
-      <option value="#FF0000">
-      <option value="#999999">
-      <option value="#990000">
-      <option value="#FF6633">
-
-      <option value="#669933">
-      <option value="#00CC33">
-      <option value="#009966">
-      <option value="#33CCFF">
-      <option value="#0099FF">
-
-      <option value="#3366FF">
-      <option value="#003399">
-      <option value="#9933CC">
-      <option value="#663366">
-      <option value="#FF66FF">
-    </datalist>
-      
-      
-      
     <div class="writing-info">
       <ng-container *ngIf="0 < writingPeerNames.length">
         <span *ngFor="let peerName of writingPeerNames; index as i" style="font-weight: bold;">{{peerName}}<span

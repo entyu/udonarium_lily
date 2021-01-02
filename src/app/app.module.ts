@@ -15,6 +15,7 @@ import { ChatTabComponent } from 'component/chat-tab/chat-tab.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 
 import { ChatTachieComponent } from 'component/chat-tachie/chat-tachie.component';
+import { ChatColorSettingComponent } from 'component/chat-color-setting/chat-color-setting.component';
 
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
 import { DiceSymbolComponent } from 'component/dice-symbol/dice-symbol.component';

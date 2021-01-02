@@ -14,6 +14,9 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() overViewWidth: number = 270;
   @SyncVar() overViewMaxHeight: number = 250;
 
+  @SyncVar() chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
+  @SyncVar() syncDummyCounter: number = 0;
+
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
 
