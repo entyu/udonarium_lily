@@ -403,7 +403,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         characterIdentifier: this.character ? this.character.identifier : null,
         standIdentifier: standIdentifier,
         standName: this.standName,
-        isUseStandImage: this.isUseStandImage 
+        isUseStandImage: (this.isUseStandImage && this.isUseStandImageOnChatTab)
       });
     }
     this.text = '';

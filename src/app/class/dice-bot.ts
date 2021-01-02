@@ -586,7 +586,7 @@ export class DiceBot extends GameObject {
         isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>' ,
       text: result,
       color: originalMessage.color,
-      isUseStandImage: originalMessage. isUseStandImage
+      isUseStandImage: originalMessage.isUseStandImage
     };
 
     // ダイスボットへのスタンドの反応
