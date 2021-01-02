@@ -22,7 +22,6 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 
-import * as lzbase62 from 'lzbase62/lzbase62.min.js';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { ChatTab } from '@udonarium/chat-tab';
 
@@ -341,7 +340,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           if (sendObj.secret) {
             const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
             if (targetPeer) {
-              EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetPeer.peerId);
+              if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetPeer.peerId);
               EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
             }
           } else {
@@ -379,7 +378,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         if (dialogObj.secret) {
           const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
           if (targetPeer) {
-            EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, targetPeer.peerId);
+            if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, targetPeer.peerId);
             EventSystem.call('POPUP_CHAT_BALLOON', dialogObj, PeerCursor.myCursor.peerId);
           }
         } else {
@@ -603,7 +602,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       if (this.sendTo) {
         const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
         if (targetPeer) {
-          EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, targetPeer.peerId);
+          if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, targetPeer.peerId);
           EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
         }
       } else {
