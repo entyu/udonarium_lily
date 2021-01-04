@@ -355,6 +355,8 @@ export class DiceBot extends GameObject {
             finalResult.isSecret = finalResult.isSecret || rollResult.isSecret;
             if (1 < repeat) finalResult.result += ` #${i + 1}`;
           }
+          
+          
           this.sendResultMessage(finalResult, chatMessage);
         } catch (e) {
           console.error(e);
@@ -453,7 +455,8 @@ export class DiceBot extends GameObject {
       imageIdentifier: '',
       tag: isSecret ? 'system secret' : 'system',
       name: isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>',
-      text: result
+      text: result,
+      messColor: originalMessage.messColor
     };
 
     if (originalMessage.to != null && 0 < originalMessage.to.length) {
