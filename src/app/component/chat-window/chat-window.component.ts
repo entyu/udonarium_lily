@@ -135,9 +135,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     let component = this.panelService.open<DiceTableSettingComponent>(DiceTableSettingComponent, option);
   }
 
-  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number }) {
+  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number , messColor:string }) {
     if (this.chatTab) {
-      this.chatMessageService.sendMessage(this.chatTab, value.text, value.gameType, value.sendFrom, value.sendTo ,value.tachieNum );
+      this.chatMessageService.sendMessage(this.chatTab, value.text, value.gameType, value.sendFrom, value.sendTo ,value.tachieNum ,value.messColor );
     }
   }
 

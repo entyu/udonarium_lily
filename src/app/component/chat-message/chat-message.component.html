@@ -4,7 +4,7 @@
     <div class="image">
       <img *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" />
     </div>
-    <div class="body">
+    <div class="body" [ngStyle]="{'color': chatMessage.messColor }">
       <div class="title">
         <span class="msg-name">{{chatMessage.name}}</span>
         <span class='tip msg-from'>{{chatMessage.from}}</span>

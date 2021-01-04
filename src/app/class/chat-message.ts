@@ -18,6 +18,7 @@ export interface ChatMessageContext {
   imageIdentifier?: string;
 
   imagePos?: number;
+  messColor?: string;
 }
 
 @SyncObject('chat')
@@ -30,6 +31,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() dicebot: string;
   @SyncVar() imageIdentifier: string;
   @SyncVar() imagePos: number;
+  @SyncVar() messColor: string;
 
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value }

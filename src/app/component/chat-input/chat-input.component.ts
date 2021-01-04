@@ -48,7 +48,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   set text(text: string) { this._text = text; this.textChange.emit(text); }
 
   @Input('tachieNum') _tachieNum: number = 0;  
-  @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number }>();
+  @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
   get tachieNum(): number { return this._tachieNum };
   set tachieNum(num:  number){ this._tachieNum = num};
 
@@ -112,6 +112,15 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       return '#000000';
     }
   }
+  
+  get selectChatColor(){
+    if( this.isChatWindow ){
+      return this.playerChatColor(this.colorSelectNo_);
+    }else{
+      return this.charactorChatColor(this.colorSelectNo_);
+    }
+  }
+  
   
   get charactorChatColor_0(){
     return this.charactorChatColor(0);
@@ -294,9 +303,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
     
-    console.log('円柱TEST event: KeyboardEvent '+this.sendFrom + '  ' + this.tachieNum);
+//    console.log('円柱TEST event: KeyboardEvent '+this.sendFrom + '  ' + this.tachieNum);
+    console.log('円柱TEST event:' + this.selectChatColor);
     
-    this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom, sendTo: this.sendTo , tachieNum : this.tachieNum});
+    this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom
+    , sendTo: this.sendTo , tachieNum : this.tachieNum ,messColor : this.selectChatColor });
 
     this.text = '';
     this.previousWritingLength = this.text.length;

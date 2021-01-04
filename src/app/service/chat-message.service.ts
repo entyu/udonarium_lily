@@ -76,7 +76,7 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
-  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, tachieNum?: number): ChatMessage {//–{‰Æ‚©‚çachieNum?: number ‚ð’Ç‰Á
+  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string): ChatMessage {//–{‰Æ‚©‚çachieNum?: number color? :string ‚ð’Ç‰Á 
 
     let img;
     let imgIndex;
@@ -85,7 +85,14 @@ export class ChatMessageService {
     }else{
       imgIndex = 0;
     }
-        
+    
+    let _color;
+    if( !color ){
+      _color = "#000000";
+    }else{
+      _color = color;
+    }
+    
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.id,
       to: this.findId(sendTo),
@@ -95,6 +102,7 @@ export class ChatMessageService {
       tag: gameType,
       text: text,
       imagePos: this.findImagePos(sendFrom),//lily
+      messColor: _color,//lily
     };
 
     return chatTab.addMessage(chatMessage);
