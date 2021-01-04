@@ -115,9 +115,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   
   get selectChatColor(){
     if( this.isChatWindow ){
-      return this.playerChatColor(this.colorSelectNo_);
+      return this.playerChatColor(this.colorSelectNo);
     }else{
-      return this.charactorChatColor(this.colorSelectNo_);
+      return this.charactorChatColor(this.colorSelectNo);
     }
   }
   
