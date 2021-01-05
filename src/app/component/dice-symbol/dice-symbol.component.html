@@ -23,7 +23,7 @@
                   <div class="back-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
                 </div>
               </div>
-              <div *ngIf="hasOwner" class="owner-tag is-nowrap is-black-background is-3d" style="opacity: 0.9;" [ngStyle]="{'background-color': ownerColor, 'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}">
+              <div *ngIf="hasOwner && 0 < ownerName.length" class="owner-tag is-nowrap is-black-background is-3d" style="opacity: 0.9;" [ngStyle]="{'background-color': ownerColor, 'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}">
                 <div class="fornt-tag is-3d" style="color: whitesmoke"><b>{{ownerName}}</b></div>
                 <div class="back-tag is-3d" style="color: whitesmoke"><b>{{ownerName}}</b></div>
               </div>

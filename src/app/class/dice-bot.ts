@@ -1,19 +1,15 @@
-import { ChatMessageService } from 'service/chat-message.service';
 import { ChatMessage, ChatMessageContext } from './chat-message';
 import { ChatTab } from './chat-tab';
 import { SyncObject } from './core/synchronize-object/decorator';
 import { GameObject } from './core/synchronize-object/game-object';
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { EventSystem } from './core/system';
-import { Network } from './core/system';
 import { PromiseQueue } from './core/system/util/promise-queue';
 import { StringUtil } from './core/system/util/string-util';
 import { DataElement } from './data-element';
 import { GameCharacter } from './game-character';
 import { PeerCursor } from './peer-cursor';
 import { StandConditionType } from './stand-list';
-
-import * as lzbase62 from 'lzbase62/lzbase62.min.js';
 import { DiceRollTableList } from './dice-roll-table-list';
 
 declare var Opal
@@ -591,7 +587,7 @@ export class DiceBot extends GameObject {
         isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>' ,
       text: result,
       color: originalMessage.color,
-      isUseStandImage: originalMessage. isUseStandImage
+      isUseStandImage: originalMessage.isUseStandImage
     };
 
     // ダイスボットへのスタンドの反応
@@ -604,12 +600,11 @@ export class DiceBot extends GameObject {
             characterIdentifier: gameCharacter.identifier
           };
           if (originalMessage.to) {
-            // ほんとにこれでええんか？
-            const targetId = Network.peerContext.room ?
-              originalMessage.to + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
-              : originalMessage.to;
-            EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, targetId);
-            EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+            const targetPeer = PeerCursor.findByUserId(originalMessage.to);
+            if (targetPeer) {
+              if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, targetPeer.peerId);
+              EventSystem.call('FAREWELL_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+            }
           } else {
             EventSystem.call('FAREWELL_STAND_IMAGE', sendObj);
           }
@@ -623,14 +618,13 @@ export class DiceBot extends GameObject {
                 standIdentifier: standInfo.standElementIdentifier, 
                 color: originalMessage.color,
                 secret: originalMessage.to ? true : false
-              };
+              };              
               if (sendObj.secret) {
-                // いろいろとこれでええの？
-                const targetId = Network.peerContext.room ?
-                  originalMessage.to + Network.peerContext.room + lzbase62.compress(Network.peerContext.roomName) + '-' + lzbase62.compress(Network.peerContext.password)
-                  : originalMessage.to;
-                EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetId);
-                EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+                const targetPeer = PeerCursor.findByUserId(originalMessage.to);
+                if (targetPeer) {
+                  if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetPeer.peerId);
+                  EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+                }
               } else {
                 EventSystem.call('POPUP_STAND_IMAGE', sendObj);
               }

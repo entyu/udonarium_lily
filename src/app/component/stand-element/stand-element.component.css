@@ -126,3 +126,7 @@
 .aura.white {
   filter: drop-shadow(0 -6px 6px #fff);
 }
+
+.disabled-text {
+  color: gray;
+}
