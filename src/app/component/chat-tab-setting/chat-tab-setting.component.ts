@@ -67,6 +67,10 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     this.saveDataService.saveGameObject(this.selectedTab, fileName);
   }
 
+  saveLog(){
+    console.log("saveLog：テスト");
+  }
+
   delete() {
     if (!this.isEmpty && this.selectedTab) {
       this.selectedTabXml = this.selectedTab.toXml();

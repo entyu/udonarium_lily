@@ -19,9 +19,14 @@
           <button (click)="downTabIndex()">↓</button>
           <button (click)="save()">保存</button>
           <button class="danger" (click)="delete()" [attr.disabled]="chatTabs.length <= 1 ? '' : null">削除</button>
+          <br>
         </ng-container>
         <ng-container *ngIf="isDeleted">
           <button (click)="restore()">元に戻す</button>
+        </ng-container>
+        <ng-container *ngIf="!isDeleted">
+        <hr>
+          <button (click)="saveLog()">ログ保存</button>
         </ng-container>
       </div>
     </ng-container>
