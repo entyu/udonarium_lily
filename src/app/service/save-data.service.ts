@@ -115,6 +115,17 @@ export class SaveDataService {
     return files;
   }
 
+  saveHtmlChatLog(gameObject: GameObject, fileName: string = 'html_data'){
+    let files: File[] = [];
+    let html: string = "テストデータです";
+
+    files.push(new File([html], 'test.html', { type: 'text/plain' }));
+//
+    FileArchiver.instance.save(files, this.appendTimestamp(fileName));
+    
+  }
+
+
   private appendTimestamp(fileName: string): string {
     let date = new Date();
     let year = date.getFullYear();
