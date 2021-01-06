@@ -5,7 +5,7 @@ import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
-import { ChatTabSettingComponent } from 'component/chat-tab-setting/chat-tab-setting.component';
+import { ChatMessageSettingComponent } from 'component/chat-message-setting/chat-message-setting.component';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -54,7 +54,7 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
   
   private timerId;
   
-//—§‚¿ŠG•\¦•æ“¾
+//ç«‹ã¡çµµè¡¨ç¤ºå¹…å–å¾—
   ngAfterViewInit() {
     this._tachieAreaWidth = this.tachieArea.nativeElement.offsetWidth;
     this.changeDetectionRef.detectChanges();
@@ -65,7 +65,7 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
     this.changeDetectionRef.detectChanges();
   }  
 
-//z-indexæ“¾
+//z-indexå–å¾—
   private _zindexOffset = 10;
 
   get zIndex_00(): number { return this.chatTab.tachieZindex(0) + this._zindexOffset; }
@@ -97,7 +97,7 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
   get opacity_11(): number { if( this.chatTab.tachieZindex(11) == 11 ){return 1;}else{ return this._opacity ;}  }
 
 
-//‚±‚ÌÀ‘•‚ÍŒã‚Å‚Ç‚¤‚É‚©‚µ‚½‚¢
+//ã“ã®å®Ÿè£…ã¯å¾Œã§ã©ã†ã«ã‹ã—ãŸã„
   get imageFileUrl_00(): string { 
      if( ! this.chatTab.imageIdentifier )return '';
      let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[0]);
@@ -180,6 +180,14 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
      let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[11]);
      if (image) return image.url;
      return '';
+  }
+
+  shoeMessageSetting(){
+     
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let title = 'ãƒãƒ£ãƒƒãƒˆè©³ç´°è¨­å®š';
+    let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
+    let component = this.panelService.open<ChatMessageSettingComponent>(ChatMessageSettingComponent, option);
   }
 
 

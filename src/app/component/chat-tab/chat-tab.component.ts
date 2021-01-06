@@ -42,6 +42,7 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     { from: 'System', to: '???', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル > プレイヤー', text: 'ダイレクトメッセージ（秘密会話）はセーブデータに記録されません。' },
     { from: 'System', to: '???', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル > プレイヤー', text: 'また、過去のダイレクトメッセージはあなたのIDが更新されると同じルーム内であっても見えなくなります。注意してください。' },
     { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: '動作推奨環境はデスクトップChromeです。今のところ、スマホからだと上手く操作できません。' },
+    { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: 'リリィ追加機能：チャット簡易表示機能は最初のチャット入力を入力すると使用可能になります。' },
     { from: 'System', timestamp: 0, imageIdentifier: '', tag: '', name: 'チュートリアル', text: 'チュートリアルは以上です。このチュートリアルは最初のチャットを入力すると非表示になります。' },
   ];
 
@@ -61,7 +62,8 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private topIndex = 0;
   private bottomIndex = 0;
 
-  private minMessageHeight: number = 61;
+  private minMessageHeight: number = 10;
+  private minMessageHeightNormal: number = 61;
 
   private preScrollTop = 0;
   private scrollSpeed = 0;
@@ -89,7 +91,7 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   get topSpace(): number { return this.minScrollHeight - this.bottomSpace; }
   get bottomSpace(): number {
     return 0 < this.chatMessages.length
-      ? (this.chatTab.chatMessages.length - this.bottomIndex - 1) * this.minMessageHeight
+      ? (this.chatTab.chatMessages.length - this.bottomIndex - 1) * this.minMessageHeightNormal
       : 0;
   }
 

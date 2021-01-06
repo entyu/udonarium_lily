@@ -5,6 +5,9 @@ import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ChatMessageService } from 'service/chat-message.service';
 
+import { ChatTabList } from '@udonarium/chat-tab-list';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+
 @Component({
   selector: 'chat-message',
   templateUrl: './chat-message.component.html',
@@ -33,6 +36,8 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   imageFile: ImageFile = ImageFile.Empty;
   animeState: string = 'inactive';
 
+  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
+  
   constructor(
     private chatMessageService: ChatMessageService
   ) { }

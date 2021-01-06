@@ -13,6 +13,8 @@ import { PanelService } from 'service/panel.service';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { ChatTabList } from '@udonarium/chat-tab-list';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 
 @Component({
   selector: 'chat-message-setting',
@@ -27,47 +29,35 @@ export class ChatMessageSettingComponent implements OnInit, OnDestroy, AfterView
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
-  changeColor( event , num ){
-    
-    if( this.tabletopObject ){
-      this.tabletopObject.chatColorCode[num] = event;
+  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
 
-      if( this.tabletopObject.syncDummyCounter < 2 ){
-        this.tabletopObject.syncDummyCounter = this.tabletopObject.syncDummyCounter + 1;
-      }else{
-        this.tabletopObject.syncDummyCounter = 0;
-      }
-      console.log('changeColor:count:'+this.tabletopObject.syncDummyCounter);
-    }else{
-      this.myPeer.chatColorCode[num] = event;
-    }
-  }
 
   constructor(
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService,
     private modalService: ModalService
+//    private chatTabList: ChatTabList
   ) {
-    this.isAllowedEmpty = this.modalService.option && this.modalService.option.isAllowedEmpty ? true : false;
+    
   }
 
+  changeDispFlagTime(){
+    //’†g‚È‚µ
+  }
+
+  changeDispFlagUserId(){
+    //’†g‚È‚µ
+  }
+
+  
   ngOnInit() {
   }
   
-  chatColorCode( num : number){
-    if( this.tabletopObject ){
-      return this.tabletopObject.chatColorCode[num];
-    }else{
-      return this.myPeer.chatColorCode[num];
-    }
-
-  }
   
   ngAfterViewInit() {
   }
 
   ngOnDestroy() {
-//    EventSystem.unregister(this);
   }
 
 }

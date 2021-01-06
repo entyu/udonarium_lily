@@ -1,19 +1,42 @@
 <div class="container">
-  <div class="message" [ngClass]="{'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': chatMessage.isDicebot}"
-    [@flyInOut]="animeState">
-    <div class="image">
+  <div [@flyInOut]="animeState">
+  <ng-container *ngIf="!chatMessage.chatSimpleDispFlag">
+    <div class="message" [ngClass]="{'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 
+    'system-message':chatMessage.isSystem, 'dicebot-message': chatMessage.isDicebot}"
+    >
+      <div class="image">
       <img *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" />
-    </div>
-    <div class="body" [ngStyle]="{'color': chatMessage.messColor }">
-      <div class="title">
-        <span class="msg-name">{{chatMessage.name}}</span>
-        <span class='tip msg-from'>{{chatMessage.from}}</span>
-        <span class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
       </div>
-      <div class="text msg-text">
-        <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
+      <div class="body" [ngStyle]="{'color': chatMessage.messColor }">
+        <div class="title">
+          <span class="msg-name">{{chatMessage.name}}</span>
+          <span class='tip msg-from'>{{chatMessage.from}}</span>
+          <span class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
+        </div>
+        <div class="text msg-text">
+          <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
+        </div>
+      </div>
+
+    </div>
+  </ng-container>
+  <ng-container *ngIf="chatMessage.chatSimpleDispFlag">
+    <div class="message-small" [ngClass]="{'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 
+    'system-message':chatMessage.isSystem, 'dicebot-message': chatMessage.isDicebot}"
+    >
+      <div class="body" [ngStyle]="{'color': chatMessage.messColor }">
+        <span class="title">
+          <font class="msg-name">{{chatMessage.name}}</font>
+          <font *ngIf="chatMessage.simpleDispFlagUserId" class='tip msg-from'>{{chatMessage.from}}</font> 
+          <font *ngIf="chatMessage.simpleDispFlagTime" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</font>
+          <font class="text msg-text">
+            <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret">
+            </ng-container>
+          </font>
+        </span>
       </div>
     </div>
+  </ng-container>
   </div>
 </div>
 <ng-template #visible>

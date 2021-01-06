@@ -54,6 +54,13 @@
       </ng-container>
 　　　/サイズ:
       <input [(ngModel)]="tachieHeightValue" type="number" min="{{minTachieSize}}" max="{{maxTachieSize}}" name="tachieHeight" (change)="chkHeight($event.target.value)"/>
+      チャット簡易表示:
+      <ng-container *ngIf="chatTab">
+        <input type="checkbox" value="chatSimpleDispFlag"  
+        [(ngModel)]="chatTab.chatSimpleDispFlag" name="chatSimpleDispFlag">
+      </ng-container>
+      <button class="message-setting small-font" (click)="shoeMessageSetting();"><i class="material-icons small-font">settings</i>詳細</button>
+      
     </div>
   </form>
 </div>

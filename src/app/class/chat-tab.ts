@@ -40,6 +40,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     return index;
   }
 
+  public chatSimpleDispFlag = 0;
   public tachieDispFlag = 1;
 
   replaceTachieZindex( toppos : number ){

@@ -15,7 +15,25 @@ export class ChatTabList extends ObjectNode implements InnerXml {
   }
 
   get chatTabs(): ChatTab[] { return this.children as ChatTab[]; }
-
+  
+  //チャット簡易表示フラグ、拡張余地のため整数型
+  private simpleDispFlagTime_ : number = 0;
+  set simpleDispFlagTime( flag : number ){
+    this.simpleDispFlagTime_ = flag;
+  }
+  
+  get simpleDispFlagTime(): number{
+    return this.simpleDispFlagTime_;
+  }
+  
+  private simpleDispFlagUserId_ : number = 0;
+  set simpleDispFlagUserId(flag : number){
+    this.simpleDispFlagUserId_ = flag;
+  }
+  get simpleDispFlagUserId(): number{
+    return this.simpleDispFlagUserId_;
+  }
+  
   addChatTab(chatTab: ChatTab)
   addChatTab(tabName: string, identifier?: string)
   addChatTab(...args: any[]) {
