@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ImageFile, ImageState } from '@udonarium/core/file-storage/image-file';
@@ -9,6 +10,8 @@ import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 import { XmlUtil } from '@udonarium/core/system/util/xml-util';
 import { DataSummarySetting } from '@udonarium/data-summary-setting';
 import { Room } from '@udonarium/room';
+
+import { saveAs } from 'file-saver';
 
 import * as Beautify from 'vkbeautify';
 //本家PR #92より
@@ -115,14 +118,12 @@ export class SaveDataService {
     return files;
   }
 
-  saveHtmlChatLog(gameObject: GameObject, fileName: string = 'html_data'){
+  saveHtmlChatLog(chatTab: ChatTab, fileName: string = 'html_data.html'){
     let files: File[] = [];
-    let html: string = "テストデータです";
+    let text: string = chatTab.logHtml();
 
-    files.push(new File([html], 'test.html', { type: 'text/plain' }));
-//
-    FileArchiver.instance.save(files, this.appendTimestamp(fileName));
-    
+    let blob = new Blob( [text], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, fileName + ".html");
   }
 
 

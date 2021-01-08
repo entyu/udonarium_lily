@@ -146,6 +146,62 @@ export class ChatTab extends ObjectNode implements InnerXml {
     }
     return xml;
   };
+  
+  //ChatMessageに入れるか考えたがログ以外に使わないのでここにおく
+  messageHtml( isTime : boolean , tabName : string, message : ChatMessage ): string{
+    let str :string = '';
+    if( message ) {
+      
+      if( tabName ) str += "[" + tabName + "]";
+      
+      if( isTime ){
+        let date = new Date( message.timestamp );
+        str += ( '00' + date.getHours() ).slice( -2 ) + ":" +  ( '00' + date.getMinutes()).slice( -2 ) + "：";
+      }
+      
+      str += "<font color='";
+      if( message.messColor ) str += message.messColor.toLowerCase();
+      str += "'>";
+
+      str += "<b>";
+      if( message.name ) str += message.name;
+      str += "</b>";
+      
+      str += "：";
+      if( message.text ) str += message.text;
+      str += "</font><br>";
+      
+      str += '\n';
+    }
+    return str;
+  }
+
+  logHtml( ): string {
+    
+    let head : string =     
+    "<?xml version='1.0' encoding='UTF-8'?>"+'\n'+
+    "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+'\n'+
+    "<html xmlns='http://www.w3.org/1999/xhtml' lang='ja'>"+'\n'+
+    "  <head>"+'\n'+
+    "    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />"+'\n'+
+    "    <title>チャットログ：" + this.name + "</title>"+'\n'+
+    "  </head>"+'\n'+
+    "  <body>"+'\n';
+
+    let last : string =
+    ""+'\n'+
+    "  </body>"+'\n'+
+    "</html>";
+
+    let main : string = "";
+
+    for (let mess of this.chatMessages ) {
+      main += this.messageHtml( true , '' , mess );
+    }
+    let str :string = head + main + last;
+    
+    return str;
+  }
 
   parseInnerXml(element: Element) {
     return super.parseInnerXml(element);
