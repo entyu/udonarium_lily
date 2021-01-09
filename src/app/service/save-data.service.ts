@@ -118,9 +118,17 @@ export class SaveDataService {
     return files;
   }
 
-  saveHtmlChatLog(chatTab: ChatTab, fileName: string = 'html_data.html'){
-    let files: File[] = [];
+  saveHtmlChatLog(chatTab: ChatTab, fileName: string ){
+//    let files: File[] = [];
     let text: string = chatTab.logHtml();
+
+    let blob = new Blob( [text], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, fileName + ".html");
+  }
+
+  saveHtmlChatLogAll( fileName: string ){
+//    let files: File[] = [];
+    let text: string = ChatTabList.instance.logHtml();
 
     let blob = new Blob( [text], {type: "text/plain;charset=utf-8"});
     saveAs(blob, fileName + ".html");

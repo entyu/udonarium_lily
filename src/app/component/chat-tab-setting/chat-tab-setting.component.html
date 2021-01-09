@@ -25,8 +25,10 @@
           <button (click)="restore()">元に戻す</button>
         </ng-container>
         <ng-container *ngIf="!isDeleted">
+        <br><br><br>
         <hr>
-          <button (click)="saveLog()">ログ保存</button>
+          <button (click)="saveLog()" style = "width:9em">ログ保存</button><span style= "font-size:12px">リストから選んだログを保存</span><br><br>
+          <button (click)="saveAllLog()" style = "width:9em">全タブログ保存</button><span style= "font-size:12px">時系列順にまとめて保存</span>
         </ng-container>
       </div>
     </ng-container>

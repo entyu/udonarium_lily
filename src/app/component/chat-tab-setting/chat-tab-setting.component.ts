@@ -4,7 +4,7 @@ import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem } from '@udonarium/core/system';
+import { EventSystem, Network } from '@udonarium/core/system';
 
 import { ChatMessageService } from 'service/chat-message.service';
 import { ModalService } from 'service/modal.service';
@@ -67,13 +67,42 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     this.saveDataService.saveGameObject(this.selectedTab, fileName);
   }
 
-  saveLog(){
-    console.log("saveLog：テスト");
-    if (!this.selectedTab) return;
-    let fileName: string = 'chat_' + this.selectedTab.name;
-    this.saveDataService.saveHtmlChatLog(this.selectedTab, fileName);
-
+  get roomName():string {
+    let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
+      ? Network.peerContext.roomName
+      : 'ルームデータ';
+    return roomName;
   }
+
+  private appendTimestamp(fileName: string): string {
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = ('00' + (date.getMonth() + 1)).slice(-2);
+    let day = ('00' + date.getDate()).slice(-2);
+    let hours = ('00' + date.getHours()).slice(-2);
+    let minutes = ('00' + date.getMinutes()).slice(-2);
+
+    return fileName + `_${year}-${month}-${day}_${hours}${minutes}`;
+  }
+  
+  saveLog(){
+    if (!this.selectedTab) return;
+    let fileName: string = this.roomName + '_log_' + this.selectedTab.name;
+    let fileName_: string = this.appendTimestamp( fileName ) ;
+
+    this.saveDataService.saveHtmlChatLog(this.selectedTab, fileName_);
+  }
+
+  saveAllLog(){
+
+    let fileName: string = this.roomName + '_log_' + '全タブ';
+    let fileName_: string = this.appendTimestamp( fileName ) ;
+  
+    this.saveDataService.saveHtmlChatLogAll( fileName_);
+    
+  }
+
+
 
   delete() {
     if (!this.isEmpty && this.selectedTab) {
