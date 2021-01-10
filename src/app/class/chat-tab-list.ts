@@ -3,6 +3,10 @@ import { SyncObject } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml } from './core/synchronize-object/object-serializer';
 
+import { PeerCursor } from '@udonarium/peer-cursor';
+import { Network } from '@udonarium/core/system';
+import { PeerContext } from '@udonarium/core/system/network/peer-context';
+
 @SyncObject('chat-tab-list')
 export class ChatTabList extends ObjectNode implements InnerXml {
   private static _instance: ChatTabList;
@@ -117,7 +121,20 @@ export class ChatTabList extends ObjectNode implements InnerXml {
         if( fastTabIndex == -1)break;
         
 //        console.log( 'tab:' + fastTabIndex + ' message :' + indexList[ fastTabIndex ] );
-        main += this.chatTabs[ fastTabIndex ].messageHtml( true , this.chatTabs[ fastTabIndex ].name , this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ] );
+
+        
+        let to = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].to;
+        let from = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].from;
+        let myId = Network.peerContext.id;
+        if( to ){
+          if( ( to != myId) && ( from != myId) ){
+            console.log( " SKIP " + from + " > " + to + " : " + this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].text );
+            indexList[ fastTabIndex ] ++;
+            continue;
+          }
+        }
+        
+        main += this.chatTabs[ fastTabIndex ].messageHtml( this.simpleDispFlagTime ? true : false  , this.chatTabs[ fastTabIndex ].name , this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ] );
         indexList[ fastTabIndex ] ++;
       }
     }

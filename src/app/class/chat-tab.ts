@@ -7,6 +7,11 @@ import { EventSystem } from './core/system';
 import { ImageFile } from './core/file-storage/image-file';
 import { ImageStorage } from './core/file-storage/image-storage';
 
+import { PeerCursor } from '@udonarium/peer-cursor';
+import { Network } from '@udonarium/core/system';
+import { PeerContext } from '@udonarium/core/system/network/peer-context';
+
+
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() name: string = 'タブ';
@@ -195,7 +200,19 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
     let main : string = "";
 
+
     for (let mess of this.chatMessages ) {
+      let to = mess.to;
+      let from = mess.from;
+      let myId = Network.peerContext.id;
+      console.log( "from:" + mess.from
+                  + " To:" + mess.to + "myId:" + myId);
+      if( to ){
+        if( ( to != myId) && ( from != myId) ){
+          continue;
+        }
+      }
+
       main += this.messageHtml( true , '' , mess );
     }
     let str :string = head + main + last;
