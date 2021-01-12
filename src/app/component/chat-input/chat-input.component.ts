@@ -9,10 +9,10 @@ import { DiceBot } from '@udonarium/dice-bot';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { TextViewComponent } from 'component/text-view/text-view.component';
+import { BatchService } from 'service/batch.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-import { TabletopService } from 'service/tabletop.service';
 
 import { ContextMenuSeparator, ContextMenuService, ContextMenuAction } from 'service/context-menu.service';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
@@ -209,7 +209,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     public chatMessageService: ChatMessageService,
-    private tabletopService: TabletopService,
+    private batchService: BatchService,
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
     private contextMenuService: ContextMenuService
@@ -260,13 +260,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         this.writingPeers.get(event.sendFrom).reset();
         //this.updateWritingPeerNames();
         this.updateWritingPeerNameAndColors();
-        this.tabletopService.addBatch(() => this.ngZone.run(() => { }), this);
+        this.batchService.add(() => this.ngZone.run(() => { }), this);
       });
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
-    this.tabletopService.removeBatch(this);
+    this.batchService.remove(this);
   }
 
   private updateWritingPeerNameAndColors() {

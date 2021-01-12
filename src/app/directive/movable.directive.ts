@@ -3,8 +3,10 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { TableSelecter } from '@udonarium/table-selecter';
 import { TabletopObject } from '@udonarium/tabletop-object';
-import { PointerCoordinate, PointerDeviceService } from 'service/pointer-device.service';
+import { BatchService } from 'service/batch.service';
+import { CoordinateService } from 'service/coordinate.service';
 import { TabletopService } from 'service/tabletop.service';
+import { PointerCoordinate, PointerDeviceService } from 'service/pointer-device.service';
 
 import { InputHandler } from './input-handler';
 
@@ -64,10 +66,18 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   private collidableElements: HTMLElement[] = [];
   private input: InputHandler = null;
 
+  private get isGridSnap(): boolean {
+    let tableSelecter = ObjectStore.instance.get<TableSelecter>('tableSelecter');
+    return tableSelecter ? tableSelecter.gridSnap : false;
+  }
+
   constructor(
     private ngZone: NgZone,
     private elementRef: ElementRef,
-    private tabletopService: TabletopService,
+    private batchService: BatchService,
+    private pointerDeviceService: PointerDeviceService,
+    private coordinateService: CoordinateService,
+    private tabletopService: TabletopService
   ) { }
 
   ngAfterViewInit() {
@@ -82,7 +92,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if ((event.isSendFromSelf && this.input.isGrabbing) || event.data.identifier !== this.tabletopObject.identifier || !this.shouldTransition(this.tabletopObject)) return;
-        this.tabletopService.addBatch(() => {
+        this.batchService.add(() => {
           if (this.input.isGrabbing) {
             this.cancel();
           } else {
@@ -103,7 +113,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.input.destroy();
     this.unregister();
     EventSystem.unregister(this);
-    this.tabletopService.removeBatch(this);
+    this.batchService.remove(this);
   }
 
   cancel() {
@@ -126,7 +136,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.setCollidableLayer(this.isInteract);
 
     let target = document.elementFromPoint(this.input.pointer.x, this.input.pointer.y) as HTMLElement;
-    this.pointer3d = this.calcLocalCoordinate(target, this.input.pointer);
+    this.pointer3d = this.coordinateService.calcTabletopLocalCoordinate(this.input.pointer, target);
     this.setPointerEvents(true);
 
     this.pointerOffset3d.x = this.posX - this.pointer3d.x;
@@ -150,7 +160,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   }
 
   onInputMove(e: MouseEvent | TouchEvent) {
-    if (this.input.isGrabbing && !this.tabletopService.pointerDeviceService.isDragging) {
+    if (this.input.isGrabbing && !this.pointerDeviceService.isDragging) {
       return this.cancel(); // todo
     }
     if (this.isDisable || !this.input.isGrabbing) return this.cancel();
@@ -160,7 +170,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     let target = document.elementFromPoint(this.input.pointer.x, this.input.pointer.y) as HTMLElement;
     if (target == null) return;
 
-    this.pointer3d = this.calcLocalCoordinate(target, this.input.pointer);
+    this.pointer3d = this.coordinateService.calcTabletopLocalCoordinate(this.input.pointer, target);
     if (this.pointerPrev3d.x === this.pointer3d.x && this.pointerPrev3d.y === this.pointer3d.y && this.pointerPrev3d.z === this.pointer3d.z) return;
 
     if (!this.input.isDragging) this.ondragstart.emit(e as PointerEvent);
@@ -184,9 +194,8 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   onInputEnd(e: MouseEvent | TouchEvent) {
     if (this.isDisable) return this.cancel();
     if (this.input.isDragging) this.ondragend.emit(e as PointerEvent);
+    if (this.isGridSnap && this.input.isDragging) this.snapToGrid();
     this.cancel();
-    let tableSelecter = ObjectStore.instance.get<TableSelecter>('tableSelecter');
-    if (tableSelecter.gridSnap) this.snapToGrid();
     this.onend.emit(e as PointerEvent);
   }
 
@@ -194,8 +203,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     if (this.isDisable) return this.cancel();
     if (e.cancelable) e.preventDefault();
 
-    let tableSelecter = ObjectStore.instance.get<TableSelecter>('tableSelecter');
-    if (tableSelecter.gridSnap) this.snapToGrid();
+    if (this.isGridSnap && this.input.isDragging) this.snapToGrid();
 
     let needsDispatch = this.input.isGrabbing && e.isTrusted;
     this.cancel();
@@ -211,16 +219,6 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   private callSelectedEvent() {
     if (this.tabletopObject)
       EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: this.tabletopObject.identifier, className: this.tabletopObject.aliasName });
-  }
-
-  private calcLocalCoordinate(target: HTMLElement, coordinate: PointerCoordinate): PointerCoordinate {
-    if (target.contains(this.tabletopService.dragAreaElement)) {
-      coordinate = PointerDeviceService.convertToLocal(coordinate, this.tabletopService.dragAreaElement);
-      coordinate.z = 0;
-    } else {
-      coordinate = PointerDeviceService.convertLocalToLocal(coordinate, target, this.tabletopService.dragAreaElement);
-    }
-    return { x: coordinate.x, y: coordinate.y, z: 0 < coordinate.z ? coordinate.z : 0 };
   }
 
   private calcDistanceRatio(start: PointerCoordinate, now: PointerCoordinate): number {
