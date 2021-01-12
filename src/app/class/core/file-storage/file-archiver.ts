@@ -11,12 +11,17 @@ import { MimeType } from './mime-type';
 type MetaData = { percent: number, currentFile: string };
 type UpdateCallback = (metadata: MetaData) => void;
 
+const MEGA_BYTE = 1024 * 1024;
+
 export class FileArchiver {
   private static _instance: FileArchiver
   static get instance(): FileArchiver {
     if (!FileArchiver._instance) FileArchiver._instance = new FileArchiver();
     return FileArchiver._instance;
   }
+
+  private maxImageSize = 2 * MEGA_BYTE;
+  private maxAudioeSize = 10 * MEGA_BYTE;
 
   private callbackOnDragEnter;
   private callbackOnDragOver;
@@ -70,22 +75,24 @@ export class FileArchiver {
     this.load(files);
   };
 
-  async load(files: File[])
-  async load(files: FileList)
-  async load(files: any) {
-    let length = files.length;
-    for (let i = 0; i < length; i++) {
-      await this.handleImage(files[i]);
-      await this.handleAudio(files[i]);
-      await this.handleText(files[i]);
-      await this.handleZip(files[i]);
-      EventSystem.trigger('FILE_LOADED', { file: files[i] });
+  async load(files: File[]): Promise<void>
+  async load(files: FileList): Promise<void>
+  async load(files: any): Promise<void> {
+    if (!files) return;
+    let loadFiles: File[] = files instanceof FileList ? toArrayOfFileList(files) : files;
+
+    for (let file of loadFiles) {
+      await this.handleImage(file);
+      await this.handleAudio(file);
+      await this.handleText(file);
+      await this.handleZip(file);
+      EventSystem.trigger('FILE_LOADED', { file: file });
     }
   }
 
   private async handleImage(file: File) {
     if (file.type.indexOf('image/') < 0) return;
-    if (2 * 1024 * 1024 < file.size) {
+    if (this.maxImageSize < file.size) {
       console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
       return;
     }
@@ -95,7 +102,7 @@ export class FileArchiver {
 
   private async handleAudio(file: File) {
     if (file.type.indexOf('audio/') < 0) return;
-    if (10 * 1024 * 1024 < file.size) {
+    if (this.maxAudioeSize < file.size) {
       console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
       return;
     }
@@ -140,11 +147,10 @@ export class FileArchiver {
   async saveAsync(files: FileList, zipName: string, updateCallback?: UpdateCallback): Promise<void>
   async saveAsync(files: any, zipName: string, updateCallback?: UpdateCallback): Promise<void> {
     if (!files) return;
+    let saveFiles: File[] = files instanceof FileList ? toArrayOfFileList(files) : files;
 
     let zip = new JSZip();
-    let length = files.length;
-    for (let i = 0; i < length; i++) {
-      let file = files[i]
+    for (let file of saveFiles) {
       zip.file(file.name, file);
     }
 
@@ -157,4 +163,11 @@ export class FileArchiver {
     }, updateCallback);
     saveAs(blob, zipName + '.zip');
   }
+}
+
+function toArrayOfFileList(fileList: FileList): File[] {
+  let files: File[] = [];
+  let length = fileList.length;
+  for (let i = 0; i < length; i++) { files.push(fileList[i]); }
+  return files;
 }

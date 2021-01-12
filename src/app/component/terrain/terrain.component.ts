@@ -24,9 +24,11 @@ import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { ModalService } from 'service/modal.service';
+import { CoordinateService } from 'service/coordinate.service';
+import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-import { TabletopService } from 'service/tabletop.service';
+import { TabletopActionService } from 'service/tabletop-action.service';
 
 @Component({
   selector: 'terrain',
@@ -47,8 +49,8 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   get hasWall(): boolean { return this.terrain.hasWall; }
   get hasFloor(): boolean { return this.terrain.hasFloor; }
 
-  get wallImage(): ImageFile { return this.tabletopService.getSkeletonImageOr(this.terrain.wallImage); }
-  get floorImage(): ImageFile { return this.tabletopService.getSkeletonImageOr(this.terrain.floorImage); }
+  get wallImage(): ImageFile { return this.imageService.getSkeletonOr(this.terrain.wallImage); }
+  get floorImage(): ImageFile { return this.imageService.getSkeletonOr(this.terrain.floorImage); }
 
   get height(): number { return this.adjustMinBounds(this.terrain.height); }
   get width(): number { return this.adjustMinBounds(this.terrain.width); }
@@ -95,13 +97,15 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private ngZone: NgZone,
-    private tabletopService: TabletopService,
+    private imageService: ImageService,
+    private tabletopActionService: TabletopActionService,
     private contextMenuService: ContextMenuService,
     private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private coordinateService: CoordinateService,
   ) { }
 
   viewRotateZ = 10;
@@ -171,7 +175,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
 
     let menuPosition = this.pointerDeviceService.pointers[0];
-    let objectPosition = this.tabletopService.calcTabletopLocalCoordinate();
+    let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     this.contextMenuService.open(menuPosition, [
       (this.isLocked
         ? {
@@ -297,7 +301,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       },
       ContextMenuSeparator,
-      { name: 'オブジェクト作成', action: null, subActions: this.tabletopService.getContextMenuActionsForCreateObject(objectPosition) }
+      { name: 'オブジェクト作成', action: null, subActions: this.tabletopActionService.makeDefaultContextMenuActions(objectPosition) }
     ], this.name);
   }
 

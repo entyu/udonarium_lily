@@ -1,8 +1,10 @@
 import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, NgZone, OnDestroy, Output } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { TabletopObject } from '@udonarium/tabletop-object';
-import { PointerCoordinate, PointerDeviceService } from 'service/pointer-device.service';
+import { BatchService } from 'service/batch.service';
+import { CoordinateService } from 'service/coordinate.service';
 import { TabletopService } from 'service/tabletop.service';
+import { PointerCoordinate, PointerDeviceService } from 'service/pointer-device.service';
 
 import { InputHandler } from './input-handler';
 
@@ -62,7 +64,10 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     private elementRef: ElementRef,
-    private tabletopService: TabletopService,
+    private batchService: BatchService,
+    private pointerDeviceService: PointerDeviceService,
+    private coordinateService: CoordinateService,
+    private tabletopService: TabletopService
   ) { }
 
   ngAfterViewInit() {
@@ -78,7 +83,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
       EventSystem.register(this)
         .on('UPDATE_GAME_OBJECT', -1000, event => {
           if ((event.isSendFromSelf && this.input.isGrabbing) || event.data.identifier !== this.tabletopObject.identifier || !this.shouldTransition(this.tabletopObject)) return;
-          this.tabletopService.addBatch(() => {
+          this.batchService.add(() => {
             if (this.input.isGrabbing) {
               this.cancel();
             } else {
@@ -98,7 +103,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     this.cancel();
     this.input.destroy();
     EventSystem.unregister(this);
-    this.tabletopService.removeBatch(this);
+    this.batchService.remove(this);
   }
 
   cancel() {
@@ -114,7 +119,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     e.stopPropagation();
     this.onstart.emit(e as PointerEvent);
 
-    let pointer = PointerDeviceService.convertLocalToLocal(this.input.pointer, this.grabbingElement, this.input.target.parentElement);
+    let pointer = this.coordinateService.convertLocalToLocal(this.input.pointer, this.grabbingElement, this.input.target.parentElement);
     this.rotateOffset = this.calcRotate(pointer, this.rotate);
     this.setAnimatedTransition(false);
 
@@ -125,14 +130,14 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
   }
 
   onInputMove(e: MouseEvent | TouchEvent) {
-    if (this.input.isGrabbing && !this.tabletopService.pointerDeviceService.isDragging) {
+    if (this.input.isGrabbing && !this.pointerDeviceService.isDragging) {
       return this.cancel(); // todo
     }
     if (this.isDisable || !this.input.isGrabbing) return this.cancel();
 
     if (e.cancelable) e.preventDefault();
     e.stopPropagation();
-    let pointer3d = PointerDeviceService.convertLocalToLocal(this.input.pointer, this.grabbingElement, this.input.target.parentElement);
+    let pointer3d = this.coordinateService.convertLocalToLocal(this.input.pointer, this.grabbingElement, this.input.target.parentElement);
     let angle = this.calcRotate(pointer3d, this.rotateOffset);
 
     if (!this.input.isDragging) this.ondragstart.emit(e as PointerEvent);

@@ -57,7 +57,7 @@ export class CardStack extends TabletopObject {
   }
 
   drawCard(): Card {
-    let card = this.topCard ? <Card>this.cardRoot.removeChild(this.topCard) : null;
+    let card = this.topCard ? this.cardRoot.removeChild(this.topCard) : null;
     if (card) {
       card.rotate += this.rotate;
       if (360 < card.rotate) card.rotate -= 360;
@@ -141,7 +141,7 @@ export class CardStack extends TabletopObject {
     if (180 < delta) delta = 360 - delta;
     card.rotate = delta <= 90 ? 0 : 180;
     this.setSamePositionFor(card);
-    return <Card>this.cardRoot.insertBefore(card, this.topCard);
+    return this.cardRoot.insertBefore(card, this.topCard);
   }
 
   putOnBottom(card: Card): Card {
@@ -152,7 +152,7 @@ export class CardStack extends TabletopObject {
     if (180 < delta) delta = 360 - delta;
     card.rotate = delta <= 90 ? 0 : 180;
     this.setSamePositionFor(card);
-    return <Card>this.cardRoot.appendChild(card);
+    return this.cardRoot.appendChild(card);
   }
 
   toTopmost() {

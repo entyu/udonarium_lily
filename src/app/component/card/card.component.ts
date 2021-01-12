@@ -26,10 +26,11 @@ import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
-import { ModalService } from 'service/modal.service';
+import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopService } from 'service/tabletop.service';
+import { ModalService } from 'service/modal.service';
 
 @Component({
   selector: 'card',
@@ -83,9 +84,9 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   get ownerName(): string { return this.card.ownerName; }
   get ownerColor(): string { return this.card.ownerColor; }
 
-  get imageFile(): ImageFile { return this.tabletopService.getSkeletonImageOr(this.card.imageFile); }
-  get frontImage(): ImageFile { return this.tabletopService.getSkeletonImageOr(this.card.frontImage); }
-  get backImage(): ImageFile { return this.tabletopService.getSkeletonImageOr(this.card.backImage); }
+  get imageFile(): ImageFile { return this.imageService.getSkeletonOr(this.card.imageFile); }
+  get frontImage(): ImageFile { return this.imageService.getSkeletonOr(this.card.frontImage); }
+  get backImage(): ImageFile { return this.imageService.getSkeletonOr(this.card.backImage); }
 
   private iconHiddenTimer: NodeJS.Timer = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
@@ -107,6 +108,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     private elementRef: ElementRef<HTMLElement>,
     private changeDetector: ChangeDetectorRef,
     private tabletopService: TabletopService,
+    private imageService: ImageService,
     private pointerDeviceService: PointerDeviceService,
     private modalService: ModalService
   ) { }
