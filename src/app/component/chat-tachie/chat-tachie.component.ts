@@ -13,6 +13,9 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 
+import { ChatTabList } from '@udonarium/chat-tab-list';
+import { ChatTachieImageComponent } from 'component/chat-tachie-img/chat-tachie-img.component';
+
 @Component({
   selector: 'chat-tachie',
   templateUrl: './chat-tachie.component.html',
@@ -21,172 +24,49 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 export class ChatTachieComponent implements OnInit, OnDestroy{
 
   @Input() chatTabidentifier: string = '';
-
   @ViewChild('tachieArea', { read: ElementRef }) private tachieArea: ElementRef;  
   private _tachieAreaWidth = 0;
   
 
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
 
+  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
+  
+
   get tachieAreaWidth():number{ 
     return this._tachieAreaWidth;
   }
 
-  public tachieHeightValue = 250;
-  public minTachieSize = 100;
-  public maxTachieSize = 500;
-  
   chkHeight( newNum ){
-    
-    if( newNum <= this.minTachieSize) this.tachieHeightValue = this.minTachieSize;
-    if( newNum >= this.maxTachieSize) this.tachieHeightValue = this.maxTachieSize;
-    
+    if( newNum <= this.chatTabList.minTachieSize) this.chatTabList.tachieHeightValue = this.chatTabList.minTachieSize;
+    if( newNum >= this.chatTabList.maxTachieSize) this.chatTabList.tachieHeightValue = this.chatTabList.maxTachieSize;
   }
-  
+
   get tachieAreaHeight() : number {
     if( this.chatTab ){
       if( this.chatTab.tachieDispFlag ){
-        return this.tachieHeightValue;
+        if( this.chatTabList.isTachieInWindow ){
+          return this.chatTabList.tachieHeightValue;
+        }
       }
     }
     return 0;
   }
   
   private timerId;
+
   
-//立ち絵表示幅取得
   ngAfterViewInit() {
-    this._tachieAreaWidth = this.tachieArea.nativeElement.offsetWidth;
-    this.changeDetectionRef.detectChanges();
   }  
 
   ngAfterViewChecked() {
-    this._tachieAreaWidth = this.tachieArea.nativeElement.offsetWidth;
-    this.changeDetectionRef.detectChanges();
   }  
-
-//z-index取得
-  private _zindexOffset = 10;
-
-  get zIndex_00(): number { return this.chatTab.tachieZindex(0) + this._zindexOffset; }
-  get zIndex_01(): number { return this.chatTab.tachieZindex(1) + this._zindexOffset; }
-  get zIndex_02(): number { return this.chatTab.tachieZindex(2) + this._zindexOffset; }
-  get zIndex_03(): number { return this.chatTab.tachieZindex(3) + this._zindexOffset; }
-  get zIndex_04(): number { return this.chatTab.tachieZindex(4) + this._zindexOffset; }
-  get zIndex_05(): number { return this.chatTab.tachieZindex(5) + this._zindexOffset; }
-  get zIndex_06(): number { return this.chatTab.tachieZindex(6) + this._zindexOffset; }
-  get zIndex_07(): number { return this.chatTab.tachieZindex(7) + this._zindexOffset; }
-  get zIndex_08(): number { return this.chatTab.tachieZindex(8) + this._zindexOffset; }
-  get zIndex_09(): number { return this.chatTab.tachieZindex(9) + this._zindexOffset; }
-  get zIndex_10(): number { return this.chatTab.tachieZindex(10) + this._zindexOffset; }
-  get zIndex_11(): number { return this.chatTab.tachieZindex(11) + this._zindexOffset; }
-
-  private _opacity = 0.5
-
-  get opacity_00(): number { if( this.chatTab.tachieZindex(0) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_01(): number { if( this.chatTab.tachieZindex(1) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_02(): number { if( this.chatTab.tachieZindex(2) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_03(): number { if( this.chatTab.tachieZindex(3) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_04(): number { if( this.chatTab.tachieZindex(4) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_05(): number { if( this.chatTab.tachieZindex(5) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_06(): number { if( this.chatTab.tachieZindex(6) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_07(): number { if( this.chatTab.tachieZindex(7) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_08(): number { if( this.chatTab.tachieZindex(8) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_09(): number { if( this.chatTab.tachieZindex(9) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_10(): number { if( this.chatTab.tachieZindex(10) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_11(): number { if( this.chatTab.tachieZindex(11) == 11 ){return 1;}else{ return this._opacity ;}  }
-
-
-//この実装は後でどうにかしたい
-  get imageFileUrl_00(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[0]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_01(): string { 
-  if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[1]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_02(): string { 
-  if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[2]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_03(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[3]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_04(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[4]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_05(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[5]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_06(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[6]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_07(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[7]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_08(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[8]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_09(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[9]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_10(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[10]);
-     if (image) return image.url;
-     return '';
-  }
-
-  get imageFileUrl_11(): string { 
-     if( ! this.chatTab.imageIdentifier )return '';
-     let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[11]);
-     if (image) return image.url;
-     return '';
-  }
 
   shoeMessageSetting(){
      
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'チャット詳細設定';
-    let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
+    let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 320, height: 160 };
     let component = this.panelService.open<ChatMessageSettingComponent>(ChatMessageSettingComponent, option);
   }
 

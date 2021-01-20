@@ -4,6 +4,7 @@ import { PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 //
 import { EventSystem, Network } from '@udonarium/core/system';
+import { ChatTachieImageComponent } from 'component/chat-tachie-img/chat-tachie-img.component';
 //
 
 @Component({

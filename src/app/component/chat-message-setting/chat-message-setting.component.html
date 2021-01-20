@@ -1,6 +1,16 @@
 <div id="file-list">
   <div class="table">
     <div class="table-cell" style = "width:16em">
+        立ち絵をウィンドウ内に表示:
+    </div>
+    <div class="table-cell" >
+      <input type="checkbox" value="isTachieInWindow"  [(ngModel)]="chatTabList.isTachieInWindow"
+       name="tachieInWindow" (click)="changeTachieInWindow()">
+    </div>
+
+  </div>
+  <div class="table">
+    <div class="table-cell" style = "width:16em">
         簡易表示で時間を表示:
     </div>
     <div class="table-cell" >
@@ -17,6 +27,5 @@
        name="hideInventory" (click)="changeDispFlagUserId()">
     </div>
   </div>
-
 
 </div>

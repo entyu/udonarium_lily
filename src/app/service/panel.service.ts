@@ -1,4 +1,5 @@
 import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { ChatTab } from '@udonarium/chat-tab';
 
 declare var Type: FunctionConstructor;
 interface Type<T> extends Function {
@@ -30,6 +31,7 @@ export class PanelService {
   height: number = 100;
   isCutIn: boolean = false ; //この方式でよいか検討のこと
   cutInIdentifier: string = '';
+  chatTab: ChatTab = null;
 
   scrollablePanel: HTMLDivElement = null;
 
@@ -70,6 +72,11 @@ export class PanelService {
       if (option.cutInIdentifier){
          childPanelService.cutInIdentifier = option.cutInIdentifier;  //この方式でよいか検討のこと
       }
+      
+//      if (option.chatTab){
+//         childPanelService.chatTab = option.chatTab;  //この方式でよいか検討のこと
+//      }
+      
     }
     panelComponentRef.onDestroy(() => {
       childPanelService.panelComponentRef = null;

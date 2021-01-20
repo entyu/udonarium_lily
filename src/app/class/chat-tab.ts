@@ -23,7 +23,9 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
   @SyncVar() count:number = 0;
   @SyncVar() imageIdentifierDummy: string = 'test';//通信開始ために使わなくても書かなきゃだめっぽい後日見直し
-  
+
+  imageDispFlag: boolean[] = [false,false,false,false,false,false,false,false,false,false,false,false];
+
   get chatMessages(): ChatMessage[] { return <ChatMessage[]>this.children; }
 
   get imageZposList( ): number[] {
@@ -38,6 +40,15 @@ export class ChatTab extends ObjectNode implements InnerXml {
       }
     }
     return -1;
+  }
+
+  tachiePosHide( pos :number ){
+    this.imageDispFlag[pos] = false;
+    console.log( this.imageDispFlag );
+  }
+
+  tachiePosIsDisp( pos :number ):boolean{
+    return this.imageDispFlag[pos];
   }
 
   tachieZindex( toppos : number ):number {
@@ -102,6 +113,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
            if( oldpos >= 0 ){ //同名キャラの古い位置を消去
               this.imageIdentifier[oldpos] = '';
               this.imageCharactorName[oldpos] = '';
+              this.imageDispFlag[oldpos] = false;
            }
            //非表示コマンド\s
            
@@ -113,13 +125,13 @@ export class ChatTab extends ObjectNode implements InnerXml {
              console.log('hideCommand' + hideCommand);
            }
            if( hideCommand ){
-
+             //事前に古い立ち絵は消す処理をしているため処理なし
            }else{
            
              this.imageIdentifier[this.pos_num] = message['imageIdentifier'];
              this.imageCharactorName[this.pos_num] =message['name'];
              this.replaceTachieZindex(this.pos_num);
-           
+             this.imageDispFlag[this.pos_num] = true;
            }
            this.imageIdentifierDummy = message['imageIdentifier'];//同期方法が無理やり感がある、後日
            

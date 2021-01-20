@@ -35,10 +35,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-//  private _teststring: string = 'AAAA';
-//  private _teststring2: string = '';
   private testcount:number = 0;
-
 
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
   isAutoScroll: boolean = true;
@@ -113,8 +110,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   updatePanelTitle() {
     if (this.chatTab) {
       this.panelService.title = 'チャットウィンドウ - ' + this.chatTab.name;
+      this.panelService.chatTab = this.chatTab;
     } else {
       this.panelService.title = 'チャットウィンドウ';
+      this.panelService.chatTab = null ;
     }
   }
 

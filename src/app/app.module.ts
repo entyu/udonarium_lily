@@ -15,6 +15,7 @@ import { ChatTabComponent } from 'component/chat-tab/chat-tab.component';
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 
 import { ChatTachieComponent } from 'component/chat-tachie/chat-tachie.component';
+import { ChatTachieImageComponent } from 'component/chat-tachie-img/chat-tachie-img.component';
 import { ChatColorSettingComponent } from 'component/chat-color-setting/chat-color-setting.component';
 import { ChatMessageSettingComponent } from 'component/chat-message-setting/chat-message-setting.component';
 
@@ -87,6 +88,7 @@ import { AppComponent } from './app.component';
     ChatWindowComponent,
 
     ChatTachieComponent,
+    ChatTachieImageComponent,
     ChatColorSettingComponent,
     ChatMessageSettingComponent,
 

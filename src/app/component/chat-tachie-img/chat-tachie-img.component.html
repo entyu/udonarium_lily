@@ -1,0 +1,82 @@
+<div>
+  <div id="tachie-component_">
+    <div class="tachie-image-box" #tachieArea style="height:0px,width:100%">
+      <ng-container *ngIf="chatTab" >
+        <ng-container *ngIf="chatTab.tachieDispFlag" >
+          <ng-container *ngIf="isTachieDispMode" >
+
+          <img class="tachie-image pos00" #tachie00 *ngIf="0 < imageFileUrl_00.length" 
+          [src]="imageFileUrl_00 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 0  ) ) translateY( ' + tachieY_Pos + 'px)',
+          'z-index': zIndex_00 , 'opacity': opacity_00 ,'height': tachieAreaHeight00 + 'px'}" 
+          (mousedown)="tachieClick(0)"/>
+
+          <img class="tachie-image pos01" #tachie01 *ngIf="0 < imageFileUrl_01.length" 
+          [src]="imageFileUrl_01 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 1  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_01 , 'opacity': opacity_01 ,'height': tachieAreaHeight01 + 'px'}" 
+          (mousedown)="tachieClick(1)"/>
+
+          <img class="tachie-image pos02" #tachie02 *ngIf="0 < imageFileUrl_02.length" 
+          [src]="imageFileUrl_02 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 2  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_02 , 'opacity': opacity_02 ,'height': tachieAreaHeight02 + 'px'}" 
+          (mousedown)="tachieClick(2)"/>
+
+          <img class="tachie-image pos03" #tachie03 *ngIf="0 < imageFileUrl_03.length" 
+          [src]="imageFileUrl_03 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 3  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_03 , 'opacity': opacity_03 ,'height': tachieAreaHeight03 + 'px'}" 
+          (mousedown)="tachieClick(3)"/>
+
+          <img class="tachie-image pos04" #tachie04 *ngIf="0 < imageFileUrl_04.length" 
+          [src]="imageFileUrl_04 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 4  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_04 , 'opacity': opacity_04 ,'height': tachieAreaHeight04 + 'px'}" 
+          (mousedown)="tachieClick(4)"/>
+
+          <img class="tachie-image pos05" #tachie05 *ngIf="0 < imageFileUrl_05.length" 
+          [src]="imageFileUrl_05 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 5  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_05 , 'opacity': opacity_05 ,'height': tachieAreaHeight05 + 'px'}" 
+          (mousedown)="tachieClick(5)"/>
+
+          <img class="tachie-image pos06" #tachie06 *ngIf="0 < imageFileUrl_06.length" 
+          [src]="imageFileUrl_06 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 6  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_06 , 'opacity': opacity_06 ,'height': tachieAreaHeight06 + 'px'}" 
+          (mousedown)="tachieClick(6)"/>
+
+          <img class="tachie-image pos07" #tachie07 *ngIf="0 < imageFileUrl_07.length" 
+          [src]="imageFileUrl_07 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 7  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_07 , 'opacity': opacity_07 ,'height': tachieAreaHeight07 + 'px'}" 
+          (mousedown)="tachieClick(7)"/>
+
+          <img class="tachie-image pos08" #tachie08 *ngIf="0 < imageFileUrl_08.length" [src]="imageFileUrl_08 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 8  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_08 , 'opacity': opacity_08 ,'height': tachieAreaHeight08 + 'px'}" 
+          (mousedown)="tachieClick(8)"/>
+
+          <img class="tachie-image pos09" #tachie09 *ngIf="0 < imageFileUrl_09.length" [src]="imageFileUrl_09 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 9  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_09 , 'opacity': opacity_09 ,'height': tachieAreaHeight09 + 'px'}" 
+          (mousedown)="tachieClick(9)"/>
+
+          <img class="tachie-image pos10" #tachie10 *ngIf="0 < imageFileUrl_10.length" [src]="imageFileUrl_10 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 10  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_10 , 'opacity': opacity_10 ,'height': tachieAreaHeight10 + 'px'}" 
+          (mousedown)="tachieClick(10)"/>
+
+          <img class="tachie-image pos11" #tachie11 *ngIf="0 < imageFileUrl_11.length" [src]="imageFileUrl_11 | safe: 'resourceUrl'"  
+          [ngStyle]="{'transform': 'translateX(  calc( (' + tachieAreaWidth  + 'px - 100% ) / 11 * 11  ) ) translateY(' + tachieY_Pos + 'px)',
+          'z-index': zIndex_11 , 'opacity': opacity_11 ,'height': tachieAreaHeight11 + 'px'}" 
+          (mousedown)="tachieClick(11)"/>
+
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+    </div>
+  </div>
+</div>

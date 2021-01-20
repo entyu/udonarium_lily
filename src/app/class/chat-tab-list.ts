@@ -9,6 +9,12 @@ import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
 @SyncObject('chat-tab-list')
 export class ChatTabList extends ObjectNode implements InnerXml {
+
+  public tachieHeightValue = 200;
+  public minTachieSize = 100;
+  public maxTachieSize = 500;
+  public isTachieInWindow = false;
+
   private static _instance: ChatTabList;
   static get instance(): ChatTabList {
     if (!ChatTabList._instance) {
