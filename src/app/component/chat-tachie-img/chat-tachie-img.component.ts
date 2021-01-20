@@ -24,10 +24,12 @@ export class ChatTachieImageComponent implements OnInit, OnDestroy{
 
   @Input() chatTabidentifier: string = '';
   @Input() isTilteTop = false;
+  @Input() dispByMouse = false;
+
   @ViewChild('tachieArea', { read: ElementRef }) private tachieArea: ElementRef;  
   private _tachieAreaWidth = 0;
   
-
+  
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
 
   get tachieY_Pos():number{ 
@@ -52,8 +54,8 @@ export class ChatTachieImageComponent implements OnInit, OnDestroy{
   }
   
   get isTachieDispMode(){
-    
-    return this.dispFlag;
+        
+    return this.dispFlag && this.dispByMouse;
   }
   
   tachieAreaHeight( pos: number) : number {

@@ -60,6 +60,13 @@ export class UIPanelComponent implements OnInit {
   ) { }
   
   
+  private tachieDispByMouse: boolean = true;
+  
+  showTachie(flag:boolean){
+    
+    this.tachieDispByMouse = flag;
+  }
+  
   
   
   ngOnInit() {
