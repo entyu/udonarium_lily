@@ -72,32 +72,5 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isDicebot(): boolean { return this.isSystem && this.from === 'System-BCDice' ? true : false; }
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
   get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
-
-
-  get chatSimpleDispFlag(): boolean {
-    if( ! this.parent ){ return false ;}
-
-    let tab : ChatTab = <ChatTab>this.parent;
-    if( tab.chatSimpleDispFlag ){
-      return true ;
-    }else{
-      return false ;
-    }
-  }
-  
-  get simpleDispFlagTime(): boolean {
-    if( this.chatTabList.simpleDispFlagTime ){
-      return true;
-    }else{
-      return false;
-    }
-  }
-  get simpleDispFlagUserId(): boolean {
-    if( this.chatTabList.simpleDispFlagUserId ){
-      return true;
-    }else{
-      return false;
-    }
-  }
   
 }

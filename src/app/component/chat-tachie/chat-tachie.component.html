@@ -18,7 +18,8 @@
       チャット簡易表示:
       <ng-container *ngIf="chatTab">
         <input type="checkbox" value="chatSimpleDispFlag"  
-        [(ngModel)]="chatTab.chatSimpleDispFlag" name="chatSimpleDispFlag">
+        [(ngModel)]="chatTab.chatSimpleDispFlag" name="chatSimpleDispFlag" 
+        (click)="changeSimpleDisp()">
       </ng-container>
       <button class="message-setting small-font" (click)="shoeMessageSetting();"><i class="material-icons small-font">settings</i>詳細</button>
       

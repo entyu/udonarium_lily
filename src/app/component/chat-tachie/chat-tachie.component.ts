@@ -88,4 +88,9 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
   trackByChatTab(index: number, chatTab: ChatTab) {
     return chatTab.identifier;
   }
+  
+  changeSimpleDisp(){
+    EventSystem.trigger('RE_DRAW_CHAT', {  });
+  }
+  
 }

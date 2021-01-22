@@ -17,6 +17,7 @@ import {
 
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
+import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { ResettableTimeout } from '@udonarium/core/system/util/resettable-timeout';
@@ -103,6 +104,8 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private callbackOnScrollToBottom: any = () => this.resetMessages();
 
   @Input() chatTab: ChatTab;
+  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
+
   @Output() onAddMessage: EventEmitter<null> = new EventEmitter();
 
   constructor(
@@ -147,6 +150,11 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
           && this.chatTab.contains(message)) {
           this.changeDetector.markForCheck();
         }
+      })
+      .on('RE_DRAW_CHAT', event => {
+        console.log("チャット再描画");
+        setTimeout(() => this.redraw() , 100);
+        //フラグの更新前に絵ヴェントが走るためタイマーを使う。ひとまずやむなし
       });
   }
 
@@ -358,7 +366,12 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       this.ngZone.run(() => { });
     });
   }
-
+  
+  redraw() {
+    // 強制的に再描画させる
+    this.changeDetector.detectChanges();
+  }  
+  
   private calcElementMaxHeight(chatMessageElements: NodeListOf<HTMLElement>): number {
     let maxHeight = this.minMessageHeight;
     for (let i = chatMessageElements.length - 1; 0 <= i; i--) {

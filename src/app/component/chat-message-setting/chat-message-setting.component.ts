@@ -42,10 +42,12 @@ export class ChatMessageSettingComponent implements OnInit, OnDestroy, AfterView
   }
 
   changeDispFlagTime(){
+    EventSystem.trigger('RE_DRAW_CHAT', {  });
     //’†g‚È‚µ
   }
 
   changeDispFlagUserId(){
+    EventSystem.trigger('RE_DRAW_CHAT', {  });
     //’†g‚È‚µ
   }
 

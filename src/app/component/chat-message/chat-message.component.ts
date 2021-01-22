@@ -33,6 +33,11 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 
 export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() chatMessage: ChatMessage;
+
+  @Input() simpleDispFlagTime: boolean = false;
+  @Input() simpleDispFlagUserId: boolean = false;
+  @Input() chatSimpleDispFlag: boolean = false;
+
   imageFile: ImageFile = ImageFile.Empty;
   animeState: string = 'inactive';
 
@@ -55,4 +60,34 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   discloseMessage() {
     this.chatMessage.tag = this.chatMessage.tag.replace('secret', '');
   }
+
+/*
+  get chatSimpleDispFlag(): boolean {
+
+    if( ! this.parent ){ return false ;}
+
+    let tab : ChatTab = <ChatTab>this.parent;
+    if( tab.chatSimpleDispFlag ){
+      return true ;
+    }else{
+      return false ;
+    }
+  }
+  
+  get simpleDispFlagTime(): boolean {
+    if( this.chatTabList.simpleDispFlagTime ){
+      return true;
+    }else{
+      return false;
+    }
+  }
+  get simpleDispFlagUserId(): boolean {
+    if( this.chatTabList.simpleDispFlagUserId ){
+      return true;
+    }else{
+      return false;
+    }
+  }
+*/
+
 }
