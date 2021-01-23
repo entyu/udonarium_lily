@@ -47,10 +47,26 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get text(): string { return this._text };
   set text(text: string) { this._text = text; this.textChange.emit(text); }
 
-  @Input('tachieNum') _tachieNum: number = 0;  
+
+//  @Input('tachieNum') _tachieNum: number = 0;  
+//  @Output() tachieNumtChange = new EventEmitter<number>();
+
   @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
-  get tachieNum(): number { return this._tachieNum };
-  set tachieNum(num:  number){ this._tachieNum = num};
+
+  get tachieNum(): number {
+    let object = ObjectStore.instance.get(this.sendFrom);
+    if (object instanceof GameCharacter) {
+      return object.selectedTachieNum;
+    }
+    return 0;
+  }
+  
+  set tachieNum(num:  number){ 
+    let object = ObjectStore.instance.get(this.sendFrom);
+    if (object instanceof GameCharacter) {
+      object.selectedTachieNum = num;
+    }
+  }
 
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
   gameHelp: string = '';

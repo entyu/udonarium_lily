@@ -17,6 +17,37 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
   @SyncVar() syncDummyCounter: number = 0;
 
+  _selectedTachieNum:number = 0;
+  
+  get selectedTachieNum(): number { 
+    
+    if( this._selectedTachieNum > ( this.imageDataElement.children.length - 1) ){
+      this._selectedTachieNum = this.imageDataElement.children.length - 1;
+    }
+    if( this._selectedTachieNum < 0 ){
+      this._selectedTachieNum = 0;
+    }
+   
+    return this._selectedTachieNum; 
+  }
+
+  set selectedTachieNum(num : number){ 
+    
+    console.log("set selectedTachieNum NUM=" + num +" len" + this.imageDataElement.children.length);
+    
+    if( num > ( this.imageDataElement.children.length - 1 ) ){
+      num = this.imageDataElement.children.length - 1;
+    }
+    if( num < 0 ){
+      num = 0;
+    }
+    this._selectedTachieNum = num
+    console.log("set selectedTachieNum" + this._selectedTachieNum);
+
+  }
+
+  
+  
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
 
