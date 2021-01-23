@@ -2,7 +2,7 @@
   <div class="table-cell imagebox">
     <img *ngIf="0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
   </div>
-  <div class="table-cell" style="overflow: hidden;">
+  <div class="table-cell" style="width:100%">
     <div>
       <select style="width: 12em;" [(ngModel)]="sendFrom">
         <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}">{{myPeer?.name}}（あなた）</option>
@@ -23,8 +23,8 @@
       <button (click)="showDicebotHelp()">?</button>
     </div>
 
-    <div style="overflow:hidden; white-space: nowrap">
-      <div style="min-width:4.5em;display: inline-block;">
+    <div class="table">
+      <div class="table-cell color-box-tag">
         <ng-container *ngIf="!isGameCharacter">
           <div class="color" (click)="setColorNum(0);"
           [ngStyle]="{'background-color': playerChatColor_0 ,'border':'solid ' + colorSelectorBoxBorder_0 + ' #666666' , 'border-radius': colorSelectorRadius_0 }"
@@ -48,12 +48,12 @@
           ></div>
         </ng-container>
       </div>
-      <div class="table-cell" style="min-width:4.5em;display: inline-block;">
-          <button class="color-setting small-font" (click)="shoeColorSetting();"><i class="material-icons small-font">settings</i>色設定</button>
+      <div class="table-cell color-setting-tag">
+        <button class="color-setting small-font" (click)="shoeColorSetting();"><i class="material-icons small-font">settings</i>色設定</button>
       </div>
 
 <!-- 立ち絵ここから-->
-      <div class="tachie-tag " style="display: inline-block;">
+      <div class="table-cell tachie-tag ">
         <ng-container *ngIf="1 > selectCharacterTachieNum">
           <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
           min="0" max="0" [(ngModel)]="tachieNum" />
@@ -63,16 +63,16 @@
           <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
           min="0" max="{{selectCharacterTachieNum -1}}" [(ngModel)]="tachieNum" />
          {{tachieNum}}/{{selectCharacterTachieNum - 1}} 立ち絵
-        </ng-container>
-      </div>
-      <div class="tachie-tag " style="display: inline-block;">
-          <ng-container *ngIf="1 <= selectCharacterTachieNum">
+<!--          <ng-container *ngIf="1 <= selectCharacterTachieNum">-->
             <ng-container *ngIf="selectCharacterTachie"> 
               <ng-container *ngIf="selectCharacterTachie.currentValue.length > 0"> 
                 {{selectCharacterTachie.currentValue}}
               </ng-container>
             </ng-container>
-          </ng-container>
+<!--          </ng-container>-->
+        </ng-container>
+      </div>
+      <div class="table-cell">
       </div>
 
     </div>
