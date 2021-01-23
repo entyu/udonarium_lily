@@ -61,33 +61,4 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     this.chatMessage.tag = this.chatMessage.tag.replace('secret', '');
   }
 
-/*
-  get chatSimpleDispFlag(): boolean {
-
-    if( ! this.parent ){ return false ;}
-
-    let tab : ChatTab = <ChatTab>this.parent;
-    if( tab.chatSimpleDispFlag ){
-      return true ;
-    }else{
-      return false ;
-    }
-  }
-  
-  get simpleDispFlagTime(): boolean {
-    if( this.chatTabList.simpleDispFlagTime ){
-      return true;
-    }else{
-      return false;
-    }
-  }
-  get simpleDispFlagUserId(): boolean {
-    if( this.chatTabList.simpleDispFlagUserId ){
-      return true;
-    }else{
-      return false;
-    }
-  }
-*/
-
 }

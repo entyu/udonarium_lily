@@ -135,45 +135,25 @@ export class ChatMessageService {
     let sendToName = this.findObjectName(sendTo);
     return sendFromName + ' > ' + sendToName;
   }
-//entyu_8
 
   private findImageIdentifier(sendFrom,index:number): string {
 
     let object = ObjectStore.instance.get(sendFrom);
     if (object instanceof GameCharacter) {
-      if( object.imageDataElement.children.length  > index){
-        return  ImageStorage.instance.get(<string>object.imageDataElement.children[index].value).identifier;
+      console.log("object.imageDataElement.children.length"+ object.imageDataElement.children.length);
+      if( object.imageDataElement.children.length  > index ){
+        let img = ImageStorage.instance.get(<string>object.imageDataElement.children[index].value);
+        if( img ){
+          return  img.identifier;
+        }
       }
-      return object.imageFile ? object.imageFile.identifier : '';
+      return '';
     } else if (object instanceof PeerCursor) {
       return object.imageIdentifier;
     }
     return sendFrom;
 
-/*
-    let object = ObjectStore.instance.get(sendFrom);
-    if (object instanceof GameCharacter) {
-      return object.imageFile ? object.imageFile.identifier : '';
-    } else if (object instanceof PeerCursor) {
-      return object.imageIdentifier;
-    }
-    return sendFrom;
-*/
   }
-
-/*
-  private findImageIdentifier(identifier: string , index:number): string {
-    let object = ObjectStore.instance.get(identifier);
-    if (object instanceof GameCharacter) {
-      return object.imageDataElement ? object.imageDataElement.children.value : '';
-    } else if (object instanceof PeerCursor) {
-      return object.imageIdentifier;
-    }
-    return identifier;
-  }
-*/
-//
-
 
 //entyu
   private findImagePos(identifier: string): number {
