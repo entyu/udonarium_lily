@@ -73,8 +73,14 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   colorSelectNo_ = 0;
 
-  @Input() isChatWindow: boolean = false;
-
+//  @Input() isChatWindow: boolean = false;
+  get isGameCharacter():boolean{
+    let object = ObjectStore.instance.get(this.sendFrom);
+    if (object instanceof GameCharacter) {    
+      return true;
+    }
+    return false;
+  }
 
   get colorSelectNo(){
     return this.colorSelectNo_;
@@ -130,10 +136,12 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   }
   
   get selectChatColor(){
-    if( this.isChatWindow ){
-      return this.playerChatColor(this.colorSelectNo);
-    }else{
+
+    let object = ObjectStore.instance.get(this.sendFrom);
+    if (object instanceof GameCharacter) {
       return this.charactorChatColor(this.colorSelectNo);
+    }else{
+      return this.playerChatColor(this.colorSelectNo);
     }
   }
   
@@ -387,27 +395,22 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   }
 
   shoeColorSetting(){
-    
-    if(this.isChatWindow){
-        let coordinate = this.pointerDeviceService.pointers[0];
-        let title = '色設定';
-        let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
-        let component = this.panelService.open<ChatColorSettingComponent>(ChatColorSettingComponent, option);
-        component.tabletopObject = null;
-    }else{
-
-      let object = ObjectStore.instance.get(this.sendFrom);
-      if (object instanceof GameCharacter) {
+    let object = ObjectStore.instance.get(this.sendFrom);
+    if (object instanceof GameCharacter) {
       
-        let coordinate = this.pointerDeviceService.pointers[0];
-        let title = '色設定';
-        if (object.name.length) title += ' - ' + object.name;
-        let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
-        let component = this.panelService.open<ChatColorSettingComponent>(ChatColorSettingComponent, option);
-        component.tabletopObject = object;
-      }
+      let coordinate = this.pointerDeviceService.pointers[0];
+      let title = '色設定';
+      if (object.name.length) title += ' - ' + object.name;
+      let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
+      let component = this.panelService.open<ChatColorSettingComponent>(ChatColorSettingComponent, option);
+      component.tabletopObject = object;
+    }else{
+      let coordinate = this.pointerDeviceService.pointers[0];
+      let title = '色設定';
+      let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
+      let component = this.panelService.open<ChatColorSettingComponent>(ChatColorSettingComponent, option);
+      component.tabletopObject = null;
     }
-    
   }
 
 

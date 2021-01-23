@@ -23,9 +23,9 @@
       <button (click)="showDicebotHelp()">?</button>
     </div>
 
-    <div >
+    <div style="overflow:hidden; white-space: nowrap">
       <div style="min-width:4.5em;display: inline-block;">
-        <ng-container *ngIf="isChatWindow">
+        <ng-container *ngIf="!isGameCharacter">
           <div class="color" (click)="setColorNum(0);"
           [ngStyle]="{'background-color': playerChatColor_0 ,'border':'solid ' + colorSelectorBoxBorder_0 + ' #666666' , 'border-radius': colorSelectorRadius_0 }"
           ></div>
@@ -36,7 +36,7 @@
           [ngStyle]="{'background-color': playerChatColor_2 ,'border':'solid ' + colorSelectorBoxBorder_2 + ' #666666' , 'border-radius': colorSelectorRadius_2 }"
           ></div>
         </ng-container>
-        <ng-container *ngIf="!isChatWindow">
+        <ng-container *ngIf="isGameCharacter">
           <div class="color" (click)="setColorNum(0);"
           [ngStyle]="{'background-color': charactorChatColor_0 ,'border':'solid ' + colorSelectorBoxBorder_0 + ' #666666' , 'border-radius': colorSelectorRadius_0 }"
           ></div>
