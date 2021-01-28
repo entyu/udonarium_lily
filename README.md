@@ -16,6 +16,25 @@
 * ~~スタンドがダイスボット結果末尾に反応~~反応するように
 * サイコロ・フィクションの判定ヘルパ
 
+## 実験的機能（ほとんどテストされていない、一部環境から利用できない不具合あり）
+
+### BCDice-API対応
+
+下記のようにconfig.yamlにBCDice-APIのエンドポイントURLを記述するとBCDice-API経由でダイスボットが反応します。
+
+```
+webrtc:
+  key: [SkywayのAPIキー]
+  config: #未使用
+    iceServers: #未使用
+      - url: stun:stun.skyway.io:3478
+      - url: turn:homeo@turn.bistri.com:80
+        credential: homeo
+app: #未使用
+dice:
+  url: [BCDice-APIのエンドポイントURL]
+```
+
 **↓↓↓↓　以下、ユドナリウム本家より　↓↓↓↓**
 
 
