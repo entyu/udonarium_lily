@@ -24,7 +24,8 @@ export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() count:number = 0;
   @SyncVar() imageIdentifierDummy: string = 'test';//通信開始ために使わなくても書かなきゃだめっぽい後日見直し
 
-  imageDispFlag: boolean[] = [false,false,false,false,false,false,false,false,false,false,false,false];
+//  imageDispFlag: boolean[] = [false,false,false,false,false,false,false,false,false,false,false,false];
+  imageDispFlag: boolean[] = [true,true,true,true,true,true,true,true,true,true,true,true];
 
   get chatMessages(): ChatMessage[] { return <ChatMessage[]>this.children; }
 
@@ -90,6 +91,15 @@ export class ChatTab extends ObjectNode implements InnerXml {
       }else{
         this._unreadLength++;
       }
+
+      if ( child.to != null && child.to !== '') {
+        // 秘話時に立ち絵の更新をかけない(処理なし)
+      }else{
+        //マウスクリック非表示を復帰する
+        this.imageDispFlag[child.imagePos] = true;
+//        console.log("立ち絵テスト3 this.imageDispFlag[child.imagePos]" + child.imagePos + " / "+this.imageDispFlag[child.imagePos] + ":");
+      }
+
       EventSystem.trigger('MESSAGE_ADDED', { tabIdentifier: this.identifier, messageIdentifier: child.identifier });
     }
   }
@@ -136,6 +146,8 @@ export class ChatTab extends ObjectNode implements InnerXml {
              this.imageCharactorName[this.pos_num] =message['name'];
              this.replaceTachieZindex(this.pos_num);
              this.imageDispFlag[this.pos_num] = true;
+
+             chat.setAttribute(key, message[key]);
            }
            this.imageIdentifierDummy = message['imageIdentifier'];//同期方法が無理やり感がある、後日
            
