@@ -328,7 +328,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
     
 //    console.log('円柱TEST event: KeyboardEvent '+this.sendFrom + '  ' + this.tachieNum);
-    console.log('円柱TEST event:' + this.selectChatColor);
+//    console.log('円柱TEST event:' + this.selectChatColor);
     
     this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom
     , sendTo: this.sendTo , tachieNum : this.tachieNum ,messColor : this.selectChatColor });

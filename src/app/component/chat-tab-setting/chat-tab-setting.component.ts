@@ -10,6 +10,8 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
+import { PeerCursor } from '@udonarium/peer-cursor';
+
 
 @Component({
   selector: 'app-chat-tab-setting',
@@ -110,6 +112,33 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
       this.selectedTab.destroy();
     }
   }
+
+  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+
+  deleteLog(){
+    if (!this.isEmpty && this.selectedTab) {
+      while( this.selectedTab.children.length > 0)
+        this.selectedTab.children[0].destroy();
+    }
+    let mess = 'ログをクリアしました'
+    let gameType: string = '';
+    let sendTo ='';
+    this.chatMessageService.sendMessage(this.selectedTab, mess, gameType, this.myPeer.identifier, sendTo , 0 , '#000000' );
+  }
+
+  deleteLogALL(){
+    let mess = 'ログをクリアしました'
+    let gameType: string = '';
+    let sendTo ='';
+
+    for (let child of ChatTabList.instance.chatTabs) {
+      while( child.children.length > 0){
+        child.children[0].destroy();
+      }
+      this.chatMessageService.sendMessage(child, mess, gameType, this.myPeer.identifier, sendTo , 0 , '#000000' );
+    }
+  }
+
 
   restore() {
     if (this.selectedTab && this.selectedTabXml) {
