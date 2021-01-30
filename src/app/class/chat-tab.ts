@@ -24,6 +24,14 @@ export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() count:number = 0;
   @SyncVar() imageIdentifierDummy: string = 'test';//通信開始ために使わなくても書かなきゃだめっぽい後日見直し
 
+  tachieReset(){
+    this.imageIdentifier = ['a','b','c','d','e','f','g','h','i','j','k','l'];
+    this.imageCharactorName = ['#0','#1','#2','#3','#4','#5','#6','#7','#8','#9','#10','#11'];
+    this.imageIdentifierZpos = [0,1,2,3,4,5,6,7,8,9,10,11];
+    this.imageIdentifierDummy = 'test';
+  }
+
+
 //  imageDispFlag: boolean[] = [false,false,false,false,false,false,false,false,false,false,false,false];
   imageDispFlag: boolean[] = [true,true,true,true,true,true,true,true,true,true,true,true];
 

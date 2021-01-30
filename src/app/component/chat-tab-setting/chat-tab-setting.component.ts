@@ -119,6 +119,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     if (!this.isEmpty && this.selectedTab) {
       while( this.selectedTab.children.length > 0)
         this.selectedTab.children[0].destroy();
+        this.selectedTab.tachieReset();
     }
     let mess = 'ログをクリアしました'
     let gameType: string = '';
@@ -134,6 +135,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     for (let child of ChatTabList.instance.chatTabs) {
       while( child.children.length > 0){
         child.children[0].destroy();
+        child.tachieReset();
       }
       this.chatMessageService.sendMessage(child, mess, gameType, this.myPeer.identifier, sendTo , 0 , '#000000' );
     }
