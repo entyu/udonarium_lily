@@ -13,6 +13,9 @@ export interface InnerXml extends GameObject {
   parseInnerXml(element: Element);
 }
 
+const objectPropertyKeys = Object.getOwnPropertyNames(Object.prototype);
+const arrayPropertyKeys = Object.getOwnPropertyNames(Array.prototype);
+
 export class ObjectSerializer {
   private static _instance: ObjectSerializer
   static get instance(): ObjectSerializer {
@@ -87,7 +90,8 @@ export class ObjectSerializer {
 
   private static array2attributes(array: Array<any>, rootKey: string): Attributes {
     let attributes = {};
-    for (let i = 0; i < array.length; i++) {
+    let length = array.length;
+    for (let i = 0; i < length; i++) {
       let item = array[i];
       let key = rootKey + '.' + i;
       let childAttr = ObjectSerializer.make2Attributes(item, key);
@@ -129,7 +133,8 @@ export class ObjectSerializer {
   }
 
   static parseAttributes(syncData: Object, attributes: NamedNodeMap): Object {
-    for (let i = 0; i < attributes.length; i++) {
+    let length = attributes.length;
+    for (let i = 0; i < length; i++) {
       let value = attributes[i].value;
       value = XmlUtil.decodeEntityReference(value);
 
@@ -137,8 +142,15 @@ export class ObjectSerializer {
       let key: string | number = split[0];
       let obj: Object | Array<any> = syncData;
 
+      let pollutionKey = split.find(splitKey => objectPropertyKeys.includes(splitKey));
+      if (pollutionKey != null) {
+        console.log(`skip invalid key (${pollutionKey})`);
+        continue;
+      }
+
       if (1 < split.length) {
         ({ obj, key } = ObjectSerializer.attributes2object(split, obj, key));
+        if (key == null) continue;
       }
 
       let type = typeof obj[key];
@@ -154,15 +166,21 @@ export class ObjectSerializer {
     // 階層構造の解析 foo.bar.0="abc" 等
     // 処理として実装こそしているが、xmlの仕様としては良くないので使用するべきではない.
     let parentObj: Object | Array<any> = null;
-    for (let i = 0; i < split.length; i++) {
+    let length = split.length;
+    for (let i = 0; i < length; i++) {
       let index = parseInt(split[i]);
       if (parentObj && !Number.isNaN(index) && !Array.isArray(obj) && Object.keys(parentObj).length) {
         parentObj[key] = [];
         obj = parentObj[key];
       }
       key = Number.isNaN(index) ? split[i] : index;
-      if (i + 1 < split.length) {
-        if (obj[key] === undefined)
+
+      if (Array.isArray(obj) && typeof key !== 'number') {
+        console.warn('Arrayにはindexの挿入しか許可しない');
+        return { obj, key: null };
+      }
+      if (i + 1 < length) {
+        if (obj[key] == null)
           obj[key] = typeof key === 'number' ? [] : {};
         parentObj = obj;
         obj = obj[key];

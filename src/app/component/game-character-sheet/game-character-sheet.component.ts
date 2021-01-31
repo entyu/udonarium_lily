@@ -24,6 +24,9 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   networkService = Network;
 
+  isSaveing: boolean = false;
+  progresPercent: number = 0;
+
   constructor(
     private saveDataService: SaveDataService,
     private panelService: PanelService,
@@ -121,15 +124,21 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     if( maxHeight > 1000 )
       maxHeight = 1000 ;
     character.overViewMaxHeight = maxHeight;
-  }
-  
-  saveToXML() {
-    if (!this.tabletopObject) return;
-
-    let element = this.tabletopObject.getElement('name', this.tabletopObject.commonDataElement);
+  }  async saveToXML() {
+    if (!this.tabletopObject || this.isSaveing) return;
+    this.isSaveing = true;
+    this.progresPercent = 0;
+    let element = this.tabletopObject.commonDataElement.getFirstElementByName('name');
     let objectName: string = element ? <string>element.value : '';
 
-    this.saveDataService.saveGameObject(this.tabletopObject, 'xml_' + objectName);
+    await this.saveDataService.saveGameObjectAsync(this.tabletopObject, 'xml_' + objectName, percent => {
+      this.progresPercent = percent;
+    });
+
+    setTimeout(() => {
+      this.isSaveing = false;
+      this.progresPercent = 0;
+    }, 500);
   }
 
   setLocation(locationName: string) {

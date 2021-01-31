@@ -1,14 +1,12 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
-import { ImageContext, ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
-import { DiceSymbol, DiceType } from '@udonarium/dice-symbol';
+import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { GameTable } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
@@ -19,8 +17,7 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 
-import { ContextMenuAction } from './context-menu.service';
-import { PointerCoordinate, PointerDeviceService } from './pointer-device.service';
+import { CoordinateService } from './coordinate.service';
 //本家PR #92より
 import { ImageTag } from '@udonarium/image-tag';
 //
@@ -32,11 +29,6 @@ type LocationName = string;
 
 @Injectable()
 export class TabletopService {
-  dragAreaElement: HTMLElement = document.body;
-
-  private batchTask: Map<any, Function> = new Map();
-  private batchTaskTimer: NodeJS.Timer = null;
-
   private _emptyTable: GameTable = new GameTable('');
   get tableSelecter(): TableSelecter { return ObjectStore.instance.get<TableSelecter>('tableSelecter'); }
   get currentTable(): GameTable {
@@ -70,8 +62,7 @@ export class TabletopService {
   get peerCursors(): PeerCursor[] { return ObjectStore.instance.getObjects<PeerCursor>(PeerCursor); }
 
   constructor(
-    public ngZone: NgZone,
-    public pointerDeviceService: PointerDeviceService,
+    private coordinateService: CoordinateService
   ) {
     console.log('円柱 constructor時');
     this.initialize();
@@ -114,7 +105,7 @@ export class TabletopService {
         
         if (gameObject instanceof TabletopObject) {
           console.log('TabletopObject 追加');
-          let pointer = this.calcTabletopLocalCoordinate();
+          let pointer = this.coordinateService.calcTabletopLocalCoordinate();
           gameObject.location.x = pointer.x - 25;
           gameObject.location.y = pointer.y - 25;
           gameObject.posZ = pointer.z;
@@ -137,29 +128,6 @@ export class TabletopService {
         }        
 
       });
-  }
-
-  addBatch(task: Function, key: any = {}) {
-    this.batchTask.set(key, task);
-    if (this.batchTaskTimer != null) return;
-    this.execBatch();
-    this.batchTaskTimer = setInterval(() => {
-      if (0 < this.batchTask.size) {
-        this.execBatch();
-      } else {
-        clearInterval(this.batchTaskTimer);
-        this.batchTaskTimer = null;
-      }
-    }, 66);
-  }
-
-  removeBatch(key: any = {}) {
-    this.batchTask.delete(key);
-  }
-
-  private execBatch() {
-    this.batchTask.forEach(task => task());
-    this.batchTask.clear();
   }
 
   private findCache(aliasName: string): TabletopCache<any> {
@@ -199,7 +167,7 @@ export class TabletopService {
     this.clearMap();
   }
 
-  private shouldRefreshCache(object: TabletopObject) {
+  private shouldRefreshCache(object: TabletopObject): boolean {
     return this.locationMap.get(object.identifier) !== object.location.name || this.parentMap.get(object.identifier) !== object.parentId;
   }
 

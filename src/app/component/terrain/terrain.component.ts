@@ -1,4 +1,15 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -10,9 +21,11 @@ import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { CoordinateService } from 'service/coordinate.service';
+import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-import { TabletopService } from 'service/tabletop.service';
+import { TabletopActionService } from 'service/tabletop-action.service';
 
 @Component({
   selector: 'terrain',
@@ -33,8 +46,8 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   get hasWall(): boolean { return this.terrain.hasWall; }
   get hasFloor(): boolean { return this.terrain.hasFloor; }
 
-  get wallImage(): ImageFile { return this.terrain.wallImage; }
-  get floorImage(): ImageFile { return this.terrain.floorImage; }
+  get wallImage(): ImageFile { return this.imageService.getSkeletonOr(this.terrain.wallImage); }
+  get floorImage(): ImageFile { return this.imageService.getSkeletonOr(this.terrain.floorImage); }
 
   get height(): number { return this.adjustMinBounds(this.terrain.height); }
   get width(): number { return this.adjustMinBounds(this.terrain.width); }
@@ -52,12 +65,15 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   private input: InputHandler = null;
 
   constructor(
-    private tabletopService: TabletopService,
+    private ngZone: NgZone,
+    private imageService: ImageService,
+    private tabletopActionService: TabletopActionService,
     private contextMenuService: ContextMenuService,
     private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private coordinateService: CoordinateService,
   ) { }
 
   ngOnInit() {
@@ -85,7 +101,9 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.input = new InputHandler(this.elementRef.nativeElement);
+    this.ngZone.runOutsideAngular(() => {
+      this.input = new InputHandler(this.elementRef.nativeElement);
+    });
     this.input.onStart = this.onInputStart.bind(this);
   }
 
@@ -117,7 +135,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
 
     let menuPosition = this.pointerDeviceService.pointers[0];
-    let objectPosition = this.tabletopService.calcTabletopLocalCoordinate();
+    let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     this.contextMenuService.open(menuPosition, [
       (this.isLocked
         ? {
@@ -165,7 +183,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       },
       ContextMenuSeparator,
-      { name: 'オブジェクト作成', action: null, subActions: this.tabletopService.getContextMenuActionsForCreateObject(objectPosition) }
+      { name: 'オブジェクト作成', action: null, subActions: this.tabletopActionService.makeDefaultContextMenuActions(objectPosition) }
     ], this.name);
   }
 

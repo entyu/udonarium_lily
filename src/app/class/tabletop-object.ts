@@ -21,7 +21,7 @@ export class TabletopObject extends ObjectNode {
 
   @SyncVar() posZ: number = 0;
 
-  get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
+  get isVisibleOnTable(): boolean { return this.location.name === 'table'; }
 
   private _imageFile: ImageFile = ImageFile.Empty;
   private _dataElements: { [name: string]: string } = {};
@@ -74,7 +74,7 @@ export class TabletopObject extends ObjectNode {
     if (!this.buffDataElement) this.rootDataElement.appendChild(DataElement.create('buff', '', {}, 'buff_' + this.identifier));//entyu
   }
 
-  getElement(name: string, from: DataElement = this.rootDataElement): DataElement {
+  protected getElement(name: string, from: DataElement = this.rootDataElement): DataElement {
     if (!from) return null;
     let element: DataElement = this._dataElements[name] ? ObjectStore.instance.get(this._dataElements[name]) : null;
     if (!element || !from.contains(element)) {

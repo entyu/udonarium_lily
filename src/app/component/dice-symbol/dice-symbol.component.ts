@@ -125,7 +125,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.diceSymbol || !object) return;
         if ((this.diceSymbol === object)
           || (object instanceof ObjectNode && this.diceSymbol.contains(object))
-          || (object instanceof PeerCursor && object.peerId === this.diceSymbol.owner)) {
+          || (object instanceof PeerCursor && object.userId === this.diceSymbol.owner)) {
           this.changeDetector.markForCheck();
         }
       })
@@ -136,7 +136,8 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
         this.changeDetector.markForCheck();
       })
       .on('DISCONNECT_PEER', event => {
-        if (this.diceSymbol.owner === event.data.peer) this.changeDetector.markForCheck();
+        let cursor = PeerCursor.findByPeerId(event.data.peerId);
+        if (!cursor || this.diceSymbol.owner === cursor.userId) this.changeDetector.markForCheck();
       });
     this.movableOption = {
       tabletopObject: this.diceSymbol,
@@ -149,8 +150,10 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.input = new InputHandler(this.elementRef.nativeElement);
-    this.input.onStart = this.onInputStart.bind(this);
+    this.ngZone.runOutsideAngular(() => {
+      this.input = new InputHandler(this.elementRef.nativeElement);
+    });
+    this.input.onStart = e => this.ngZone.run(() => this.onInputStart(e));
   }
 
   ngOnDestroy() {
@@ -171,7 +174,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onInputStart(e: MouseEvent | TouchEvent) {
     this.startDoubleClickTimer(e);
-    if (e instanceof MouseEvent) this.startIconHiddenTimer();
+    this.startIconHiddenTimer();
   }
 
   startDoubleClickTimer(e) {
@@ -232,7 +235,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.isMine) {
       actions.push({
         name: '自分だけ見る', action: () => {
-          this.owner = Network.peerId;
+          this.owner = Network.peerContext.userId;
           SoundEffect.play(PresetSound.lock);
         }
       });

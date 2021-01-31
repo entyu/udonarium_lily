@@ -37,11 +37,11 @@ export class DiceSymbol extends TabletopObject {
   }
 
   get ownerName(): string {
-    let object = PeerCursor.find(this.owner);
+    let object = PeerCursor.findByUserId(this.owner);
     return object ? object.name : '';
   }
-  get hasOwner(): boolean { return PeerCursor.find(this.owner) != null; }
-  get isMine(): boolean { return Network.peerId === this.owner; }
+  get hasOwner(): boolean { return 0 < this.owner.length; }
+  get isMine(): boolean { return Network.peerContext.userId === this.owner; }
   get isVisible(): boolean { return !this.hasOwner || this.isMine; }
 
   diceRoll(): string {
@@ -101,8 +101,7 @@ export class DiceSymbol extends TabletopObject {
     return faces;
   }
 
-  static create(name: string, type: DiceType, size: number,
-    identifier?: string): DiceSymbol {
+  static create(name: string, type: DiceType, size: number, identifier?: string): DiceSymbol {
     let object: DiceSymbol = identifier ? new DiceSymbol(identifier) : new DiceSymbol();
 
     object.createDataElements();

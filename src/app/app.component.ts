@@ -58,9 +58,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
   private openPanelCount: number = 0;
-  
-  dispcounter : number = 10 ;//表示更新用ダミーカットインを閉じるときに無理やり更新させている。
-    
+  isSaveing: boolean = false;
+  progresPercent: number = 0;
+  isSaveing: boolean = false;
+  progresPercent: number = 0;
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
@@ -168,11 +169,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.lazyNgZoneUpdate(false);
       })
       .on('OPEN_NETWORK', event => {
-        console.log('OPEN_NETWORK', event.data.peer);
-        PeerCursor.myCursor.peerId = event.data.peer;
+        console.log('OPEN_NETWORK', event.data.peerId);
+        PeerCursor.myCursor.peerId = Network.peerContext.peerId;
+        PeerCursor.myCursor.userId = Network.peerContext.userId;
       })
       .on('CLOSE_NETWORK', event => {
-        console.log('CLOSE_NETWORK', event.data.peer);
+        console.log('CLOSE_NETWORK', event.data.peerId);
         this.ngZone.run(async () => {
           if (1 < Network.peerIds.length) {
             await this.modalService.open(TextViewComponent, { title: 'ネットワークエラー', text: 'ネットワーク接続に何らかの異常が発生しました。\nこの表示以後、接続が不安定であれば、ページリロードと再接続を試みてください。' });
@@ -282,16 +284,29 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  save() {
+  async save() {
+    if (this.isSaveing) return;
+    this.isSaveing = true;
+    this.progresPercent = 0;
+
     let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
       ? Network.peerContext.roomName
       : 'ルームデータ';
-    this.saveDataService.saveRoom(roomName);
+    await this.saveDataService.saveRoomAsync(roomName, percent => {
+      this.progresPercent = percent;
+    });
+
+    setTimeout(() => {
+      this.isSaveing = false;
+      this.progresPercent = 0;
+    }, 500);
   }
 
   handleFileSelect(event: Event) {
-    let files = (<HTMLInputElement>event.target).files;
+    let input = <HTMLInputElement>event.target;
+    let files = input.files;
     if (files.length) FileArchiver.instance.load(files);
+    input.value = '';
   }
 
   private lazyNgZoneUpdate(isImmediate: boolean) {

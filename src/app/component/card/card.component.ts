@@ -23,6 +23,7 @@ import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopService } from 'service/tabletop.service';
@@ -53,9 +54,9 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   get hasOwner(): boolean { return this.card.hasOwner; }
   get ownerName(): string { return this.card.ownerName; }
 
-  get imageFile(): ImageFile { return this.card.imageFile; }
-  get frontImage(): ImageFile { return this.card.frontImage; }
-  get backImage(): ImageFile { return this.card.backImage; }
+  get imageFile(): ImageFile { return this.imageService.getSkeletonOr(this.card.imageFile); }
+  get frontImage(): ImageFile { return this.imageService.getSkeletonOr(this.card.frontImage); }
+  get backImage(): ImageFile { return this.imageService.getSkeletonOr(this.card.backImage); }
 
   private iconHiddenTimer: NodeJS.Timer = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
@@ -77,6 +78,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     private elementRef: ElementRef<HTMLElement>,
     private changeDetector: ChangeDetectorRef,
     private tabletopService: TabletopService,
+    private imageService: ImageService,
     private pointerDeviceService: PointerDeviceService
   ) { }
 
@@ -87,7 +89,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!this.card || !object) return;
         if ((this.card === object)
           || (object instanceof ObjectNode && this.card.contains(object))
-          || (object instanceof PeerCursor && object.peerId === this.card.owner)) {
+          || (object instanceof PeerCursor && object.userId === this.card.owner)) {
           this.changeDetector.markForCheck();
         }
       })
@@ -98,7 +100,8 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.changeDetector.markForCheck();
       })
       .on('DISCONNECT_PEER', event => {
-        if (this.card.owner === event.data.peer) this.changeDetector.markForCheck();
+        let cursor = PeerCursor.findByPeerId(event.data.peerId);
+        if (!cursor || this.card.owner === cursor.userId) this.changeDetector.markForCheck();
       });
     this.movableOption = {
       tabletopObject: this.card,
@@ -111,8 +114,10 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.input = new InputHandler(this.elementRef.nativeElement);
-    this.input.onStart = this.onInputStart.bind(this);
+    this.ngZone.runOutsideAngular(() => {
+      this.input = new InputHandler(this.elementRef.nativeElement);
+    });
+    this.input.onStart = e => this.ngZone.run(() => this.onInputStart(e));
   }
 
   ngOnDestroy() {
@@ -182,7 +187,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   onInputStart(e: MouseEvent | TouchEvent) {
     this.startDoubleClickTimer(e);
     this.card.toTopmost();
-    if (e instanceof MouseEvent) this.startIconHiddenTimer();
+    this.startIconHiddenTimer();
   }
 
   @HostListener('contextmenu', ['$event'])
@@ -217,7 +222,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           name: '自分だけ見る', action: () => {
             SoundEffect.play(PresetSound.cardDraw);
             this.card.faceDown();
-            this.owner = Network.peerId;
+            this.owner = Network.peerContext.userId;
           }
         }),
       ContextMenuSeparator,

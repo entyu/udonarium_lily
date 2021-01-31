@@ -5,7 +5,6 @@ import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { Network } from '@udonarium/core/system';
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
@@ -62,10 +61,11 @@ export class ChatMessageService {
         console.warn('There has been a problem with your fetch operation: ', error.message);
         this.setIntervalTimer();
       });
-      this.setIntervalTimer();
+    this.setIntervalTimer();
   }
 
   private setIntervalTimer() {
+    if (this.intervalTimer != null) clearTimeout(this.intervalTimer);
     this.intervalTimer = setTimeout(() => {
       this.intervalTimer = null;
       this.calibrateTimeOffset();
@@ -94,7 +94,7 @@ export class ChatMessageService {
     }
     
     let chatMessage: ChatMessageContext = {
-      from: Network.peerContext.id,
+      from: Network.peerContext.userId,
       to: this.findId(sendTo),
       name: this.makeMessageName(sendFrom, sendTo),
       imageIdentifier: this.findImageIdentifier(sendFrom,imgIndex),//lily
@@ -113,7 +113,7 @@ export class ChatMessageService {
     if (object instanceof GameCharacter) {
       return object.identifier;
     } else if (object instanceof PeerCursor) {
-      return PeerContext.create(object.peerId).id;
+      return object.userId;
     }
     return null;
   }

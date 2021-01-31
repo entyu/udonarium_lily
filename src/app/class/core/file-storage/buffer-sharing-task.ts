@@ -3,7 +3,6 @@ import * as MessagePack from 'msgpack-lite';
 import { EventSystem } from '../system';
 import { ResettableTimeout } from '../system/util/resettable-timeout';
 import { clearZeroTimeout, setZeroTimeout } from '../system/util/zero-timeout';
-import { FileReaderUtil } from './file-reader-util';
 
 interface ChankData {
   index: number;
@@ -12,10 +11,8 @@ interface ChankData {
 }
 
 export class BufferSharingTask<T> {
-  private _identifier: string;
-  get identifier(): string { return this._identifier };
-  private _sendTo: string;
-  get sendTo(): string { return this._sendTo };
+  readonly identifier: string;
+  readonly sendTo: string;
 
   private data: T;
   private uint8Array: Uint8Array;
@@ -30,6 +27,7 @@ export class BufferSharingTask<T> {
   private startTime = 0;
   private isCanceled = false;
 
+  private onstart: () => void;
   onprogress: (task: BufferSharingTask<T>, loded: number, total: number) => void;
   onfinish: (task: BufferSharingTask<T>, data: T) => void;
   ontimeout: (task: BufferSharingTask<T>) => void;
@@ -37,24 +35,32 @@ export class BufferSharingTask<T> {
 
   private timeoutTimer: ResettableTimeout;
 
-  private constructor(data?: T, sendTo?: string) {
+  private constructor(identifier: string, sendTo?: string, data?: T) {
+    this.identifier = identifier;
+    this.sendTo = sendTo;
     this.data = data;
-    this.uint8Array = MessagePack.encode(data);
-    this._sendTo = sendTo;
   }
 
-  static async createSendTask<T>(data: T, sendTo: string, identifier?: string): Promise<BufferSharingTask<T>> {
-    let task = new BufferSharingTask(data, sendTo);
-    task._identifier = identifier != null ? identifier : await FileReaderUtil.calcSHA256Async(task.uint8Array);
-    task.initializeSend();
+  static createSendTask<T>(identifier: string, sendTo: string, data?: T): BufferSharingTask<T> {
+    let task = new BufferSharingTask(identifier, sendTo, data);
+    task.onstart = () => task.initializeSend();
     return task;
   }
 
   static createReceiveTask<T>(identifier: string): BufferSharingTask<T> {
-    let task = new BufferSharingTask<T>();
-    task._identifier = identifier;
-    task.initializeReceive();
+    let task = new BufferSharingTask<T>(identifier);
+    task.onstart = () => task.initializeReceive();
     return task;
+  }
+
+  start(data?: T) {
+    if (!this.onstart) {
+      console.warn('再起動する仕様など無い。');
+      return;
+    }
+    this.data = data;
+    this.onstart();
+    this.onstart = null;
   }
 
   private progress(loded: number, total: number) {
@@ -100,6 +106,7 @@ export class BufferSharingTask<T> {
   }
 
   private initializeSend() {
+    this.uint8Array = MessagePack.encode(this.data);
     let total = Math.ceil(this.uint8Array.byteLength / this.chankSize);
     this.chanks = new Array(total);
 
@@ -115,8 +122,8 @@ export class BufferSharingTask<T> {
         }
       })
       .on('DISCONNECT_PEER', event => {
-        if (event.data.peer !== this.sendTo) return;
-        console.warn('送信キャンセル（Peer切断）', this, event.data.peer);
+        if (event.data.peerId !== this.sendTo) return;
+        console.warn('送信キャンセル（Peer切断）', this, event.data.peerId);
         this._cancel();
       })
       .on('CANCEL_TASK_' + this.identifier, event => {
@@ -166,8 +173,8 @@ export class BufferSharingTask<T> {
         }
       })
       .on('DISCONNECT_PEER', event => {
-        if (event.data.peer !== this.sendTo) return;
-        console.warn('受信キャンセル（Peer切断）', this, event.data.peer);
+        if (event.data.peerId !== this.sendTo) return;
+        console.warn('受信キャンセル（Peer切断）', this, event.data.peerId);
         this._cancel();
       })
       .on('CANCEL_TASK_' + this.identifier, event => {
@@ -199,7 +206,7 @@ export class BufferSharingTask<T> {
   }
 
   private resetTimeout() {
-    if (this.timeoutTimer == null) this.timeoutTimer = new ResettableTimeout(() => this.timeout(), 15 * 1000);
+    if (this.timeoutTimer == null) this.timeoutTimer = new ResettableTimeout(() => this.timeout(), 30 * 1000);
     this.timeoutTimer.reset();
   }
 }
