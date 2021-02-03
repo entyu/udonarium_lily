@@ -131,7 +131,7 @@ export class ChatTabList extends ObjectNode implements InnerXml {
         
         let to = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].to;
         let from = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].from;
-        let myId = Network.peerContext.id;
+        let myId = Network.peerContext.userId; //marge
         if( to ){
           if( ( to != myId) && ( from != myId) ){
             console.log( " SKIP " + from + " > " + to + " : " + this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].text );

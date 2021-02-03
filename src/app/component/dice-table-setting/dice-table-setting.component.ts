@@ -117,7 +117,8 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
 
   save() {
     if (!this.selectedTable) return;
-    this.saveDataService.saveGameObject(this.selectedTable, 'dice_table_' + this.selectedTable.name);
+//    this.saveDataService.saveGameObject(this.selectedTable, 'dice_table_' + this.selectedTable.name);
+    this.saveDataService.saveGameObjectAsync(this.selectedTable, 'dice_table_' + this.selectedTable.name);//#marge    
   }
 
   delete() {

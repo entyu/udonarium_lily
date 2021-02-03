@@ -135,7 +135,8 @@ export class CutInListComponent implements OnInit, OnDestroy {
   save() {
     if (!this.selectedCutIn) return;
     this.selectedCutIn.selected = true;
-    this.saveDataService.saveGameObject(this.selectedCutIn, 'cut_' + this.selectedCutIn.name);
+//    this.saveDataService.saveGameObject(this.selectedCutIn, 'cut_' + this.selectedCutIn.name);
+      this.saveDataService.saveGameObjectAsync(this.selectedCutIn, 'cut_' + this.selectedCutIn.name); //#marege  
   }
 
   delete() {

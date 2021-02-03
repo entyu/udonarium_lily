@@ -240,7 +240,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     for (let mess of this.chatMessages ) {
       let to = mess.to;
       let from = mess.from;
-      let myId = Network.peerContext.id;
+      let myId = Network.peerContext.userId;//#marge
       console.log( "from:" + mess.from
                   + " To:" + mess.to + "myId:" + myId);
       if( to ){

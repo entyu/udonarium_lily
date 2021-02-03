@@ -195,7 +195,7 @@ export class TabletopService {
         break;
     }
   }
-
+/* #marge
   calcTabletopLocalCoordinate(
     x: number = this.pointerDeviceService.pointers[0].x,
     y: number = this.pointerDeviceService.pointers[0].y,
@@ -210,168 +210,10 @@ export class TabletopService {
     }
     return { x: coordinate.x, y: coordinate.y, z: 0 < coordinate.z ? coordinate.z : 0 };
   }
+*/
 
-  createGameCharacter(position: PointerCoordinate): GameCharacter {
-    let character = GameCharacter.create('新しいキャラクター', 1, '');
-    character.location.x = position.x - 25;
-    character.location.y = position.y - 25;
-    character.posZ = position.z;
-    return character;
-  }
 
-  createGameTableMask(position: PointerCoordinate): GameTableMask {
-    let viewTable = this.tableSelecter.viewTable;
-    if (!viewTable) return;
-
-    let tableMask = GameTableMask.create('マップマスク', 5, 5, 100);
-    tableMask.location.x = position.x - 25;
-    tableMask.location.y = position.y - 25;
-    tableMask.posZ = position.z;
-
-    viewTable.appendChild(tableMask);
-    return tableMask;
-  }
-
-  createTerrain(position: PointerCoordinate): Terrain {
-    let url: string = './assets/images/tex.jpg';
-    let image: ImageFile = ImageStorage.instance.get(url)
-
-//本家PR #92より
-//    if (!image) image = ImageStorage.instance.add(url);
-    if (!image) {
-      image = ImageStorage.instance.add(url);
-      ImageTag.create(image.identifier).tag = 'default 地形';
-    }
-//
-    let viewTable = this.tableSelecter.viewTable;
-    if (!viewTable) return;
-
-    let terrain = Terrain.create('地形', 2, 2, 2, image.identifier, image.identifier);
-    terrain.location.x = position.x - 50;
-    terrain.location.y = position.y - 50;
-    terrain.posZ = position.z;
-
-    viewTable.appendChild(terrain);
-    return terrain;
-  }
-
-  createTextNote(position: PointerCoordinate): TextNote {
-    let textNote = TextNote.create('共有メモ', 'テキストを入力してください', 5, 4, 3);
-    textNote.location.x = position.x;
-    textNote.location.y = position.y;
-    textNote.posZ = position.z;
-    return textNote;
-  }
-
-  createDiceSymbol(position: PointerCoordinate, name: string, diceType: DiceType, imagePathPrefix: string): DiceSymbol {
-    let diceSymbol = DiceSymbol.create(name, diceType, 1);
-    let image: ImageFile = null;
-
-    diceSymbol.faces.forEach(face => {
-      let url: string = `./assets/images/dice/${imagePathPrefix}/${imagePathPrefix}[${face}].png`;
-      image = ImageStorage.instance.get(url)
-      if (!image) { image = ImageStorage.instance.add(url); }
-      diceSymbol.imageDataElement.getFirstElementByName(face).value = image.identifier;
-    });
-
-    diceSymbol.location.x = position.x - 25;
-    diceSymbol.location.y = position.y - 25;
-    diceSymbol.posZ = position.z;
-    return diceSymbol;
-  }
-
-  createTrump(position: PointerCoordinate): CardStack {
-    let cardStack = CardStack.create('トランプ山札');
-    cardStack.location.x = position.x - 25;
-    cardStack.location.y = position.y - 25;
-    cardStack.posZ = position.z;
-
-    let back: string = './assets/images/trump/z02.gif';
-//本家PR #92より
-//    if (!ImageStorage.instance.get(back)) {
-//      ImageStorage.instance.add(back);
-//    }
-
-    if (!ImageStorage.instance.get(back)) {
-      const image = ImageStorage.instance.add(back);
-      ImageTag.create(image.identifier).tag = 'default トランプ';
-    }
-//
-    let names: string[] = ['c', 'd', 'h', 's'];
-
-    for (let name of names) {
-      for (let i = 1; i <= 13; i++) {
-        let trump: string = name + (('00' + i).slice(-2));
-        let url: string = './assets/images/trump/' + trump + '.gif';
-        if (!ImageStorage.instance.get(url)) {
-//本家PR #92より
-//          ImageStorage.instance.add(url);
-          const image = ImageStorage.instance.add(url);
-          ImageTag.create(image.identifier).tag = 'default トランプ';
-//
-        }
-        let card = Card.create('カード', url, back);
-        cardStack.putOnBottom(card);
-      }
-    }
-
-    for (let i = 1; i <= 2; i++) {
-      let trump: string = 'x' + (('00' + i).slice(-2));
-      let url: string = './assets/images/trump/' + trump + '.gif';
-      if (!ImageStorage.instance.get(url)) {
-//本家PR #92より
-//        ImageStorage.instance.add(url);
-         const image = ImageStorage.instance.add(url);
-        ImageTag.create(image.identifier).tag = 'default トランプ';
-//
-      }
-      let card = Card.create('カード', url, back);
-      cardStack.putOnBottom(card);
-    }
-    return cardStack;
-  }
-
-  makeDefaultTable() {
-    let tableSelecter = new TableSelecter('tableSelecter');
-    tableSelecter.initialize();
-
-    let gameTable = new GameTable('gameTable');
-    let testBgFile: ImageFile = null;
-    let bgFileContext = ImageFile.createEmpty('testTableBackgroundImage_image').toContext();
-    bgFileContext.url = './assets/images/BG10a_80.jpg';
-    testBgFile = ImageStorage.instance.add(bgFileContext);
-//本家PR #92より
-    ImageTag.create(testBgFile.identifier).tag = '背景';    
-//
-    //let testDistanceFile: ImageFile = null;
-    //let distanceFileContext = ImageFile.createEmpty('testTableDistanceviewImage_image').toContext();
-    //distanceFileContext.url = './assets/images/BG00a1_80.jpg';
-    //testDistanceFile = ImageStorage.instance.add(distanceFileContext);
-
-//entyu_2 #92
-    //ImageTag.create(testBgFile.identifier).tag = 'default テーブル';
-//
-    gameTable.name = '最初のテーブル';
-    gameTable.imageIdentifier = testBgFile.identifier;
-    //gameTable.backgroundImageIdentifier = testDistanceFile.identifier;
-    gameTable.width = 20;
-    gameTable.height = 15;
-    gameTable.initialize();
-
-    tableSelecter.viewTableIdentifier = gameTable.identifier;
-  }
-
-  //バフ追加
-  addBuffRound(character :GameCharacter,name:string,subcom:string,round:number){
-    // @ts-ignore
-    if(character.buffDataElement.children){
-      for (let dataElm of character.buffDataElement.children){
-        dataElm.appendChild(DataElement.create(name, round , { 'type': 'numberResource', 'currentValue': subcom }, name + '_' + character.identifier ));
-        return;
-      }
-    }
-  }
-
+/*
   makeDefaultTabletopObjects() {
     let testCharacter: GameCharacter = null;
     let testFile: ImageFile = null;
@@ -483,7 +325,9 @@ export class TabletopService {
     
     
   }
+*/
 
+/*
   getContextMenuActionsForCreateObject(position: PointerCoordinate): ContextMenuAction[] {
     return [
       this.getCreateCharacterMenu(position),
@@ -494,7 +338,8 @@ export class TabletopService {
       this.getCreateDiceSymbolMenu(position),
     ];
   }
-
+*/
+  /*
   private getCreateCharacterMenu(position: PointerCoordinate): ContextMenuAction {
     return {
       name: 'キャラクターを作成', action: () => {
@@ -504,7 +349,8 @@ export class TabletopService {
       }
     }
   }
-
+  */
+  /*
   private getCreateTableMaskMenu(position: PointerCoordinate): ContextMenuAction {
     return {
       name: 'マップマスクを作成', action: () => {
@@ -513,7 +359,8 @@ export class TabletopService {
       }
     }
   }
-
+  */
+  /*
   private getCreateTerrainMenu(position: PointerCoordinate): ContextMenuAction {
     return {
       name: '地形を作成', action: () => {
@@ -522,7 +369,8 @@ export class TabletopService {
       }
     }
   }
-
+  */
+  /*
   private getCreateTextNoteMenu(position: PointerCoordinate): ContextMenuAction {
     return {
       name: '共有メモを作成', action: () => {
@@ -531,7 +379,8 @@ export class TabletopService {
       }
     }
   }
-
+  */
+  /*
   private getCreateTrumpMenu(position: PointerCoordinate): ContextMenuAction {
     return {
       name: 'トランプの山札を作成', action: () => {
@@ -540,7 +389,8 @@ export class TabletopService {
       }
     }
   }
-
+  */
+  /*
   private getCreateDiceSymbolMenu(position: PointerCoordinate): ContextMenuAction {
     let dices: { menuName: string, diceName: string, type: DiceType, imagePathPrefix: string }[] = [
       { menuName: 'D4', diceName: 'D4', type: DiceType.D4, imagePathPrefix: '4_dice' },
@@ -563,6 +413,8 @@ export class TabletopService {
     });
     return { name: 'ダイスを作成', action: null, subActions: subMenus };
   }
+  */
+  
 }
 
 class TabletopCache<T extends TabletopObject> {
