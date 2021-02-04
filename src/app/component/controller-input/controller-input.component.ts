@@ -300,7 +300,8 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
 
   private updateWritingPeerNames() {
     this.writingPeerNames = Array.from(this.writingPeers.keys()).map(peerId => {
-      let peer = PeerCursor.find(peerId);
+//      let peer = PeerCursor.find(peerId);
+      let peer = PeerCursor.findByPeerId(peerId); //#marge
       return peer ? peer.name : '';
     });
   }
@@ -311,8 +312,11 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
       if (this.isDirect) {
         let object = ObjectStore.instance.get(this.sendTo);
         if (object instanceof PeerCursor) {
-          let peer = PeerContext.create(object.peerId);
-          if (peer) sendTo = peer.userid; //#marge
+//          let peer = PeerContext.create(object.peerId);
+//          if (peer) sendTo = peer.id; 
+          let peer = PeerContext.parse(object.peerId);
+          if (peer) sendTo = peer.peerId; //#marge
+
         }
       }
       EventSystem.call('WRITING_A_MESSAGE', this.chatTabidentifier, sendTo);
@@ -414,7 +418,8 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
         return false;
       default:
         for (const conn of Network.peerContexts) {
-          if (conn.isOpen && gameCharacter.location.name === conn.fullstring) {
+//          if (conn.isOpen && gameCharacter.location.name === conn.fullstring) {
+          if (conn.isOpen && gameCharacter.location.name === conn.peerId) {
             return false;
           }
         }

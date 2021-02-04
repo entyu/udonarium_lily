@@ -14,6 +14,10 @@ import { TableSelecter } from '@udonarium/table-selecter';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 
+import { ImageTag } from '@udonarium/image-tag'; //#marge
+import { DataElement } from '@udonarium/data-element';
+
+
 import { ContextMenuAction } from './context-menu.service';
 import { PointerCoordinate } from './pointer-device.service';
 
@@ -204,60 +208,10 @@ export class TabletopActionService {
       if (!ImageStorage.instance.get(url)) {
 //本家PR #92より
 //          ImageStorage.instance.add(url);
-
-      }
-      let card = Card.create('カード', url, back);
-      cardStack.putOnBottom(card);
-    }
-    return cardStack;
-  }
-
-
-  createTrump(position: PointerCoordinate): CardStack {
-    let cardStack = CardStack.create('トランプ山札');
-    cardStack.location.x = position.x - 25;
-    cardStack.location.y = position.y - 25;
-    cardStack.posZ = position.z;
-
-    let back: string = './assets/images/trump/z02.gif';
-//本家PR #92より
-//    if (!ImageStorage.instance.get(back)) {
-//      ImageStorage.instance.add(back);
-//    }
-
-    if (!ImageStorage.instance.get(back)) {
-      const image = ImageStorage.instance.add(back);
-      ImageTag.create(image.identifier).tag = 'default トランプ';
-    }
-//
-    let names: string[] = ['c', 'd', 'h', 's'];
-
-    for (let name of names) {
-      for (let i = 1; i <= 13; i++) {
-        let trump: string = name + (('00' + i).slice(-2));
-        let url: string = './assets/images/trump/' + trump + '.gif';
-        if (!ImageStorage.instance.get(url)) {
-//本家PR #92より
-//          ImageStorage.instance.add(url);
-//
           const image = ImageStorage.instance.add(url);
           ImageTag.create(image.identifier).tag = 'default トランプ';
 //
-        }
-        let card = Card.create('カード', url, back);
-        cardStack.putOnBottom(card);
-      }
-    }
 
-    for (let i = 1; i <= 2; i++) {
-      let trump: string = 'x' + (('00' + i).slice(-2));
-      let url: string = './assets/images/trump/' + trump + '.gif';
-      if (!ImageStorage.instance.get(url)) {
-//本家PR #92より
-//        ImageStorage.instance.add(url);
-        const image = ImageStorage.instance.add(url);
-        ImageTag.create(image.identifier).tag = 'default トランプ';
-//
       }
       let card = Card.create('カード', url, back);
       cardStack.putOnBottom(card);
