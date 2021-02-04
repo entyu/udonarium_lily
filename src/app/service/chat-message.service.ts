@@ -160,7 +160,7 @@ export class ChatMessageService {
     let object = ObjectStore.instance.get(identifier);
     if (object instanceof GameCharacter) {
 //        let element = object.getElement('POS', object.detailDataElement);
-        let element = object.detailDataElement.getFirstElementByName(name); //#marge
+        let element = object.detailDataElement.getFirstElementByName('POS'); //#marge
         if(element)
             if( 0 <= <number>element.currentValue && <number>element.currentValue <= 11)
                 return <number>element.currentValue;
