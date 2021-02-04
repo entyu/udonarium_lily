@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CutInBgmComponent } from './cut-in-bgm.component';
 
@@ -6,7 +6,7 @@ describe('CutInBgmComponent', () => {
   let component: CutInBgmComponent;
   let fixture: ComponentFixture<CutInBgmComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CutInBgmComponent ]
     })

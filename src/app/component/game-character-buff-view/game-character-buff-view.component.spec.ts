@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed ,waitForAsync} from '@angular/core/testing';
 
 import { GameCharacterBuffViewComponent } from './game-character-buff-view.component';
 
@@ -6,7 +6,7 @@ describe('GameCharacterBuffViewComponent', () => {
   let component: GameCharacterBuffViewComponent;
   let fixture: ComponentFixture<GameCharacterBuffViewComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GameCharacterBuffViewComponent ]
     })

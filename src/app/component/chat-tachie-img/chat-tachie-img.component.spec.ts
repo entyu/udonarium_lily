@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed ,waitForAsync} from '@angular/core/testing';
 
 import { ChatTachieImageComponent } from './chat-tachie-img.component';
 
@@ -6,7 +6,7 @@ describe('ChatTachieImageComponent', () => {
   let component: ChatTachieImageComponent;
   let fixture: ComponentFixture<ChatTachieImageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ChatTachieImageComponent ]
     })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed ,waitForAsync } from '@angular/core/testing';
 
 import { CutInWindowComponent } from './cut-in-window.component';
 
@@ -6,7 +6,7 @@ describe('CutInWindowComponent', () => {
   let component: CutInWindowComponent;
   let fixture: ComponentFixture<CutInWindowComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CutInWindowComponent ]
     })
