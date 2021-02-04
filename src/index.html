@@ -3,6 +3,16 @@
 
 <head>
   <meta charset="utf-8">
+<script type="text/javascript">
+    window.onbeforeunload = function(e) {
+      e.returnValue = "ページを離れようとしています。よろしいですか？";
+    }
+    history.pushState(null, null);
+    window.addEventListener('popstate', function(e) {
+      alert('ページ移動しようとしていますよろしいですか？')
+    });
+</script>
+
   <title>UdonariumLily 1.01.0b0</title>
 <!--
 0.02.0 立ち絵表示を12ポジションに、アクティブを手前に、他を薄く
