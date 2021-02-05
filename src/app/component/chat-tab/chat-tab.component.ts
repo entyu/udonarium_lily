@@ -63,8 +63,18 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   private topIndex = 0;
   private bottomIndex = 0;
 
-  private minMessageHeight: number = 10;
-  private minMessageHeightNormal: number = 61;
+  private _minMessageHeight: number = 26;
+  private _minMessageHeightNormal: number = 61;
+  
+  get minMessageHeight(){
+    
+    if( this.chatTab ){
+      if( this.chatTab.chatSimpleDispFlag ){
+        return this._minMessageHeight;
+      }
+    }
+    return this._minMessageHeightNormal;
+  }
 
   private preScrollTop = 0;
   private scrollSpeed = 0;
@@ -92,7 +102,7 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   get topSpace(): number { return this.minScrollHeight - this.bottomSpace; }
   get bottomSpace(): number {
     return 0 < this.chatMessages.length
-      ? (this.chatTab.chatMessages.length - this.bottomIndex - 1) * this.minMessageHeightNormal
+      ? (this.chatTab.chatMessages.length - this.bottomIndex - 1) * this.minMessageHeight
       : 0;
   }
 
