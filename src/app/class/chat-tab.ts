@@ -209,7 +209,11 @@ export class ChatTab extends ObjectNode implements InnerXml {
       str += "</b>";
       
       str += "：";
-      if( message.text ) str += this.escapeHtml( message.text );
+      if( !message.isSecret || message.isSendFromSelf ){
+        if( message.text ) str += this.escapeHtml( message.text );
+      }else{
+        str += "（シークレットダイス）";
+      }
       str += "</font><br>";
       
       str += '\n';
