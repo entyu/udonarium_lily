@@ -57,7 +57,7 @@ export class TabletopActionService {
 //    if (!image) image = ImageStorage.instance.add(url);
     if (!image) {
       image = ImageStorage.instance.add(url);
-      ImageTag.create(image.identifier).tag = 'default 地形';
+      ImageTag.create(image.identifier).tag = '地形';
     }
 //
     let viewTable = this.getViewTable();
@@ -111,7 +111,7 @@ export class TabletopActionService {
 //    }
     if (!ImageStorage.instance.get(back)) {
       const image = ImageStorage.instance.add(back);
-      ImageTag.create(image.identifier).tag = 'default トランプ';
+      ImageTag.create(image.identifier).tag = 'トランプ';
     }
 //
     let suits: string[] = ['c', 'd', 'h', 's'];
@@ -132,7 +132,7 @@ export class TabletopActionService {
 //本家PR #92より
 //          ImageStorage.instance.add(url);
           const image = ImageStorage.instance.add(url);
-          ImageTag.create(image.identifier).tag = 'default トランプ';
+          ImageTag.create(image.identifier).tag = 'トランプ';
 //
 
       }
