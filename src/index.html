@@ -7,14 +7,18 @@
     window.onbeforeunload = function(e) {
       e.returnValue = "ページを離れようとしています。よろしいですか？";
     }
-    history.pushState(null, null);
-    window.addEventListener('popstate', function(e) {
-      alert('ページ移動しようとしていますよろしいですか？')
-    });
 </script>
 
   <title>UdonariumLily 1.01.0b1</title>
 <!--
+    history.pushState(null, null);
+      alert('ページ移動しようとしていますよろしいですか？')
+    window.addEventListener('popstate', function(e) {
+      e.returnValue = "ページ移動しようとしていますよろしいですか？";
+    });
+-->
+<!--
+
 0.02.0 立ち絵表示を12ポジションに、アクティブを手前に、他を薄く
 0.02.1 立ち絵表示非表示ボックス　サイズ調整機能追加
 0.02.2 チャットパレットでステ参照ダイスがふれなくなるバグを修正
