@@ -99,6 +99,9 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   get isEmpty(): boolean { return false ; }
 
+  isSaveing: boolean = false;
+  progresPercent: number = 0;
+
   constructor(
     private pointerDeviceService: PointerDeviceService,//
     private modalService: ModalService,
@@ -132,11 +135,22 @@ export class CutInListComponent implements OnInit, OnDestroy {
     this.selectCutIn(cutIn.identifier);
   }
 
-  save() {
+  async save() {
     if (!this.selectedCutIn) return;
+    this.isSaveing = true;
+    this.progresPercent = 0;
+
     this.selectedCutIn.selected = true;
-//    this.saveDataService.saveGameObject(this.selectedCutIn, 'cut_' + this.selectedCutIn.name);
-      this.saveDataService.saveGameObjectAsync(this.selectedCutIn, 'cut_' + this.selectedCutIn.name); //#marege  
+    let fileName: string = 'cut_' + this.selectedCutIn.name;
+
+    await this.saveDataService.saveGameObjectAsync(this.selectedCutIn, fileName, percent => {
+      this.progresPercent = percent;
+    });
+
+    setTimeout(() => {
+      this.isSaveing = false;
+      this.progresPercent = 0;
+    }, 500);
   }
 
   delete() {

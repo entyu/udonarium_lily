@@ -85,6 +85,8 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     return !this.isEmpty && this.isSelected && !this.isDeleted;
   }
 
+  isSaveing: boolean = false;
+  progresPercent: number = 0;
 
   constructor(
     private modalService: ModalService,
@@ -115,10 +117,21 @@ export class DiceTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     this.selectDiceTable(diceTable.identifier);
   }
 
-  save() {
+  async save() {
     if (!this.selectedTable) return;
-//    this.saveDataService.saveGameObject(this.selectedTable, 'dice_table_' + this.selectedTable.name);
-    this.saveDataService.saveGameObjectAsync(this.selectedTable, 'dice_table_' + this.selectedTable.name);//#marge    
+    this.isSaveing = true;
+    this.progresPercent = 0;
+
+    let fileName: string = 'dice_table_' + this.selectedTable.name;
+
+    await this.saveDataService.saveGameObjectAsync(this.selectedTable, fileName, percent => {
+      this.progresPercent = percent;
+    });
+
+    setTimeout(() => {
+      this.isSaveing = false;
+      this.progresPercent = 0;
+    }, 500);
   }
 
   delete() {
