@@ -163,8 +163,8 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       })
       .on('RE_DRAW_CHAT', event => {
         console.log("チャット再描画");
-        setTimeout(() => this.redraw() , 100);
-        //フラグの更新前に絵ヴェントが走るためタイマーを使う。ひとまずやむなし
+        setTimeout(() => this.redraw() , 0);
+        //フラグの更新前にイベントが走るためタイマーを使う。ひとまずやむなし
       });
   }
 
