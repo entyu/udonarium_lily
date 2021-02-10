@@ -112,7 +112,6 @@ export class ChatTabList extends ObjectNode implements InnerXml {
         chkTimestamp = -1;
 
         for( let i = 0 ; i < tabNum ; i++){
-//          console.log( "num:" + tabNum + " length:"+this.chatTabs[i].chatMessages.length  );
           if( this.chatTabs[i].chatMessages.length <= indexList[i] ) continue;
 
           if( chkTimestamp == -1){
@@ -126,12 +125,9 @@ export class ChatTabList extends ObjectNode implements InnerXml {
         }
         if( fastTabIndex == -1)break;
         
-//        console.log( 'tab:' + fastTabIndex + ' message :' + indexList[ fastTabIndex ] );
-
-        
         let to = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].to;
         let from = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].from;
-        let myId = Network.peerContext.userId; //marge
+        let myId = Network.peerContext.userId; //1.13.xとのmargeで修正
         if( to ){
           if( ( to != myId) && ( from != myId) ){
             console.log( " SKIP " + from + " > " + to + " : " + this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].text );

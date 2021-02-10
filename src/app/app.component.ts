@@ -60,8 +60,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private openPanelCount: number = 0;
   isSaveing: boolean = false;
   progresPercent: number = 0;
-//  isSaveing: boolean = false; #marge
-// progresPercent: number = 0;
   dispcounter : number = 10 ;//表示更新用ダミーカットインを閉じるときに無理やり更新させている。
 
 
