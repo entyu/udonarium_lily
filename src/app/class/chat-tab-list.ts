@@ -76,8 +76,7 @@ export class ChatTabList extends ObjectNode implements InnerXml {
   }
 
   logHtml( ): string {
-    
-    
+        
     let head : string =     
     "<?xml version='1.0' encoding='UTF-8'?>"+'\n'+
     "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+'\n'+

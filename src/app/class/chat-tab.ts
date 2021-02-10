@@ -193,7 +193,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     let str :string = '';
     if( message ) {
       
-      if( tabName ) str += "[" + tabName + "]";
+      if( tabName ) str += "[" + this.escapeHtml( tabName ) + "]";
       
       if( isTime ){
         let date = new Date( message.timestamp );
@@ -205,17 +205,35 @@ export class ChatTab extends ObjectNode implements InnerXml {
       str += "'>";
 
       str += "<b>";
-      if( message.name ) str += message.name;
+      if( message.name ) str += this.escapeHtml( message.name );
       str += "</b>";
       
       str += "：";
-      if( message.text ) str += message.text;
+      if( message.text ) str += this.escapeHtml( message.text );
       str += "</font><br>";
       
       str += '\n';
     }
     return str;
   }
+
+
+  escapeHtml(string) {
+    if(typeof string !== 'string') {
+      return string;
+    }
+    return string.replace(/[&'`"<>]/g, function(match){
+      return {
+        '&': '&amp;',
+        "'": '&#x27;',
+        '`': '&#x60;',
+        '"': '&quot;',
+        '<': '&lt;',
+        '>': '&gt;',
+      }[match]
+    });
+  }
+
 
   logHtml( ): string {
     
@@ -225,7 +243,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     "<html xmlns='http://www.w3.org/1999/xhtml' lang='ja'>"+'\n'+
     "  <head>"+'\n'+
     "    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />"+'\n'+
-    "    <title>チャットログ：" + this.name + "</title>"+'\n'+
+    "    <title>チャットログ：" + this.escapeHtml( this.name ) + "</title>"+'\n'+
     "  </head>"+'\n'+
     "  <body>"+'\n';
 
