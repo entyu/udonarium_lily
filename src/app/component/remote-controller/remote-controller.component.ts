@@ -72,6 +72,12 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
   remotNumber: number = 0;
 
+  recoveryLimitFlag = false;
+  recoveryLimitFlagChange( value ){
+    //現状特に処理なし
+  }
+
+
   reverseValue(){
     this.remotNumber = -this.remotNumber;
   }
@@ -155,15 +161,20 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
             data.value = sum;  
             newNum = <number>data.value;
           }
-
+          
+          let maxRecoveryMess = "";
           if( this.remotControllerSelect.type == 'currentValue'){
             oldNumS = <string>data.currentValue;
             sum = parseInt(oldNumS);
             sum = sum + this.remotNumber;
             data.currentValue = sum;  
-            newNum = <number>data.currentValue;
+            if( this.recoveryLimitFlag && data.currentValue >= data.value ){
+              maxRecoveryMess = "(最大)";
+              data.currentValue = data.value;
+            }
+            newNum = <number>data.currentValue;            
           }
-          text = text + '['+ object.name + ' ' + oldNumS + '>' + newNum + '] ';
+          text = text + '['+ object.name + ' ' + oldNumS + '>' + newNum + maxRecoveryMess +'] ';
         }
       }
     }
