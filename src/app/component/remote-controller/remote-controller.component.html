@@ -75,10 +75,13 @@
     <ng-container *ngIf="! controllerAreaIsHide ">
       <div>
         変更量
-        <input style="width: 5em;   font-size: 1.2em;" size="1" 
+        <input style="width: 4em;   font-size: 1.2em;" size="1" 
         type="number" [(ngModel)]="this.remotNumber" placeholder="Value" />
-        <button type="submit" (click)="remotChangeValue()">
-          <span>リモコン操作</span>
+        <button (click)="reverseValue()" >
+          <span > ± </span>
+        </button>
+        <button type="submit"  (click)="remotChangeValue()" >
+          <span >リモコン操作</span>
         </button>
       </div>
       <div *ngIf="errorMessageController.length > 0">{{errorMessageController}}

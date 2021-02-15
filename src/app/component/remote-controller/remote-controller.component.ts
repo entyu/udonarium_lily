@@ -71,6 +71,10 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   chatTabidentifier: string = '';
 
   remotNumber: number = 0;
+
+  reverseValue(){
+    this.remotNumber = -this.remotNumber;
+  }
   
   disptimer = null;
   
