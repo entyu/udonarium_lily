@@ -39,13 +39,24 @@ export class CutInListComponent implements OnInit, OnDestroy {
   
   get cutInName(): string { return this.isEditable ? this.selectedCutIn.name : '' ; }
   set cutInName(cutInName: string) { if (this.isEditable) this.selectedCutIn.name = cutInName; }
-
+  
   get cutInWidth(): number { 
-    return this.isEditable ? this.selectedCutIn.width : 0 ; 
+    if( !this.isEditable ) return 0;
+    if( !this.selectedCutIn ) return 0;
+    
+    return  this.cutInOriginalSize ? this.originalImgWidth() : this.selectedCutIn.width ; 
   }
   set cutInWidth(cutInWidth: number) { if (this.isEditable) this.selectedCutIn.width = cutInWidth; }
 
-  get cutInHeight(): number { return this.isEditable ? this.selectedCutIn.height : 0 ; }
+  get cutInHeight(): number { 
+    if( !this.isEditable ) return 0;
+    if( !this.selectedCutIn ) return 0;
+    
+    return  this.cutInOriginalSize ? this.originalImgHeight() : this.selectedCutIn.height ; 
+  }
+
+  keepImageAspect: boolean = false;
+  
   set cutInHeight(cutInHeight: number) { if (this.isEditable) this.selectedCutIn.height = cutInHeight; }
 
 
@@ -199,7 +210,34 @@ export class CutInListComponent implements OnInit, OnDestroy {
   stoppreviewCutIn(){
     //jukuと同じにする
   }
+  
+  originalImgWidth(){
+    if( !this.selectedCutIn )return 0;
+    if( !this.selectedCutIn.cutInImage) return 0;
 
+    let imageurl = this.selectedCutIn.cutInImage.url;
+    if( imageurl.length > 0 ){
+      let img = new Image();
+      img.src = imageurl;
+      this.selectedCutIn.width = img.width;
+    }
+    return this.selectedCutIn.width;
+  }
+
+  originalImgHeight(){
+    if( !this.selectedCutIn )return 0;
+    if( !this.selectedCutIn.cutInImage) return 0;
+
+    let imageurl = this.selectedCutIn.cutInImage.url;
+    if( imageurl.length > 0 ){
+      let img = new Image();
+      img.src = imageurl;
+      this.selectedCutIn.height = img.height;
+    }
+    return this.selectedCutIn.height;
+  }
+
+  
   playCutIn(){ 
     if(!this.isSelected) return;
 

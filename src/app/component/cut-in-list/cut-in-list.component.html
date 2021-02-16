@@ -43,10 +43,11 @@
         元サイズで表示：<input type="checkbox" [(ngModel)]="cutInOriginalSize" name="cutInOriginalSize" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
       <div>
-        Width :<input [(ngModel)]="cutInWidth" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
+        Width :<input [(ngModel)]="cutInWidth" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null">
+        縦横比を維持 :<input type="checkbox" [(ngModel)]="keepImageAspect" name="keepImageAspect" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null"/>
       </div>
       <div>
-        Height :<input [(ngModel)]="cutInHeight" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
+        Height :<input [(ngModel)]="cutInHeight" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null">
       </div>
       <div>
         <input [(ngModel)]="cutInX_Pos" type="range" min="0" max="100" name="cutInX_PosWidth" [attr.disabled]="!isEditable ? '' : null"/>
