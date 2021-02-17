@@ -61,4 +61,8 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     this.chatMessage.tag = this.chatMessage.tag.replace('secret', '');
   }
 
+  escapeHtml(text) {
+    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+               .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
 }
