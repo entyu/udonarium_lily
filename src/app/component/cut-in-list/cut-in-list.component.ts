@@ -75,17 +75,23 @@ export class CutInListComponent implements OnInit, OnDestroy {
   keepImageAspect: boolean = false;
   
   chkImageAspect( ){
+
     if( !this.isEditable ) return 0;
     if( !this.selectedCutIn ) return 0;
-
-    let imageurl = this.selectedCutIn.cutInImage.url;
-    if( imageurl.length > 0 ){
-      let img = new Image();
-      img.src = imageurl;
-      console.log("img.height /  img.width " + img.height + " "+  img.width);
-      this.selectedCutIn.height = Math.floor(  this.selectedCutIn.width  * img.height /  img.width );
-    }
+    
+    setTimeout(() => { 
+      if( this.keepImageAspect ){
+        let imageurl = this.selectedCutIn.cutInImage.url;
+        if( imageurl.length > 0 ){
+          let img = new Image();
+          img.src = imageurl;
+          console.log("img.height /  img.width " + img.height + " "+  img.width);
+          this.selectedCutIn.height = Math.floor(  this.selectedCutIn.width  * img.height /  img.width );
+        }
+      }
+    });
   }
+
 
 
 
@@ -241,6 +247,7 @@ export class CutInListComponent implements OnInit, OnDestroy {
   }
   
   originalImgWidth(){
+    if( !this.isSelected) return 0;
     if( !this.selectedCutIn )return 0;
     if( !this.selectedCutIn.cutInImage) return 0;
 
@@ -248,12 +255,13 @@ export class CutInListComponent implements OnInit, OnDestroy {
     if( imageurl.length > 0 ){
       let img = new Image();
       img.src = imageurl;
-      this.selectedCutIn.width = img.width;
+      return img.width;
     }
-    return this.selectedCutIn.width;
+    return 0;
   }
 
   originalImgHeight(){
+    if( !this.isSelected) return 0;
     if( !this.selectedCutIn )return 0;
     if( !this.selectedCutIn.cutInImage) return 0;
 
@@ -261,23 +269,21 @@ export class CutInListComponent implements OnInit, OnDestroy {
     if( imageurl.length > 0 ){
       let img = new Image();
       img.src = imageurl;
-      this.selectedCutIn.height = img.height;
+      return img.height;
     }
-    return this.selectedCutIn.height;
+    return 0;
   }
 
   
   playCutIn(){ 
-    if(!this.isSelected) return;
 
     if( this.selectedCutIn.originalSize ){
       let imageurl = this.selectedCutIn.cutInImage.url;
       if( imageurl.length > 0 ){
-        console.log( 'CutInWindow originalSize URL :' + imageurl);
         let img = new Image();
         img.src = imageurl;
-        this.selectedCutIn.width = img.width;
-        this.selectedCutIn.height = img.height;
+        this.selectedCutIn.width = this.originalImgWidth();
+        this.selectedCutIn.height = this.originalImgHeight();
       }
     }
     
