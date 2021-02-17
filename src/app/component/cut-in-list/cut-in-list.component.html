@@ -44,7 +44,8 @@
       </div>
       <div>
         Width :<input [(ngModel)]="cutInWidth" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null">
-        縦横比を維持 :<input type="checkbox" [(ngModel)]="keepImageAspect" name="keepImageAspect" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null"/>
+        縦横比を維持 :<input type="checkbox" [(ngModel)]="keepImageAspect" name="keepImageAspect" 
+        [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null" (click)="chkImageAspect($event.target.value)" />
       </div>
       <div>
         Height :<input [(ngModel)]="cutInHeight" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null">

@@ -39,6 +39,25 @@ export class CutInListComponent implements OnInit, OnDestroy {
   
   get cutInName(): string { return this.isEditable ? this.selectedCutIn.name : '' ; }
   set cutInName(cutInName: string) { if (this.isEditable) this.selectedCutIn.name = cutInName; }
+
+  set cutInWidth(cutInWidth: number) { 
+    if (this.isEditable) this.selectedCutIn.width = cutInWidth; 
+
+    if( this.keepImageAspect ){
+       this.selectedCutIn.height = Math.floor(  cutInWidth  * this.originalImgHeight() /  this.originalImgWidth() );
+       console.log(" this.keepImageAspect H" + this.selectedCutIn.height);
+    }
+  }
+  set cutInHeight(cutInHeight: number) {
+    if (this.isEditable) this.selectedCutIn.height = cutInHeight; 
+
+    if( this.keepImageAspect ){
+       this.selectedCutIn.width = Math.floor(  cutInHeight *  this.originalImgWidth() /  this.originalImgHeight() );
+       console.log(" this.keepImageAspect W" + this.selectedCutIn.width);
+    }
+  }
+
+
   
   get cutInWidth(): number { 
     if( !this.isEditable ) return 0;
@@ -46,18 +65,28 @@ export class CutInListComponent implements OnInit, OnDestroy {
     
     return  this.cutInOriginalSize ? this.originalImgWidth() : this.selectedCutIn.width ; 
   }
-  set cutInWidth(cutInWidth: number) { if (this.isEditable) this.selectedCutIn.width = cutInWidth; }
 
   get cutInHeight(): number { 
     if( !this.isEditable ) return 0;
     if( !this.selectedCutIn ) return 0;
-    
     return  this.cutInOriginalSize ? this.originalImgHeight() : this.selectedCutIn.height ; 
   }
 
   keepImageAspect: boolean = false;
   
-  set cutInHeight(cutInHeight: number) { if (this.isEditable) this.selectedCutIn.height = cutInHeight; }
+  chkImageAspect( ){
+    if( !this.isEditable ) return 0;
+    if( !this.selectedCutIn ) return 0;
+
+    let imageurl = this.selectedCutIn.cutInImage.url;
+    if( imageurl.length > 0 ){
+      let img = new Image();
+      img.src = imageurl;
+      console.log("img.height /  img.width " + img.height + " "+  img.width);
+      this.selectedCutIn.height = Math.floor(  this.selectedCutIn.width  * img.height /  img.width );
+    }
+  }
+
 
 
   get cutInX_Pos(): number { return this.isEditable ? this.selectedCutIn.x_pos : 0 ; }
