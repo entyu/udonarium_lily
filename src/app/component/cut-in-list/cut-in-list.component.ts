@@ -238,10 +238,6 @@ export class CutInListComponent implements OnInit, OnDestroy {
     return audio ? true : false ;
   }
 
-
-  previewCutIn(){
-    //jukuと同じにする
-  }
   stoppreviewCutIn(){
     //jukuと同じにする
   }
@@ -274,9 +270,24 @@ export class CutInListComponent implements OnInit, OnDestroy {
     return 0;
   }
 
+
+
+  previewCutIn(){
+    if( this.selectedCutIn.originalSize ){
+      let imageurl = this.selectedCutIn.cutInImage.url;
+      if( imageurl.length > 0 ){
+        let img = new Image();
+        img.src = imageurl;
+        this.selectedCutIn.width = this.originalImgWidth();
+        this.selectedCutIn.height = this.originalImgHeight();
+      }
+    }
+    //プレビューではジューク音楽の停止をしない
+    this.cutInLauncher.startCutInMySelf( this.selectedCutIn );
+    
+  }
   
   playCutIn(){ 
-
     if( this.selectedCutIn.originalSize ){
       let imageurl = this.selectedCutIn.cutInImage.url;
       if( imageurl.length > 0 ){

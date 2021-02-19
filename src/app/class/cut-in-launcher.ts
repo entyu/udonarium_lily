@@ -23,15 +23,27 @@ export class CutInLauncher extends GameObject {
   @SyncVar() test: string = 'test001';
   @SyncVar() launchCutInIdentifier: string  = '';
   @SyncVar() launchTimeStamp: number = 0;
+  @SyncVar() launchMySelf = false;
   @SyncVar() launchIsStart: boolean = false;
   @SyncVar() stopBlankTagCutInTimeStamp: number = 0;
   
   reloadDummy : number = 5;
+
+  startCutInMySelf( cutIn : CutIn ){
+    this.launchCutInIdentifier = cutIn.identifier;
+    this.launchIsStart = true;
+    this.launchTimeStamp = this.launchTimeStamp + 1;
+    this.launchMySelf = true;
+
+    this.startSelfCutIn();
+  }
+
   
   startCutIn( cutIn : CutIn ){
     this.launchCutInIdentifier = cutIn.identifier;
     this.launchIsStart = true;
     this.launchTimeStamp = this.launchTimeStamp + 1;
+    this.launchMySelf = false;
 
     this.startSelfCutIn();
   }
@@ -40,6 +52,7 @@ export class CutInLauncher extends GameObject {
     this.launchCutInIdentifier = cutIn.identifier;
     this.launchIsStart = false;
     this.launchTimeStamp = this.launchTimeStamp + 1;
+    this.launchMySelf = false;
 
     this.stopSelfCutIn();
   }
@@ -105,8 +118,11 @@ export class CutInLauncher extends GameObject {
     let launchIsStart = this.launchIsStart;
     let launchTimeStamp = this.launchTimeStamp;
     let stopBlankTagCutInTimeStamp = this.stopBlankTagCutInTimeStamp;
+    let launchMySelf = this.launchMySelf;
     
     super.apply(context);
+    
+    if( this.launchMySelf ) return; //ソロ再生用の場合他の人は発火しない
     
     if( launchCutInIdentifier !== this.launchCutInIdentifier || 
         launchIsStart !== this.launchIsStart ||

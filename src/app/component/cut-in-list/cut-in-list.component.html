@@ -26,11 +26,10 @@
       <div >音楽データ :
         <button (click)="openCutInBgmModal()">設定</button><br>
 
-        <button  (click)="playCutIn()" [disabled]="" >カットイン/再生</button>
-        <button  (click)="stopCutIn()" [disabled]="" >カットイン/停止</button><br>
-
-
-　　　　LINK:<span *ngIf="isCutInBgmUploaded()" >OK：</span><span *ngIf="!isCutInBgmUploaded()" >NG：</span><br>
+        <button  (click)="playCutIn()" [disabled]="" >カットイン再生</button>
+        <button  (click)="stopCutIn()" [disabled]="" >カットイン停止</button>
+        <button  (click)="previewCutIn()" [disabled]="" >自分だけ再生</button><br>
+        LINK:<span *ngIf="isCutInBgmUploaded()" >OK：</span><span *ngIf="!isCutInBgmUploaded()" >NG：</span><br>
         <ng-container *ngIf="!isCutInBgmUploaded()">
           <span *ngIf="cutInAudioName.length>0 " >音楽ファイルがアップされていません</span>
           <span *ngIf="cutInAudioName.length<=0 " >音楽ファイルが設定されていません</span>
