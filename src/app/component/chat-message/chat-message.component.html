@@ -26,8 +26,8 @@
     >
       <div class="body" [ngStyle]="{'color': chatMessage.messColor }">
         <span class="title">
-          <font class="msg-name">{{chatMessage.name}}</font>
-          <font *ngIf="simpleDispFlagUserId" class='tip msg-from'>{{chatMessage.from}}</font> 
+          <font class="msg-name">{{chatMessage.name}}</font>：
+          <font *ngIf="simpleDispFlagUserId" class='tip msg-from'>{{chatMessage.from}}</font>
           <font *ngIf="simpleDispFlagTime" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</font>
           <font class="text msg-text">
             <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret">
