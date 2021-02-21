@@ -206,5 +206,32 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     
   }
 
+  escapeHtml(text) {
+    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+               .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+  
+  isEditUrl( dataElmIdentifier) {
+    let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);
+    if( !box )return false;
+//   console.log( "Edit:" + dataElmIdentifier  + ":" + box.checked   );
+    return box.checked;
+  }
+  
+  isUrlText( text ){
+    if( text.match( /^https:\/\// ) )return true;
+    if( text.match( /^http:\/\// ) )return true;
+    return false;
+  }
+  
+  changeChk(){
+    //é¿èàóùÇ»Çµ
+  }
+
+  textFocus( dataElmIdentifier ){
+    //console.log( "text forcus:" + dataElmIdentifier );
+    let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);
+    box.checked = true;
+  }
   
 }

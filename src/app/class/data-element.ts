@@ -1,6 +1,7 @@
 import { Attributes } from './core/synchronize-object/attributes';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
+import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
 
 @SyncObject('data')
 export class DataElement extends ObjectNode {
@@ -57,5 +58,10 @@ export class DataElement extends ObjectNode {
       }
     }
     return null;
+  }
+  
+  get myIdentifer(){
+    let self:GameObject = <GameObject>this;
+    return self.identifier;
   }
 }

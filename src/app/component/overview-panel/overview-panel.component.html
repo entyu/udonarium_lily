@@ -156,12 +156,23 @@
     <ng-container [ngSwitch]="dataElm.type">
       <ng-container *ngSwitchCase="'note'">
         <div class="section">
-          <div>{{dataElm.name}}</div>
+          
+          <div>{{dataElm.name}} 
+            <span [hidden]="!isUrlText(dataElm.value)">
+              &nbsp;&nbsp;URL編集:<input id = {{dataElm.myIdentifer}} type="checkbox" (change)="changeChk()"/>
+            </span>
+          </div>
           <div class="note" style="position: relative;">
             <div class="is-fill">
-              <textarea class="textarea" [(ngModel)]="dataElm.value" spellcheck="false"></textarea>
+              <textarea class="textarea" [(ngModel)]="dataElm.value" spellcheck="false" 
+              (focus)="textFocus(dataElm.myIdentifer)"
+              [hidden]="!isEditUrl(dataElm.myIdentifer) && isUrlText(dataElm.value)" ></textarea>
+
+              <span class="textarea-url" [innerHTML]="escapeHtml(dataElm.value) | linky:{stripPrefix: false}" 
+              [hidden]="isEditUrl(dataElm.myIdentifer) || !isUrlText(dataElm.value)"></span>
+
             </div>
-            <div class="textarea-spacer">{{dataElm.value}}</div>
+            <div class="textarea-spacer" >{{dataElm.value}}</div>
           </div>
         </div>
       </ng-container>
