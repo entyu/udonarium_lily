@@ -36,6 +36,15 @@
   vertical-align: bottom;
 }
 
+.img-chk{
+  height:1em;
+  margin-left:0px;
+}
+
+.img-box{
+  border: 2px dotted #666;
+}
+
 .selected {
   border: 2px dotted #666;
   border-top: 6px solid #444;

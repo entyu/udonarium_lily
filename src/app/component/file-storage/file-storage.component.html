@@ -27,10 +27,10 @@
 </div>
 <div id="file-list">
   <span *ngFor="let file of images" class="image_">
-    <div style="float:left">
+    <div class="img-box" style="float:left" (click)="imgBlockClick(file.identifier)">
       <img *ngIf="(0 < file.url.length) " [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
       <img *ngIf="file.url.length <= 0 " src="assets/images/loading.gif" alt="{{file.name}}">
-      <input *ngIf="(0 < file.url.length) " name="tag_chg_chk" type="checkbox" (change) ="onChange(file.identifier , $event.target.checked)" [checked]="identifierList.indexOf(file.identifier) > -1" >
+      <input class="img-chk" *ngIf="(0 < file.url.length)" id = {{file.identifier}} name="tag_chg_chk" type="checkbox" (change) ="onChange(file.identifier)" >
     </div>
   </span>
 </div>

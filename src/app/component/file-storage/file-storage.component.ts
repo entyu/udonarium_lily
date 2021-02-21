@@ -84,50 +84,33 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   changeTag(){
    
-   if( this.newTagName == '全て' ) return; //表示上混乱するタグの禁止
-   
-   let changeableImages = this.images; 
-   
-   for (let identifier of this.identifierList) {
-     
-     for( let changeableImage of changeableImages ){
-       if( changeableImage.context.identifier == identifier ){
-         const imageTag = ImageTag.get(identifier);
-         imageTag ? imageTag : ImageTag.create(identifier);
-     
-         if( this.newTagName == '未設定' ){ 
-           imageTag.tag = '';
-         }else{
-          imageTag.tag = this.newTagName;
-         }
-       }
-     }
-   }
-   
- }
-
-  selectTag :string = '';
-  identifierList :string[] = [];
-  newTagName:string = '';
-  resetBtn() {
-     this.identifierList = [];
+    if( this.newTagName == '全て' ) return; //表示上混乱するタグの禁止
+    
+    let changeableImages = this.images; 
+    console.log("this.newTagName" + this.newTagName );
+    
+    for (let img of changeableImages) {
+//    console.log("img.context.identifier:"+img.context.identifier);
+      let box = <HTMLInputElement>document.getElementById(img.context.identifier);
+      if( box ){
+        if( box.checked ){
+          const imageTag = ImageTag.get(img.context.identifier);
+          imageTag = imageTag ? imageTag : ImageTag.create(img.context.identifier);
+          if( this.newTagName == '未設定' ){ 
+            imageTag.tag = '';
+          }else{
+            imageTag.tag = this.newTagName;
+          }
+        }
+      }
+    }
   }
 
-
-  onChange(fileName:string, checked : boolean) {
-
-    const imageTag = ImageTag.get(fileName);
-    if( !imageTag ) ImageTag.create(fileName);
-
-    if (checked) {
-       if (this.identifierList.indexOf(fileName) < 0) { 
-          this.identifierList.push(fileName);
-       }
-    } else {
-       if (this.identifierList.indexOf(fileName) > -1) {
-         this.identifierList.splice(this.identifierList.indexOf(fileName), 1);              
-       }
-    }
+  selectTag :string = '';
+  newTagName:string = '';
+  
+  resetBtn() {
+//  処理なし
   }
 
 
@@ -166,4 +149,16 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.selectedFile = file;//本家PR #92より
   }
+  
+  imgBlockClick(identifier){
+    console.log( "identifier:"+identifier);
+    let box = <HTMLInputElement>document.getElementById(identifier);
+    box.checked = !box.checked;
+  }
+  
+  onChange(identifier) {
+    this.imgBlockClick(identifier);
+  }
+
+  
 }
