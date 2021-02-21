@@ -148,4 +148,31 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
       this.updateTimer = null;
     }, 66);
   }
+
+  escapeHtml(text) {
+    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+               .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+  
+  isEditUrl( dataElmIdentifier) {
+    let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);
+    if( !box )return false;
+    return box.checked;
+  }
+  
+  isUrlText( text ){
+    if( text.match( /^https:\/\// ) )return true;
+    if( text.match( /^http:\/\// ) )return true;
+    return false;
+  }
+  
+  changeChk(){
+    //実処理なし
+  }
+
+  textFocus( dataElmIdentifier ){
+    let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);
+    box.checked = true;
+  }
+  
 }
