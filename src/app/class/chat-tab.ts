@@ -210,7 +210,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
       
       str += "：";
       if( !message.isSecret || message.isSendFromSelf ){
-        if( message.text ) str += this.escapeHtml( message.text );
+        if( message.text ) str += this.escapeHtml( message.text ).replace(/\n/g,'<br>');
       }else{
         str += "（シークレットダイス）";
       }
@@ -220,8 +220,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     }
     return str;
   }
-
-
+    
   escapeHtml(string) {
     if(typeof string !== 'string') {
       return string;
