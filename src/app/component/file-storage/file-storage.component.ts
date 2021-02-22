@@ -94,7 +94,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       let box = <HTMLInputElement>document.getElementById(img.context.identifier);
       if( box ){
         if( box.checked ){
-          const imageTag = ImageTag.get(img.context.identifier);
+          let imageTag = ImageTag.get(img.context.identifier);
           imageTag = imageTag ? imageTag : ImageTag.create(img.context.identifier);
           if( this.newTagName == '未設定' ){ 
             imageTag.tag = '';
