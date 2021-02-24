@@ -113,7 +113,7 @@ export class GameCharacter extends TabletopObject {
     let cloneObject = super.clone();
 
     let objectname:string;
-    let reg = new RegExp('(.*)_([0-9]*)');
+    let reg = new RegExp('^(.*)_([0-9]+)$');
     let res = cloneObject.name.match(reg);
 
     if(res != null && res.length == 3) {
