@@ -186,5 +186,4 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let component = this.panelService.open<RemoteControllerComponent>(RemoteControllerComponent, option);
     component.character = gameObject;
   }
-
 }
