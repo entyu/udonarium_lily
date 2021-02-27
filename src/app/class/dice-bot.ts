@@ -75,6 +75,9 @@ export class DiceBot extends GameObject {
 
           let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
           if (!rollResult.result) return;
+          
+          rollResult.result = rollResult.result.replace(/\n?(#\d+)\n/ig,"$1 ");//繰り返しロールを詰める
+
           this.sendResultMessage(rollResult, chatMessage);
         } catch (e) {
           console.error(e);
@@ -119,7 +122,6 @@ export class DiceBot extends GameObject {
             finalResult.isSecret = finalResult.isSecret || rollResult.isSecret;
             if (1 < repeat) finalResult.result += ` #${i + 1}`;
           }
-          console.log('finalResult.result:' + finalResult.result );
 
           let rolledDiceNum = finalResult.result.match(/\d+$/);
           let tableAns = "ダイス目の番号が表にありません";
@@ -161,7 +163,7 @@ export class DiceBot extends GameObject {
     let isSecret: boolean = rollResult.isSecret;
 
     if (result.length < 1) return;
-
+    console.log("result.length:" +result.length);
     result = result.replace(/[＞]/g, s => '→').trim();
 
     let diceBotMessage: ChatMessageContext = {
