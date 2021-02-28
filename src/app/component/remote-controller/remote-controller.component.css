@@ -375,11 +375,16 @@ input[type='range']::-ms-tooltip {
   display: table-cell;
 }
 
+.click-area{
+  border: 1px dotted #666;
+}
+
 .image-box {
   padding: 0px;
   width: 32px;
   height: 32px;
-  display: table-cell;
+  max-width: 32px;
+  max-height: 32px;
   vertical-align: top;
 }
 

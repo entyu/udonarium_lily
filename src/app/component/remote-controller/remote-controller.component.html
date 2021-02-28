@@ -135,15 +135,16 @@
 
     <div class="object-tags-box">
       <div>
-        <input name="tag_chg_chk" type="checkbox" 
-        (change) ="charListChange(gameObject.identifier , $event.target.checked)" 
-        [checked]="charList.indexOf(gameObject.identifier) > -1" >
         <span class="object-name">{{gameObject.name}}</span>
         <button class="tab-setting small-font" (click)="buffEdit( gameObject )">バフ編集</button>
       </div>
       <div class="table">
-        <div class="table-cell image-box">
-          <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
+        <div class="table-cell click-area" (click)="targetBlockClick(gameObject.identifier)">
+          <div class="image-box">
+            <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
+          </div>
+          <input class="target_chk" id = {{gameObject.identifier}} name="target_chk" 
+          type="checkbox" (change) ="onChange(gameObject.identifier)" >
         </div>
         <div class="table-cell">
           <div *ngIf="gameObject.rootDataElement">

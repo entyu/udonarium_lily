@@ -53,6 +53,8 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
   get text(): string { return this._text };
   set text(text: string) { this._text = text; this.textChange.emit(text); }
 
+//  @Input('selectNum') _selectNum: number = 0;
+//  get selectNum(): number { return this._selectNum };
 //  @Input('tachieNum') _tachieNum: number = 0;  
 
   @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
