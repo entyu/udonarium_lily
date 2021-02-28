@@ -57,7 +57,9 @@ export class GameCharacter extends TabletopObject {
     }
     return null;
   }
-  
+
+  set name(value:string) { this.setCommonValue('name', value); }
+
   TestExec() {
     console.log('TestExec');
  
@@ -105,6 +107,27 @@ export class GameCharacter extends TabletopObject {
       controller.initialize();
       this.appendChild(controller);
     }
+  }
+
+  clone() :this {
+    let cloneObject = super.clone();
+
+    let objectname:string;
+    let reg = new RegExp('^(.*)_([0-9]+)$');
+    let res = cloneObject.name.match(reg);
+
+    if(res != null && res.length == 3) {
+      let cloneNumber:number = parseInt(res[2]) + 1;
+      objectname = res[1] + "_" + cloneNumber;
+    } else {
+      objectname = cloneObject.name + "_2";
+    }
+
+    cloneObject.name = objectname;
+    cloneObject.update();
+
+    return cloneObject;
+
   }
 
   createTestGameDataElement(name: string, size: number, imageIdentifier: string) {
