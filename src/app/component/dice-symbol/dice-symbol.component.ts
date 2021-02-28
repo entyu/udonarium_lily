@@ -26,6 +26,7 @@ import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { ModalService } from 'service/modal.service';
+import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -107,8 +108,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   get faces(): string[] { return this.diceSymbol.faces; }
   get nothingFaces(): string[] { return this.diceSymbol.nothingFaces; }
   get imageFile(): ImageFile {
-    let image = this.diceSymbol.imageFile;
-    return image ? image : this.emptyImage;
+    return this.imageService.getEmptyOr(this.diceSymbol.imageFile);
   }
 
   get isMine(): boolean { return this.diceSymbol.isMine; }
@@ -128,7 +128,6 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   private iconHiddenTimer: NodeJS.Timer = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
 
-  private emptyImage: ImageFile = ImageFile.Empty;
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -162,6 +161,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
     private elementRef: ElementRef<HTMLElement>,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
+    private imageService: ImageService,
     private modalService: ModalService
   ) { }
 
