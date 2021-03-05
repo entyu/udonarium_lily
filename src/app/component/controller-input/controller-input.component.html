@@ -8,7 +8,7 @@
         <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}">{{myPeer?.name}}（あなた）</option>
         <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
         </option>
-      </select> 
+      </select> <div style = "float:right" >選択数：{{selectNum}}</div>
     </div>
     <div class="table">
       <div class="table-cell">
@@ -23,9 +23,15 @@
           ></div>
           <button class="color-setting small-font" (click)="shoeColorSetting();">
           <i class="material-icons small-font">settings</i>色設定</button>
+          
+          <div style = "float:right">
+            <button class="color-setting small-font" (click)="allBoxUnCheck();">
+            全解除→</button>
+          </div>
       </div>
     </div>
 <!-- 立ち絵ここから-->
+
     <div >
       <div class="tachie-tag table-cell">
         <ng-container *ngIf="1 >= selectCharacterTachieNum">

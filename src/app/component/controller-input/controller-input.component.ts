@@ -53,11 +53,13 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
   get text(): string { return this._text };
   set text(text: string) { this._text = text; this.textChange.emit(text); }
 
-//  @Input('selectNum') _selectNum: number = 0;
-//  get selectNum(): number { return this._selectNum };
-//  @Input('tachieNum') _tachieNum: number = 0;  
+  @Input('selectNum') _selectNum: number = 0;
+  get selectNum(): number { return this._selectNum; }
+  set selectNum( num :number){ this._selectNum = 0; }
 
   @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
+
+  @Output() allBox = new EventEmitter<{}>();
 
   get tachieNum(): number {
     let object = ObjectStore.instance.get(this.sendFrom);
@@ -359,6 +361,11 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
     this.calcFitHeight();
   }
 
+  allBoxUnCheck() {
+    this.allBox.emit();
+    this.selectNum = 0;
+  }
+
   calcFitHeight() {
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
     textArea.style.height = '';
@@ -400,4 +407,5 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
         return true;
     }
   }
+  
 }

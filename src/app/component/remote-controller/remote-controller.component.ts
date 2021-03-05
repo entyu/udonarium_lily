@@ -255,7 +255,8 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   get sortOrderName(): string { return this.sortOrder === SortOrder.ASC ? '昇順' : '降順'; }
 
   get newLineString(): string { return this.inventoryService.newLineString; }
-
+  
+  selectNum :number = 0;
 
   ngAfterViewInit() {
   }
@@ -272,8 +273,6 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
         return '共有';
     }
   }
-
-        
 
   getInventory(inventoryType : string) {
     switch (inventoryType) {
@@ -543,7 +542,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     
   }
 
-  allUnCheck(){
+  allBoxUnCheck(){
     let objectList = this.getGameObjects(this.selectTab);
     for (let object of objectList){
       if (object instanceof GameCharacter) {
@@ -559,6 +558,13 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     console.log( "identifier:"+identifier);
     let box = <HTMLInputElement>document.getElementById(identifier);
     box.checked = !box.checked;
+
+    let gameCharacters = this.getTargetCharacters( true );
+    if( gameCharacters ){
+      this.selectNum = gameCharacters.length;
+    }else{
+      this.selectNum = 0;
+    }
   }
 
   onChange(identifier) {
