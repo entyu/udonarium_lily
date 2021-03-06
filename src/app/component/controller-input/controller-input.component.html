@@ -1,39 +1,43 @@
 <div class="table" [ngClass]="{ 'direct-message': isDirect }" >
-  <div class="table-cell imagebox">
-    <img *ngIf="0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
-  </div>   
-  <div class="table-cell">
-    <div>
-      <select style="width: 12em;" [(ngModel)]="sendFrom">
-        <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}">{{myPeer?.name}}（あなた）</option>
-        <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
-        </option>
-      </select> <div style = "float:right" >選択数：{{selectNum}}</div>
-    </div>
-    <div class="table">
-      <div class="table-cell">
-          <div class="color" (click)="setColorNum(0);"
-          [ngStyle]="{'background-color': charactorChatColor_0 ,'border':'solid ' + colorSelectorBoxBorder_0 + ' #666666' , 'border-radius': colorSelectorRadius_0 }"
-          ></div>
-          <div class="color" (click)="setColorNum(1);"
-          [ngStyle]="{'background-color': charactorChatColor_1 ,'border':'solid ' + colorSelectorBoxBorder_1 + ' #666666' , 'border-radius': colorSelectorRadius_1 }"
-          ></div>
-          <div class="color" (click)="setColorNum(2);"
-          [ngStyle]="{'background-color': charactorChatColor_2 ,'border':'solid ' + colorSelectorBoxBorder_2 + ' #666666' , 'border-radius': colorSelectorRadius_2 }"
-          ></div>
-          <button class="color-setting small-font" (click)="shoeColorSetting();">
-          <i class="material-icons small-font">settings</i>色設定</button>
-          
-          <div style = "float:right">
+  <div class="table">
+    <div class="table-cell imagebox">
+      <img *ngIf="0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
+    </div>   
+    <div class="table-cell">
+      <div class="table">
+        <div class="table-cell" >
+          <div>
+            <select style="width: 10em;" [(ngModel)]="sendFrom">
+              <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}">{{myPeer?.name}}（あなた）</option>
+              <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
+              </option>
+            </select> 
+          </div>
+          <div>
+            <div class="color" (click)="setColorNum(0);"
+            [ngStyle]="{'background-color': charactorChatColor_0 ,'border':'solid ' + colorSelectorBoxBorder_0 + ' #666666' , 'border-radius': colorSelectorRadius_0 }"
+            ></div>
+           <div class="color" (click)="setColorNum(1);"
+            [ngStyle]="{'background-color': charactorChatColor_1 ,'border':'solid ' + colorSelectorBoxBorder_1 + ' #666666' , 'border-radius': colorSelectorRadius_1 }"
+            ></div>
+            <div class="color" (click)="setColorNum(2);"
+            [ngStyle]="{'background-color': charactorChatColor_2 ,'border':'solid ' + colorSelectorBoxBorder_2 + ' #666666' , 'border-radius': colorSelectorRadius_2 }"
+            ></div>
+            <button class="color-setting small-font" (click)="shoeColorSetting();">
+            <i class="material-icons small-font">settings</i>色設定</button>
+          </div>
+        </div>
+        <div class="table-cell" >
+          <div style="font-size:0.8em;text-align:right">
+            選択数：{{selectNum}}<br>
             <button class="color-setting small-font" (click)="allBoxUnCheck();">
             全解除→</button>
           </div>
+        </div>
       </div>
-    </div>
+     
 <!-- 立ち絵ここから-->
-
-    <div >
-      <div class="tachie-tag table-cell">
+      <div class="tachie-tag">
         <ng-container *ngIf="1 >= selectCharacterTachieNum">
           <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
           min="0" max="0" [(ngModel)]="tachieNum" />
@@ -44,26 +48,23 @@
           <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
           min="0" max="{{selectCharacterTachieNum -1}}" [(ngModel)]="tachieNum" />
          {{tachieNum}}/{{selectCharacterTachieNum - 1}} 立ち絵
-            <ng-container *ngIf="selectCharacterTachie.currentValue.length > 0"> 
-              {{selectCharacterTachie.currentValue}}
-            </ng-container>
-            <ng-container *ngIf="selectCharacterTachie.currentValue.length <= 0"> 
-            </ng-container>
-
+          <ng-container *ngIf="selectCharacterTachie.currentValue.length > 0"> 
+            {{selectCharacterTachie.currentValue}}
+          </ng-container>
+          <ng-container *ngIf="selectCharacterTachie.currentValue.length <= 0"> 
+          </ng-container>
         </ng-container>
-
       </div>
-    </div>
 <!-- ここまで-->
+    </div>
   </div>
-</div>
 
-<hr>
-<div style="width:100%;">バフ/デバッファー
-  <div style="float:right;text-align:right;">隠す
+  <hr>
+  <div style="width:100%;">バフ/デバッファー
+    <div style="float:right;text-align:right;">隠す
         <input name="buff_hide_chk" type="checkbox" 
         (change) ="buffHideChkChange($event.target.checked)" >
-  </div>
+    </div>
     <form>
       <div  [hidden] = "buffHideIsChk">
         <textarea class="controller-input" placeholder="Enterで送信" [(ngModel)]="text"
@@ -72,6 +73,6 @@
         <button type="submit" (click)="sendChat(null)">実行</button>
       </div>
     </form>
-<div>
+  </div>
   
 </div>
