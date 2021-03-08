@@ -149,4 +149,15 @@ export class UIPanelComponent implements OnInit {
   close() {
     if (this.panelService) this.panelService.close();
   }
+  
+  backGroundSetting( isWhiteLog :boolean ): string{
+    
+//    if( isWhiteLog )
+    if( 0 )
+      return "background: linear-gradient(-30deg, rgba(255,255,255, 1.0), rgba(255, 255, 255, 1.0)); "
+//      return "background: linear-gradient(-30deg, rgba(240,240,240, 0.9), rgba(240, 240, 240, 0.9));"
+    else
+      return "background: linear-gradient(-30deg, rgba(240,218,189, 0.9), rgba(255, 244, 232, 0.9));"
+  }
+  
 }
