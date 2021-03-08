@@ -2,8 +2,9 @@
   [style.left.px]="left" [style.top.px]="top" [style.width.px]="width" [style.height.px]="height"
   [draggable.stack]="'.draggable-panel'" appDraggable appResizable #draggablePanel
   (mouseenter)="showTachie(true)" (mouseleave)="showTachie(false)"
-  style = "{{backGroundSetting(0)}}"
   >
+<!--  style = "{{backGroundSetting(0)}}"-->
+
   <div class="title">
     <div class="title-button">
       <button (click)="toggleFullScreen()"><i class="material-icons" style="font-size: 14px;">fullscreen</i></button>
@@ -19,8 +20,4 @@
       <ng-content></ng-content>
       <div #content></div>
     </div>
-
-<!--
-  </ng-container>
--->
 </div>
