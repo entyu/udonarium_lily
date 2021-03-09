@@ -1,23 +1,39 @@
-<div class="flex-container">
-  <div class="flex-item no-grow">
+<div class="table">
+  <div class="table-cell " style = "width:13em">
     <div>
       <button (click)="createDiceTable()" [attr.disabled]="this.isEdit ? '' : null">新しい表を作る</button>
     </div>
-    <select style="width: 10em;" size="15" (change)="selectDiceTable($event.target.value)" 
+    <select style="width: 100%;" size="15;padding-right:5px" (change)="selectDiceTable($event.target.value)" 
     [ngModel]="selectedTable?.identifier"  [attr.disabled]="this.isEdit ? '' : null">
       <option *ngFor="let diceTable of getDiceTables()" value="{{diceTable.identifier}}">{{diceTable.name}}</option>
     </select>
   </div>
-  <div class="flex-item-">
-    <div><span style="width: 7em;display:inline-block;">表タイトル :</span>
-      <input [(ngModel)]="tableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+  <div class="table-cell" style="width:5px;max-width:5px">
+  </div>
+  <div class="table-cell" >
+    <div class="table">
+      <div class="table-cell" style="width: 7em;">
+        <span style="width: 7em;display:inline-block;">表タイトル :</span>
+      </div>
+      <div class="table-cell" style="width: 100%; padding-right:10px;">
+        <input [(ngModel)]="tableName" placeholder="Name" style="width:100%;" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
     </div>
-    <div><span style="width: 7em;display:inline-block;">ダイス :</span>
-      <input [(ngModel)]="tableDice" placeholder="Dice" [attr.disabled]="!isEditable ? '' : null" />
+    <div class="table">
+      <div class="table-cell" style="width: 7em;">
+        <span style="width: 7em;display:inline-block;">ダイス :</span>
+      </div>
+      <div class="table-cell" style="width: 100%; padding-right:10px;">
+        <input [(ngModel)]="tableDice" placeholder="Dice" style="width:100%;" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
     </div>
-
-    <div><span style="width: 7em;display:inline-block;">コマンド :</span>
-      <input [(ngModel)]="tableCommand" placeholder="Command" [attr.disabled]="!isEditable ? '' : null" />
+    <div>
+      <div class="table-cell" style="width: 7em;">
+        <span style="width: 7em;display:inline-block;">コマンド :</span>
+      </div>
+      <div class="table-cell" style="width: 100%; padding-right:10px;">
+        <input [(ngModel)]="tableCommand" placeholder="Command" style="width:100%;" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
     </div>
     <div>
       <select style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType"
@@ -48,19 +64,17 @@
         <span *ngIf="isEdit">ダイス表を確定</span>
       </button>
     </div>
-  <hr/>
-  <div>
-    <ng-container *ngIf="!isDeleted">
-      <button (click)="save()">保存</button>
-      <button class="danger" (click)="delete()" [attr.disabled]="getDiceTables().length <= 0 ? '' : null">削除</button>
+    <hr/>
+    <div>
+      <ng-container *ngIf="!isDeleted">
+        <button (click)="save()">保存</button>
+        <button class="danger" (click)="delete()" [attr.disabled]="getDiceTables().length <= 0 ? '' : null">削除</button>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="isEmpty">
+      <div style="font-size: 12px;">※ダイス表が１つも作成されていません。「新しい表を作る」から新しいダイス表を作成することができます。</div>
     </ng-container>
   </div>
-<ng-container *ngIf="isEmpty">
-  <div style="font-size: 12px;">※ダイス表が１つも作成されていません。「新しい表を作る」から新しいダイス表を作成することができます。</div>
-</ng-container>
-
-  </div>
-
 <!--入力部ここまで -->
 </div>
 
