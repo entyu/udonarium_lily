@@ -11,6 +11,9 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { CutInLauncher } from './cut-in-launcher';
+
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() name: string = 'タブ';
@@ -22,6 +25,8 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
   @SyncVar() count:number = 0;
   @SyncVar() imageIdentifierDummy: string = 'test';//通信開始ために使わなくても書かなきゃだめっぽい後日見直し
+
+  get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
 
   tachieReset(){
     this.imageIdentifier = ['a','b','c','d','e','f','g','h','i','j','k','l'];
@@ -158,6 +163,10 @@ export class ChatTab extends ObjectNode implements InnerXml {
       chat.setAttribute(key, message[key]);
     }
     chat.initialize();
+    
+    if( 0 > chat.tags.indexOf('secret') ){
+      this.cutInLauncher.chatActivateCutIn( chat.text );//カットイン末尾発動
+    }
  
     EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
 

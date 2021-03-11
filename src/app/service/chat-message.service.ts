@@ -110,7 +110,7 @@ export class ChatMessageService {
     
     //ƒnƒCƒhˆ—
     let chkMessage = ' ' + StringUtil.toHalfWidth(text).toLowerCase();
-    let matches_array = chkMessage.match(/\s@(\S+)$/i)
+    let matches_array = chkMessage.match(/\s@(\S+)$/i);
     if( matches_array ){
       if( RegExp.$1 == 'hide' )
         chatMessage.imageIdentifier = '';

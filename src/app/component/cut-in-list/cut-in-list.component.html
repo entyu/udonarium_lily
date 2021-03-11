@@ -65,6 +65,7 @@
       </div>
       <div>
         タグ名称 :<input [(ngModel)]="cutInTagName" placeholder="" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null" />
+        チャット末尾発動：<input type="checkbox" [(ngModel)]="chatActivate" name="chatActivate" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
       <div>
 <p style="font-size:0.4em">※カットインの挙動<br>

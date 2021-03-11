@@ -10,8 +10,6 @@ import { CutInLauncher } from '@udonarium/cut-in-launcher';
 import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 
-
-
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
@@ -106,6 +104,9 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   get cutInIsLoop(): boolean { return this.isEditable ? this.selectedCutIn.isLoop : false ; }
   set cutInIsLoop(cutInIsLoop: boolean) { if (this.isEditable) this.selectedCutIn.isLoop = cutInIsLoop; }
+
+  get chatActivate(): boolean { return this.isEditable ? this.selectedCutIn.chatActivate : false ; }
+  set chatActivate(chatActivate: boolean) { if (this.isEditable) this.selectedCutIn.chatActivate = chatActivate; }
 
   get cutInOutTime(): number { return this.isEditable ? this.selectedCutIn.outTime : 0 ; }
   set cutInOutTime(cutInOutTime: number) { if (this.isEditable) this.selectedCutIn.outTime = cutInOutTime; }
