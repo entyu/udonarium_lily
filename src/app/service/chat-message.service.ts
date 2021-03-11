@@ -119,7 +119,7 @@ export class ChatMessageService {
     //—§‚¿ŠG’u‚«Š·‚¦    
     let matches_array_num = chkMessage.match(/\s@(\d+)$/i);
     if( matches_array_num ){
-      let num: number = RegExp.$1;
+      let num: number = parseInt(RegExp.$1);
       chatMessage.imageIdentifier = this.findImageIdentifier(sendFrom,num);
     }
     
