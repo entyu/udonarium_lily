@@ -11,7 +11,6 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
-
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() name: string = 'タブ';
@@ -131,33 +130,26 @@ export class ChatTab extends ObjectNode implements InnerXml {
         if (message['to'] != null && message['to'] !== '') { continue; } // 秘話時に立ち絵の更新をかけない
         this.pos_num = message[key];
         if( 0 <= this.pos_num && this.pos_num < this.imageIdentifier.length ){
-           let oldpos = this.getImageCharactorPos(message['name']);
-           if( oldpos >= 0 ){ //同名キャラの古い位置を消去
-              this.imageIdentifier[oldpos] = '';
-              this.imageCharactorName[oldpos] = '';
-              this.imageDispFlag[oldpos] = false;
-           }
-           //非表示コマンド\s
-           
-           let splitMessage = message['text'].split(/\s+/);
-           let hideCommand = null;
-           console.log('splitMessage' + splitMessage);
-           if( splitMessage ){
-             hideCommand = splitMessage[ splitMessage.length -1 ].match(new RegExp('[@＠][HhＨｈ][IiＩｉ][DdＤｄ][EeＥｅ]$'));
-             console.log('hideCommand' + hideCommand);
-           }
-           if( hideCommand ){
-             //事前に古い立ち絵は消す処理をしているため処理なし
-           }else{
-           
-             this.imageIdentifier[this.pos_num] = message['imageIdentifier'];
-             this.imageCharactorName[this.pos_num] =message['name'];
-             this.replaceTachieZindex(this.pos_num);
-             this.imageDispFlag[this.pos_num] = true;
+          let oldpos = this.getImageCharactorPos(message['name']);
+          if( oldpos >= 0 ){ //同名キャラの古い位置を消去
+            this.imageIdentifier[oldpos] = '';
+            this.imageCharactorName[oldpos] = '';
+            this.imageDispFlag[oldpos] = false;
+          }
+          //非表示コマンド\s
 
-             chat.setAttribute(key, message[key]);
-           }
-           this.imageIdentifierDummy = message['imageIdentifier'];//同期方法が無理やり感がある、後日
+          if( message['imageIdentifier'] == '' ){
+            //事前に古い立ち絵は消す処理をしているため処理なし
+          }else{
+           
+            this.imageIdentifier[this.pos_num] = message['imageIdentifier'];
+            this.imageCharactorName[this.pos_num] =message['name'];
+            this.replaceTachieZindex(this.pos_num);
+            this.imageDispFlag[this.pos_num] = true;
+
+            chat.setAttribute(key, message[key]);
+          }
+          this.imageIdentifierDummy = message['imageIdentifier'];//同期方法が無理やり感がある、後日
            
         }
         continue;

@@ -9,6 +9,9 @@ import { GameCharacter } from '@udonarium/game-character';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 
+import { StringUtil } from '@udonarium/core/system/util/string-util';
+
+
 const HOURS = 60 * 60 * 1000;
 
 @Injectable()
@@ -104,6 +107,22 @@ export class ChatMessageService {
       imagePos: this.findImagePos(sendFrom),//lily
       messColor: _color,//lily
     };
+    
+    //ハイド処理
+    let chkMessage = ' ' + StringUtil.toHalfWidth(text).toLowerCase();
+    let matches_array = chkMessage.match(/\s@(\S+)$/i)
+    if( matches_array ){
+      if( RegExp.$1 == 'hide' )
+        chatMessage.imageIdentifier = '';
+    }
+    
+    //立ち絵置き換え    
+    let matches_array_num = chkMessage.match(/\s@(\d+)$/i);
+    if( matches_array_num ){
+      let num: number = RegExp.$1;
+      chatMessage.imageIdentifier = this.findImageIdentifier(sendFrom,num);
+    }
+    
 
     return chatTab.addMessage(chatMessage);
   }
