@@ -11,6 +11,7 @@
       </ng-container>
     </ng-container>
     <ng-container *ngIf="chatMessages.length <= 0">
+<!--      <span>使用している <a href= "3rdpartylicenses.txt" target="_blank">3rdpartylicenses</a>についてはこちらを参照してください</span>-->
       <chat-message *ngFor="let chatMessage of sampleMessages" [chatMessage]="chatMessage"
         [simpleDispFlagTime]="false"
         [simpleDispFlagUserId]="false"
