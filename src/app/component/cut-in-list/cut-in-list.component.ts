@@ -61,13 +61,20 @@ export class CutInListComponent implements OnInit, OnDestroy {
     if( !this.isEditable ) return 0;
     if( !this.selectedCutIn ) return 0;
     
-    return  this.cutInOriginalSize ? this.originalImgWidth() : this.selectedCutIn.width ; 
+    if( this.cutInOriginalSize ){
+      this.selectedCutIn.width = this.originalImgWidth();
+    }
+    return  this.selectedCutIn.width ; 
   }
 
   get cutInHeight(): number { 
     if( !this.isEditable ) return 0;
     if( !this.selectedCutIn ) return 0;
-    return  this.cutInOriginalSize ? this.originalImgHeight() : this.selectedCutIn.height ; 
+
+    if( this.cutInOriginalSize ){
+      this.selectedCutIn.height = this.originalImgHeight();
+    }
+    return  this.selectedCutIn.height ; 
   }
 
   keepImageAspect: boolean = false;
