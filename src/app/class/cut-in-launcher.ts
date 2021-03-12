@@ -29,6 +29,26 @@ export class CutInLauncher extends GameObject {
   
   reloadDummy : number = 5;
 
+  chatActivateCutIn( text : string ){
+    let text2 = ' ' + text;
+    let matches_array = text2.match(/\s(\S+)$/i);
+    let activateName :string = '';
+    
+    if( matches_array ){
+      activateName = RegExp.$1;
+      let allCutIn = this.getCutIns();
+      
+      for ( let cutIn_ of allCutIn ){
+        if( cutIn_.chatActivate && ( cutIn_.name == activateName ) ){
+          this.startCutIn( cutIn_ );
+          return ;
+        }
+      }
+    }
+  }
+
+
+
   startCutInMySelf( cutIn : CutIn ){
     this.launchCutInIdentifier = cutIn.identifier;
     this.launchIsStart = true;

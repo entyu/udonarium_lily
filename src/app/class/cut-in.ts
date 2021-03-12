@@ -32,6 +32,8 @@ export class CutIn extends GameObject {
   @SyncVar() tagName: string = '';
   @SyncVar() selected: boolean = false;
   @SyncVar() isLoop: boolean = false;
+  @SyncVar() chatActivate: boolean = false;
+
   @SyncVar() outTime: number = 0;
 
   @SyncVar() useOutUrl: boolean = false;

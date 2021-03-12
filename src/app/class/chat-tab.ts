@@ -11,6 +11,8 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { CutInLauncher } from './cut-in-launcher';
 
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
@@ -23,6 +25,8 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
   @SyncVar() count:number = 0;
   @SyncVar() imageIdentifierDummy: string = 'test';//通信開始ために使わなくても書かなきゃだめっぽい後日見直し
+
+  get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
 
   tachieReset(){
     this.imageIdentifier = ['a','b','c','d','e','f','g','h','i','j','k','l'];
@@ -131,33 +135,26 @@ export class ChatTab extends ObjectNode implements InnerXml {
         if (message['to'] != null && message['to'] !== '') { continue; } // 秘話時に立ち絵の更新をかけない
         this.pos_num = message[key];
         if( 0 <= this.pos_num && this.pos_num < this.imageIdentifier.length ){
-           let oldpos = this.getImageCharactorPos(message['name']);
-           if( oldpos >= 0 ){ //同名キャラの古い位置を消去
-              this.imageIdentifier[oldpos] = '';
-              this.imageCharactorName[oldpos] = '';
-              this.imageDispFlag[oldpos] = false;
-           }
-           //非表示コマンド\s
-           
-           let splitMessage = message['text'].split(/\s+/);
-           let hideCommand = null;
-           console.log('splitMessage' + splitMessage);
-           if( splitMessage ){
-             hideCommand = splitMessage[ splitMessage.length -1 ].match(new RegExp('[@＠][HhＨｈ][IiＩｉ][DdＤｄ][EeＥｅ]$'));
-             console.log('hideCommand' + hideCommand);
-           }
-           if( hideCommand ){
-             //事前に古い立ち絵は消す処理をしているため処理なし
-           }else{
-           
-             this.imageIdentifier[this.pos_num] = message['imageIdentifier'];
-             this.imageCharactorName[this.pos_num] =message['name'];
-             this.replaceTachieZindex(this.pos_num);
-             this.imageDispFlag[this.pos_num] = true;
+          let oldpos = this.getImageCharactorPos(message['name']);
+          if( oldpos >= 0 ){ //同名キャラの古い位置を消去
+            this.imageIdentifier[oldpos] = '';
+            this.imageCharactorName[oldpos] = '';
+            this.imageDispFlag[oldpos] = false;
+          }
+          //非表示コマンド\s
 
-             chat.setAttribute(key, message[key]);
-           }
-           this.imageIdentifierDummy = message['imageIdentifier'];//同期方法が無理やり感がある、後日
+          if( message['imageIdentifier'] == '' ){
+            //事前に古い立ち絵は消す処理をしているため処理なし
+          }else{
+           
+            this.imageIdentifier[this.pos_num] = message['imageIdentifier'];
+            this.imageCharactorName[this.pos_num] =message['name'];
+            this.replaceTachieZindex(this.pos_num);
+            this.imageDispFlag[this.pos_num] = true;
+
+            chat.setAttribute(key, message[key]);
+          }
+          this.imageIdentifierDummy = message['imageIdentifier'];//同期方法が無理やり感がある、後日
            
         }
         continue;
@@ -166,6 +163,10 @@ export class ChatTab extends ObjectNode implements InnerXml {
       chat.setAttribute(key, message[key]);
     }
     chat.initialize();
+    
+    if( 0 > chat.tags.indexOf('secret') ){
+      this.cutInLauncher.chatActivateCutIn( chat.text );//カットイン末尾発動
+    }
  
     EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
 
