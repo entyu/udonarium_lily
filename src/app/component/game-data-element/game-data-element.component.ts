@@ -129,6 +129,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
+
   setElementType(type: string) {
     this.gameDataElement.setAttribute('type', type);
   }

@@ -12,7 +12,10 @@
         </select>
       </ng-container>
       <ng-container *ngIf="isImage && indexNum>=1">
-        <ng-container  *ngTemplateOutlet="editButtonsImage01"></ng-container>
+        <ng-container  *ngTemplateOutlet="editButtonsImageTop"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="isImage && indexNum<1">
+        <ng-container  *ngTemplateOutlet="editButtonsImageMiddle"></ng-container>
       </ng-container>
 
     </div>
@@ -75,7 +78,7 @@
               <img *ngIf="imageFileUrl" class="sub-image" [src]="imageFileUrl | safe: 'resourceUrl'" [alt]="gameDataElement.value"/>
             </div>
             <div class="table-cell-2 sub-table">
-                <input style="width:100%; min-width:10px;" size="1" [(ngModel)]="currentValue" placeholder="立ち絵名" />
+                <span>立ち絵番号{{indexNum}}: </span><input style="width:100%; min-width:10px;" size="1" [(ngModel)]="currentValue" placeholder="立ち絵名" />
                 <button class="tachie-button" (click)="openModal('imageIdentifier', true)" style="font-size:1.0em;">画像変更</button>
 
             </div>
@@ -90,7 +93,7 @@
     <div *ngIf="isEdit" class="table-cell table-cell_solid" style="vertical-align: top;">
 
       <ng-container *ngIf="isImage">
-        <ng-container *ngTemplateOutlet="editButtonsImage02"></ng-container>
+        <ng-container *ngTemplateOutlet="editButtonsImageTitle"></ng-container>
       </ng-container>
       <ng-container *ngIf="!isImage">
         <ng-container *ngTemplateOutlet="editButtons"></ng-container>
@@ -126,9 +129,21 @@
 </ng-template>
 
 
-<ng-template #editButtonsImage01>
+<ng-template #editButtonsImageTop>
+  <button class="dummy" style = "visibility:hidden"><i class="material-icons">remove_circle_outline</i></button>
+  <button (click)="upElement()"><i class="material-icons">arrow_upward</i></button>
+  <br>
   <button (click)="deleteImageElement();"><i class="material-icons">remove_circle_outline</i></button>
+  <button (click)="downElement()"><i class="material-icons">arrow_downward</i></button>
 </ng-template>
-<ng-template #editButtonsImage02>
+<ng-template #editButtonsImageMiddle>
+  <button class="dummy" style = "visibility:hidden"><i class="material-icons">remove_circle_outline</i></button>
+  <button (click)="upElement()"><i class="material-icons">arrow_upward</i></button>
+  <br>
+  <button class="dummy" style = "visibility:hidden"><i class="material-icons">remove_circle_outline</i></button>
+  <button (click)="downElement()"><i class="material-icons">arrow_downward</i></button>
+</ng-template>
+<ng-template #editButtonsImageTitle>
   <button (click)="addImageElement()"><i class="material-icons">add_circle</i></button>
 </ng-template>
+
