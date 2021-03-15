@@ -36,10 +36,10 @@
       </div>
     </div>
     <div>
-      <select style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType"
-        [ngModelOptions]="{standalone: true}" [attr.disabled]="!isEditable ? '' : null" >
-        <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.id}}">{{diceBotInfo.name}}</option>
-      </select>
+      <ng-select class="ud-select" style="width: 12em;" (change)="loadDiceBot($event)" [(ngModel)]="gameType"
+      [ngModelOptions]="{standalone: true}" [attr.disabled]="!isEditable ? '' : null" [clearable]="false">
+        <ng-option *ngFor="let diceBotInfo of diceBotInfos" [value]="diceBotInfo.id">{{diceBotInfo.name}}</ng-option>
+      </ng-select>
     </div>
 
     <div *ngIf="isEdit" class="edit-info">
