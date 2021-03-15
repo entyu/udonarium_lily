@@ -11,7 +11,7 @@
               <ng-option *ngIf="!onlyCharacters" [value]="myPeer?.identifier">{{myPeer?.name}}（あなた）</ng-option>
               <ng-option *ngFor="let gameCharacter of gameCharacters" [value]="gameCharacter.identifier">{{gameCharacter.name}}
               </ng-option>
-            </ng-select> 
+            </ng-select>
           </div>
           <div>
             <div class="color" (click)="setColorNum(0);"

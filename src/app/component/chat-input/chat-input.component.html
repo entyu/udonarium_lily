@@ -4,18 +4,18 @@
   </div>
   <div class="table-cell" style="width:100%">
     <div>
-      <ng-select class="ud-select" style="width: 12em; font-size: 80%;" [(ngModel)]="sendFrom" [clearable]="false">
+      <ng-select class="ud-select" style="width: 12em;" [(ngModel)]="sendFrom" [clearable]="false">
         <ng-option *ngIf="!onlyCharacters" [value]="myPeer?.identifier">{{myPeer?.name}}（あなた）</ng-option>
         <ng-option *ngFor="let gameCharacter of gameCharacters" [value]="gameCharacter.identifier">{{gameCharacter.name}}
         </ng-option>
       </ng-select> ＞
-      <ng-select class="ud-select" style="width: 10em; font-size: 80%;" [(ngModel)]="sendTo" [clearable]="false">
+      <ng-select class="ud-select" style="width: 10em;" [(ngModel)]="sendTo" [clearable]="false">
         <ng-option [value]="''">全員</ng-option>
         <ng-option *ngFor="let peer of otherPeers" [value]="peer.identifier">{{peer.name}}
           <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
         </ng-option>
       </ng-select>
-      <ng-select class="ud-select" style="width: 15em; margin-left:1em;" (change)="loadDiceBot($event)" [(ngModel)]="gameType"
+      <ng-select class="ud-select" style="width: 15em; margin-left:.1em;" (change)="loadDiceBot($event)" [(ngModel)]="gameType"
         [ngModelOptions]="{standalone: true}" [clearable]="false">
         <ng-option *ngFor="let diceBotInfo of diceBotInfos" [value]="diceBotInfo.id">{{diceBotInfo.name}}</ng-option>
       </ng-select>
