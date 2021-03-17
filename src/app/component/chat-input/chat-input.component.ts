@@ -326,6 +326,29 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.calcFitHeight();
   }
 
+
+  private history: string[] = new Array();
+  private currentHistoryIndex: number = -1;
+  private static MAX_HISTORY_NUM = 1000;
+
+  moveHistory(event: KeyboardEvent, direction: number) {
+    if (event) event.preventDefault();
+
+    if (direction < 0 && this.currentHistoryIndex < 0) {
+      this.currentHistoryIndex = this.history.length - 1;
+    } else if (direction > 0 && this.currentHistoryIndex >= this.history.length - 1) {
+      this.currentHistoryIndex = -1;
+    } else {
+      this.currentHistoryIndex = this.currentHistoryIndex + direction;
+    }
+
+    if (this.currentHistoryIndex < 0) {
+      this.text = '';
+    } else {
+      this.text = this.history[this.currentHistoryIndex];
+    }
+  }
+
   sendChat(event: KeyboardEvent) {
     if (event) event.preventDefault();
 
@@ -337,6 +360,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 //    console.log('円柱TEST event: KeyboardEvent '+this.sendFrom + '  ' + this.tachieNum);
 //    console.log('円柱TEST event:' + this.selectChatColor);
     
+
+    if (this.history.length >= ChatInputComponent.MAX_HISTORY_NUM) {
+      this.history.shift();
+    }
+    this.history.push(this.text);
+    this.currentHistoryIndex = -1;
+
     this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom
     , sendTo: this.sendTo , tachieNum : this.tachieNum ,messColor : this.selectChatColor });
 
