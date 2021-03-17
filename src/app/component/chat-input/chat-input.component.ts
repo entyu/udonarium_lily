@@ -342,11 +342,18 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       this.currentHistoryIndex = this.currentHistoryIndex + direction;
     }
 
+    let histText: string;
     if (this.currentHistoryIndex < 0) {
-      this.text = '';
+      histText = '';
     } else {
-      this.text = this.history[this.currentHistoryIndex];
+      histText = this.history[this.currentHistoryIndex];
     }
+
+    this.text = histText;
+    this.previousWritingLength = this.text.length;
+    let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
+    textArea.value = histText;
+    this.calcFitHeight();
   }
 
   sendChat(event: KeyboardEvent) {
