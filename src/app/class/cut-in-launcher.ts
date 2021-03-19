@@ -17,6 +17,8 @@ import { ModalService } from 'service/modal.service';
 
 import { CutIn } from './cut-in';
 
+import { Network } from '@udonarium/core/system';
+
 @SyncObject('cut-in-launcher')
 export class CutInLauncher extends GameObject {
 
@@ -26,10 +28,11 @@ export class CutInLauncher extends GameObject {
   @SyncVar() launchMySelf = false;
   @SyncVar() launchIsStart: boolean = false;
   @SyncVar() stopBlankTagCutInTimeStamp: number = 0;
+  @SyncVar() sendTo : string = '';
   
   reloadDummy : number = 5;
 
-  chatActivateCutIn( text : string ){
+  chatActivateCutIn( text : string , sendTo : string){
     let text2 = ' ' + text;
     let matches_array = text2.match(/\s(\S+)$/i);
     let activateName :string = '';
@@ -40,7 +43,7 @@ export class CutInLauncher extends GameObject {
       
       for ( let cutIn_ of allCutIn ){
         if( cutIn_.chatActivate && ( cutIn_.name == activateName ) ){
-          this.startCutIn( cutIn_ );
+          this.startCutIn( cutIn_ , sendTo);
           return ;
         }
       }
@@ -54,16 +57,22 @@ export class CutInLauncher extends GameObject {
     this.launchIsStart = true;
     this.launchTimeStamp = this.launchTimeStamp + 1;
     this.launchMySelf = true;
-
+    this.sendTo = '';
     this.startSelfCutIn();
   }
 
   
-  startCutIn( cutIn : CutIn ){
+  startCutIn( cutIn : CutIn ,sendTo? :string ){
     this.launchCutInIdentifier = cutIn.identifier;
     this.launchIsStart = true;
     this.launchTimeStamp = this.launchTimeStamp + 1;
     this.launchMySelf = false;
+    
+    if( sendTo )
+      this.sendTo = sendTo;
+    else{
+      this.sendTo = '';
+    }
 
     this.startSelfCutIn();
   }
@@ -129,6 +138,7 @@ export class CutInLauncher extends GameObject {
     super.onStoreRemoved();
   }
 
+  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
   // override
   apply(context: ObjectContext) {
@@ -139,11 +149,18 @@ export class CutInLauncher extends GameObject {
     let launchTimeStamp = this.launchTimeStamp;
     let stopBlankTagCutInTimeStamp = this.stopBlankTagCutInTimeStamp;
     let launchMySelf = this.launchMySelf;
+    let sendTo = this.sendTo;
     
     super.apply(context);
     
     if( this.launchMySelf ) return; //ソロ再生用の場合他の人は発火しない
-    
+
+    if( this.sendTo != "" ){
+      if( this.sendTo != Network.peerContext.userId ){
+        return;
+      }
+    }
+
     if( launchCutInIdentifier !== this.launchCutInIdentifier || 
         launchIsStart !== this.launchIsStart ||
         launchTimeStamp !== this.launchTimeStamp ){
