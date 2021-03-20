@@ -54,6 +54,10 @@ export class ChatMessageSettingComponent implements OnInit, OnDestroy, AfterView
   changeTachieInWindow(){
     //’†g‚È‚µ
   }
+
+  changeKeepTachieOutWindow(){
+    //’†g‚È‚µ
+  }
   
   ngOnInit() {
   }

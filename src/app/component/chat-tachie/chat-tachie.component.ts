@@ -66,7 +66,7 @@ export class ChatTachieComponent implements OnInit, OnDestroy{
      
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'チャット詳細設定';
-    let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 320, height: 160 };
+    let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 200, width: 340, height: 220 };
     let component = this.panelService.open<ChatMessageSettingComponent>(ChatMessageSettingComponent, option);
   }
 

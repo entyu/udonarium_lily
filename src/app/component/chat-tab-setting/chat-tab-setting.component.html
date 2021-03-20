@@ -35,10 +35,15 @@
           <button (click)="saveAllLog()" style = "width:9em">全タブログ保存</button><span style= "font-size:12px">時系列順にまとめて保存</span>
         </ng-container>
         <hr>
-        <br><br><br>
+        <br><br>
         <ng-container *ngIf="!isDeleted">
-          <button class="danger" (click)="deleteLog()" [attr.disabled]="chatTabs.length <= 1 ? '' : null" style = "width:9em">選択ログ消去</button>
-          <button class="danger" (click)="deleteLogALL()" [attr.disabled]="chatTabs.length <= 1 ? '' : null" style = "width:9em">全ログ消去</button>
+          ログの消去機能を有効にする<input type="checkbox" value="allowDeleteLog"  [(ngModel)]="allowDeleteLog"><br>
+          <button class="danger" (click)="deleteLog()" [attr.disabled]="chatTabs.length <= 1 ? '' : null" style = "width:9em"
+          [attr.disabled]="!allowDeleteLog ? '' : null"
+          >選択ログ消去</button>
+          <button class="danger" (click)="deleteLogALL()" [attr.disabled]="chatTabs.length <= 1 ? '' : null" style = "width:9em"
+          [attr.disabled]="!allowDeleteLog ? '' : null"
+          >全ログ消去</button>
         </ng-container>
 
       </div>

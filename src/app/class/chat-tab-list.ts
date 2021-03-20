@@ -14,6 +14,7 @@ export class ChatTabList extends ObjectNode implements InnerXml {
   public minTachieSize = 100;
   public maxTachieSize = 500;
   public isTachieInWindow = false;
+  public isKeepTachieOutWindow = false;
 
   private static _instance: ChatTabList;
   static get instance(): ChatTabList {

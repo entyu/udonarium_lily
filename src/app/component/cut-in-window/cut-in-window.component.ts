@@ -108,6 +108,7 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
       })
       .on('STOP_CUT_IN_BY_BGM', event => { 
         if( this.cutIn ){
+          console.log( " 'STOP_CUT_IN_BY_BGM :" + this.cutIn);
           let audio = AudioStorage.instance.get( this.cutIn.audioIdentifier );
 
           if( this.cutIn.tagName == '' && audio ){

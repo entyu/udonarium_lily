@@ -54,8 +54,11 @@ export class ChatTachieImageComponent implements OnInit, OnDestroy{
   }
   
   get isTachieDispMode(){
-        
-    return this.dispFlag && this.dispByMouse;
+    if( this.chatTabList.isKeepTachieOutWindow ){
+      return this.dispFlag ; 
+    }else{
+      return this.dispFlag && this.dispByMouse ;
+    }
   }
   
   tachieAreaHeight( pos: number) : number {

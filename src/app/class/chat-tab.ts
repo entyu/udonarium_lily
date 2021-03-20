@@ -165,7 +165,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     chat.initialize();
     
     if( 0 > chat.tags.indexOf('secret') ){
-      this.cutInLauncher.chatActivateCutIn( chat.text );//カットイン末尾発動
+      this.cutInLauncher.chatActivateCutIn( chat.text , message['to'] );//カットイン末尾発動
     }
  
     EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });

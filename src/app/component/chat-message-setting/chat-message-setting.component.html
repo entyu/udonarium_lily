@@ -11,6 +11,18 @@
   </div>
   <div class="table">
     <div class="table-cell" style = "width:16em">
+        マウスのウィンドウ離脱時<br>
+        ウィンドウ外の立ち絵を保持:
+    </div>
+    <div class="table-cell" >
+      <input type="checkbox" value="isKeepTachieOutWindow"  [(ngModel)]="chatTabList.isKeepTachieOutWindow"
+       name="isKeepTachieOutWindow" (click)="changeKeepTachieOutWindow()"
+       [attr.disabled]="chatTabList.isTachieInWindow ? '' : null">
+    </div>
+
+  </div>
+  <div class="table">
+    <div class="table-cell" style = "width:16em">
         簡易表示で時間を表示:
     </div>
     <div class="table-cell" >

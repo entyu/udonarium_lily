@@ -79,7 +79,7 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
-  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string): ChatMessage {//–{‰Æ‚©‚çachieNum?: number color? :string ‚ğ’Ç‰Á 
+  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string): ChatMessage {//æœ¬å®¶ã‹ã‚‰achieNum?: number color? :string ã‚’è¿½åŠ  
 
     let img;
     let imgIndex;
@@ -108,22 +108,25 @@ export class ChatMessageService {
       messColor: _color,//lily
     };
     
-    //ƒnƒCƒhˆ—
+    //ãƒã‚¤ãƒ‰å‡¦ç†
     let chkMessage = ' ' + StringUtil.toHalfWidth(text).toLowerCase();
     let matches_array = chkMessage.match(/\s@(\S+)$/i);
     if( matches_array ){
       if( RegExp.$1 == 'hide' )
         chatMessage.imageIdentifier = '';
+        
+      chatMessage.text = text.replace(/([@ï¼ ]\S+)$/i,'');
     }
     
-    //—§‚¿ŠG’u‚«Š·‚¦    
+    //ç«‹ã¡çµµç½®ãæ›ãˆ    
     let matches_array_num = chkMessage.match(/\s@(\d+)$/i);
     if( matches_array_num ){
       let num: number = parseInt(RegExp.$1);
       chatMessage.imageIdentifier = this.findImageIdentifier(sendFrom,num);
+
+      chatMessage.text = text.replace(/([@ï¼ ]\S+)$/i,'');
     }
     
-
     return chatTab.addMessage(chatMessage);
   }
 
@@ -179,7 +182,7 @@ export class ChatMessageService {
     let object = ObjectStore.instance.get(identifier);
     if (object instanceof GameCharacter) {
 //        let element = object.getElement('POS', object.detailDataElement);
-        let element = object.detailDataElement.getFirstElementByName('POS'); //1.13.x‚Æ‚Ìmarge‚ÅC³
+        let element = object.detailDataElement.getFirstElementByName('POS'); //1.13.xã¨ã®margeã§ä¿®æ­£
         if(element)
             if( 0 <= <number>element.currentValue && <number>element.currentValue <= 11)
                 return <number>element.currentValue;
