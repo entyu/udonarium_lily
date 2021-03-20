@@ -4,6 +4,9 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
 
+//import { GameObjectInventoryService } from 'service/game-object-inventory.service';
+import { ObjectStore } from './core/synchronize-object/object-store';
+
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
   @SyncVar() rotate: number = 0;
@@ -115,17 +118,32 @@ export class GameCharacter extends TabletopObject {
     let objectname:string;
     let reg = new RegExp('^(.*)_([0-9]+)$');
     let res = cloneObject.name.match(reg);
-
+    
+    let cloneNumber:number = 0;
     if(res != null && res.length == 3) {
-      let cloneNumber:number = parseInt(res[2]) + 1;
-      objectname = res[1] + "_" + cloneNumber;
+      objectname = res[1];
+      cloneNumber = parseInt(res[2]) + 1;
     } else {
-      objectname = cloneObject.name + "_2";
+      objectname = cloneObject.name ;
+      cloneNumber = 2;
     }
 
-    cloneObject.name = objectname;
-    cloneObject.update();
+    let list = ObjectStore.instance.getObjects(GameCharacter);
+    for (let character of list ) {
+      if( character.location.name == 'graveyard' ) continue;
+      
+      res = character.name.match(reg);
+      if(res != null && res.length == 3) {
+        let numberChk = parseInt(res[2]) + 1 ;
+        if( cloneNumber <= numberChk ){
+          cloneNumber = numberChk
+        }
+      }
+    }
 
+    cloneObject.name = objectname + '_' + cloneNumber;
+    cloneObject.update();
+    
     return cloneObject;
 
   }
