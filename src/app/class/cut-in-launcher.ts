@@ -31,7 +31,9 @@ export class CutInLauncher extends GameObject {
   @SyncVar() sendTo : string = '';
   
   reloadDummy : number = 5;
-
+  
+  //カットイン時のジューク音楽停止はカットインリストウィンドウ操作による
+  //秘話仕様で止まる必要もないためそのまま止めずにカットインする
   chatActivateCutIn( text : string , sendTo : string){
     let text2 = ' ' + text;
     let matches_array = text2.match(/\s(\S+)$/i);
@@ -49,7 +51,6 @@ export class CutInLauncher extends GameObject {
       }
     }
   }
-
 
 
   startCutInMySelf( cutIn : CutIn ){
@@ -90,8 +91,6 @@ export class CutInLauncher extends GameObject {
     this.stopBlankTagCutInTimeStamp = this.stopBlankTagCutInTimeStamp + 1;
     EventSystem.trigger('STOP_CUT_IN_BY_BGM', {  });
   }
-
-
   
   sameTagCutIn( cutIn : CutIn ): CutIn[] {
     
@@ -138,8 +137,6 @@ export class CutInLauncher extends GameObject {
     super.onStoreRemoved();
   }
 
-  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-
   // override
   apply(context: ObjectContext) {
     console.log('CutInLauncher apply() CALL');
@@ -155,7 +152,14 @@ export class CutInLauncher extends GameObject {
     
     if( this.launchMySelf ) return; //ソロ再生用の場合他の人は発火しない
 
-    if( this.sendTo != "" ){
+     console.log('this.sendTo :' + this.sendTo);
+
+    if( stopBlankTagCutInTimeStamp !== this.stopBlankTagCutInTimeStamp ){
+      console.log('データ伝搬で検知 無タグカットイン停止のトリガー');
+      EventSystem.trigger('STOP_CUT_IN_BY_BGM', {  });
+    }
+
+    if( this.sendTo != "" ){ //秘話再生
       if( this.sendTo != Network.peerContext.userId ){
         return;
       }
@@ -170,10 +174,7 @@ export class CutInLauncher extends GameObject {
         this.stopSelfCutIn();
       }
     }
-    if( stopBlankTagCutInTimeStamp !== this.stopBlankTagCutInTimeStamp ){
-      console.log('データ伝搬で検知 無タグカットイン停止のトリガー');
-      EventSystem.trigger('STOP_CUT_IN_BY_BGM', {  });
-    }
+
     
   }
 
