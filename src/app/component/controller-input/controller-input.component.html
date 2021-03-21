@@ -7,11 +7,11 @@
       <div class="table">
         <div class="table-cell" >
           <div>
-            <select style="width: 10em;" [(ngModel)]="sendFrom">
-              <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}">{{myPeer?.name}}（あなた）</option>
-              <option *ngFor="let gameCharacter of gameCharacters" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}
-              </option>
-            </select> 
+            <ng-select class="ud-select" style="width: 10em;" [(ngModel)]="sendFrom" [searchable]="false" [clearable]="false">
+              <ng-option *ngIf="!onlyCharacters" [value]="myPeer?.identifier">{{myPeer?.name}}（あなた）</ng-option>
+              <ng-option *ngFor="let gameCharacter of gameCharacters" [value]="gameCharacter.identifier">{{gameCharacter.name}}
+              </ng-option>
+            </ng-select>
           </div>
           <div>
             <div class="color" (click)="setColorNum(0);"

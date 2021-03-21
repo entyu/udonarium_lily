@@ -1,1 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+.ng-select.ud-select {
+  display: inline-block;
+  vertical-align: baseline;
+  font-size: 80%;
+  min-height: 20px;
+}
+
+.ng-select.ud-select .ng-select-container{
+  min-height: 20px;
+  height: 20px;
+}
+
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+  top: auto;
+}
+
+.ng-dropdown-panel.ud-select .ng-dropdown-panel-items .ng-option {
+  font-size: 80%;
+  padding: 4px 10px;
+}
+
+.ng-dropdown-panel.ud-select  {
+  width: auto !important;
+  max-width: 550px;
+}

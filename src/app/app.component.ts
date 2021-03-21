@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
+import { NgSelectConfig } from '@ng-select/ng-select';
 
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
@@ -70,6 +71,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private chatMessageService: ChatMessageService,
     private appConfigService: AppConfigService,
     private saveDataService: SaveDataService,
+    private ngSelectConfig: NgSelectConfig,
     private ngZone: NgZone
   ) {
 
@@ -88,6 +90,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     });
     this.appConfigService.initialize();
     this.pointerDeviceService.initialize();
+    this.ngSelectConfig.appendTo = 'body';
 
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();
