@@ -133,7 +133,7 @@ export class GameCharacter extends TabletopObject {
       if( character.location.name == 'graveyard' ) continue;
       
       res = character.name.match(reg);
-      if(res != null && res.length == 3) {
+      if(res != null && res.length == 3 && res[1] == objectname) {
         let numberChk = parseInt(res[2]) + 1 ;
         if( cloneNumber <= numberChk ){
           cloneNumber = numberChk

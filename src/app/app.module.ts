@@ -39,6 +39,7 @@ import { LobbyComponent } from 'component/lobby/lobby.component';
 import { LinkyModule } from 'ngx-linky';
 import { ModalComponent } from 'component/modal/modal.component';
 import { NetworkIndicatorComponent } from 'component/network-indicator/network-indicator.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { OverviewPanelComponent } from 'component/overview-panel/overview-panel.component';
 import { PasswordCheckComponent } from 'component/password-check/password-check.component';
 import { PeerCursorComponent } from 'component/peer-cursor/peer-cursor.component';
@@ -147,6 +148,7 @@ import { AppComponent } from './app.component';
     CommonModule,
     FormsModule,
     LinkyModule,
+    NgSelectModule,
   ],
   providers: [
     AppConfigService,
