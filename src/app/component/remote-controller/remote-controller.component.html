@@ -11,8 +11,8 @@
         </form>
 
         <controller-input [onlyCharacters]="true" [chatTabidentifier]="chatTabidentifier" 
-        [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" [(selectNum)]="selectNum"
-        (allBox)="allBoxUnCheck()" (chat)="sendChat($event)" (hideChkEvent)="hideChkBoxEvent($event)"
+        [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text" [(selectNum)]="this.getTargetCharacters( true ).length"
+        (allBox)="allBoxCheck($event)" (chat)="sendChat($event)" (hideChkEvent)="hideChkBoxEvent($event)"
         #controllerInput>
         </controller-input>
 

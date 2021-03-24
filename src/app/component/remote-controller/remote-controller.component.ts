@@ -256,7 +256,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
   get newLineString(): string { return this.inventoryService.newLineString; }
   
-  selectNum :number = 0;
+//  selectNum :number = 0;
 
   ngAfterViewInit() {
   }
@@ -542,13 +542,14 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     
   }
 
-  allBoxUnCheck(){
+  allBoxCheck( value: { check: boolean }){
+
     let objectList = this.getGameObjects(this.selectTab);
     for (let object of objectList){
       if (object instanceof GameCharacter) {
         let box = <HTMLInputElement>document.getElementById(object.identifier);
         if( box ){
-          box.checked = false;
+          box.checked = value.check;
         }
       }
     }
@@ -558,13 +559,14 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     console.log( "identifier:"+identifier);
     let box = <HTMLInputElement>document.getElementById(identifier);
     box.checked = !box.checked;
-
+/*
     let gameCharacters = this.getTargetCharacters( true );
     if( gameCharacters ){
       this.selectNum = gameCharacters.length;
     }else{
       this.selectNum = 0;
     }
+*/
   }
 
   onChange(identifier) {

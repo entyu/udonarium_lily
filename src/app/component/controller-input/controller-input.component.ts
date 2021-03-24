@@ -55,11 +55,11 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
 
   @Input('selectNum') _selectNum: number = 0;
   get selectNum(): number { return this._selectNum; }
-  set selectNum( num :number){ this._selectNum = 0; }
+//  set selectNum( num :number){ this._selectNum = num; }
 
   @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
 
-  @Output() allBox = new EventEmitter<{}>();
+  @Output() allBox = new EventEmitter<{ check: boolean}>();
 
   get tachieNum(): number {
     let object = ObjectStore.instance.get(this.sendFrom);
@@ -361,9 +361,12 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
     this.calcFitHeight();
   }
 
-  allBoxUnCheck() {
-    this.allBox.emit();
-    this.selectNum = 0;
+  allBoxCheck() {
+    if( this.selectNum > 0 ){
+      this.allBox.emit( {check:false});
+    }else{
+      this.allBox.emit( {check:true} );
+    }
   }
 
   calcFitHeight() {
