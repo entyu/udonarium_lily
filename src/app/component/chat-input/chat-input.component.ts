@@ -447,13 +447,16 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       let coordinate = this.pointerDeviceService.pointers[0];
       let title = '色設定';
       if (object.name.length) title += ' - ' + object.name;
-      let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
+//クロームのカラーピッカーがスペースが足りないと黒表示されることへの暫定対処　20210321
+//      let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
+        let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 300, width: 300, height: 170 };
       let component = this.panelService.open<ChatColorSettingComponent>(ChatColorSettingComponent, option);
       component.tabletopObject = object;
     }else{
       let coordinate = this.pointerDeviceService.pointers[0];
       let title = '色設定';
-      let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
+//      let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 150, width: 300, height: 120 };
+        let option: PanelOption = { title: title, left: coordinate.x + 50, top: coordinate.y - 300, width: 300, height: 170 };
       let component = this.panelService.open<ChatColorSettingComponent>(ChatColorSettingComponent, option);
       component.tabletopObject = null;
     }

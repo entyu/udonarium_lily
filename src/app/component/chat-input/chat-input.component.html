@@ -78,7 +78,7 @@
 <!-- ここまで-->
     <div>
       <form>
-        <textarea class="chat-input" placeholder="Enterで送信  Shift+Enterで改行" [(ngModel)]="text"
+        <textarea class="chat-input" placeholder="Enterで送信  Shift+Enterで改行  Ctrl+上下キーで履歴呼び出し" [(ngModel)]="text"
           [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
           (keydown.control.arrowup)="moveHistory($event, -1)" (keydown.control.arrowdown)="moveHistory($event, 1)"
           #textArea></textarea>
