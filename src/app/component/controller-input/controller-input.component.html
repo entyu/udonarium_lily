@@ -30,8 +30,14 @@
         <div class="table-cell" >
           <div style="font-size:0.8em;text-align:right">
             選択数：{{selectNum}}<br>
-            <button class="color-setting small-font" (click)="allBoxUnCheck();">
-            全解除→</button>
+            <button class="color-setting small-font" (click)="allBoxCheck();" style="width:7em;">
+              <ng-container *ngIf="0 != selectNum">
+              全解除口→
+              </ng-container>
+              <ng-container *ngIf="0 == selectNum">
+              全選択〆→
+              </ng-container>
+            </button>
           </div>
         </div>
       </div>
