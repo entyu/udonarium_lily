@@ -48,10 +48,12 @@
           <option value="2">ヘクス（横揃え）</option>
         </select>
         色:
-        <select [(ngModel)]="tableGridColor" name="tableGridColor" [attr.disabled]="!isEditable ? '' : null">
-          <option value="#000000e6">黒</option>
-          <option value="#dddddde6">白</option>
-        </select>
+        <input type="color" [(ngModel)]="tableGridColor" name="tableGridColor"
+               list="table-grid-color-list" [attr.disabled]="!isEditable ? '' : null">
+        <datalist id="table-grid-color-list">
+          <option value="#000000">
+          <option value="#dddddd">
+        </datalist>
       </div>
       <div>
         背景フィルタ
