@@ -499,8 +499,6 @@ input[type='range']::-ms-tooltip {
 }
 
 .sticky-top-left {
-  position: sticky;
-  top: 0;
   width: 20em;
   height: calc(100% - 12px);
   overflow-y: scroll;
