@@ -502,7 +502,7 @@ input[type='range']::-ms-tooltip {
   position: sticky;
   top: 0;
   width: 20em;
-  height: 99%;
+  height: calc(100% - 12px);
   overflow-y: scroll;
   background-color: rgba(240,218,189, 0.8);
   border-top:1px dotted #666;
@@ -512,7 +512,7 @@ input[type='range']::-ms-tooltip {
 
 .controller-right {
   flex: 1;
-  height: 99%;
+  height: 100%;
   overflow-y: scroll;
 }
 
