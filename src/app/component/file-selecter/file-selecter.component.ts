@@ -40,10 +40,25 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   @Input() isAllowedEmpty: boolean = false;
+
+  getAllImage():ImageFile[]{
+    let imageFileList: ImageFile[] = [];
+    
+    for (let imageFile of this.fileStorageService.images){
+      let identifier = imageFile.context.identifier;
+      let tag: string = '';
+      if( ImageTag.get(identifier) ) tag = ImageTag.get(identifier).tag;
+      
+      if( tag != 'えいぷりるセット')   //システム予約名を非表示
+        imageFileList.push(imageFile);
+    }
+    return imageFileList;
+  }
+
 //本家PR #92より
   get images(): ImageFile[] {
       let imageFileList: ImageFile[] = [];
-      if (this.selectTag == '全て') return this.fileStorageService.images;
+      if (this.selectTag == '全て') return this.getAllImage();
 
       for (let imageFile of this.fileStorageService.images){
         let identifier = imageFile.context.identifier;
@@ -78,7 +93,8 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
       let imageTag = ImageTag.get(identifier);
       if( imageTag ){
         if( imageTag.tag ){
-           tags.push(imageTag.tag);
+          if( imageTag.tag != 'えいぷりるセット')   //システム予約名を非表示
+            tags.push(imageTag.tag);
         }
       }
     }

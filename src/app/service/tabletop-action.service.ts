@@ -180,8 +180,182 @@ export class TabletopActionService {
     }
   }
 
+  initAprilDiceImage(){
+    let file: ImageFile = null;
+    let fileContext: ImageContext = null;
+    
+    fileContext = ImageFile.createEmpty('1d4_dice[00]').toContext();
+    fileContext.url = './assets/images/april_dice/1d4_dice[00].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
 
+    fileContext = ImageFile.createEmpty('1d4_dice[01]').toContext();
+    fileContext.url = './assets/images/april_dice/1d4_dice[01].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
 
+    fileContext = ImageFile.createEmpty('1d4_dice[02]').toContext();
+    fileContext.url = './assets/images/april_dice/1d4_dice[02].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d4_dice[03]').toContext();
+    fileContext.url = './assets/images/april_dice/1d4_dice[03].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d6_dice[00]').toContext();
+    fileContext.url = './assets/images/april_dice/1d6_dice[00].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d6_dice[01]').toContext();
+    fileContext.url = './assets/images/april_dice/1d6_dice[01].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d6_dice[02]').toContext();
+    fileContext.url = './assets/images/april_dice/1d6_dice[02].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d6_dice[03]').toContext();
+    fileContext.url = './assets/images/april_dice/1d6_dice[03].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('2d6_dice[00]').toContext();
+    fileContext.url = './assets/images/april_dice/2d6_dice[00].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('2d6_dice[01]').toContext();
+    fileContext.url = './assets/images/april_dice/2d6_dice[01].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('2d6_dice[02]').toContext();
+    fileContext.url = './assets/images/april_dice/2d6_dice[02].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('2d6_dice[03]').toContext();
+    fileContext.url = './assets/images/april_dice/2d6_dice[03].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    
+    fileContext = ImageFile.createEmpty('1d8_dice[00]').toContext();
+    fileContext.url = './assets/images/april_dice/1d8_dice[00].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d8_dice[01]').toContext();
+    fileContext.url = './assets/images/april_dice/1d8_dice[01].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d8_dice[02]').toContext();
+    fileContext.url = './assets/images/april_dice/1d8_dice[02].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d8_dice[03]').toContext();
+    fileContext.url = './assets/images/april_dice/1d8_dice[03].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d10_dice[00]').toContext();
+    fileContext.url = './assets/images/april_dice/1d10_dice[00].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d10_dice[01]').toContext();
+    fileContext.url = './assets/images/april_dice/1d10_dice[01].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d10_dice[02]').toContext();
+    fileContext.url = './assets/images/april_dice/1d10_dice[02].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d10_dice[03]').toContext();
+    fileContext.url = './assets/images/april_dice/1d10_dice[03].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d12_dice[00]').toContext();
+    fileContext.url = './assets/images/april_dice/1d12_dice[00].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d12_dice[01]').toContext();
+    fileContext.url = './assets/images/april_dice/1d12_dice[01].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d12_dice[02]').toContext();
+    fileContext.url = './assets/images/april_dice/1d12_dice[02].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d12_dice[03]').toContext();
+    fileContext.url = './assets/images/april_dice/1d12_dice[03].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d20_dice[00]').toContext();
+    fileContext.url = './assets/images/april_dice/1d20_dice[00].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d20_dice[01]').toContext();
+    fileContext.url = './assets/images/april_dice/1d20_dice[01].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d20_dice[02]').toContext();
+    fileContext.url = './assets/images/april_dice/1d20_dice[02].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d20_dice[03]').toContext();
+    fileContext.url = './assets/images/april_dice/1d20_dice[03].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d100_dice[00]').toContext();
+    fileContext.url = './assets/images/april_dice/1d100_dice[00].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d100_dice[01]').toContext();
+    fileContext.url = './assets/images/april_dice/1d100_dice[01].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d100_dice[02]').toContext();
+    fileContext.url = './assets/images/april_dice/1d100_dice[02].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('1d100_dice[03]').toContext();
+    fileContext.url = './assets/images/april_dice/1d100_dice[03].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('april[00]').toContext();
+    fileContext.url = './assets/images/april/april[00].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+    fileContext = ImageFile.createEmpty('april[01]').toContext();
+    fileContext.url = './assets/images/april/april[01].png';
+    file = ImageStorage.instance.add(fileContext);
+    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+
+  }
+  
   makeDefaultTabletopObjects() {
     let testCharacter: GameCharacter = null;
     let testFile: ImageFile = null;
@@ -261,7 +435,7 @@ export class TabletopActionService {
     testCharacter.location.y = 13 * 50;
     testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
     this.addBuffRound( testCharacter ,'テストバフ3' , '回避+5' , 1);
-
+    
   }
 
   makeDefaultContextMenuActions(position: PointerCoordinate): ContextMenuAction[] {
