@@ -12,6 +12,8 @@ import { StringUtil } from './core/system/util/string-util';
 import { DiceTable } from './dice-table';
 import { DiceTablePalette } from './chat-palette';
 
+import { PeerCursor } from './peer-cursor';
+
 interface DiceRollResult {
   result: string;
   isSecret: boolean;
@@ -147,15 +149,193 @@ export class DiceBot extends GameObject {
           console.error(e);
         }
         return;
+      })
+
+      //ダイスからぶりによる擬似的なダイス交換を行う
+      
+      //注※
+      //空振り処理は実装しているが
+      //数学上　実行によって実行後の判定の成功率やダイスの偏りに影響は及ぼさない
+
+      //コードを実装した円柱は、採用しているユドナリウムリリィのダイスの乱数発生器にχ二乗検定による統計的検証は行い、
+      //乱数性質に問題がないことは確認、理解した上で作っている
+
+      //あくまで　
+      //『ダイスを交換したり　悪い出目が偶然続いたときに　ダイスを空振りしてお祓いをしたくなる　今日のダイスは偏っている気がする』など
+      //人間の心理をターゲートとしたコマンドである  
+
+      //このコマンドでダイスロール時に表示されるアイコンが変更されるがこれは視覚上演出であり
+      //空振りした回数やダイスの乱数とは無関係に差し替えている
+
+      //別のオンラインセッションツールの「どどんとふむせる」のまそっぷ機能のオマージュであり(細部実装は異なる)
+
+      //性質上　2021年エイプリールフールコマンドとして実装した
+      //実装意図はユーモアであることを記しておく
+      
+      .on('APRIL_MESSAGE', async event => {
+        console.log('えいぷりる実行判定');
+
+        let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
+        if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
+
+        let text: string = StringUtil.toHalfWidth(chatMessage.text);
+        let splitText = text.split(/\s/);
+        let gameType: string = chatMessage.tag;
+
+        let diceTable = this.getDiceTables() ;
+        if( !diceTable )return;
+        if( splitText.length == 0 )return;
+        
+        if( splitText[0] == '#まそっぷ'){
+          setTimeout(() => { this.alertAprilMessage(chatMessage); },10);
+          return;
+        }
+        if( splitText[0] != '#えいぷりる') return;
+        
+        console.log('えいぷりる実行:' + splitText[0] + ":" + splitText[1] +":" + splitText.length);
+        
+        let diceType : string = "2d6";
+        let rollDiceType : string = "d6";
+
+        if( splitText.length == 2){
+          let chkType = splitText[1].toLowerCase();
+          if( chkType == "1d4" || chkType == "4")       {diceType = "1d4";  rollDiceType = "d4";}
+          if( chkType == "1d6" || chkType == "6")       {diceType = "1d6";  rollDiceType = "d6";}
+          if( chkType == "2d6")                         {diceType = "2d6";  rollDiceType = "d6";}
+          if( chkType == "1d8"  || chkType == "8")      {diceType = "1d8";  rollDiceType = "d8";}
+          if( chkType == "1d10"  || chkType == "10")    {diceType = "1d10"; rollDiceType = "d10";}
+          if( chkType == "1d12"  || chkType == "12")    {diceType = "1d12"; rollDiceType = "d12";}
+          if( chkType == "1d20"  || chkType == "20")    {diceType = "1d20"; rollDiceType = "d20";}
+          if( chkType == "1d100"  || chkType == "100")  {diceType = "1d100";rollDiceType = "d100";}
+          if( chkType == "0" ) diceType = "";
+        }
+        
+        console.log('えいぷりる ダイスタイプ:' + diceType);
+        
+        let nowDiceImageIndex = PeerCursor.myCursor.diceImageIndex;
+        let newDiceImageIndex = 0;
+        
+        let imageIndexMax = 3;
+        if( nowDiceImageIndex < 0){//画像のランダム決定は標準乱数つかう
+          newDiceImageIndex = Math.floor(Math.random() * ( imageIndexMax + 1) );
+        }else{
+          newDiceImageIndex = Math.floor(Math.random() * ( imageIndexMax ) );
+          if( nowDiceImageIndex <= newDiceImageIndex )
+            newDiceImageIndex ++;
+        }
+        
+        PeerCursor.myCursor.diceImageType = diceType;
+        if( diceType == "" ){
+          PeerCursor.myCursor.diceImageIndex = -1;
+          setTimeout(() => { this.unDispDiceAprilMessage(chatMessage); },10);
+          return;
+        }else{
+          PeerCursor.myCursor.diceImageIndex = newDiceImageIndex;
+        }
+
+        console.log('えいぷりる ダイスImage:' + PeerCursor.myCursor.diceImageName);
+        
+        let changeFate0 = 100;
+        
+        let changeFate1 = Math.floor(Math.random()*100)+1;//一度のロール量上限100による
+        if( changeFate1 < 1) changeFate1 = 1;
+        if( changeFate1 > 100) changeFate1 = 100;
+
+        let changeFate2 = Math.floor(Math.random()*100)+1;//一度のロール量上限100による
+        if( changeFate2 < 1) changeFate2 = 1;
+        if( changeFate2 > 100) changeFate2 = 100;
+        
+        let aprilRollDice = changeFate0 + rollDiceType + "+" + changeFate1 + rollDiceType + "+" + changeFate2 + rollDiceType ;
+        
+        try {
+          let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec( aprilRollDice );
+          let rollText: string = (regArray[3] != null) ? regArray[3] : text;
+
+          let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
+          if (!rollResult.result) return;
+          
+          this.sendAprilMessage(rollResult, changeFate0 + changeFate1 + changeFate2 ,chatMessage);
+        } catch (e) {
+          console.error(e);
+        }
+        
+        return;
       });
   }
 
-  // GameObject Lifecycle
-  onStoreRemoved() {
-    super.onStoreRemoved();
-    EventSystem.unregister(this);
+  private alertAprilMessage( originalMessage: ChatMessage) {
+    let text = '「ちゃんと『#えいぷりる』ってよんでください！ダイス運下げますよっ！？」';
+
+    let aprilMessage: ChatMessageContext = {
+      identifier: '',
+      tabIdentifier: originalMessage.tabIdentifier,
+      originFrom: originalMessage.from,
+      from: 'System',
+      timestamp: originalMessage.timestamp + 1,
+      imageIdentifier: '',
+      tag: 'system',
+      name: '<えいぷりる>' ,
+      text: text,
+      messColor: originalMessage.messColor
+    };
+
+    let chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
+    if (chatTab) chatTab.addMessage(aprilMessage);
+  }
+
+
+  private unDispAprilMessage( originalMessage: ChatMessage) {
+    let text = 'ダイス画像をデフォルトにしました';
+
+    let aprilMessage: ChatMessageContext = {
+      identifier: '',
+      tabIdentifier: originalMessage.tabIdentifier,
+      originFrom: originalMessage.from,
+      from: 'System',
+      timestamp: originalMessage.timestamp + 1,
+      imageIdentifier: '',
+      tag: 'system',
+      name: '<えいぷりる>' ,
+      text: text,
+      messColor: originalMessage.messColor
+    };
+
+    let chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
+    if (chatTab) chatTab.addMessage(aprilMessage);
   }
   
+  private sendAprilMessage(rollResult: DiceRollResult, roollNum: number , originalMessage: ChatMessage) {
+    let result: string = rollResult.result;
+    let isSecret: boolean = rollResult.isSecret;
+
+    if (result.length < 1) return;
+    console.log("result.length:" +result.length);
+    
+    let totalFate = result.match(/\d+$/);
+    let text = "「まそっぷ！」えいぷりるは炎の剣で " +roollNum+ " 連続でダイスを突いた → " + totalFate + " の運命が変わったかもしれない"
+    
+    let diceBotMessage: ChatMessageContext = {
+      identifier: '',
+      tabIdentifier: originalMessage.tabIdentifier,
+      originFrom: originalMessage.from,
+      from: 'System-BCDice',
+      timestamp: originalMessage.timestamp + 1,
+      imageIdentifier: '',
+      tag: 'system',
+      name: '<BCDice：' + 'えいぷりる' + '>' ,
+      text: text,
+      messColor: originalMessage.messColor
+    };
+
+    if (originalMessage.to != null && 0 < originalMessage.to.length) {
+      diceBotMessage.to = originalMessage.to;
+      if (originalMessage.to.indexOf(originalMessage.from) < 0) {
+        diceBotMessage.to += ' ' + originalMessage.from;
+      }
+    }
+    let chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
+    if (chatTab) chatTab.addMessage(diceBotMessage);
+  }
   
   
   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
@@ -218,4 +398,11 @@ export class DiceBot extends GameObject {
       return help;
     })());
   }
+
+  // GameObject Lifecycle
+  onStoreRemoved() {
+    super.onStoreRemoved();
+    EventSystem.unregister(this);
+  }
+
 }
