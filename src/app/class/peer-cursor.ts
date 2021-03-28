@@ -31,9 +31,9 @@ export class PeerCursor extends GameObject {
   set diceImageType( type:string ){ this._diceImageType = type ; }
   set diceImageIndex( index: number ){ this._diceImageIndex = index; }
   
-  get diceImageName(): string { 
+  get diceImageIdentifier(): string { 
     if( this.diceImageType != ""){
-      return this.diceImageType + "_" + "[" + this.diceImageIndex.toString().padStart(2,'0') + "].png"; 
+      return this.diceImageType + "_dice" + "[" + this.diceImageIndex.toString().padStart(2,'0') + "]"; 
     }else{
       return "";
     }

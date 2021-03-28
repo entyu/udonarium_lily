@@ -173,7 +173,7 @@ export class DiceBot extends GameObject {
       //実装意図はユーモアであることを記しておく
       
       .on('APRIL_MESSAGE', async event => {
-        console.log('えいぷりる実行判定');
+//        console.log('えいぷりる実行判定');
 
         let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
@@ -186,7 +186,7 @@ export class DiceBot extends GameObject {
         if( !diceTable )return;
         if( splitText.length == 0 )return;
         
-        if( splitText[0] == '#まそっぷ'){
+        if( splitText[0] == '#まそっぷ' || splitText[0] == '#エイプリル'){
           setTimeout(() => { this.alertAprilMessage(chatMessage); },10);
           return;
         }
@@ -197,7 +197,7 @@ export class DiceBot extends GameObject {
         let diceType : string = "2d6";
         let rollDiceType : string = "d6";
 
-        if( splitText.length == 2){
+        if( splitText.length >= 2){
           let chkType = splitText[1].toLowerCase();
           if( chkType == "1d4" || chkType == "4")       {diceType = "1d4";  rollDiceType = "d4";}
           if( chkType == "1d6" || chkType == "6")       {diceType = "1d6";  rollDiceType = "d6";}
@@ -232,8 +232,7 @@ export class DiceBot extends GameObject {
         }else{
           PeerCursor.myCursor.diceImageIndex = newDiceImageIndex;
         }
-
-        console.log('えいぷりる ダイスImage:' + PeerCursor.myCursor.diceImageName);
+//        console.log('えいぷりる ダイスImage:' + PeerCursor.myCursor.diceImageIdentifier);
         
         let changeFate0 = 100;
         
@@ -272,7 +271,7 @@ export class DiceBot extends GameObject {
       originFrom: originalMessage.from,
       from: 'System',
       timestamp: originalMessage.timestamp + 1,
-      imageIdentifier: '',
+      imageIdentifier: 'april[01]',
       tag: 'system',
       name: '<えいぷりる>' ,
       text: text,
@@ -284,8 +283,8 @@ export class DiceBot extends GameObject {
   }
 
 
-  private unDispAprilMessage( originalMessage: ChatMessage) {
-    let text = 'ダイス画像をデフォルトにしました';
+  private unDispDiceAprilMessage( originalMessage: ChatMessage) {
+    let text = 'ダイス画像をデフォルト(非表示)にしました';
 
     let aprilMessage: ChatMessageContext = {
       identifier: '',
@@ -293,7 +292,7 @@ export class DiceBot extends GameObject {
       originFrom: originalMessage.from,
       from: 'System',
       timestamp: originalMessage.timestamp + 1,
-      imageIdentifier: '',
+      imageIdentifier: 'april[00]',
       tag: 'system',
       name: '<えいぷりる>' ,
       text: text,
@@ -312,7 +311,7 @@ export class DiceBot extends GameObject {
     console.log("result.length:" +result.length);
     
     let totalFate = result.match(/\d+$/);
-    let text = "「まそっぷ！」えいぷりるは炎の剣で " +roollNum+ " 連続でダイスを突いた → " + totalFate + " の運命が変わったかもしれない"
+    let text = "「まそっぷ！」えいぷりるは炎の剣で " +roollNum+ " 連続でダイスを突いた → " + totalFate + " 運命が変わったかもしれない"
     
     let diceBotMessage: ChatMessageContext = {
       identifier: '',
@@ -320,7 +319,7 @@ export class DiceBot extends GameObject {
       originFrom: originalMessage.from,
       from: 'System-BCDice',
       timestamp: originalMessage.timestamp + 1,
-      imageIdentifier: '',
+      imageIdentifier: 'april[00]',
       tag: 'system',
       name: '<BCDice：' + 'えいぷりる' + '>' ,
       text: text,
@@ -352,7 +351,7 @@ export class DiceBot extends GameObject {
       originFrom: originalMessage.from,
       from: 'System-BCDice',
       timestamp: originalMessage.timestamp + 1,
-      imageIdentifier: '',
+      imageIdentifier: PeerCursor.myCursor.diceImageIdentifier ,
       tag: isSecret ? 'system secret' : 'system',
       name: isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>',
       text: result,
