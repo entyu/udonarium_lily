@@ -37,7 +37,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       let tag: string = '';
       if( ImageTag.get(identifier) ) tag = ImageTag.get(identifier).tag;
       
-      if( tag != 'えいぷりるセット')   //システム予約名を非表示
+      if( tag != 'システム予約')   //システム予約名を非表示
         imageFileList.push(imageFile);
     }
     return imageFileList;
@@ -78,7 +78,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       let imageTag = ImageTag.get(identifier);
       if( imageTag ){
         if( imageTag.tag ){
-          if( imageTag.tag != 'えいぷりるセット')   //システム予約名を非表示
+          if( imageTag.tag != 'システム予約')   //システム予約名を非表示
             tags.push(imageTag.tag);
         }
       }
@@ -100,7 +100,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   changeTag(){
    
     if( this.newTagName == '全て' ) return; //表示上混乱するタグの禁止
-    if( this.newTagName == 'えいぷりるセット' )return; //システム予約名称
+    if( this.newTagName == 'システム予約' )return; //システム予約名称
     
     let changeableImages = this.images; 
     console.log("this.newTagName" + this.newTagName );

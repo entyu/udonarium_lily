@@ -187,173 +187,172 @@ export class TabletopActionService {
     fileContext = ImageFile.createEmpty('1d4_dice[00]').toContext();
     fileContext.url = './assets/images/april_dice/1d4_dice[00].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d4_dice[01]').toContext();
     fileContext.url = './assets/images/april_dice/1d4_dice[01].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d4_dice[02]').toContext();
     fileContext.url = './assets/images/april_dice/1d4_dice[02].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d4_dice[03]').toContext();
     fileContext.url = './assets/images/april_dice/1d4_dice[03].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d6_dice[00]').toContext();
     fileContext.url = './assets/images/april_dice/1d6_dice[00].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d6_dice[01]').toContext();
     fileContext.url = './assets/images/april_dice/1d6_dice[01].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d6_dice[02]').toContext();
     fileContext.url = './assets/images/april_dice/1d6_dice[02].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d6_dice[03]').toContext();
     fileContext.url = './assets/images/april_dice/1d6_dice[03].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('2d6_dice[00]').toContext();
     fileContext.url = './assets/images/april_dice/2d6_dice[00].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('2d6_dice[01]').toContext();
     fileContext.url = './assets/images/april_dice/2d6_dice[01].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('2d6_dice[02]').toContext();
     fileContext.url = './assets/images/april_dice/2d6_dice[02].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('2d6_dice[03]').toContext();
     fileContext.url = './assets/images/april_dice/2d6_dice[03].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
     
     fileContext = ImageFile.createEmpty('1d8_dice[00]').toContext();
     fileContext.url = './assets/images/april_dice/1d8_dice[00].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d8_dice[01]').toContext();
     fileContext.url = './assets/images/april_dice/1d8_dice[01].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d8_dice[02]').toContext();
     fileContext.url = './assets/images/april_dice/1d8_dice[02].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d8_dice[03]').toContext();
     fileContext.url = './assets/images/april_dice/1d8_dice[03].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d10_dice[00]').toContext();
     fileContext.url = './assets/images/april_dice/1d10_dice[00].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d10_dice[01]').toContext();
     fileContext.url = './assets/images/april_dice/1d10_dice[01].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d10_dice[02]').toContext();
     fileContext.url = './assets/images/april_dice/1d10_dice[02].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d10_dice[03]').toContext();
     fileContext.url = './assets/images/april_dice/1d10_dice[03].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d12_dice[00]').toContext();
     fileContext.url = './assets/images/april_dice/1d12_dice[00].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d12_dice[01]').toContext();
     fileContext.url = './assets/images/april_dice/1d12_dice[01].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d12_dice[02]').toContext();
     fileContext.url = './assets/images/april_dice/1d12_dice[02].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d12_dice[03]').toContext();
     fileContext.url = './assets/images/april_dice/1d12_dice[03].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d20_dice[00]').toContext();
     fileContext.url = './assets/images/april_dice/1d20_dice[00].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d20_dice[01]').toContext();
     fileContext.url = './assets/images/april_dice/1d20_dice[01].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d20_dice[02]').toContext();
     fileContext.url = './assets/images/april_dice/1d20_dice[02].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d20_dice[03]').toContext();
     fileContext.url = './assets/images/april_dice/1d20_dice[03].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d100_dice[00]').toContext();
     fileContext.url = './assets/images/april_dice/1d100_dice[00].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d100_dice[01]').toContext();
     fileContext.url = './assets/images/april_dice/1d100_dice[01].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d100_dice[02]').toContext();
     fileContext.url = './assets/images/april_dice/1d100_dice[02].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('1d100_dice[03]').toContext();
     fileContext.url = './assets/images/april_dice/1d100_dice[03].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('april[00]').toContext();
     fileContext.url = './assets/images/april/april[00].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
+    ImageTag.create(file.identifier).tag = 'システム予約';    
 
     fileContext = ImageFile.createEmpty('april[01]').toContext();
     fileContext.url = './assets/images/april/april[01].png';
     file = ImageStorage.instance.add(fileContext);
-    ImageTag.create(file.identifier).tag = 'えいぷりるセット';    
-
+    ImageTag.create(file.identifier).tag = 'システム予約';    
   }
   
   makeDefaultTabletopObjects() {

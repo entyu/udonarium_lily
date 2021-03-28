@@ -49,7 +49,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
       let tag: string = '';
       if( ImageTag.get(identifier) ) tag = ImageTag.get(identifier).tag;
       
-      if( tag != 'えいぷりるセット')   //システム予約名を非表示
+      if( tag != 'システム予約')   //システム予約名を非表示
         imageFileList.push(imageFile);
     }
     return imageFileList;
@@ -93,7 +93,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
       let imageTag = ImageTag.get(identifier);
       if( imageTag ){
         if( imageTag.tag ){
-          if( imageTag.tag != 'えいぷりるセット')   //システム予約名を非表示
+          if( imageTag.tag != 'システム予約')   //システム予約名を非表示
             tags.push(imageTag.tag);
         }
       }
