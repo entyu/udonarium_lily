@@ -29,9 +29,23 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     return this._searchWords;
   }
 
+  getAllImage():ImageFile[]{
+    let imageFileList: ImageFile[] = [];
+    
+    for (let imageFile of this.fileStorageService.images){
+      let identifier = imageFile.context.identifier;
+      let tag: string = '';
+      if( ImageTag.get(identifier) ) tag = ImageTag.get(identifier).tag;
+      
+      if( tag != 'システム予約')   //システム予約名を非表示
+        imageFileList.push(imageFile);
+    }
+    return imageFileList;
+  }
+
   get images(): ImageFile[] {
       let imageFileList: ImageFile[] = [];
-      if (this.selectTag == '全て') return ImageStorage.instance.images;
+      if (this.selectTag == '全て') return this.getAllImage();
       for (let imageFile of this.fileStorageService.images){
         let identifier = imageFile.context.identifier;
 
@@ -64,7 +78,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       let imageTag = ImageTag.get(identifier);
       if( imageTag ){
         if( imageTag.tag ){
-           tags.push(imageTag.tag);
+          if( imageTag.tag != 'システム予約')   //システム予約名を非表示
+            tags.push(imageTag.tag);
         }
       }
     }
@@ -85,6 +100,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   changeTag(){
    
     if( this.newTagName == '全て' ) return; //表示上混乱するタグの禁止
+    if( this.newTagName == 'システム予約' )return; //システム予約名称
     
     let changeableImages = this.images; 
     console.log("this.newTagName" + this.newTagName );

@@ -119,6 +119,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     this.tabletopActionService.makeDefaultTable();
     this.tabletopActionService.makeDefaultTabletopObjects();
+    this.tabletopActionService.initAprilDiceImage();
   }
 
   ngAfterViewInit() {

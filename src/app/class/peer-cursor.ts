@@ -21,6 +21,25 @@ export class PeerCursor extends GameObject {
   private static peerIdMap: Map<PeerId, ObjectIdentifier> = new Map();
   chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
 
+  
+  private _diceImageType: string = "";
+  private _diceImageIndex: number = -1;
+  
+  get diceImageType(): string { return this._diceImageType; }
+  get diceImageIndex(): number { return this._diceImageIndex; }
+
+  set diceImageType( type:string ){ this._diceImageType = type ; }
+  set diceImageIndex( index: number ){ this._diceImageIndex = index; }
+  
+  get diceImageIdentifier(): string { 
+    if( this.diceImageType != ""){
+      return this.diceImageType + "_dice" + "[" + this.diceImageIndex.toString().padStart(2,'0') + "]"; 
+    }else{
+      return "";
+    }
+  }
+
+  
 
   get isMine(): boolean { return (PeerCursor.myCursor && PeerCursor.myCursor === this); }
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
