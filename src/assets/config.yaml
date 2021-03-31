@@ -1,5 +1,5 @@
 webrtc:
-  key: e808a270-b3f1-4175-ba88-346e0b2e0797  #Your SkyWay API key
+  key: aaaaaaaa-bbbb-ccccc-dddd-eeeeeeeeeeee  #Your SkyWay API key
   config: #未使用
     iceServers: #未使用
       - url: stun:stun.skyway.io:3478
