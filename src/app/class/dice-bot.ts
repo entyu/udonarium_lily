@@ -244,8 +244,13 @@ export class DiceBot extends GameObject {
         if( changeFate2 < 1) changeFate2 = 1;
         if( changeFate2 > 100) changeFate2 = 100;
         
-        let aprilRollDice = changeFate0 + rollDiceType + "+" + changeFate1 + rollDiceType + "+" + changeFate2 + rollDiceType ;
-        
+        if( diceType == "2d6" ){
+          let aprilRollDice = changeFate0 + rollDiceType + "+" + changeFate0 + rollDiceType + "+" + 
+                              changeFate1 + rollDiceType + "+" + changeFate1 + rollDiceType + "+" + 
+                              changeFate2 + rollDiceType + "+" + changeFate2 + rollDiceType ;
+        }else{
+          let aprilRollDice = changeFate0 + rollDiceType + "+" + changeFate1 + rollDiceType + "+" + changeFate2 + rollDiceType ;          
+        }
         try {
           let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec( aprilRollDice );
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
@@ -275,7 +280,8 @@ export class DiceBot extends GameObject {
       tag: 'system',
       name: '<えいぷりる>' ,
       text: text,
-      messColor: originalMessage.messColor
+      messColor: originalMessage.messColor,
+      imagePos: originalMessage.imagePos ? originalMessage.imagePos : null
     };
 
     let chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
@@ -323,9 +329,10 @@ export class DiceBot extends GameObject {
       tag: 'system',
       name: '<BCDice：' + 'えいぷりる' + '>' ,
       text: text,
-      messColor: originalMessage.messColor
+      messColor: originalMessage.messColor,
+      imagePos: originalMessage.imagePos ? originalMessage.imagePos : null
     };
-
+    
     if (originalMessage.to != null && 0 < originalMessage.to.length) {
       diceBotMessage.to = originalMessage.to;
       if (originalMessage.to.indexOf(originalMessage.from) < 0) {
