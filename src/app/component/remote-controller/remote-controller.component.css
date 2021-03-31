@@ -501,7 +501,7 @@ input[type='range']::-ms-tooltip {
 .sticky-top-left {
   flex: 1;
   max-width: 20em;
-  height: calc(100% - 12px);
+  height: calc(100% - 11px);
   overflow-y: scroll;
   background-color: rgba(240,218,189, 0.8);
   border-top:1px dotted #666;
