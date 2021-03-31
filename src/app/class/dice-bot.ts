@@ -244,12 +244,14 @@ export class DiceBot extends GameObject {
         if( changeFate2 < 1) changeFate2 = 1;
         if( changeFate2 > 100) changeFate2 = 100;
         
+        let aprilRollDice = "";
+        
         if( diceType == "2d6" ){
-          let aprilRollDice = changeFate0 + rollDiceType + "+" + changeFate0 + rollDiceType + "+" + 
+          aprilRollDice = changeFate0 + rollDiceType + "+" + changeFate0 + rollDiceType + "+" + 
                               changeFate1 + rollDiceType + "+" + changeFate1 + rollDiceType + "+" + 
                               changeFate2 + rollDiceType + "+" + changeFate2 + rollDiceType ;
         }else{
-          let aprilRollDice = changeFate0 + rollDiceType + "+" + changeFate1 + rollDiceType + "+" + changeFate2 + rollDiceType ;          
+          aprilRollDice = changeFate0 + rollDiceType + "+" + changeFate1 + rollDiceType + "+" + changeFate2 + rollDiceType ;          
         }
         try {
           let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec( aprilRollDice );
