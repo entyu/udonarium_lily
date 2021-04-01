@@ -4,10 +4,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   HostListener,
   Input,
   OnDestroy,
   OnInit,
+  ViewChild
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
@@ -49,6 +51,7 @@ import { RemoteControllerComponent } from 'component/remote-controller/remote-co
 export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
+  @ViewChild('root') rootElementRef: ElementRef<HTMLElement>;
 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
@@ -67,7 +70,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     private contextMenuService: ContextMenuService,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
   ) { }
 
   ngOnInit() {
@@ -84,6 +87,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      })
+      .on('FOCUS_TO_TABLETOP_OBJECT', event => {
+        if (this.gameCharacter !== event.data) { return; }
+        console.log(`recv focus event to ${this.gameCharacter.name}`);
+        setTimeout(() => {
+          this.rootElementRef.nativeElement.classList.remove('focused');
+        }, 1010);
+        this.rootElementRef.nativeElement.classList.add('focused');
       });
     this.movableOption = {
       tabletopObject: this.gameCharacter,

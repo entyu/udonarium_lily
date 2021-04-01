@@ -235,6 +235,11 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
 
   }
 
+  private focusToObject(gameObject: GameCharacter) {
+    if (gameObject.location.name != "table") { return; }
+    EventSystem.trigger('FOCUS_TO_TABLETOP_OBJECT', gameObject);
+  }
+
   selectGameObject(gameObject: GameObject) {
     let aliasName: string = gameObject.aliasName;
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
