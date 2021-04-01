@@ -116,6 +116,31 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
         this.pointerDeviceService.isDragging = false;
         let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
         this.gridCanvas.nativeElement.style.opacity = opacity + '';
+      })
+      .on('FOCUS_TO_TABLETOP_OBJECT', event => {
+        setTimeout(() => {
+          console.log(`move table to focus ${event.data.name} (${event.data.location.x}, ${event.data.location.y})`);
+          this.gameTable.nativeElement.style.transition = '0.2s ease-out';
+          setTimeout(() => {
+            this.gameTable.nativeElement.style.transition = null;
+          }, 100);
+          // 座標変換
+          let centerX = this.gridCanvas.nativeElement.clientWidth / 2;
+          let centerY = this.gridCanvas.nativeElement.clientHeight / 2;
+          let movedX = event.data.location.x - centerX;
+          let movedY = event.data.location.y - centerY;
+          // z軸回転
+          let rotateZRad = this.viewRotateZ / 180 * Math.PI;
+          let rotatedMovedX = movedX * Math.cos(rotateZRad) - movedY * Math.sin(rotateZRad);
+          let zRotatedMovedY = movedX * Math.sin(rotateZRad) + movedY * Math.cos(rotateZRad);
+          // x軸回転
+          let rotateXRad = this.viewRotateX / 180 * Math.PI;
+          let rotatedMovedY = zRotatedMovedY * Math.cos(rotateXRad);
+          // 移動
+          this.setTransform(
+            -rotatedMovedX - this.viewPotisonX, -rotatedMovedY - this.viewPotisonY, 0, 0, 0, 0
+          );
+        }, 50);
       });
     this.tabletopActionService.makeDefaultTable();
     this.tabletopActionService.makeDefaultTabletopObjects();
