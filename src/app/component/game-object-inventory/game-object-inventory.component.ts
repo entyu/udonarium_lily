@@ -243,6 +243,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   selectGameObject(gameObject: GameObject) {
     let aliasName: string = gameObject.aliasName;
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
+    EventSystem.trigger('HIGHTLIGHT_TABLETOP_OBJECT', gameObject);
   }
 
   private deleteGameObject(gameObject: GameObject) {

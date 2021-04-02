@@ -66,6 +66,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
 
+  private unhighlightTimerID: number | null;
+
   constructor(
     private contextMenuService: ContextMenuService,
     private panelService: PanelService,
@@ -88,11 +90,18 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
       })
-      .on('FOCUS_TO_TABLETOP_OBJECT', event => {
+      .on('HIGHTLIGHT_TABLETOP_OBJECT', event => {
         if (this.gameCharacter !== event.data) { return; }
         console.log(`recv focus event to ${this.gameCharacter.name}`);
-        setTimeout(() => {
+        // アニメーション中であればアニメーションを初期化
+        if (this.rootElementRef.nativeElement.classList.contains('focused')) {
+          window.clearTimeout(this.unhighlightTimerID);
           this.rootElementRef.nativeElement.classList.remove('focused');
+          void this.rootElementRef.nativeElement.offsetWidth;
+        }
+        this.unhighlightTimerID = window.setTimeout(() => {
+          this.rootElementRef.nativeElement.classList.remove('focused');
+          this.unhighlightTimerID = null;
         }, 1010);
         this.rootElementRef.nativeElement.classList.add('focused');
       });
