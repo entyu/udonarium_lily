@@ -12,10 +12,15 @@
   height: 100%;
 }
 
+.remote-controller-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
 .flex-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
 .chat-tab {
@@ -335,11 +340,6 @@ input[type='range']::-ms-tooltip {
   color: #CCC;
 }
 
-.is-sticky-top {
-  position: sticky;
-  top : 0;
-}
-
 .tab-setting {
   background-color: transparent;
   color: #444; 
@@ -499,11 +499,10 @@ input[type='range']::-ms-tooltip {
 }
 
 .sticky-top-left {
-  float: left;
-  position: sticky;
-  top : 0;
-  width: 20em;
-  
+  flex: 1;
+  max-width: 20em;
+  height: calc(100% - 11px);
+  overflow-y: scroll;
   background-color: rgba(240,218,189, 0.8);
   border-top:1px dotted #666;
   padding:5px 5px;
@@ -511,11 +510,10 @@ input[type='range']::-ms-tooltip {
 }
 
 .controller-right {
-  position: absorute;
-  margin-left: 20em;
+  flex: 1;
+  height: 100%;
+  overflow-y: scroll;
 }
-
-
 
 .tab-setting {
   background-color: transparent;

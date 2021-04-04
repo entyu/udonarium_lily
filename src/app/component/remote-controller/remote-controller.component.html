@@ -1,4 +1,5 @@
-<div class="table sticky-top-left" >
+<div class="remote-controller-wrapper">
+<div class="sticky-top-left">
     <div class="flex-container">
       <div style="flex-grow: 0;">
         <form>
@@ -98,18 +99,18 @@
               <ng-container *ngIf="dataElm && this.dataTags.includes(dataElm.name)">
                 <ng-container [ngSwitch]="dataElm.attributes['type']">
                   <div>
-    　　　　　  　<label *ngSwitchCase="'numberResource'">
+                  <label *ngSwitchCase="'numberResource'">
                   <input name="controller" type="radio" value="{{dataElm.name + '現在値'}}" ng-control="options" (click)="remotSelect(dataElm.name,'currentValue',(dataElm.name + '現在値'))" />
                    <div>{{dataElm.name + '現在値'}}</div>
-　                </label>
+                  </label>
                   <label *ngSwitchCase="'numberResource'">
                     <input name="controller" type="radio" value="{{dataElm.name + '最大値'}}" ng-control="options" (click)="remotSelect(dataElm.name,'value',(dataElm.name + '最大値'))" />
                     <div>{{dataElm.name + '最大値'}}</div>
                   </label>
-　　　　　        <label *ngSwitchDefault>
+                  <label *ngSwitchDefault>
                     <input name="controller" type="radio" value="{{dataElm.name}}" ng-control="options" (click)="remotSelect(dataElm.name,'value',dataElm.name)" />
                     <div>{{dataElm.name}}</div>
-　                </label>
+                  </label>
                   </div>
                 </ng-container>
               </ng-container>
@@ -120,15 +121,13 @@
     </ng-container>
 </div>
 
-<div class="controller-right" >
+<div class="controller-right">
     <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
     <div 
      *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
      [ngClass]="{'box': true, 'selected': 0 }" >
       <ng-container *ngTemplateOutlet="gameObjectTags; context:{ gameObject: gameObject}"></ng-container>
     </div>
-</div>
-
 <!-- インベントリ -->
 <ng-template #gameObjectTags let-gameObject="gameObject">
   <div class="inventory-object " >
@@ -201,5 +200,6 @@
     </ng-container>
   </div>
 </ng-template>
+</div> <!-- end of .controller-right -->
 
-
+</div> <!-- end of .remote-controller-wrapper -->
