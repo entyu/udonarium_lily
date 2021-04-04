@@ -42,8 +42,8 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   get tableHeight(): number { return this.selectedTable.height; }
   set tableHeight(tableHeight: number) { if (this.isEditable) this.selectedTable.height = tableHeight; }
 
-  get tableGridColor(): string { return this.selectedTable.gridColor; }
-  set tableGridColor(tableGridColor: string) { if (this.isEditable) this.selectedTable.gridColor = tableGridColor; }
+  get tableGridColor(): string { return this.selectedTable.gridColor.substring(0, 7); }
+  set tableGridColor(tableGridColor: string) { if (this.isEditable) this.selectedTable.gridColor = tableGridColor + "e6"; }
 
   get tableGridShow(): boolean { return this.tableSelecter.gridShow; }
   set tableGridShow(tableGridShow: boolean) {
