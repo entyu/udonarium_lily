@@ -240,6 +240,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
+  private calcFitHeightInterval: NodeJS.Timer = null;
+
   constructor(
     private ngZone: NgZone,
     public chatMessageService: ChatMessageService,
@@ -351,9 +353,12 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
     this.text = histText;
     this.previousWritingLength = this.text.length;
-    let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
-    textArea.value = histText;
-    this.calcFitHeight();
+    if (this.calcFitHeightInterval == null) {
+      this.calcFitHeightInterval = setTimeout(() => {
+        this.calcFitHeightInterval = null;
+        this.calcFitHeight();
+      }, 0)
+    }
   }
 
   sendChat(event: KeyboardEvent) {
@@ -379,9 +384,12 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
     this.text = '';
     this.previousWritingLength = this.text.length;
-    let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
-    textArea.value = '';
-    this.calcFitHeight();
+    if (this.calcFitHeightInterval == null) {
+      this.calcFitHeightInterval = setTimeout(() => {
+        this.calcFitHeightInterval = null;
+        this.calcFitHeight();
+      }, 0)
+    }
   }
 
   calcFitHeight() {
