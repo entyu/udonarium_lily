@@ -90,16 +90,20 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   selectPalette(line: string) {
-    this.text = line;
+    let multiLine = line.replace(/\\n/g, '\n');
+    this.text = multiLine;
+    this.chatInputComponent.kickCalcFitHeight();
   }
 
   clickPalette(line: string) {
-    if (this.doubleClickTimer && this.text === line) {
+    let multiLine = line.replace(/\\n/g, '\n');
+    if (this.doubleClickTimer && this.text === multiLine) {
       clearTimeout(this.doubleClickTimer);
       this.doubleClickTimer = null;
       this.chatInputComponent.sendChat(null);
     } else {
-      this.text = line;
+      this.text = multiLine;
+      this.chatInputComponent.kickCalcFitHeight();
       this.doubleClickTimer = setTimeout(() => { this.doubleClickTimer = null }, 400);
     }
   }
