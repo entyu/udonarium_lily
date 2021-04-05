@@ -117,9 +117,9 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
         let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
         this.gridCanvas.nativeElement.style.opacity = opacity + '';
       })
-      .on('FOCUS_TO_TABLETOP_OBJECT', event => {
+      .on('FOCUS_TO_TABLETOP_COORDINATE', event => {
         setTimeout(() => {
-          console.log(`move table to focus ${event.data.name} (${event.data.location.x}, ${event.data.location.y})`);
+          console.log(`move table to focus (${event.data.x}, ${event.data.y})`);
           this.gameTable.nativeElement.style.transition = '0.2s ease-out';
           setTimeout(() => {
             this.gameTable.nativeElement.style.transition = null;
@@ -127,8 +127,8 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
           // 座標変換
           let centerX = this.gridCanvas.nativeElement.clientWidth / 2;
           let centerY = this.gridCanvas.nativeElement.clientHeight / 2;
-          let movedX = event.data.location.x - centerX;
-          let movedY = event.data.location.y - centerY;
+          let movedX = event.data.x - centerX;
+          let movedY = event.data.y - centerY;
           // z軸回転
           let rotateZRad = this.viewRotateZ / 180 * Math.PI;
           let rotatedMovedX = movedX * Math.cos(rotateZRad) - movedY * Math.sin(rotateZRad);
