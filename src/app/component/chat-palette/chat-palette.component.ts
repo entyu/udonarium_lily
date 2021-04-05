@@ -17,7 +17,7 @@ import { PanelService } from 'service/panel.service';
 })
 export class ChatPaletteComponent implements OnInit, OnDestroy {
   @ViewChild('chatInput', { static: true }) chatInputComponent: ChatInputComponent;
-  @ViewChild('chatPlette') chatPletteElementRef: ElementRef<HTMLSelectElement>;
+  @ViewChild('chatPalette') chatPaletteElementRef: ElementRef<HTMLSelectElement>;
   @Input() character: GameCharacter = null;
 
   get palette(): ChatPalette { return this.character.chatPalette; }
@@ -112,9 +112,9 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     }
   }
 
-  resetPletteSelect() {
-    if (!this.chatPletteElementRef.nativeElement) return;
-    this.chatPletteElementRef.nativeElement.selectedIndex = -1;
+  resetPaletteSelect() {
+    if (!this.chatPaletteElementRef.nativeElement) return;
+    this.chatPaletteElementRef.nativeElement.selectedIndex = -1;
   }
 
   toggleEditMode() {
