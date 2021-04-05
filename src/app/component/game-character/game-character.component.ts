@@ -92,7 +92,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         this.changeDetector.markForCheck();
       })
       .on('HIGHTLIGHT_TABLETOP_OBJECT', event => {
-        if (this.gameCharacter !== event.data) { return; }
+        if (this.gameCharacter.identifier !== event.data.identifier) { return; }
+        if (this.gameCharacter.location.name != "table") { return; }
+
         console.log(`recv focus event to ${this.gameCharacter.name}`);
         // アニメーション開始のタイマーが既にあってアニメーション開始前（ごくわずかな間）ならば何もしない
         if (this.highlightTimerID != null) { return; }
