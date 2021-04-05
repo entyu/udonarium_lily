@@ -353,12 +353,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
     this.text = histText;
     this.previousWritingLength = this.text.length;
-    if (this.calcFitHeightInterval == null) {
-      this.calcFitHeightInterval = setTimeout(() => {
-        this.calcFitHeightInterval = null;
-        this.calcFitHeight();
-      }, 0)
-    }
+    this.kickCalcFitHeight();
   }
 
   sendChat(event: KeyboardEvent) {
@@ -384,6 +379,10 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
     this.text = '';
     this.previousWritingLength = this.text.length;
+    this.kickCalcFitHeight();
+  }
+
+  kickCalcFitHeight() {
     if (this.calcFitHeightInterval == null) {
       this.calcFitHeightInterval = setTimeout(() => {
         this.calcFitHeightInterval = null;
