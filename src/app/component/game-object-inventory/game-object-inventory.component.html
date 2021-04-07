@@ -4,7 +4,7 @@
   <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
 <!--    <ng-container *ngIf="!gameObject.hideInventory && gameObject.location.name == 'table'"> -->
   <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
-     (click)="selectGameObject(gameObject)"  (dblclick)="focusToObject(gameObject)"
+     (click)="selectGameObject(gameObject)"  (dblclick)="focusToObject($event, gameObject)"
      [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
     <ng-container *ngTemplateOutlet="gameObjectTags; context:{ gameObject: gameObject}"></ng-container>
   </div>
