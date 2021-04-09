@@ -235,9 +235,17 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
 
   }
 
+  private focusToObject(e: Event, gameObject: GameCharacter) {
+    if (!(e.target instanceof HTMLElement)) { return; }
+    if (e.target.tagName.toLowerCase() == 'input') { return; }
+    if (gameObject.location.name != "table") { return; }
+    EventSystem.trigger('FOCUS_TO_TABLETOP_COORDINATE', { x: gameObject.location.x, y: gameObject.location.y });
+  }
+
   selectGameObject(gameObject: GameObject) {
     let aliasName: string = gameObject.aliasName;
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
+    EventSystem.trigger('HIGHTLIGHT_TABLETOP_OBJECT', { identifier: gameObject.identifier });
   }
 
   private deleteGameObject(gameObject: GameObject) {

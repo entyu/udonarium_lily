@@ -4,10 +4,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   HostListener,
   Input,
   OnDestroy,
   OnInit,
+  ViewChild
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
@@ -49,6 +51,7 @@ import { RemoteControllerComponent } from 'component/remote-controller/remote-co
 export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
+  @ViewChild('root') rootElementRef: ElementRef<HTMLElement>;
 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
@@ -63,11 +66,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
 
+  private highlightTimer: NodeJS.Timer;
+  private unhighlightTimer: NodeJS.Timer;
+
   constructor(
     private contextMenuService: ContextMenuService,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
   ) { }
 
   ngOnInit() {
@@ -84,6 +90,32 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      })
+      .on('HIGHTLIGHT_TABLETOP_OBJECT', event => {
+        if (this.gameCharacter.identifier !== event.data.identifier) { return; }
+        if (this.gameCharacter.location.name != "table") { return; }
+
+        console.log(`recv focus event to ${this.gameCharacter.name}`);
+        // アニメーション開始のタイマーが既にあってアニメーション開始前（ごくわずかな間）ならば何もしない
+        if (this.highlightTimer != null) { return; }
+
+        // アニメーション中であればアニメーションを初期化
+        if (this.rootElementRef.nativeElement.classList.contains('focused')) {
+          clearTimeout(this.unhighlightTimer);
+          this.rootElementRef.nativeElement.classList.remove('focused');
+        }
+
+        // アニメーション開始処理タイマー
+        this.highlightTimer = setTimeout(() => {
+          this.highlightTimer = null;
+          this.rootElementRef.nativeElement.classList.add('focused');
+        }, 0);
+
+        // アニメーション終了処理タイマー
+        this.unhighlightTimer = setTimeout(() => {
+          this.unhighlightTimer = null;
+          this.rootElementRef.nativeElement.classList.remove('focused');
+        }, 1010);
       });
     this.movableOption = {
       tabletopObject: this.gameCharacter,

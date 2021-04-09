@@ -263,3 +263,17 @@
 .component:hover .material-icons, .component:active .material-icons {
   display: inline;
 }
+
+.component.focused {
+  animation-name: focused;
+  animation-timing-function: ease;
+  animation-duration: 1s;
+}
+
+@keyframes focused {
+  0% { box-shadow: none; }
+  50% { box-shadow:
+          0px 0px 10px 5px #ff0,
+          inset 0px 0px 10px 5px #ff0; }
+  100% { box-shadow: none; }
+}
