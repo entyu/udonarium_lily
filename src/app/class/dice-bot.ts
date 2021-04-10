@@ -466,11 +466,11 @@ export class DiceBot extends GameObject {
       allEditList.push( oneResourceEdit );
     }
     
-    eesourceEdit( allEditList , originalMessage);
+    this.resourceEdit( allEditList , originalMessage);
     return;
   }
 
-  private eesourceEdit( allEditList:ResourceEdit[] ,originalMessage: ChatMessage){
+  private resourceEdit( allEditList:ResourceEdit[] ,originalMessage: ChatMessage){
     let text = "";
     for( let edit of allEditList){
 /*
