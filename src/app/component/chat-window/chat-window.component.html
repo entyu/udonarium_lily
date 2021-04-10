@@ -20,7 +20,7 @@
       <button class="tab-setting small-font" (click)="showDiceTableSetting()"><i class="material-icons small-font">settings</i>ダイス表設定</button>
     </div>
   </form>
-  <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom"  (chat)="sendChat($event)" ></chat-input>
+  <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom"  (chat)="sendChat($event)" (tabSwitch)="chatTabSwitchRelative($event)"></chat-input>
 </div>
 
       
