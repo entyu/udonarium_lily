@@ -106,6 +106,7 @@ export class ChatMessageService {
       text: text,
       imagePos: this.findImagePos(sendFrom),//lily
       messColor: _color,//lily
+      sendFrom: sendFrom //lily
     };
     
     //ハイド処理
