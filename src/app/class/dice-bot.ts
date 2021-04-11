@@ -490,11 +490,11 @@ export class DiceBot extends GameObject {
         let gameType: string = chatMessage.tag;
 
         try {
-          let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(text);
+          let regArray = /^((?:repeat|rep|x)?(\d+)?\s+)?([^\s]*)?/ig.exec(text);
           let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
           // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
-          if (!rollText || repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) {
+          if (!rollText || repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /choice\(.*\)/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) {
             return;
           }
           let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false };
