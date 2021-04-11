@@ -12,7 +12,8 @@
     <div class="body">
       <div class="title">
         <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
-        <span #msgFrom class='tip msg-from' [innerHTML]="stringUtil.escapeHtml('　' + chatMessage.from) | linky:{stripPrefix: false}"></span>
+        <span #msgFrom class='tip msg-from' 
+          [innerHTML]="stringUtil.escapeHtml('　' + chatMessage.from) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, decodePercentEncoding: false, stripPrefix: false, email: false, phone: false}"></span>
         <span class='tip msg-timestamp'>　{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
       </div>
       <div class="text msg-text">
@@ -27,7 +28,8 @@
   </div>
 </div>
 <ng-template #visible>
-  <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" [innerHTML]="stringUtil.escapeHtml(chatMessage.text) | linky:{stripPrefix: false}"></span>
+  <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
+    [innerHTML]="stringUtil.escapeHtml(chatMessage.text) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, decodePercentEncoding: false, stripPrefix: false, email: false, phone: false}"></span>
   <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()">結果を公開</button>
 </ng-template>
 <ng-template #secret>

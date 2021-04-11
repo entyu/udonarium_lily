@@ -79,31 +79,41 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
       const anchor = this.msgFromElm.nativeElement.querySelector('A[href]');
       if (anchor) {
         const href = anchor.getAttribute('href');
-        if ((href == DiceBot.apiUrl + '/' || href == DiceBot.apiUrl) && DiceBot.adminUrl && DiceBot.adminUrl.trim() != '') {
-          anchor.setAttribute('href', DiceBot.adminUrl);
-          anchor.textContent = DiceBot.adminUrl;
-          anchor.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            this.modalService.open(OpenUrlComponent, { url: DiceBot.adminUrl });
-          }, true);
+        if (StringUtil.validUrl(href)) {
+          if ((href == DiceBot.apiUrl + '/' || href == DiceBot.apiUrl) && DiceBot.adminUrl && DiceBot.adminUrl.trim() != '') {
+            anchor.setAttribute('href', DiceBot.adminUrl);
+            anchor.textContent = DiceBot.adminUrl;
+            anchor.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              this.modalService.open(OpenUrlComponent, { url: DiceBot.adminUrl });
+            }, true);
+          } else {
+            anchor.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              this.modalService.open(OpenUrlComponent, { url: href });
+            }, true);
+          }
         } else {
-          anchor.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            this.modalService.open(OpenUrlComponent, { url: href });
-          }, true);
+          anchor.removeAttribute('href');
+          anchor.removeAttribute('target');
         }
       }
     }
     if (this.messageElm) {
       this.messageElm.nativeElement.querySelectorAll('A[href]').forEach(anchor => {
         const href = anchor.getAttribute('href');
-        anchor.addEventListener('click', (e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          this.modalService.open(OpenUrlComponent, { url: href });
-        }, true);
+        if (StringUtil.validUrl(href)) {
+          anchor.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            this.modalService.open(OpenUrlComponent, { url: href });
+          }, true);
+        } else {
+          anchor.removeAttribute('href');
+          anchor.removeAttribute('target');
+        }
       });
     }
   }
