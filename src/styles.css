@@ -5,7 +5,7 @@ a[target=_blank] {
 a[target=_blank]:hover {
   text-decoration: underline;
 }
-a[target=_blank]::after {
+a[target=_blank]::before {
   margin-right: 2px;
   margin-left: 2px;
   font-family: "Font Awesome 5 Free";
