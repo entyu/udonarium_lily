@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+a[target=_blank] {
+  text-decoration: none;
+}
+a[target=_blank]:hover {
+  text-decoration: underline;
+}
+a[target=_blank]::after {
+  margin-right: 2px;
+  margin-left: 2px;
+  font-family: "Font Awesome 5 Free";
+  content: '\f35d';
+  font-weight: bolder;
+  text-decoration: none;
+  display: inline-block;
+}
