@@ -39,6 +39,7 @@ export class DiceBot extends GameObject {
   private static queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
 
   public static apiUrl: string = null;
+  public static adminUrl: string = null;
 
   public static diceBotInfos: DiceBotInfo[] = [
     { script: 'EarthDawn', game: 'アースドーン' },

@@ -55,4 +55,20 @@ export namespace StringUtil {
     }
     return /^https?\:\/\//.test(url.trim());
   }
+
+  export function escapeHtml(str) {
+    if(typeof str !== 'string') {
+      return str.toString();
+    }
+    return str.replace(/[&'`"<>]/g, function(match){
+      return {
+        '&': '&amp;',
+        "'": '&#x27;',
+        '`': '&#x60;',
+        '"': '&quot;',
+        '<': '&lt;',
+        '>': '&gt;',
+      }[match]
+    });
+  }
 }

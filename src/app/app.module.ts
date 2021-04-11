@@ -65,6 +65,8 @@ import { StandImageComponent } from './component/stand-image/stand-image.compone
 import { StandImageService } from 'service/stand-image.service';
 import { DiceRollTableSettingComponent } from './component/dice-roll-table-setting/dice-roll-table-setting.component';
 
+import { LinkyModule } from 'ngx-linky';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -121,6 +123,7 @@ import { DiceRollTableSettingComponent } from './component/dice-roll-table-setti
     BrowserAnimationsModule,
     CommonModule,
     FormsModule,
+    LinkyModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [

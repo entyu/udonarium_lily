@@ -1,11 +1,15 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ChatMessageService } from 'service/chat-message.service';
 
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { ModalService } from 'service/modal.service';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { DiceBot } from '@udonarium/dice-bot';
 
 @Component({
   selector: 'chat-message',
@@ -46,12 +50,18 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 
 export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() chatMessage: ChatMessage;
+  @ViewChild('msgFrom') msgFromElm: ElementRef;
+  @ViewChild('message') messageElm: ElementRef;
+  
   imageFile: ImageFile = ImageFile.Empty;
   animeState: string = 'inactive';
 
   constructor(
-    private chatMessageService: ChatMessageService
+    private chatMessageService: ChatMessageService,
+    private modalService: ModalService
   ) { }
+
+  stringUtil = StringUtil;
 
   ngOnInit() {
     let file: ImageFile = this.chatMessage.image;
@@ -65,6 +75,37 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    if (this.msgFromElm) {
+      const anchor = this.msgFromElm.nativeElement.querySelector('A[href]');
+      if (anchor) {
+        const href = anchor.getAttribute('href');
+        if ((href == DiceBot.apiUrl + '/' || href == DiceBot.apiUrl) && DiceBot.adminUrl && DiceBot.adminUrl.trim() != '') {
+          anchor.setAttribute('href', DiceBot.adminUrl);
+          anchor.textContent = DiceBot.adminUrl;
+          anchor.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            this.modalService.open(OpenUrlComponent, { url: DiceBot.adminUrl });
+          }, true);
+        } else {
+          anchor.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            this.modalService.open(OpenUrlComponent, { url: href });
+          }, true);
+        }
+      }
+    }
+    if (this.messageElm) {
+      this.messageElm.nativeElement.querySelectorAll('A[href]').forEach(anchor => {
+        const href = anchor.getAttribute('href');
+        anchor.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          this.modalService.open(OpenUrlComponent, { url: href });
+        }, true);
+      });
+    }
   }
 
   discloseMessage() {
