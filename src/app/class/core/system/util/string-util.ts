@@ -56,6 +56,15 @@ export namespace StringUtil {
     return /^https?\:\/\//.test(url.trim());
   }
 
+  export function sameOrigin(url: string): boolean {
+    if (!url) return false;
+    try {
+      return (new URL(url)).origin === window.location.origin;
+    } catch (e) {
+      return false;
+    }
+  }
+
   export function escapeHtml(str) {
     if(typeof str !== 'string') {
       return str.toString();

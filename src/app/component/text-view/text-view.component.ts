@@ -38,11 +38,14 @@ export class TextViewComponent implements OnInit, AfterViewInit {
       this.messageElm.nativeElement.querySelectorAll('A[href]').forEach(anchor => {
         const href = anchor.getAttribute('href');
         if (StringUtil.validUrl(href)) {
-          anchor.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            this.modalService.open(OpenUrlComponent, { url: href });
-          }, true);
+          if (!StringUtil.sameOrigin(href)) {
+            anchor.classList.add('outer-link');
+            anchor.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              this.modalService.open(OpenUrlComponent, { url: href });
+            }, true);
+          }
         } else {
           anchor.removeAttribute('href');
           anchor.removeAttribute('target');

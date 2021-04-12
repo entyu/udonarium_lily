@@ -36,6 +36,7 @@
       <span *ngIf="action.materialIcon" style="vertical-align: top"><i style="font-size: 150%; padding-left: 2px;" class="material-icons">{{action.materialIcon}}</i></span>
       {{ action.name.replace('☑', '').replace('☐', '').replace('◉', '').replace('○', '') }}
       <span *ngIf="action.icon && 0 < action.icon?.url.length" class="imagebox"><img class="image" [src]="action.icon.url | safe: 'resourceUrl'"></span>
+      <i *ngIf="action.isOuterLink" class="material-icons" style="font-size: 1rem">open_in_new</i>
     </div>
     <div *ngIf="action.subActions && !action.disabled" class="sub-menu-arrow">
       <i class="material-icons" style="font-size: 1em; vertical-align: bottom;">arrow_forward_ios</i>

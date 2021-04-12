@@ -505,10 +505,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           const url = urlElement.value.toString();
           return {
             name: urlElement.name ? urlElement.name : url,
-            action: () => { this.modalService.open(OpenUrlComponent, { url: url, title: this.gameCharacter.name, subTitle: urlElement.name }); },
+            action: () => {
+              if (StringUtil.sameOrigin(url)) {
+                window.open(url.trim(), '_blank', 'noopener');
+              } else {
+                this.modalService.open(OpenUrlComponent, { url: url, title: this.gameCharacter.name, subTitle: urlElement.name });
+              } 
+            },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
-            materialIcon: 'open_in_new'
+            isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
           };
         }),
         disabled: this.gameCharacter.getUrls().length <= 0

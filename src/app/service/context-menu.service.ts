@@ -29,7 +29,8 @@ export interface ContextMenuAction {
   default?: boolean,
   icon?: ImageFile,
   error?: string,
-  materialIcon?: string
+  materialIcon?: string,
+  isOuterLink?: boolean
 }
 
 @Injectable()

@@ -75,20 +75,13 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.msgFromElm) {
+    if (this.msgFromElm && this.msgFromElm.nativeElement) {
       const anchor = this.msgFromElm.nativeElement.querySelector('A[href]');
       if (anchor) {
         const href = anchor.getAttribute('href');
         if (StringUtil.validUrl(href)) {
-          if ((href == DiceBot.apiUrl + '/' || href == DiceBot.apiUrl) && DiceBot.adminUrl && DiceBot.adminUrl.trim() != '') {
-            anchor.setAttribute('href', DiceBot.adminUrl);
-            anchor.textContent = DiceBot.adminUrl;
-            anchor.addEventListener('click', (e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              this.modalService.open(OpenUrlComponent, { url: DiceBot.adminUrl });
-            }, true);
-          } else {
+          if (!StringUtil.sameOrigin(href)) {
+            anchor.classList.add('outer-link');
             anchor.addEventListener('click', (e) => {
               e.stopPropagation();
               e.preventDefault();
@@ -101,15 +94,18 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
         }
       }
     }
-    if (this.messageElm) {
+    if (this.messageElm && this.messageElm.nativeElement) {
       this.messageElm.nativeElement.querySelectorAll('A[href]').forEach(anchor => {
         const href = anchor.getAttribute('href');
         if (StringUtil.validUrl(href)) {
-          anchor.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            this.modalService.open(OpenUrlComponent, { url: href });
-          }, true);
+          if (!StringUtil.sameOrigin(href)) {
+            anchor.classList.add('outer-link');
+            anchor.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              this.modalService.open(OpenUrlComponent, { url: href });
+            }, true);
+          }
         } else {
           anchor.removeAttribute('href');
           anchor.removeAttribute('target');
