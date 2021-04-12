@@ -92,14 +92,14 @@
       <div class="table-cell">
         <div *ngIf="gameObject.rootDataElement">
           <ng-container *ngFor="let dataElm of getInventoryTags(gameObject); trackBy: trackByGameObject">
-            <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm}"></ng-container>
+            <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm, name: gameObject.name }"></ng-container>
           </ng-container>
         </div>
       </div>
     </div>
   </div>
 </ng-template>
-<ng-template #dataElmTag let-dataElm="dataElm">
+<ng-template #dataElmTag let-dataElm="dataElm" let-name="name">
   <ng-container *ngIf="dataElm?.name === newLineString"><br></ng-container>
   <div *ngIf="dataElm && dataElm.name !== newLineString" class="object-tag">
     <ng-container [ngSwitch]="dataElm.attributes['type']">
@@ -146,13 +146,25 @@
           </div>
         </div>
       </ng-container>
+      <ng-container *ngSwitchCase="'url'">
+        <div class="tag-name">{{dataElm.name}}</div>
+        <div style="text-align: center;">
+          <div style="display: inline-block;">
+            <div class="tag-value-box">
+              <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
+              <input class="input tag-value" type="url" size="1" style="min-width: calc(4em - 2rem); width: calc(100% - 2rem); max-width: calc(12em - 2rem);" [(ngModel)]="dataElm.value" placeholder="https://example.com" />
+              <button class="link" style="width: 1.6rem" [attr.disabled]="!stringUtil.validUrl(dataElm.value) ? '' : null" (click)="stringUtil.validUrl(dataElm.value) ? openUrl(dataElm.value, name, dataElm.name) : false"><i class="material-icons" style="font-size: 1.0rem">{{ !stringUtil.validUrl(dataElm.value) ? 'link_off' : (stringUtil.sameOrigin(dataElm.value) ? 'link' : 'open_in_new') }}</i></button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
       <ng-container *ngSwitchDefault>
         <div class="tag-name">{{dataElm.name}}</div>
         <div style="text-align: center;">
           <div style="display: inline-block;">
             <div class="tag-value-box">
               <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
-              <input class="input tag-value" type="{{dataElm.name === 'size' || dataElm.name === 'altitude' ? 'number' : 'text'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+              <input class="input tag-value" style="min-width: 4em" type="{{dataElm.name === 'size' || dataElm.name === 'altitude' ? 'number' : 'text'}}" min="{{dataElm.name === 'size' ? '0' : ''}}" size="1" [(ngModel)]="dataElm.value" placeholder="Value" />
             </div>
           </div>
         </div>

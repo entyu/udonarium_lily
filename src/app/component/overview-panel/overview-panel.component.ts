@@ -240,11 +240,11 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     this.isOpenImageView = isOpen;
   }
 
-  openUrl(url, title=null) {
+  openUrl(url, title=null, subTitle=null) {
     if (StringUtil.sameOrigin(url)) {
       window.open(url.trim(), '_blank', 'noopener');
     } else {
-      this.modalService.open(OpenUrlComponent, { url: url, title: title });
+      this.modalService.open(OpenUrlComponent, { url: url, title: title, subTitle: subTitle });
     } 
   }
   private getInventoryTags(gameObject: TabletopObject): DataElement[] {

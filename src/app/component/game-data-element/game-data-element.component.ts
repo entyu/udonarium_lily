@@ -20,6 +20,7 @@ import { ModalService } from 'service/modal.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Input() tableTopObjectName: string = null;
   @Input() gameDataElement: DataElement = null;
   @Input() isEdit: boolean = false;
   @Input() isTagLocked: boolean = false;
@@ -123,7 +124,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     if (StringUtil.sameOrigin(url)) {
       window.open(url.trim(), '_blank', 'noopener');
     } else {
-      this.modalService.open(OpenUrlComponent, { url: url, title: this.name });
+      this.modalService.open(OpenUrlComponent, { url: url, title: this.tableTopObjectName, subTitle: this.name });
     } 
   }
 

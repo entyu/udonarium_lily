@@ -150,13 +150,19 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
+  get tableTopObjectName(): string {
+    let element = this.tabletopObject.commonDataElement.getFirstElementByName('name') || this.tabletopObject.commonDataElement.getFirstElementByName('title');
+    return element ? <string>element.value : '';
+  }
+
   async saveToXML() {
     if (!this.tabletopObject || this.isSaveing) return;
     this.isSaveing = true;
     this.progresPercent = 0;
 
-    let element = this.tabletopObject.commonDataElement.getFirstElementByName('name');
-    let objectName: string = element ? <string>element.value : '';
+    //let element = this.tabletopObject.commonDataElement.getFirstElementByName('name') || this.tabletopObject.commonDataElement.getFirstElementByName('title');
+    //let objectName: string = element ? <string>element.value : '';
+    let objectName = this.tableTopObjectName;
 
     await this.saveDataService.saveGameObjectAsync(this.tabletopObject, 'xml_' + objectName, percent => {
       this.progresPercent = percent;

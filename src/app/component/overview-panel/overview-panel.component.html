@@ -49,7 +49,7 @@
       <div class="grid-container-root" *ngIf="hasDataElms && card.isVisible">
         <div class="grid-container">
           <ng-container *ngFor="let dataElm of dataElms">
-            <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }"></ng-container>
+            <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm, name: card.name }"></ng-container>
           </ng-container>
         </div>
       </div>
@@ -103,7 +103,7 @@
         <ng-container *ngFor="let dataElm of inventoryDataElms">
           <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
             <div class="grid-container">
-              <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }"></ng-container>
+              <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm, name: character.name }"></ng-container>
             </div>
           </ng-container>
         </ng-container>
@@ -141,7 +141,7 @@
         <div class="grid-container">
           <ng-container *ngFor="let dataElm of dataElms">
             <ng-container *ngIf="dataElm && dataElm.name !== newLineString">
-              <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }"></ng-container>
+              <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm, name: dice.name }"></ng-container>
             </ng-container>
           </ng-container>
         </div>
@@ -150,14 +150,14 @@
   </div>
 </ng-template>
 
-<ng-template #dataElement let-dataElm="dataElm">
+<ng-template #dataElement let-dataElm="dataElm" let-name="name">
   <ng-container *ngIf="0 < dataElm.children.length; then thenBlock; else elseBlock"></ng-container>
   <ng-template #thenBlock>
     <div class="section" style="padding-top: 0.5em;">
       <div *ngIf="0 < dataElm.name.trim().length" class="section-text" [attr.title]="dataElm.name">{{dataElm.name}}</div>
       <div class="grid-container indetnt">
         <ng-container *ngFor="let childElm of dataElm.children">
-          <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: childElm }"></ng-container>
+          <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: childElm, name: name }"></ng-container>
         </ng-container>
       </div>
     </div>
@@ -216,7 +216,7 @@
         <div class="value">
           <div class="hidden-spacer">{{dataElm.value}}</div>
           <input class="input" style="width:calc(8em - 1.6rem)" type="url" size="1" [(ngModel)]="dataElm.value" />
-          <button class="link" style="width: 1.6rem" [attr.disabled]="!stringUtil.validUrl(dataElm.value) ? '' : null" (click)="stringUtil.validUrl(dataElm.value) ? openUrl(dataElm.value, dataElm.name) : false"><i class="material-icons" style="font-size: 1.0rem">{{ !stringUtil.validUrl(dataElm.value) ? 'link_off' : (stringUtil.sameOrigin(dataElm.value) ? 'link' : 'open_in_new') }}</i></button>
+          <button class="link" style="width: 1.6rem" [attr.disabled]="!stringUtil.validUrl(dataElm.value) ? '' : null" (click)="stringUtil.validUrl(dataElm.value) ? openUrl(dataElm.value, name, dataElm.name) : false"><i class="material-icons" style="font-size: 1.0rem">{{ !stringUtil.validUrl(dataElm.value) ? 'link_off' : (stringUtil.sameOrigin(dataElm.value) ? 'link' : 'open_in_new') }}</i></button>
         </div>
       </ng-container>
       <ng-container *ngSwitchDefault>

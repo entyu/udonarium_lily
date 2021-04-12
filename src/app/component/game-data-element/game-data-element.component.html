@@ -101,7 +101,7 @@
       </div>
       <div class="table" *ngIf="0 < gameDataElement.children.length">
         <div game-data-element class="table-row" *ngFor="let childElement of gameDataElement.children"
-          [gameDataElement]="childElement" [isEdit]="isEdit" [isTagLocked]="isTagLocked"></div>
+          [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit" [isTagLocked]="isTagLocked"></div>
       </div>
     </div>
   </ng-container>
