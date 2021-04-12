@@ -150,9 +150,9 @@
         <div class="tag-name">{{dataElm.name}}</div>
         <div style="text-align: center;">
           <div style="display: inline-block;">
-            <div class="tag-value-box">
+            <div class="tag-value-box" style="white-space: nowrap">
               <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
-              <input class="input tag-value" type="url" size="1" style="min-width: calc(4em - 2rem); width: calc(100% - 2rem); max-width: calc(12em - 2rem);" [(ngModel)]="dataElm.value" placeholder="https://example.com" />
+              <input class="input tag-value" type="url" size="1" style="min-width: calc(6em - 2rem); width: calc(100% - 2rem); max-width: calc(100% - 2rem);" [(ngModel)]="dataElm.value" placeholder="https://example.com" />
               <button class="link" style="width: 1.6rem" [attr.disabled]="!stringUtil.validUrl(dataElm.value) ? '' : null" (click)="stringUtil.validUrl(dataElm.value) ? openUrl(dataElm.value, name, dataElm.name) : false"><i class="material-icons" style="font-size: 1.0rem">{{ !stringUtil.validUrl(dataElm.value) ? 'link_off' : (stringUtil.sameOrigin(dataElm.value) ? 'link' : 'open_in_new') }}</i></button>
             </div>
           </div>
