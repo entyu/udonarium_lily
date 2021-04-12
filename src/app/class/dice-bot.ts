@@ -422,16 +422,23 @@ export class DiceBot extends GameObject {
       
       let replaceText = oneText.replace("：",":").replace("＋","+").replace("－","-").replace("＝","=");
       
-      console.log(replaceText);
+      console.log("リソース変更：" + replaceText);
       if( ! replaceText.match(/[:]([^-+=]+)([-+=])(.+)/) ) return ;
       
       if( replaceText.match(/[:]([^-+=]+)([-+=])(.+)/) ){
-        oneResourceEdit.target =  RegExp.$1 ;                                     //操作対象検索文字タイプ生値
-        oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(RegExp.$1) ;     //操作対象検索文字半角化
-        oneResourceEdit.operator = StringUtil.toHalfWidth(RegExp.$2) ;            //演算符号
-        oneResourceEdit.command = StringUtil.toHalfWidth(RegExp.$3)+"+(1d1-1)";   //操作量　C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
         
-//        console.log( "円柱chkpoint 01");
+        console.log( RegExp.$1 +"/" + RegExp.$2 +'/' + RegExp.$3 );
+        
+        let reg1:string = RegExp.$1;
+        let reg2:string = RegExp.$2;
+        let reg3:string = RegExp.$3;
+        
+        oneResourceEdit.target =  reg1 ;                                     //操作対象検索文字タイプ生値
+        oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(reg1) ;     //操作対象検索文字半角化
+        oneResourceEdit.operator = reg2 ;                                    //演算符号
+        oneResourceEdit.command = StringUtil.toHalfWidth(reg3)+"+(1d1-1)";   //操作量　C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
+        
+        //console.log( "円柱chkpoint " + oneResourceEdit.target +"/" + oneResourceEdit.targetHalfWidth +'/' + oneResourceEdit.operator + '/' +oneResourceEdit.command);
         
         //操作対象検索
         data =  object.detailDataElement.getFirstElementByName(oneResourceEdit.target);
@@ -448,6 +455,7 @@ export class DiceBot extends GameObject {
             return ;//実行失敗
           }
         }
+        console.log("oneResourceEdit.detaElm :V" + oneResourceEdit.detaElm.value + " cV "+ oneResourceEdit.detaElm.currentValue);
         
         //ダイスロール及び四則演算
         try {
@@ -455,7 +463,7 @@ export class DiceBot extends GameObject {
           if (!rollResult.result) return null;
           console.log("rollResult.result>"+rollResult.result);
 
-          rollResult.result.match(/(\d+)$/); //計算結果だけ格納
+          rollResult.result.match(/([-+]?\d+)$/); //計算結果だけ格納
           console.log( "rollResult.result " + rollResult.result + "  calcAns:"+ RegExp.$1);
           
           oneResourceEdit.calcAns = parseInt(RegExp.$1);
