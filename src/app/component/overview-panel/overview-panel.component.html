@@ -211,6 +211,14 @@
             <span style="font-size: smaller;">({{ (dataElm.calcAbilityScore() >= 0 ? '+' : '') + dataElm.calcAbilityScore() }})</span>
         </div>
       </ng-container>
+      <ng-container *ngSwitchCase="'url'">
+        <div class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
+        <div class="value">
+          <div class="hidden-spacer">{{dataElm.value}}</div>
+          <input class="input" style="width:calc(8em - 1.6rem)" type="url" size="1" [(ngModel)]="dataElm.value" />
+          <button class="link" style="width: 1.6rem" [attr.disabled]="!stringUtil.validUrl(dataElm.value) ? '' : null" (click)="stringUtil.validUrl(dataElm.value) ? openUrl(dataElm.value, dataElm.name) : false"><i class="material-icons" style="font-size: 1.0rem">{{ !stringUtil.validUrl(dataElm.value) ? 'link_off' : (stringUtil.sameOrigin(dataElm.value) ? 'link' : 'open_in_new') }}</i></button>
+        </div>
+      </ng-container>
       <ng-container *ngSwitchDefault>
         <div *ngIf="dataElm.name" class="tag" [attr.title]="dataElm.name">{{dataElm.name}}</div>
         <div class="value">
