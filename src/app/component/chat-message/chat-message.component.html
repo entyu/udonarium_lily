@@ -13,7 +13,7 @@
       <div class="title">
         <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
         <span #msgFrom class='tip msg-from' 
-          [innerHTML]="stringUtil.escapeHtml('　' + chatMessage.from) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, decodePercentEncoding: false, stripPrefix: false, stripTrailingSlash: false, email: false, phone: false}"></span>
+          [innerHTML]="stringUtil.escapeHtml('　' + chatMessage.from) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, decodePercentEncoding: false, stripPrefix: false, stripTrailingSlash: true, email: false, phone: false}"></span>
         <span class='tip msg-timestamp'>　{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
       </div>
       <div class="text msg-text">
