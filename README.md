@@ -40,7 +40,9 @@ https://github.com/TK11235/udonarium
 以下のファイルをダウンロードして解凍し、Webサーバに配置してください。  
 
 最新版v1.02.1　　BCDice 3 対応できました！
+
 https://github.com/entyu/udonarium_lily/releases/download/v1.02.1/udonarium_lily-v1.02.1.zip
+
 
 **開発者向けのソースコードをダウンロードしないように注意して下さい。**
 1. [SkyWay](https://webrtc.ecl.ntt.com/)のAPIキーを取得し、APIキー情報を`assets/config.yaml`に記述します。
