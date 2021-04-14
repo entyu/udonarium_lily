@@ -492,7 +492,6 @@ export class DiceBot extends GameObject {
         try {
           let regArray = /^((S?)(?:repeat|rep|x)?(\d+)?\s+)?([^\s]*)?/ig.exec(text);
           let isRepSecret = regArray[2] && regArray[2] != null;
-          console.log(regArray[2] )
           let repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
           let rollText: string = (regArray[4] != null) ? regArray[4] : text;
           // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
