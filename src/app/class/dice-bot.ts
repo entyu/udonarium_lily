@@ -490,9 +490,11 @@ export class DiceBot extends GameObject {
         let gameType: string = chatMessage.tag;
 
         try {
-          let regArray = /^((?:repeat|rep|x)?(\d+)?\s+)?([^\s]*)?/ig.exec(text);
-          let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
-          let rollText: string = (regArray[3] != null) ? regArray[3] : text;
+          let regArray = /^((S?)(?:repeat|rep|x)?(\d+)?\s+)?([^\s]*)?/ig.exec(text);
+          let isRepSecret = regArray[2] && regArray[2] != null;
+          console.log(regArray[2] )
+          let repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
+          let rollText: string = (regArray[4] != null) ? regArray[4] : text;
           // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
           if (!rollText || repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /choice\(.*\)/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) {
             return;
@@ -512,7 +514,7 @@ export class DiceBot extends GameObject {
             if (isDiceRollTableMatch) {
               finalResult.isDiceRollTable = true;
               finalResult.tableName = (diceRollTable.name && diceRollTable.name.length > 0) ? diceRollTable.name : '(無名のダイスボット表)';
-              finalResult.isSecret = isSecret;
+              finalResult.isSecret = isSecret || isRepSecret;
               const diceRollTableRows = diceRollTable.parseText();
               for (let i = 0; i < repeat && i < 32; i++) {
                 let rollResult = await DiceBot.diceRollAsync(StringUtil.toHalfWidth(diceRollTable.dice), 'DiceBot', 1);
@@ -548,7 +550,7 @@ export class DiceBot extends GameObject {
                 if (rollResult.result.length < 1) break;
 
                 finalResult.result += rollResult.result;
-                finalResult.isSecret = finalResult.isSecret || rollResult.isSecret;
+                finalResult.isSecret = finalResult.isSecret || rollResult.isSecret || isRepSecret;
                 if (1 < repeat) finalResult.result += ` #${i + 1}`;
               }
             }
