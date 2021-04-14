@@ -490,8 +490,9 @@ export class DiceBot extends GameObject {
         let gameType: string = chatMessage.tag;
 
         try {
-          let regArray = /^((S?)(?:repeat|rep|x)?(\d+)?\s+)?([^\s]*)?/ig.exec(text);
-          let isRepSecret = regArray[2] && regArray[2] != null;
+          let regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?\s+)?([^\s]*)?/ig.exec(text);
+          let repCommand = regArray[2];
+          let isRepSecret = repCommand && repCommand.toUpperCase().indexOf('S') === 0;
           let repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
           let rollText: string = (regArray[4] != null) ? regArray[4] : text;
           // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
@@ -540,9 +541,11 @@ export class DiceBot extends GameObject {
             }
           }
           if (!isDiceRollTableMatch) {
-            //TODO システムダイスも並列に
             if (DiceBot.apiUrl) {
+              //BCDice-API の繰り返し機能を利用する、結果の形式が縦に長いのと、更新していないBCDice-APIサーバーもありそうなのでまだ実装しない
+              //finalResult = await DiceBot.diceRollAsync(repCommand ? (repCommand + repeat + ' ' + rollText) : rollText, gameType, repCommand ? 1 : repeat);
               finalResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);
+              finalResult.isSecret = finalResult.isSecret || isRepSecret;
             } else {
               for (let i = 0; i < repeat && i < 32; i++) {
                 let rollResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);
