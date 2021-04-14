@@ -356,6 +356,7 @@
   padding: 6px 12px;
   white-space: pre-wrap;
   word-break: break-word;
+  overflow-wrap: anywhere;
   text-align: center;
 }
 

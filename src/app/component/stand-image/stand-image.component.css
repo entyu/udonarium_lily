@@ -94,6 +94,7 @@
 }
 
 .dialog p {
+  overflow-wrap: anywhere;
   word-break: break-word;
   display: inline-block;
   margin-top: 0.5em;
