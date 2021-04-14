@@ -30,7 +30,7 @@
 <ng-template #visible>
   <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
     [innerHTML]="stringUtil.escapeHtml(chatMessage.text) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: false, stripTrailingSlash: false, email: false, phone: false}"></span>
-  <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()">結果を公開</button>
+  <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">結果を公開</button>
 </ng-template>
 <ng-template #secret>
   <span>（シークレットダイス）</span>
