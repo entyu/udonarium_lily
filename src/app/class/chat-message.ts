@@ -23,6 +23,7 @@ export interface ChatMessageContext {
 
   imagePos?: number;
   messColor?: string;
+  sendFrom?: string; //lily
 }
 
 @SyncObject('chat')
@@ -36,6 +37,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() imageIdentifier: string;
   @SyncVar() imagePos: number;
   @SyncVar() messColor: string;
+  @SyncVar() sendFrom: string;
 
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value }

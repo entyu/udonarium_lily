@@ -55,6 +55,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
 
+  @Output() tabSwitch = new EventEmitter<number>();
+
   get tachieNum(): number {
     let object = ObjectStore.instance.get(this.sendFrom);
     if (object instanceof GameCharacter) {
@@ -354,6 +356,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.text = histText;
     this.previousWritingLength = this.text.length;
     this.kickCalcFitHeight();
+  }
+
+  tabSwitchAction(event: KeyboardEvent, direction: number) {
+    if (event) event.preventDefault();
+    this.tabSwitch.emit(direction);
   }
 
   sendChat(event: KeyboardEvent) {
