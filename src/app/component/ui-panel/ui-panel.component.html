@@ -1,13 +1,15 @@
 <div [@flyInOut]="'in'" [ngClass]="{'pointer-events-none': isPointerDragging}" class="draggable-panel"
   [style.left.px]="left" [style.top.px]="top" [style.width.px]="width" [style.height.px]="height"
+  [resizable.disable]="isMinimized"
   [draggable.stack]="'.draggable-panel'" appDraggable appResizable #draggablePanel
   (mouseenter)="showTachie(true)" (mouseleave)="showTachie(false)"
   >
 <!--  style = "{{backGroundSetting(0)}}"-->
 
-  <div class="title">
+  <div class="title" #titleBar>
     <div class="title-button">
-      <button (click)="toggleFullScreen()"><i class="material-icons" style="font-size: 14px;">fullscreen</i></button>
+      <button [disabled]="isFullScreen" (click)="toggleMinimize()"><i class="material-icons" style="font-size: 14px;">minimize</i></button>
+      <button [disabled]="isMinimized" (click)="toggleFullScreen()"><i class="material-icons" style="font-size: 14px;">fullscreen</i></button>
       <button (click)="close()"><i class="material-icons" style="font-size: 14px;">close</i></button>
     </div>
     {{panelService.title}}
