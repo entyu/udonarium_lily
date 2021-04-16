@@ -31,6 +31,7 @@ import { ChatTachieImageComponent } from 'component/chat-tachie-img/chat-tachie-
 export class UIPanelComponent implements OnInit {
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
   @ViewChild('scrollablePanel', { static: true }) scrollablePanel: ElementRef<HTMLDivElement>;
+  @ViewChild('titleBar', { static: true }) titleBar: ElementRef<HTMLDivElement>;
   @ViewChild('content', { read: ViewContainerRef, static: true }) content: ViewContainerRef;
 
   @Input() set title(title: string) { this.panelService.title = title; }
@@ -50,7 +51,8 @@ export class UIPanelComponent implements OnInit {
   private preWidth: number = 100;
   private preHeight: number = 100;
 
-  private isFullScreen: boolean = false;
+  isFullScreen: boolean = false;
+  isMinimized: boolean = false;
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
 
@@ -103,7 +105,27 @@ export class UIPanelComponent implements OnInit {
 
   }
 */  
+  toggleMinimize() {
+    if (this.isFullScreen) return;
+
+    let body  = this.scrollablePanel.nativeElement;
+    let panel = this.draggablePanel.nativeElement;
+    if (this.isMinimized) {
+      this.isMinimized = false;
+      body.style.display = null;
+      this.height = this.preHeight;
+    } else {
+      this.preHeight = panel.offsetHeight;
+
+      this.isMinimized = true;
+      body.style.display = 'none';
+      this.height = this.titleBar.nativeElement.offsetHeight;
+    }
+  }
+
   toggleFullScreen() {
+    if (this.isMinimized) return;
+
     let panel = this.draggablePanel.nativeElement;
     if (panel.offsetLeft <= 0
       && panel.offsetTop <= 0

@@ -77,6 +77,7 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
   }
 
   private onResizeStart(e: MouseEvent | TouchEvent, handle: ResizeHandler) {
+    if (this.isDisable) return this.cancel();
     if ((e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
     this.handleMap.forEach(h => {
       if (h !== handle) h.input.cancel();
