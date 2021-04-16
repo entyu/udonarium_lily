@@ -17,7 +17,7 @@ import { PanelService } from 'service/panel.service';
 })
 export class ChatPaletteComponent implements OnInit, OnDestroy {
   @ViewChild('chatInput', { static: true }) chatInputComponent: ChatInputComponent;
-  @ViewChild('chatPlette') chatPletteElementRef: ElementRef<HTMLSelectElement>;
+  @ViewChild('chatPalette') chatPaletteElementRef: ElementRef<HTMLSelectElement>;
   @Input() character: GameCharacter = null;
 
   get palette(): ChatPalette { return this.character.chatPalette; }
@@ -89,6 +89,10 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     this.updatePanelTitle();
   }
 
+  resizeChatInput() {
+    this.chatInputComponent.kickCalcFitHeight();
+  }
+
   chatTabSwitchRelative(direction: number) {
     let chatTabs = this.chatMessageService.chatTabs;
     let index = chatTabs.findIndex((elm) => elm.identifier == this.chatTabidentifier);
@@ -106,16 +110,18 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   selectPalette(line: string) {
-    this.text = line;
+    let multiLine = line.replace(/\\n/g, '\n');
+    this.text = multiLine;
   }
 
   clickPalette(line: string) {
-    if (this.doubleClickTimer && this.text === line) {
+    let multiLine = line.replace(/\\n/g, '\n');
+    if (this.doubleClickTimer && this.text === multiLine) {
       clearTimeout(this.doubleClickTimer);
       this.doubleClickTimer = null;
       this.chatInputComponent.sendChat(null);
     } else {
-      this.text = line;
+      this.text = multiLine;
       this.doubleClickTimer = setTimeout(() => { this.doubleClickTimer = null }, 400);
     }
   }
@@ -128,9 +134,9 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     }
   }
 
-  resetPletteSelect() {
-    if (!this.chatPletteElementRef.nativeElement) return;
-    this.chatPletteElementRef.nativeElement.selectedIndex = -1;
+  resetPaletteSelect() {
+    if (!this.chatPaletteElementRef.nativeElement) return;
+    this.chatPaletteElementRef.nativeElement.selectedIndex = -1;
   }
 
   toggleEditMode() {

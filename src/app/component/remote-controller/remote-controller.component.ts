@@ -40,7 +40,7 @@ class RemotControllerSelect {
 })
 export class RemoteControllerComponent implements OnInit, OnDestroy {
   @ViewChild('controllerInput', { static: true }) controllerInputComponent: ControllerInputComponent;
-  @ViewChild('chatPlette') chatPletteElementRef: ElementRef<HTMLSelectElement>;
+  @ViewChild('chatPalette') chatPaletteElementRef: ElementRef<HTMLSelectElement>;
   @Input() character: GameCharacter = null;
 
   get palette(): ChatPalette { return this.character.remoteController; }
@@ -223,9 +223,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   }
 
 
-  resetPletteSelect() {
-    if (!this.chatPletteElementRef.nativeElement) return;
-    this.chatPletteElementRef.nativeElement.selectedIndex = -1;
+  resetPaletteSelect() {
+    if (!this.chatPaletteElementRef.nativeElement) return;
+    this.chatPaletteElementRef.nativeElement.selectedIndex = -1;
   }
 
   toggleEditMode() {
