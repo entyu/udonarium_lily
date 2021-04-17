@@ -359,8 +359,12 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       //ToDO ちゃんとパースする
       let match;
       let dialog = [];
-      while ((match = dialogRegExp.exec(text)) !== null) {
-        dialog.push(match[1]);
+      if (StringUtil.isEmote(text)) {
+        dialog.push(text);
+      } else {
+        while ((match = dialogRegExp.exec(text)) !== null) {
+          dialog.push(match[1]);
+        }
       }
       if (dialog.length > 0) {
         //連続💭とりあえずやめる（複数表示できないかな）
