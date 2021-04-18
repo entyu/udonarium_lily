@@ -27,9 +27,7 @@ export class ImageTag extends ObjectNode {
 
   static create(imageIdentifier: string) {
     const object: ImageTag = new ImageTag(`imagetag_${imageIdentifier}`);
-
     object.imageIdentifier = imageIdentifier;
-
     object.initialize();
     return object;
   }

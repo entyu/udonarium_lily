@@ -25,9 +25,7 @@ export class ImageTagList extends ObjectNode implements InnerXml {
 
   static create(images: ImageFile[]): ImageTagList {
     const imageTagList = new ImageTagList();
-
     imageTagList.identifiers = images.map(image => image.identifier);
-
     return imageTagList;
   }
 }
