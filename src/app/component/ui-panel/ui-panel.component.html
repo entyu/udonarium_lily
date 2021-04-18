@@ -1,6 +1,6 @@
 <div [@flyInOut]="'in'" [ngClass]="{'pointer-events-none': isPointerDragging}" class="draggable-panel"
   [style.left.px]="left" [style.top.px]="top" [style.width.px]="width" [style.height.px]="height"
-  [resizable.disable]="isMinimized"
+  [resizable.disable]="isMinimized || isFullScreen"
   [draggable.stack]="'.draggable-panel'" appDraggable appResizable #draggablePanel
   (mouseenter)="showTachie(true)" (mouseleave)="showTachie(false)"
   >
