@@ -13,6 +13,8 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 
+import { ImageTag } from '@udonarium/image-tag';
+
 @Component({
   selector: 'file-selector',
   templateUrl: './file-selecter.component.html',
@@ -20,9 +22,24 @@ import { PanelService } from 'service/panel.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
-
   @Input() isAllowedEmpty: boolean = false;
-  get images(): ImageFile[] { return ImageStorage.instance.images; }
+
+  searchWord: string = '';
+  private _searchWord: string;
+  private _searchWords: string[];
+  get searchWords(): string[] {
+    if (this._searchWord !== this.searchWord) {
+      this._searchWord = this.searchWord;
+      this._searchWords = this.searchWord != null && 0 < this.searchWord.trim().length ? this.searchWord.trim().split(/\s+/) : [];
+    }
+    return this._searchWords;
+  }
+  
+  //get images(): ImageFile[] { return ImageStorage.instance.images; }
+  get images(): ImageFile[] {
+    if (this.searchWords.length < 1) return ImageStorage.instance.images;
+    return ImageTag.searchImages(this.searchWords);
+  }
   get empty(): ImageFile { return ImageFile.Empty; }
 
   constructor(

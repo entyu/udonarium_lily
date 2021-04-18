@@ -46,6 +46,8 @@ import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { DiceRollTableSettingComponent } from 'component/dice-roll-table-setting/dice-roll-table-setting.component';
 
+import { ImageTag } from '@udonarium/image-tag';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -114,10 +116,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let fileContext = ImageFile.createEmpty('none_icon').toContext();
     fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';
     let noneIconImage = ImageStorage.instance.add(fileContext);
+    ImageTag.create(noneIconImage.identifier).tag = 'default アイコン';
 
     fileContext = ImageFile.createEmpty('stand_no_image').toContext();
     fileContext.url = './assets/images/nc96424.png';
-    ImageStorage.instance.add(fileContext);
+    let standNoIconImage = ImageStorage.instance.add(fileContext);
+    ImageTag.create(standNoIconImage.identifier).tag = 'default スタンド';
 
     AudioPlayer.resumeAudioContext();
     PresetSound.dicePick = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/shoulder-touch1.mp3').identifier;
