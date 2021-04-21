@@ -11,16 +11,52 @@
   </div>
 </label>
 <div class="sticky-top">
-  <div>
-    検索: <input [(ngModel)]="searchWord" placeholder="部分一致で検索 スペース区切りで複数指定" />
-  </div>
-  <div>
-    タグ: <input [(ngModel)]="selectedTag" placeholder="タグ名" [attr.disabled]="isSelected ? null : ''" />
+  <div class="word-selecter">
+    <label>
+      <input name="word-selecter" type="checkbox" value="ALL" checked="{{searchAllImage ? 'checked' : ''}}" (click)="onSearchAllImage()">
+      <div class="all-tags"><b>ALL</b><badge class="badge" [count]="images.length" [@.disabled]="true"></badge></div>
+    </label>
+    <label *ngIf="countAllImagesHasWord(null) > 0">
+      <input name="word-selecter" type="checkbox" value="No Tag" [(ngModel)]="searchNoTagImage" checked="{{searchNoTagImage ? 'checked' : ''}}" (change)="searchNoTagImage = (searchNoTagImage ? true : false)">
+      <div class="no-tag"><s>No Tag</s><badge *ngIf="countImagesHasWord(null) > 0" class="badge" [count]="countImagesHasWord(null)" [@.disabled]="true"></badge></div>
+    </label>
+    <label *ngFor="let word of allImagesOwnWords">
+      <input name="word-selecter" type="checkbox" value="{{word}}" [checked]="searchWords.includes(word)" (change)="onSelectedWord(word)">
+      <div>{{word}}<badge *ngIf="countImagesHasWord(word) > 0" class="badge" [count]="countImagesHasWord(word)" [@.disabled]="true"></badge></div>
+    </label>
+    <select [(ngModel)]="serchCondIsOr" style="margin-left: 3px">
+      <option value="true">いずれか (OR)</option>
+      <option value="">すべて (AND)</option>
+    </select>
   </div>
 </div>
-<div id="file-list">
-  <div *ngFor="let file of images" [ngClass]="{ image: true, selected: selectedFile === file }" >
+<div id="file-list" [ngClass]="{ selecter: isSelected }" style="padding-top: 3px;">
+  <div *ngFor="let file of images" class="image" [ngClass]="{ selected: selected(file) }" style="text-align: center; min-width: 100px; height: 120px; position: relative;">
+    <div style="position: absolute; font-size: xx-small; text-align: left; top: 0px; width: 100px; height:120px; overflow: hidden; pointer-events: none">
+      <ng-container *ngIf="getTagWords(file).length > 0; then tagsBlock; else noTagBlock"></ng-container> 
+        <ng-template #tagsBlock>
+          <ng-container *ngFor="let word of getTagWords(file); index as i">  
+            <label *ngIf="i < 6" class="word-tag grow" style="display: block; width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">{{ word }}</label>
+            <span *ngIf="i == 6" class="grow" style="display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">…</span>
+          </ng-container>
+        </ng-template>
+        <ng-template #noTagBlock>
+          <s class="grow" style="color:gray; display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">No Tag</s>
+        </ng-template>
+    </div>
     <img *ngIf="0 < file.url.length" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
     <img *ngIf="file.url.length <= 0" src="assets/images/loading.gif" alt="{{file.name}}">
+  </div>
+</div>
+<div *ngIf="isSelected" class="sticky-bottom">
+  <div>
+    <button style="font-size: x-small; margin-right: 2em" (click)="onUnselect()">画像選択解除</button>
+    <input type="text" [(ngModel)]="addingTagWord" style="width: 13em" placeholder="スペース 区切りで 複数可能"><button style="font-size: x-small" [disabled]="addingTagWord == null || addingTagWord.trim() === ''" (click)="addTagWord()">タグ追加 ➡</button>
+    <ng-container *ngIf="selectedImagesOwnWords.length > 0">
+      <label *ngFor="let word of selectedImagesOwnWords" class="word-tag" (click)="removeTagWord(word)">{{ word }}<sup style="font-size: xx-small; color: red">×</sup></label>
+    </ng-container>
+    <ng-container *ngIf="selectedImagesOwnWords.length == 0">
+      <span style="font-size: smaller; font-weight: bolder; margin-left: 3px; color: gray"><s>No Tag</s></span>
+    </ng-container>
   </div>
 </div>

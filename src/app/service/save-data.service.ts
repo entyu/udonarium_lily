@@ -55,7 +55,7 @@ export class SaveDataService {
     }
     let imageTagXml = this.convertToXml(ImageTagList.create(images));
 
-    files.push(new File([imageTagXml], 'imagetag.xml', { type: 'text/plain' }));
+    files.push(new File([imageTagXml], 'imageTag.xml', { type: 'text/plain' }));
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 
@@ -79,7 +79,7 @@ export class SaveDataService {
     }
     let imageTagXml = this.convertToXml(ImageTagList.create(images));
     
-    files.push(new File([imageTagXml], 'imagetag.xml', { type: 'text/plain' }));
+    files.push(new File([imageTagXml], 'imageTag.xml', { type: 'text/plain' }));
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 

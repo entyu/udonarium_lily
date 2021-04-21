@@ -14,6 +14,7 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 
 import { ImageTag } from '@udonarium/image-tag';
+import { ImageTagList } from '@udonarium/image-tag-list';
 
 @Component({
   selector: 'file-selector',
@@ -35,10 +36,9 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     return this._searchWords;
   }
   
-  //get images(): ImageFile[] { return ImageStorage.instance.images; }
   get images(): ImageFile[] {
     if (this.searchWords.length < 1) return ImageStorage.instance.images;
-    return ImageTag.searchImages(this.searchWords);
+    return ImageTagList.searchImages(this.searchWords, true, true);
   }
   get empty(): ImageFile { return ImageFile.Empty; }
 
