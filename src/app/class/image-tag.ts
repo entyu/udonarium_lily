@@ -5,6 +5,7 @@ import { ImageFile } from './core/file-storage/image-file';
 import { ImageStorage } from './core/file-storage/image-storage';
 
 import { EventSystem, Network } from './core/system';
+import { StringUtil } from './core/system/util/string-util';
 
 @SyncObject('image-tag')
 export class ImageTag extends ObjectNode {
@@ -43,8 +44,8 @@ export class ImageTag extends ObjectNode {
     if (typeof words === 'string') words = words.trim().split(/\s+/);
     words = words.concat();
     words.push(...this.words);
-    this.tag = Array.from(new Set(words)).sort().join(' ');
-    EventSystem.trigger('OPERATE_IMAGE_TAGS', { tag: this.tag });
+    this.tag = Array.from(new Set(words.map(word => StringUtil.toHalfWidth(word).toLowerCase()))).sort().join(' ');
+    EventSystem.call('OPERATE_IMAGE_TAGS', { tag: this.tag });
   }
 
   removeWords(words: string)
@@ -53,7 +54,7 @@ export class ImageTag extends ObjectNode {
     if (typeof words === 'string') words = words.trim().split(/\s+/);
     words = words.concat();
     this.tag = this.words.filter(word => !words.includes(word)).sort().join(' ');
-    EventSystem.trigger('OPERATE_IMAGE_TAGS', { tag: this.tag });
+    EventSystem.call('OPERATE_IMAGE_TAGS', { tag: this.tag });
   }
 
   static get(imageIdentifier: string): ImageTag {

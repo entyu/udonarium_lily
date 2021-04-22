@@ -9,14 +9,41 @@ import { PanelService } from 'service/panel.service';
 import { ImageTagList } from '@udonarium/image-tag-list';
 import { ImageTag } from '@udonarium/image-tag';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
+import { UUID } from '@udonarium/core/system/util/uuid';
 
 @Component({
   selector: 'file-storage',
   templateUrl: './file-storage.component.html',
   styleUrls: ['./file-storage.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('scaleInOut', [
+      transition('void => *', [
+        animate('200ms ease', keyframes([
+          style({ transform: 'scale3d(0, 0, 0)', offset: 0 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate('180ms ease', style({ transform: 'scale3d(0, 0, 0)' }))
+      ])
+    ]),
+    trigger('fadeAndUpInOut', [
+      transition('void => *', [
+        animate('100ms ease-in-out', keyframes([
+          style({ transform: 'scale3d(1.0, 0, 1.0)', opacity: 0.5  }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', opacity: 1.0 }),
+        ]))
+      ]),
+      transition('* => void', [
+        animate('100ms ease-in-out', style({ transform: 'scale3d(1.0, 0, 1.0)', opacity: 0.5 }))
+      ])
+    ])
+  ]
 })
 export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
+  panelId;
   searchNoTagImage = true;
   serchCondIsOr = true;
   addingTagWord = '';
@@ -53,7 +80,11 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     return true;
   }
 
-  get isSelected(): boolean { return this.selectedImageFiles.length > 0; }
+  get isSelected(): boolean {
+    let ret = this.selectedImageFiles.length > 0;
+    if (!ret) this.addingTagWord = '';
+    return ret;
+  }
 
   get allImagesOwnWords(): string[] {
     return ImageTagList.allImagesOwnWords();
@@ -70,7 +101,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   
   ngOnInit() {
     Promise.resolve().then(() => this.panelService.title = 'ファイル一覧');
-    this.searchWords = this.allImagesOwnWords;
+    this.searchWords = this.allImagesOwnWords.filter(word => word.indexOf('*') !== 0);
+    this.panelId = UUID.generateUuid();
   }
 
   ngAfterViewInit() {
@@ -184,5 +216,17 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     const allImagesOwnWords = this.allImagesOwnWords;
     this.searchWords = this.searchWords.filter(word => allImagesOwnWords.includes(word));
+    this.deletedWords.push(word);
+    this.deletedWords = Array.from(new Set(this.deletedWords));
+  }
+
+  identify(index, image){
+    const imageTag = ImageTag.get(image.identifier);
+    return image.identifier + (imageTag ? imageTag.tag : '');  
+  }
+
+  suggestWords(): string[] {
+    const selectedWords = this.selectedImagesOwnWords;
+    return Array.from(new Set(this.allImagesOwnWords.concat(this.deletedWords))).filter(word => word.indexOf('*') !== 0 && !selectedWords.includes(word));
   }
 }

@@ -30,6 +30,7 @@
 
 .image img {
   vertical-align: bottom;
+  transition-duration: 120ms;
 }
 
 .image.selected {
@@ -37,7 +38,7 @@
 }
 
 .selecter .image:not(.selected) img {
-  filter: brightness(30%);
+  filter: brightness(50%);
   opacity: 0.7;
 }
 
@@ -61,6 +62,8 @@
   background-color: rgba(240, 218, 189, 0.9);
   border-top: 1px dotted #666;
   z-index: 100;
+
+  transform-origin: center bottom;
 }
 
 .word-tag {
