@@ -62,8 +62,6 @@
   background-color: rgba(240, 218, 189, 0.9);
   border-top: 1px dotted #666;
   z-index: 100;
-
-  transform-origin: center bottom;
 }
 
 .word-tag {

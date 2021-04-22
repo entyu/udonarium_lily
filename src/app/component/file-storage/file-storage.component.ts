@@ -32,12 +32,13 @@ import { UUID } from '@udonarium/core/system/util/uuid';
     trigger('fadeAndUpInOut', [
       transition('void => *', [
         animate('100ms ease-in-out', keyframes([
-          style({ transform: 'scale3d(1.0, 0, 1.0)', opacity: 0.5  }),
-          style({ transform: 'scale3d(1.0, 1.0, 1.0)', opacity: 1.0 }),
+          style({ 'transform-origin': 'center bottom', transform: 'translateY(8px) scaleY(0)', opacity: 0.6 }),
+          style({ 'transform-origin': 'center bottom', transform: 'translateY(0px) scaleY(1.0)', opacity: 1.0 })
         ]))
       ]),
       transition('* => void', [
-        animate('100ms ease-in-out', style({ transform: 'scale3d(1.0, 0, 1.0)', opacity: 0.5 }))
+        animate('100ms ease-in-out', style({ 'transform-origin': 'center bottom', transform: 'translateY(0px) scaleY(1.0)', opacity: 1.0 })),
+        animate('100ms ease-in-out', style({ 'transform-origin': 'center bottom', transform: 'translateY(8px) scaleY(0)', opacity: 0.6 }))
       ])
     ])
   ]
