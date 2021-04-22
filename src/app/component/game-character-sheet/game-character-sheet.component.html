@@ -43,14 +43,14 @@
   <img class="shadow-image" [src]="tabletopObject.shadowImageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.shadowImageFile.name" (click)="openModal('shadowImageIdentifier', true)">
   <div *ngIf="0 < tabletopObject.imageFile?.url.length || 0 < tabletopObject.faceIcons?.length" class="box main-image-box">
     <div class="icons-box">
-      <ng-container *ngFor="let faceIconImage of tabletopObject.faceIcons; index as i">
+      <div *ngFor="let faceIconImage of tabletopObject.faceIcons; index as i; trackBy: identify">
         <div @bounceInOut *ngIf="0 < faceIconImage.url.length" class="icon-image-box" [ngClass]="{'current-icon': tabletopObject.currntIconIndex == i}">
           <img [src]="faceIconImage.url | safe: 'resourceUrl'" [alt]="faceIconImage.name" (click)="selectIcon(i)" />
-          <button *ngIf="tabletopObject.currntIconIndex == i" class="button-delete-icon" title="顔IC削除" (click)="deleteIcon(i)">
+          <button *ngIf="tabletopObject.currntIconIndex == i" class="button-delete-icon" title="顔IC削除" (click)="deleteIcon(i, faceIconImage.identifier)">
             <b class="material-icons" style="font-size: 1rem;">close</b>
           </button>
         </div>
-      </ng-container>
+      </div>
     </div>
     <div class="image-showcase" style="position: absolute; height: 50px; top: 300px">
       <span *ngFor="let imageFile of tabletopObject.imageFiles; index as i" class="image-thumbnail" [ngClass]="{'hide': tabletopObject.currntImageIndex == i}" style="position: absolute;" [style.left.px]="(tabletopObject.currntImageIndex <= i ? i-1 : i ) * 50">
