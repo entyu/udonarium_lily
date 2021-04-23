@@ -55,7 +55,6 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   isSort = false;
   sortOrder: string[] = [];
 
-  //ToDO 画像のネタバレ防止機能
   isShowHideImages = false;
 
   get images(): ImageFile[] {
@@ -95,12 +94,12 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     return ret;
   }
 
-  get allImagesOwnWords(): string[] {
-    return ImageTagList.allImagesOwnWords(this.isShowHideImages);
+  get selectedImagesIsHidden(): boolean {
+    return ImageTagList.imagesIsHidden(this.selectedImageFiles);
   }
 
-  get selectedImagesOwnWords(): string[] {
-    return ImageTagList.imagesOwnWords(this.selectedImageFiles);
+  get allImagesOwnWords(): string[] {
+    return ImageTagList.allImagesOwnWords(this.isShowHideImages);
   }
 
   constructor(
@@ -119,9 +118,9 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     EventSystem.register(this)
     .on('SYNCHRONIZE_FILE_LIST', event => {
       if (event.isSendFromSelf) {
-        this.changeDetector.markForCheck();
         this.sortOrder.unshift(null);
         this.sortOrder = Array.from(new Set(this.sortOrder));
+        this.changeDetector.markForCheck();
       }
     })
     .on('OPERATE_IMAGE_TAGS', event => {
@@ -166,6 +165,10 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.selectedImageFiles.map(imageFile => imageFile.identifier).includes(file.identifier)
   }
 
+  selectedImagesOwnWords(hasAll=false): string[] {
+    return ImageTagList.imagesOwnWords(this.selectedImageFiles, hasAll);
+  }
+
   onSelectedWord(searchWord: string) {
     //this.selectedImageFiles = [];
     if (searchWord == null || searchWord.trim() === '') return;
@@ -195,6 +198,11 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     return imageTag ? imageTag.words : [];
   }
 
+  getHidden(image: ImageFile): boolean {
+    const imageTag = ImageTag.get(image.identifier);
+    return imageTag ? imageTag.hide : false;
+  }
+
   onSearchAllImage() {
     if (this.searchAllImage) {
       this.searchWords = [];
@@ -209,6 +217,27 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedImageFiles = [];
   }
 
+  onShowHiddenImages($event: Event) {
+    if (this.isShowHideImages) {
+      this.isShowHideImages = false;
+    } else {
+      if (window.confirm("非表示設定の画像を表示します（ネタバレなどにご注意ください）。\nよろしいですか？")) {
+        this.isShowHideImages = true;
+      } else {
+        this.isShowHideImages = false;
+        $event.preventDefault();
+      }
+    }
+  }
+
+  setectedImagesToHidden(toHidden: boolean) {
+    if (!window.confirm(`選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します${ toHidden ? "（これは「画像一覧をうっかり開いて意図せずネタバレ」などを防ぐもので、他者から完全に見えなくするものではありません）" : ''}。\nよろしいですか？`)) return;
+    for (const image of this.selectedImageFiles) {
+      const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
+      imageTag.hide = toHidden;
+    }
+  }
+
   addTagWord() {
     if (this.addingTagWord == null || this.addingTagWord.trim() == '') return;
     const words = this.addingTagWord.trim().split(/\s+/);
@@ -218,7 +247,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
       //imageTag.addWords(words);
       //TODO いまのところ全部帰ってくるが実際に追加したタグだけを返して追加したい
-      if (!addedWords) addedWords = imageTag.addWords(words);
+      addedWords = imageTag.addWords(words);
     }
     if (addedWords) {
       this.searchWords.push(...addedWords);
@@ -247,7 +276,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   suggestWords(): string[] {
-    const selectedWords = this.selectedImagesOwnWords;
+    const selectedWords = this.selectedImagesOwnWords(true);
     return Array.from(new Set(this.allImagesOwnWords.concat(this.deletedWords))).filter(word => word.indexOf('*') !== 0 && !selectedWords.includes(word));
   }
 }

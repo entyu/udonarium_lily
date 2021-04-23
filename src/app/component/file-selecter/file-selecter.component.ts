@@ -47,7 +47,6 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   isSort = false;
   sortOrder: string[] = [];
 
-  //ToDO 画像のネタバレ防止機能
   isShowHideImages = false;
   
   get images(): ImageFile[] {
@@ -141,6 +140,24 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     return imageTag ? imageTag.words : [];
   }
   
+  getHidden(image: ImageFile): boolean {
+    const imageTag = ImageTag.get(image.identifier);
+    return imageTag ? imageTag.hide : false;
+  }
+
+  onShowHiddenImages($event: Event) {
+    if (this.isShowHideImages) {
+      this.isShowHideImages = false;
+    } else {
+      if (window.confirm("非表示設定の画像を表示します（ネタバレなどにご注意ください）。\nよろしいですか？")) {
+        this.isShowHideImages = true;
+      } else {
+        this.isShowHideImages = false;
+        $event.preventDefault();
+      }
+    }
+  }
+
   onSelectedFile(file: ImageFile) {
     EventSystem.call('SELECT_FILE', { fileIdentifier: file.identifier }, Network.peerId);
     this.modalService.resolve(file.identifier);

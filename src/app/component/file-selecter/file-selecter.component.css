@@ -109,3 +109,8 @@
       -1px  0px 0px #ffffff,
        0px -1px 0px #ffffff; 
 }
+
+.red-eye {
+  color: darkred;
+  text-shadow: 0px 0px 4px red;
+}

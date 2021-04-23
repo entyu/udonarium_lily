@@ -1,4 +1,10 @@
 <div class="sticky-top">
+  <div style="float: right; margin-top: 3px; margin-right: 3px">
+    <label sytle="white-space: nowrap">
+      <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
+      <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+    </label>
+  </div>
   <span class="word-selecter">
     <label>
       <input name="word-selecter" type="checkbox" value="ALL" checked="{{searchAllImage ? 'checked' : ''}}" (click)="onSearchAllImage()">
@@ -31,15 +37,18 @@
   <div *ngFor="let file of images; trackBy: identify" class="image" @scaleInOut style="text-align: center; min-width: 100px; height: 120px; position: relative;">
     <div style="position: absolute; font-size: xx-small; text-align: left; bottom: 0px; width: 100px; overflow: hidden; pointer-events: none">
       <ng-container *ngIf="getTagWords(file).length > 0; then tagsBlock; else noTagBlock"></ng-container> 
-        <ng-template #tagsBlock>
-          <ng-container *ngFor="let word of getTagWords(file); index as i">  
-            <label *ngIf="i < 6" class="word-tag grow" style="display: block; width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">{{ word }}</label>
-            <span *ngIf="i == 6" class="grow" style="display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">…</span>
-          </ng-container>
-        </ng-template>
-        <ng-template #noTagBlock>
-          <s class="grow" style="color:gray; display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">No Tag</s>
-        </ng-template>
+      <ng-template #tagsBlock>
+        <ng-container *ngFor="let word of getTagWords(file); index as i">  
+          <label *ngIf="i < 6" class="word-tag grow" style="display: block; width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">{{ word }}</label>
+          <span *ngIf="i == 6" class="grow" style="display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">…</span>
+        </ng-container>
+      </ng-template>
+      <ng-template #noTagBlock>
+        <s class="grow" style="color:gray; display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">No Tag</s>
+      </ng-template>
+    </div>
+    <div *ngIf="getHidden(file)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none">
+      <i class="material-icons red-eye" style="font-size: 16px; display: block">visibility</i>
     </div>
     <img *ngIf="0 < file.url.length" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
     <img *ngIf="file.url.length <= 0" src="assets/images/loading.gif" alt="{{file.name}}">

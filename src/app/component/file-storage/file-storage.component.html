@@ -11,6 +11,12 @@
   </div>
 </label>
 <div class="sticky-top">
+  <div style="float: right; margin-top: 3px; margin-right: 3px">
+    <label sytle="white-space: nowrap">
+      <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
+      <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+    </label>
+  </div>
   <span class="word-selecter">
     <label>
       <input name="word-selecter" type="checkbox" value="ALL" checked="{{searchAllImage ? 'checked' : ''}}" (click)="onSearchAllImage()">
@@ -34,12 +40,6 @@
       <input name="is-sort" value="Sort" type="checkbox" [(ngModel)]="isSort" checked="{{isSort ? 'checked' : ''}}" (change)="isSort = (isSort ? true : false)">
       <b style="font-size: smaller; margin-right: 3px">ソート</b>
     </label>
-  <!--
-  <label sytle="white-space: nowrap">
-    <input name="show-hide-images" value="Show Hides" type="checkbox" [(ngModel)]="isShowHideImages" checked="{{isShowHideImages ? 'checked' : ''}}" (change)="isShowHideImages = (isShowHideImages ? true : false)">
-    <i class="material-icons" style="font-size: smaller">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
-  </label>
-  -->
   </span>
 </div>
 <div id="file-list" [ngClass]="{ selecter: isSelected }" style="padding-top: 3px;">
@@ -56,19 +56,26 @@
           <s class="grow" style="color:gray; display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">No Tag</s>
         </ng-template>
     </div>
+    <div *ngIf="getHidden(file)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none">
+      <i class="material-icons red-eye" style="font-size: 16px; display: block">visibility</i>
+    </div>
     <img *ngIf="0 < file.url.length" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
     <img *ngIf="file.url.length <= 0" src="assets/images/loading.gif" alt="{{file.name}}">
   </div>
 </div>
 <div *ngIf="isSelected" class="sticky-bottom" @fadeAndUpInOut>
   <div>
+    <div style="margin-left: 3px; float: right">
+      <button style="padding: 2px 0.5em;" [attr.title]="selectedImagesIsHidden ? '選択画像を表示設定にする' : '選択画像を非表示設定にする'" (click)="setectedImagesToHidden(!selectedImagesIsHidden)">
+        <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': selectedImagesIsHidden}">{{ selectedImagesIsHidden ? 'visibility' : 'visibility_off' }}</i>
+      </button>
+    </div>
     <button style="font-size: x-small; margin-right: 2em" (click)="onUnselect()">画像選択解除</button>
-    
     <input attr.list="{{panelId}}_suggest" type="text" [(ngModel)]="addingTagWord" style="width: 14em" placeholder="スペース 区切りで 複数可能"><button style="font-size: x-small" [disabled]="addingTagWord == null || addingTagWord.trim() === ''" (click)="addTagWord()">タグ追加 ➡</button>
-    <ng-container *ngIf="selectedImagesOwnWords.length > 0">
-      <label *ngFor="let word of selectedImagesOwnWords" class="word-tag" (click)="removeTagWord(word)">{{ word }}<sup style="font-size: xx-small; color: red">×</sup></label>
+    <ng-container *ngIf="selectedImagesOwnWords().length > 0">
+      <label *ngFor="let word of selectedImagesOwnWords()" class="word-tag" (click)="removeTagWord(word)">{{ word }}<sup style="font-size: xx-small; color: red">×</sup></label>
     </ng-container>
-    <ng-container *ngIf="selectedImagesOwnWords.length == 0">
+    <ng-container *ngIf="selectedImagesOwnWords().length == 0">
       <span style="font-size: smaller; font-weight: bolder; margin-left: 3px; color: gray"><s>No Tag</s></span>
     </ng-container>
   </div>

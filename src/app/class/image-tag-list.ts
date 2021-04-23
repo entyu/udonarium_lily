@@ -14,7 +14,7 @@ export class ImageTagList extends ObjectNode implements InnerXml {
   static searchImages(searchWords: string[], noTag: boolean, isOr: boolean, isShowHideImages: boolean): ImageFile[]
   static searchImages(searchWords: any, noTag, isOr, isShowHideImages: boolean): ImageFile[] {
     if (typeof searchWords === 'string') searchWords = searchWords.trim().split(/\s+/);
-    // 検索単語は画像タグのすべての単語に含まれるもののみ
+    // 検索単語は画像タグのすべての単語に含まれるもののみ(noTagの処理は呼び出し側でやってて実装がひどい、要修正)
     const allWords = ImageTagList.allImagesOwnWords(isShowHideImages);
     searchWords = searchWords.filter(searchWord => allWords.includes(searchWord));
     const images = this.allImages(isShowHideImages);
@@ -38,13 +38,26 @@ export class ImageTagList extends ObjectNode implements InnerXml {
     return ImageTagList.imagesOwnWords(this.allImages(isShowHideImages));
   }
   
-  static imagesOwnWords(images: ImageFile[]): string[] {
-    const temp: string[] = [];
-    for (const imageFile of images) {
-      const imageTag = ImageTag.get(imageFile.identifier);
-      if (imageTag) temp.push(...imageTag.words);
+  static imagesOwnWords(images: ImageFile[], hasAll=false): string[] {
+    if (hasAll) {
+      if (images.length === 0) return [];
+      const imageTags = images.map(image => ImageTag.get(image.identifier));
+      if (!imageTags[0]) return [];
+      let temp = imageTags[0].words;
+      for (let i = 1; i < imageTags.length; i++) {
+        if (!imageTags[i]) return [];
+        temp = temp.filter(word => imageTags[i].words.includes(word));
+        if (temp.length === 0) return temp;
+      }
+      return temp.sort();
+    } else {
+      const temp: string[] = [];
+      for (const imageFile of images) {
+        const imageTag = ImageTag.get(imageFile.identifier);
+        if (imageTag) temp.push(...imageTag.words);
+      }
+      return Array.from(new Set(temp)).sort();
     }
-    return Array.from(new Set(temp)).sort();
   }
 
   static countAllImagesHasWord(word: string, isShowHideImages: boolean): number {
@@ -59,6 +72,14 @@ export class ImageTagList extends ObjectNode implements InnerXml {
       }
     }
     return count;
+  }
+
+  static imagesIsHidden(images: ImageFile[]): boolean {
+    for (const image of images) {
+      const imageTag = ImageTag.get(image.identifier);
+      if (!imageTag || !imageTag.hide) return false;
+    }
+    return true;
   }
 
   static sortImagesByWords(images: ImageFile[], keys: string[]): ImageFile[] {
