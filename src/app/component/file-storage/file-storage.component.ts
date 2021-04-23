@@ -45,32 +45,40 @@ import { UUID } from '@udonarium/core/system/util/uuid';
 })
 export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   panelId;
-  searchNoTagImage = true;
+  private _searchNoTagImage = true;
   serchCondIsOr = true;
   addingTagWord = '';
   searchWords: string[] = [];
   deletedWords: string[] = [];
   selectedImageFiles: ImageFile[] = [];
 
+  isSort = false;
+  sortOrder: string[] = [];
+
+  //ToDO 画像のネタバレ防止機能
+  isShowHideImages = false;
+
   get images(): ImageFile[] {
-    const searchResultImages = ImageTagList.searchImages(this.searchWords, (this.searchNoTagImage && this.countAllImagesHasWord(null) > 0), this.serchCondIsOr);
+    const searchResultImages = ImageTagList.searchImages(this.searchWords, (this.searchNoTagImage && this.countAllImagesHasWord(null) > 0), this.serchCondIsOr, this.isShowHideImages);
     const searchResultImageIdentifiers = searchResultImages.map(image => image.identifier);
     this.selectedImageFiles = this.selectedImageFiles.filter(image => searchResultImageIdentifiers.includes(image.identifier));
-    return searchResultImages.sort((a, b) => {
-      const tagA = ImageTag.get(a.identifier);
-      const tagB = ImageTag.get(b.identifier);
-      const strA = tagA ? StringUtil.toHalfWidth(tagA.tag.toLocaleUpperCase()) : '';
-      const strB = tagB ? StringUtil.toHalfWidth(tagB.tag.toLocaleUpperCase()) : '';
-      if (strA === strB) {
-        return 0;
-      } else if (strA < strB) {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
+    return this.isSort ? ImageTagList.sortImagesByWords(searchResultImages, this.sortOrder) : searchResultImages;
   }
   
+  get searchNoTagImage(): boolean {
+    return this._searchNoTagImage;
+  }
+
+  set searchNoTagImage(value: boolean) {
+    if (value) {
+      this.sortOrder.unshift(null);
+    } else {
+      this.sortOrder = this.sortOrder.filter(key => key != null);
+    }
+    this.sortOrder = Array.from(new Set(this.sortOrder));
+    this._searchNoTagImage = value;
+  }
+
   get searchAllImage(): boolean {
     if (!this.searchNoTagImage && this.countAllImagesHasWord(null) > 0) return false;
     for (const word of this.allImagesOwnWords) {
@@ -88,7 +96,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   get allImagesOwnWords(): string[] {
-    return ImageTagList.allImagesOwnWords();
+    return ImageTagList.allImagesOwnWords(this.isShowHideImages);
   }
 
   get selectedImagesOwnWords(): string[] {
@@ -102,7 +110,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   
   ngOnInit() {
     Promise.resolve().then(() => this.panelService.title = 'ファイル一覧');
-    this.searchWords = this.allImagesOwnWords.filter(word => word.indexOf('*') !== 0);
+    this.searchWords = this.allImagesOwnWords;
+    this.sortOrder = [null].concat(this.searchWords);
     this.panelId = UUID.generateUuid();
   }
 
@@ -111,6 +120,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     .on('SYNCHRONIZE_FILE_LIST', event => {
       if (event.isSendFromSelf) {
         this.changeDetector.markForCheck();
+        this.sortOrder.unshift(null);
+        this.sortOrder = Array.from(new Set(this.sortOrder));
       }
     })
     .on('OPERATE_IMAGE_TAGS', event => {
@@ -123,11 +134,11 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   allImages(): ImageFile[] {
-    return ImageTagList.allImages();
+    return ImageTagList.allImages(this.isShowHideImages);
   }
 
   countAllImagesHasWord(word): number {
-    return ImageTagList.countAllImagesHasWord(word);
+    return ImageTagList.countAllImagesHasWord(word, this.isShowHideImages);
   }
 
   countImagesHasWord(word): number {
@@ -160,9 +171,12 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (searchWord == null || searchWord.trim() === '') return;
     if (this.searchWords.includes(searchWord)) {
       this.searchWords = this.searchWords.filter(word => searchWord !== word);
+      this.sortOrder = this.sortOrder.filter(word => searchWord !== word);
     } else {
       this.searchWords.push(searchWord);
+      this.sortOrder.unshift(searchWord);
     }
+    this.sortOrder = Array.from(new Set(this.sortOrder));
   }
 
   onSelectedFile(file: ImageFile) {
@@ -198,13 +212,20 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   addTagWord() {
     if (this.addingTagWord == null || this.addingTagWord.trim() == '') return;
     const words = this.addingTagWord.trim().split(/\s+/);
+    let addedSWords = null;
     if (!window.confirm("選択した画像に " + words.map(word => `🏷️${word} `).join(' ') + "を追加します。\nよろしいですか？")) return;
     for (const image of this.selectedImageFiles) {
       const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
-      imageTag.addWords(words);
+      //imageTag.addWords(words);
+      addedSWords = imageTag.addWords(words);
+      //TODO いまのところ全部帰ってくるが実際に追加したタグだけを返したい
+      if (addedSWords) {
+        this.searchWords.push(...addedSWords);
+        this.sortOrder.splice(0, 0, ...addedSWords);
+      }
     }
-    this.searchWords.push(...words);
     this.searchWords = Array.from(new Set(this.searchWords)).sort();
+    this.sortOrder = Array.from(new Set(this.sortOrder)).sort();
     this.addingTagWord = '';
   }
 
@@ -222,8 +243,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   identify(index, image){
-    const imageTag = ImageTag.get(image.identifier);
-    return image.identifier + (imageTag ? imageTag.tag : '');  
+    return image.identifier;
   }
 
   suggestWords(): string[] {

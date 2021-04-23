@@ -10,14 +10,14 @@ import { ImageStorage } from './core/file-storage/image-storage';
 export class ImageTagList extends ObjectNode implements InnerXml {
   private identifiers: string[] = [];
 
-  static searchImages(searchWords: string, noTag: boolean, isOr: boolean): ImageFile[]
-  static searchImages(searchWords: string[], noTag: boolean, isOr: boolean): ImageFile[]
-  static searchImages(searchWords: any, noTag=true, isOr=true): ImageFile[] {
+  static searchImages(searchWords: string, noTag: boolean, isOr: boolean, isShowHideImages: boolean): ImageFile[]
+  static searchImages(searchWords: string[], noTag: boolean, isOr: boolean, isShowHideImages: boolean): ImageFile[]
+  static searchImages(searchWords: any, noTag, isOr, isShowHideImages: boolean): ImageFile[] {
     if (typeof searchWords === 'string') searchWords = searchWords.trim().split(/\s+/);
     // 検索単語は画像タグのすべての単語に含まれるもののみ
-    const allWords = ImageTagList.allImagesOwnWords();
+    const allWords = ImageTagList.allImagesOwnWords(isShowHideImages);
     searchWords = searchWords.filter(searchWord => allWords.includes(searchWord));
-    const images = ImageStorage.instance.images;
+    const images = this.allImages(isShowHideImages);
     return images.filter(image => {
       const imageTag = ImageTag.get(image.identifier);
       return (noTag && (isOr || searchWords.length === 0) && (!imageTag || imageTag.tag == null || imageTag.tag.trim() === ''))
@@ -25,12 +25,17 @@ export class ImageTagList extends ObjectNode implements InnerXml {
     });
   }
 
-  static allImages(): ImageFile[] {
-    return ImageStorage.instance.images;
+  static allImages(isShowHideImages: boolean): ImageFile[] {
+    const images = ImageStorage.instance.images
+    return images.filter(image => {
+      if (isShowHideImages) return true;
+      const imageTag = ImageTag.get(image.identifier);
+      return !imageTag || !imageTag.hide;
+    });
   }
 
-  static allImagesOwnWords(): string[] {
-    return ImageTagList.imagesOwnWords(this.allImages());
+  static allImagesOwnWords(isShowHideImages: boolean): string[] {
+    return ImageTagList.imagesOwnWords(this.allImages(isShowHideImages));
   }
   
   static imagesOwnWords(images: ImageFile[]): string[] {
@@ -42,10 +47,10 @@ export class ImageTagList extends ObjectNode implements InnerXml {
     return Array.from(new Set(temp)).sort();
   }
 
-  static countAllImagesHasWord(word: string): number {
+  static countAllImagesHasWord(word: string, isShowHideImages: boolean): number {
     let count = 0;
     if (word != null && word.trim() === '') return count;
-    for (const imageFile of ImageStorage.instance.images) {
+    for (const imageFile of ImageTagList.allImages(isShowHideImages)) {
       const imageTag = ImageTag.get(imageFile.identifier);
       if (word == null) {
         if (!imageTag || imageTag.tag == null || imageTag.tag.trim() == '') count++;
@@ -54,6 +59,47 @@ export class ImageTagList extends ObjectNode implements InnerXml {
       }
     }
     return count;
+  }
+
+  static sortImagesByWords(images: ImageFile[], keys: string[]): ImageFile[] {
+    const _data = images.map(image => {
+      const imageTag = ImageTag.get(image.identifier);
+      return { image: image, tag: (imageTag && imageTag.tag != null) ? imageTag.tag : '' };
+    });
+    _data.sort((a, b) => {
+      let order = 0;
+      keys.some(key => {
+        order = ImageTagList._sortByWord(a, b, key);
+        return !!order;
+      });
+      return order;
+    });
+    return _data.map(obj => obj.image);
+  }
+
+  private static _sortByWord(objA, objB, key: string) {
+    if (key == null) {
+      if (objA.tag == '' && objB.tag == '') {
+        return 0;
+      } else if (objA.tag == '') {
+        return -1;
+      } else if (objB.tag == '') {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+    const a = ` ${objA.tag} `.indexOf(` ${key} `);
+    const b = ` ${objB.tag} `.indexOf(` ${key} `);
+    if (a == -1 && b == -1) {
+      return 0;
+    } else if (a >= 0 && b == -1) {
+      return -1;
+    } else if (a == -1 && b >= 0) {
+      return 1;
+    } else {
+      return a - b;
+    }
   }
 
   // GameObject Lifecycle
