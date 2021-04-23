@@ -212,20 +212,20 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   addTagWord() {
     if (this.addingTagWord == null || this.addingTagWord.trim() == '') return;
     const words = this.addingTagWord.trim().split(/\s+/);
-    let addedSWords = null;
+    let addedWords = null;
     if (!window.confirm("選択した画像に " + words.map(word => `🏷️${word} `).join(' ') + "を追加します。\nよろしいですか？")) return;
     for (const image of this.selectedImageFiles) {
       const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
       //imageTag.addWords(words);
-      addedSWords = imageTag.addWords(words);
-      //TODO いまのところ全部帰ってくるが実際に追加したタグだけを返したい
-      if (addedSWords) {
-        this.searchWords.push(...addedSWords);
-        this.sortOrder.splice(0, 0, ...addedSWords);
-      }
+      //TODO いまのところ全部帰ってくるが実際に追加したタグだけを返して追加したい
+      if (!addedWords) addedWords = imageTag.addWords(words);
+    }
+    if (addedWords) {
+      this.searchWords.push(...addedWords);
+      this.sortOrder.unshift(...addedWords);
     }
     this.searchWords = Array.from(new Set(this.searchWords)).sort();
-    this.sortOrder = Array.from(new Set(this.sortOrder)).sort();
+    this.sortOrder = Array.from(new Set(this.sortOrder));
     this.addingTagWord = '';
   }
 

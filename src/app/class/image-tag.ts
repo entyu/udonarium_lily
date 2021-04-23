@@ -45,8 +45,8 @@ export class ImageTag extends ObjectNode {
     if (typeof words === 'string') words = words.trim().split(/\s+/);
     words = words.concat();
     const addingWords = Array.from(new Set<string>(words.map(word => StringUtil.toHalfWidth(word).toLowerCase())));
-    words.push(...this.words);
-    this.tag = Array.from(new Set(words.map(word => StringUtil.toHalfWidth(word).toLowerCase()))).sort().join(' ');
+    //words.push(...this.words);
+    this.tag = Array.from(new Set(addingWords.concat(this.words))).sort().join(' ');
     EventSystem.call('OPERATE_IMAGE_TAGS', { tag: this.tag });
     return addingWords;
   }
