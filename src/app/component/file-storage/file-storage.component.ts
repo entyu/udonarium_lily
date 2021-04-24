@@ -53,7 +53,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   deletedWords: string[] = [];
   selectedImageFiles: ImageFile[] = [];
 
-  isSort = false;
+  isSort = true;
   static sortOrder: string[] = [];
 
   isShowHideImages = false;

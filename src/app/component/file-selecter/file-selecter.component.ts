@@ -45,7 +45,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   addingTagWord = '';
   searchWords: string[] = [];
   
-  isSort = false;
+  isSort = true;
   //sortOrder: string[] = [];
 
   isShowHideImages = false;
