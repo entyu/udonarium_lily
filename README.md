@@ -33,6 +33,7 @@
 
 
 ---------以下本家からの一部抜粋です---------------
+
 https://github.com/TK11235/udonarium
 
 ## サーバ設置
@@ -40,9 +41,11 @@ https://github.com/TK11235/udonarium
 以下のファイルをダウンロードして解凍し、Webサーバに配置してください。  
 
 最新版v1.02.2　　BCDice 3 対応
+
 https://github.com/entyu/udonarium_lily/releases/download/v1.02.2/udonarium_lily-v1.02.2.zip
 
 旧バージョン
+
 https://github.com/entyu/udonarium_lily/releases/download/v1.02.1/udonarium_lily-v1.02.1.zip
 
 
