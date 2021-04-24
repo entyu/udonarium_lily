@@ -11,7 +11,7 @@ import { StringUtil } from './core/system/util/string-util';
 export class ImageTag extends ObjectNode {
   @SyncVar() imageIdentifier: string = '';
   @SyncVar() tag: string = '';
-  @SyncVar() hide:boolean = false;
+  @SyncVar() hide: boolean = false;
 
   get words(): string[] {
     if (this.tag == null || this.tag.trim() == '') this.tag = '';
@@ -50,7 +50,7 @@ export class ImageTag extends ObjectNode {
     const addingWords = Array.from(new Set<string>(words.map(word => StringUtil.toHalfWidth(word).toLowerCase())));
     //words.push(...this.words);
     this.tag = Array.from(new Set(addingWords.concat(this.words))).sort().join(' ');
-    EventSystem.call('OPERATE_IMAGE_TAGS', this.tag);
+    EventSystem.call('OPERATE_IMAGE_TAGS', this.identifier);
     return addingWords;
   }
 
@@ -59,10 +59,10 @@ export class ImageTag extends ObjectNode {
   removeWords(words: any): string[] {
     if (typeof words === 'string') words = words.trim().split(/\s+/);
     words = words.concat();
-    const delteingingWords = Array.from(new Set<string>(words.map(word => StringUtil.toHalfWidth(word).toLowerCase())));
-    this.tag = this.words.filter(word => !delteingingWords.includes(StringUtil.toHalfWidth(word).toLowerCase())).sort().join(' ');
-    EventSystem.call('OPERATE_IMAGE_TAGS', this.tag);
-    return delteingingWords;
+    const delteingWords = Array.from(new Set<string>(words.map(word => StringUtil.toHalfWidth(word).toLowerCase())));
+    this.tag = this.words.filter(word => !delteingWords.includes(StringUtil.toHalfWidth(word).toLowerCase())).sort().join(' ');
+    EventSystem.call('OPERATE_IMAGE_TAGS', this.identifier);
+    return delteingWords;
   }
 
   static get(imageIdentifier: string): ImageTag {

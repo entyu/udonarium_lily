@@ -15,7 +15,6 @@ import { PanelService } from 'service/panel.service';
 
 import { ImageTag } from '@udonarium/image-tag';
 import { ImageTagList } from '@udonarium/image-tag-list';
-import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
 
@@ -103,8 +102,10 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    EventSystem.register(this).on('SYNCHRONIZE_FILE_LIST', event => {
+    EventSystem.register(this)
+    .on('SYNCHRONIZE_FILE_LIST', event => {
       if (event.isSendFromSelf) {
+        /*
         if (this.serchCondIsOr) {
           let isNotagAdd = false;
           for (let i = FileStorageComponent.imageCount - 1; i < event.data.length; i++) {
@@ -128,6 +129,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
           FileStorageComponent.sortOrder = Array.from(new Set(FileStorageComponent.sortOrder));
           this.searchWords = Array.from(new Set(this.searchWords)).sort();
         }
+        */
         this.changeDetector.markForCheck();
       }
       FileStorageComponent.imageCount = event.data.length;
@@ -191,7 +193,8 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSelectedFile(file: ImageFile) {
-    EventSystem.call('SELECT_FILE', { fileIdentifier: file.identifier }, Network.peerId);
+    // 今のところGameCharacterGeneratorComponentでしか使ってない？
+    //EventSystem.call('SELECT_FILE', { fileIdentifier: file.identifier }, Network.peerId);
     this.modalService.resolve(file.identifier);
   }
 
