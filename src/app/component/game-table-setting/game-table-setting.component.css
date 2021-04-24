@@ -81,3 +81,8 @@ input[type='number'] {
 img {
   transition: all 100ms 0s ease;;
 }
+
+.self-setting {
+  font-weight: bolder;
+  font-size: smaller;
+}
