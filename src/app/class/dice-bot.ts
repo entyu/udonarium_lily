@@ -39,6 +39,7 @@ export class DiceBot extends GameObject {
   private static queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
 
   public static apiUrl: string = null;
+  public static adminUrl: string = null;
 
   public static diceBotInfos: DiceBotInfo[] = [
     { script: 'EarthDawn', game: 'アースドーン' },
@@ -362,7 +363,7 @@ export class DiceBot extends GameObject {
     ['Vampire: The Masquerade 5th Edition', 'ウアンハイアサマスカレエトタイ5ハン', 'ヴァンパイア：ザ・マスカレード 第5版'],
     ['ワールドオブダークネス', 'ワアルトオフタアクネス', 'ワールド・オブ・ダークネス'],
     ['モノトーン・ミュージアム', 'モノトオンミユウシアム', 'モノトーンミュージアム'],
-    ['剣の街の異邦人TRPG', 'ツルキノマチノイホウシンTRPG', '剣(つるぎ)の街の異邦人TRPG'],
+    ['剣の街の異邦人TRPG', 'ツルキノマチノイホウシンTRPG'],
     ['壊れた世界のポストマン', 'コワレタセカイノホストマン', '壊れた世界のポストマン'],
     ['紫縞のリヴラドール', 'シシマノリフラトオル', '紫縞のリヴラドール'],
     ['SRS汎用(改造版)', 'スタンタアトRPGシステムオルタナテイフハン', 'SRS汎用 オルタナティヴ'],
@@ -489,11 +490,13 @@ export class DiceBot extends GameObject {
         let gameType: string = chatMessage.tag;
 
         try {
-          let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(text);
-          let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
-          let rollText: string = (regArray[3] != null) ? regArray[3] : text;
+          let regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?\s+)?([^\s]*)?/ig.exec(text);
+          let repCommand = regArray[2];
+          let isRepSecret = repCommand && repCommand.toUpperCase().indexOf('S') === 0;
+          let repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
+          let rollText: string = (regArray[4] != null) ? regArray[4] : text;
           // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
-          if (!rollText || repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) {
+          if (!rollText || repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /choice\(.*\)/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) {
             return;
           }
           let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false };
@@ -512,7 +515,7 @@ export class DiceBot extends GameObject {
             if (isDiceRollTableMatch) {
               finalResult.isDiceRollTable = true;
               finalResult.tableName = (diceRollTable.name && diceRollTable.name.length > 0) ? diceRollTable.name : '(無名のダイスボット表)';
-              finalResult.isSecret = isSecret;
+              finalResult.isSecret = isSecret || isRepSecret;
               const diceRollTableRows = diceRollTable.parseText();
               for (let i = 0; i < repeat && i < 32; i++) {
                 let rollResult = await DiceBot.diceRollAsync(StringUtil.toHalfWidth(diceRollTable.dice), 'DiceBot', 1);
@@ -539,16 +542,18 @@ export class DiceBot extends GameObject {
             }
           }
           if (!isDiceRollTableMatch) {
-            //TODO システムダイスも並列に
             if (DiceBot.apiUrl) {
+              //BCDice-API の繰り返し機能を利用する、結果の形式が縦に長いのと、更新していないBCDice-APIサーバーもありそうなのでまだ実装しない
+              //finalResult = await DiceBot.diceRollAsync(repCommand ? (repCommand + repeat + ' ' + rollText) : rollText, gameType, repCommand ? 1 : repeat);
               finalResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);
+              finalResult.isSecret = finalResult.isSecret || isRepSecret;
             } else {
               for (let i = 0; i < repeat && i < 32; i++) {
                 let rollResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);
                 if (rollResult.result.length < 1) break;
 
                 finalResult.result += rollResult.result;
-                finalResult.isSecret = finalResult.isSecret || rollResult.isSecret;
+                finalResult.isSecret = finalResult.isSecret || rollResult.isSecret || isRepSecret;
                 if (1 < repeat) finalResult.result += ` #${i + 1}`;
               }
             }

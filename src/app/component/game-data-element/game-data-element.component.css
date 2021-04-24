@@ -90,6 +90,13 @@ button:hover  {
   font-size: 0.5rem;
 }
 
+button:disabled {
+  color: gray;
+}
+button:disabled:hover {
+  background-color: transparent;
+}
+
 input[type='range'] {
   --slider-track-color: transparent; /* #ccc */
   --slider-fill-color: #555; /*#777 */
@@ -192,3 +199,4 @@ input[type='range']::-ms-tooltip {
 .modeifire-type {
   font-size: smaller;
 }
+

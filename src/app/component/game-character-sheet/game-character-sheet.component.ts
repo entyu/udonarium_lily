@@ -150,13 +150,19 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
+  get tableTopObjectName(): string {
+    let element = this.tabletopObject.commonDataElement.getFirstElementByName('name') || this.tabletopObject.commonDataElement.getFirstElementByName('title');
+    return element ? <string>element.value : '';
+  }
+
   async saveToXML() {
     if (!this.tabletopObject || this.isSaveing) return;
     this.isSaveing = true;
     this.progresPercent = 0;
 
-    let element = this.tabletopObject.commonDataElement.getFirstElementByName('name');
-    let objectName: string = element ? <string>element.value : '';
+    //let element = this.tabletopObject.commonDataElement.getFirstElementByName('name') || this.tabletopObject.commonDataElement.getFirstElementByName('title');
+    //let objectName: string = element ? <string>element.value : '';
+    let objectName = this.tableTopObjectName;
 
     await this.saveDataService.saveGameObjectAsync(this.tabletopObject, 'xml_' + objectName, percent => {
       this.progresPercent = percent;
@@ -268,19 +274,22 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     let elements = this.tabletopObject.imageDataElement.getElementsByName(name);
     //ToDO インデックスも抽象化して汎用にする
     if (elements && 0 < elements.length && index < elements.length) {
-      if (this.tabletopObject.currntImageIndex >= index) this.tabletopObject.currntImageIndex -= 1;
-      if (this.tabletopObject.currntImageIndex < 0) this.tabletopObject.currntImageIndex = 0;
+      if (this.tabletopObject.currntImageIndex > index) this.tabletopObject.currntImageIndex -= 1;
       this.tabletopObject.imageDataElement.removeChild(elements[index]);
+      if (this.tabletopObject.currntImageIndex >= elements.length - 1) this.tabletopObject.currntImageIndex =  elements.length - 2;
+      if (this.tabletopObject.currntImageIndex < 0) this.tabletopObject.currntImageIndex = 0;
     }
   }
 
-  deleteIcon(index: number=0) {
+  deleteIcon(index: number=0, imageIdentifier='') {
     if (!this.tabletopObject || !this.tabletopObject.imageDataElement) return;
     let elements = this.tabletopObject.imageDataElement.getElementsByName('faceIcon');
-    if (elements && 0 < elements.length && index < elements.length) {
-      if (this.tabletopObject.currntIconIndex >= index) this.tabletopObject.currntIconIndex -= 1;
-      if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
+    //console.log(elements[index].value  + ' : ' + imageIdentifier);
+    if (elements && 0 < elements.length && index < elements.length && (!imageIdentifier || elements[index].value === imageIdentifier)) {
+      if (this.tabletopObject.currntIconIndex > index) this.tabletopObject.currntIconIndex -= 1;
       this.tabletopObject.imageDataElement.removeChild(elements[index]);
+      if (this.tabletopObject.currntIconIndex >= elements.length - 1) this.tabletopObject.currntIconIndex =  elements.length - 2;
+      if (this.tabletopObject.currntIconIndex < 0) this.tabletopObject.currntIconIndex = 0;
       //if (sound) SoundEffect.play(PresetSound.sweep);
     }
   }
@@ -313,5 +322,9 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 720, height: 572 };
     let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
     component.character = <GameCharacter>this.tabletopObject;
+  }
+
+  identify(index, obj){
+    return obj.identifier;  
   }
 }

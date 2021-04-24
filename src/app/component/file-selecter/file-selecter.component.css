@@ -1,16 +1,118 @@
 .image {
   font-size: 0;
+  display: inline-block;
+  border: 2px solid transparent;
 }
 
-.image  img {
+.image:hover {
+  border: 2px dotted red;
+}
+
+.image img {
   vertical-align: bottom;
+  transition-duration: 120ms;
 }
 
 .empty {
   line-height: 120px;
-  vertical-align: middle;
+  vertical-align: bottom;
 }
 
 .empty button {
   height: 100px;
+}
+
+/* Image Tag */
+.badge {
+  position: absolute;
+  top: -4px;
+  right: 0;
+}
+
+.sticky-top {
+  position: sticky;
+  top: 0;
+  background-color: rgba(240, 218, 189, 0.9);
+  border-top: 1px dotted #666;
+  border-bottom: 1px dotted #666;
+  z-index: 100;
+}
+
+.word-tag {
+  font-size: smaller;
+  margin-right: 3px;
+  display: inline-block;
+  color: black;
+  font-weight: bolder;
+}
+.word-tag::before {
+  content: '🏷️';
+}
+.word-tag:hover {
+  color: red;
+}
+
+.word-selecter {
+  padding : 5px;
+  user-select: none;
+}
+
+.word-selecter label {
+  display: inline-block;
+  position: relative;
+}
+
+.word-selecter input[type="checkbox"] {
+  display: none;
+}
+
+.word-selecter input[type="checkbox"] + div {
+  display: inline-block;
+  vertical-align: middle;
+  outline: 0;
+  font-size: 12px;
+  background-color: transparent;
+  color: #444; 
+  border: solid 1px #555;
+  padding: 2px 8px;
+  margin: 2px;
+  border-radius: 100px;
+  cursor: pointer;
+
+  height: 1.6em;
+}
+
+.word-selecter input[type="checkbox"] + div:hover {
+  background-color: #888;
+  color: #eee;
+  border: solid 1px #555;
+}
+
+.word-selecter input[type="checkbox"]:checked + div {
+  background: #555;
+  color: #CCC;
+}
+
+.word-selecter input[type="checkbox"]:checked + div.all-tags {
+  background-color: #eee;
+  color: darkcyan;
+}
+
+.grow {
+  text-shadow    : 
+       1px  1px 0px #ffffff,
+      -1px  1px 0px #ffffff,
+       1px -1px 0px #ffffff,
+      -1px -1px 0px #ffffff,
+       1px  0px 0px #ffffff,
+       0px  1px 0px #ffffff,
+      -1px  0px 0px #ffffff,
+       0px -1px 0px #ffffff; 
+}
+
+.red-eye {
+  color: darkred;
+  text-shadow: 0px 0px 2px crimson,
+  0px 0px 4px white;
+  font-weight: bolder;
 }

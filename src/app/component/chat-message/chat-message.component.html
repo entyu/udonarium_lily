@@ -12,7 +12,8 @@
     <div class="body">
       <div class="title">
         <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
-        <span class='tip msg-from'>　{{chatMessage.from}}</span>
+        <span #msgFrom class='tip msg-from' 
+          [innerHTML]="stringUtil.escapeHtml('　' + chatMessage.from) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: true, stripTrailingSlash: true, email: false, phone: false}"></span>
         <span class='tip msg-timestamp'>　{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
       </div>
       <div class="text msg-text">
@@ -27,8 +28,9 @@
   </div>
 </div>
 <ng-template #visible>
-  <span [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.text}}</span>
-  <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()">結果を公開</button>
+  <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
+    [innerHTML]="stringUtil.escapeHtml(chatMessage.text) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: false, stripTrailingSlash: false, email: false, phone: false}"></span>
+  <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">結果を公開</button>
 </ng-template>
 <ng-template #secret>
   <span>（シークレットダイス）</span>

@@ -36,7 +36,7 @@ export class OpenUrlComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     Promise.resolve().then(() => {
-      let titleBar = '参照URLを開く';
+      let titleBar = '外部URLを開く';
       if (this.title) {
         titleBar += ('〈' + this.title + (this.subTitle ? `：${this.subTitle}` : '') + '〉');
       } else if (this.subTitle) {
@@ -52,7 +52,7 @@ export class OpenUrlComponent implements OnInit, OnDestroy {
   }
 
   openUrl() {
-    window.open(this.url.trim());
+    window.open(this.url.trim(), '_blank', 'noopener');
     this.modalService.resolve(true);
   }
 

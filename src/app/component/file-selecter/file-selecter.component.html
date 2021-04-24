@@ -1,9 +1,56 @@
-<div id="file-list">
+<div class="sticky-top">
+  <div style="float: right; margin-top: 3px; margin-right: 3px">
+    <label sytle="white-space: nowrap">
+      <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
+      <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+    </label>
+  </div>
+  <span class="word-selecter">
+    <label>
+      <input name="word-selecter" type="checkbox" value="ALL" checked="{{searchAllImage ? 'checked' : ''}}" (click)="onSearchAllImage()">
+      <div class="all-tags"><b>ALL</b><badge class="badge" [count]="images.length" [@.disabled]="true"></badge></div>
+    </label>
+    <label *ngIf="countAllImagesHasWord(null) > 0">
+      <input name="word-selecter" type="checkbox" value="No Tag" [(ngModel)]="searchNoTagImage" checked="{{searchNoTagImage ? 'checked' : ''}}" (change)="searchNoTagImage = (searchNoTagImage ? true : false)">
+      <div class="no-tag"><s>No Tag</s><badge *ngIf="countImagesHasWord(null) > 0" class="badge" [count]="countImagesHasWord(null)" [@.disabled]="true"></badge></div>
+    </label>
+    <label *ngFor="let word of allImagesOwnWords">
+      <input name="word-selecter" type="checkbox" value="{{word}}" [checked]="searchWords.includes(word)" (change)="onSelectedWord(word)">
+      <div>{{word}}<badge *ngIf="countImagesHasWord(word) > 0" class="badge" [count]="countImagesHasWord(word)" [@.disabled]="true"></badge></div>
+    </label>
+  </span>
+  <span style="white-space: nowrap">
+    <select [(ngModel)]="serchCondIsOr" style="margin-left: 3px">
+      <option value="true">いずれか (OR)</option>
+      <option value="">すべて (AND)</option>
+    </select>
+    <label sytle="white-space: nowrap" title="最近使ったタグの画像を前に">
+      <input name="is-sort" value="Sort" type="checkbox" [(ngModel)]="isSort" checked="{{isSort ? 'checked' : ''}}" (change)="isSort = (isSort ? true : false)">
+      <b style="font-size: smaller; margin-right: 3px">ソート</b>
+    </label>
+  </span>
+</div>
+<div id="file-list" style="min-height: 250px">
   <span class="empty" *ngIf="isAllowedEmpty">
     <button (click)="onSelectedFile(empty)">画像なし</button>
   </span>
-  <span *ngFor="let file of images" class="image">
+  <div *ngFor="let file of images; trackBy: identify" class="image" @scaleInOut style="text-align: center; min-width: 100px; height: 120px; position: relative;">
+    <div style="position: absolute; font-size: xx-small; text-align: left; bottom: 0px; width: 100px; overflow: hidden; pointer-events: none">
+      <ng-container *ngIf="getTagWords(file).length > 0; then tagsBlock; else noTagBlock"></ng-container> 
+      <ng-template #tagsBlock>
+        <ng-container *ngFor="let word of getTagWords(file); index as i">  
+          <label *ngIf="i < 6" class="word-tag grow" style="display: block; width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">{{ word }}</label>
+          <span *ngIf="i == 6" class="grow" style="display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">…</span>
+        </ng-container>
+      </ng-template>
+      <ng-template #noTagBlock>
+        <s class="grow" style="color:gray; display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">No Tag</s>
+      </ng-template>
+    </div>
+    <div *ngIf="getHidden(file)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none">
+      <i class="material-icons red-eye" style="margin-right: 2px; font-size: 16px; display: block">visibility</i>
+    </div>
     <img *ngIf="0 < file.url.length" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
-    <img *ngIf="file.url.length <= 0" src="./assets/images/loading.gif" alt="{{file.name}}">
-  </span>
+    <img *ngIf="file.url.length <= 0" src="assets/images/loading.gif" alt="{{file.name}}">
+  </div>
 </div>

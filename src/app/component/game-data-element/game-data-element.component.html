@@ -70,12 +70,15 @@
           <ng-container *ngSwitchCase="'url'">
             <!-- size属性がないと小さくならない -->
             <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div>
-            <input type="url" style="width:100%; min-width:10px;" size="1" [(ngModel)]="value" placeholder="https://www.example.com" />
+            <span style="white-space: nowrap">
+              <input type="url" style="width:calc(100% - 1.6rem); min-width:10px;" size="1" [(ngModel)]="value" placeholder="https://www.example.com" />
+              <button style="width: 1.6rem" [attr.disabled]="!stringUtil.validUrl(value) ? '' : null" (click)="stringUtil.validUrl(value) ? openUrl(value) : false"><i class="material-icons" style="font-size: 1.0rem">{{ !stringUtil.validUrl(value) ? 'link_off' : (stringUtil.sameOrigin(value) ? 'link' : 'open_in_new') }}</i></button>
+            </span>
           </ng-container>
           <ng-container *ngSwitchDefault>
             <!-- size属性がないと小さくならない -->
             <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div>
-            <input style="width:100%; min-width:10px;" size="1" [(ngModel)]="value" placeholder="Value" />
+            <input style="width:100%; min-width:10px;" size="1" [(ngModel)]="value" placeholder="" />
           </ng-container>
         </ng-container>
       </ng-container>
@@ -98,7 +101,7 @@
       </div>
       <div class="table" *ngIf="0 < gameDataElement.children.length">
         <div game-data-element class="table-row" *ngFor="let childElement of gameDataElement.children"
-          [gameDataElement]="childElement" [isEdit]="isEdit" [isTagLocked]="isTagLocked"></div>
+          [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit" [isTagLocked]="isTagLocked"></div>
       </div>
     </div>
   </ng-container>

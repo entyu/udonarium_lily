@@ -406,6 +406,36 @@ button.is-active .material-icons {
   opacity: 1.0;
 }
 
+button.link {
+  /*.input {*/
+    background: none;
+    border: none;
+    border-radius: 2px;
+    outline: none;
+  
+    color: #444;
+    font-family: Cambria, Georgia;
+    font-size: 1.0em;
+    padding: 2px;
+    box-sizing: border-box;
+  }
+    
+  button.link i {
+    font-size: 1.0rem;
+  }
+  
+  button.link:hover  {
+    background: #444;
+    color: #CCC;
+  }
+  
+  button.link:disabled {
+    color: gray;
+  }
+  button.link:disabled:hover {
+    background-color: transparent;
+  }
+
 .face-icon {
   display: inline-block;
   width: 12px;

@@ -47,6 +47,8 @@ import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { DiceRollTableSettingComponent } from 'component/dice-roll-table-setting/dice-roll-table-setting.component';
 import { CutInSettingComponent } from 'component/cut-in-setting/cut-in-setting.component';
 
+import { ImageTag } from '@udonarium/image-tag';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -115,10 +117,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let fileContext = ImageFile.createEmpty('none_icon').toContext();
     fileContext.url = './assets/images/ic_account_circle_black_24dp_2x.png';
     let noneIconImage = ImageStorage.instance.add(fileContext);
+    ImageTag.create(noneIconImage.identifier).tag = '*default アイコン';
 
     fileContext = ImageFile.createEmpty('stand_no_image').toContext();
     fileContext.url = './assets/images/nc96424.png';
-    ImageStorage.instance.add(fileContext);
+    let standNoIconImage = ImageStorage.instance.add(fileContext);
+    ImageTag.create(standNoIconImage.identifier).tag = '*default スタンド';
 
     AudioPlayer.resumeAudioContext();
     PresetSound.dicePick = AudioStorage.instance.add('./assets/sounds/soundeffect-lab/shoulder-touch1.mp3').identifier;
@@ -169,6 +173,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on<AppConfig>('LOAD_CONFIG', event => {
         console.log('LOAD_CONFIG !!!', event.data);
         if (event.data.dice && event.data.dice.url) {
+          //ToDO BCDice-API管理者情報表示の良いUI思いつかないのでペンディング
+          //fetch(event.data.dice.url + '/v1/admin', {mode: 'cors'})
+          //  .then(response => { return response.json() })
+          //  .then(infos => { DiceBot.adminUrl = infos.url });
           fetch(event.data.dice.url + '/v1/names', {mode: 'cors'})
             .then(response => { return response.json() })
             .then(infos => {
@@ -179,7 +187,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
               let tempInfos = infos.names
                 .filter(info => info.system != 'DiceBot')
                 .map(info => {
-                  // namesの結果にソートキー欲しい
                   let normalize = (info.sort_key && info.sort_key.indexOf('国際化') < 0) ? info.sort_key : info.name.normalize('NFKD');
                   for (let replaceData of DiceBot.replaceData) {
                     if (replaceData[2] && info.name === replaceData[0]) {
@@ -343,6 +350,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         break;
       case 'FileStorageComponent':
         component = FileStorageComponent;
+        option.width = 700;
         break;
       case 'GameCharacterSheetComponent':
         component = GameCharacterSheetComponent;

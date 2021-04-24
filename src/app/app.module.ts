@@ -67,6 +67,8 @@ import { DiceRollTableSettingComponent } from './component/dice-roll-table-setti
 import { CutInComponent } from './component/cut-in/cut-in.component';
 import { CutInSettingComponent } from './component/cut-in-setting/cut-in-setting.component';
 
+import { LinkyModule } from 'ngx-linky';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -125,6 +127,7 @@ import { CutInSettingComponent } from './component/cut-in-setting/cut-in-setting
     BrowserAnimationsModule,
     CommonModule,
     FormsModule,
+    LinkyModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [

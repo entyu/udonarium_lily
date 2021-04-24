@@ -93,6 +93,14 @@
   z-index: 900005;
 }
 
+.dialog p {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  display: inline-block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 .dialog.is-position-right:after {
   box-sizing: border-box;
   content: '';
