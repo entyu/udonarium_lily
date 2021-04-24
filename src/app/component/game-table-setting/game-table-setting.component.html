@@ -8,12 +8,21 @@
     </select>
   </div>
   <div class="flex-item">
+    <div style="float: right; margin-top: 3px; margin-right: 3px">
+      <label sytle="white-space: nowrap">
+        <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
+        <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+      </label>
+    </div>
     <ng-container *ngIf="!isEmpty || selectedTable">
       <div class="images-select">
         <div>
           画像
-          <div (click)="openBgImageModal()">
-            <img height="120" [src]="tableBackgroundImage.url | safe: 'resourceUrl'">
+          <div (click)="openBgImageModal()" style="position: relative; overflow: hidden">
+            <div *ngIf="getHidden(tableBackgroundImage)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none">
+              <i class="material-icons" [class]="isShowHideImages ? 'red-eye': 'grow'" style="margin-right: 2px; font-size: 16px; display: block">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+            </div>
+            <img height="120" [ngClass]="{ blackout: !isShowHideImages && getHidden(tableBackgroundImage) }" [src]="tableBackgroundImage.url | safe: 'resourceUrl'">
           </div>
         </div>
         <div>
@@ -21,8 +30,11 @@
           <div *ngIf="!tableDistanceviewImage.url">
             <button (click)="openDistanceViewImageModal()" style="height: 120px;">背景画像を追加</button>
           </div>
-          <div *ngIf="tableDistanceviewImage.url" (click)="openDistanceViewImageModal()">
-            <img height="120" [src]="tableDistanceviewImage.url | safe: 'resourceUrl'">
+          <div *ngIf="tableDistanceviewImage.url" style="position: relative; overflow: hidden" (click)="openDistanceViewImageModal()">
+            <div *ngIf="getHidden(tableDistanceviewImage)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none">
+              <i class="material-icons" [class]="isShowHideImages ? 'red-eye': 'grow'" style="margin-right: 2px; font-size: 16px; display: block">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+            </div>
+            <img height="120" [ngClass]="{ blackout: !isShowHideImages && getHidden(tableDistanceviewImage) }" [src]="tableDistanceviewImage.url | safe: 'resourceUrl'">
           </div>
         </div>
       </div>

@@ -57,7 +57,7 @@
         </ng-template>
     </div>
     <div *ngIf="getHidden(file)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none">
-      <i class="material-icons red-eye" style="font-size: 16px; display: block">visibility</i>
+      <i class="material-icons red-eye" style="margin-right: 2px; font-size: 16px; display: block">visibility</i>
     </div>
     <img *ngIf="0 < file.url.length" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
     <img *ngIf="file.url.length <= 0" src="assets/images/loading.gif" alt="{{file.name}}">

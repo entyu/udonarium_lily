@@ -5,6 +5,7 @@ import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-seri
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
+import { ImageTag } from '@udonarium/image-tag';
 import { TableSelecter } from '@udonarium/table-selecter';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
@@ -21,6 +22,9 @@ import { SaveDataService } from 'service/save-data.service';
 export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   minSize: number = 1;
   maxSize: number = 100;
+
+  isShowHideImages = false;
+
   get tableBackgroundImage(): ImageFile {
     return this.imageService.getEmptyOr(this.selectedTable ? this.selectedTable.imageIdentifier : null);
   }
@@ -150,6 +154,11 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     }
   }
 
+  getHidden(image: ImageFile): boolean {
+    const imageTag = ImageTag.get(image.identifier);
+    return imageTag ? imageTag.hide : false;
+  }
+  
   openBgImageModal() {
     if (this.isDeleted) return;
     this.modalService.open<string>(FileSelecterComponent).then(value => {
@@ -164,5 +173,18 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
       if (!this.selectedTable || !value) return;
       this.selectedTable.backgroundImageIdentifier = value;
     });
+  }
+
+  onShowHiddenImages($event: Event) {
+    if (this.isShowHideImages) {
+      this.isShowHideImages = false;
+    } else {
+      if (window.confirm("非表示設定の画像を表示します（ネタバレなどにご注意ください）。\nよろしいですか？")) {
+        this.isShowHideImages = true;
+      } else {
+        this.isShowHideImages = false;
+        $event.preventDefault();
+      }
+    }
   }
 }
