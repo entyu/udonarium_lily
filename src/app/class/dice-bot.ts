@@ -1,4 +1,5 @@
 import Loader from 'bcdice/lib/loader/loader';
+import GameSystemClass from 'bcdice/lib/game_system';
 import { GameSystemInfo } from 'bcdice/lib/bcdice/game_system_list.json';
 
 import { ChatMessage, ChatMessageContext } from './chat-message';
@@ -84,13 +85,14 @@ export class DiceBot extends GameObject {
           let regArray = /^((\d+)?\s+)?(.*)?/ig.exec(text);
           let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
-          if (!rollText || repeat < 1) return;
+          const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
+          if (!rollText || repeat < 1 || !gameSystem.COMMAND_PATTERN.test(rollText)) return;
           // 繰り返しコマンドに変換
           if (repeat > 1) {
             rollText = `x${repeat} ${rollText}`
           }
 
-          let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
+          let rollResult = await DiceBot.diceRollAsync(rollText, gameSystem);
           if (!rollResult.result) return;
           
           rollResult.result = rollResult.result.replace(/\n?(#\d+)\n/ig,"$1 ");//繰り返しロールを詰める
@@ -207,7 +209,7 @@ export class DiceBot extends GameObject {
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
         let splitText = text.split(/\s/);
-        let gameType: string = chatMessage.tag;
+        const gameSystem = await DiceBot.loadGameSystemAsync(chatMessage.tag);
 
         let diceTable = this.getDiceTables() ;
         if( !diceTable )return;
@@ -284,7 +286,7 @@ export class DiceBot extends GameObject {
           let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec( aprilRollDice );
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
 
-          let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
+          let rollResult = await DiceBot.diceRollAsync(rollText, gameSystem);
           if (!rollResult.result) return;
           
           this.sendAprilMessage(rollResult, changeFate0 + changeFate1 + changeFate2 ,chatMessage);
@@ -406,7 +408,7 @@ export class DiceBot extends GameObject {
     
     let allEditList : ResourceEdit[] = [];
     let data : DataElement ;
-    let gameType = originalMessage.tag;
+    const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tag);
 
      
     for( let oneText of result ){
@@ -459,7 +461,7 @@ export class DiceBot extends GameObject {
         
         //ダイスロール及び四則演算
         try {
-          let rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameType);
+          let rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameSystem);
           if (!rollResult.result) return null;
           console.log("rollResult.result>"+rollResult.result);
 
@@ -574,16 +576,15 @@ export class DiceBot extends GameObject {
     if (chatTab) chatTab.addMessage(diceBotMessage);
   }
 
-  static diceRollAsync(message: string, gameType: string): Promise<DiceRollResult> {
-    return DiceBot.queue.add((async () => {
+  static diceRollAsync(message: string, gameSystem: GameSystemClass): Promise<DiceRollResult> {
+    return DiceBot.queue.add(() => {
       try {
-        const bcdice = await DiceBot.loader.dynamicLoad(gameType);
-        const result = bcdice.eval(message);
+        const result = gameSystem.eval(message);
         if (result) {
           console.log('diceRoll!!!', result.text);
           console.log('isSecret!!!', result.secret);
           return {
-            result: `${gameType} : ${result.text}`,
+            result: `${gameSystem.ID} : ${result.text}`,
             isSecret: result.secret,
           };
         }
@@ -591,20 +592,28 @@ export class DiceBot extends GameObject {
         console.error(e);
       }
       return { result: '', isSecret: false };
-    })());
+    });
   }
 
   static getHelpMessage(gameType: string): Promise<string> {
-    return DiceBot.queue.add((async () => {
+    return DiceBot.queue.add(async (resolve, reject) => {
       let help = '';
       try {
-        const bcdice = await DiceBot.loader.dynamicLoad(gameType);
-        help = bcdice.HELP_MESSAGE;
+        const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
+        help = gameSystem.HELP_MESSAGE;
       } catch (e) {
         console.error(e);
       }
-      return help;
-    })());
+      resolve(help);
+      return;
+    });
+  }
+
+  static loadGameSystemAsync(gameType: string): Promise<GameSystemClass> {
+    const id = this.diceBotInfos.some((info) => info.id === gameType)
+      ? gameType
+      : 'DiceBot';
+    return DiceBot.loader.dynamicLoad(id);
   }
 
   // GameObject Lifecycle
