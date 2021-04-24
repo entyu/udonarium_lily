@@ -14,8 +14,9 @@ export class ImageTag extends ObjectNode {
   @SyncVar() hide:boolean = false;
 
   get words(): string[] {
-    if (this.tag == null) this.tag = '';
+    if (this.tag == null || this.tag.trim() == '') this.tag = '';
     if (this.tag.trim() === '') return [];
+    this.tag = StringUtil.toHalfWidth(this.tag).toLowerCase();
     return this.tag.trim().split(/\s+/);
   }
 
@@ -23,17 +24,19 @@ export class ImageTag extends ObjectNode {
   containsWords(words: string[], isOr: boolean): boolean
   containsWords(words: any, isOr=true): boolean {
     if (typeof words === 'string') words = words.trim().split(/\s+/);
+    if (words.length == 0) return false;
     words = words.concat();
-    let temp = this.words;
+    //let temp = this.words;
     if (isOr) {
       for (const word of words) {
-        if (temp.includes(word)) return true;
+        //if (temp.includes(StringUtil.toHalfWidth(word).toLowerCase())) return true;
+        if (` ${this.tag} `.indexOf(` ${StringUtil.toHalfWidth(word).toLowerCase()} `) >= 0) return true;
       }
       return false;
     } else {
-      if (words.length == 0) return false;
       for (const word of words) {
-        if (!temp.includes(word)) return false;
+        //if (!temp.includes(StringUtil.toHalfWidth(word).toLowerCase())) return false;
+        if (` ${this.tag} `.indexOf(` ${StringUtil.toHalfWidth(word).toLowerCase()} `) < 0) return false;
       }
       return true;
     }
@@ -47,7 +50,7 @@ export class ImageTag extends ObjectNode {
     const addingWords = Array.from(new Set<string>(words.map(word => StringUtil.toHalfWidth(word).toLowerCase())));
     //words.push(...this.words);
     this.tag = Array.from(new Set(addingWords.concat(this.words))).sort().join(' ');
-    EventSystem.call('OPERATE_IMAGE_TAGS', { tag: this.tag });
+    EventSystem.call('OPERATE_IMAGE_TAGS', this.tag);
     return addingWords;
   }
 
@@ -58,7 +61,7 @@ export class ImageTag extends ObjectNode {
     words = words.concat();
     const delteingingWords = Array.from(new Set<string>(words.map(word => StringUtil.toHalfWidth(word).toLowerCase())));
     this.tag = this.words.filter(word => !delteingingWords.includes(StringUtil.toHalfWidth(word).toLowerCase())).sort().join(' ');
-    EventSystem.call('OPERATE_IMAGE_TAGS', { tag: this.tag });
+    EventSystem.call('OPERATE_IMAGE_TAGS', this.tag);
     return delteingingWords;
   }
 

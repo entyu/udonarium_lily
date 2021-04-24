@@ -113,4 +113,5 @@
 .red-eye {
   color: darkred;
   text-shadow: 0px 0px 4px red;
+  font-weight: bolder;
 }

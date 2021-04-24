@@ -119,7 +119,7 @@ export class ImageTagList extends ObjectNode implements InnerXml {
     } else if (a == -1 && b >= 0) {
       return 1;
     } else {
-      return a - b;
+      return 0;
     }
   }
 

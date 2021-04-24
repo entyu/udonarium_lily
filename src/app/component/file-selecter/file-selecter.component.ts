@@ -17,6 +17,7 @@ import { ImageTag } from '@udonarium/image-tag';
 import { ImageTagList } from '@udonarium/image-tag-list';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
+import { FileStorageComponent } from 'component/file-storage/file-storage.component';
 
 @Component({
   selector: 'file-selector',
@@ -45,13 +46,13 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   searchWords: string[] = [];
   
   isSort = false;
-  sortOrder: string[] = [];
+  //sortOrder: string[] = [];
 
   isShowHideImages = false;
   
   get images(): ImageFile[] {
     const searchResultImages = ImageTagList.searchImages(this.searchWords, (this.searchNoTagImage && this.countAllImagesHasWord(null) > 0), this.serchCondIsOr, this.isShowHideImages);
-    return this.isSort ? ImageTagList.sortImagesByWords(searchResultImages, this.sortOrder) : searchResultImages;
+    return this.isSort ? ImageTagList.sortImagesByWords(searchResultImages, FileStorageComponent.sortOrder) : searchResultImages;
   }
   
   get empty(): ImageFile { return ImageFile.Empty; }
@@ -62,12 +63,13 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   set searchNoTagImage(value: boolean) {
     if (value) {
-      this.sortOrder.unshift(null);
+      FileStorageComponent.sortOrder.unshift(null);
     } else {
-      this.sortOrder = this.sortOrder.filter(key => key != null);
+      FileStorageComponent.sortOrder = FileStorageComponent.sortOrder.filter(key => key != null);
     }
-    this.sortOrder = Array.from(new Set(this.sortOrder));
+    FileStorageComponent.sortOrder = Array.from(new Set(FileStorageComponent.sortOrder));
     this._searchNoTagImage = value;
+    EventSystem.trigger('CHANGE_SORT_ORDER', null);
   }
 
   get searchAllImage(): boolean {
@@ -95,16 +97,46 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'ファイル一覧');
     this.searchWords = this.allImagesOwnWords;
-    this.sortOrder = [null].concat(this.searchWords);
+    //FileStorageComponent.sortOrder = [null].concat(this.searchWords);
+    // 非表示も含めた数
+    FileStorageComponent.imageCount = ImageStorage.instance.images.length;
   }
 
   ngAfterViewInit() {
     EventSystem.register(this).on('SYNCHRONIZE_FILE_LIST', event => {
       if (event.isSendFromSelf) {
+        if (this.serchCondIsOr) {
+          let isNotagAdd = false;
+          for (let i = FileStorageComponent.imageCount - 1; i < event.data.length; i++) {
+            const imageTag = ImageTag.get(event.data[i].identifier);
+            let noTag = true;
+            if (imageTag && imageTag.tag != null && imageTag.tag.trim() != '') {
+              if (this.isShowHideImages || !imageTag.hide) {
+                for (const word of imageTag.words) {
+                  FileStorageComponent.sortOrder.unshift(word);
+                  this.searchWords.push(word);
+                }
+              }
+              noTag = false;
+            }
+            isNotagAdd = isNotagAdd || noTag;
+          }
+          if (isNotagAdd) {
+            FileStorageComponent.sortOrder.unshift(null);
+            this._searchNoTagImage = true;
+          }
+          FileStorageComponent.sortOrder = Array.from(new Set(FileStorageComponent.sortOrder));
+          this.searchWords = Array.from(new Set(this.searchWords)).sort();
+        }
         this.changeDetector.markForCheck();
-        this.sortOrder.unshift(null);
-        this.sortOrder = Array.from(new Set(this.sortOrder));
       }
+      FileStorageComponent.imageCount = event.data.length;
+    })
+    .on('OPERATE_IMAGE_TAGS', event => {
+      this.changeDetector.markForCheck();
+    })
+    .on('CHANGE_SORT_ORDER', event => {
+      if (event.isSendFromSelf) this.changeDetector.markForCheck();
     });
   }
 
@@ -166,10 +198,10 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   onSearchAllImage() {
     if (this.searchAllImage) {
       this.searchWords = [];
-      this.searchNoTagImage = false;
+      this._searchNoTagImage = false;
     } else {
       this.searchWords = this.allImagesOwnWords;
-      this.searchNoTagImage = true;
+      this._searchNoTagImage = true;
     }
   }
 
@@ -178,12 +210,13 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     if (searchWord == null || searchWord.trim() === '') return;
     if (this.searchWords.includes(searchWord)) {
       this.searchWords = this.searchWords.filter(word => searchWord !== word);
-      this.sortOrder = this.sortOrder.filter(word => searchWord !== word);
+      FileStorageComponent.sortOrder = FileStorageComponent.sortOrder.filter(word => searchWord !== word);
     } else {
       this.searchWords.push(searchWord);
-      this.sortOrder.unshift(searchWord);
+      FileStorageComponent.sortOrder.unshift(searchWord);
     }
-    this.sortOrder = Array.from(new Set(this.sortOrder));
+    FileStorageComponent.sortOrder = Array.from(new Set(FileStorageComponent.sortOrder));
+    EventSystem.trigger('CHANGE_SORT_ORDER', searchWord);
   }
 
   identify(index, image){
