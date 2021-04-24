@@ -146,8 +146,9 @@
           <div class="image-box">
             <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
           </div>
-          <input class="target_chk" id = {{gameObject.identifier}} name="target_chk" 
+          <input class="target_chk" id ={{gameObject.identifier}}_{{initTimestamp}}  name="target_chk" 
           type="checkbox" (change) ="onChange(gameObject.identifier)" >
+<!-- +{{initTmepstamp}} -->
         </div>
         <div class="table-cell">
           <div *ngIf="gameObject.rootDataElement">

@@ -48,6 +48,8 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   errorMessageController ='';
   
   private _gameType: string = '';
+  private initTimestamp : number = 0;
+
   get gameType(): string { return this._gameType };
   set gameType(gameType: string) {
     this._gameType = gameType;
@@ -119,7 +121,10 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     private contextMenuService: ContextMenuService,
     private pointerDeviceService: PointerDeviceService 
 
-  ) { }  
+  ) { 
+    this.initTimestamp = Date.now();
+    console.log("this.initTimestamp "+this.initTimestamp);    
+  }  
 
   
   remotSelect( identifier : string , type : string , name : string ){
@@ -182,7 +187,6 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     this.disptimer = setInterval(() => {
       this.changeDetector.detectChanges();
     }, 200 );
-
   }
 
 
@@ -256,8 +260,6 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
   get newLineString(): string { return this.inventoryService.newLineString; }
   
-//  selectNum :number = 0;
-
   ngAfterViewInit() {
   }
 
@@ -316,13 +318,12 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
   getTargetCharacters( checkedOnly : boolean ): GameCharacter[]{
     let gameCharacters = new Array();
-
     let objectList = this.getGameObjects(this.selectTab);
     for (let object of objectList){
       if (object instanceof GameCharacter) {
         if( object.hideInventory ) continue; //非表示対象の除外のため
         
-        let box = <HTMLInputElement>document.getElementById(object.identifier);
+        let box = <HTMLInputElement>document.getElementById(object.identifier+'_'+ this.initTimestamp);
         if( box ){
           if( box.checked || (!checkedOnly) ){
             gameCharacters.push(object);
@@ -547,26 +548,18 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     let objectList = this.getGameObjects(this.selectTab);
     for (let object of objectList){
       if (object instanceof GameCharacter) {
-        let box = <HTMLInputElement>document.getElementById(object.identifier);
+        let box = <HTMLInputElement>document.getElementById(object.identifier +'_'+ this.initTimestamp);
         if( box ){
           box.checked = value.check;
         }
       }
     }
   }
-
+  
   targetBlockClick(identifier){
-    console.log( "identifier:"+identifier);
-    let box = <HTMLInputElement>document.getElementById(identifier);
+    console.log( "identifier:"+identifier + " initTimestamp:" +this.initTimestamp);
+    let box = <HTMLInputElement>document.getElementById(identifier +'_'+ this.initTimestamp);
     box.checked = !box.checked;
-/*
-    let gameCharacters = this.getTargetCharacters( true );
-    if( gameCharacters ){
-      this.selectNum = gameCharacters.length;
-    }else{
-      this.selectNum = 0;
-    }
-*/
   }
 
   onChange(identifier) {
