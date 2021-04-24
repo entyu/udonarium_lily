@@ -283,7 +283,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       addedWords = imageTag.addWords(words);
     }
     if (addedWords) {
-      //this.searchWords.push(...addedWords);
+      if (this.serchCondIsOr) this.searchWords.push(...addedWords);
       FileStorageComponent.sortOrder.unshift(...addedWords);
     }
     if (this.serchCondIsOr) this.searchWords = Array.from(new Set(this.searchWords)).sort();
