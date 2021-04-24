@@ -73,3 +73,7 @@ input[type='number'] {
 .blackout {
   filter: blur(12px) grayscale(70%);
 }
+
+.self-only {
+  color: red;
+}

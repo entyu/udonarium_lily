@@ -82,6 +82,6 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
   100% { transform: scale(1.0, 1.0) translate(0%, 0%); }
 }
 
-sup {
+.self-only {
   color: red;
 }

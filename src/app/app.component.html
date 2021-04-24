@@ -55,13 +55,13 @@
       <li (click)="standSetteings()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">how_to_reg</i></div>
-          <div>スタンド設定<sup>*</sup></div>
+          <div>スタンド設定<sup class="self-only">*</sup></div>
         </a>
       </li>
       <li (click)="resetPointOfView()">
         <a routerLink="/" routerLinkActive="active">
           <div><i class="material-icons icon-size">remove_red_eye</i></div>
-          <div>視点リセット<sup>*</sup></div>
+          <div>視点リセット<sup class="self-only">*</sup></div>
         </a>
       </li>
       <li>
@@ -87,7 +87,7 @@
         </a>
       </li>
     </ul>
-    <div style="margin-top: 2em; font-size: 8px; text-align: center;"><b><sup>*</sup>は自分のみ</b></div>
+    <div style="margin-top: 2em; font-size: 8px; text-align: center;"><b><sup class="self-only">*</sup>は自分のみ</b></div>
   </nav>
 </ui-panel>
 <div #modalLayer></div>
