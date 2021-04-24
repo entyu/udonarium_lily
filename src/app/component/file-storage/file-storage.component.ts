@@ -264,7 +264,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setectedImagesToHidden(toHidden: boolean) {
-    if (!window.confirm(`選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します${ toHidden ? "（これは「ファイル一覧を開いた際に意図せずネタバレ」などを防ぐもので、他者から完全に見えなくするものではありません）" : ''}。\nよろしいですか？`)) return;
+    if (!window.confirm(`選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します${ toHidden ? "（これは「ファイル一覧を開いた際に意図せずネタバレを見てしまう」などを防ぐもので、他者から完全に見えなくするものではありません）" : ''}。\nよろしいですか？`)) return;
     for (const image of this.selectedImageFiles) {
       const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
       imageTag.hide = toHidden;
