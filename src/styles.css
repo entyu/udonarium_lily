@@ -9,11 +9,11 @@ a[target=_blank]:hover {
 a.outer-link::after {
   margin-right: 2px;
   margin-left: 2px;
-  font-family: "Font Awesome 5 Free";
-  content: '\f35d';
+  font-family: 'Material Icons';
+  content: '\e89e';
   font-weight: bolder;
   text-decoration: none;
   display: inline-block;
   font-size: smaller;
-  vertical-align: super;
+  vertical-align: 25%;
 }
