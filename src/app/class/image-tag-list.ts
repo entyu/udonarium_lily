@@ -90,7 +90,7 @@ export class ImageTagList extends ObjectNode implements InnerXml {
     _data.sort((a, b) => {
       let order = 0;
       keys.some(key => {
-        order = ImageTagList._sortByWord(a, b, key);
+        order = ImageTagList._sortByWordCriteria(a, b, key);
         return !!order;
       });
       return order;
@@ -98,7 +98,7 @@ export class ImageTagList extends ObjectNode implements InnerXml {
     return _data.map(obj => obj.image);
   }
 
-  private static _sortByWord(objA, objB, key: string) {
+  private static _sortByWordCriteria(objA, objB, key: string) {
     if (key == null) {
       if (objA.tag == '' && objB.tag == '') {
         return 0;
