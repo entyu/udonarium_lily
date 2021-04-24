@@ -77,3 +77,7 @@ input[type='number'] {
 .self-only {
   color: red;
 }
+
+img {
+  transition: all 100ms 0s ease;;
+}
