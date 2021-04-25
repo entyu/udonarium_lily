@@ -30,7 +30,7 @@
     <div class="img-box" style="float:left" (click)="imgBlockClick(file.identifier)">
       <img *ngIf="(0 < file.url.length) " [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
       <img *ngIf="file.url.length <= 0 " src="assets/images/loading.gif" alt="{{file.name}}">
-      <input class="img-chk" *ngIf="(0 < file.url.length)" id = {{file.identifier}} name="tag_chg_chk" type="checkbox" (change) ="onChange(file.identifier)" >
+      <input class="img-chk" *ngIf="(0 < file.url.length)" id = {{file.identifier}}_{{initTimestamp}} name="tag_chg_chk" type="checkbox" (change) ="onChange(file.identifier)" >
     </div>
   </span>
 </div>
