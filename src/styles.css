@@ -1,19 +1,1 @@
 /* You can add global styles to this file, and also import other style files */
-a[target=_blank] {
-  text-decoration: none;
-  word-break: break-all;
-}
-a[target=_blank]:hover {
-  text-decoration: underline;
-}
-a.outer-link::after {
-  margin-right: 2px;
-  margin-left: 2px;
-  font-family: 'Material Icons';
-  content: '\e89e';
-  font-weight: bolder;
-  text-decoration: none;
-  display: inline-block;
-  font-size: smaller;
-  vertical-align: 25%;
-}

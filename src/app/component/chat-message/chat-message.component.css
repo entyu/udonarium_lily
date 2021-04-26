@@ -105,6 +105,11 @@
   border-left: 4px transparent;
 }
 
+.dicebot-message .msg-name,
+.dicebot-message .msg-text {
+  font-style: oblique;
+}
+
 .is-others .title {
   text-align: right;
 }

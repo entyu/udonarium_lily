@@ -12,17 +12,19 @@
       <div>タブ名 :
         <input [(ngModel)]="tabName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
       </div>
-      <div style="font-weight: bolder; font-size: smaller">
+      <div style="font-weight: bolder; font-size: smaller; padding-top: 3px">
         <label>
           <input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" [attr.disabled]="!isEditable ? '' : null" />
           スタンド有効
         </label>
+        <button (click)="saveLog()" style="font-size: smaller; margin-left: 1em" [attr.disabled]="!isEditable ? '' : null">ログ保存</button>
       </div>
       <hr/>
       <div>
         <ng-container *ngIf="!isDeleted">
           <button (click)="upTabIndex()">↑</button>
           <button (click)="downTabIndex()">↓</button>
+          <button (click)="saveLogAll()" style="font-size: smaller; margin-left: 0.5em">ログ保存 (全タブ)</button>
           <button [disabled]="isSaveing" (click)="save()">
             <div style="position: relative;">
               <div [ngClass]="{'is-hidden': isSaveing}">保存</div>

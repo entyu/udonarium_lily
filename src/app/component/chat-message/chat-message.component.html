@@ -2,7 +2,7 @@
   <div class="message"
     [style.border-left-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
     [style.border-right-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
-    [ngClass]="{'is-mine': isMine, 'is-others': !isMine, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message':chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}"
+    [ngClass]="{'is-mine': isMine, 'is-others': !isMine, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message': chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}"
     [@flyInOut]="isMine ? null : 'active'" [@flyInOutMe]="!isMine ? null : 'active'">
     <div *ngIf="isMine" class="image" [ngClass]="{inverse: chatMessage.isInverseIcon == 1, hollow: chatMessage.isHollowIcon == 1}">
       <span class="aura" [ngClass]="{black: chatMessage.aura == 0, blue: chatMessage.aura == 1, green: chatMessage.aura == 2, cyan: chatMessage.aura == 3, red: chatMessage.aura == 4, magenta: chatMessage.aura == 5, yellow: chatMessage.aura == 6, white: chatMessage.aura == 7}">
@@ -33,5 +33,5 @@
   <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">結果を公開</button>
 </ng-template>
 <ng-template #secret>
-  <span>（シークレットダイス）</span>
+  <span><s>（シークレットダイス）</s></span>
 </ng-template>

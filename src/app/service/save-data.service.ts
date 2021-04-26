@@ -15,6 +15,7 @@ import { Room } from '@udonarium/room';
 import * as Beautify from 'vkbeautify';
 
 import { ImageTagList } from '@udonarium/image-tag-list';
+import { ChatTab } from '@udonarium/chat-tab';
 
 type UpdateCallback = (percent: number) => void;
 
@@ -144,5 +145,11 @@ export class SaveDataService {
     let minutes = ('00' + date.getMinutes()).slice(-2);
 
     return fileName + `_${year}-${month}-${day}_${hours}${minutes}`;
+  }
+
+  saveChatLog(type: number, fileName: string, chatTab: ChatTab=null) {
+    const mimeType = (type == 0 ? 'text/plain' : 'text/html');
+    const ext = (type == 0 ? '.txt' : '.html');
+    saveAs(new Blob([chatTab ? chatTab.log(type) : ChatTabList.instance.log(type)], {type: `${mimeType};charset=utf-8`}), this.appendTimestamp(fileName) + ext);
   }
 }
