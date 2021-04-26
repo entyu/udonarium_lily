@@ -55,7 +55,7 @@ export class ChatTabList extends ObjectNode implements InnerXml {
 <html lang="ja-JP">
 <head>
   <meta charset="UTF-8">
-  <title>チャットログ：すべてのタブ</title>
+  <title>チャットログ：全タブ</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
   ${ ChatMessage.logCss() }
