@@ -418,7 +418,9 @@ export class DiceBot extends GameObject {
         target: "",
         targetHalfWidth: "",
         operator: "",
+        diceResult: "",
         command: "",
+        isDiceRoll:false,
         hitName: "",
         calcAns: 0,
         detaElm : null
