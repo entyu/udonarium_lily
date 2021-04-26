@@ -17,6 +17,8 @@ import { ImageTag } from '@udonarium/image-tag';//本家PR #92より
 })
 export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  private initTimestamp : number = 0;
+
 //本家PR #92より
   searchWord: string = '';
   private _searchWord: string;
@@ -107,7 +109,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     
     for (let img of changeableImages) {
 //    console.log("img.context.identifier:"+img.context.identifier);
-      let box = <HTMLInputElement>document.getElementById(img.context.identifier);
+      let box = <HTMLInputElement>document.getElementById(img.context.identifier+'_'+ this.initTimestamp);
       if( box ){
         if( box.checked ){
           let imageTag = ImageTag.get(img.context.identifier);
@@ -134,7 +136,9 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private changeDetector: ChangeDetectorRef,
     private panelService: PanelService
-  ) { }
+  ) { 
+    this.initTimestamp = Date.now();
+  }
 
   ngOnInit() {
     Promise.resolve().then(() => this.panelService.title = 'ファイル一覧');
@@ -168,7 +172,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   
   imgBlockClick(identifier){
     console.log( "identifier:"+identifier);
-    let box = <HTMLInputElement>document.getElementById(identifier);
+    let box = <HTMLInputElement>document.getElementById(identifier+'_'+ this.initTimestamp);
     box.checked = !box.checked;
   }
   
