@@ -1,9 +1,9 @@
 <div class="flex-container">
   <div class="flex-item no-grow">
     <div>
-      <button (click)="create()">チャットタブを作る</button>
+      <button (click)="create()" style="font-size: smaller; margin-bottom: 2px">チャットタブを作る</button>
     </div>
-    <select style="width: 10em;" size="10" (change)="onChangeSelectTab($event.target.value)" [ngModel]="selectedTab?.identifier">
+    <select style="width: 100%" size="10" (change)="onChangeSelectTab($event.target.value)" [ngModel]="selectedTab?.identifier">
       <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
     </select>
   </div>
@@ -24,7 +24,7 @@
         <ng-container *ngIf="!isDeleted">
           <button (click)="upTabIndex()">↑</button>
           <button (click)="downTabIndex()">↓</button>
-          <button (click)="saveLogAll()" style="font-size: smaller; margin-left: 0.5em">ログ出力 (全タブ)</button>
+          <button (click)="saveLogAll()" style="font-size: smaller; margin-left: 1em">ログ出力 (全タブ)</button>
           <button [disabled]="isSaveing" (click)="save()">
             <div style="position: relative;">
               <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
