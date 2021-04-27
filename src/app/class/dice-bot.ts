@@ -93,7 +93,7 @@ export class DiceBot extends GameObject {
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
-        let gameType: string = chatMessage.tag;
+        let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'' ;
         
         try {
 //          let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(text);
@@ -126,7 +126,7 @@ export class DiceBot extends GameObject {
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
         let splitText = text.split(/\s/);
-        let gameType: string = chatMessage.tag;
+        let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'';
 
         let diceTable = this.getDiceTables() ;
         if( !diceTable )return;
@@ -187,7 +187,7 @@ export class DiceBot extends GameObject {
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
-        let gameType: string = chatMessage.tag;
+        let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'';
         
         this.checkResourceEditCommand( chatMessage );
         
@@ -224,7 +224,7 @@ export class DiceBot extends GameObject {
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
         let splitText = text.split(/\s/);
-        const gameSystem = await DiceBot.loadGameSystemAsync(chatMessage.tag);
+        const gameSystem = await DiceBot.loadGameSystemAsync(chatMessage.tags ? chatMessage.tags[0]:'');
 
         let diceTable = this.getDiceTables() ;
         if( !diceTable )return;
@@ -423,7 +423,7 @@ export class DiceBot extends GameObject {
     
     let allEditList : ResourceEdit[] = [];
     let data : DataElement ;
-    const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tag);
+    const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tags ? originalMessage.tags[0]:'');
 
      
     for( let oneText of result ){

@@ -152,7 +152,7 @@ export class ChatMessageService {
     
 //    return chatTab.addMessage(chatMessage); 
 //    ダイスのシークレット判定のため非同期でaddMessageを実行する様に変更した
-//    この関数の戻り値は使用箇所無しだが将来的にタイミング問題が発生する可能性は注意 lily v1.03.0b3
+//    この関数の戻り値は使用箇所無しのため戻り値なしに変更将来的に問題が発生する可能性は注意 lily v1.03.0b2
 
     return ;
   }
