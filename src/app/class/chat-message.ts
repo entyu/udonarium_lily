@@ -101,7 +101,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     const date = new Date(this.timestamp);
     const shortDateTimeStr = ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2);
     const longDateTimeStr = date.getFullYear() + '/' + ('00' + (date.getMonth() + 1)).slice(-2) + '/' + ('00' + date.getDate()).slice(-2) + ' ' + shortDateTimeStr + ':' + ('00' + date.getSeconds()).slice(-2);
-    const characterName = StringUtil.escapeHtml(this.name);
+    const nameHtml = StringUtil.escapeHtml(this.name);
     
     let messageClassNames = ['message'];
     if (this.isDirect || this.isSecret) messageClassNames.push('direct-message');
@@ -125,7 +125,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
         }
       });
     return `<div class="${ messageClassNames.join(' ') }" style="border-left-color: ${ color }">
-  <div title="${ longDateTimeStr }">${ headHtml }<time datetime="${ date.toISOString() }">${ shortDateTime ? shortDateTimeStr : longDateTimeStr }</time>：<span class="msg-name"${ colorStyle }>${ characterName }</span>：</div>
+  <div title="${ longDateTimeStr }">${ headHtml }<time datetime="${ date.toISOString() }">${ shortDateTime ? shortDateTimeStr : longDateTimeStr }</time>：<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</div>
   <div class="msg-text"${ colorStyle }>${ textAutoLinkHtml }</div>
 </div>`;
   }
