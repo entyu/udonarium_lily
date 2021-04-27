@@ -63,10 +63,10 @@ ${ ChatMessage.logCss() }
 </head>
 <body>
 ${
-  this.chatTabs.reduce((acc, chatTab) => {
-      if (chatTab) acc.push(...chatTab.chatMessages.filter(chatMessage => chatMessage.isDisplayable)
+  this.chatTabs.reduce((ac, chatTab) => {
+      if (chatTab) ac.push(...chatTab.chatMessages.filter(chatMessage => chatMessage.isDisplayable)
         .map(chatMessage => ({ index: chatMessage.index, tabName: chatTab.name, chatMessage: chatMessage }))); 
-      return acc;
+      return ac;
     }, [])
     .sort((a, b) => a.index - b.index)
     .map(obj => obj.chatMessage.logFragmentHtml(obj.tabName))
