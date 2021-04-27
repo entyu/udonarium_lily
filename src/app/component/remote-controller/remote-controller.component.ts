@@ -131,7 +131,6 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   selectTab = 'table';
   selectedIdentifier = '';
 
-  isEdit = false;
   hideChkBoxEvent( eventValue: boolean) {
     this.buffAreaIsHide = eventValue;
   }
