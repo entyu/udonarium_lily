@@ -11,6 +11,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 
+import { DiceBot } from '@udonarium/dice-bot';
 
 const HOURS = 60 * 60 * 1000;
 
@@ -79,7 +80,8 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
-  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string): ChatMessage {//本家からachieNum?: number color? :string を追加 
+  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string){
+//  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string): ChatMessage {//本家からachieNum?: number color? :string を追加 
 
     let img;
     let imgIndex;
@@ -102,13 +104,13 @@ export class ChatMessageService {
       name: this.makeMessageName(sendFrom, sendTo),
       imageIdentifier: this.findImageIdentifier(sendFrom,imgIndex),//lily
       timestamp: this.calcTimeStamp(chatTab),
-      tag: gameType,
+      tag: gameType ,
       text: text,
       imagePos: this.findImagePos(sendFrom),//lily
       messColor: _color,//lily
       sendFrom: sendFrom //lily
     };
-    
+        
     //ハイド処理
     let chkMessage = ' ' + StringUtil.toHalfWidth(text).toLowerCase();
     let matches_array = chkMessage.match(/\s@(\S+)$/i);
@@ -127,8 +129,32 @@ export class ChatMessageService {
 
       chatMessage.text = text.replace(/([@＠]\S+)$/i,'');
     }
+
+    let dicebot = ObjectStore.instance.get<DiceBot>('DiceBot');
+    dicebot.checkSecretDiceCommand(gameType,text).then(value => {
+      console.log(value); // => resolve!!
+
+      let chatMessageAddSecretTag: ChatMessageContext = {
+        from:             chatMessage.from,
+        to:               chatMessage.to,
+        name:             chatMessage.name,
+        imageIdentifier:  chatMessage.imageIdentifier,
+        timestamp:        chatMessage.timestamp,
+        tag:              value ? chatMessage.tag + ' secret' : chatMessage.tag ,
+        text:             chatMessage.text,
+        imagePos:         chatMessage.imagePos,
+        messColor:        chatMessage.messColor,
+        sendFrom:         chatMessage.sendFrom 
+      };
+
+      chatTab.addMessage(chatMessageAddSecretTag);
+    });
     
-    return chatTab.addMessage(chatMessage);
+//    return chatTab.addMessage(chatMessage); 
+//    ダイスのシークレット判定のため非同期でaddMessageを実行する様に変更した
+//    この関数の戻り値は使用箇所無しだが将来的にタイミング問題が発生する可能性は注意 lily v1.03.0b3
+
+    return ;
   }
 
   private findId(identifier: string): string {
