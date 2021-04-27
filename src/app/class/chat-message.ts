@@ -169,7 +169,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 .msg-name {
   font-weight: bolder;
 }
-.tab-name, .msg-name, .msg-text {
+.msg-text {
   white-space: pre-wrap;
 }
 a[target=_blank] {
