@@ -183,7 +183,7 @@ a.outer-link::after {
   margin-right: 2px;
   margin-left: 2px;
   font-family: 'Material Icons';
-  content: 'open_in_new';
+  content: '\\e89e';
   font-weight: bolder;
   text-decoration: none;
   display: inline-block;
