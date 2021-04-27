@@ -2,7 +2,7 @@ import { ChatMessage, ChatMessageContext } from './chat-message';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
-import { EventSystem, Network } from './core/system';
+import { EventSystem } from './core/system';
 import { StringUtil } from './core/system/util/string-util';
 
 @SyncObject('chat-tab')

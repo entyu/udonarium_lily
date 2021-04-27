@@ -5,9 +5,7 @@ import { ObjectNode } from './core/synchronize-object/object-node';
 import { Network } from './core/system';
 import { StringUtil } from './core/system/util/string-util';
 import { Autolinker } from 'autolinker';
-import { ObjectStore } from './core/synchronize-object/object-store';
 import { PeerCursor } from './peer-cursor';
-import { stringify } from '@angular/compiler/src/util';
 
 export interface ChatMessageContext {
   identifier?: string;
