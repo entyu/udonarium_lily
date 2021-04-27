@@ -49,23 +49,23 @@ export class ChatTabList extends ObjectNode implements InnerXml {
     this.destroy();
   }
 
-  log(type) {
+  log(type): string {
     if (!this.chatTabs) return '';
     return `<!DOCTYPE html>
 <html lang="ja-JP">
 <head>
-  <meta charset="UTF-8">
-  <title>チャットログ：全タブ</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <style>
-  ${ ChatMessage.logCss() }
-  </style>
+<meta charset="UTF-8">
+<title>チャットログ：全タブ</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+${ ChatMessage.logCss() }
+</style>
 </head>
 <body>
 ${
   this.chatTabs.reduce((acc, chatTab) => {
       if (chatTab) acc.push(...chatTab.chatMessages.filter(chatMessage => chatMessage.isDisplayable)
-        .map(chatMessage => { return { index: chatMessage.index, tabName: chatTab.name, chatMessage: chatMessage } })); 
+        .map(chatMessage => ({ index: chatMessage.index, tabName: chatTab.name, chatMessage: chatMessage }))); 
       return acc;
     }, [])
     .sort((a, b) => a.index - b.index)

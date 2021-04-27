@@ -7,6 +7,7 @@ import { StringUtil } from './core/system/util/string-util';
 import { Autolinker } from 'autolinker';
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { PeerCursor } from './peer-cursor';
+import { stringify } from '@angular/compiler/src/util';
 
 export interface ChatMessageContext {
   identifier?: string;
@@ -89,7 +90,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
   get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
 
-  logFragmentText(head: string=null, shortDateTime=true, compact=true): string {
+  logFragmentText(head: string=null, shortDateTime=false): string {
     head = (!head || head.trim() == '') ? '' : `[${ head }] `;
     const date = new Date(this.timestamp);
     let dateStr = ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2);
@@ -109,7 +110,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     if (this.isSystem) messageClassNames.push('system-message');
     if (this.isDicebot || this.isCalculate) messageClassNames.push('dicebot-message');
     const color = StringUtil.escapeHtml(this.color ? this.color : PeerCursor.CHAT_DEFAULT_COLOR);
-    const colorStyle = this.isSpecialColor ? '' : ` style="color: ${ StringUtil.escapeHtml(this.color ? this.color : PeerCursor.CHAT_DEFAULT_COLOR) }"`;
+    const colorStyle = this.isSpecialColor ? '' : ` style="color: ${ color }"`;
 
     const textAutoLinkHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>' 
       : Autolinker.link(StringUtil.escapeHtml(this.text), {
@@ -125,77 +126,75 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
           return m.getType() == 'url' && StringUtil.validUrl(m.getAnchorHref());
         }
       });
-      
     return `<div class="${ messageClassNames.join(' ') }" style="border-left-color: ${ color }">
-  <div>${ headHtml }<time title="${ longDateTimeStr }" datetime="${ date.toISOString() }">${ shortDateTime ? shortDateTimeStr : longDateTimeStr }</time>：<span class="msg-name"${ colorStyle }>${ characterName }</span>：</div>
+  <div title="${ longDateTimeStr }">${ headHtml }<time datetime="${ date.toISOString() }">${ shortDateTime ? shortDateTimeStr : longDateTimeStr }</time>：<span class="msg-name"${ colorStyle }>${ characterName }</span>：</div>
   <div class="msg-text"${ colorStyle }>${ textAutoLinkHtml }</div>
 </div>`;
   }
 
   static logCss(compact=true): string {
     return `.message {
-    display: flex;
-    flex-flow: row nowrap;
-    box-sizing: border-box;
-    width: 100%;
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    padding-left: 2px;
-    border-left: 4px solid transparent;
-  }
-  .direct-message {
-    background-color: #555;
-    color: #CCC;
-  }
-  .dicebot-message .msg-text {
-    color: #22F;
-  }
-  .direct-message.dicebot-message .msg-text {
-    color: #CCF;
-  }
-  .dicebot-message .msg-name,
-  .dicebot-message .msg-text {
-    font-style: oblique;
-  }
-  .tab-name {
-    display: inline-block;
-  }
-  .tab-name::before {
-    content: '[';
-  }
-  .tab-name::after {
-    content: ']';
-  }
-  .msg-name {
-    font-weight: bolder;
-  }
-  .msg-text {
-    white-space: pre-wrap;
-  }
-  a[target=_blank] {
-    text-decoration: none;
-    word-break: break-all;
-  }
-  a[target=_blank]:hover {
-    text-decoration: underline;
-  }
-  a.outer-link::after {
-    margin-right: 2px;
-    margin-left: 2px;
-    font-family: 'Material Icons';
-    content: 'open_in_new';
-    font-weight: bolder;
-    text-decoration: none;
-    display: inline-block;
-    font-size: smaller;
-    vertical-align: 25%;
-  }
-  .direct-message a[href] {
-    color: #CCF;
-  }
-  .direct-message a[href]:visited {
-    color: #99D;
-  }`;
+  display: flex;
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  padding-left: 2px;
+  border-left: 4px solid transparent;
+  margin-top: 1px;
+}
+.direct-message {
+  background-color: #555;
+  color: #CCC;
+}
+.dicebot-message .msg-text {
+  color: #22F;
+}
+.direct-message.dicebot-message .msg-text {
+  color: #CCF;
+}
+.dicebot-message .msg-name,
+.dicebot-message .msg-text {
+  font-style: oblique;
+}
+.tab-name {
+  display: inline-block;
+}
+.tab-name::before {
+  content: '[';
+}
+.tab-name::after {
+  content: ']';
+}
+.msg-name {
+  font-weight: bolder;
+}
+.tab-name, .msg-name, .msg-text {
+  white-space: pre-wrap;
+}
+a[target=_blank] {
+  text-decoration: none;
+  word-break: break-all;
+}
+a[target=_blank]:hover {
+  text-decoration: underline;
+}
+a.outer-link::after {
+  margin-right: 2px;
+  margin-left: 2px;
+  font-family: 'Material Icons';
+  content: 'open_in_new';
+  font-weight: bolder;
+  text-decoration: none;
+  display: inline-block;
+  font-size: smaller;
+  vertical-align: 25%;
+}
+.direct-message a[href] {
+  color: #CCF;
+}
+.direct-message a[href]:visited {
+  color: #99D;
+}`;
   }
 }

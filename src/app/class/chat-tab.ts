@@ -66,16 +66,16 @@ export class ChatTab extends ObjectNode implements InnerXml {
     return super.parseInnerXml(element);
   };
 
-  log(type) {
+  log(type): string {
     return `<!DOCTYPE html>
 <html lang="ja-JP">
 <head>
-  <meta charset="UTF-8">
-  <title>チャットログ：${ StringUtil.escapeHtml(this.name) }</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <style>
-  ${ ChatMessage.logCss() }
-  </style>
+<meta charset="UTF-8">
+<title>チャットログ：${ StringUtil.escapeHtml(this.name) }</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+${ ChatMessage.logCss() }
+</style>
 </head>
 <body>
 ${ 
