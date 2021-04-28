@@ -48,9 +48,20 @@ export class ChatTabList extends ObjectNode implements InnerXml {
     this.destroy();
   }
 
-  log(type): string {
+  log(togFormat, logTimestampType): string {
     if (!this.chatTabs) return '';
-    return `<!DOCTYPE html>
+    const logFlagment = this.chatTabs.reduce((ac, chatTab) => {
+        if (chatTab) ac.push(...chatTab.chatMessages.filter(chatMessage => chatMessage.isDisplayable)
+          .map(chatMessage => ({ index: chatMessage.index, tabName: chatTab.name, chatMessage: chatMessage }))); 
+        return ac;
+      }, [])
+      .sort((a, b) => a.index - b.index)
+      .map(obj => togFormat == 0 ? obj.chatMessage.logFragmentText(obj.tabName, logTimestampType) : obj.chatMessage.logFragmentHtml(obj.tabName, logTimestampType))
+      .join("\n");
+
+    return togFormat == 0 
+      ? logFlagment
+      : `<!DOCTYPE html>
 <html lang="ja-JP">
 <head>
 <meta charset="UTF-8">
@@ -61,16 +72,7 @@ ${ ChatMessage.logCss() }
 </style>
 </head>
 <body>
-${
-  this.chatTabs.reduce((ac, chatTab) => {
-      if (chatTab) ac.push(...chatTab.chatMessages.filter(chatMessage => chatMessage.isDisplayable)
-        .map(chatMessage => ({ index: chatMessage.index, tabName: chatTab.name, chatMessage: chatMessage }))); 
-      return ac;
-    }, [])
-    .sort((a, b) => a.index - b.index)
-    .map(obj => obj.chatMessage.logFragmentHtml(obj.tabName))
-    .join("\n")
-}
+${ logFlagment }
 </body>
 </html>`;
   }

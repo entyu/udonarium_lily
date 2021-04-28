@@ -66,6 +66,7 @@ import { StandImageService } from 'service/stand-image.service';
 import { DiceRollTableSettingComponent } from './component/dice-roll-table-setting/dice-roll-table-setting.component';
 
 import { LinkyModule } from 'ngx-linky';
+import { ChatLogOutputComponent } from './component/chat-log-output/chat-log-output.component';
 
 @NgModule({
   declarations: [
@@ -116,7 +117,8 @@ import { LinkyModule } from 'ngx-linky';
     StandSettingComponent,
     StandElementComponent,
     StandImageComponent,
-    DiceRollTableSettingComponent
+    DiceRollTableSettingComponent,
+    ChatLogOutputComponent
   ],
   imports: [
     BrowserModule,

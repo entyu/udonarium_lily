@@ -124,13 +124,4 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
       parentElement.insertBefore(nextElement, this.selectedTab);
     }
   }
-
-  saveLog() {
-    if (!this.selectedTab) return;
-    this.saveDataService.saveChatLog(1, this.roomName + '_log_' + this.selectedTab.name, this.selectedTab);
-  }
-
-  saveLogAll() {
-    this.saveDataService.saveChatLog(1, this.roomName + '_log_全タブ');
-  }
 }

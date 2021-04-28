@@ -88,20 +88,33 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
   get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
 
-  logFragmentText(tabName: string=null, shortDateTime=false): string {
-    tabName = (!tabName || tabName.trim() == '') ? '' : `[${ tabName }]`;
+  logFragmentText(tabName: string=null, logTimestampType: number): string {
+    tabName = (!tabName || tabName.trim() == '') ? '' : `[${ tabName }] `;
     const date = new Date(this.timestamp);
     let dateStr = ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2);
-    if (!shortDateTime) dateStr = date.getFullYear() + '/' + ('00' + (date.getMonth() + 1)).slice(-2) + '/' + ('00' + date.getDate()).slice(-2) + ' ' + dateStr + ':' + ('00' + date.getSeconds()).slice(-2);
-    return `${ tabName } ${ dateStr }：${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : this.text }`
+    if (logTimestampType == 0) {
+      dateStr = '';
+    } else if (logTimestampType == 1) {
+      dateStr = dateStr + '：';
+    } else if (logTimestampType == 2) {
+      dateStr = date.getFullYear() + '/' + ('00' + (date.getMonth() + 1)).slice(-2) + '/' + ('00' + date.getDate()).slice(-2) + ' ' + dateStr + ':' + ('00' + date.getSeconds()).slice(-2) + '：';
+    }
+    return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : this.text }`
   }
 
-  logFragmentHtml(tabName: string=null, shortDateTime=true, compact=true): string {
+  logFragmentHtml(tabName: string=null, logTimestampType: number, compact=true): string {
     const tabNameHtml = (!tabName || tabName.trim() == '') ? '' : `<span class="tab-name">${ StringUtil.escapeHtml(tabName) }</span> `;
     const date = new Date(this.timestamp);
     const shortDateTimeStr = ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2);
     const longDateTimeStr = date.getFullYear() + '/' + ('00' + (date.getMonth() + 1)).slice(-2) + '/' + ('00' + date.getDate()).slice(-2) + ' ' + shortDateTimeStr + ':' + ('00' + date.getSeconds()).slice(-2);
     const nameHtml = StringUtil.escapeHtml(this.name);
+    
+    let dateHtml = '';
+    if (logTimestampType == 1) {
+      dateHtml = `<time datetime="${ date.toISOString() }">${ shortDateTimeStr }</time>：`;
+    } else if (logTimestampType == 2) {
+      dateHtml = `<time datetime="${ date.toISOString() }">${ longDateTimeStr }</time>：`;;
+    }
     
     let messageClassNames = ['message'];
     if (this.isDirect || this.isSecret) messageClassNames.push('direct-message');
@@ -125,7 +138,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
         }
       });
     return `<div class="${ messageClassNames.join(' ') }" style="border-left-color: ${ color }">
-  <div title="${ longDateTimeStr }">${ tabNameHtml }<span class="msg-header"><time datetime="${ date.toISOString() }">${ shortDateTime ? shortDateTimeStr : longDateTimeStr }</time>：<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</span></div>
+  <div class="msg-header">${ tabNameHtml }${ dateHtml }<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</div>
   <div class="msg-text"${ colorStyle }>${ textAutoLinkHtml }</div>
 </div>`;
   }
@@ -169,11 +182,6 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 }
 .msg-name {
   font-weight: bolder;
-}
-.tab-name,
-.msg-name,
-time {
-  white-space: nowrap;
 }
 .msg-text {
   white-space: pre-wrap;

@@ -147,9 +147,9 @@ export class SaveDataService {
     return fileName + `_${year}-${month}-${day}_${hours}${minutes}`;
   }
 
-  saveChatLog(type: number, fileName: string, chatTab: ChatTab=null) {
-    const mimeType = (type == 0 ? 'text/plain' : 'text/html');
-    const ext = (type == 0 ? '.txt' : '.html');
-    saveAs(new Blob([chatTab ? chatTab.log(type) : ChatTabList.instance.log(type)], {type: `${mimeType};charset=utf-8`}), this.appendTimestamp(fileName) + ext);
+  saveChatLog(logFormat: number, fileName: string, chatTab: ChatTab=null, logTimestampType) {
+    const mimeType = (logFormat == 0 ? 'text/plain' : 'text/html');
+    const ext = (logFormat == 0 ? '.txt' : '.html');
+    saveAs(new Blob([chatTab ? chatTab.log(logFormat, logTimestampType) : ChatTabList.instance.log(logFormat, logTimestampType)], {type: `${mimeType};charset=utf-8`}), this.appendTimestamp(fileName) + ext);
   }
 }
