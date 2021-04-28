@@ -164,8 +164,16 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 .tab-name::after {
   content: ']';
 }
+.msg-header {
+  white-space: nowrap;
+}
 .msg-name {
   font-weight: bolder;
+}
+.tab-name,
+.msg-name,
+time {
+  white-space: nowrap;
 }
 .msg-text {
   white-space: pre-wrap;
