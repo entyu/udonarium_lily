@@ -27,7 +27,7 @@
         </div>
         <hr/>
         <div>
-          <button (click)="saveLog()" style="font-size: smaller" [attr.disabled]="!isEditable ? '' : null">ログ出力</button>
+          <button (click)="saveLog()" style="font-size: smaller" [attr.disabled]="isEmpty || (!isAllTabs && (!selectedTab || isDeleted)) ? '' : null">ログ出力</button>
         </div>
       </ng-container>
     </div>
