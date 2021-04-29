@@ -102,7 +102,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : this.text }`
   }
 
-  logFragmentHtml(tabName: string=null, logTimestampType: number, compact=true): string {
+  logFragmentHtml(tabName: string=null, logTimestampType: number, noImage=true): string {
     const tabNameHtml = (!tabName || tabName.trim() == '') ? '' : `<span class="tab-name">${ StringUtil.escapeHtml(tabName) }</span> `;
     const date = new Date(this.timestamp);
     const shortDateTimeStr = ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2);
@@ -138,12 +138,12 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
         }
       });
     return `<div class="${ messageClassNames.join(' ') }" style="border-left-color: ${ color }">
-  <div class="msg-header">${ tabNameHtml }${ dateHtml }<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</div>
+  <div class="msg-header" title="${ longDateTimeStr + '：' + nameHtml }">${ tabNameHtml }${ dateHtml }<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</div>
   <div class="msg-text"${ colorStyle }>${ textAutoLinkHtml }</div>
 </div>`;
   }
 
-  static logCss(compact=true): string {
+  static logCss(noImage=true): string {
     return `.message {
   display: flex;
   width: 100%;
