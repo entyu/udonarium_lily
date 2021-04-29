@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatTab } from '@udonarium/chat-tab';
-import { ChatTabList } from '@udonarium/chat-tab-list';
-import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { Network, EventSystem } from '@udonarium/core/system';
 import { UUID } from '@udonarium/core/system/util/uuid';
@@ -20,6 +18,9 @@ export class ChatLogOutputComponent implements OnInit {
   private static logFormat: number = 1;
   private static logTimestampType: number = 1;
 
+  selectedTab: ChatTab = null;
+  panelId;
+
   get isAllTabs(): boolean { return ChatLogOutputComponent.isAllTabs; }
   set isAllTabs(isAllTabs: boolean) { ChatLogOutputComponent.isAllTabs = isAllTabs; }
 
@@ -35,7 +36,6 @@ export class ChatLogOutputComponent implements OnInit {
   get chatTabs(): ChatTab[] { return this.chatMessageService.chatTabs; }
   get isEmpty(): boolean { return this.chatMessageService.chatTabs.length < 1 }
   get isDeleted(): boolean { return this.selectedTab ? ObjectStore.instance.get(this.selectedTab.identifier) == null : false; }
-  get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
 
   get roomName():string {
     let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
@@ -43,9 +43,6 @@ export class ChatLogOutputComponent implements OnInit {
       : 'ルームデータ';
     return roomName;
   }
-  
-  selectedTab: ChatTab = null;
-  panelId;
 
   constructor(
     private modalService: ModalService,
@@ -74,6 +71,8 @@ export class ChatLogOutputComponent implements OnInit {
 
   saveLog() {
     if (!this.selectedTab) return;
-    this.saveDataService.saveChatLog(this.logFormat, this.roomName + '_log_' + this.selectedTab.name, this.isAllTabs ? null: this.selectedTab, this.logTimestampType);
+    const fileName = this.roomName + '_log_' + (this.isAllTabs ? '全てのタブ' : this.selectedTab.name);
+    const tab = this.isAllTabs ? null: this.selectedTab;
+    this.saveDataService.saveChatLog(this.logFormat, fileName, tab, this.logTimestampType);
   }
 }

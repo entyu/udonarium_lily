@@ -88,6 +88,14 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
   get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
 
+  logFragment(logForamt: number, tabName: string=null, logTimestampType: number, noImage=true) {
+    if (logForamt == 0) {
+      return this.logFragmentText(tabName, logTimestampType);
+    } else {
+      return this.logFragmentHtml(tabName, logTimestampType, logForamt != 2);
+    }
+  }
+
   logFragmentText(tabName: string=null, logTimestampType: number): string {
     tabName = (!tabName || tabName.trim() == '') ? '' : `[${ tabName }] `;
     const date = new Date(this.timestamp);
