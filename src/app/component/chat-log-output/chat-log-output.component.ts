@@ -37,6 +37,8 @@ export class ChatLogOutputComponent implements OnInit {
   get isEmpty(): boolean { return this.chatMessageService.chatTabs.length < 1 }
   get isDeleted(): boolean { return this.selectedTab ? ObjectStore.instance.get(this.selectedTab.identifier) == null : false; }
 
+  get isDiable(): boolean { return this.isEmpty || (!this.isAllTabs && (!this.selectedTab || this.isDeleted)) }
+
   get roomName():string {
     let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
       ? Network.peerContext.roomName
@@ -70,9 +72,9 @@ export class ChatLogOutputComponent implements OnInit {
   }
 
   saveLog() {
-    if (!this.selectedTab) return;
-    const fileName = this.roomName + '_log_' + (this.isAllTabs ? '全てのタブ' : this.selectedTab.name);
-    const tab = this.isAllTabs ? null: this.selectedTab;
+    if (this.isDiable) return;
+    const fileName = this.roomName + '_chatLog_' + (this.isAllTabs ? '全てのタブ' : this.selectedTab.name);
+    const tab = this.isAllTabs ? null : this.selectedTab;
     this.saveDataService.saveChatLog(this.logFormat, fileName, tab, this.logTimestampType);
   }
 }
