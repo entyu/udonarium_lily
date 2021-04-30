@@ -9,8 +9,8 @@
   </div>
   <div class="flex-item">
     <ng-container *ngIf="!isEmpty && selectedTab">
-      <div><label><b style="font-size: smaller">タブ名:</b><br>
-        <input style="width: 90%" [(ngModel)]="tabName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" /></label>
+      <div><label><b style="font-size: smaller">タブ名: </b>
+        <input style="width: 200px" [(ngModel)]="tabName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" /></label>
       </div>
       <div style="font-weight: bolder; font-size: smaller; padding-top: 3px">
         <label>
@@ -23,7 +23,7 @@
         <ng-container *ngIf="!isDeleted">
           <button (click)="upTabIndex()">↑</button>
           <button (click)="downTabIndex()">↓</button>
-          <div style="float: right; margin-right: 1em">
+          <div style="float: right">
           <button (click)="showLogOutput()">ログ出力</button>
           <button [disabled]="isSaveing" (click)="save()">
             <div style="position: relative;">
