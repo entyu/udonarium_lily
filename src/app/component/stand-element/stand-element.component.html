@@ -42,25 +42,31 @@
         </ng-container>
       </div>
       <div>
+        <ng-container *ngIf="showNameElement">
+          <label style="margin-right: 0.6em">
+            <input type="checkbox" [(ngModel)]="showNameElement.value" checked="{{showNameElement.value ? 'checked' : ''}}" (change)="showNameElement.value = (showNameElement.value ? 'showName' : '')">
+            <b style="font-size: smaller;">ネーム表示</b>
+          </label>
+        </ng-container>
         <ng-container *ngIf="applyImageEffectElement">
-          <label style="margin-right: 0.6em;">
+          <label style="margin-right: 0.6em">
             <input type="checkbox" [(ngModel)]="applyImageEffectElement.value" checked="{{applyImageEffectElement.value ? 'checked' : ''}}" (change)="applyImageEffectElement.value = (applyImageEffectElement.value ? 'applyImageEffect' : '')">
-            <b style="font-size: smaller;">キャラクター画像効果を反映</b>
+            <b style="font-size: smaller;">画像効果反映</b>
           </label>
         </ng-container>
         <ng-container *ngIf="applyRollElement">
-          <label style="margin-right: 0.6em;">
+          <label style="margin-right: 0.6em">
             <input type="checkbox" [(ngModel)]="applyRollElement.value" checked="{{applyRollElement.value ? 'checked' : ''}}" (change)="applyRollElement.value = (applyRollElement.value ? 'applyRoll' : '')">
-            <b style="font-size: smaller;">回転を反映</b>
+            <b style="font-size: smaller;">回転反映</b>
           </label>
         </ng-container>
         <ng-container *ngIf="applyDialogElement">
-          <label style="margin-right: 0.3em;">
+          <label style="margin-right: 0.2em">
             <input type="checkbox" [(ngModel)]="applyDialogElement.value" checked="{{applyDialogElement.value ? 'checked' : ''}}" (change)="applyDialogElement.value = (applyDialogElement.value ? 'applyDialog' : '')">
             <b style="font-size: smaller;">💭</b>
           </label>
         </ng-container>
-        <button (click)="openSpeakingModal()" style="font-size: 9px" [style.font-weight]="isSpeakable ? 'bolder' : 'normal'">口パクアニメ (APNGなど)</button>
+        <button (click)="openSpeakingModal()" style="font-size: 9px" [style.font-weight]="isSpeakable ? 'bolder' : 'normal'">口パク画像 (APNGなど)</button>
         <ng-container *ngIf="positionElement">
           <br><button style="font-size: 9px; margin-right: 1em;" (click)="testStandUp()"><b>テスト (自分だけ見る)</b></button>
           <label style="margin-right: 0.3em;">
@@ -77,7 +83,7 @@
           <br><span style="white-space: nowrap; font-size: smaller">
             <b style="display: inline-block; margin-left: 3px">Height (0=指定なし): </b>
             <input style="width: 130px" type="range" min="0" max="100" [(ngModel)]="heightElement.value">
-            <input style="width: 3em; text-align: right;" type="number" min="0" max="100" [(ngModel)]="heightElement.value">
+            <input style="width: 3em; text-align: right;" type="number" min="0" max="200" [(ngModel)]="heightElement.value">
             <b style="display: inline-block; font-size: smaller; margin-left: 3px">%</b>
           </span>
           <span style="white-space: nowrap; margin-left: 0.8em; font-size: smaller">
