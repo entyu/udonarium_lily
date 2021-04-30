@@ -131,10 +131,10 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     const color = StringUtil.escapeHtml(this.color ? this.color : PeerCursor.CHAT_DEFAULT_COLOR);
     const colorStyle = this.isSpecialColor ? '' : ` style="color: ${ color }"`;
 
-    const textAutoLinkHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>' 
+    const textAutoLinkedHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>' 
       : Autolinker.link(StringUtil.escapeHtml(this.text), {
         urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, 
-        truncate: {length: 48, location: 'end'}, 
+        truncate: {length: 96, location: 'end'}, 
         decodePercentEncoding: false, 
         stripPrefix: false, 
         stripTrailingSlash: false, 
@@ -147,18 +147,21 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
       });
     return `<div class="${ messageClassNames.join(' ') }" style="border-left-color: ${ color }">
   <div class="msg-header" title="${ longDateTimeStr + '：' + nameHtml }">${ tabNameHtml }${ dateHtml }<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</div>
-  <div class="msg-text"${ colorStyle }>${ textAutoLinkHtml }</div>
+  <div class="msg-text"${ colorStyle }>${ textAutoLinkedHtml }</div>
 </div>`;
   }
 
   static logCss(noImage=true): string {
-    return `.message {
+    return `body {
+  color: #444;
+  background-color: #FFF;
+}
+.message {
   display: flex;
   width: 100%;
   word-wrap: break-word;
   overflow-wrap: anywhere;
   word-break: break-word;
-  padding-left: 2px;
   border-left: 4px solid transparent;
   margin-top: 1px;
 }
@@ -187,12 +190,15 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 }
 .msg-header {
   white-space: nowrap;
+  border-left: 1px solid #FFF;
+  padding-left: 3px;
 }
 .msg-name {
   font-weight: bolder;
 }
 .msg-text {
   white-space: pre-wrap;
+  width: 100%
 }
 a[target=_blank] {
   text-decoration: none;
