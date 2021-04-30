@@ -191,7 +191,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 .msg-header {
   white-space: nowrap;
   border-left: 1px solid #FFF;
-  padding-left: 3px;
+  padding-left: 2px;
 }
 .msg-name {
   font-weight: bolder;
