@@ -43,9 +43,6 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
   get palette(): ChatPalette { return this.character.remoteController; }
 
-  private _gameSystem: GameSystemClass;
-  private initTimestamp : number = 0;
-
   get gameType(): string { return this._gameSystem == null ? '' : this._gameSystem.ID };
   set gameType(gameType: string) {
     DiceBot.loadGameSystemAsync(gameType).then((gameSystem) => {
@@ -96,7 +93,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   errorMessageBuff = '';
   errorMessageController = '';
 
-  private _gameType = '';
+  private _gameSystem: GameSystemClass;
   private initTimestamp = 0;
 
   public buffAreaIsHide = false;
