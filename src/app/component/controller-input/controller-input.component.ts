@@ -352,10 +352,15 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
     if (event && event.keyCode !== 13) return;
 
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
+
+    const message = {
+      text: this.text, sendFrom: this.sendFrom, sendTo: this.sendTo,
+      tachieNum : this.tachieNum, messColor : this.selectChatColor,
+    }
     DiceBot.loadGameSystemAsync(this.gameType).then((gameSystem) => {
       this.chat.emit({
-        text: this.text, gameSystem: gameSystem, sendFrom: this.sendFrom,
-        sendTo: this.sendTo, tachieNum : this.tachieNum, messColor : this.selectChatColor,
+        text: message.text, gameSystem: gameSystem, sendFrom: message.sendFrom,
+        sendTo: message.sendTo, tachieNum : message.tachieNum, messColor : message.messColor,
       });
     });
     this.text = '';
