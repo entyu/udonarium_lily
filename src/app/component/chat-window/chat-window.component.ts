@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import GameSystemClass from 'bcdice/lib/game_system';
 import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { DiceBot } from '@udonarium/dice-bot';
@@ -151,11 +152,9 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     let component = this.panelService.open<DiceTableSettingComponent>(DiceTableSettingComponent, option);
   }
 
-  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number , messColor:string }) {
+  sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number , messColor:string }) {
     if (this.chatTab) {
-      DiceBot.loadGameSystemAsync(value.gameType).then((gameSystem) => {
-        this.chatMessageService.sendMessage(this.chatTab, value.text, gameSystem, value.sendFrom, value.sendTo ,value.tachieNum ,value.messColor );
-      });
+      this.chatMessageService.sendMessage(this.chatTab, value.text, value.gameSystem, value.sendFrom, value.sendTo, value.tachieNum, value.messColor);
     }
   }
 

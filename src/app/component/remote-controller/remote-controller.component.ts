@@ -446,7 +446,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     }      
   }
 
-  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string }) {
+  sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string }) {
 
     let text :string ='';
     let gameCharacters = this.getTargetCharacters( true );
@@ -473,7 +473,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
       }
       this.remotAddBuffRound(gameCharacters,buffname,sub,round);
       let mess = 'バフを付与 ' + bufftext + ' > ' + text;
-      this.chatMessageService.sendMessage(this.chatTab, mess, this._gameSystem, this.sendFrom, this.sendTo ,value.tachieNum , value.messColor ); 
+      this.chatMessageService.sendMessage(this.chatTab, mess, this._gameSystem, this.sendFrom, this.sendTo ,value.tachieNum , value.messColor );
       this.errorMessageBuff = '';
     }else{
       this.errorMessageBuff = '対象が未選択です';
