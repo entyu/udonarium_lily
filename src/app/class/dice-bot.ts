@@ -70,20 +70,17 @@ export class DiceBot extends GameObject {
   getDiceTables(): DiceTable[] {
     return ObjectStore.instance.getObjects(DiceTable);
   }
-  
-  //繰り返しコマンドを除去し、sより後ろがCOMMAND_PATTERNにマッチするか確認
-  async checkSecretDiceCommand(gameType,chatText): Promise<boolean> {
-    let text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
-    let nonRepeatText = text.replace(/^(\d+)?\s+/,'repeat1 ').replace(/^x(\d+)?\s+/,'repeat1 ').replace(/repeat(\d+)?\s+/,'');
-//    console.log("シークレット確認nonRepeatText:" + nonRepeatText);
-    let regArray = /^s(.*)?/ig.exec(nonRepeatText);
+
+  // 繰り返しコマンドを除去し、sより後ろがCOMMAND_PATTERNにマッチするか確認
+  checkSecretDiceCommand(gameSystem: GameSystemClass, chatText: string): boolean {
+    const text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
+    const nonRepeatText = text.replace(/^(\d+)?\s+/, 'repeat1 ').replace(/^x(\d+)?\s+/, 'repeat1 ').replace(/repeat(\d+)?\s+/, '');
+    const regArray = /^s(.*)?/ig.exec(nonRepeatText);
     console.log("check secret regArray:" + regArray);
-    if( !regArray ) return false;
-    const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
-    if (!gameSystem.COMMAND_PATTERN.test(regArray[1])) return false;
-    return true;
+
+    return regArray && gameSystem.COMMAND_PATTERN.test(regArray[1])
   }
-  
+
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
@@ -93,10 +90,10 @@ export class DiceBot extends GameObject {
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
-        let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'' ;
-        
+        let gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
+
         try {
-//          let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(text);
+          // let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(text);
           let regArray = /^((\d+)?\s+)?(.*)?/ig.exec(text);
           let repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
@@ -109,7 +106,7 @@ export class DiceBot extends GameObject {
 
           let rollResult = await DiceBot.diceRollAsync(rollText, gameSystem);
           if (!rollResult.result) return;
-          
+
           rollResult.result = rollResult.result.replace(/\n?(#\d+)\n/ig,"$1 ");//繰り返しロールを詰める
 
           this.sendResultMessage(rollResult, chatMessage);
@@ -126,11 +123,10 @@ export class DiceBot extends GameObject {
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
         let splitText = text.split(/\s/);
-        let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'';
 
         let diceTable = this.getDiceTables() ;
-        if( !diceTable )return;
-        if( splitText.length == 0 )return;
+        if (!diceTable) return;
+        if (splitText.length == 0) return;
         
         console.log('コマンド候補:' + splitText[0] );
         
@@ -187,7 +183,7 @@ export class DiceBot extends GameObject {
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
-        let gameType: string = chatMessage.tags ? chatMessage.tags[0]:'';
+        let gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
         
         this.checkResourceEditCommand( chatMessage );
         
@@ -224,7 +220,7 @@ export class DiceBot extends GameObject {
 
         let text: string = StringUtil.toHalfWidth(chatMessage.text);
         let splitText = text.split(/\s/);
-        const gameSystem = await DiceBot.loadGameSystemAsync(chatMessage.tags ? chatMessage.tags[0]:'');
+        const gameSystem = await DiceBot.loadGameSystemAsync(chatMessage.tags ? chatMessage.tags[0] : '');
 
         let diceTable = this.getDiceTables() ;
         if( !diceTable )return;
@@ -423,7 +419,7 @@ export class DiceBot extends GameObject {
     
     let allEditList : ResourceEdit[] = [];
     let data : DataElement ;
-    const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tags ? originalMessage.tags[0]:'');
+    const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tags ? originalMessage.tags[0] : '');
 
      
     for( let oneText of result ){

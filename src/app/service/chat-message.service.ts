@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import GameSystemClass from 'bcdice/lib/game_system';
 
 import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
@@ -80,8 +81,8 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
-  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string){
-//  sendMessage(chatTab: ChatTab, text: string, gameType: string, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string): ChatMessage {//本家からachieNum?: number color? :string を追加 
+  // 本家からachieNum?: number color? :string を追加
+  sendMessage(chatTab: ChatTab, text: string, gameSystem: GameSystemClass | null, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string): ChatMessage {
 
     let img;
     let imgIndex;
@@ -98,20 +99,30 @@ export class ChatMessageService {
       _color = color;
     }
     
+    let dicebot = ObjectStore.instance.get<DiceBot>('DiceBot');
+    let chatMessageTag: string;
+    if (gameSystem == null) {
+      chatMessageTag = '';
+    } else if (dicebot.checkSecretDiceCommand(gameSystem, text)) {
+      chatMessageTag = `${gameSystem.ID} secret`;
+    } else {
+      chatMessageTag = gameSystem.ID;
+    }
+
     let chatMessage: ChatMessageContext = {
       from: Network.peerContext.userId,
       to: this.findId(sendTo),
       name: this.makeMessageName(sendFrom, sendTo),
       imageIdentifier: this.findImageIdentifier(sendFrom,imgIndex),//lily
       timestamp: this.calcTimeStamp(chatTab),
-      tag: gameType ,
+      tag: chatMessageTag,
       text: text,
       imagePos: this.findImagePos(sendFrom),//lily
       messColor: _color,//lily
       sendFrom: sendFrom //lily
     };
         
-    //ハイド処理
+    // ハイド処理
     let chkMessage = ' ' + StringUtil.toHalfWidth(text).toLowerCase();
     let matches_array = chkMessage.match(/\s@(\S+)$/i);
     if( matches_array ){
@@ -121,7 +132,7 @@ export class ChatMessageService {
       chatMessage.text = text.replace(/([@＠]\S+)$/i,'');
     }
     
-    //立ち絵置き換え    
+    // 立ち絵置き換え
     let matches_array_num = chkMessage.match(/\s@(\d+)$/i);
     if( matches_array_num ){
       let num: number = parseInt(RegExp.$1);
@@ -130,31 +141,7 @@ export class ChatMessageService {
       chatMessage.text = text.replace(/([@＠]\S+)$/i,'');
     }
 
-    let dicebot = ObjectStore.instance.get<DiceBot>('DiceBot');
-    dicebot.checkSecretDiceCommand(gameType,text).then(value => {
-      console.log(value); // => resolve!!
-
-      let chatMessageAddSecretTag: ChatMessageContext = {
-        from:             chatMessage.from,
-        to:               chatMessage.to,
-        name:             chatMessage.name,
-        imageIdentifier:  chatMessage.imageIdentifier,
-        timestamp:        chatMessage.timestamp,
-        tag:              value ? chatMessage.tag + ' secret' : chatMessage.tag ,
-        text:             chatMessage.text,
-        imagePos:         chatMessage.imagePos,
-        messColor:        chatMessage.messColor,
-        sendFrom:         chatMessage.sendFrom 
-      };
-
-      chatTab.addMessage(chatMessageAddSecretTag);
-    });
-    
-//    return chatTab.addMessage(chatMessage); 
-//    ダイスのシークレット判定のため非同期でaddMessageを実行する様に変更した
-//    この関数の戻り値は使用箇所無しのため戻り値なしに変更将来的に問題が発生する可能性は注意 lily v1.03.0b2
-
-    return ;
+    return chatTab.addMessage(chatMessage);
   }
 
   private findId(identifier: string): string {
