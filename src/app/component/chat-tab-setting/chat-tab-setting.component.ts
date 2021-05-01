@@ -141,7 +141,6 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     let mess = 'ログをクリアしました'
     let gameSystem = null;
     let sendTo ='';
-    
     this.chatMessageService.sendMessage(this.selectedTab, mess, gameSystem, this.myPeer.identifier, sendTo , 0 , '#000000' );
   }
 
