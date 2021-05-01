@@ -121,7 +121,7 @@ export class ChatMessageService {
       messColor: _color,//lily
       sendFrom: sendFrom //lily
     };
-        
+
     // ハイド処理
     let chkMessage = ' ' + StringUtil.toHalfWidth(text).toLowerCase();
     let matches_array = chkMessage.match(/\s@(\S+)$/i);

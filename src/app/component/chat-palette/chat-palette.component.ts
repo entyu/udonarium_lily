@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import GameSystemClass from 'bcdice/lib/game_system';
 import { ChatPalette } from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -126,12 +127,10 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendChat(value: { text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number, messColor:string}) {
+  sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number, messColor:string}) {
     if (this.chatTab) {
-      DiceBot.loadGameSystemAsync(value.gameType).then((gameSystem) => {
-        let text = this.palette.evaluate(value.text, this.character.rootDataElement);
-        this.chatMessageService.sendMessage(this.chatTab, text, gameSystem, value.sendFrom, value.sendTo ,value.tachieNum , value.messColor);
-      });
+      let text = this.palette.evaluate(value.text, this.character.rootDataElement);
+      this.chatMessageService.sendMessage(this.chatTab, text, value.gameSystem, value.sendFrom, value.sendTo, value.tachieNum, value.messColor);
       // this.chatMessageService.sendMessage(this.chatTab, text, value.gameType, value.sendFrom, value.sendTo);
     }
   }

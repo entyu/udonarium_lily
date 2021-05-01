@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import GameSystemClass from 'bcdice/lib/game_system';
 import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -53,7 +54,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 //  @Input('tachieNum') _tachieNum: number = 0;  
 //  @Output() tachieNumtChange = new EventEmitter<number>();
 
-  @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
+  @Output() chat = new EventEmitter<{ text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
 
   @Output() tabSwitch = new EventEmitter<number>();
 
@@ -381,12 +382,20 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.history.push(this.text);
     this.currentHistoryIndex = -1;
 
-    this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom
-    , sendTo: this.sendTo , tachieNum : this.tachieNum ,messColor : this.selectChatColor });
-
+    const message = {
+      text: this.text, sendFrom: this.sendFrom, sendTo: this.sendTo,
+      tachieNum : this.tachieNum, messColor : this.selectChatColor,
+    }
+    DiceBot.loadGameSystemAsync(this.gameType).then((gameSystem) => {
+      this.chat.emit({
+        text: message.text, gameSystem: gameSystem, sendFrom: message.sendFrom,
+        sendTo: message.sendTo, tachieNum : message.tachieNum, messColor : message.messColor,
+      });
+    });
     this.text = '';
     this.previousWritingLength = this.text.length;
     this.kickCalcFitHeight();
+
   }
 
   kickCalcFitHeight() {
