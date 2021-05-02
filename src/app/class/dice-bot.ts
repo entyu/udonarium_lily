@@ -111,6 +111,16 @@ export class DiceBot extends GameObject {
     return ObjectStore.instance.getObjects(DiceTable);
   }
 
+  // 繰り返しコマンドを除去し、sより後ろがCOMMAND_PATTERNにマッチするか確認
+  checkSecretDiceCommand(gameSystem: GameSystemClass, chatText: string): boolean {
+    const text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
+    const nonRepeatText = text.replace(/^(\d+)?\s+/, 'repeat1 ').replace(/^x(\d+)?\s+/, 'repeat1 ').replace(/repeat(\d+)?\s+/, '');
+    const regArray = /^s(.*)?/ig.exec(nonRepeatText);
+    console.log("check secret regArray:" + regArray);
+
+    return regArray && gameSystem.COMMAND_PATTERN.test(regArray[1])
+  }
+
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
