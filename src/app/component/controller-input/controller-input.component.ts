@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import GameSystemClass from 'bcdice/lib/game_system';
 import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -57,7 +58,7 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
   get selectNum(): number { return this._selectNum; }
 //  set selectNum( num :number){ this._selectNum = num; }
 
-  @Output() chat = new EventEmitter<{ text: string, gameType: string, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
+  @Output() chat = new EventEmitter<{ text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
 
   @Output() allBox = new EventEmitter<{ check: boolean}>();
 
@@ -351,9 +352,17 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
     if (event && event.keyCode !== 13) return;
 
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
-    this.chat.emit({ text: this.text, gameType: this.gameType, sendFrom: this.sendFrom
-    , sendTo: this.sendTo ,tachieNum :this.tachieNum , messColor : this.selectChatColor });
 
+    const message = {
+      text: this.text, sendFrom: this.sendFrom, sendTo: this.sendTo,
+      tachieNum : this.tachieNum, messColor : this.selectChatColor,
+    }
+    DiceBot.loadGameSystemAsync(this.gameType).then((gameSystem) => {
+      this.chat.emit({
+        text: message.text, gameSystem: gameSystem, sendFrom: message.sendFrom,
+        sendTo: message.sendTo, tachieNum : message.tachieNum, messColor : message.messColor,
+      });
+    });
     this.text = '';
     this.previousWritingLength = this.text.length;
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;

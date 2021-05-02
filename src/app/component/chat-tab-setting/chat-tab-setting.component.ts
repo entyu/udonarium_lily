@@ -139,16 +139,16 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
         this.selectedTab.tachieReset();
     }
     let mess = 'ログをクリアしました'
-    let gameType: string = '';
+    let gameSystem = null;
     let sendTo ='';
-    this.chatMessageService.sendMessage(this.selectedTab, mess, gameType, this.myPeer.identifier, sendTo , 0 , '#000000' );
+    this.chatMessageService.sendMessage(this.selectedTab, mess, gameSystem, this.myPeer.identifier, sendTo , 0 , '#000000' );
   }
 
   deleteLogALL(){
     if( !this.allowDeleteLog ) return;
     
     let mess = 'ログをクリアしました'
-    let gameType: string = '';
+    let gameSystem = null;
     let sendTo ='';
     
     for (let child of ChatTabList.instance.chatTabs) {
@@ -156,7 +156,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
         child.children[0].destroy();
         child.tachieReset();
       }
-      this.chatMessageService.sendMessage(child, mess, gameType, this.myPeer.identifier, sendTo , 0 , '#000000' );
+      this.chatMessageService.sendMessage(child, mess, gameSystem, this.myPeer.identifier, sendTo , 0 , '#000000' );
     }
   }
 
