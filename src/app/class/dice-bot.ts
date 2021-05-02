@@ -130,7 +130,7 @@ export class DiceBot extends GameObject {
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) { return; }
 
         const text: string = StringUtil.toHalfWidth(chatMessage.text);
-        const gameType: string = chatMessage.tag;
+        let gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
 
         try {
           // let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(text);
@@ -163,7 +163,6 @@ export class DiceBot extends GameObject {
 
         const text: string = StringUtil.toHalfWidth(chatMessage.text);
         const splitText = text.split(/\s/);
-        const gameType: string = chatMessage.tag;
 
         const diceTable = this.getDiceTables() ;
         if ( !diceTable ) {return; }
@@ -186,7 +185,8 @@ export class DiceBot extends GameObject {
           const rollText: string = (regArray[3] != null) ? regArray[3] : text;
           const finalResult: DiceRollResult = { result: '', isSecret: false };
           for (let i = 0; i < repeat && i < 32; i++) {
-            const rollResult = await DiceBot.diceRollAsync(rollText, rollTable.diceTablePalette.dicebot);
+            const gameSystem = await DiceBot.loadGameSystemAsync(rollTable.diceTablePalette.dicebot);
+            const rollResult = await DiceBot.diceRollAsync(rollText, gameSystem);
             if (rollResult.result.length < 1) { break; }
 
             finalResult.result += rollResult.result;
@@ -224,7 +224,7 @@ export class DiceBot extends GameObject {
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) { return; }
 
         const text: string = StringUtil.toHalfWidth(chatMessage.text);
-        const gameType: string = chatMessage.tag;
+        let gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
 
         this.checkResourceEditCommand( chatMessage );
 
@@ -261,7 +261,7 @@ export class DiceBot extends GameObject {
 
         const text: string = StringUtil.toHalfWidth(chatMessage.text);
         const splitText = text.split(/\s/);
-        const gameSystem = await DiceBot.loadGameSystemAsync(chatMessage.tag);
+        const gameSystem = await DiceBot.loadGameSystemAsync(chatMessage.tags ? chatMessage.tags[0] : '');
 
         const diceTable = this.getDiceTables() ;
         if ( !diceTable ) {return; }
@@ -461,7 +461,7 @@ export class DiceBot extends GameObject {
 
     const allEditList: ResourceEdit[] = [];
     let data: DataElement ;
-    const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tag);
+    const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tags ? originalMessage.tags[0] : '');
 
 
     for ( const oneText of result ){
@@ -534,7 +534,6 @@ export class DiceBot extends GameObject {
       } catch (e) {
         console.error(e);
       }
-      console.log( '円柱chkpoint 25');
       console.log( 'target:' + oneResourceEdit.target + ' operator:' + oneResourceEdit.operator + ' command:' + oneResourceEdit.command + ' ans:' + oneResourceEdit.calcAns);
       allEditList.push( oneResourceEdit );
     }
