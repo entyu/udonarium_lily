@@ -15,6 +15,11 @@
         <span #msgFrom class='tip msg-from' 
           [innerHTML]="stringUtil.escapeHtml('　' + chatMessage.from) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: true, stripTrailingSlash: true, email: false, phone: false}"></span>
         <span class='tip msg-timestamp'>　{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
+        <ng-container *ngIf="isEditable">
+          <button *ngIf="!isEditing" class="edit-button" (click)="editingText = chatMessage.text; isEditing = true">編集</button>
+          <button *ngIf="isEditing" class="edit-button" (click)="chatMessage.isEdited = true; chatMessage.text = editingText; isEditing = false">確定</button><button *ngIf="isEditing" class="edit-button" (click)="isEditing = false">キャンセル</button>
+        </ng-container>
+        <span *ngIf="chatMessage.isEdited" class="is-edited">　編集済</span>
       </div>
       <div class="text msg-text">
         <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
@@ -28,9 +33,14 @@
   </div>
 </div>
 <ng-template #visible>
-  <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
-    [innerHTML]="stringUtil.escapeHtml(chatMessage.text) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: false, stripTrailingSlash: false, email: false, phone: false}"></span>
-  <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">結果を公開</button>
+  <ng-container *ngIf="isEditing">
+    <textarea [(ngModel)]="editingText" style="width: 100%; height: 100%"></textarea>
+  </ng-container>
+  <ng-container *ngIf="!isEditing">
+    <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
+      [innerHTML]="stringUtil.escapeHtml(chatMessage.text) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: false, stripTrailingSlash: false, email: false, phone: false}"></span>
+    <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">結果を公開</button>
+  </ng-container>
 </ng-template>
 <ng-template #secret>
   <span><s>（シークレットダイス）</s></span>

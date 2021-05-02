@@ -5,11 +5,9 @@ import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ChatMessageService } from 'service/chat-message.service';
 
-import { PeerCursor } from '@udonarium/peer-cursor';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
-import { DiceBot } from '@udonarium/dice-bot';
 
 @Component({
   selector: 'chat-message',
@@ -55,6 +53,8 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   
   imageFile: ImageFile = ImageFile.Empty;
   animeState: string = 'inactive';
+  isEditing = false;
+  editingText: string;
 
   constructor(
     private chatMessageService: ChatMessageService,
@@ -72,6 +72,10 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
 
   get isMine(): boolean {
     return this.chatMessage.isSendFromSelf;
+  }
+
+  get isEditable(): boolean {
+    return this.chatMessage.isEditable;
   }
 
   ngAfterViewInit() {

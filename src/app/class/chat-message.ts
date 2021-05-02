@@ -48,9 +48,12 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() standIdentifier: string;
   @SyncVar() standName: string;
   @SyncVar() isUseStandImage: boolean;
+  @SyncVar() isEdited: boolean = false;
 
   get tabIdentifier(): string { return this.parent.identifier; }
-  get text(): string { return <string>this.value }
+  get text(): string { return <string>this.value; }
+  set text(text: string) { this.value = text; }
+  
   get timestamp(): number {
     let timestamp = this.getAttribute('timestamp');
     let num = timestamp ? +timestamp : 0;
@@ -87,6 +90,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isCalculate(): boolean { return this.isSystem && this.from.indexOf('Dice') >= 0 && this.text.indexOf(': 計算結果 →') > -1 ? true : false; }
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
   get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
+  get isEditable(): boolean { return !this.isSystem && this.from === Network.peerContext.userId }
 
   logFragment(logForamt: number, tabName: string=null, logTimestampType: number, noImage=true) {
     if (logForamt == 0) {

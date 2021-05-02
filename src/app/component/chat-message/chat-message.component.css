@@ -123,6 +123,19 @@
   max-width: 100%
 }
 
+.is-edited {
+  font-size: 8px;
+  color: red;
+  font-weight: bolder;
+}
+
+.edit-button {
+  font-size: 8px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin: 0px;
+}
+
 .aura {
   transition: filter 0.3s ease-in-out;
 }
