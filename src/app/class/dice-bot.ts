@@ -116,9 +116,9 @@ export class DiceBot extends GameObject {
     const text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
     const nonRepeatText = text.replace(/^(\d+)?\s+/, 'repeat1 ').replace(/^x(\d+)?\s+/, 'repeat1 ').replace(/repeat(\d+)?\s+/, '');
     const regArray = /^s(.*)?/ig.exec(nonRepeatText);
-    console.log("check secret regArray:" + regArray);
+    console.log('check secret regArray:' + regArray);
 
-    return regArray && gameSystem.COMMAND_PATTERN.test(regArray[1])
+    return regArray && gameSystem.COMMAND_PATTERN.test(regArray[1]);
   }
 
   // GameObject Lifecycle
@@ -130,7 +130,7 @@ export class DiceBot extends GameObject {
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) { return; }
 
         const text: string = StringUtil.toHalfWidth(chatMessage.text);
-        let gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
+        const gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
 
         try {
           // let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(text);
@@ -224,7 +224,7 @@ export class DiceBot extends GameObject {
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) { return; }
 
         const text: string = StringUtil.toHalfWidth(chatMessage.text);
-        let gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
+        const gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
 
         this.checkResourceEditCommand( chatMessage );
 
@@ -490,11 +490,12 @@ export class DiceBot extends GameObject {
 
       console.log( reg1 + '/' + reg2 + '/' + reg3 );
 
-      oneResourceEdit.target = reg1;                                                         // 操作対象検索文字タイプ生値
-      oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(reg1);                        // 操作対象検索文字半角化
-      oneResourceEdit.operator = reg2;                                                       // 演算符号
+      oneResourceEdit.target = reg1;                                                       // 操作対象検索文字タイプ生値
+      oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(reg1);                    // 操作対象検索文字半角化
+      oneResourceEdit.operator = reg2;                                                 // 演算符号
       const commandPrefix = reg2 == '-' ? '-' : '';
-      oneResourceEdit.command = commandPrefix + StringUtil.toHalfWidth(reg3) + '+(1d1-1)';   // 操作量C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
+      oneResourceEdit.command = commandPrefix + StringUtil.toHalfWidth(reg3) + '+(1d1-1)';
+      // 操作量C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
 
       if (StringUtil.toHalfWidth(reg3).match(/\d[dD]/)) {
         oneResourceEdit.isDiceRoll = true;
@@ -530,7 +531,7 @@ export class DiceBot extends GameObject {
         const resultMatch = rollResult.result.match(/([-+]?\d+)$/); // 計算結果だけ格納
         console.log( 'calcAns:' + resultMatch[1]);
 
-        oneResourceEdit.calcAns = parseInt(resultMatch[1]);
+        oneResourceEdit.calcAns = parseInt(resultMatch[1], 10);
       } catch (e) {
         console.error(e);
       }
@@ -556,7 +557,7 @@ export class DiceBot extends GameObject {
         if (edit.operator == '=') {
           calc = edit.calcAns;
         } else {
-          calc = parseInt(oldValueS) + edit.calcAns;
+          calc = parseInt(oldValueS, 10) + edit.calcAns;
         }
         edit.detaElm.currentValue = calc;
 
@@ -566,7 +567,7 @@ export class DiceBot extends GameObject {
         if (edit.operator == '=') {
           calc = edit.calcAns;
         } else {
-          calc = parseInt(oldValueS) + edit.calcAns;
+          calc = parseInt(oldValueS, 10) + edit.calcAns;
         }
         edit.detaElm.value = calc;
       }
@@ -611,7 +612,6 @@ export class DiceBot extends GameObject {
     if (chatTab) { chatTab.addMessage(resourceMessage); }
 
   }
-
 
   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
     let result: string = rollResult.result;
