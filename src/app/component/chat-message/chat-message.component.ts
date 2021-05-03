@@ -49,7 +49,7 @@ import { EventSystem } from '@udonarium/core/system';
 
 export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() chatMessage: ChatMessage;
-  @ViewChild('msgFrom') msgFromElm: ElementRef;
+  @ViewChild('msgFrom', { static: true }) msgFromElm: ElementRef;
   @ViewChild('message') messageElm: ElementRef;
 
   imageFile: ImageFile = ImageFile.Empty;
@@ -133,7 +133,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   editStart() {
     EventSystem.trigger('MESSAGE_EDITING_START', { messageIdentifier: this.chatMessage.identifier });
     this.editingText = this.chatMessage.text;
-    this.isEditing = true
+    this.isEditing = true;
   }
 
   editEnd(event: KeyboardEvent=null) {
@@ -169,12 +169,5 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
 
   editCancel() {
     this.isEditing = false;
-  }
-
-  caltEditHeightCss() {
-    const match = this.editingText.match(/\n/g);
-    const lines = match ? match.length : 0;
-    console.log(lines)
-    return `calc(1.3em * ${lines + 1})`;
   }
 }
