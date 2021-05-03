@@ -10,6 +10,8 @@ import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { EventSystem } from '@udonarium/core/system';
 
+import { COMPOSITION_BUFFER_MODE } from '@angular/forms'
+
 @Component({
   selector: 'chat-message',
   templateUrl: './chat-message.component.html',
@@ -44,7 +46,10 @@ import { EventSystem } from '@udonarium/core/system';
       ])
     ]),
   ],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  providers: [
+    { provide: COMPOSITION_BUFFER_MODE, useValue: false }
+  ]
 })
 
 export class ChatMessageComponent implements OnInit, AfterViewInit {

@@ -124,9 +124,17 @@
 }
 
 .is-edited {
-  color: red;
   margin-left: 2px;
   font-size: 8px;
+  vertical-align: text-bottom;
+}
+
+.is-edited::before {
+  content: '(';
+}
+
+.is-edited::after {
+  content: ')';
 }
 
 .edit-button {
@@ -144,7 +152,7 @@ textarea {
 
 .small-font {
   font-size: 14px;
-  vertical-align: middle;
+  vertical-align: bottom;
 }
 
 .aura {

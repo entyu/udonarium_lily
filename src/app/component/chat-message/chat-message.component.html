@@ -15,13 +15,10 @@
         <span #msgFrom class='tip msg-from' 
           [innerHTML]="stringUtil.escapeHtml(chatMessage.from) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: true, stripTrailingSlash: true, email: false, phone: false}"></span>
         <span class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
-        <span style="white-space: nowrap">
-          <span *ngIf="isEditable" style="margin-left: 4px">
-            <button *ngIf="!isEditing" class="edit-button" (click)="editStart()" title="編集"><i class="material-icons small-font">edit</i></button>
-            <button *ngIf="isEditing" class="edit-button" [disabled]="editingText.trim().length == 0" (click)="editEnd()" title="確定"><i class="material-icons small-font">done</i></button>
-            <button *ngIf="isEditing" class="edit-button" (click)="editCancel()" title="キャンセル"><i class="material-icons small-font">clear</i></button>
-          </span>
-          <span *ngIf="!isEditing && chatMessage.isEdited" class="is-edited">(<b>編集済</b> {{chatMessage.lastUpdate | date:'y/M/d H:mm'}})</span>
+        <span *ngIf="isEditable" style="margin-left: 4px; white-space: nowrap">
+          <button *ngIf="!isEditing" class="edit-button" (click)="editStart()" title="編集"><i class="material-icons small-font">edit</i></button>
+          <button *ngIf="isEditing" class="edit-button" [disabled]="editingText.trim().length == 0" (click)="editEnd()" title="確定"><i class="material-icons small-font">done</i></button>
+          <button *ngIf="isEditing" class="edit-button" (click)="editCancel()" title="キャンセル"><i class="material-icons small-font">clear</i></button>
         </span>
       </div>
       <div class="text msg-text">
@@ -37,13 +34,14 @@
 </div>
 <ng-template #visible>
   <div *ngIf="isEditing" style="position: relative">
-    <span aria-hidden="true" style="visibility: invisible">{{ editingText + "\u200b" }}</span>
-    <textarea #edit [(ngModel)]="editingText" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%" (keydown.enter)="editEnd($event)"></textarea>
+    <span aria-hidden="true" style="visibility: hidden">{{ editingText + "\u200b" }}</span>
+    <textarea #edit [(ngModel)]="editingText" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%" (keydown.enter)="editEnd($event)" (keydown.escape)="editCancel()"></textarea>
   </div>
   <div [style.display]="isEditing ? 'none' : 'block'">
     <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
       [innerHTML]="stringUtil.escapeHtml(chatMessage.text + '\u200b') | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: false, stripTrailingSlash: false, email: false, phone: false}"></span>
-    <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">結果を公開</button>
+      <span *ngIf="!isEditing && chatMessage.isEdited" class="is-edited"><b style="white-space: nowrap;">編集済</b> {{chatMessage.lastUpdate | date:'y/M/d H:mm'}}</span>
+      <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">結果を公開</button>
   </div>
 </ng-template>
 <ng-template #secret>
