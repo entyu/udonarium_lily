@@ -50,11 +50,11 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() chatMessage: ChatMessage;
   @ViewChild('msgFrom') msgFromElm: ElementRef;
   @ViewChild('message') messageElm: ElementRef;
-  
+
   imageFile: ImageFile = ImageFile.Empty;
   animeState: string = 'inactive';
   isEditing = false;
-  editingText: string;
+  editingText = '';
 
   constructor(
     private chatMessageService: ChatMessageService,
@@ -120,5 +120,52 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
 
   discloseMessage() {
     this.chatMessage.tag = this.chatMessage.tag.replace('secret', '');
+  }
+
+  editStart() {
+    this.editingText = this.chatMessage.text;
+    this.isEditing = true
+  }
+
+  editEnd(event: KeyboardEvent=null) {
+    if (event) event.preventDefault();
+    if (event && event.keyCode !== 13) return;
+
+    if (this.isEditable && this.editingText.trim().length > 0 && this.chatMessage.text != this.editingText) {
+      if (!this.chatMessage.isSecret) this.chatMessage.isEdited = true;
+      this.chatMessage.text = this.editingText;
+      this.isEditing = false;
+      setTimeout(() => {
+        this.messageElm.nativeElement.querySelectorAll('A[href]').forEach(anchor => {
+          const href = anchor.getAttribute('href');
+          if (StringUtil.validUrl(href)) {
+            if (!StringUtil.sameOrigin(href)) {
+              anchor.classList.add('outer-link');
+              anchor.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                this.modalService.open(OpenUrlComponent, { url: href });
+              }, true);
+            }
+          } else {
+            anchor.removeAttribute('href');
+            anchor.removeAttribute('target');
+          }
+        });
+      });
+    } else {
+      this.editCancel();
+    }
+  }
+
+  editCancel() {
+    this.isEditing = false;
+  }
+
+  caltEditHeightCss() {
+    const match = this.editingText.match(/\n/g);
+    const lines = match ? match.length : 0;
+    console.log(lines)
+    return `calc(1.3em * ${lines + 1})`;
   }
 }

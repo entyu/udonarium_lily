@@ -87,6 +87,7 @@
 
 .msg-text {
   white-space: pre-wrap;
+  line-height: 1.3;
 }
 
 .dicebot-message .msg-name {
@@ -133,8 +134,18 @@
   font-size: 8px;
   padding-top: 0px;
   padding-bottom: 0px;
+  margin-right: 1px;
   margin: 0px;
 }
+
+textarea {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Verdana, Meiryo, "M+ 1p", sans-serif;
+  margin: -3px;
+  font-size: 14px;
+  line-height: 1.3;
+  resize: none;
+}
+
 
 .aura {
   transition: filter 0.3s ease-in-out;
