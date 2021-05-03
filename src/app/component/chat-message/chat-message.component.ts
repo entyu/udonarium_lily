@@ -50,7 +50,8 @@ import { EventSystem } from '@udonarium/core/system';
 export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() chatMessage: ChatMessage;
   @ViewChild('msgFrom', { static: true }) msgFromElm: ElementRef;
-  @ViewChild('message') messageElm: ElementRef;
+  @ViewChild('message', { static: false }) messageElm: ElementRef;
+  @ViewChild('edit', { static: false }) editElm: ElementRef<HTMLTextAreaElement>;
 
   imageFile: ImageFile = ImageFile.Empty;
   animeState: string = 'inactive';
@@ -134,6 +135,9 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     EventSystem.trigger('MESSAGE_EDITING_START', { messageIdentifier: this.chatMessage.identifier });
     this.editingText = this.chatMessage.text;
     this.isEditing = true;
+    setTimeout(() => {
+      if (this.editElm.nativeElement) this.editElm.nativeElement.focus();
+    });
   }
 
   editEnd(event: KeyboardEvent=null) {

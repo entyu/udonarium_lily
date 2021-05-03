@@ -20,7 +20,7 @@
           <button *ngIf="isEditing" class="edit-button" [disabled]="editingText.trim().length == 0" (click)="editEnd()" title="確定"><i class="material-icons small-font">done</i></button>
           <button *ngIf="isEditing" class="edit-button" (click)="editCancel()" title="キャンセル"><i class="material-icons small-font">clear</i></button>
         </span>
-        <span *ngIf="chatMessage.isEdited && !isEditing" class="is-edited"><b>編集済</b> ({{chatMessage.lastUpdate | date:'y/M/d H:mm'}})</span>
+        <span *ngIf="chatMessage.isEdited && !isEditing" class="is-edited">(<b>編集済</b> {{chatMessage.lastUpdate | date:'y/M/d H:mm'}})</span>
       </div>
       <div class="text msg-text">
         <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
@@ -36,7 +36,7 @@
 <ng-template #visible>
   <div *ngIf="isEditing" style="position: relative">
     <span aria-hidden="true" style="visibility: invisible">{{ editingText + "\u200b" }}</span>
-    <textarea [(ngModel)]="editingText" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%" (keydown.enter)="editEnd($event)"></textarea>
+    <textarea #edit [(ngModel)]="editingText" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%" (keydown.enter)="editEnd($event)"></textarea>
   </div>
   <div [style.display]="isEditing ? 'none' : 'block'">
     <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
