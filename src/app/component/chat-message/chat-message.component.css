@@ -131,7 +131,8 @@
 
 .edit-button {
   padding: 0px 6px;
-  margin: -2px 1px 0px 0px;
+  vertical-align: 10%;
+  margin: 0px 1px 0px 0px;
 }
 
 textarea {
