@@ -13,14 +13,14 @@
       <div class="title">
         <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
         <span #msgFrom class='tip msg-from' 
-          [innerHTML]="stringUtil.escapeHtml('　' + chatMessage.from) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: true, stripTrailingSlash: true, email: false, phone: false}"></span>
-        <span class='tip msg-timestamp'>　{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
+          [innerHTML]="stringUtil.escapeHtml(chatMessage.from) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: true, stripTrailingSlash: true, email: false, phone: false}"></span>
+        <span class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
         <span *ngIf="isEditable" style="margin-left: 4px">
           <button *ngIf="!isEditing" class="edit-button" (click)="editStart()">編集</button>
           <button *ngIf="isEditing" class="edit-button" [disabled]="editingText.trim().length == 0" (click)="editEnd()">確定</button>
           <button *ngIf="isEditing" class="edit-button" (click)="editCancel()">キャンセル</button>
         </span>
-        <span *ngIf="chatMessage.isEdited && !isEditing" class="is-edited"> 編集済</span>
+        <span *ngIf="chatMessage.isEdited && !isEditing" class="is-edited">編集済</span>
       </div>
       <div class="text msg-text">
         <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>

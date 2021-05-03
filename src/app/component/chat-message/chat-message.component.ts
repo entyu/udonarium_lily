@@ -8,6 +8,7 @@ import { ChatMessageService } from 'service/chat-message.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { EventSystem } from '@udonarium/core/system';
 
 @Component({
   selector: 'chat-message',
@@ -64,6 +65,13 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   stringUtil = StringUtil;
 
   ngOnInit() {
+    EventSystem.register(this)
+    .on('MESSAGE_EDITING_START', -1000, event => {
+      if (event.isSendFromSelf && (!event.data || event.data.messageIdentifier !== this.chatMessage.identifier)) {
+        this.editCancel();
+      }
+    });
+
     let file: ImageFile = this.chatMessage.image;
     if (file) this.imageFile = file;
     let time = this.chatMessageService.getTime();
@@ -123,6 +131,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   }
 
   editStart() {
+    EventSystem.trigger('MESSAGE_EDITING_START', { messageIdentifier: this.chatMessage.identifier });
     this.editingText = this.chatMessage.text;
     this.isEditing = true
   }
@@ -132,7 +141,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     if (event && event.keyCode !== 13) return;
 
     if (this.isEditable && this.editingText.trim().length > 0 && this.chatMessage.text != this.editingText) {
-      if (!this.chatMessage.isSecret) this.chatMessage.isEdited = true;
+      if (!this.chatMessage.isSecret) this.chatMessage.lastUpdate = Date.now();
       this.chatMessage.text = this.editingText;
       this.isEditing = false;
       setTimeout(() => {

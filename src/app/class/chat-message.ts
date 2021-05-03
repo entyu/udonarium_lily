@@ -48,7 +48,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() standIdentifier: string;
   @SyncVar() standName: string;
   @SyncVar() isUseStandImage: boolean;
-  @SyncVar() isEdited: boolean = false;
+  @SyncVar() lastUpdate: number = 0
 
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value; }
@@ -67,6 +67,10 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
       this._sendTo = this.to != null && 0 < this.to.trim().length ? this.to.trim().split(/\s+/) : [];
     }
     return this._sendTo;
+  }
+
+  get isEdited(): boolean {
+    return this.lastUpdate > 0;
   }
 
   private _tag: string;
