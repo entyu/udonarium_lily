@@ -126,7 +126,7 @@
 .is-edited {
   margin-left: 2px;
   font-size: 8px;
-  vertical-align: text-bottom;
+  vertical-align: bottom;
 }
 
 .is-edited::before {

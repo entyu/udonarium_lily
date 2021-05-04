@@ -48,7 +48,7 @@ export class ChatTabList extends ObjectNode implements InnerXml {
     this.destroy();
   }
 
-  log(logFormat, logTimestampType): string {
+  log(logFormat, dateFormat): string {
     if (!this.chatTabs) return '';
     const logBody = this.chatTabs.reduce((ac, chatTab) => {
         if (chatTab) ac.push(...chatTab.chatMessages.filter(chatMessage => chatMessage.isDisplayable)
@@ -56,7 +56,7 @@ export class ChatTabList extends ObjectNode implements InnerXml {
         return ac;
       }, [])
       .sort((a, b) => a.index - b.index)
-      .map(obj => obj.chatMessage.logFragment(logFormat, obj.tabName, logTimestampType))
+      .map(obj => obj.chatMessage.logFragment(logFormat, obj.tabName, dateFormat))
       .join("\n");
 
     return logFormat == 0 

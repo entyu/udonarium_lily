@@ -17,6 +17,7 @@
         <span class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
         <span *ngIf="isEditable" style="margin-left: 4px; white-space: nowrap">
           <button *ngIf="!isEditing" class="edit-button" (click)="editStart()" title="編集"><i class="material-icons small-font">edit</i></button>
+          <button *ngIf="!isEditing" class="edit-button" aria-hidden="true" style="visibility: hidden"><i class="material-icons small-font">clear</i></button>
           <button *ngIf="isEditing" class="edit-button" [disabled]="editingText.trim().length == 0" (click)="editEnd()" title="確定"><i class="material-icons small-font">done</i></button>
           <button *ngIf="isEditing" class="edit-button" (click)="editCancel()" title="キャンセル"><i class="material-icons small-font">clear</i></button>
         </span>
@@ -40,8 +41,8 @@
   <div [style.display]="isEditing ? 'none' : 'block'">
     <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
       [innerHTML]="stringUtil.escapeHtml(chatMessage.text + '\u200b') | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: false, stripTrailingSlash: false, email: false, phone: false}"></span>
-      <span *ngIf="!isEditing && chatMessage.isEdited" class="is-edited"><b style="white-space: nowrap;">編集済</b> {{chatMessage.lastUpdate | date:'y/M/d H:mm'}}</span>
-      <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">結果を公開</button>
+    <span *ngIf="!isEditing && chatMessage.isEdited" class="is-edited"><b style="white-space: nowrap">編集済</b> {{chatMessage.lastUpdate | date:'y/M/d H:mm'}}</span>
+    <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px;">結果を公開</button>
   </div>
 </ng-template>
 <ng-template #secret>

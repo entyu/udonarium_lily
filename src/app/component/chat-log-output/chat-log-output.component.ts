@@ -16,7 +16,7 @@ import { SaveDataService } from 'service/save-data.service';
 export class ChatLogOutputComponent implements OnInit {
   private static isAllTabs = false;
   private static logFormat: number = 1;
-  private static logTimestampType: number = 1;
+  private static dateFormat: string = 'HH:mm';
 
   selectedTab: ChatTab = null;
   panelId;
@@ -27,8 +27,8 @@ export class ChatLogOutputComponent implements OnInit {
   get logFormat(): number { return ChatLogOutputComponent.logFormat; }
   set logFormat(logFormat: number) { ChatLogOutputComponent.logFormat = logFormat; }
 
-  get logTimestampType(): number { return ChatLogOutputComponent.logTimestampType; }
-  set logTimestampType(logTimestampType: number) { ChatLogOutputComponent.logTimestampType = logTimestampType; }
+  get dateFormat(): string { return ChatLogOutputComponent.dateFormat; }
+  set dateFormat(dateFormat: string) { ChatLogOutputComponent.dateFormat = dateFormat; }
 
   get tabName(): string { return this.selectedTab.name; }
   set tabName(tabName: string) { this.selectedTab.name = tabName; }
@@ -75,6 +75,6 @@ export class ChatLogOutputComponent implements OnInit {
     if (this.isDiable) return;
     const fileName = this.roomName + '_chatLog_' + (this.isAllTabs ? '全てのタブ' : this.selectedTab.name);
     const tab = this.isAllTabs ? null : this.selectedTab;
-    this.saveDataService.saveChatLog(this.logFormat, fileName, tab, this.logTimestampType);
+    this.saveDataService.saveChatLog(this.logFormat, fileName, tab, this.dateFormat);
   }
 }

@@ -20,9 +20,9 @@
           </div>
           <div>
             時刻<sup class="self-only">*</sup>：
-            <label><input name="{{panelId}}-log-output-timestamp-type" type="radio" [(ngModel)]="logTimestampType" [checked]="logTimestampType == 0" [value]="0">なし</label>
-            <label><input name="{{panelId}}-log-output-timestamp-type" type="radio" [(ngModel)]="logTimestampType" [checked]="logTimestampType == 1" [value]="1">時：分</label>
-            <label><input name="{{panelId}}-log-output-timestamp-type" type="radio" [(ngModel)]="logTimestampType" [checked]="logTimestampType == 2" [value]="2">日付時刻</label>
+            <label><input name="{{panelId}}-log-output-timestamp-type" type="radio" [(ngModel)]="dateFormat" [checked]="dateFormat == ''" [value]="''">なし</label>
+            <label><input name="{{panelId}}-log-output-timestamp-type" type="radio" [(ngModel)]="dateFormat" [checked]="dateFormat == 'HH:mm'" [value]="'HH:mm'">時：分</label>
+            <label><input name="{{panelId}}-log-output-timestamp-type" type="radio" [(ngModel)]="dateFormat" [checked]="dateFormat == 'yyyy/MM/dd HH:mm'" [value]="'yyyy/MM/dd HH:mm'">日付時刻</label>
           </div>
         </div>
         <hr/>

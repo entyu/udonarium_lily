@@ -6,6 +6,8 @@ import { Network } from './core/system';
 import { StringUtil } from './core/system/util/string-util';
 import { Autolinker } from 'autolinker';
 import { PeerCursor } from './peer-cursor';
+import { formatDate } from '@angular/common';
+import { Inject, LOCALE_ID } from '@angular/core';
 
 export interface ChatMessageContext {
   identifier?: string;
@@ -96,42 +98,43 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
   get isEditable(): boolean { return !this.isSystem && this.from === Network.peerContext.userId }
 
-  logFragment(logForamt: number, tabName: string=null, logTimestampType: number, noImage=true) {
+  constructor(
+    @Inject(LOCALE_ID) private locale: string='en-US'
+  ) {
+    super();
+  }
+  
+  logFragment(logForamt: number, tabName: string=null, dateFormat='HH:mm', noImage=true) {
     if (logForamt == 0) {
-      return this.logFragmentText(tabName, logTimestampType);
+      return this.logFragmentText(tabName, dateFormat);
     } else {
-      return this.logFragmentHtml(tabName, logTimestampType, logForamt != 2);
+      return this.logFragmentHtml(tabName, dateFormat, logForamt != 2);
     }
   }
 
-  logFragmentText(tabName: string=null, logTimestampType: number): string {
+  logFragmentText(tabName: string=null, dateFormat='HH:mm'): string {
     tabName = (!tabName || tabName.trim() == '') ? '' : `[${ tabName }] `;
-    const date = new Date(this.timestamp);
-    let dateStr = ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2);
-    if (logTimestampType == 0) {
-      dateStr = '';
-    } else if (logTimestampType == 1) {
-      dateStr = dateStr + '：';
-    } else if (logTimestampType == 2) {
-      dateStr = date.getFullYear() + '/' + ('00' + (date.getMonth() + 1)).slice(-2) + '/' + ('00' + date.getDate()).slice(-2) + ' ' + dateStr + ':' + ('00' + date.getSeconds()).slice(-2) + '：';
-    }
-    return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : this.text }`
+    const dateStr = (dateFormat == '') ? '' : formatDate(new Date(this.timestamp), dateFormat, this.locale) + '：';
+    const lastUpdateStr = !this.isEdited ? '' : 
+      (dateFormat == '') ? ' (編集済)' : ` (編集済 ${ formatDate(new Date(this.lastUpdate), dateFormat, this.locale) })`;
+    return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : this.text + lastUpdateStr }`
   }
 
-  logFragmentHtml(tabName: string=null, logTimestampType: number, noImage=true): string {
+  logFragmentHtml(tabName: string=null, dateFormat='HH:mm', noImage=true): string {
     const tabNameHtml = (!tabName || tabName.trim() == '') ? '' : `<span class="tab-name">${ StringUtil.escapeHtml(tabName) }</span> `;
     const date = new Date(this.timestamp);
-    const shortDateTimeStr = ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2);
-    const longDateTimeStr = date.getFullYear() + '/' + ('00' + (date.getMonth() + 1)).slice(-2) + '/' + ('00' + date.getDate()).slice(-2) + ' ' + shortDateTimeStr + ':' + ('00' + date.getSeconds()).slice(-2);
+    const dateHtml = (dateFormat == '') ? '' : `<time datetime="${ date.toISOString() }">${ StringUtil.escapeHtml(formatDate(date, dateFormat, this.locale)) }</time>：`;
     const nameHtml = StringUtil.escapeHtml(this.name);
-    
-    let dateHtml = '';
-    if (logTimestampType == 1) {
-      dateHtml = `<time datetime="${ date.toISOString() }">${ shortDateTimeStr }</time>：`;
-    } else if (logTimestampType == 2) {
-      dateHtml = `<time datetime="${ date.toISOString() }">${ longDateTimeStr }</time>：`;;
+    let lastUpdateHtml = '';
+    if (this.isEdited) {
+      if (dateFormat == '') {
+        lastUpdateHtml = '<span class="is-edited">編集済</span>';
+      } else {
+        const lastUpdate = new Date(this.lastUpdate);
+        lastUpdateHtml = `<span class="is-edited"><b>編集済</b> <time datetime="${ lastUpdate.toISOString() }">${ StringUtil.escapeHtml(formatDate(lastUpdate, dateFormat, this.locale)) }</time></span>`;
+      }
     }
-    
+
     let messageClassNames = ['message'];
     if (this.isDirect || this.isSecret) messageClassNames.push('direct-message');
     if (this.isSystem) messageClassNames.push('system-message');
@@ -154,8 +157,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
         }
       });
     return `<div class="${ messageClassNames.join(' ') }" style="border-left-color: ${ color }">
-  <div class="msg-header" title="${ longDateTimeStr + '：' + nameHtml }">${ tabNameHtml }${ dateHtml }<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</div>
-  <div class="msg-text"${ colorStyle }>${ textAutoLinkedHtml }</div>
+  <div class="msg-header">${ tabNameHtml }${ dateHtml }<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</div>
+  <div class="msg-text"><span${ colorStyle }>${ textAutoLinkedHtml }</span>${ lastUpdateHtml }</div>
 </div>`;
   }
 
@@ -207,6 +210,16 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 .msg-text {
   white-space: pre-wrap;
   width: 100%
+}
+.is-edited {
+  margin-left: 2px;
+  font-size: 8px;
+}
+.is-edited::before {
+  content: '(';
+}
+.is-edited::after {
+  content: ')';
 }
 a[target=_blank] {
   text-decoration: none;
