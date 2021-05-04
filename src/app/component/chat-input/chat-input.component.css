@@ -21,14 +21,17 @@
   vertical-align: top;
   text-align: center;
 }
-.image{
+.image {
   width: 100%;
   height: 100%;
   vertical-align: bottom;
   object-fit: cover;
   object-position: 50% 0%;
+}
+.image.face-icon {
   border-radius: 0.5rem;
 }
+
 .inverse {
   transform: scaleX(-1);
 }

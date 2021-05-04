@@ -1,8 +1,12 @@
 <div *ngIf="myPeer">
-  <button (click)="changeIcon()">アイコンを変更する</button>
-  <div *ngIf="myPeer.image" class="image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
-    (click)="changeIcon()">
-    <!--<img *ngIf="myPeer.image" [src]="myPeer.image.url | safe: 'resourceUrl'" />-->
+  <div style="display: flex; align-items: flex-end; margin-bottom: 4px">
+    <div *ngIf="myPeer.image" class="image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
+      (click)="changeIcon()">
+      <!--<img *ngIf="myPeer.image" [src]="myPeer.image.url | safe: 'resourceUrl'" />-->
+    </div>
+    <div>
+      <button (click)="changeIcon()">プレイヤーアイコン変更</button>
+    </div>
   </div>
   <span>あなたの色とニックネーム：<input type="color" style="width:1em; margin-right: 0.5em" [(ngModel)]="myPeerColor">　<input [(ngModel)]="myPeerName" [style.color]="myPeerColor" style="font-weight: bolder;" placeholder="ニックネーム" />
   <br>※最後に使った色とニックネームをブラウザに保存、<br>　色を初期値に戻す際は白(255,255,255)を選択。</span>

@@ -86,7 +86,7 @@ export class ChatMessageService {
       name: this.makeMessageName(sendFrom, sendTo),
       imageIdentifier: this.findImageIdentifier(sendFrom, isUseFaceIcon),
       timestamp: this.calcTimeStamp(chatTab),
-      tag: gameType,
+      tag: effective ? `${gameType} noface` : gameType,
       text: StringUtil.cr(text),
       color: color,
       isInverseIcon: effective && isInverseIcon ? 1 : 0,
