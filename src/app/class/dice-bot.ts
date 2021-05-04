@@ -31,6 +31,7 @@ interface DiceRollResult {
   isSecret: boolean;
   isDiceRollTable?: boolean;
   tableName?: string;
+  isEmptyDice?: boolean;
 }
 
 @SyncObject('dice-bot')
@@ -499,7 +500,7 @@ export class DiceBot extends GameObject {
           if (!rollText || repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /choice\(.*\)/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) {
             return;
           }
-          let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false };
+          let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true };
           
           //ダイスボット表
           let isDiceRollTableMatch = false;
@@ -518,6 +519,7 @@ export class DiceBot extends GameObject {
               const diceRollTableRows = diceRollTable.parseText();
               for (let i = 0; i < repeat && i < 32; i++) {
                 let rollResult = await DiceBot.diceRollAsync(StringUtil.toHalfWidth(diceRollTable.dice), 'DiceBot', 1);
+                finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
                 if (rollResult.result) rollResult.result = rollResult.result.replace('DiceBot : ', '').replace(/[＞]/g, s => '→').trim();
                 let rollResultNumber = 0;
                 let match = null;
@@ -553,6 +555,7 @@ export class DiceBot extends GameObject {
 
                 finalResult.result += rollResult.result;
                 finalResult.isSecret = finalResult.isSecret || rollResult.isSecret || isRepSecret;
+                finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
                 if (1 < repeat) finalResult.result += ` #${i + 1}`;
               }
             }
@@ -573,10 +576,15 @@ export class DiceBot extends GameObject {
 
   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
     let result: string = rollResult.result;
-    let isSecret: boolean = rollResult.isSecret;
+    const isSecret: boolean = rollResult.isSecret;
+    const isEmptyDice: boolean = rollResult.isEmptyDice;
 
     if (result.length < 1) return;
     if (!rollResult.isDiceRollTable) result = result.replace(/[＞]/g, s => '→').trim();
+
+    let tag = 'system';
+    if (isSecret) tag += ' secret';
+    if (isEmptyDice) tag += ' empty';
 
     let diceBotMessage: ChatMessageContext = {
       identifier: '',
@@ -585,7 +593,7 @@ export class DiceBot extends GameObject {
       from: rollResult.isDiceRollTable ? 'Dice-Roll Table' : DiceBot.apiUrl ? `BCDice-API(${DiceBot.apiUrl})` : 'System-BCDice',
       timestamp: originalMessage.timestamp + 1,
       imageIdentifier: '',
-      tag: isSecret ? 'system secret' : 'system',
+      tag: tag,
       name: rollResult.isDiceRollTable ? 
         isSecret ? '<' + rollResult.tableName + ' (Secret)：' + originalMessage.name + '>' : '<' + rollResult.tableName + '：' + originalMessage.name + '>' :
         isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>' ,
@@ -665,11 +673,11 @@ export class DiceBot extends GameObject {
               throw new Error(response.statusText);
             })
             .then(json => {
-              return { result: (gameType ? gameType : 'DiceBot') + json.result + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret };
+              return { result: (gameType ? gameType : 'DiceBot') + json.result + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, isEmptyDice: (json.dices && json.dices.length == 0) };
             })
             .catch(e => {
               //console.error(e);
-              return { result: '', isSecret: false };
+              return { result: '', isSecret: false,  isEmptyDice: true };
             })
         );
       }
@@ -678,8 +686,9 @@ export class DiceBot extends GameObject {
           .then(results => { return results.reduce((ac, cv) => {
             let result = ac.result + cv.result;
             let isSecret = ac.isSecret || cv.isSecret;
-            return { result: result, isSecret: isSecret };
-          }, { result: '', isSecret: false }) })
+            let isEmptyDice = ac.isEmptyDice && cv.isEmptyDice;
+            return { result: result, isSecret: isSecret, isEmptyDice: isEmptyDice };
+          }, { result: '', isSecret: false, isEmptyDice: true }) })
       );
     } else {
       DiceBot.queue.add(DiceBot.loadDiceBotAsync(gameType));
@@ -698,11 +707,12 @@ export class DiceBot extends GameObject {
             result = cgiDiceBot.$roll(message, gameType, dir, diceBotTablePrefix, isNeedResult);
             console.log('diceRoll!!!', result);
             console.log('isSecret!!!', cgiDiceBot.isSecret);
-            return { result: result[0], isSecret: cgiDiceBot.isSecret };
+            console.log('isEmptyDice!!!', result[1].length == 0);
+            return { result: result[0], isSecret: cgiDiceBot.isSecret, isEmptyDice: result[1].length == 0 };
           } catch (e) {
             console.error(e);
           }
-          return { result: '', isSecret: false };
+          return { result: '', isSecret: false, isEmptyDice: true };
       });
     }
   }
