@@ -118,9 +118,8 @@
   text-align: right;
 }
 .is-others .msg-text span {
-  display: inline-block;
   text-align: left;
-  max-width: 100%
+  max-width: 100%;
 }
 
 .is-edited {
