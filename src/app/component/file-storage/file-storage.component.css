@@ -38,7 +38,7 @@
 }
 
 .selecter .image:not(.selected) img {
-  filter: brightness(50%) opacity(70%) blur(1px);
+  filter: saturate(40%) opacity(90%) blur(2px);
 }
 
 .badge {

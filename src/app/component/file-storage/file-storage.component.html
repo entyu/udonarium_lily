@@ -44,19 +44,23 @@
 </div>
 <div id="file-list" [ngClass]="{ selecter: isSelected }" style="padding-top: 3px;">
   <div *ngFor="let file of images; trackBy: identify" class="image" @scaleInOut [ngClass]="{ selected: selected(file) }" style="text-align: center; min-width: 100px; height: 120px; position: relative;">
-    <div style="position: absolute; font-size: xx-small; text-align: left; bottom: 0px; width: 100px; overflow: hidden; pointer-events: none">
+    <div style="position: absolute; font-size: xx-small; text-align: left; bottom: 0px; width: 100%; height: 100%; overflow: hidden; pointer-events: none">
       <ng-container *ngIf="getTagWords(file).length > 0; then tagsBlock; else noTagBlock"></ng-container> 
-        <ng-template #tagsBlock>
+      <ng-template #tagsBlock>
+        <div style="position: absolute; bottom: 0px; z-index: 5">
           <ng-container *ngFor="let word of getTagWords(file); index as i">  
             <label *ngIf="i < 6" class="word-tag grow" style="display: block; width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">{{ word }}</label>
             <span *ngIf="i == 6" class="grow" style="display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">…</span>
           </ng-container>
-        </ng-template>
-        <ng-template #noTagBlock>
-          <s class="grow" style="color:gray; display: block; width: 88px; overflow: hidden; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">No Tag</s>
-        </ng-template>
+        </div>
+      </ng-template>
+      <ng-template #noTagBlock>
+        <div style="position: absolute; bottom: 0px; z-index: 5">
+          <s class="grow" style="color:gray; display: block; padding-left: 2px; font-weight: bold; text-overflow: ellipsis; white-space: nowrap; pointer-events: none">No Tag</s>
+        </div>
+      </ng-template>
     </div>
-    <div *ngIf="getHidden(file)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none">
+    <div *ngIf="getHidden(file)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none; z-index: 5">
       <i class="material-icons red-eye" style="margin-right: 2px; font-size: 16px; display: block">visibility</i>
     </div>
     <img *ngIf="0 < file.url.length" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
