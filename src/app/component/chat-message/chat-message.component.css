@@ -143,6 +143,13 @@
   margin: 0px 1px 0px 0px;
 }
 
+.edit-buttons {
+  visibility: hidden;
+}
+.container:hover .edit-buttons{
+  visibility: visible;
+}
+
 textarea {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Verdana, Meiryo, "M+ 1p", sans-serif;
   margin: -3px -3px -3px -3px;
