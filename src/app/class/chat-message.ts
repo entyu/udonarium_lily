@@ -94,9 +94,10 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isDicebot(): boolean { return this.isSystem && this.from.indexOf('Dice') >= 0 && this.text.indexOf(': 計算結果 →') < 0 ? true : false; }
   get isCalculate(): boolean { return this.isSystem && this.from.indexOf('Dice') >= 0 && this.text.indexOf(': 計算結果 →') > -1 ? true : false; }
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
-  get isEmptyDice(): boolean { return -1 < this.tags.indexOf('empty') ? true : false; }
+  get isEmptyDice(): boolean { return !this.isDicebot || -1 < this.tags.indexOf('empty'); }
   get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
   get isEditable(): boolean { return !this.isSystem && this.from === Network.peerContext.userId }
+  get isFaceIcon(): boolean { return !this.isSystem && (!this.characterIdentifier || this.tags.indexOf('noface') < 0); }
 
   //とりあえず
   private locale = 'en-US';

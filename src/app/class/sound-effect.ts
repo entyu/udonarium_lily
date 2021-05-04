@@ -38,7 +38,7 @@ export class SoundEffect extends GameObject {
       })
       .on('SEND_MESSAGE', event => {
         let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
-        if (!chatMessage || !chatMessage.isSendFromSelf || !chatMessage.isDicebot || chatMessage.isEmptyDice) return;
+        if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isEmptyDice) return;
         if (Math.random() < 0.5) {
           SoundEffect.play(PresetSound.diceRoll1);
         } else {
