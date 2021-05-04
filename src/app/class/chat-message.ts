@@ -7,7 +7,6 @@ import { StringUtil } from './core/system/util/string-util';
 import { Autolinker } from 'autolinker';
 import { PeerCursor } from './peer-cursor';
 import { formatDate } from '@angular/common';
-import { Inject, LOCALE_ID } from '@angular/core';
 
 export interface ChatMessageContext {
   identifier?: string;
@@ -98,11 +97,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
   get isEditable(): boolean { return !this.isSystem && this.from === Network.peerContext.userId }
 
-  constructor(
-    @Inject(LOCALE_ID) private locale: string='en-US'
-  ) {
-    super();
-  }
+  //とりあえず
+  private locale = 'en-US';
   
   logFragment(logForamt: number, tabName: string=null, dateFormat='HH:mm', noImage=true) {
     if (logForamt == 0) {
