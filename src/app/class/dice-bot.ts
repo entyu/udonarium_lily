@@ -484,17 +484,17 @@ export class DiceBot extends GameObject {
     DiceBot.queue.add(DiceBot.loadScriptAsync('./assets/cgiDiceBot.js'));
     EventSystem.register(this)
       .on('SEND_MESSAGE', async event => {
-        let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
+        const chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
-        let text: string = StringUtil.toHalfWidth(chatMessage.text);
-        let gameType: string = chatMessage.tag.replace('noface', '').trim();
+        const text: string = StringUtil.toHalfWidth(chatMessage.text).replace("\u200b", '');
+        const gameType: string = chatMessage.tag.replace('noface', '').trim();
 
         try {
-          let regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?\s+)?([^\n]*)?/ig.exec(text);
-          let repCommand = regArray[2];
-          let isRepSecret = repCommand && repCommand.toUpperCase().indexOf('S') === 0;
-          let repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
+          const regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?\s+)?([^\n]*)?/ig.exec(text);
+          const repCommand = regArray[2];
+          const isRepSecret = repCommand && repCommand.toUpperCase().indexOf('S') === 0;
+          const repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
           let rollText: string = (regArray[4] != null) ? regArray[4] : text;
 
           // スペース区切りのChoiceコマンドへの対応
@@ -502,8 +502,8 @@ export class DiceBot extends GameObject {
           if (rollText) {
             //ToDO バージョン調べる
             if (DiceBot.apiUrl
-                && (!DiceRollTableList.instance.diceRollTables.map(diceRollTable => diceRollTable.command).some(command => command != null && command.trim().toUpperCase() == 'CHOICE'))
-                && (rollText.trim().toUpperCase().indexOf('SCHOICE ') == 0 || rollText.trim().toUpperCase().indexOf('CHOICE ') == 0)) {
+                && (rollText.trim().toUpperCase().indexOf('SCHOICE ') == 0 || rollText.trim().toUpperCase().indexOf('CHOICE ') == 0)
+                && (!DiceRollTableList.instance.diceRollTables.map(diceRollTable => diceRollTable.command).some(command => command != null && command.trim().toUpperCase() == 'CHOICE'))) {
               isNewChoice = true;
               rollText = rollText.trim();
             } else {
