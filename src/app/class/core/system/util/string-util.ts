@@ -80,9 +80,4 @@ export namespace StringUtil {
       }[match]
     });
   }
-
-  export function lastNewLineAdjust(str: string): string {
-    if (str == null) return '';
-    return (str.lastIndexOf("\n") == str.length - 1) ? str + "\n" : str
-  }
 }

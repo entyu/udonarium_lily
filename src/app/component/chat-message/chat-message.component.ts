@@ -179,4 +179,10 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   editCancel() {
     this.isEditing = false;
   }
+
+  // 表示の調整
+  lastNewLineAdjust(str: string): string {
+    if (str == null) return '';
+    return ((this.isEditing || !(this.chatMessage.isEdited || this.chatMessage.isSecret)) && str.lastIndexOf("\n") == str.length - 1) ? str + "\n" : str;
+  }
 }
