@@ -87,7 +87,7 @@ export class ChatMessageService {
       imageIdentifier: this.findImageIdentifier(sendFrom, isUseFaceIcon),
       timestamp: this.calcTimeStamp(chatTab),
       tag: effective ? `${gameType} noface` : gameType,
-      text: StringUtil.cr(text.replace("\u200b", '')),
+      text: StringUtil.cr(text),
       color: color,
       isInverseIcon: effective && isInverseIcon ? 1 : 0,
       isHollowIcon: effective && isHollowIcon ? 1 : 0,

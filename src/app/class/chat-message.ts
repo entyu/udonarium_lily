@@ -52,8 +52,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() lastUpdate: number = 0
 
   get tabIdentifier(): string { return this.parent.identifier; }
-  get text(): string { return (<string>this.value).replace("\u200b", ''); }
-  set text(text: string) { this.value = (text == null) ? '' : text.replace("\u200b", ''); }
+  get text(): string { return <string>this.value; }
+  set text(text: string) { this.value = (text == null) ? '' : text; }
   
   get timestamp(): number {
     let timestamp = this.getAttribute('timestamp');
