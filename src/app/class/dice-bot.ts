@@ -754,7 +754,7 @@ export class DiceBot extends GameObject {
         .then(jsons => { 
           return jsons.map(json => {
             if (json.systeminfo && json.systeminfo.info) {
-              return json.systeminfo.info.replace('このダイスボットは部屋のシステム名表示用となります', 'このダイスボットはチャットパレットなどのシステム名表示用となります');
+              return json.systeminfo.info.replace('部屋のシステム名', 'チャットパレットなどのシステム名');
             } else {
               return 'ダイスボット情報がありません。';
             }                
@@ -788,7 +788,7 @@ export class DiceBot extends GameObject {
           let bcdice = Opal.CgiDiceBot.$new().$newBcDice();
           bcdice.$setGameByTitle(gameType);
           const specialHelp = bcdice.diceBot.$getHelpMessage();
-          if (specialHelp) help.push(specialHelp);
+          if (specialHelp) help.push(specialHelp.replace('部屋のシステム名', 'チャットパレットなどのシステム名'));
         } catch (e) {
           console.error(e);
         }
