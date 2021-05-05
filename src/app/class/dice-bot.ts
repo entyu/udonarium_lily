@@ -498,23 +498,27 @@ export class DiceBot extends GameObject {
           let rollText: string = (regArray[4] != null) ? regArray[4] : text;
 
           // スペース区切りのChoiceコマンドへの対応
-          let isNewChoice = false;
+          let isChoice = false;
+          let result;
           if (rollText) {
             //ToDO バージョン調べる
             if (DiceBot.apiUrl
                 && (rollText.trim().toUpperCase().indexOf('SCHOICE ') == 0 || rollText.trim().toUpperCase().indexOf('CHOICE ') == 0)
                 && (!DiceRollTableList.instance.diceRollTables.map(diceRollTable => diceRollTable.command).some(command => command != null && command.trim().toUpperCase() == 'CHOICE'))) {
-              isNewChoice = true;
+              isChoice = true;
               rollText = rollText.trim();
+            } else if (DiceBot.apiUrl && (result = /^(S?CHOICE\[[^\[\]]+\])/ig.exec(rollText.trim())) || (result = /^(S?CHOICE\([^\(\)]+\))/ig.exec(rollText.trim()))) {
+              isChoice = true;
+              rollText = result[1];
             } else {
-              rollText = rollText.trim().split(/\s+/)[0];
+              rollText = rollText.trim().split(/\s+/)[0]
             }
           } else {
             return;
           }
 
           // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
-          if (!isNewChoice && (repeat < 1 || !(/choice\[.*\]/i.test(rollText) || (DiceBot.apiUrl && /choice\(.*\)/i.test(rollText)) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText)))) {
+          if (!isChoice && (repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText)))) {
             return;
           }
           let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true };
