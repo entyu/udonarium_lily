@@ -390,10 +390,12 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         ? {
           name: '☑ 💭の表示', action: () => {
             this.gameCharacter.isShowChatBubble = false;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         } : {
           name: '☐ 💭の表示', action: () => {
             this.gameCharacter.isShowChatBubble = true;
+            EventSystem.trigger('UPDATE_INVENTORY', null);
           }
         }),
       (this.isDropShadow
