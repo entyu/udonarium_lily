@@ -490,6 +490,8 @@ export class DiceBot extends GameObject {
         const text: string = StringUtil.toHalfWidth(chatMessage.text).replace("\u200b", ''); //ゼロ幅スペース削除
         const gameType: string = chatMessage.tag.replace('noface', '').trim();
 
+        console.log(text)
+
         try {
           const regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?\s+)?([^\n]*)?/ig.exec(text);
           const repCommand = regArray[2];
@@ -503,10 +505,11 @@ export class DiceBot extends GameObject {
           if (rollText) {
             //ToDO バージョン調べる
             if (DiceBot.apiUrl
-                && (rollText.trim().toUpperCase().indexOf('SCHOICE ') == 0 || rollText.trim().toUpperCase().indexOf('CHOICE ') == 0)
+                && (rollText.trim().toUpperCase().indexOf('SCHOICE ') == 0 || rollText.trim().toUpperCase().indexOf('CHOICE ') == 0 
+                   || rollText.trim().toUpperCase().indexOf('SCHOICE　') == 0 || rollText.trim().toUpperCase().indexOf('CHOICE　') == 0)
                 && (!DiceRollTableList.instance.diceRollTables.map(diceRollTable => diceRollTable.command).some(command => command != null && command.trim().toUpperCase() == 'CHOICE'))) {
               isChoice = true;
-              rollText = rollText.trim();
+              rollText = rollText.trim().replace(/[　\s]+/g, ' ');
             } else if (DiceBot.apiUrl && (result = /^(S?CHOICE\[[^\[\]]+\])/ig.exec(rollText.trim())) || (result = /^(S?CHOICE\([^\(\)]+\))/ig.exec(rollText.trim()))) {
               isChoice = true;
               rollText = result[1];
