@@ -14,7 +14,7 @@ export class CutInList extends ObjectNode implements InnerXml {
     return CutInList._instance;
   }
   
-  get cutIns(): CutInList[] { return this.children as CutInList[]; }
+  get cutIns(): CutIn[] { return this.children as CutIn[]; }
 
   addCutIn(cutIn: CutIn)
   addCutIn(name: string, identifier?: string)
