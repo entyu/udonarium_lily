@@ -1,3 +1,7 @@
+import Loader from 'bcdice/lib/loader/loader';
+import GameSystemClass from 'bcdice/lib/game_system';
+import { GameSystemInfo } from 'bcdice/lib/bcdice/game_system_list.json';
+
 import { ChatMessage, ChatMessageContext } from './chat-message';
 import { ChatTab } from './chat-tab';
 import { SyncObject } from './core/synchronize-object/decorator';
@@ -11,6 +15,8 @@ import { GameCharacter } from './game-character';
 import { PeerCursor } from './peer-cursor';
 import { StandConditionType } from './stand-list';
 import { DiceRollTableList } from './dice-roll-table-list';
+
+
 
 declare var Opal
 
@@ -34,6 +40,17 @@ interface DiceRollResult {
   isEmptyDice?: boolean;
 }
 
+// bcdice-js custom loader class
+class WebpackLoader extends Loader {
+  async dynamicImport(className: string): Promise<void> {
+    await import(
+      /* webpackChunkName: "[request]"  */
+      /* webpackInclude: /\.js$/ */
+      `bcdice/lib/bcdice/game_system/${className}`
+    );
+  }
+}
+
 @SyncObject('dice-bot')
 export class DiceBot extends GameObject {
   private static loadedDiceBots: { [gameType: string]: boolean } = {};
@@ -41,6 +58,8 @@ export class DiceBot extends GameObject {
 
   public static apiUrl: string = null;
   public static adminUrl: string = null;
+
+  public static loader = new WebpackLoader();
 
   public static diceBotInfos: DiceBotInfo[] = [
     { script: 'EarthDawn', game: 'アースドーン' },
