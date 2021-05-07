@@ -157,7 +157,7 @@
 }
 
 .inverse {
-  transform: scaleX(-1);
+  transform: rotateY(-180deg);
 }
 .inverser {
   transition: transform 132ms 0s ease;

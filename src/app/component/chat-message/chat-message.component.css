@@ -49,8 +49,11 @@
   vertical-align: bottom;
   object-fit: cover;
   object-position: 50% 0%;
+}
+.message .image img.face-icon {
   border-radius: 0.5rem;
 }
+
 .message .body {
   flex-grow: 1;
 }
@@ -105,6 +108,11 @@
   border-left: 4px transparent;
 }
 
+.dicebot-message .msg-name,
+.dicebot-message .msg-text {
+  font-style: oblique;
+}
+
 .is-others .title {
   text-align: right;
 }
@@ -113,9 +121,47 @@
   text-align: right;
 }
 .is-others .msg-text span {
-  display: inline-block;
   text-align: left;
-  max-width: 100%
+  max-width: 100%;
+}
+
+.is-edited {
+  margin-left: 2px;
+  font-size: 8px;
+  vertical-align: bottom;
+}
+
+.is-edited::before {
+  content: '(';
+}
+
+.is-edited::after {
+  content: ')';
+}
+
+.edit-button {
+  padding: 0px 6px;
+  vertical-align: 10%;
+  margin: 0px 1px 0px 0px;
+}
+
+.edit-buttons {
+  visibility: hidden;
+}
+.container:hover .edit-buttons{
+  visibility: visible;
+}
+
+textarea {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Verdana, Meiryo, "M+ 1p", sans-serif;
+  margin: -3px -3px -3px -3px;
+  font-size: 14px;
+  resize: none;
+}
+
+.small-font {
+  font-size: 14px;
+  vertical-align: bottom;
 }
 
 .aura {

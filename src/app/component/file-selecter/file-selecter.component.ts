@@ -98,7 +98,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     this.searchWords = this.allImagesOwnWords;
     //FileStorageComponent.sortOrder = [null].concat(this.searchWords);
     // 非表示も含めた数
-    FileStorageComponent.imageCount = ImageStorage.instance.images.length;
+    //FileStorageComponent.imageCount = ImageStorage.instance.images.length;
   }
 
   ngAfterViewInit() {
@@ -132,7 +132,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
         */
         this.changeDetector.markForCheck();
       }
-      FileStorageComponent.imageCount = event.data.length;
+      //FileStorageComponent.imageCount = event.data.length;
     })
     .on('OPERATE_IMAGE_TAGS', event => {
       this.changeDetector.markForCheck();

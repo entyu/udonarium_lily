@@ -1,9 +1,10 @@
 .image {
   padding: 0px;
-  width: 128px;
-  height: 128px;
+  width: 64px;
+  height: 64px;
   display: table-cell;
   vertical-align: top;
+  border-radius: 0.6rem;
 }
 
 .image img{

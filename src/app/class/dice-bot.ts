@@ -31,6 +31,7 @@ interface DiceRollResult {
   isSecret: boolean;
   isDiceRollTable?: boolean;
   tableName?: string;
+  isEmptyDice?: boolean;
 }
 
 @SyncObject('dice-bot')
@@ -483,33 +484,56 @@ export class DiceBot extends GameObject {
     DiceBot.queue.add(DiceBot.loadScriptAsync('./assets/cgiDiceBot.js'));
     EventSystem.register(this)
       .on('SEND_MESSAGE', async event => {
-        let chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
+        const chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
-        let text: string = StringUtil.toHalfWidth(chatMessage.text);
-        let gameType: string = chatMessage.tag;
+        const text: string = StringUtil.toHalfWidth(chatMessage.text).replace("\u200b", ''); //ゼロ幅スペース削除
+        const gameType: string = chatMessage.tag.replace('noface', '').trim();
+
+        console.log(text)
 
         try {
-          let regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?\s+)?([^\s]*)?/ig.exec(text);
-          let repCommand = regArray[2];
-          let isRepSecret = repCommand && repCommand.toUpperCase().indexOf('S') === 0;
-          let repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
+          const regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?\s+)?([^\n]*)?/ig.exec(text);
+          const repCommand = regArray[2];
+          const isRepSecret = repCommand && repCommand.toUpperCase().indexOf('S') === 0;
+          const repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
           let rollText: string = (regArray[4] != null) ? regArray[4] : text;
-          // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
-          if (!rollText || repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /choice\(.*\)/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) {
+
+          // スペース区切りのChoiceコマンドへの対応
+          let isChoice = false;
+          let result;
+          if (rollText) {
+            //ToDO バージョン調べる
+            if (DiceBot.apiUrl
+                && (rollText.trim().toUpperCase().indexOf('SCHOICE ') == 0 || rollText.trim().toUpperCase().indexOf('CHOICE ') == 0 
+                   || rollText.trim().toUpperCase().indexOf('SCHOICE　') == 0 || rollText.trim().toUpperCase().indexOf('CHOICE　') == 0)
+                && (!DiceRollTableList.instance.diceRollTables.map(diceRollTable => diceRollTable.command).some(command => command != null && command.trim().toUpperCase() == 'CHOICE'))) {
+              isChoice = true;
+              rollText = rollText.trim().replace(/[　\s]+/g, ' ');
+            } else if (DiceBot.apiUrl && (result = /^(S?CHOICE\[[^\[\]]+\])/ig.exec(rollText.trim())) || (result = /^(S?CHOICE\([^\(\)]+\))/ig.exec(rollText.trim()))) {
+              isChoice = true;
+              rollText = result[1];
+            } else {
+              rollText = rollText.trim().split(/\s+/)[0]
+            }
+          } else {
             return;
           }
-          let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false };
+
+          // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
+          if (!isChoice && (repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText)))) {
+            return;
+          }
+          let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true };
           
           //ダイスボット表
           let isDiceRollTableMatch = false;
           for (const diceRollTable of DiceRollTableList.instance.diceRollTables) {
             let isSecret = false;
-            const command = StringUtil.toHalfWidth(diceRollTable.command);
-            if (command && rollText.trim().toUpperCase() === 'S' + command.trim().toUpperCase()) {
+            if (diceRollTable.command != null && rollText.trim().toUpperCase() === 'S' + diceRollTable.command.trim().toUpperCase()) {
               isDiceRollTableMatch = true;
               isSecret = true;
-            } else if (command && rollText.trim().toUpperCase() === command.trim().toUpperCase()) {
+            } else if (diceRollTable.command != null && rollText.trim().toUpperCase() === diceRollTable.command.trim().toUpperCase()) {
               isDiceRollTableMatch = true;
             }
             if (isDiceRollTableMatch) {
@@ -519,6 +543,7 @@ export class DiceBot extends GameObject {
               const diceRollTableRows = diceRollTable.parseText();
               for (let i = 0; i < repeat && i < 32; i++) {
                 let rollResult = await DiceBot.diceRollAsync(StringUtil.toHalfWidth(diceRollTable.dice), 'DiceBot', 1);
+                finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
                 if (rollResult.result) rollResult.result = rollResult.result.replace('DiceBot : ', '').replace(/[＞]/g, s => '→').trim();
                 let rollResultNumber = 0;
                 let match = null;
@@ -554,6 +579,7 @@ export class DiceBot extends GameObject {
 
                 finalResult.result += rollResult.result;
                 finalResult.isSecret = finalResult.isSecret || rollResult.isSecret || isRepSecret;
+                finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
                 if (1 < repeat) finalResult.result += ` #${i + 1}`;
               }
             }
@@ -574,10 +600,15 @@ export class DiceBot extends GameObject {
 
   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
     let result: string = rollResult.result;
-    let isSecret: boolean = rollResult.isSecret;
+    const isSecret: boolean = rollResult.isSecret;
+    const isEmptyDice: boolean = rollResult.isEmptyDice;
 
     if (result.length < 1) return;
     if (!rollResult.isDiceRollTable) result = result.replace(/[＞]/g, s => '→').trim();
+
+    let tag = 'system';
+    if (isSecret) tag += ' secret';
+    if (isEmptyDice) tag += ' empty';
 
     let diceBotMessage: ChatMessageContext = {
       identifier: '',
@@ -586,7 +617,7 @@ export class DiceBot extends GameObject {
       from: rollResult.isDiceRollTable ? 'Dice-Roll Table' : DiceBot.apiUrl ? `BCDice-API(${DiceBot.apiUrl})` : 'System-BCDice',
       timestamp: originalMessage.timestamp + 1,
       imageIdentifier: '',
-      tag: isSecret ? 'system secret' : 'system',
+      tag: tag,
       name: rollResult.isDiceRollTable ? 
         isSecret ? '<' + rollResult.tableName + ' (Secret)：' + originalMessage.name + '>' : '<' + rollResult.tableName + '：' + originalMessage.name + '>' :
         isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>' ,
@@ -666,11 +697,11 @@ export class DiceBot extends GameObject {
               throw new Error(response.statusText);
             })
             .then(json => {
-              return { result: (gameType ? gameType : 'DiceBot') + json.result + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret };
+              return { result: (gameType ? gameType : 'DiceBot') + json.result + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, isEmptyDice: (json.dices && json.dices.length == 0) };
             })
             .catch(e => {
               //console.error(e);
-              return { result: '', isSecret: false };
+              return { result: '', isSecret: false,  isEmptyDice: true };
             })
         );
       }
@@ -679,8 +710,9 @@ export class DiceBot extends GameObject {
           .then(results => { return results.reduce((ac, cv) => {
             let result = ac.result + cv.result;
             let isSecret = ac.isSecret || cv.isSecret;
-            return { result: result, isSecret: isSecret };
-          }, { result: '', isSecret: false }) })
+            let isEmptyDice = ac.isEmptyDice && cv.isEmptyDice;
+            return { result: result, isSecret: isSecret, isEmptyDice: isEmptyDice };
+          }, { result: '', isSecret: false, isEmptyDice: true }) })
       );
     } else {
       DiceBot.queue.add(DiceBot.loadDiceBotAsync(gameType));
@@ -699,11 +731,12 @@ export class DiceBot extends GameObject {
             result = cgiDiceBot.$roll(message, gameType, dir, diceBotTablePrefix, isNeedResult);
             console.log('diceRoll!!!', result);
             console.log('isSecret!!!', cgiDiceBot.isSecret);
-            return { result: result[0], isSecret: cgiDiceBot.isSecret };
+            console.log('isEmptyDice!!!', result[1].length == 0);
+            return { result: result[0], isSecret: cgiDiceBot.isSecret, isEmptyDice: result[1].length == 0 };
           } catch (e) {
             console.error(e);
           }
-          return { result: '', isSecret: false };
+          return { result: '', isSecret: false, isEmptyDice: true };
       });
     }
   }
@@ -724,7 +757,7 @@ export class DiceBot extends GameObject {
         .then(jsons => { 
           return jsons.map(json => {
             if (json.systeminfo && json.systeminfo.info) {
-              return json.systeminfo.info.replace('このダイスボットは部屋のシステム名表示用となります', 'このダイスボットはチャットパレットなどのシステム名表示用となります');
+              return json.systeminfo.info.replace('部屋のシステム名', 'チャットパレットなどのシステム名');
             } else {
               return 'ダイスボット情報がありません。';
             }                
@@ -758,7 +791,7 @@ export class DiceBot extends GameObject {
           let bcdice = Opal.CgiDiceBot.$new().$newBcDice();
           bcdice.$setGameByTitle(gameType);
           const specialHelp = bcdice.diceBot.$getHelpMessage();
-          if (specialHelp) help.push(specialHelp);
+          if (specialHelp) help.push(specialHelp.replace('部屋のシステム名', 'チャットパレットなどのシステム名'));
         } catch (e) {
           console.error(e);
         }

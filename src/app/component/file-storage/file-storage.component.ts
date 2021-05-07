@@ -56,7 +56,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isShowHideImages = false;
 
-  static imageCount = 0;
+  //static imageCount = 0;
 
   get images(): ImageFile[] {
     const searchResultImages = ImageTagList.searchImages(this.searchWords, (this.searchNoTagImage && this.countAllImagesHasWord(null) > 0), this.serchCondIsOr, this.isShowHideImages);
@@ -115,7 +115,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     //FileStorageComponent.sortOrder = [null].concat(this.searchWords);
     this.panelId = UUID.generateUuid();
     // 非表示も含めた数
-    FileStorageComponent.imageCount = ImageStorage.instance.images.length;
+    //FileStorageComponent.imageCount = ImageStorage.instance.images.length;
   }
 
   ngAfterViewInit() {
@@ -150,7 +150,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
         */
         this.changeDetector.markForCheck();
       }
-      FileStorageComponent.imageCount = event.data.length;
+      //FileStorageComponent.imageCount = event.data.length;
     })
     .on('OPERATE_IMAGE_TAGS', event => {
       this.changeDetector.markForCheck();

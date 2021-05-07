@@ -1,9 +1,9 @@
 <div class="flex-container">
   <div class="flex-item no-grow">
     <div>
-      <button (click)="createGameTable()">新しいテーブルを作る</button>
+      <button style="margin-bottom: 2px; font-size: smaller" (click)="createGameTable()">新しいテーブルを作る</button>
     </div>
-    <select style="width: 10em;" size="10" (change)="selectGameTable($event.target.value)" [ngModel]="selectedTable?.identifier">
+    <select style="width: 100%; max-width: 155px" size="10" (change)="selectGameTable($event.target.value)" [ngModel]="selectedTable?.identifier">
       <option *ngFor="let gameTable of getGameTables()" value="{{gameTable.identifier}}">{{gameTable.name}}</option>
     </select>
   </div>
@@ -75,14 +75,16 @@
       </div>
       <hr/>
       <div>
-        <label>グリッドを常に表示:
+        <label class="self-setting">
           <input type="checkbox" [(ngModel)]="tableGridShow" name="tableGridShow" />
+          グリッドを常に表示<sup class="self-only">*</sup>
         </label>
-        <label>スナップ:
+        <label style="margin-left: 1em" class="self-setting">
           <input type="checkbox" [(ngModel)]="tableGridSnap" name="tableGridSnap" />
+          スナップ<sup class="self-only">*</sup>
         </label>
         <ng-container *ngIf="!isDeleted">
-          <button [disabled]="isSaveing" (click)="save()">
+          <button style="margin-left: 2em" [disabled]="isSaveing" (click)="save()">
             <div style="position: relative;">
               <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
               <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>

@@ -415,6 +415,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
     textArea.value = '';
     this.calcFitHeight();
+    EventSystem.trigger('MESSAGE_EDITING_START', null);
   }
 
   calcFitHeight() {

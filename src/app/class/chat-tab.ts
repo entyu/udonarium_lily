@@ -3,6 +3,7 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
 import { EventSystem } from './core/system';
+import { StringUtil } from './core/system/util/string-util';
 
 @SyncObject('chat-tab')
 export class ChatTab extends ObjectNode implements InnerXml {
@@ -64,4 +65,28 @@ export class ChatTab extends ObjectNode implements InnerXml {
   parseInnerXml(element: Element) {
     return super.parseInnerXml(element);
   };
+
+  log(logFormat, dateFormat): string {
+    const logBody = this.chatMessages
+    .filter(chatMessage => chatMessage.isDisplayable)
+    .map(chatMessage => chatMessage.logFragment(logFormat, null, dateFormat))
+    .join("\n");
+
+    return logFormat == 0 
+      ? logBody
+      : `<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+<meta charset="UTF-8">
+<title>チャットログ：${ StringUtil.escapeHtml(this.name) }</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+${ ChatMessage.logCss() }
+</style>
+</head>
+<body>
+${ logBody }
+</body>
+</html>`
+  }
 }

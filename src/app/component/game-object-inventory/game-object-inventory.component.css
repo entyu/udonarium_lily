@@ -275,7 +275,6 @@ input[type='range']::-ms-tooltip {
   vertical-align: bottom;
   object-fit: cover;
   object-position: 50% 0%;
-  border-radius: 0.3rem;
 }
 
 .inventory-object {

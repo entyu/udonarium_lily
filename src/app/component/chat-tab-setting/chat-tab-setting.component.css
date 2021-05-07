@@ -42,3 +42,8 @@
   right: 0;
   font-size: 0.9em;
 }
+
+.small-font {
+  font-size: 16px;
+  vertical-align: middle;
+}

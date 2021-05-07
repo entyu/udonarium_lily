@@ -1,0 +1,37 @@
+<div class="flex-container">
+    <div class="flex-item no-grow">
+      <select style="width: 140px" size="10" (change)="onChangeSelectTab($event.target.value)" [ngModel]="selectedTab?.identifier" [disabled]="isAllTabs">
+        <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
+      </select>
+    </div>
+    <div class="flex-item">
+      <ng-container *ngIf="!isEmpty">
+        <div style="font-weight: bolder; font-size: smaller; padding-top: 3px">
+          <div>
+            タブ<sup class="self-only">*</sup>：
+            <label><input name="{{panelId}}-log-output-tab" type="radio" [(ngModel)]="isAllTabs" [checked]="!isAllTabs" [value]="false">選択したタブ</label>
+            <label><input name="{{panelId}}-log-output-tab" type="radio" [(ngModel)]="isAllTabs" [checked]="isAllTabs" [value]="true">全てのタブ</label>
+          </div>
+          <div>
+            形式<sup class="self-only">*</sup>：
+            <label><input name="{{panelId}}-log-output-format" type="radio" [(ngModel)]="logFormat" [checked]="logFormat == 0" [value]="0">テキスト</label>
+            <label><input name="{{panelId}}-log-output-format" type="radio" [(ngModel)]="logFormat" [checked]="logFormat == 1" [value]="1">HTML</label>
+            <!-- <label><input name="{{panelId}}-log-output-format" type="radio" [(ngModel)]="logFormat" [checked]="logFormat == 2" [value]="2">HTML (画像あり)</label> -->
+          </div>
+          <div>
+            時刻<sup class="self-only">*</sup>：
+            <label><input name="{{panelId}}-log-output-timestamp-type" type="radio" [(ngModel)]="dateFormat" [checked]="dateFormat == ''" [value]="''">なし</label>
+            <label><input name="{{panelId}}-log-output-timestamp-type" type="radio" [(ngModel)]="dateFormat" [checked]="dateFormat == 'HH:mm'" [value]="'HH:mm'">時：分</label>
+            <label><input name="{{panelId}}-log-output-timestamp-type" type="radio" [(ngModel)]="dateFormat" [checked]="dateFormat == 'yyyy/MM/dd HH:mm'" [value]="'yyyy/MM/dd HH:mm'">日付時刻</label>
+          </div>
+        </div>
+        <hr/>
+        <div>
+          <button (click)="saveLog()" style="font-size: smaller" [disabled]="isDiable">ログ出力</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <ng-container *ngIf="isEmpty">
+    <div style="font-size: 12px;">※チャットタブが作成されていません。</div>
+  </ng-container>

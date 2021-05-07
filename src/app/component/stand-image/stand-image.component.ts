@@ -76,6 +76,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   private naturalHeight = 0;
   
   isSpeaking = false;
+  math = Math;
 
   constructor(
     private ngZone: NgZone
@@ -95,8 +96,10 @@ export class StandImageComponent implements OnInit, OnDestroy {
       clearTimeout(this._dialogTimeoutId);
       if (this.gameCharacter && this.gameCharacter.text) this.isSpeaking = true;
       this._dialogTimeoutId = setTimeout(() => {
-        this.isSpeaking = false;
-      }, 200);
+        this.ngZone.run(() => {
+          this.isSpeaking = false;
+        });
+      }, 300);
     }
   }
 
@@ -105,7 +108,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   get isShowNameTag(): boolean {
-    return StandImageComponent.isShowNameTag;
+    return StandImageComponent.isShowNameTag && this.isShowName;
   }
 
   get isCanBeGone(): boolean {
@@ -252,6 +255,15 @@ export class StandImageComponent implements OnInit, OnDestroy {
   get isApplyDialog(): boolean {
     if (!this.standElement || !this.gameCharacter) return false;
     let elm = this.standElement.getFirstElementByName('applyDialog');
+    if (elm && elm.value) {
+      return true;
+    }
+    return false;
+  }
+
+  private get isShowName(): boolean {
+    if (!this.standElement || !this.gameCharacter) return false;
+    let elm = this.standElement.getFirstElementByName('showName');
     if (elm && elm.value) {
       return true;
     }

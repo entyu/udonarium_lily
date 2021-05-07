@@ -1,11 +1,11 @@
 <div class="table" [ngClass]="{ 'direct-message': isDirect }">
-  <div class="table-cell imagebox" (contextmenu)="onContextMenu($event)" style="cursor: context-menu;">
+  <div class="table-cell imagebox" (contextmenu)="onContextMenu($event)" style="cursor: context-menu; padding-left: 4px">
     <div *ngIf="!character; else isCharacter" class="imagebox">
-      <img *ngIf="0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
+      <img *ngIf="0 < imageFile.url.length" class="image face-icon" [src]="imageFile.url | safe: 'resourceUrl'" />
     </div>
     <ng-template #isCharacter>
       <div *ngIf="isUseFaceIcon && character && character.faceIcon != null && 0 < character.faceIcon?.url?.length; else noFaceIcon" class="imagebox">
-        <img class="image" [src]="character.faceIcon?.url | safe: 'resourceUrl'" />
+        <img class="image face-icon" [src]="character.faceIcon?.url | safe: 'resourceUrl'" />
       </div>
       <ng-template #noFaceIcon>
         <div *ngIf="character && character.imageFile != null && 0 < character.imageFile.url.length" class="inverser" [ngClass]="{inverse: character.isInverse, hollow: character.isHollow}">
@@ -18,7 +18,10 @@
   </div>
   <div class="table-cell">
     <div>
-      <label style="margin-right: 2px"><input type="checkbox" [(ngModel)]="isUseFaceIcon" checked="{{isUseFaceIcon ? 'checked' : ''}}" (change)="isUseFaceIcon = (isUseFaceIcon ? true : false)" /><b style="font-size: smaller;">顔IC</b></label>
+      <label style="margin-right: 5px">
+        <input *ngIf="character" type="checkbox" [(ngModel)]="isUseFaceIcon" checked="{{isUseFaceIcon ? 'checked' : ''}}" (change)="isUseFaceIcon = (isUseFaceIcon ? true : false)" />
+        <b *ngIf="character" style="font-size: smaller;">顔IC</b>
+      </label>
       <select style="max-width: 10em" [(ngModel)]="sendFrom" (change)="standName = ''" [ngStyle]="{'color': color, 'font-weight': (sendFrom != myPeer?.identifier ? 'normal' : 'bolder')}">
         <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}" [style.color]="myColor" style="font-weight: bolder;">{{myPeer?.name}}（あなた）</option>
         <option *ngFor="let gameCharacter of gameCharacters" style="font-weight: normal;" [style.color]="gameCharacter.chatPalette && gameCharacter.chatPalette.color && gameCharacter.chatPalette.color != '#ffffff' ? gameCharacter.chatPalette.color : '#444'" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
@@ -47,7 +50,7 @@
         <button (click)="showDicebotHelp()">?</button>
       </span>
     </div>
-    <div *ngIf="hasStand" [ngClass]="{'disabled-stand': !isUseStandImageOnChatTab}" style="font-size: smaller;">
+    <div *ngIf="hasStand" [ngClass]="{'disabled-stand': !isUseStandImageOnChatTab}" style="font-size: smaller">
       <label style="margin-right: 2px">
         <input type="checkbox" [(ngModel)]="isUseStandImage" checked="{{isUseStandImage ? 'checked' : ''}}" (change)="isUseStandImage = (isUseStandImage ? true : false)" [attr.disabled]="!isUseStandImageOnChatTab ? '' : null" />
         <b style="font-size: smaller;">Stand: </b>

@@ -81,9 +81,11 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
           }, this);
         })
         .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
-          PeerCursorComponent.viewRotateX = event.data['x'];
-          PeerCursorComponent.viewRotateZ = event.data['z'];
-          this.changeDetector.markForCheck();
+          this.ngZone.run(() => {
+            PeerCursorComponent.viewRotateX = event.data['x'];
+            PeerCursorComponent.viewRotateZ = event.data['z'];
+            this.changeDetector.markForCheck();
+          });
       });
     }
   }

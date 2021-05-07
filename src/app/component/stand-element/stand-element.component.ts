@@ -7,7 +7,6 @@ import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { StandConditionType } from '@udonarium/stand-list';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
-import { accessSync } from 'fs';
 import { ModalService } from 'service/modal.service';
 
 @Component({
@@ -101,6 +100,12 @@ export class StandElementComponent implements OnInit {
     return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('applyDialog', 'applyDialog', { }, 'applyDialog_' + this.standElement.identifier));
   }
 
+  get showNameElement() {
+    if (!this.standElement) return null;
+    let elm = this.standElement.getFirstElementByName('showName');
+    return elm ? elm : <DataElement>this.standElement.appendChild(DataElement.create('showName', 'showName', { }, 'showName_' + this.standElement.identifier));
+  }
+
   get positionElement(): DataElement {
     if (!this.standElement) return null;
     let elm = this.standElement.getFirstElementByName('position');
@@ -125,6 +130,14 @@ export class StandElementComponent implements OnInit {
 
   get isApplyDialog(): boolean {
     let elm = this.applyDialogElement;
+    if (elm && elm.value) {
+      return true;
+    }
+    return false;
+  }
+
+  get isShowName(): boolean {
+    let elm = this.showNameElement;
     if (elm && elm.value) {
       return true;
     }
@@ -197,7 +210,7 @@ export class StandElementComponent implements OnInit {
     });
     EventSystem.trigger('POPUP_CHAT_BALLOON', { 
       characterIdentifier: this.gameCharacter.identifier, 
-      text: 'テストテストテストテストテストテストテストテストテストテストテストテストテストテスト', 
+      text: 'これはテストです、あなたにだけ見えています。スタンドの設定を行う際は、メニューの「スタンド設定」から「透明化、自動退去」をオフにすると微調整が行いやすくなります。', 
       color: this.gameCharacter.chatPalette ? this.gameCharacter.chatPalette.color : null,
       dialogTest: true
     });

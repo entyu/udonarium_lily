@@ -5,11 +5,12 @@ import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ChatMessageService } from 'service/chat-message.service';
 
-import { PeerCursor } from '@udonarium/peer-cursor';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
-import { DiceBot } from '@udonarium/dice-bot';
+import { EventSystem } from '@udonarium/core/system';
+
+import { COMPOSITION_BUFFER_MODE } from '@angular/forms'
 
 @Component({
   selector: 'chat-message',
@@ -45,16 +46,22 @@ import { DiceBot } from '@udonarium/dice-bot';
       ])
     ]),
   ],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.Default,
+  providers: [
+    { provide: COMPOSITION_BUFFER_MODE, useValue: false }
+  ]
 })
 
 export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() chatMessage: ChatMessage;
-  @ViewChild('msgFrom') msgFromElm: ElementRef;
-  @ViewChild('message') messageElm: ElementRef;
-  
+  @ViewChild('msgFrom', { static: true }) msgFromElm: ElementRef;
+  @ViewChild('message', { static: false }) messageElm: ElementRef;
+  @ViewChild('edit', { static: false }) editElm: ElementRef<HTMLTextAreaElement>;
+
   imageFile: ImageFile = ImageFile.Empty;
   animeState: string = 'inactive';
+  isEditing = false;
+  editingText = '';
 
   constructor(
     private chatMessageService: ChatMessageService,
@@ -64,6 +71,13 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   stringUtil = StringUtil;
 
   ngOnInit() {
+    EventSystem.register(this)
+    .on('MESSAGE_EDITING_START', -1000, event => {
+      if (event.isSendFromSelf && (!event.data || event.data.messageIdentifier !== this.chatMessage.identifier)) {
+        this.editCancel();
+      }
+    });
+
     let file: ImageFile = this.chatMessage.image;
     if (file) this.imageFile = file;
     let time = this.chatMessageService.getTime();
@@ -72,6 +86,10 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
 
   get isMine(): boolean {
     return this.chatMessage.isSendFromSelf;
+  }
+
+  get isEditable(): boolean {
+    return this.chatMessage.isEditable;
   }
 
   ngAfterViewInit() {
@@ -116,5 +134,55 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
 
   discloseMessage() {
     this.chatMessage.tag = this.chatMessage.tag.replace('secret', '');
+  }
+
+  editStart() {
+    EventSystem.trigger('MESSAGE_EDITING_START', { messageIdentifier: this.chatMessage.identifier });
+    this.editingText = this.chatMessage.text;
+    this.isEditing = true;
+    setTimeout(() => {
+      if (this.editElm.nativeElement) this.editElm.nativeElement.focus();
+    });
+  }
+
+  editEnd(event: KeyboardEvent=null) {
+    if (event) event.preventDefault();
+    if (event && event.keyCode !== 13) return;
+
+    if (this.isEditable && this.editingText.trim().length > 0 && this.chatMessage.text != this.editingText) {
+      if (!this.chatMessage.isSecret) this.chatMessage.lastUpdate = Date.now();
+      this.chatMessage.text = this.editingText;
+      this.isEditing = false;
+      setTimeout(() => {
+        this.messageElm.nativeElement.querySelectorAll('A[href]').forEach(anchor => {
+          const href = anchor.getAttribute('href');
+          if (StringUtil.validUrl(href)) {
+            if (!StringUtil.sameOrigin(href)) {
+              anchor.classList.add('outer-link');
+              anchor.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                this.modalService.open(OpenUrlComponent, { url: href });
+              }, true);
+            }
+          } else {
+            anchor.removeAttribute('href');
+            anchor.removeAttribute('target');
+          }
+        });
+      });
+    } else {
+      this.editCancel();
+    }
+  }
+
+  editCancel() {
+    this.isEditing = false;
+  }
+
+  // 表示の調整
+  lastNewLineAdjust(str: string): string {
+    if (str == null) return '';
+    return ((this.isEditing || !(this.chatMessage.isEdited || this.chatMessage.isSecret)) && str.lastIndexOf("\n") == str.length - 1) ? str + "\n" : str;
   }
 }

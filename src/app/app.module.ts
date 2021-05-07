@@ -68,6 +68,7 @@ import { CutInComponent } from './component/cut-in/cut-in.component';
 import { CutInSettingComponent } from './component/cut-in-setting/cut-in-setting.component';
 
 import { LinkyModule } from 'ngx-linky';
+import { ChatLogOutputComponent } from './component/chat-log-output/chat-log-output.component';
 
 @NgModule({
   declarations: [
@@ -120,7 +121,8 @@ import { LinkyModule } from 'ngx-linky';
     StandImageComponent,
     DiceRollTableSettingComponent,
     CutInComponent,
-    CutInSettingComponent
+    CutInSettingComponent,
+    ChatLogOutputComponent
   ],
   imports: [
     BrowserModule,

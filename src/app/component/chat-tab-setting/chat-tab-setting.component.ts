@@ -4,11 +4,13 @@ import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem } from '@udonarium/core/system';
+import { EventSystem, Network } from '@udonarium/core/system';
+import { ChatLogOutputComponent } from 'component/chat-log-output/chat-log-output.component';
 
 import { ChatMessageService } from 'service/chat-message.service';
 import { ModalService } from 'service/modal.service';
-import { PanelService } from 'service/panel.service';
+import { PanelOption, PanelService } from 'service/panel.service';
+import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
 
 @Component({
@@ -31,6 +33,13 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   get isDeleted(): boolean { return this.selectedTab ? ObjectStore.instance.get(this.selectedTab.identifier) == null : false; }
   get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
 
+  get roomName():string {
+    let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
+      ? Network.peerContext.roomName
+      : 'ルームデータ';
+    return roomName;
+  }
+  
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
@@ -38,11 +47,12 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private panelService: PanelService,
     private chatMessageService: ChatMessageService,
-    private saveDataService: SaveDataService
+    private saveDataService: SaveDataService,
+    private pointerDeviceService: PointerDeviceService
   ) { }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'チャットタブ設定');
+    Promise.resolve().then(() => { this.modalService.title = this.panelService.title = 'チャットタブ設定'; this.panelService.isAbleFullScreenButton = false });
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', 1000, event => {
         if (!this.selectedTab || event.data.identifier !== this.selectedTab.identifier) return;
@@ -116,5 +126,12 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
       let nextElement = parentElement.children[index + 1];
       parentElement.insertBefore(nextElement, this.selectedTab);
     }
+  }
+
+  showLogOutput() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 450, height: 300 };
+    let component = this.panelService.open<ChatLogOutputComponent>(ChatLogOutputComponent, option);
+    component.selectedTab = this.selectedTab;
   }
 }
