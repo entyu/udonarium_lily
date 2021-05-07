@@ -9,7 +9,6 @@ import { GameObject } from './core/synchronize-object/game-object';
 import { GameCharacter } from './game-character';
 import { DataElement } from './data-element';
 
-
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { EventSystem } from './core/system';
 import { PromiseQueue } from './core/system/util/promise-queue';
@@ -18,6 +17,11 @@ import { DiceTable } from './dice-table';
 import { DiceTablePalette } from './chat-palette';
 
 import { PeerCursor } from './peer-cursor';
+
+import KariDice from './KariDice';
+// 追加カスタムダイスは下記追記
+//import *** from './***';
+
 
 interface ResourceEdit {
   target: string;
@@ -53,7 +57,7 @@ export class DiceBot extends GameObject {
   private static loader: WebpackLoader = new WebpackLoader();
   private static queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
 
-  static diceBotInfos: GameSystemInfo[] = DiceBot.loader.listAvailableGameSystems().sort(
+  static diceBotInfos: GameSystemInfo[] = DiceBot.listAvailableGameSystems().sort(
     (a, b) => {
       const aKey: string = a.sortKey;
       const bKey: string = b.sortKey;
@@ -66,7 +70,25 @@ export class DiceBot extends GameObject {
       return 0;
     }
   );
+  
+  static getCustomGameSystemInfo(ststem:any): GameSystemInfo{
+    const gameSystemInfo: GameSystemInfo = {
+      id: ststem.ID,
+      name: ststem.NAME,
+      className: ststem.ID,
+      sortKey: ststem.SORT_KEY
+    };
+    return gameSystemInfo;
+  }
 
+  static listAvailableGameSystems(): GameSystemInfo[]{
+    let diceBotInfos: GameSystemInfo[] = DiceBot.loader.listAvailableGameSystems();
+    diceBotInfos.push( this.getCustomGameSystemInfo( KariDice ));
+    // 追加カスタムダイスは下記追記
+    // diceBotInfos.push( getCustomGameSystemInfo( *** ));
+    return diceBotInfos;
+  }
+  
   static diceRollAsync(message: string, gameSystem: GameSystemClass): Promise<DiceRollResult> {
     return DiceBot.queue.add(() => {
       try {
@@ -100,11 +122,32 @@ export class DiceBot extends GameObject {
     });
   }
 
-  static loadGameSystemAsync(gameType: string): Promise<GameSystemClass> {
+  static loadCustomGameSystem(gameType: string):any{
+    if( gameType == 'KariDice') return KariDice;
+    // 追加カスタムダイスは下記追記
+    // if( gameType == '***') return ***; 
+    
+    return null;
+  }
+  
+  static loadGameSystemAsync(gameType: string): Promise<any> {
+
     const id = this.diceBotInfos.some((info) => info.id === gameType)
       ? gameType
       : 'DiceBot';
-    return DiceBot.loader.dynamicLoad(id);
+    
+    return new Promise( (resolve) => {
+      console.log('loadGameSystemAsync 01 gameType '+ gameType);
+      let system = this.loadCustomGameSystem( gameType );
+
+      console.log('loadGameSystemAsync 02 system '+ system);
+
+      if( !system ){
+        console.log('loadGameSystemAsync 03 DiceBot.loader.dynamicLoad '+ id);
+        system = DiceBot.loader.dynamicLoad(id);
+      }
+      resolve( system );
+    });
   }
 
   getDiceTables(): DiceTable[] {
@@ -112,13 +155,17 @@ export class DiceBot extends GameObject {
   }
 
   // 繰り返しコマンドを除去し、sより後ろがCOMMAND_PATTERNにマッチするか確認
-  checkSecretDiceCommand(gameSystem: GameSystemClass, chatText: string): boolean {
+  checkSecretDiceCommand(gameSystem: any, chatText: string): boolean {
     const text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
     const nonRepeatText = text.replace(/^(\d+)?\s+/, 'repeat1 ').replace(/^x(\d+)?\s+/, 'repeat1 ').replace(/repeat(\d+)?\s+/, '');
     const regArray = /^s(.*)?/ig.exec(nonRepeatText);
-    console.log('check secret regArray:' + regArray);
+    console.log('checkSecretDiceCommand:' + chatText + ' gameSystem.name:' + gameSystem.name);
 
-    return regArray && gameSystem.COMMAND_PATTERN.test(regArray[1]);
+    if( gameSystem.COMMAND_PATTERN ){
+      return regArray && gameSystem.COMMAND_PATTERN.test(regArray[1]);
+    }
+    console.log('checkSecretDiceCommand:' + false);
+    return false;
   }
 
   // GameObject Lifecycle
@@ -133,12 +180,17 @@ export class DiceBot extends GameObject {
         const gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
 
         try {
-          // let regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(text);
           const regArray = /^((\d+)?\s+)?(.*)?/ig.exec(text);
           const repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
+          console.log('SEND_MESSAGE gameType :'+ gameType);
           const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
-          if (!rollText || repeat < 1 || !gameSystem.COMMAND_PATTERN.test(rollText)) { return; }
+
+          if( gameSystem.COMMAND_PATTERN ){
+            if( !gameSystem.COMMAND_PATTERN.test(rollText)) { return; }
+          }
+          if (!rollText || repeat < 1 ) { return; }
+
           // 繰り返しコマンドに変換
           if (repeat > 1) {
             rollText = `x${repeat} ${rollText}`;
