@@ -6,11 +6,19 @@
 
 .image:hover {
   border: 2px dotted red;
+  transform: scale(1.05);
+  z-index: 200;
+  transition-duration: 60ms;
 }
 
 .image img {
   vertical-align: bottom;
   transition-duration: 120ms;
+}
+
+.image:hover img {
+  backdrop-filter: blur(1px);
+  filter: none !important;
 }
 
 .empty {
