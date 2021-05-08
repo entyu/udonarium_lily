@@ -239,7 +239,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
             });
         } else {
           DiceBot.diceBotInfos.forEach((info) => {
-            let normalize = info.game.normalize('NFKD');
+            let normalize = info.sort_key.normalize('NFKD');
             for (let replaceData of DiceBot.replaceData) {
               if (replaceData[2] && info.game === replaceData[0]) {
                 normalize = replaceData[1];
