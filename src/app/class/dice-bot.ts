@@ -1,5 +1,4 @@
 import Loader from 'bcdice/lib/loader/loader';
-import GameSystemClass from 'bcdice/lib/game_system';
 import { GameSystemInfo } from 'bcdice/lib/bcdice/game_system_list.json';
 
 import { ChatMessage, ChatMessageContext } from './chat-message';
@@ -49,13 +48,13 @@ class WebpackLoader extends Loader {
 
 @SyncObject('dice-bot')
 export class DiceBot extends GameObject {
-  private static loadedDiceBots: { [gameType: string]: GameSystemInfo } = {};
+  private static readonly loadedDiceBots: { [gameType: string]: GameSystemInfo } = {};
   private static queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
 
   public static apiUrl: string = null;
   public static adminUrl: string = null;
 
-  public static loader = new WebpackLoader();
+  public static readonly loader = new WebpackLoader();
 
   public static diceBotInfos: DiceBotInfo[] = DiceBot.loader.listAvailableGameSystems().filter(gameSystemInfo => gameSystemInfo.id != 'DiceBot').map<DiceBotInfo>(gameSystemInfo => {
     const lang = /.+\:(.+)/.exec(gameSystemInfo.id);

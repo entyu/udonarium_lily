@@ -37,7 +37,8 @@
     "tslib": "^2.2.0",
     "vkbeautify": "^0.99.3",
     "xmlhttprequest-ssl": ">=1.6.2",
-    "zone.js": "~0.10.3"
+    "zone.js": "~0.10.3",
+    "url-parse": ">=1.5.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.1102.12",
