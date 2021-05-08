@@ -72,7 +72,7 @@ export class DiceBot extends GameObject {
     }
   );
   
-  static getCustomGameSystemInfo(ststem:any): GameSystemInfo{
+  static getCustomGameSystemInfo(ststem:GameSystem): GameSystemInfo{
     const gameSystemInfo: GameSystemInfo = {
       id: ststem.ID,
       name: ststem.NAME,
@@ -84,8 +84,8 @@ export class DiceBot extends GameObject {
 
   static listAvailableGameSystems(): GameSystemInfo[]{
     let diceBotInfos: GameSystemInfo[] = DiceBot.loader.listAvailableGameSystems();
-    diceBotInfos.push( this.getCustomGameSystemInfo( KariDice ));
-    diceBotInfos.push( this.getCustomGameSystemInfo( IdoDice ));
+    diceBotInfos.push( this.getCustomGameSystemInfo( <GameSystem>KariDice ));
+    diceBotInfos.push( this.getCustomGameSystemInfo( <GameSystem>IdoDice ));
     // 追加カスタムダイスは下記追記
     // diceBotInfos.push( getCustomGameSystemInfo( *** ));
     return diceBotInfos;
@@ -124,16 +124,16 @@ export class DiceBot extends GameObject {
     });
   }
 
-  static loadCustomGameSystem(gameType: string):any{
-    if( gameType == 'KariDice') return KariDice;
-    if( gameType == 'IdoDice') return IdoDice;
+  static loadCustomGameSystem(gameType: string):GameSystem{
+    if( gameType == 'KariDice') return <GameSystem>KariDice;
+    if( gameType == 'IdoDice') return <GameSystem>IdoDice;
     // 追加カスタムダイスは下記追記
     // if( gameType == '***') return ***; 
     
     return null;
   }
   
-  static loadGameSystemAsync(gameType: string): Promise<any> {
+  static loadGameSystemAsync(gameType: string): Promise<GameSystem> {
 
     const id = this.diceBotInfos.some((info) => info.id === gameType)
       ? gameType
@@ -142,7 +142,6 @@ export class DiceBot extends GameObject {
     return new Promise( (resolve) => {
       let system = this.loadCustomGameSystem( gameType );
       if( !system ){
-        console.log('loadGameSystemAsync 03 DiceBot.loader.dynamicLoad '+ id);
         system = DiceBot.loader.dynamicLoad(id);
       }
       resolve( system );
@@ -154,7 +153,7 @@ export class DiceBot extends GameObject {
   }
 
   // 繰り返しコマンドを除去し、sより後ろがCOMMAND_PATTERNにマッチするか確認
-  checkSecretDiceCommand(gameSystem: any, chatText: string): boolean {
+  checkSecretDiceCommand(gameSystem: GameSystem, chatText: string): boolean {
     const text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
     const nonRepeatText = text.replace(/^(\d+)?\s+/, 'repeat1 ').replace(/^x(\d+)?\s+/, 'repeat1 ').replace(/repeat(\d+)?\s+/, '');
     const regArray = /^s(.*)?/ig.exec(nonRepeatText);
