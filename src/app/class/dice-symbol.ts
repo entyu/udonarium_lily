@@ -71,6 +71,7 @@ export class DiceSymbol extends TabletopObject {
     switch (type) {
       case DiceType.D2:
         sided = 2;
+        faceGeneratorFunc = index => (index === 0) ? '裏' : '表';
         break;
       case DiceType.D4:
         sided = 4;

@@ -1,3 +1,7 @@
+# ダイス画像
 どどんとふ
  - (https://github.com/torgtaitai/DodontoF) modified BSD licenses
- - (http://www.dodontof.com)
+
+# コイン画像
+二ノ瀬泰徳
+ - (https://commons.nicovideo.jp/user/3965873) ニコニ・コモンズ
