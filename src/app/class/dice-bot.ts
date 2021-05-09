@@ -298,7 +298,7 @@ export class DiceBot extends GameObject {
             if ((rollText.trim().toUpperCase().indexOf('SCHOICE ') === 0 || rollText.trim().toUpperCase().indexOf('CHOICE ') === 0 
                   || rollText.trim().toUpperCase().indexOf('SCHOICE　') === 0 || rollText.trim().toUpperCase().indexOf('CHOICE　') === 0)
                 && (!DiceRollTableList.instance.diceRollTables.map(diceRollTable => diceRollTable.command).some(command => command != null && command.trim().toUpperCase() === 'CHOICE'))) {
-              rollText = rollText.trim().replace(/[　\s]+/, ' ');
+              rollText = rollText.trim().replace(/[　\s]+/g, ' ');
               isChoice = true;
             } else if ((choiceMatch = /^(S?CHOICE\[[^\[\]]+\])/ig.exec(rollText.trim())) || (choiceMatch = /^(S?CHOICE\([^\(\)]+\))/ig.exec(rollText.trim()))) {
               rollText = choiceMatch[1];
