@@ -38,7 +38,9 @@
     "vkbeautify": "^0.99.3",
     "xmlhttprequest-ssl": ">=1.6.2",
     "zone.js": "~0.10.3",
-    "url-parse": ">=1.5.0"
+    "url-parse": ">=1.5.0",
+    "hosted-git-info": ">=2.8.9",
+    "lodash": ">=4.17.21"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.1102.12",
