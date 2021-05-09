@@ -289,6 +289,7 @@ export class DiceBot extends GameObject {
           }
           if (!isDiceRollTableMatch) {
             //ダイスボット切り替えた時点で読み込む前提（chat-inputの動作依存、良くない）
+            if (!DiceBot.loadedDiceBots[gameType]) gameType = 'DiceBot';
             if (!DiceBot.apiUrl && !DiceBot.loadedDiceBots[gameType].COMMAND_PATTERN.test(rollText)) return;
 
             // スペース区切りのChoiceコマンドへの対応
@@ -464,7 +465,11 @@ export class DiceBot extends GameObject {
             let gameSystem: GameSystemClass;
             if (!(gameSystem = DiceBot.loadedDiceBots[gameType])) {
               gameSystem = await DiceBot.loader.dynamicLoad(gameType);
-              DiceBot.loadedDiceBots[gameType] = gameSystem;
+              if (gameSystem) {
+                DiceBot.loadedDiceBots[gameType] = gameSystem;
+              } else {
+                gameSystem = DiceBot.loadedDiceBots['DiceBot'];
+              }
             }
             const result = gameSystem.eval(message);
             if (!result) return { result: '', isSecret: false, isEmptyDice: true };
@@ -511,10 +516,12 @@ export class DiceBot extends GameObject {
           if (gameType && gameType != '' && gameType != 'DiceBot') {
             let gameSystem: GameSystemClass;
             if (!(gameSystem = DiceBot.loadedDiceBots[gameType])) {
-              gameSystem = await DiceBot.loader.dynamicLoad(gameType);
-              DiceBot.loadedDiceBots[gameType] = gameSystem;
+              try {
+                gameSystem = await DiceBot.loader.dynamicLoad(gameType);
+              } catch (e) {}
+              if (gameSystem) DiceBot.loadedDiceBots[gameType] = gameSystem;
             }
-            if (gameSystem.HELP_MESSAGE) help.push(gameSystem.HELP_MESSAGE.replace('部屋のシステム名', 'チャットパレットなどのシステム名'));
+            if (gameSystem && gameSystem.HELP_MESSAGE) help.push(gameSystem.HELP_MESSAGE.replace('部屋のシステム名', 'チャットパレットなどのシステム名'));
           }
         } catch (e) {
           console.error(e);
