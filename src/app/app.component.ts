@@ -428,10 +428,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  openDiceRollTable() {
-
-  }
-
   resetPointOfView() {
     this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
       { name: '初期視点に戻す', action: () => EventSystem.trigger('RESET_POINT_OF_VIEW', null) },
@@ -469,7 +465,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 */
   diceAllOpne() {
-    if (confirm('「一斉公開しない」設定ではないダイスをすべて公開します。\nよろしいですか？')) {
+    if (confirm('「一斉公開しない」設定ではないダイス、コインをすべて公開します。\nよろしいですか？')) {
       EventSystem.trigger('DICE_ALL_OPEN', null);
     }
   }
