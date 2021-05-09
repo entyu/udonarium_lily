@@ -1,6 +1,3 @@
-import Loader from 'bcdice/lib/loader/loader';
-import { GameSystemInfo } from 'bcdice/lib/bcdice/game_system_list.json';
-
 import { ChatMessage, ChatMessageContext } from './chat-message';
 import { ChatTab } from './chat-tab';
 import { SyncObject } from './core/synchronize-object/decorator';
@@ -14,6 +11,9 @@ import { GameCharacter } from './game-character';
 import { PeerCursor } from './peer-cursor';
 import { StandConditionType } from './stand-list';
 import { DiceRollTableList } from './dice-roll-table-list';
+
+import Loader from 'bcdice/lib/loader/loader';
+import GameSystemClass from 'bcdice/lib/game_system';
 
 export interface DiceBotInfo {
   script: string;
@@ -48,15 +48,27 @@ class WebpackLoader extends Loader {
 
 @SyncObject('dice-bot')
 export class DiceBot extends GameObject {
-  private static readonly loadedDiceBots: { [gameType: string]: GameSystemInfo } = {};
-  private static queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
+  private static readonly queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
+  public static readonly loader = new WebpackLoader();
+  private static readonly loadedDiceBots: { [gameType: string]: GameSystemClass } = {};
 
   public static apiUrl: string = null;
   public static adminUrl: string = null;
 
-  public static readonly loader = new WebpackLoader();
-
-  public static diceBotInfos: DiceBotInfo[] = DiceBot.loader.listAvailableGameSystems().filter(gameSystemInfo => gameSystemInfo.id != 'DiceBot').map<DiceBotInfo>(gameSystemInfo => {
+  public static diceBotInfos: DiceBotInfo[] = DiceBot.loader.listAvailableGameSystems()
+  .filter(gameSystemInfo => gameSystemInfo.id != 'DiceBot')
+  .sort((a ,b) => {
+    const aKey: string = a.sortKey;
+    const bKey: string = b.sortKey;
+    if (aKey < bKey) {
+      return -1;
+    }
+    if (aKey > bKey) {
+      return 1;
+    }
+    return 0
+  })
+  .map<DiceBotInfo>(gameSystemInfo => {
     const lang = /.+\:(.+)/.exec(gameSystemInfo.id);
     let langName;
     if (lang && lang[1]) {
@@ -77,8 +89,8 @@ export class DiceBot extends GameObject {
   public static replaceData: [string, string, string?][] = [
     ['新クトゥルフ', 'シンクトウルフシンワTRPG', '新クトゥルフ神話TRPG'],
     ['クトゥルフ神話TRPG', 'クトウルフシンワTRPG', '(旧) クトゥルフ神話TRPG'],
-    ['克蘇魯神話', '克蘇魯的呼喚', '克蘇魯的呼喚'],
-    ['克蘇魯神話第7版', '克蘇魯的呼喚 第七版', '克蘇魯的呼喚 第七版'],
+    ['克蘇魯神話', '克蘇魯的呼喚', '克蘇魯的呼喚 第六版'],
+    ['克蘇魯神話第7版', '克蘇魯的呼喚 第7版', '克蘇魯的呼喚 第七版'],
     ['トーグ', 'トオク', 'TORG'],
     ['ワープス', 'ワアフス', 'WARPS'],
     ['トーグ1.5版', 'トオク1.5ハン', 'TORG 1.5版'],
@@ -213,14 +225,16 @@ export class DiceBot extends GameObject {
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
-    //DiceBot.queue.add(DiceBot.loadScriptAsync('./assets/cgiDiceBot.js'));
+    // 別の場所でDiceBot.loadedDiceBots初期化したい
+    (async () => { DiceBot.loadedDiceBots['DiceBot'] = await DiceBot.loader.dynamicLoad('DiceBot'); DiceBot.loadedDiceBots['DiceBot']; })();
     EventSystem.register(this)
       .on('SEND_MESSAGE', async event => {
         const chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
 
         const text: string = StringUtil.toHalfWidth(chatMessage.text).replace("\u200b", ''); //ゼロ幅スペース削除
-        const gameType: string = chatMessage.tag.replace('noface', '').trim();
+        let gameType: string = chatMessage.tag.replace('noface', '').trim();
+        gameType = gameType ? gameType : 'DiceBot';
 
         try {
           const regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?\s+)?([^\n]*)?/ig.exec(text);
@@ -229,30 +243,7 @@ export class DiceBot extends GameObject {
           const repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
           let rollText: string = (regArray[4] != null) ? regArray[4] : text;
 
-          // スペース区切りのChoiceコマンドへの対応
-          let isChoice = false;
-          let result;
-          if (rollText) {
-            //ToDO バージョン調べる
-            if ((rollText.trim().toUpperCase().indexOf('SCHOICE ') == 0 || rollText.trim().toUpperCase().indexOf('CHOICE ') == 0 
-                   || rollText.trim().toUpperCase().indexOf('SCHOICE　') == 0 || rollText.trim().toUpperCase().indexOf('CHOICE　') == 0)
-                && (!DiceRollTableList.instance.diceRollTables.map(diceRollTable => diceRollTable.command).some(command => command != null && command.trim().toUpperCase() == 'CHOICE'))) {
-              isChoice = true;
-              rollText = rollText.trim().replace(/[　\s]+/g, ' ');
-            } else if ((result = /^(S?CHOICE\[[^\[\]]+\])/ig.exec(rollText.trim())) || (result = /^(S?CHOICE\([^\(\)]+\))/ig.exec(rollText.trim()))) {
-              isChoice = true;
-              rollText = result[1];
-            } else {
-              rollText = rollText.trim().split(/\s+/)[0]
-            }
-          } else {
-            return;
-          }
-
-          // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
-          if (!isChoice && (repeat < 1 || !(/choice\[.*\]/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText)))) {
-            return;
-          }
+          if (!rollText || repeat <= 0) return;
           let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true };
           
           //ダイスボット表
@@ -290,13 +281,36 @@ export class DiceBot extends GameObject {
                   }
                 }
                 if (!isRowMatch) finalResult.result += ('🎲 ' + rollResult.result + "\n" + '(結果なし)');
-                if (1 < repeat) finalResult.result += ` #${i + 1}\n`;
+                if (1 < repeat) finalResult.result += ` #${i + 1}`;
+                if (i < repeat - 1) finalResult.result += "\n";
               }
               break;
             }
           }
           if (!isDiceRollTableMatch) {
+            //ダイスボット切り替えた時点で読み込む前提（chat-inputの動作依存、良くない）
+            if (!DiceBot.apiUrl && !DiceBot.loadedDiceBots[gameType].COMMAND_PATTERN.test(rollText)) return;
+
+            // スペース区切りのChoiceコマンドへの対応
+            let isChoice = false;
+            //ToDO バージョン調べる
+            let choiceMatch;
+            if ((rollText.trim().toUpperCase().indexOf('SCHOICE ') === 0 || rollText.trim().toUpperCase().indexOf('CHOICE ') === 0 
+                  || rollText.trim().toUpperCase().indexOf('SCHOICE　') === 0 || rollText.trim().toUpperCase().indexOf('CHOICE　') === 0)
+                && (!DiceRollTableList.instance.diceRollTables.map(diceRollTable => diceRollTable.command).some(command => command != null && command.trim().toUpperCase() === 'CHOICE'))) {
+              rollText = rollText.trim().replace(/[　\s]+/, ' ');
+              isChoice = true;
+            } else if ((choiceMatch = /^(S?CHOICE\[[^\[\]]+\])/ig.exec(rollText.trim())) || (choiceMatch = /^(S?CHOICE\([^\(\)]+\))/ig.exec(rollText.trim()))) {
+              rollText = choiceMatch[1];
+              isChoice = true;
+            } else {
+              rollText = rollText.trim().split(/\s+/)[0]
+            }
+
             if (DiceBot.apiUrl) {
+              // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
+              //ToDO APIのバージョン調べて新しければCOMMAND_PATTERN使う？（いつ読み込もう？）
+              if (!isChoice && !(/choice\[.*\]/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) return;
               //BCDice-API の繰り返し機能を利用する、結果の形式が縦に長いのと、更新していないBCDice-APIサーバーもありそうなのでまだ実装しない
               //finalResult = await DiceBot.diceRollAsync(repCommand ? (repCommand + repeat + ' ' + rollText) : rollText, gameType, repCommand ? 1 : repeat);
               finalResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);
@@ -447,12 +461,13 @@ export class DiceBot extends GameObject {
     } else {
       return DiceBot.queue.add((async () => {
           try {
-            let gameSystem;
+            let gameSystem: GameSystemClass;
             if (!(gameSystem = DiceBot.loadedDiceBots[gameType])) {
               gameSystem = await DiceBot.loader.dynamicLoad(gameType);
               DiceBot.loadedDiceBots[gameType] = gameSystem;
             }
             const result = gameSystem.eval(message);
+            if (!result) return { result: '', isSecret: false, isEmptyDice: true };
             console.log('diceRoll!!!', result);
             console.log('isSecret!!!', result.secret);
             console.log('isEmptyDice!!!', !result.rands || result.rands.length == 0);
@@ -492,14 +507,9 @@ export class DiceBot extends GameObject {
       return DiceBot.queue.add((async () => {
         let help = [''];
         try {
-          let diceBot;
-          if (!(diceBot = DiceBot.loadedDiceBots['DiceBot'])) {
-            diceBot = await DiceBot.loader.dynamicLoad('DiceBot');
-            DiceBot.loadedDiceBots['DiceBot'] = diceBot;
-          }
-          help = [diceBot.HELP_MESSAGE];
+          help = [DiceBot.loadedDiceBots['DiceBot'].HELP_MESSAGE];
           if (gameType && gameType != '' && gameType != 'DiceBot') {
-            let gameSystem;
+            let gameSystem: GameSystemClass;
             if (!(gameSystem = DiceBot.loadedDiceBots[gameType])) {
               gameSystem = await DiceBot.loader.dynamicLoad(gameType);
               DiceBot.loadedDiceBots[gameType] = gameSystem;
