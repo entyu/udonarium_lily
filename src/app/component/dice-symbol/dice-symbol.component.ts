@@ -49,12 +49,12 @@ import { PointerDeviceService } from 'service/pointer-device.service';
     ]),
     trigger('coinFlip', [
       transition('* => active', [
-        animate('800ms ease', keyframes([
-          style({ transform: 'scale3d(0.8, 0.8, 0.8) rotateX(-0deg) rotateY(-0deg)', offset: 0 }),
-          style({ transform: 'scale3d(1.2, 1.2, 1.2) rotateX(-360deg) rotateY(-360deg)', offset: 0.5 }),
-          style({ transform: 'scale3d(0.75, 0.75, 0.75) rotateX(-520deg) rotateY(-520deg)', offset: 0.75 }),
-          style({ transform: 'scale3d(1.125, 1.125, 1.125) rotateX(-630deg) rotateY(-630deg)', offset: 0.875 }),
-          style({ transform: 'scale3d(1.0, 1.0, 1.0) rotateX(-720deg) rotateY(-720deg)', offset: 1.0 })
+        animate('800ms ease-in-out', keyframes([
+          style({ transform: 'scale3d(0.8, 0.8, 0.8) translateY(0%) rotateX(-0deg) rotateY(-0deg)', offset: 0 }),
+          style({ transform: 'scale3d(1.2, 1.2, 1.2)  translateY(-30%) rotateX(-360deg) rotateY(-360deg)', offset: 0.5 }),
+          style({ transform: 'scale3d(0.75, 0.75, 0.75) translateY(-40%) rotateX(-520deg) rotateY(-520deg)', offset: 0.75 }),
+          style({ transform: 'scale3d(1.125, 1.125, 1.125) translateY(-30%) rotateX(-630deg) rotateY(-630deg)', offset: 0.875 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0) translateY(0%) rotateX(-720deg) rotateY(-720deg)', offset: 1.0 })
         ]))
       ])
     ]),
