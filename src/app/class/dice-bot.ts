@@ -72,7 +72,7 @@ export class DiceBot extends GameObject {
     }
   );
   
-  static getCustomGameSystemInfo(ststem:GameSystem): GameSystemInfo{
+  static getCustomGameSystemInfo(ststem:GameSystemClass): GameSystemInfo{
     const gameSystemInfo: GameSystemInfo = {
       id: ststem.ID,
       name: ststem.NAME,
@@ -84,8 +84,8 @@ export class DiceBot extends GameObject {
 
   static listAvailableGameSystems(): GameSystemInfo[]{
     let diceBotInfos: GameSystemInfo[] = DiceBot.loader.listAvailableGameSystems();
-    diceBotInfos.push( this.getCustomGameSystemInfo( <GameSystem>KariDice ));
-    diceBotInfos.push( this.getCustomGameSystemInfo( <GameSystem>IdoDice ));
+    diceBotInfos.push( this.getCustomGameSystemInfo( <GameSystemClass>KariDice ));
+    diceBotInfos.push( this.getCustomGameSystemInfo( <GameSystemClass>IdoDice ));
     // 追加カスタムダイスは下記追記
     // diceBotInfos.push( getCustomGameSystemInfo( *** ));
     return diceBotInfos;
@@ -124,16 +124,16 @@ export class DiceBot extends GameObject {
     });
   }
 
-  static loadCustomGameSystem(gameType: string):GameSystem{
-    if( gameType == 'KariDice') return <GameSystem>KariDice;
-    if( gameType == 'IdoDice') return <GameSystem>IdoDice;
+  static loadCustomGameSystem(gameType: string):any{
+    if( gameType == 'KariDice') return KariDice;
+    if( gameType == 'IdoDice') return IdoDice;
     // 追加カスタムダイスは下記追記
     // if( gameType == '***') return ***; 
     
     return null;
   }
   
-  static loadGameSystemAsync(gameType: string): Promise<GameSystem> {
+  static loadGameSystemAsync(gameType: string): Promise<any> {
 
     const id = this.diceBotInfos.some((info) => info.id === gameType)
       ? gameType
@@ -153,7 +153,7 @@ export class DiceBot extends GameObject {
   }
 
   // 繰り返しコマンドを除去し、sより後ろがCOMMAND_PATTERNにマッチするか確認
-  checkSecretDiceCommand(gameSystem: GameSystem, chatText: string): boolean {
+  checkSecretDiceCommand(gameSystem: GameSystemClass, chatText: string): boolean {
     const text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
     const nonRepeatText = text.replace(/^(\d+)?\s+/, 'repeat1 ').replace(/^x(\d+)?\s+/, 'repeat1 ').replace(/repeat(\d+)?\s+/, '');
     const regArray = /^s(.*)?/ig.exec(nonRepeatText);
