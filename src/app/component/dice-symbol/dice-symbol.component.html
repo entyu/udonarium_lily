@@ -30,9 +30,9 @@
               <div class="component-content is-3d" 
                 [@changeFace]="!isCoin && isVisible ? face : null" [@changeFaceCoin]="isCoin && isVisible ? (face == '裏' ? 0 : 1) : null" 
                 [@diceRoll]="!isCoin && animeState" [@coinFlip]="isCoin && animeState"
-                (@diceRoll.done)="animationShuffleDone($event)" (@coinFlip.done)="animationShuffleDone($event)">
-                <img class="image front-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
-                <img class="image back-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}" style="transform: rotateY(-180deg)">
+                (@diceRoll.done)="animationShuffleDone($event)" (@coinFlip.done)="animationShuffleDone($event)" [style.transform]="isCoin ? 'rotateX(30deg)' : ''">
+                  <img class="image front-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
+                  <img class="image back-face is-3d" *ngIf="0 < backFaceImageFile.url.length" [src]="backFaceImageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine || (isVisible && isCoin)}" style="transform: rotateY(-180deg)">
               </div>
             </div>
           </div>
