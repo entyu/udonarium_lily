@@ -42,7 +42,7 @@
           [@diceRoll]="animeState"
           (@diceRoll.done)="animationShuffleDone($event)">
           <img *ngIf="!isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)">
-          <img *ngIf="isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px); transform: scaleX(-1) scaleY(-1)">
+          <img *ngIf="isFlip && isDropShadow && 0 < backFaceImageFile.url.length" class="image shadow" [src]="backFaceImageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)" [style.transform]="isCoin ? 'scaleX(-1)' : 'scaleX(-1) scaleY(-1)'">
         </div>
       </div>
     </div>
