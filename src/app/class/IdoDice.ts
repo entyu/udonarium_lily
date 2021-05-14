@@ -13,21 +13,32 @@ export default class IdoDice extends Base {
   /^S?([+\-(]*\d+|\d+B\d+|C[+\-(]*\d+|choice|D66|(repeat|rep|x)\d+|\d+R\d+|\d+U\d+|BCDiceVersion)/i
 */
   static readonly HELP_MESSAGE = `
+・円柱の身内用に作成したカスタムダイス
+1d100と目標値による成功度を算出します。
+
+・CoCとは似ていますが判定基準細部が異なります。
+
+・F値(標準96)以上＞ファンブル
+・目標値を超える＞失敗
+・目標値を以下＞成功
+・1/S値(標準1/5)以下＞スペシャル
+・C値(標準5)以下＞クリティカル
+
 ・専用命令(ID<=x(追加文字))
-  使用例 ）技能値200で判定する場合
-  ID<=200（1d100<=200と同じ）
+  使用例)技能値200で判定する場合
+  ID<=200(1d100<=200と同じ)
   (ID<=200) → 31 → スペシャル
   ■追加文字定義
-    Fx：F値xで判定
+    Fn：F値xで判定
       ID<=200F90
       (ID<=200F90) F90 → 91 → 致命的失敗
-    Sx：S値を1/xに変更する
+    Sn：S値を1/yに変更する
       ID<=200S3
       (ID<=200S3) S3 → 65 → スペシャル
-    Cx：C値をxに変更する
+    Cn：C値をxに変更する
       ID<=200C10
       (ID<=200C10) C10 → 10 → 決定的成功/スペシャル
-    P：パーフェクトオーダーS値1/4、C10で判定(S4C10と同じ)
+    P：パーフェクトオーダー状態S値1/4、C10で判定(S4C10と同じ)
       ID<=200P
       (ID<=200P) S4 C10 → 41 → スペシ ャル
     B：ボスフラグF値100で判定(F100と同じ)
@@ -51,15 +62,15 @@ export default class IdoDice extends Base {
       (ID3<=120PB) S4 C10 F100 目標値120 判定数3 → 4,81,21 → C,N,S
 `.trim();
 
-  private command: string;
   private commandWithoutRepeat: string;
-  private preCommand: string;
+
+  private dispCommandId: string;
+  private dispCommandRes: string;
+  private dispCommandCbr: string;
+
   private repeat: number;
   private option: string;
   private target: number;
-
-  private cbrValue1: string;
-  private cbrValue2: string;
 
   private critical: number;
   private famble: number;
@@ -83,34 +94,33 @@ export default class IdoDice extends Base {
       commandWithoutRepeat = command;
     }
 
+// IDxコマンド
     const regExp = /^([S]?)ID(\d*)<=([\d\-\+\*\/\(\)CR]+)(.*)$/i;
     let matchResult = commandWithoutRepeat.match(regExp);
     if( matchResult ){
-      if( matchResult[4].split(/\s/)[0] == '' ){
-        const dicenum = matchResult[2] == ''? '1' : matchResult[2];
-        const changeText = matchResult[1] + dicenum + 'b100<=' + matchResult[3];
-        if (repeat > 1) {
-          super(`x${repeat} ${changeText}`, internal);
-        } else {
-          super(changeText, internal);
-        }
-
-        console.log('matchResult' + matchResult);
-        this.command = command
-        this.commandWithoutRepeat = commandWithoutRepeat;
-        this.repeat = repeat;
-        this.dicenum = parseInt(dicenum,10);
-        this.option = matchResult[4].split(/\s/)[0];
-        this.optionCommand(this.option);
-        this.preCommand = matchResult? matchResult[1] + 'ID' + matchResult[2] + '<=' : '';
-        return;
+      const dicenum = matchResult[2] == ''? '1' : matchResult[2];// IDx x省略時は1
+      const changeText = matchResult[1] + dicenum + 'b100<=' + matchResult[3];// シークレットの場合はSをつけてxb100をロール
+      if (repeat > 1) {
+        super(`x${repeat} ${changeText}`, internal);
+      } else {
+        super(changeText, internal);
       }
+
+      console.log('matchResult' + matchResult);
+      this.commandWithoutRepeat = commandWithoutRepeat;
+      this.repeat = repeat;
+      this.dicenum = parseInt(dicenum,10);
+      this.option = matchResult[4].split(/\s/)[0];// IDx<=n以降のオプション部分切り出し
+      this.optionCommand(this.option);
+      this.dispCommandId = matchResult[1] + 'ID' + matchResult[2] + '<=';
+      return;
     }
 
+// RES(X-Y)コマンド
     const regExpRes = /^([S]?)RES\(([\d\-\+\*\/\(\)CR]+)\)(.*)$/i;
     matchResult = commandWithoutRepeat.match(regExpRes);
     if( matchResult ){
-      if( matchResult[3].split(/\s/)[0] == '' ){
+      if( matchResult[3].split(/\s/)[0] == '' ){// マッチ部分以降が空であるかスペース区切りのコメントかチェック
         const changeText = matchResult[1] + '1d100<=(' + matchResult[2] + ')*5+50';
         if (repeat > 1) {
           super(`x${repeat} ${changeText}`, internal);
@@ -124,10 +134,11 @@ export default class IdoDice extends Base {
       }
     }
 
+// CBR(X,Y)コマンド
     const regExpCbr = /^([S]?)CBR\((\d+),(\d+)\)(.*)$/i;
     matchResult = commandWithoutRepeat.match(regExpCbr);
     if( matchResult ){
-      if( matchResult[4].split(/\s/)[0] == '' ){
+      if( matchResult[4].split(/\s/)[0] == '' ){// マッチ部分以降が空であるかスペース区切りのコメントかチェック
         const val1 = parseInt(matchResult[2],10);
         const val2 = parseInt(matchResult[3],10);
         const val = val1 < val2? val1 :val2;
@@ -141,12 +152,12 @@ export default class IdoDice extends Base {
         console.log('matchResult' + matchResult);
         this.commandWithoutRepeat = commandWithoutRepeat;
         this.repeat = repeat;
-        this.cbrValue1 = matchResult[2];
-        this.cbrValue2 = matchResult[3];
+        this.dispCommandCbr = '1d100<=' + matchResult[2] + ',' + matchResult[3];
         return;
       }
     }
 
+// 専用コマンド不一致の場合通常ダイス
     const changeText = commandWithoutRepeat;
     if (repeat > 1) {
       super(`x${repeat} ${changeText}`, internal);
@@ -160,7 +171,7 @@ export default class IdoDice extends Base {
 
   eval(): Result | null {
     if (this.commandWithoutRepeat.match(/^S?ID/i)) {
-      return this.chkOptionCommand(this.option)? this.custom_dice(): null;
+      return this.chkOptionCommand(this.option)? this.custom_dice_id(): null;
     }
     if (this.commandWithoutRepeat.match(/^S?RES/i)) {
       return this.custom_dice_res();
@@ -172,11 +183,13 @@ export default class IdoDice extends Base {
     return super.eval();
   }
 
+// オプションコマンドの書式チェック
   private chkOptionCommand(command: string):boolean{
-    const optionReplace = command.replace(/C\d+/i,'').replace(/S\d+|P/i,'').replace(/F\d+|B/i,'');
+    const optionReplace = command.replace(/P/i,'S4C10').replace(/S\d+/i,'').replace(/C\d+/i,'').replace(/F\d+|B/i,'');
     return optionReplace == ''? true: false;
   }
 
+// オプションコマンドの解釈C,F,S倍率を変更
   private optionCommand(command: string){
     this.critical = 5;
     this.famble = 96;
@@ -205,12 +218,15 @@ export default class IdoDice extends Base {
     const matchParfect = command.match(/P/i);
     if(matchParfect){
       this.special = 4;
+      this.critical = 10;
     }
     console.log( 'C:' + this.critical + ' F:' + this.famble + ' S:' + this.special);
   }
 
-  private diceResultTextSingle( diceValue :number[]): string{
-    let resultText = '(' + this.preCommand.toUpperCase() + this.target +')';
+// IDn<=xコマンド結果テキスト記述
+  private diceResultTextSingleId( diceValue :number[]): string{
+    let resultText = '(' + this.dispCommandId.toUpperCase() + this.target +')';
+
     if( this.special != 5){
       resultText += ' S'+this.special;
     }
@@ -269,29 +285,36 @@ export default class IdoDice extends Base {
     return resultText;
   }
 
-  private custom_dice(): Result | null {
+// IDn<=xコマンド結果処理
+  private custom_dice_id(): Result | null {
     const result = super.eval();
     if (result == null) {
       return null;
     }
     console.log( 'result:' + result.text);
 
-    let target = result.text.match(/B100<=(\d+)/i);
+    // BCDice結果から演算済みの目標値を取り出す
+    let target = result.text.match(/b100<=(\d+)/i);
     if( !target ){ return null;}
     this.target = parseInt( target[1],10);
+
+    // 書式が特殊なため自力書き出し
     let newResultText: string = '';
     for (let i = 0; i < this.repeat; i++) {
       let dice :number[] = [];
+
+      // 1リピート分のダイスを取得
       for (let j = 0; j < this.dicenum; j++) {
         dice.push( result.detailedRands[this.dicenum*i+j].value );
       }
+      // 結果のテキストを作成
       if( this.repeat > 1){
         if( i > 0 ){
           newResultText += '\n\n';
         }
-        newResultText += '#' + (i+1) + '\n' + this.diceResultTextSingle(dice);
+        newResultText += '#' + (i+1) + '\n' + this.diceResultTextSingleId(dice);
       }else{
-        newResultText += this.diceResultTextSingle(dice);
+        newResultText += this.diceResultTextSingleId(dice);
       }
     }
 
@@ -302,6 +325,7 @@ export default class IdoDice extends Base {
     };
   }
 
+// RESコマンド結果テキスト記述
   private diceResultTextSingleRes( diceValue :number , target :number): string{
     let resultText:string = '(1d100<=' + target + ')' + ' ＞ ';
     resultText += diceValue + ' ＞ ';
@@ -317,6 +341,7 @@ export default class IdoDice extends Base {
     return resultText;
   }
 
+// RESコマンド結果処理
   private custom_dice_res(): Result | null {
     const result = super.eval();
     if (result == null) {
@@ -324,6 +349,7 @@ export default class IdoDice extends Base {
     }
     console.log( 'result:' + result.text);
 
+    // BCDice結果から演算済みの目標値を取り出す
     const target = result.text.match(/1d100<=(\d+)/i);
     if( !target ){ return null;}
     const targetNum: number= parseInt(target[1],10);
@@ -350,8 +376,9 @@ export default class IdoDice extends Base {
     };
   }
 
+// CBRコマンド結果テキスト記述
   private diceResultTextSingleCbr( diceValue :number , target :number): string{
-    let resultText:string = '(1d100<=' + this.cbrValue1 + ',' + this.cbrValue2 + ')' + ' ＞ ';
+    let resultText:string = '(' + this.dispCommandCbr + ')' + ' ＞ ';
 
     this.target = target;
     this.critical = 5;
@@ -375,6 +402,7 @@ export default class IdoDice extends Base {
     return resultText;
   }
 
+// RESコマンド結果処理
   private custom_dice_cbr(): Result | null {
     const result = super.eval();
     if (result == null) {
@@ -382,6 +410,7 @@ export default class IdoDice extends Base {
     }
     console.log( 'result:' + result.text);
 
+    // BCDice結果から演算済みの目標値を取り出す
     const target = result.text.match(/1d100<=(\d+)/i);
     if( !target ){ return null;}
     const targetNum: number= parseInt(target[1],10);
