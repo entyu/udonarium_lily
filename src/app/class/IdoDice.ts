@@ -24,18 +24,18 @@ export default class IdoDice extends Base {
 ・1/S値(標準1/5)以下＞スペシャル
 ・C値(標準5)以下＞クリティカル
 
-・専用命令(ID<=x(追加文字))
+・専用命令(ID<=x(オプション文字：省略可))
   使用例)技能値200で判定する場合
-  ID<=200(1d100<=200と同じ)
+  ID<=200 :1d100<=200と同じ
   (ID<=200) → 31 → スペシャル
   ■追加文字定義
-    Fn：F値xで判定
+    Fn：F値nで判定 無指定はn=96扱い
       ID<=200F90
       (ID<=200F90) F90 → 91 → 致命的失敗
-    Sn：S値を1/yに変更する
+    Sn：S値を1/nに変更する 無指定n=5扱い
       ID<=200S3
       (ID<=200S3) S3 → 65 → スペシャル
-    Cn：C値をxに変更する
+    Cn：C値をnに変更する 無指定n=5扱い
       ID<=200C10
       (ID<=200C10) C10 → 10 → 決定的成功/スペシャル
     P：パーフェクトオーダー状態S値1/4、C10で判定(S4C10と同じ)
@@ -48,18 +48,19 @@ export default class IdoDice extends Base {
       ID<=200BC20S3　ボスがC値20S1/3で判定
       (ID<=200BC20S3) S3 C20 F100 → 15 → 決定的成功/スペシャル
 
-  ■複数判定
-    複数回の判定結果を
+・複数判定(IDy<=x(オプション文字：省略可)):オプションは前述の書式と同様
+  
+    y回の判定結果を
     C（クリティカル）S（スペシャル）1C（1クリ）F（ファンブル）
     100F（100ファンブル）N（通常成功）X（失敗）で表示
 
-    IDn<=x　で目標値xでn回判定
+    IDy<=x で目標値xでy回判定
       ID4<=85　　修験律動4人掛け等
-      (ID4<=85) 目標値85 判定数4 → 73,60,12,64 → N,N,S,N
+      (ID4<=85) → 73,60,12,64 → N,N,S,N
 
-    追加文字定義可能
+    オプション文字指定例
       ID3<=120PB パフェオボス乱槍
-      (ID3<=120PB) S4 C10 F100 目標値120 判定数3 → 4,81,21 → C,N,S
+      (ID3<=120PB) S4 C10 F100 → 4,81,21 → C,N,S
 `.trim();
 
   private commandWithoutRepeat: string;
@@ -115,6 +116,29 @@ export default class IdoDice extends Base {
       this.dispCommandId = matchResult[1] + 'ID' + matchResult[2] + '<=';
       return;
     }
+
+// 1d100コマンド
+    const regExpD100 = /^([S]?)1d100<=([\d\-\+\*\/\(\)CR]+)(.*)$/i;
+    matchResult = commandWithoutRepeat.match(regExpD100);
+    if( matchResult ){
+      if( matchResult[3].split(/\s/)[0] == '' ){// マッチ部分以降が空であるかスペース区切りのコメントかチェック
+        const dicenum = '1';
+        const changeText = commandWithoutRepeat;
+        if (repeat > 1) {
+          super(`x${repeat} ${changeText}`, internal);
+        } else {
+          super(changeText, internal);
+        }
+
+        console.log('matchResult' + matchResult);
+        this.commandWithoutRepeat = commandWithoutRepeat;
+        this.repeat = repeat;
+        this.dicenum = 1;
+        this.dispCommandId = '1d100<=';
+        return;
+      }
+    }
+
 
 // RES(X-Y)コマンド
     const regExpRes = /^([S]?)RES\(([\d\-\+\*\/\(\)CR]+)\)(.*)$/i;
@@ -172,6 +196,9 @@ export default class IdoDice extends Base {
   eval(): Result | null {
     if (this.commandWithoutRepeat.match(/^S?ID/i)) {
       return this.chkOptionCommand(this.option)? this.custom_dice_id(): null;
+    }
+    if (this.commandWithoutRepeat.match(/^S?1D100/i)) {
+      return this.custom_dice_d100();
     }
     if (this.commandWithoutRepeat.match(/^S?RES/i)) {
       return this.custom_dice_res();
@@ -325,17 +352,80 @@ export default class IdoDice extends Base {
     };
   }
 
+// 1d100<=xコマンド結果テキスト記述
+  private diceResultTextSingleD100( diceValue :number): string{
+    let resultText = '(' + this.dispCommandId.toUpperCase() + this.target +')';
+
+    this.critical = 5;
+    this.famble = 96;
+    this.special = 5;
+
+    resultText += ' ＞ '+ diceValue + ' ＞ ';
+    if( diceValue >= this.famble){
+      resultText += '致命的失敗';
+    }else if( diceValue > this.target ){
+      resultText += '失敗';
+    }else if( diceValue <= this.critical && diceValue <= (this.target / this.special) ){
+      resultText += '決定的成功/スペシャル';
+    }else if( diceValue <= this.critical){
+      resultText += '決定的成功';
+    }else if( diceValue <= (this.target / this.special)){
+      resultText += 'スペシャル';
+    }else{
+      resultText += '成功';
+    }
+    return resultText;
+  }
+
+// 1d100<=xコマンド結果処理
+  private custom_dice_d100(): Result | null {
+    const result = super.eval();
+    if (result == null) {
+      return null;
+    }
+    console.log( 'result:' + result.text);
+
+    // BCDice結果から演算済みの目標値を取り出す
+    let target = result.text.match(/1d100<=(\d+)/i);
+    if( !target ){ return null;}
+    this.target = parseInt( target[1],10);
+    console.log( 'target:' + target);
+
+    // 自力書き出し
+    let newResultText: string = '';
+    for (let i = 0; i < this.repeat; i++) {
+      let dice :number;
+      dice = result.detailedRands[i].value;
+      // 結果のテキストを作成
+      if( this.repeat > 1){
+        if( i > 0 ){
+          newResultText += '\n\n';
+        }
+        newResultText += '#' + (i+1) + '\n' + this.diceResultTextSingleD100(dice);
+      }else{
+        newResultText += this.diceResultTextSingleD100(dice);
+      }
+    }
+
+    const text = newResultText;
+    return {
+      ...result,
+      text,
+    };
+  }
+
 // RESコマンド結果テキスト記述
   private diceResultTextSingleRes( diceValue :number , target :number): string{
-    let resultText:string = '(1d100<=' + target + ')' + ' ＞ ';
-    resultText += diceValue + ' ＞ ';
+    let resultText:string = '(1D100<=' + target + ')' + ' ＞ ';
     if( target >= 100 ){
       resultText += '自動成功';
     }else if( target <= 0 ){
       resultText += '自動失敗';
     }else if( diceValue <= target ){
+      resultText += diceValue + ' ＞ ';
       resultText += '成功';
     }else{
+      resultText += diceValue + ' ＞ ';
       resultText += '失敗';
     }
     return resultText;
