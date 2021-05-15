@@ -77,6 +77,8 @@
   border: none;
   background: none;
   -webkit-text-stroke: 2px whitesmoke;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .emote.emote-secret {

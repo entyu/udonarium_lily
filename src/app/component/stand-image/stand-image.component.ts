@@ -227,6 +227,12 @@ export class StandImageComponent implements OnInit, OnDestroy {
     return ret;
   }
 
+  get emoteCssBottom(): number {
+    let ret = this.imageHeight;
+    if (ret < 0) ret = 0;
+    return ret;
+  }
+
   get nameTagCSSMarginLeft(): number {
     let offset = (this.imageWidth / 2) - this.position * document.documentElement.clientWidth / 100;
     if (offset < 32) offset = 32;
