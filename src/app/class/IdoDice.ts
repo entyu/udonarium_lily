@@ -100,6 +100,11 @@ export default class IdoDice extends Base {
     let matchResult = commandWithoutRepeat.match(regExp);
     if( matchResult ){
       const dicenum = matchResult[2] == ''? '1' : matchResult[2];// IDx x省略時は1
+      let commandDiceNum = matchResult[2];
+      if( parseInt(dicenum,10) < 1){
+        dicenum = '1';
+        commandDiceNum = '';
+      }
       const changeText = matchResult[1] + dicenum + 'b100<=' + matchResult[3];// シークレットの場合はSをつけてxb100をロール
       if (repeat > 1) {
         super(`x${repeat} ${changeText}`, internal);
@@ -113,7 +118,7 @@ export default class IdoDice extends Base {
       this.dicenum = parseInt(dicenum,10);
       this.option = matchResult[4].split(/\s/)[0];// IDx<=n以降のオプション部分切り出し
       this.optionCommand(this.option);
-      this.dispCommandId = matchResult[1] + 'ID' + matchResult[2] + '<=';
+      this.dispCommandId = matchResult[1] + 'ID' + commandDiceNum + '<=';
       return;
     }
 
@@ -122,8 +127,10 @@ export default class IdoDice extends Base {
     matchResult = commandWithoutRepeat.match(regExpD100);
     if( matchResult ){
       if( matchResult[3].split(/\s/)[0] == '' ){// マッチ部分以降が空であるかスペース区切りのコメントかチェック
+        console.log('matchResult' + matchResult);
+
         const dicenum = '1';
-        const changeText = commandWithoutRepeat;
+        const changeText = matchResult[1] + '1d100<=' + matchResult[2];
         if (repeat > 1) {
           super(`x${repeat} ${changeText}`, internal);
         } else {
@@ -131,7 +138,7 @@ export default class IdoDice extends Base {
         }
 
         console.log('matchResult' + matchResult);
-        this.commandWithoutRepeat = commandWithoutRepeat;
+        this.commandWithoutRepeat = matchResult[1] + '1d100<=' + matchResult[2];
         this.repeat = repeat;
         this.dicenum = 1;
         this.dispCommandId = '1d100<=';
@@ -190,6 +197,7 @@ export default class IdoDice extends Base {
     }
     this.commandWithoutRepeat = commandWithoutRepeat;
     this.repeat = repeat;
+    this.dispCommandId = '';
     return;
   }
 
@@ -197,7 +205,7 @@ export default class IdoDice extends Base {
     if (this.commandWithoutRepeat.match(/^S?ID/i)) {
       return this.chkOptionCommand(this.option)? this.custom_dice_id(): null;
     }
-    if (this.commandWithoutRepeat.match(/^S?1D100/i)) {
+    if (this.dispCommandId.match(/^1d100<=/i)) {
       return this.custom_dice_d100();
     }
     if (this.commandWithoutRepeat.match(/^S?RES/i)) {
