@@ -32,9 +32,9 @@
 </div>
 <div id="file-list" style="min-height: 250px">
   <span class="empty" *ngIf="isAllowedEmpty">
-    <button (click)="onSelectedFile(empty)">画像なし</button>
+    <button (click)="onSelectedFile(empty)" style="min-width: 100px; height: 120px">画像なし<br>/設定解除</button>
   </span>
-  <div *ngFor="let file of images; trackBy: identify" class="image" @scaleInOut style="text-align: center; min-width: 100px; height: 120px; position: relative;">
+  <div *ngFor="let file of images; trackBy: identify" @scaleInOut class="image" style="text-align: center; min-width: 100px; height: 120px; position: relative" [ngClass]="{'current-images': getCurrent(file)}">
     <div style="position: absolute; font-size: xx-small; text-align: left; bottom: 0px; width: 100%; height: 100%; overflow: hidden; pointer-events: none">
       <ng-container *ngIf="getTagWords(file).length > 0; then tagsBlock; else noTagBlock"></ng-container> 
       <ng-template #tagsBlock>
@@ -54,7 +54,10 @@
     <div *ngIf="getHidden(file)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none; z-index: 5">
       <i class="material-icons red-eye" style="z-index: 5; margin-right: 2px; font-size: 16px; display: block">visibility</i>
     </div>
-    <img *ngIf="0 < file.url.length" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="onSelectedFile(file)">
+    <div *ngIf="getCurrent(file)" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 5">
+      <b class="grow" style="font-size: 13px; color: red; padding-left: 2px">設定中</b>
+    </div>
+    <img *ngIf="0 < file.url.length" [src]="file.url | safe: 'resourceUrl'" [alt]="file.name" height="120" (click)="getCurrent(file) ? false : onSelectedFile(file)">
     <img *ngIf="file.url.length <= 0" src="assets/images/loading.gif" alt="{{file.name}}">
   </div>
 </div>

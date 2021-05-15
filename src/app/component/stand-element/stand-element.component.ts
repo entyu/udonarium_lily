@@ -152,11 +152,14 @@ export class StandElementComponent implements OnInit {
 
   openModal(name='imageIdentifier', isAllowedEmpty=false) {
     if (!this.standElement) return;
+    let currentImageIdentifires: string[] = [];
     let elm = this.standElement.getFirstElementByName(name);
     if (!elm) {
       elm = <DataElement>this.standElement.appendChild(DataElement.create(name, '', { type: 'image' }, name + '_' + this.standElement.identifier));
+    } else {
+      currentImageIdentifires = [elm.value + ''];
     }
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty, currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!value) return;
       elm.value = value;
     });

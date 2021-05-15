@@ -8,7 +8,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { EventSystem, Network } from '@udonarium/core/system';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
@@ -39,6 +38,7 @@ import { FileStorageComponent } from 'component/file-storage/file-storage.compon
 })
 export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() isAllowedEmpty: boolean = false;
+  @Input() currentImageIdentifires: string[] = [] 
   _searchNoTagImage = true;
   serchCondIsOr = true;
   addingTagWord = '';
@@ -51,7 +51,19 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   
   get images(): ImageFile[] {
     const searchResultImages = ImageTagList.searchImages(this.searchWords, (this.searchNoTagImage && this.countAllImagesHasWord(null) > 0), this.serchCondIsOr, this.isShowHideImages);
-    return this.isSort ? ImageTagList.sortImagesByWords(searchResultImages, FileStorageComponent.sortOrder) : searchResultImages;
+    return this.isSort ? ImageTagList.sortImagesByWords(searchResultImages, FileStorageComponent.sortOrder).sort((a, b) => {
+      if (this.getCurrent(a)) {
+        if (this.getCurrent(b)) {
+          return 0;
+        } else {
+          return -1;
+        }
+      } else if (this.getCurrent(b)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }) : searchResultImages;
   }
   
   get empty(): ImageFile { return ImageFile.Empty; }
@@ -91,6 +103,9 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     private modalService: ModalService
   ) {
     this.isAllowedEmpty = this.modalService.option && this.modalService.option.isAllowedEmpty ? true : false;
+    if (this.modalService.option && this.modalService.option.currentImageIdentifires) {
+      this.currentImageIdentifires = this.modalService.option.currentImageIdentifires;
+    }
   }
 
   ngOnInit() {
@@ -177,6 +192,11 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
   getHidden(image: ImageFile): boolean {
     const imageTag = ImageTag.get(image.identifier);
     return imageTag ? imageTag.hide : false;
+  }
+
+  getCurrent(image: ImageFile): boolean {
+    if (!this.currentImageIdentifires) return false;
+    return this.currentImageIdentifires.includes(image.identifier);
   }
 
   onShowHiddenImages($event: Event) {

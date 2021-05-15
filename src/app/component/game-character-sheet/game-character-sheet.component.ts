@@ -185,7 +185,15 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   openModal(name: string = '', isAllowedEmpty: boolean = false) {
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
+    let currentImageIdentifires: string[] = [];
+    if (name == 'shadowImageIdentifier') {
+      const element = this.tabletopObject.imageElement;
+      if (element && element.value != 'null' && element.currentValue) currentImageIdentifires = [element.currentValue + ''];
+    } else {
+      const elements = this.tabletopObject.imageDataElement.getElementsByName(name);
+      if (elements && elements.length > 0) currentImageIdentifires = elements.map(element => element.value + '');
+    }
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty, currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
       if (name == 'shadowImageIdentifier') {
         // 影はメイン画像のcurrentValueとする
@@ -223,7 +231,12 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   openModalAddImage() {
-    this.modalService.open<string>(FileSelecterComponent).then(value => {
+    let currentImageIdentifires: string[] = [];
+    const elements = this.tabletopObject.imageDataElement.getElementsByName('imageIdentifier');
+    if (elements.length > 0) {
+      currentImageIdentifires = elements.map(element => element.value + '');
+    }
+    this.modalService.open<string>(FileSelecterComponent, { currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
       let elements = this.tabletopObject.imageDataElement.getElementsByName('imageIdentifier');
       if (elements.length >= this.MAX_IMAGE_ICON_COUNT) {
@@ -239,7 +252,12 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   openModalReplaceImage(isAllowedEmpty: boolean = false) {
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty }).then(value => {
+    let currentImageIdentifires: string[] = [];
+    const elements = this.tabletopObject.imageDataElement.getElementsByName('imageIdentifier');
+    if (elements.length > 0) {
+      currentImageIdentifires = elements.map(element => element.value + '');
+    }
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: isAllowedEmpty, currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.tabletopObject || !this.tabletopObject.imageDataElement || !value) return;
       if (value == 'null') {
         //削除
