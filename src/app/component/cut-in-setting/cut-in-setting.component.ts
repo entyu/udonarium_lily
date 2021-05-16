@@ -12,6 +12,7 @@ import { TextViewComponent } from 'component/text-view/text-view.component';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageTag } from '@udonarium/image-tag';
+import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 
 
 @Component({
@@ -21,7 +22,9 @@ import { ImageTag } from '@udonarium/image-tag';
 })
 export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('cutInSelecter') cutInSelecter: ElementRef<HTMLSelectElement>;
-  
+  readonly minSize: number = 0;
+  readonly maxSize: number = 100;
+
   isShowHideImages = false;
   selectedCutIn: CutIn = null;
   selectedCutInXml: string = '';
@@ -30,6 +33,9 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get cutInName(): string { return this.selectedCutIn.name; }
   set cutInName(cutInName: string) { if (this.isEditable) this.selectedCutIn.name = cutInName; }
+
+  get cutInDuration(): number { return this.selectedCutIn.duration; }
+  set cutInDuration(cutInDuration: number) { if (this.isEditable) this.selectedCutIn.duration = cutInDuration; }
 
   get cutInCond(): string { return this.selectedCutIn.value + ''; }
   set cutInCond(cutInCond: string) { if (this.isEditable) this.selectedCutIn.value = cutInCond; }
@@ -45,6 +51,9 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get cutInPosY(): number { return this.selectedCutIn.posY; }
   set cutInPosY(cutInPosY: number) { if (this.isEditable) this.selectedCutIn.posY = cutInPosY; }
+
+  get cutInZIndex(): number { return this.selectedCutIn.zIndex; }
+  set cutInZIndex(cutInZIndex: number) { if (this.isEditable) this.selectedCutIn.zIndex = cutInZIndex; }
 
   get cutInIsFrontOdStand(): boolean { return this.selectedCutIn.isFrontOfStand; }
   set cutInIsFrontOdStand(cutInIsFrontOdStand: boolean) { if (this.isEditable) this.selectedCutIn.isFrontOfStand = cutInIsFrontOdStand; }
@@ -175,7 +184,13 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openModal() {
-
+    if (this.isDeleted) return;
+    let currentImageIdentifires: string[] = [];
+    if (this.selectedCutIn && this.selectedCutIn.imageIdentifier) currentImageIdentifires = [this.selectedCutIn.imageIdentifier];
+    this.modalService.open<string>(FileSelecterComponent, { currentImageIdentifires: currentImageIdentifires }).then(value => {
+      if (!this.selectedCutIn || !value) return;
+      this.selectedCutIn.imageIdentifier = value;
+    });
   }
 
   onShowHiddenImages($event: Event) {

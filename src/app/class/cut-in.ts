@@ -5,10 +5,13 @@ import { ObjectNode } from './core/synchronize-object/object-node';
 @SyncObject('cut-in')
 export class CutIn extends ObjectNode {
   @SyncVar() name: string = '';
+  @SyncVar() duration: number = 6;
+
   @SyncVar() width: number = 60;
   @SyncVar() height: number = 0;
   @SyncVar() posX: number = 50;
   @SyncVar() posY: number = 50;
+  @SyncVar() zIndex: number = 0;
   @SyncVar() isFrontOfStand: boolean = false;
   @SyncVar() imageIdentifier: string = ImageFile.Empty.identifier;
 
@@ -18,6 +21,7 @@ export class CutIn extends ObjectNode {
   @SyncVar() isLoop: boolean = false;
   @SyncVar() isPlaying: boolean = false;
   @SyncVar() audioIdentifier: string = '';
+  @SyncVar() tag: string = '';
 
   get conditionTexts(): string[] {
     if (!this.value) return [];

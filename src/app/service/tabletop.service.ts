@@ -6,6 +6,8 @@ import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
+import { CutIn } from '@udonarium/cut-in';
+import { CutInList } from '@udonarium/cut-in-list';
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { DiceSymbol } from '@udonarium/dice-symbol';
@@ -105,6 +107,8 @@ export class TabletopService {
           ChatTabList.instance.addChatTab(gameObject);
         } else if (gameObject instanceof DiceRollTable) {
           DiceRollTableList.instance.addDiceRollTable(gameObject);
+        }  else if (gameObject instanceof CutIn) {
+          CutInList.instance.addCutIn(gameObject);
         }
       });
   }

@@ -79,3 +79,7 @@
     font-weight: bolder;
     font-size: smaller;
   }
+
+  input[type='number'] {
+    text-align: right;
+  }
