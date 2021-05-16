@@ -109,7 +109,21 @@ export class DiceBot extends GameObject {
       return { result: '', isSecret: false };
     });
   }
-
+/*
+  static getDiceBotId(gameType: string): Promise<string> {
+    return DiceBot.queue.add(async (resolve, reject) => {
+      let id = '';
+      try {
+        const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
+        id = gameSystem.ID;
+      } catch (e) {
+        console.error(e);
+      }
+      resolve(id);
+      return;
+    });
+  }
+*/
   static getHelpMessage(gameType: string): Promise<string> {
     return DiceBot.queue.add(async (resolve, reject) => {
       let help = '';

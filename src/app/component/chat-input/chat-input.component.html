@@ -21,7 +21,11 @@
       </ng-select>
       <button (click)="showDicebotHelp()">?</button>
     </div>
-
+    <div>
+      <ng-container *ngIf="!isGameTypeInList()">
+        <font size="1.5" color="#FF0000">※ダイスボットが見つかりません(おそらくバージョン違いです)再選択してください。</font>
+      </ng-container>
+    </div>
     <div class="table">
       <div class="table-cell color-box-tag">
         <ng-container *ngIf="!isGameCharacter">

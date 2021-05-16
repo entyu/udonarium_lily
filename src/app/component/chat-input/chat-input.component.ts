@@ -50,10 +50,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get text(): string { return this._text };
   set text(text: string) { this._text = text; this.textChange.emit(text); }
 
-
-//  @Input('tachieNum') _tachieNum: number = 0;  
-//  @Output() tachieNumtChange = new EventEmitter<number>();
-
   @Output() chat = new EventEmitter<{ text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
 
   @Output() tabSwitch = new EventEmitter<number>();
@@ -75,6 +71,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   get isDirect(): boolean { return this.sendTo != null && this.sendTo.length ? true : false }
   gameHelp: string = '';
+  loadDiceName: string = '';
 
   colorSelectNo_ = 0;
 
@@ -139,9 +136,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       return '#000000';
     }
   }
-  
-  get selectChatColor(){
 
+  get selectChatColor(){
     let object = ObjectStore.instance.get(this.sendFrom);
     if (object instanceof GameCharacter) {
       return this.charactorChatColor(this.colorSelectNo);
@@ -182,7 +178,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   setColorNum( num : number ){
     this.colorSelectNo = num ;
-//    console.log('設定'+ this.colorSelectNo);
   }
 
   get selectCharacterTachie(){
@@ -371,10 +366,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (event && event.keyCode !== 13) return;
 
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
-    
-//    console.log('円柱TEST event: KeyboardEvent '+this.sendFrom + '  ' + this.tachieNum);
-//    console.log('円柱TEST event:' + this.selectChatColor);
-    
 
     if (this.history.length >= ChatInputComponent.MAX_HISTORY_NUM) {
       this.history.shift();
@@ -395,7 +386,6 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.text = '';
     this.previousWritingLength = this.text.length;
     this.kickCalcFitHeight();
-
   }
 
   kickCalcFitHeight() {
@@ -420,6 +410,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     DiceBot.getHelpMessage(gameType).then(help => {
       console.log('onChangeGameType done\n' + help);
     });
+  }
+
+  isGameTypeInList(): boolean{
+    for( let diceBotInfo of this.diceBotInfos ){
+      if( diceBotInfo.id === this.gameType ){ return true ;}
+    }
+    return false;
   }
 
   showDicebotHelp() {
