@@ -1,3 +1,8 @@
+// original version from 
+// https://gist.github.com/h-mikisato/b5753689483b02b19585365b8ce5940f
+// and
+// https://github.com/blhsrwznrghfzpr/bcdice-js/blob/extend-samlpe/examples/ts/custom_dicebot.ts
+
 import Base from "bcdice/lib/base";
 import Result from "bcdice/lib/result";
 
