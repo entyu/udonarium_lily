@@ -115,7 +115,12 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     const dateStr = (dateFormat == '') ? '' : formatDate(new Date(this.timestamp), dateFormat, this.locale) + '：';
     const lastUpdateStr = !this.isEdited ? '' : 
       (dateFormat == '') ? ' (編集済)' : ` (編集済 ${ formatDate(new Date(this.lastUpdate), dateFormat, this.locale) })`;
-    return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : this.text + lastUpdateStr }`
+    let text = this.text;
+    if (text.lastIndexOf('\n') == text.length - 1 && !lastUpdateStr) {
+      // 最終行の調整
+      text += "\n";
+    }
+    return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : text + lastUpdateStr }`
   }
 
   logFragmentHtml(tabName: string=null, dateFormat='HH:mm', noImage=true): string {
@@ -123,15 +128,6 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     const date = new Date(this.timestamp);
     const dateHtml = (dateFormat == '') ? '' : `<time datetime="${ date.toISOString() }">${ StringUtil.escapeHtml(formatDate(date, dateFormat, this.locale)) }</time>：`;
     const nameHtml = StringUtil.escapeHtml(this.name);
-    let lastUpdateHtml = '';
-    if (this.isEdited) {
-      if (dateFormat == '') {
-        lastUpdateHtml = '<span class="is-edited">編集済</span>';
-      } else {
-        const lastUpdate = new Date(this.lastUpdate);
-        lastUpdateHtml = `<span class="is-edited"><b>編集済</b> <time datetime="${ lastUpdate.toISOString() }">${ StringUtil.escapeHtml(formatDate(lastUpdate, dateFormat, this.locale)) }</time></span>`;
-      }
-    }
 
     let messageClassNames = ['message'];
     if (this.isDirect || this.isSecret) messageClassNames.push('direct-message');
@@ -140,7 +136,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     const color = StringUtil.escapeHtml(this.color ? this.color : PeerCursor.CHAT_DEFAULT_COLOR);
     const colorStyle = this.isSpecialColor ? '' : ` style="color: ${ color }"`;
 
-    const textAutoLinkedHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>' 
+    let textAutoLinkedHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>' 
       : Autolinker.link(StringUtil.escapeHtml(this.text), {
         urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, 
         truncate: {length: 96, location: 'end'}, 
@@ -154,6 +150,22 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
           return m.getType() == 'url' && StringUtil.validUrl(m.getAnchorHref());
         }
       });
+
+      let lastUpdateHtml = '';
+      if (this.isEdited) {
+        if (dateFormat == '') {
+          lastUpdateHtml = '<span class="is-edited">編集済</span>';
+        } else {
+          const lastUpdate = new Date(this.lastUpdate);
+          lastUpdateHtml = `<span class="is-edited"><b>編集済</b> <time datetime="${ lastUpdate.toISOString() }">${ StringUtil.escapeHtml(formatDate(lastUpdate, dateFormat, this.locale)) }</time></span>`;
+        }
+      }
+      
+      if (textAutoLinkedHtml.lastIndexOf('\n') == textAutoLinkedHtml.length - 1 && !lastUpdateHtml) {
+        // 最終行の調整
+        textAutoLinkedHtml += "\n";
+      }
+
     return `<div class="${ messageClassNames.join(' ') }" style="border-left-color: ${ color }">
   <div class="msg-header">${ tabNameHtml }${ dateHtml }<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</div>
   <div class="msg-text"><span${ colorStyle }>${ textAutoLinkedHtml }</span>${ lastUpdateHtml }</div>
