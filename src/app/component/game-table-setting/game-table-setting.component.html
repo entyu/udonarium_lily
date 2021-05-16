@@ -28,7 +28,7 @@
         <div>
           背景
           <div *ngIf="!tableDistanceviewImage.url">
-            <button (click)="openDistanceViewImageModal()" style="height: 120px;">背景画像を追加</button>
+            <button (click)="openDistanceViewImageModal()" style="height: 120px;" [attr.disabled]="!isEditable ? '' : null">背景画像を追加</button>
           </div>
           <div *ngIf="tableDistanceviewImage.url" style="position: relative; overflow: hidden" (click)="openDistanceViewImageModal()">
             <div *ngIf="getHidden(tableDistanceviewImage)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none">

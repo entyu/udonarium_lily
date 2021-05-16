@@ -1,5 +1,4 @@
 import { ImageFile } from './core/file-storage/image-file';
-import { ImageStorage } from './core/file-storage/image-storage';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 
@@ -10,6 +9,7 @@ export class CutIn extends ObjectNode {
   @SyncVar() height: number = 0;
   @SyncVar() posX: number = 50;
   @SyncVar() posY: number = 50;
+  @SyncVar() isFrontOfStand: boolean = false;
   @SyncVar() imageIdentifier: string = ImageFile.Empty.identifier;
 
   @SyncVar() audioName: string = '';

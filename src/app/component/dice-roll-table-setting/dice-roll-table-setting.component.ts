@@ -120,6 +120,11 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
       let restoreTable = <DiceRollTable>ObjectSerializer.instance.parseXml(this.selectedDiceRollTableXml);
       DiceRollTableList.instance.addDiceRollTable(restoreTable);
       this.selectedDiceRollTableXml = '';
+      setTimeout(() => {
+        const diceRollTables = this.diceRollTables;
+        this.onChangeDiceRollTable(diceRollTables[diceRollTables.length - 1].identifier);
+        this.diceRollTableSelecter.nativeElement.selectedIndex = diceRollTables.length - 1;
+      });
     }
   }
 

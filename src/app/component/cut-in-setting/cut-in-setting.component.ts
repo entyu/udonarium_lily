@@ -9,6 +9,9 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 import { EventSystem } from '@udonarium/core/system';
 import { TextViewComponent } from 'component/text-view/text-view.component';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { ImageTag } from '@udonarium/image-tag';
 
 
 @Component({
@@ -24,10 +27,38 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedCutInXml: string = '';
 
   get cutIns(): CutIn[] { return CutInList.instance.cutIns; }
+
+  get cutInName(): string { return this.selectedCutIn.name; }
+  set cutInName(cutInName: string) { if (this.isEditable) this.selectedCutIn.name = cutInName; }
+
+  get cutInCond(): string { return this.selectedCutIn.value + ''; }
+  set cutInCond(cutInCond: string) { if (this.isEditable) this.selectedCutIn.value = cutInCond; }
+
+  get cutInWidth(): number { return this.selectedCutIn.width; }
+  set cutInWidth(cutInWidth: number) { if (this.isEditable) this.selectedCutIn.width = cutInWidth; }
+
+  get cutInHeight(): number { return this.selectedCutIn.height; }
+  set cutInHeight(cutInHeight: number) { if (this.isEditable) this.selectedCutIn.height = cutInHeight; }
+
+  get cutInPosX(): number { return this.selectedCutIn.posX; }
+  set cutInPosX(cutInPosX: number) { if (this.isEditable) this.selectedCutIn.posX = cutInPosX; }
+
+  get cutInPosY(): number { return this.selectedCutIn.posY; }
+  set cutInPosY(cutInPosY: number) { if (this.isEditable) this.selectedCutIn.posY = cutInPosY; }
+
+  get cutInIsFrontOdStand(): boolean { return this.selectedCutIn.isFrontOfStand; }
+  set cutInIsFrontOdStand(cutInIsFrontOdStand: boolean) { if (this.isEditable) this.selectedCutIn.isFrontOfStand = cutInIsFrontOdStand; }
+
   get isEmpty(): boolean { return this.cutIns.length < 1; }
   get isDeleted(): boolean { return this.selectedCutIn ? ObjectStore.instance.get(this.selectedCutIn.identifier) == null : false; }
   get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
 
+  get cutInImage(): ImageFile {
+    if (!this.selectedCutIn) return ImageFile.Empty;
+    let file = ImageStorage.instance.get(this.selectedCutIn.imageIdentifier);
+    return file ? file : ImageFile.Empty;
+  }
+  
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
@@ -51,7 +82,6 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    //const diceRollTables = DiceRollTableList.instance.diceRollTables;
     if (this.cutIns.length > 0) {
       setTimeout(() => {
         this.onChangeCutIn(this.cutIns[0].identifier);
@@ -75,6 +105,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   add() {
     const cutIn = this.create();
+    cutIn.imageIdentifier = 'stand_no_image';
     setTimeout(() => {
       this.onChangeCutIn(cutIn.identifier);
       this.cutInSelecter.nativeElement.value = cutIn.identifier;
@@ -110,7 +141,17 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       let restoreCutIn = <CutIn>ObjectSerializer.instance.parseXml(this.selectedCutInXml);
       CutInList.instance.addCutIn(restoreCutIn);
       this.selectedCutInXml = '';
+      setTimeout(() => {
+        const cutIns = this.cutIns;
+        this.onChangeCutIn(cutIns[cutIns.length - 1].identifier);
+        this.cutInSelecter.nativeElement.selectedIndex = cutIns.length - 1;
+      });
     }
+  }
+
+  getHidden(image: ImageFile): boolean {
+    const imageTag = ImageTag.get(image.identifier);
+    return imageTag ? imageTag.hide : false;
   }
 
   upTabIndex() {
@@ -131,6 +172,10 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       let nextElement = parentElement.children[index + 1];
       parentElement.insertBefore(nextElement, this.selectedCutIn);
     }
+  }
+
+  openModal() {
+
   }
 
   onShowHiddenImages($event: Event) {

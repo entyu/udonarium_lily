@@ -3,21 +3,42 @@
     <div>
       <button style="font-size: smaller; margin-bottom: 3px" (click)="add()">カットインの追加</button>
     </div>
-    <select #cutInSelecter style="width: 14em;" size="15" (change)="onChangeCutIn($event.target.value)">
+    <select #cutInSelecter style="width: 12em;" size="15" (change)="onChangeCutIn($event.target.value)">
       <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}">{{ cutIn.name }}</option>
     </select>
   </div>
   <div class="flex-item">
     <div style="float: right; margin-top: 3px; margin-right: 3px">
-      <label sytle="white-space: nowrap">
-        <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
-        <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
-      </label>
       <button (click)="helpCutIn()">?</button>
     </div>
     <ng-container *ngIf="!isEmpty && selectedCutIn">
-      <div style="font-size: smaller;">
-        
+      <div style="font-size: smaller; display: flex">
+        <div>
+          <div (click)="openModal()" style="position: relative; overflow: hidden">
+            <div *ngIf="getHidden(cutInImage)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none">
+              <i class="material-icons" [class]="isShowHideImages ? 'red-eye': 'grow'" style="margin-right: 2px; font-size: 16px; display: block">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+            </div>
+            <img height="180" [ngClass]="{ blackout: !isShowHideImages && getHidden(cutInImage) }" [src]="cutInImage.url | safe: 'resourceUrl'">
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; width: 100%">
+          <div style="padding-bottom: 2px">
+            <button [attr.disabled]="!isEditable ? '' : null">画像変更</button>
+            <div style="float: right">
+              <label sytle="white-space: nowrap">
+                <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
+                <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+              </label>
+            </div>
+          </div>
+          <div style="padding: 2px">
+            <b>Name: </b><input type="text" [(ngModel)]="cutInName" [attr.disabled]="!isEditable ? '' : null">
+          </div>
+          <div style="padding: 2px">
+            <b>チャット末尾: </b><br>
+            <textarea style="width: 100%; height: 7em" [(ngModel)]="cutInCond" [attr.disabled]="!isEditable ? '' : null"></textarea>
+          </div>
+        </div>
       </div>
       <div>
         
@@ -37,7 +58,7 @@
             <button class="danger" (click)="delete()">削除</button>
           </div>
         </ng-container>
-        <ng-container *ngIf="isDeleted">
+        <ng-container *ngIf="isDeleted && selectedCutInXml">
           <button (click)="restore()">元に戻す</button>
         </ng-container>
       </div>
@@ -45,5 +66,10 @@
   </div>
 </div>
 <ng-container *ngIf="isEmpty">
-  <div style="font-size: 12px;">※カットインがありません。</div>
+  <div style="font-size: 12px;">
+    ※カットインがありません。
+    <ng-container *ngIf="isDeleted && selectedCutInXml">
+      <button (click)="restore()">元に戻す</button>
+    </ng-container>
+  </div>
 </ng-container>
