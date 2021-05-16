@@ -21,7 +21,7 @@ import { PeerCursor } from './peer-cursor';
 import KariDice from './KariDice';
 import IdoDice from './IdoDice';
 // 追加カスタムダイスは下記追記
-//import *** from './***';
+// import *** from './***';
 
 
 interface ResourceEdit {
@@ -71,8 +71,8 @@ export class DiceBot extends GameObject {
       return 0;
     }
   );
-  
-  static getCustomGameSystemInfo(ststem:GameSystemClass): GameSystemInfo{
+
+  static getCustomGameSystemInfo(ststem: GameSystemClass): GameSystemInfo{
     const gameSystemInfo: GameSystemInfo = {
       id: ststem.ID,
       name: ststem.NAME,
@@ -83,14 +83,14 @@ export class DiceBot extends GameObject {
   }
 
   static listAvailableGameSystems(): GameSystemInfo[]{
-    let diceBotInfos: GameSystemInfo[] = DiceBot.loader.listAvailableGameSystems();
-    diceBotInfos.push( this.getCustomGameSystemInfo( <GameSystemClass>KariDice ));
-    diceBotInfos.push( this.getCustomGameSystemInfo( <GameSystemClass>IdoDice ));
+    const diceBotInfos: GameSystemInfo[] = DiceBot.loader.listAvailableGameSystems();
+    diceBotInfos.push( this.getCustomGameSystemInfo( KariDice as GameSystemClass ));
+    diceBotInfos.push( this.getCustomGameSystemInfo( IdoDice as GameSystemClass ));
     // 追加カスタムダイスは下記追記
     // diceBotInfos.push( getCustomGameSystemInfo( *** ));
     return diceBotInfos;
   }
-  
+
   static diceRollAsync(message: string, gameSystem: GameSystemClass): Promise<DiceRollResult> {
     return DiceBot.queue.add(() => {
       try {
@@ -138,24 +138,24 @@ export class DiceBot extends GameObject {
     });
   }
 
-  static loadCustomGameSystem(gameType: string):any{
-    if( gameType == 'KariDice') return KariDice;
-    if( gameType == 'IdoDice') return IdoDice;
+  static loadCustomGameSystem(gameType: string): any{
+    if ( gameType == 'KariDice') { return KariDice; }
+    if ( gameType == 'IdoDice') { return IdoDice; }
     // 追加カスタムダイスは下記追記
-    // if( gameType == '***') return ***; 
-    
+    // if( gameType == '***') return ***;
+
     return null;
   }
-  
+
   static loadGameSystemAsync(gameType: string): Promise<any> {
 
     const id = this.diceBotInfos.some((info) => info.id === gameType)
       ? gameType
       : 'DiceBot';
-    
+
     return new Promise( (resolve) => {
       let system = this.loadCustomGameSystem( gameType );
-      if( !system ){
+      if ( !system ){
         system = DiceBot.loader.dynamicLoad(id);
       }
       resolve( system );
@@ -173,7 +173,7 @@ export class DiceBot extends GameObject {
     const regArray = /^s(.*)?/ig.exec(nonRepeatText);
     console.log('checkSecretDiceCommand:' + chatText + ' gameSystem.name:' + gameSystem.name);
 
-    if( gameSystem.COMMAND_PATTERN ){
+    if ( gameSystem.COMMAND_PATTERN ){
       return regArray && gameSystem.COMMAND_PATTERN.test(regArray[1]);
     }
     console.log('checkSecretDiceCommand:' + false);
@@ -195,10 +195,10 @@ export class DiceBot extends GameObject {
           const regArray = /^((\d+)?\s+)?(.*)?/ig.exec(text);
           const repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
           let rollText: string = (regArray[3] != null) ? regArray[3] : text;
-          console.log('SEND_MESSAGE gameType :'+ gameType);
+          console.log('SEND_MESSAGE gameType :' + gameType);
           const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
-          if( gameSystem.COMMAND_PATTERN ){
-            if( !gameSystem.COMMAND_PATTERN.test(rollText)) { return; }
+          if ( gameSystem.COMMAND_PATTERN ){
+            if ( !gameSystem.COMMAND_PATTERN.test(rollText)) { return; }
           }
           if (!rollText || repeat < 1 ) { return; }
 
