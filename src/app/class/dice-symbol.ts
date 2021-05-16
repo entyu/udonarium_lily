@@ -37,6 +37,12 @@ export class DiceSymbol extends TabletopObject {
         ? this.getImageFile(this.faces[0])
         : null;
   }
+  get backFaceImageFile(): ImageFile {
+    if (!this.isCoin) return this.imageFile;
+    return this.isVisible ?
+    this.getImageFile(this.face == '表' ? '裏' : '表')
+    : this.getImageFile(this.faces[1])
+  }
   get nothingFaces(): string[] { return this.imageDataElement.children.filter(element => (element as DataElement).currentValue == 'nothing').map(element => (element as DataElement).name); }
 
   get ownerName(): string {
@@ -52,6 +58,7 @@ export class DiceSymbol extends TabletopObject {
   get hasOwner(): boolean { return 0 < this.owner.length; }
   get isMine(): boolean { return Network.peerContext.userId === this.owner; }
   get isVisible(): boolean { return !this.hasOwner || this.isMine; }
+  get isCoin(): boolean { return this.faces.length === 2; }
 
   diceRoll(): string {
     let faces = this.faces;
@@ -71,6 +78,7 @@ export class DiceSymbol extends TabletopObject {
     switch (type) {
       case DiceType.D2:
         sided = 2;
+        faceGeneratorFunc = index => (index === 0) ? '表' : '裏';
         break;
       case DiceType.D4:
         sided = 4;

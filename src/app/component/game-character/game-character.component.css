@@ -369,7 +369,8 @@
   min-width: 300px;
   -webkit-text-stroke: 1px rgb(240, 218, 189);
   letter-spacing: -8px;
-  white-space: nowrap;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .chat-bubble p.is-whisper {

@@ -27,16 +27,22 @@
                 <div class="fornt-tag is-3d" style="color: whitesmoke"><b>{{ownerName}}</b></div>
                 <div class="back-tag is-3d" style="color: whitesmoke"><b>{{ownerName}}</b></div>
               </div>
-              <div class="component-content is-3d" [@changeFace]="isVisible ? face : null" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)">
-                <img class="image front-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
-                <img class="image back-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}" style="transform: rotateY(-180deg)">
+              <div class="component-content is-3d" 
+                [@changeFace]="!isCoin && isVisible ? face : null" [@changeFaceCoin]="isCoin && isVisible ? (face == '裏' ? 0 : 1) : null" 
+                [@diceRoll]="!isCoin && animeState" [@coinFlip]="isCoin && animeState"
+                (@diceRoll.done)="animationShuffleDone($event)" (@coinFlip.done)="animationShuffleDone($event)" [style.transform]="isCoin ? 'rotateX(30deg)' : ''">
+                  <img class="image front-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
+                  <img class="image back-face is-3d" *ngIf="0 < backFaceImageFile.url.length" [src]="backFaceImageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine || (isVisible && isCoin)}" style="transform: rotateY(-180deg)">
               </div>
             </div>
           </div>
         </div>
-        <div class="is-3d" style="position: relative; top: -20%;" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" [@changeFace]="isVisible ? face : null" [@diceRoll]="animeState" (@diceRoll.done)="animationShuffleDone($event)">
+        <div style="position: relative; top: -20%;" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" 
+          [@changeFace]="!isCoin && isVisible ? face : null" [@changeFaceCoin]="isCoin && isVisible ? (face == '表' ? 1 : 2) : null" 
+          [@diceRoll]="animeState"
+          (@diceRoll.done)="animationShuffleDone($event)">
           <img *ngIf="!isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)">
-          <img *ngIf="isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px); transform: scaleX(-1)">
+          <img *ngIf="isFlip && isDropShadow && 0 < backFaceImageFile.url.length" class="image shadow" [src]="backFaceImageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)" [style.transform]="isCoin ? 'scaleX(-1)' : 'scaleX(-1) scaleY(-1)'">
         </div>
       </div>
     </div>

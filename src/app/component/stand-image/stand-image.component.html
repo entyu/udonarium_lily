@@ -14,6 +14,7 @@
         [style.width.px]="imageWidth"
         [style.font-size.px]="imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16"
         [style.color]="color ? color : '#444'"
+        [style.bottom.px]="dialogBoxCssBottom + (imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16)"
         [ngClass]="{'emote-secret': isSecret}">{{ gameCharacter.text }}</div>
       <div [ngStyle]="{'transform-origin': standImageTransformOrigin, 'transform': isApplyRoll ? ('rotate(' + gameCharacter.roll + 'deg)') : ''}">
         <div class="inverser" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">

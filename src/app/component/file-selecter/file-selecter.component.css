@@ -4,6 +4,10 @@
   border: 2px solid transparent;
 }
 
+.current-images {
+  pointer-events: none;
+}
+
 .image:hover {
   border: 2px dotted red;
   transform: scale(1.05);

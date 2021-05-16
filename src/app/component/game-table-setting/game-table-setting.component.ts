@@ -161,7 +161,9 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   
   openBgImageModal() {
     if (this.isDeleted) return;
-    this.modalService.open<string>(FileSelecterComponent).then(value => {
+    let currentImageIdentifires: string[] = [];
+    if (this.selectedTable && this.selectedTable.imageIdentifier) currentImageIdentifires = [this.selectedTable.imageIdentifier];
+    this.modalService.open<string>(FileSelecterComponent, { currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.selectedTable || !value) return;
       this.selectedTable.imageIdentifier = value;
     });
@@ -169,7 +171,9 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
 
   openDistanceViewImageModal() {
     if (this.isDeleted) return;
-    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: true }).then(value => {
+    let currentImageIdentifires: string[] = [];
+    if (this.selectedTable && this.selectedTable.backgroundImageIdentifier) currentImageIdentifires = [this.selectedTable.backgroundImageIdentifier];
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: true, currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.selectedTable || !value) return;
       this.selectedTable.backgroundImageIdentifier = value;
     });

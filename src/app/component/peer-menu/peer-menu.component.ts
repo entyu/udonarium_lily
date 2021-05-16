@@ -89,7 +89,9 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   changeIcon() {
-    this.modalService.open<string>(FileSelecterComponent).then(value => {
+    let currentImageIdentifires: string[] = [];
+    if (this.myPeer && this.myPeer.imageIdentifier) currentImageIdentifires = [this.myPeer.imageIdentifier];
+    this.modalService.open<string>(FileSelecterComponent, { currentImageIdentifires: currentImageIdentifires }).then(value => {
       if (!this.myPeer || !value) return;
       this.myPeer.imageIdentifier = value;
     });
