@@ -84,7 +84,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
   }
 
   add() {
-    const diceRollTable = this.create('ダイスボット表');
+    const diceRollTable = this.create();
     setTimeout(() => {
       this.onChangeDiceRollTable(diceRollTable.identifier);
       this.diceRollTableSelecter.nativeElement.value = diceRollTable.identifier;

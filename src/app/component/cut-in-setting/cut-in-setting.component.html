@@ -1,18 +1,49 @@
-<div style="margin-bottom: 4px;">
-  <button style="float: right">?</button>
-  <div style="display: flex; flex-direction: row; flex-wrap: wrap">
-    <div *ngFor="let ctuIn of cutIns; let i = index" style="width: 700px">
-      <div style="display: flex; flex-direction: row; justify-content: space-between">
-        <div style="margin-left: -1em; margin-right: -1em;">
-          
-        </div>
-        <div style="text-align: right; width: 3em;">
-          <button class="remove-button danger" >×</button>
-          <button class="remove-button" style="margin-top: 5px" >↑</button>
-          <button class="remove-button" style="margin-top: 2px" >↓</button>
-        </div>
-      </div>
-      <hr>
+<div class="flex-container">
+  <div class="flex-item no-grow">
+    <div>
+      <button style="font-size: smaller; margin-bottom: 3px" (click)="add()">カットインの追加</button>
     </div>
+    <select #cutInSelecter style="width: 14em;" size="15" (change)="onChangeCutIn($event.target.value)">
+      <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}">{{ cutIn.name }}</option>
+    </select>
   </div>
-  <button (click)="add()">カットイン設定の追加</button>
+  <div class="flex-item">
+    <div style="float: right; margin-top: 3px; margin-right: 3px">
+      <label sytle="white-space: nowrap">
+        <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
+        <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+      </label>
+      <button (click)="helpCutIn()">?</button>
+    </div>
+    <ng-container *ngIf="!isEmpty && selectedCutIn">
+      <div style="font-size: smaller;">
+        
+      </div>
+      <div>
+        
+      </div>
+      <hr/>
+      <div>
+        <ng-container *ngIf="!isDeleted">
+          <button (click)="upTabIndex()">↑</button>
+          <button (click)="downTabIndex()">↓</button>
+          <div style="float: right">
+            <button [disabled]="isSaveing" (click)="save()">
+              <div style="position: relative;">
+                <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
+                <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
+              </div>
+            </button>
+            <button class="danger" (click)="delete()">削除</button>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isDeleted">
+          <button (click)="restore()">元に戻す</button>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<ng-container *ngIf="isEmpty">
+  <div style="font-size: 12px;">※カットインがありません。</div>
+</ng-container>

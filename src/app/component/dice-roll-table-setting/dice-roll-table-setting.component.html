@@ -8,9 +8,9 @@
     </select>
   </div>
   <div class="flex-item">
+    <button style="float: right;" (click)="helpDiceRollTable()">?</button>
     <ng-container *ngIf="!isEmpty && selectedDiceRollTable">
       <div style="font-size: smaller;">
-        <button style="float: right;" (click)="helpDiceRollTable()">?</button>
         <div style="margin-bottom: 3px;">
           <b>name: </b> 
           <input style="width: 60%; min-width: 5em" [(ngModel)]="diceRollTableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
@@ -34,13 +34,15 @@
         <ng-container *ngIf="!isDeleted">
           <button (click)="upTabIndex()">↑</button>
           <button (click)="downTabIndex()">↓</button>
-          <button [disabled]="isSaveing" (click)="save()">
-            <div style="position: relative;">
-              <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
-              <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
-            </div>
-          </button>
-          <button class="danger" (click)="delete()">削除</button>
+          <div style="float: right">
+            <button [disabled]="isSaveing" (click)="save()">
+              <div style="position: relative;">
+                <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
+                <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
+              </div>
+            </button>
+            <button class="danger" (click)="delete()">削除</button>
+          </div>
         </ng-container>
         <ng-container *ngIf="isDeleted">
           <button (click)="restore()">元に戻す</button>
