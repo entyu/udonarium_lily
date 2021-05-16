@@ -4,15 +4,15 @@
   border: 2px solid transparent;
 }
 
-.current-images {
-  pointer-events: none;
-}
-
 .image:hover {
   border: 2px dotted red;
-  transform: scale(1.05);
+  transform: scale(1.08);
   z-index: 200;
   transition-duration: 60ms;
+}
+
+.current-images.image:hover {
+  border-color: transparent;
 }
 
 .image img {
