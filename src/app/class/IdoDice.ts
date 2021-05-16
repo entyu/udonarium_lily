@@ -99,7 +99,7 @@ export default class IdoDice extends Base {
     const regExp = /^([S]?)ID(\d*)<=([\d\-\+\*\/\(\)CR]+)(.*)$/i;
     let matchResult = commandWithoutRepeat.match(regExp);
     if( matchResult ){
-      const dicenum = matchResult[2] == ''? '1' : matchResult[2];// IDx x省略時は1
+      let dicenum = matchResult[2] == ''? '1' : matchResult[2];// IDx x省略時は1
       let commandDiceNum = matchResult[2];
       if( parseInt(dicenum,10) < 1){
         dicenum = '1';
