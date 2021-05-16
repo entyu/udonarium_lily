@@ -24,7 +24,7 @@ export class CutIn extends GameObject {
   @SyncVar() x_pos: number = 50;
   @SyncVar() y_pos: number = 50;
   
-  //主にジュークボックス機能を参考に作成
+  // 主にジュークボックス機能を参考に作成
   @SyncVar() imageIdentifier: string = 'imageIdentifier';
   @SyncVar() audioIdentifier: string = '';
   @SyncVar() audioName: string = '';
@@ -44,8 +44,8 @@ export class CutIn extends GameObject {
   private audioPlayer: AudioPlayer = new AudioPlayer();
 
   get cutInImage(): ImageFile {
-    if (!this.imageIdentifier) return ImageFile.Empty;
-    let file = ImageStorage.instance.get(this.imageIdentifier);
+    if (!this.imageIdentifier) { return ImageFile.Empty; }
+    const file = ImageStorage.instance.get(this.imageIdentifier);
     return file ? file : ImageFile.Empty;
   }
 
@@ -58,5 +58,5 @@ export class CutIn extends GameObject {
   onStoreRemoved() {
     super.onStoreRemoved();
   }
-  
+
 }

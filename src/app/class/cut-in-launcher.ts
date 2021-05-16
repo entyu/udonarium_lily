@@ -29,22 +29,22 @@ export class CutInLauncher extends GameObject {
   @SyncVar() launchIsStart: boolean = false;
   @SyncVar() stopBlankTagCutInTimeStamp: number = 0;
   @SyncVar() sendTo : string = '';
-  
-  reloadDummy : number = 5;
-  
-  //カットイン時のジューク音楽停止はカットインリストウィンドウ操作による
-  //秘話仕様で止まる必要もないためそのまま止めずにカットインする
-  chatActivateCutIn( text : string , sendTo : string){
-    let text2 = ' ' + text;
-    let matches_array = text2.match(/\s(\S+)$/i);
-    let activateName :string = '';
-    
-    if( matches_array ){
+
+  reloadDummy = 5;
+
+  // カットイン時のジューク音楽停止はカットインリストウィンドウ操作による
+  // 秘話仕様で止まる必要もないためそのまま止めずにカットインする
+  chatActivateCutIn( text: string , sendTo: string){
+    const text2 = ' ' + text;
+    const matches_array = text2.match(/\s(\S+)$/i);
+    let activateName = '';
+
+    if ( matches_array ){
       activateName = RegExp.$1;
-      let allCutIn = this.getCutIns();
-      
-      for ( let cutIn_ of allCutIn ){
-        if( cutIn_.chatActivate && ( cutIn_.name == activateName ) ){
+      const allCutIn = this.getCutIns();
+
+      for ( const cutIn_ of allCutIn ){
+        if ( cutIn_.chatActivate && ( cutIn_.name == activateName ) ){
           this.startCutIn( cutIn_ , sendTo);
           return ;
         }
@@ -53,7 +53,7 @@ export class CutInLauncher extends GameObject {
   }
 
 
-  startCutInMySelf( cutIn : CutIn ){
+  startCutInMySelf( cutIn: CutIn ){
     this.launchCutInIdentifier = cutIn.identifier;
     this.launchIsStart = true;
     this.launchTimeStamp = this.launchTimeStamp + 1;
@@ -62,23 +62,24 @@ export class CutInLauncher extends GameObject {
     this.startSelfCutIn();
   }
 
-  
-  startCutIn( cutIn : CutIn ,sendTo? :string ){
+
+  startCutIn( cutIn: CutIn , sendTo?: string ){
     this.launchCutInIdentifier = cutIn.identifier;
     this.launchIsStart = true;
     this.launchTimeStamp = this.launchTimeStamp + 1;
     this.launchMySelf = false;
-    
-    if( sendTo )
+
+    if ( sendTo ) {
       this.sendTo = sendTo;
+    }
     else{
       this.sendTo = '';
     }
 
     this.startSelfCutIn();
   }
-  
-  stopCutIn( cutIn : CutIn ){
+
+  stopCutIn( cutIn: CutIn ){
     this.launchCutInIdentifier = cutIn.identifier;
     this.launchIsStart = false;
     this.launchTimeStamp = this.launchTimeStamp + 1;
@@ -91,34 +92,34 @@ export class CutInLauncher extends GameObject {
     this.stopBlankTagCutInTimeStamp = this.stopBlankTagCutInTimeStamp + 1;
     EventSystem.trigger('STOP_CUT_IN_BY_BGM', {  });
   }
-  
-  sameTagCutIn( cutIn : CutIn ): CutIn[] {
-    
-    let cutIns = this.getCutIns() ;
-    let tagName = cutIn.tagName; 
-    let sameTagCutIn : CutIn[] = [];
-    for ( let cutIn_ of cutIns ){
-      if( cutIn_.tagName == tagName && cutIn_.identifier !== cutIn.identifier){
+
+  sameTagCutIn( cutIn: CutIn ): CutIn[] {
+
+    const cutIns = this.getCutIns() ;
+    const tagName = cutIn.tagName;
+    const sameTagCutIn: CutIn[] = [];
+    for ( const cutIn_ of cutIns ){
+      if ( cutIn_.tagName == tagName && cutIn_.identifier !== cutIn.identifier){
         sameTagCutIn.push( cutIn_ );
       }
     }
     return sameTagCutIn;
   }
-  
+
   startSelfCutIn( ){
-    let cutIn_ = ObjectStore.instance.get(this.launchCutInIdentifier);
+    const cutIn_ = ObjectStore.instance.get(this.launchCutInIdentifier);
     EventSystem.trigger('START_CUT_IN', { cutIn : cutIn_ });
   }
 
   stopSelfCutIn( ){
-    let cutIn_ = ObjectStore.instance.get(this.launchCutInIdentifier);
+    const cutIn_ = ObjectStore.instance.get(this.launchCutInIdentifier);
     EventSystem.trigger('STOP_CUT_IN', { cutIn : cutIn_ });
   }
 
 
 
-  stopSelfCutInByIdentifier( identifier : string ){
-    let cutIn_ = ObjectStore.instance.get( identifier );
+  stopSelfCutInByIdentifier( identifier: string ){
+    const cutIn_ = ObjectStore.instance.get( identifier );
     EventSystem.trigger('STOP_CUT_IN', { cutIn : cutIn_ });
   }
 
@@ -126,7 +127,7 @@ export class CutInLauncher extends GameObject {
     return ObjectStore.instance.getObjects(CutIn);
   }
 
-  
+
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
@@ -141,41 +142,38 @@ export class CutInLauncher extends GameObject {
   apply(context: ObjectContext) {
     console.log('CutInLauncher apply() CALL');
 
-    let launchCutInIdentifier = this.launchCutInIdentifier;
-    let launchIsStart = this.launchIsStart;
-    let launchTimeStamp = this.launchTimeStamp;
-    let stopBlankTagCutInTimeStamp = this.stopBlankTagCutInTimeStamp;
-    let launchMySelf = this.launchMySelf;
-    let sendTo = this.sendTo;
-    
+    const launchCutInIdentifier = this.launchCutInIdentifier;
+    const launchIsStart = this.launchIsStart;
+    const launchTimeStamp = this.launchTimeStamp;
+    const stopBlankTagCutInTimeStamp = this.stopBlankTagCutInTimeStamp;
+    const launchMySelf = this.launchMySelf;
+    const sendTo = this.sendTo;
+
     super.apply(context);
-    
-    if( this.launchMySelf ) return; //ソロ再生用の場合他の人は発火しない
 
-     console.log('this.sendTo :' + this.sendTo);
+    if ( this.launchMySelf ) { return; } // ソロ再生用の場合他の人は発火しない
 
-    if( stopBlankTagCutInTimeStamp !== this.stopBlankTagCutInTimeStamp ){
+    console.log('this.sendTo :' + this.sendTo);
+
+    if ( stopBlankTagCutInTimeStamp !== this.stopBlankTagCutInTimeStamp ){
       console.log('データ伝搬で検知 無タグカットイン停止のトリガー');
       EventSystem.trigger('STOP_CUT_IN_BY_BGM', {  });
     }
 
-    if( this.sendTo != "" ){ //秘話再生
-      if( this.sendTo != Network.peerContext.userId ){
+    if ( this.sendTo != '' ){ // 秘話再生
+      if ( this.sendTo != Network.peerContext.userId ){
         return;
       }
     }
 
-    if( launchCutInIdentifier !== this.launchCutInIdentifier || 
+    if ( launchCutInIdentifier !== this.launchCutInIdentifier ||
         launchIsStart !== this.launchIsStart ||
         launchTimeStamp !== this.launchTimeStamp ){
-      if( this.launchIsStart ){
+      if ( this.launchIsStart ){
         this.startSelfCutIn();
       }else{
         this.stopSelfCutIn();
       }
     }
-
-    
   }
-
 }
