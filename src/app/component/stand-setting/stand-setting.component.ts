@@ -9,6 +9,7 @@ import { StandElementComponent } from 'component/stand-element/stand-element.com
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TextViewComponent } from 'component/text-view/text-view.component';
+import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 
 @Component({
   selector: 'app-stand-setting',
@@ -19,7 +20,8 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() character: GameCharacter = null;
 　@ViewChildren(StandElementComponent) standElementComponents: QueryList<StandElementComponent>;
 
-  panelId;
+  panelId: string;
+  standSettingXML = '';
 
   private _intervalId;
   private isSpeaking = false;
@@ -111,10 +113,12 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   add() {
     this.character.standList.add(this.character.imageFile.identifier);
+    this.standSettingXML = '';
   }
 
   delele(standElement: DataElement, index: number) {
     if (!this.character || !this.character.standList || !window.confirm('スタンド設定を削除しますか？')) return;
+    this.standSettingXML = standElement.toXml();
     let elm = this.character.standList.removeChild(standElement);
     if (elm) {
       if (this.character.standList.overviewIndex == index) {
@@ -124,8 +128,16 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
   }
+  
+  restore() {
+    if (!this.standSettingXML) return;
+    let restoreStand = <DataElement>ObjectSerializer.instance.parseXml(this.standSettingXML);
+    this.character.standList.appendChild(restoreStand);
+    this.standSettingXML = '';
+  }
 
   upStandIndex(standElement: DataElement) {
+    this.standSettingXML = '';
     let parentElement = this.character.standList;
     let index: number = parentElement.children.indexOf(standElement);
     if (0 < index) {
@@ -140,6 +152,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   downStandIndex(standElement: DataElement) {
+    this.standSettingXML = '';
     let parentElement = this.character.standList;
     let index: number = parentElement.children.indexOf(standElement);
     if (index < parentElement.children.length - 1) {
