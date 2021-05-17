@@ -1,1 +1,3 @@
-<p>cut-in works!</p>
+<div *ngIf="isVisible" style="position: absolute">
+  <img #cutInImageElement @cutInInOut (@cutInInOut.done)="isVisible ? null : end()" [src]="cutInImage.url | safe: 'resourceUrl'" (load)="onImageLoad()">
+</div>
