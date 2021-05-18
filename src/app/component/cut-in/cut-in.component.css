@@ -3,6 +3,10 @@
   padding: 0px;
 }
 
+img:hover {
+  outline: 2px dashed blue; 
+}
+
 .grow {
   text-shadow    : 
         1px  1px 0px #ffffff,
@@ -15,10 +19,6 @@
         0px -1px 0px #ffffff; 
 }
 
-.test {
-  outline: 3px solid blue;
-}
-
 .test-indicator {
   position: absolute;
   pointer-events: none;
@@ -27,4 +27,30 @@
   font-size: smaller;
   padding: 0px 3px 2px 3px;
   font-weight: bolder;
+}
+
+.secret-indicator {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  color: gray;
+  font-size: smaller;
+  padding: 0px 3px 2px 3px;
+  font-weight: bolder;
+  opacity: 0.8;
+}
+
+.name-indicator {
+  position: absolute;
+  pointer-events: none;
+  z-index: 10;
+  color: blue;
+  padding: 0px 3px;
+  font-weight: bolder;
+  font-size: smaller;
+  visibility: hidden;
+}
+
+.container:hover .name-indicator {
+  visibility: visible;
 }

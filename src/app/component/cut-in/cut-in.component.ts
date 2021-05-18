@@ -1,8 +1,11 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { CutIn } from '@udonarium/cut-in';
+import { PeerCursor } from '@udonarium/peer-cursor';
+import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { PointerDeviceService } from 'service/pointer-device.service';
 
 @Component({
   selector: 'cut-in',
@@ -36,8 +39,10 @@ export class CutInComponent implements OnInit, OnDestroy {
   private _isVisible = false;
   private _isEnd = false;
 
+  isBackyard = false;
   isSecret = false;
   isTest = false;
+  sender = '';
   
   cutInImageTransformOrigin = 'center';
 
@@ -47,6 +52,8 @@ export class CutInComponent implements OnInit, OnDestroy {
   math = Math;
 
   constructor(
+    private pointerDeviceService: PointerDeviceService,
+    private contextMenuService: ContextMenuService,
     private ngZone: NgZone
   ) { }
 
@@ -73,19 +80,36 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get pixcelWidth(): number {
-    if (!this.cutIn) return 0;
-    if (this.cutIn.width <= 0 && this.cutIn.height <= 0) return this.naturalWidth; 
-    return this.cutIn.width <= 0 
-      ? (document.documentElement.offsetHeight * this.cutIn.height * (this.naturalWidth / this.naturalHeight) / 100)
-      : (document.documentElement.clientWidth * this.cutIn.width / 100);
+    let ret = 0;
+    if (!this.cutIn) return ret;
+    if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
+      ret = this.naturalWidth;
+    } else { 
+      ret = (this.cutIn.width <= 0)
+        ? (document.documentElement.offsetHeight * this.cutIn.height * (this.naturalWidth / this.naturalHeight) / 100)
+        : (document.documentElement.clientWidth * this.cutIn.width / 100);
+    }
+    if (ret < 100) {
+      // とりあえず、あとで考える
+      ret = 100;
+    }
+    return ret;
   }
 
   get pixcelHeight(): number {
-    if (!this.cutIn) return 0;
-    if (this.cutIn.width <= 0 && this.cutIn.height <= 0) return this.naturalHeight; 
-    return this.cutIn.height <= 0 
-      ? (document.documentElement.clientWidth * this.cutIn.width * (this.naturalHeight / this.naturalWidth) / 100)
-      : (document.documentElement.offsetHeight * this.cutIn.height / 100);
+    let ret = 0;
+    if (!this.cutIn) return ret;
+    if (this.cutIn.width <= 0 && this.cutIn.height <= 0) { 
+      ret = this.naturalHeight;
+    } else {
+      ret = (this.cutIn.height <= 0)
+        ? (document.documentElement.clientWidth * this.cutIn.width * (this.naturalHeight / this.naturalWidth) / 100)
+        : (document.documentElement.offsetHeight * this.cutIn.height / 100);
+    }
+    if (ret < 100) {
+      ret = 100;
+    }
+    return ret;
   }
 
   get pixcelPosX(): number {
@@ -99,8 +123,33 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get zIndex(): number {
-    if (!this.cutIn) return 0;
+    if (!this.cutIn || this.isBackyard) return 0;
     return (this.cutIn.isFrontOfStand ? 1500000 : 500000) + this.cutIn.zIndex;
+  }
+
+  get senderName() {
+    let ret = ''; 
+    if (!this.sender) return ret;
+    let object = PeerCursor.findByPeerId(this.sender);
+    console.log(object)
+    if (object instanceof PeerCursor) {
+      ret = object.name;
+    }
+    return ret;
+  }
+
+  get isMine() {
+    return this.sender === PeerCursor.myCursor.peerId;
+  }
+
+  get senderColor() {
+    let ret = PeerCursor.CHAT_DEFAULT_COLOR;
+    if (!this.sender) return ret;
+    let object = PeerCursor.findByPeerId(this.sender);
+    if (object instanceof PeerCursor) {
+      ret = object.color;
+    }
+    return ret;
   }
 
   play() {
@@ -128,4 +177,28 @@ export class CutInComponent implements OnInit, OnDestroy {
     this.naturalWidth = this.cutInImageElement.nativeElement.naturalWidth;
     this.naturalHeight = this.cutInImageElement.nativeElement.naturalHeight;
   }
+
+  @HostListener('contextmenu', ['$event'])
+  onContextMenu(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
+    let position = this.pointerDeviceService.pointers[0];
+    this.contextMenuService.open(position, [
+      {
+        name: '閉じる（自分のみ終了）',
+        action: () => { this.stop(); },
+        default: true,
+        selfOnly: true
+      },
+      ContextMenuSeparator,
+      {
+        name: `${this.isBackyard ? '☑' : '☐'}ウィンドウの背後に表示`,
+        action: () => { this.isBackyard = !this.isBackyard; },
+        selfOnly: true
+      }
+    ], this.cutIn.name);
+  }
+
 }

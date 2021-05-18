@@ -317,10 +317,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       })
       .on('PLAY_CUT_IN', -1000, event => {
         let cutIn = ObjectStore.instance.get<CutIn>(event.data.identifier);
-        this.cutInService.play(cutIn, event.data.secret ? event.data.secret : false, event.data.test ? event.data.test : false);
+        this.cutInService.play(cutIn, event.data.secret ? event.data.secret : false, event.data.test ? event.data.test : false, event.data.sender);
       })
       .on('STOP_CUT_IN', -1000, event => {
-        //let cutIn = ObjectStore.instance.get<CutIn>(event.data.identifier);
         this.cutInService.stop(event.data.identifier);
       })
       .on('POPUP_STAND_IMAGE', -1000, event => {

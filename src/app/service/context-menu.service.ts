@@ -30,7 +30,8 @@ export interface ContextMenuAction {
   icon?: ImageFile,
   error?: string,
   materialIcon?: string,
-  isOuterLink?: boolean
+  isOuterLink?: boolean,
+  selfOnly?: boolean
 }
 
 @Injectable()

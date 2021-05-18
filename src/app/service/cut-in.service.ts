@@ -21,7 +21,7 @@ export class CutInService {
       .map(cutInComponentRef => cutInComponentRef.instance.cutIn.identifier);
   }
 
-  play(cutIn: CutIn, isSecret=false, isTest=false) {
+  play(cutIn: CutIn, isSecret=false, isTest=false, sender: string=null) {
     if (!cutIn) return;
     for (const cutInComponentRef of CutInService.cutInComponentRefQueue) {
       if (cutInComponentRef && cutInComponentRef.instance) {
@@ -41,6 +41,7 @@ export class CutInService {
     nowCutInComponentRef.instance.cutIn = cutIn;
     nowCutInComponentRef.instance.isSecret = isSecret;
     nowCutInComponentRef.instance.isTest = isTest;
+    nowCutInComponentRef.instance.sender = sender;
     nowCutInComponentRef.instance.play();
     CutInService.cutInComponentRefQueue.push(nowCutInComponentRef);
   }

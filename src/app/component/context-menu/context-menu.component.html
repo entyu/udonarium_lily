@@ -34,7 +34,7 @@
       <span *ngIf="action.name && action.name.indexOf('イエロー') == 2" class="color-indicator" style="color: #ff0">■</span>
       <span *ngIf="action.name && action.name.indexOf('ホワイト') == 2" class="color-indicator" style="color: #fff">■</span>
       <span *ngIf="action.materialIcon" style="vertical-align: top"><i style="font-size: 150%; padding-left: 2px;" class="material-icons">{{action.materialIcon}}</i></span>
-      {{ action.name.replace('☑', '').replace('☐', '').replace('◉', '').replace('○', '') }}
+      {{ action.name.replace('☑', '').replace('☐', '').replace('◉', '').replace('○', '') }}<sup *ngIf="action.selfOnly" class="self-only">*</sup>
       <span *ngIf="action.icon && 0 < action.icon?.url.length" class="imagebox"><img class="image" [src]="action.icon.url | safe: 'resourceUrl'"></span>
       <i *ngIf="action.isOuterLink" class="material-icons" style="font-size: 1rem">open_in_new</i>
     </div>
