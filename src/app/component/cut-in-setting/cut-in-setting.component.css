@@ -51,35 +51,40 @@
     font-weight: bolder;
   }
   
-  .grow {
-    text-shadow    : 
-         1px  1px 0px #ffffff,
-        -1px  1px 0px #ffffff,
-         1px -1px 0px #ffffff,
-        -1px -1px 0px #ffffff,
-         1px  0px 0px #ffffff,
-         0px  1px 0px #ffffff,
-        -1px  0px 0px #ffffff,
-         0px -1px 0px #ffffff; 
-  }
-  
-  .blackout {
-    filter: blur(12px) grayscale(70%);
-  }
-  
-  .self-only {
-    color: red;
-  }
-  
-  img {
-    transition: all 100ms 0s ease;
-  }
-  
-  .self-setting {
-    font-weight: bolder;
-    font-size: smaller;
-  }
+.grow {
+  text-shadow    : 
+        1px  1px 0px #ffffff,
+      -1px  1px 0px #ffffff,
+        1px -1px 0px #ffffff,
+      -1px -1px 0px #ffffff,
+        1px  0px 0px #ffffff,
+        0px  1px 0px #ffffff,
+      -1px  0px 0px #ffffff,
+        0px -1px 0px #ffffff; 
+}
 
-  input[type='number'] {
-    text-align: right;
-  }
+.blackout {
+  filter: blur(12px) grayscale(70%);
+}
+
+.self-only {
+  color: red;
+}
+
+img {
+  transition: all 100ms 0s ease;
+}
+
+.self-setting {
+  font-weight: bolder;
+  font-size: smaller;
+}
+
+input[type='number'] {
+  text-align: right;
+}
+
+.self-only {
+  color: red;
+  vertical-align: text-top;
+}

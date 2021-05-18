@@ -130,3 +130,7 @@
 .disabled-text {
   color: gray;
 }
+
+.self-only {
+  color: red;
+}

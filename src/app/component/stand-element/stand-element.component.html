@@ -68,7 +68,7 @@
         </ng-container>
         <button (click)="openSpeakingModal()" style="font-size: 9px" [style.font-weight]="isSpeakable ? 'bolder' : 'normal'">口パク画像 (APNGなど)</button>
         <ng-container *ngIf="positionElement">
-          <br><button style="font-size: 9px; margin-right: 1em;" (click)="testStandUp()"><b>テスト (自分だけ見る)</b></button>
+          <br><button style="font-size: 9px; margin-right: 1em;" (click)="testStandUp()"><b>テスト (自分だけ見る)<sup class="self-only">*</sup></b></button>
           <label style="margin-right: 0.3em;">
             <input type="checkbox" [(ngModel)]="positionElement.currentValue" checked="{{positionElement.currentValue ? 'checked' : ''}}" (change)="positionElement.currentValue = (positionElement.currentValue ? 'posSpecialize' : '')">
             <b style="font-size: smaller;">Pos個別指定: </b>

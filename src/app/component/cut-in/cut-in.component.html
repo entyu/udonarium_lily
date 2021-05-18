@@ -1,3 +1,21 @@
-<div *ngIf="isVisible" style="position: absolute">
-  <img #cutInImageElement @cutInInOut (@cutInInOut.done)="isVisible ? null : end()" [src]="cutInImage.url | safe: 'resourceUrl'" (load)="onImageLoad()">
+<div *ngIf="isVisible" appDraggable [draggable.allowOverHalf]="true"
+  #cutInContainerElement class="container" 
+  @cutInInOut (@cutInInOut.done)="isVisible ? null : end()"
+  style="position: absolute; min-width: 100px; min-height: 100px"
+  [style.width.px]="pixcelWidth"
+  [style.height.px]="pixcelHeight"
+  [style.left.px]="pixcelPosX"
+  [style.top.px]="pixcelPosY"
+  [style.z-index]="zIndex"
+  [style.pointer-events]="isVisible ? 'auto' : 'none'"
+  (dblclick)="stop()">
+  <div *ngIf="isTest" class="test-indicator grow" style="top: 0px; left: 0px">TEST</div>
+  <div *ngIf="isTest" class="test-indicator grow" style="top: 0px; right: 0px">TEST</div>
+  <div *ngIf="isTest" class="test-indicator grow" style="bottom: 0px; left: 0px">TEST</div>
+  <div *ngIf="isTest" class="test-indicator grow" style="bottom: 0px; right: 0px">TEST</div>
+  <img #cutInImageElement 
+    style="width: 100%; height: 100%; margin: 0px; padding: 0px"
+    [style.pointer-events]="isVisible ? 'auto' : 'none'"
+    [ngClass]="{test: isTest}"
+    [src]="cutInImage.url | safe: 'resourceUrl'" (load)="onImageLoad()">
 </div>

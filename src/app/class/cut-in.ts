@@ -7,7 +7,7 @@ export class CutIn extends ObjectNode {
   @SyncVar() name: string = '';
   @SyncVar() duration: number = 6;
 
-  @SyncVar() width: number = 60;
+  @SyncVar() width: number = 30;
   @SyncVar() height: number = 0;
   @SyncVar() posX: number = 50;
   @SyncVar() posY: number = 50;

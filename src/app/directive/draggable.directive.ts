@@ -14,6 +14,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
   @Input('draggable.unhandle') unhandleSelector: string = 'input,textarea,button,select,option,span';
   @Input('draggable.stack') stackSelector: string = '';
   @Input('draggable.opacity') opacity: number = 0.7;
+  @Input('draggable.allowOverHalf') allowOverHalf: boolean = false;
 
   @Output('draggable.start') onstart: EventEmitter<MouseEvent | TouchEvent> = new EventEmitter();
   @Output('draggable.move') onmove: EventEmitter<MouseEvent | TouchEvent> = new EventEmitter();
@@ -186,19 +187,35 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
     let correction: PointerCoordinate = { x: 0, y: 0, z: 0 };
     let box = this.elementRef.nativeElement.getBoundingClientRect();
     let bounds = this.elementRef.nativeElement.ownerDocument.querySelector(this.boundsSelector).getBoundingClientRect();
-
-    if (bounds.right < box.right + diff.x) {
-      correction.x += bounds.right - (box.right + diff.x);
-    }
-    if (box.left + diff.x < bounds.left) {
-      correction.x += bounds.left - (box.left + diff.x);
-    }
-
-    if (bounds.bottom < box.bottom + diff.y) {
-      correction.y += bounds.bottom - (box.bottom + diff.y);
-    }
-    if (box.top + diff.y < bounds.top) {
-      correction.y += bounds.top - (box.top + diff.y);
+    
+    if (this.allowOverHalf) {
+      const boxWidth = box.right - box.left;
+      const boxHeight = box.bottom - box.top;
+      if (bounds.right + boxWidth / 2 < box.right + diff.x) {
+        correction.x += bounds.right + boxWidth / 2 - (box.right + diff.x);
+      }
+      if (box.left + diff.x < bounds.left - boxWidth / 2) {
+        correction.x += bounds.left - boxWidth / 2 - (box.left + diff.x);
+      }
+      if (bounds.bottom + boxHeight / 2 < box.bottom + diff.y) {
+        correction.y += bounds.bottom + boxHeight / 2 - (box.bottom + diff.y);
+      }
+      if (box.top + diff.y < bounds.top - boxHeight / 2) {
+        correction.y += bounds.top - boxHeight / 2 - (box.top + diff.y);
+      }
+    } else {
+      if (bounds.right < box.right + diff.x) {
+        correction.x += bounds.right - (box.right + diff.x);
+      }
+      if (box.left + diff.x < bounds.left) {
+        correction.x += bounds.left - (box.left + diff.x);
+      }
+      if (bounds.bottom < box.bottom + diff.y) {
+        correction.y += bounds.bottom - (box.bottom + diff.y);
+      }
+      if (box.top + diff.y < bounds.top) {
+        correction.y += bounds.top - (box.top + diff.y);
+      }
     }
     return correction;
   }

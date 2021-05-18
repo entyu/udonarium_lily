@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CutInList } from '@udonarium/cut-in-list';
 import { CutIn } from '@udonarium/cut-in';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -13,6 +13,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageTag } from '@udonarium/image-tag';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
+import { CutInService } from 'service/cut-in.service';
 
 
 @Component({
@@ -33,6 +34,9 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get cutInName(): string { return this.selectedCutIn.name; }
   set cutInName(cutInName: string) { if (this.isEditable) this.selectedCutIn.name = cutInName; }
+
+  get cutInTag(): string { return this.selectedCutIn.tag; }
+  set cutInTag(cutInTag: string) { if (this.isEditable) this.selectedCutIn.tag = cutInTag; }
 
   get cutInDuration(): number { return this.selectedCutIn.duration; }
   set cutInDuration(cutInDuration: number) { if (this.isEditable) this.selectedCutIn.duration = cutInDuration; }
@@ -66,6 +70,11 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.selectedCutIn) return ImageFile.Empty;
     let file = ImageStorage.instance.get(this.selectedCutIn.imageIdentifier);
     return file ? file : ImageFile.Empty;
+  }
+  
+  get isNowShowing(): boolean {
+    if (!this.selectedCutIn) return false;
+    return CutInService.nowShowingIdentifiers().includes(this.selectedCutIn.identifier);
   }
   
   isSaveing: boolean = false;
@@ -139,7 +148,11 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   delete() {
-    if (!this.isEmpty && this.selectedCutIn) {
+    if (!this.selectedCutIn) return;
+    EventSystem.call('STOP_CUT_IN', { 
+      identifier: this.selectedCutIn.identifier
+    });
+    if (!this.isEmpty) {
       this.selectedCutInXml = this.selectedCutIn.toXml();
       this.selectedCutIn.destroy();
     }
@@ -213,5 +226,30 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     textView.title = 'カットインヘルプ';
     textView.text = 
 `　`;
+  }
+
+  playCutIn() {
+    if (!this.selectedCutIn) return;
+    EventSystem.call('PLAY_CUT_IN', { 
+      identifier: this.selectedCutIn.identifier,
+      test: false
+    });
+  }
+
+  stopCutIn() {
+    if (!this.selectedCutIn) return;
+    EventSystem.call('STOP_CUT_IN', { 
+      identifier: this.selectedCutIn.identifier
+    });
+  }
+
+  testCutIn() {
+    if (!this.selectedCutIn) return;
+    setTimeout(() => {
+      EventSystem.trigger('PLAY_CUT_IN', { 
+        identifier: this.selectedCutIn.identifier, 
+        test: true
+      });
+    });
   }
 }

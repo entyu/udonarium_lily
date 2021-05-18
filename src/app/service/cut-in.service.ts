@@ -1,4 +1,5 @@
 import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInComponent } from 'component/cut-in/cut-in.component';
 
@@ -14,6 +15,12 @@ export class CutInService {
     private componentFactoryResolver: ComponentFactoryResolver
   ) { }
   
+  static nowShowingIdentifiers(): string[] {
+    return this.cutInComponentRefQueue
+      .filter(cutInComponentRef => cutInComponentRef && cutInComponentRef.instance && cutInComponentRef.instance.cutIn && cutInComponentRef.instance.isVisible)
+      .map(cutInComponentRef => cutInComponentRef.instance.cutIn.identifier);
+  }
+
   play(cutIn: CutIn, isSecret=false, isTest=false) {
     if (!cutIn) return;
     for (const cutInComponentRef of CutInService.cutInComponentRefQueue) {
@@ -21,9 +28,9 @@ export class CutInService {
         const cutInComponent = cutInComponentRef.instance;
         if (cutInComponent.isEnd) {
           cutInComponentRef.destroy();
-        } else if (cutInComponent.cutIn) {
+        } else {
           const tmp = cutInComponent.cutIn;
-          if (cutIn.identifier === tmp.identifier || (cutIn.tag != null && cutIn.tag.trim() != '' && tmp.tag != null && tmp.tag.trim() != '' && cutIn.tag.trim() == tmp.tag.trim())) {
+          if (cutIn.identifier === tmp.identifier || (cutIn.tag != null && cutIn.tag.trim() != '' && tmp.tag != null && tmp.tag.trim() != '' && StringUtil.toHalfWidth(cutIn.tag.trim()).toUpperCase() == StringUtil.toHalfWidth(tmp.tag.trim()).toUpperCase())) {
             cutInComponent.stop();
           }
         }
@@ -38,15 +45,16 @@ export class CutInService {
     CutInService.cutInComponentRefQueue.push(nowCutInComponentRef);
   }
 
-  stop(cutIn: CutIn) {
+  stop(cutIn: CutIn | string) {
     if (!cutIn) return;
+    if (cutIn instanceof CutIn) cutIn = cutIn.identifier;
     for (const cutInComponentRef of CutInService.cutInComponentRefQueue) {
       if (cutInComponentRef && cutInComponentRef.instance) {
         const cutInComponent = cutInComponentRef.instance;
         if (cutInComponent.isEnd) {
           cutInComponentRef.destroy();
-        } else if (cutInComponent.cutIn) {
-          if (cutIn.identifier === cutInComponent.cutIn.identifier) {
+        } else {
+          if (cutIn === cutInComponent.cutIn.identifier) {
             cutInComponent.stop();
           }
         }

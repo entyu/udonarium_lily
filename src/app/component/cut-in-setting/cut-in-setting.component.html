@@ -21,7 +21,7 @@
             <div *ngIf="isEditable" style="position: absolute; top: 1px; left: -1px; z-index: 5">
               <button (click)="openModal()"><b>画像変更</b></button>
             </div>
-            <img style="width: 175px" [ngClass]="{ blackout: !isShowHideImages && getHidden(cutInImage) }" [src]="cutInImage.url | safe: 'resourceUrl'">
+            <img style="width: 160px; height: 160px; object-fit: contain" [ngClass]="{ blackout: !isShowHideImages && getHidden(cutInImage) }" [src]="cutInImage.url | safe: 'resourceUrl'">
           </div>
         </div>
         <div style="display: flex; flex-direction: column; width: 100%">
@@ -32,17 +32,13 @@
                 <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
               </label>
             </div>
-            <div>
-              <button [attr.disabled]="!isEditable ? '' : null"><b><i class="material-icons" style="font-size: smaller">play_arrow</i>表示</b></button>
-              <button [attr.disabled]="!isEditable ? '' : null"><b><i class="material-icons" style="font-size: smaller">stop</i>終了</b></button>
-            </div>
           </div>
           <div style="padding-left: 2px">
-            <b style="font-size: smaller">Name: </b><input type="text" [(ngModel)]="cutInName" [attr.disabled]="!isEditable ? '' : null">
+            <b style="font-size: smaller">Name: </b><input type="text" style="width: 7em" [(ngModel)]="cutInName" [attr.disabled]="!isEditable ? '' : null">
+            <b style="font-size: smaller; margin-left: 1em">Tag: </b><input type="text" style="width: 3em" [(ngModel)]="cutInTag" [attr.disabled]="!isEditable ? '' : null">
           </div>
           <div style="padding-left: 2px; padding-top: 2px">
-            <b style="font-size: smaller">Duration: </b><input type="number" min="0" max="60" [(ngModel)]="cutInDuration" style="width: 2.5em" [attr.disabled]="!isEditable ? '' : null"><b style="font-size: smaller; padding-left: 2px">sec.</b>
-            <button style="font-size: smaller; padding: 2px 4px" [attr.disabled]="!isEditable ? '' : null"><b style="font-size: smaller">テスト (自分だけ見る)</b></button>
+            <b style="font-size: smaller">Duration (0=無制限): </b><input type="number" min="0" max="1000" [(ngModel)]="cutInDuration" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="font-size: smaller; padding-left: 2px">sec.</b>
           </div>
           <div style="padding-left: 2px">
             <b style="font-size: smaller">チャット末尾: </b><br>
@@ -51,6 +47,11 @@
         </div>
       </div>
       <div style="font-size: smaller; display: flex; flex-direction: column; width: 100%">
+        <div>
+          <button [attr.disabled]="!isEditable ? '' : null" (click)="testCutIn()"><b>テスト (自分だけ見る)<sup class="self-only">*</sup></b></button>
+          <button [attr.disabled]="!isEditable ? '' : null" (click)="playCutIn()"><b><i class="material-icons" style="font-size: smaller">play_arrow</i>送信</b></button>
+          <button [attr.disabled]="!isEditable || !isNowShowing ? '' : null" (click)="stopCutIn()"><b><i class="material-icons" style="font-size: smaller">stop</i>消去</b></button>
+        </div>
         <div>
           <b>位置</b>
         </div>
@@ -63,8 +64,8 @@
           <input [(ngModel)]="cutInPosY" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="padding-left: 2px">%</b>
         </div>
         <div style="padding-left: 1em">
-          <b>Z-Index: </b><input [(ngModel)]="cutInZIndex" type="number" min="{{-maxSize}}" max="{{maxSize}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null">
-          <label style="margin-left: 1em"><input name="cutInIsFrontOdStand" type="checkbox" [(ngModel)]="cutInIsFrontOdStand" [checked]="cutInIsFrontOdStand" [value]="true" [attr.disabled]="!isEditable ? '' : null"><b>スタンドより前面</b></label>
+          <b>PosZ: </b><label style="margin-right: 1em"><input name="cutInIsFrontOdStand" type="checkbox" [(ngModel)]="cutInIsFrontOdStand" [checked]="cutInIsFrontOdStand" [value]="true" [attr.disabled]="!isEditable ? '' : null"><b>スタンドより前面</b></label>
+          <b>重なり順 (大きいものが上): </b><input [(ngModel)]="cutInZIndex" type="number" min="{{-maxSize}}" max="{{maxSize}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null">
         </div>
         <div style="padding-top: 4px;">
           <b>サイズ（幅、高さ共に0の場合は元画像のまま）</b>
