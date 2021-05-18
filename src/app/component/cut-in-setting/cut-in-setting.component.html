@@ -1,18 +1,111 @@
-<div style="margin-bottom: 4px;">
-  <button style="float: right">?</button>
-  <div style="display: flex; flex-direction: row; flex-wrap: wrap">
-    <div *ngFor="let standElement of standElements; let i = index" style="width: 700px">
-      <div style="display: flex; flex-direction: row; justify-content: space-between">
-        <div style="margin-left: -1em; margin-right: -1em;">
-          
+<div class="flex-container">
+  <div class="flex-item no-grow">
+    <div>
+      <button style="font-size: smaller; margin-bottom: 3px" (click)="add()">カットインの追加</button>
+    </div>
+    <select #cutInSelecter style="width: 12em;" size="15" (change)="onChangeCutIn($event.target.value)">
+      <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}">{{ cutIn.name }}</option>
+    </select>
+  </div>
+  <div class="flex-item">
+    <div style="float: right; margin-top: 3px; margin-right: 3px">
+      <button (click)="helpCutIn()">?</button>
+    </div>
+    <ng-container *ngIf="!isEmpty && selectedCutIn">
+      <div style="display: flex">
+        <div>
+          <div (dblclick)="isEditable ? openModal() : false" style="position: relative; overflow: hidden">
+            <div *ngIf="getHidden(cutInImage)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none; z-index: 5">
+              <i class="material-icons" [class]="isShowHideImages ? 'red-eye': 'grow'" style="margin-right: 2px; font-size: 16px; display: block">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+            </div>
+            <div *ngIf="isEditable" style="position: absolute; top: 1px; left: -1px; z-index: 5">
+              <button (click)="openModal()"><b>画像変更</b></button>
+            </div>
+            <img style="width: 160px; height: 160px; object-fit: contain" [ngClass]="{ blackout: !isShowHideImages && getHidden(cutInImage) }" [src]="cutInImage.url | safe: 'resourceUrl'">
+          </div>
         </div>
-        <div style="text-align: right; width: 3em;">
-          <button class="remove-button danger" >×</button>
-          <button class="remove-button" style="margin-top: 5px" >↑</button>
-          <button class="remove-button" style="margin-top: 2px" >↓</button>
+        <div style="display: flex; flex-direction: column; width: 100%">
+          <div style="padding-bottom: 2px">
+            <div style="float: right">
+              <label sytle="white-space: nowrap">
+                <input name="show-hide-images" type="checkbox" value="Show Hides" checked="{{isShowHideImages ? 'checked' : ''}}" (click)="onShowHiddenImages($event)">
+                <i class="material-icons" style="font-size: smaller" [ngClass]="{'red-eye': isShowHideImages}">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
+              </label>
+            </div>
+          </div>
+          <div style="padding-left: 2px">
+            <b style="font-size: smaller">Name: </b><input type="text" style="width: 7em" [(ngModel)]="cutInName" [attr.disabled]="!isEditable ? '' : null">
+            <b style="font-size: smaller; margin-left: 1em">Tag: </b><input type="text" style="width: 3em" [(ngModel)]="cutInTag" [attr.disabled]="!isEditable ? '' : null">
+          </div>
+          <div style="padding-left: 2px; padding-top: 2px">
+            <b style="font-size: smaller">Duration (0=無制限): </b><input type="number" min="0" max="1000" [(ngModel)]="cutInDuration" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="font-size: smaller; padding-left: 2px">sec.</b>
+          </div>
+          <div style="padding-left: 2px">
+            <b style="font-size: smaller">チャット末尾: </b><br>
+            <textarea style="width: 100%; height: 5em" [(ngModel)]="cutInCond" [attr.disabled]="!isEditable ? '' : null"></textarea>
+          </div>
         </div>
       </div>
-      <hr>
-    </div>
+      <div style="font-size: smaller; display: flex; flex-direction: column; width: 100%">
+        <div>
+          <button [attr.disabled]="!isEditable ? '' : null" (click)="testCutIn()"><b>テスト (自分だけ見る)<sup class="self-only">*</sup></b></button>
+          <button [attr.disabled]="!isEditable ? '' : null" (click)="playCutIn()"><b><i class="material-icons" style="font-size: smaller">play_arrow</i>送信</b></button>
+          <button [attr.disabled]="!isEditable || !isNowShowing ? '' : null" (click)="stopCutIn()"><b><i class="material-icons" style="font-size: smaller">stop</i>消去</b></button>
+        </div>
+        <div>
+          <b>位置</b>
+        </div>
+        <div style="padding-left: 1em">
+          <b>PosX: </b><input [(ngModel)]="cutInPosX" type="range" title="{{cutInPosX}}" min="{{minSize}}" max="{{maxSize}}" style="width: 180px" name="cutInPosX" [attr.disabled]="!isEditable ? '' : null" />
+          <input [(ngModel)]="cutInPosX" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="padding-left: 2px">%</b>
+        </div>
+        <div style="padding-left: 1em">
+          <b>PosY: </b><input [(ngModel)]="cutInPosY" type="range" title="{{cutInPosY}}" min="{{minSize}}" max="{{maxSize}}" style="width: 180px" name="cutInPosY" [attr.disabled]="!isEditable ? '' : null" />
+          <input [(ngModel)]="cutInPosY" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="padding-left: 2px">%</b>
+        </div>
+        <div style="padding-left: 1em">
+          <b>PosZ: </b><label style="margin-right: 1em"><input name="cutInIsFrontOdStand" type="checkbox" [(ngModel)]="cutInIsFrontOdStand" [checked]="cutInIsFrontOdStand" [value]="true" [attr.disabled]="!isEditable ? '' : null"><b>スタンドより前面</b></label>
+          <b>重なり順 (大きいものが上): </b><input [(ngModel)]="cutInZIndex" type="number" min="{{-maxSize}}" max="{{maxSize}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null">
+        </div>
+        <div style="padding-top: 4px;">
+          <b>サイズ（幅、高さ共に0の場合は元画像のまま）</b>
+        </div>
+        <div style="padding-left: 1em">
+          <b>Width (0=指定なし): </b><input [(ngModel)]="cutInWidth" type="range" title="{{cutInWidth}}" min="{{minSize}}" max="{{maxSize}}" style="width: 180px" name="cutInWidth" [attr.disabled]="!isEditable ? '' : null" />
+          <input [(ngModel)]="cutInWidth" type="number" min="{{minSize}}" max="{{maxSize * 2}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="padding-left: 2px">%</b>
+        </div>
+        <div style="padding-left: 1em">
+          <b>Height (0=指定なし): </b><input [(ngModel)]="cutInHeight" type="range"　title="{{cutInHeight}}" min="{{minSize}}" max="{{maxSize}}" style="width: 180px" name="cutIHeight" [attr.disabled]="!isEditable ? '' : null" />
+          <input [(ngModel)]="cutInHeight" type="number" min="{{minSize}}" max="{{maxSize * 2}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="padding-left: 2px">%</b>
+        </div>
+      </div>
+      <hr/>
+      <div>
+        <ng-container *ngIf="!isDeleted">
+          <button (click)="upTabIndex()">↑</button>
+          <button (click)="downTabIndex()">↓</button>
+          <div style="float: right">
+            <button [disabled]="isSaveing" (click)="save()">
+              <div style="position: relative;">
+                <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
+                <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
+              </div>
+            </button>
+            <button class="danger" (click)="delete()">削除</button>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isDeleted && selectedCutInXml">
+          <button (click)="restore()">元に戻す</button>
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
-  <button (click)="add()">カットイン設定の追加</button>
+</div>
+<ng-container *ngIf="isEmpty">
+  <div style="font-size: 12px;">
+    ※カットインがありません。
+    <ng-container *ngIf="isDeleted && selectedCutInXml">
+      <button (click)="restore()">元に戻す</button>
+    </ng-container>
+  </div>
+</ng-container>

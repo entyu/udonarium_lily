@@ -1,0 +1,30 @@
+.container {
+  margin: 0px;
+  padding: 0px;
+}
+
+.grow {
+  text-shadow    : 
+        1px  1px 0px #ffffff,
+      -1px  1px 0px #ffffff,
+        1px -1px 0px #ffffff,
+      -1px -1px 0px #ffffff,
+        1px  0px 0px #ffffff,
+        0px  1px 0px #ffffff,
+      -1px  0px 0px #ffffff,
+        0px -1px 0px #ffffff; 
+}
+
+.test {
+  outline: 3px solid blue;
+}
+
+.test-indicator {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  color: blue;
+  font-size: smaller;
+  padding: 0px 3px 2px 3px;
+  font-weight: bolder;
+}
