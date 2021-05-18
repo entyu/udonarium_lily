@@ -47,11 +47,24 @@ export class StandImageService {
     }
   }
 
-  farewell(identifier: GameCharacter | string) {
-    if (identifier instanceof GameCharacter) identifier = identifier.identifier;
-    const standImageComponentRef = StandImageService.currentStandImageShowing.get(identifier);
+  farewell(characterIdentifier: GameCharacter | string) {
+    if (characterIdentifier instanceof GameCharacter) characterIdentifier = characterIdentifier.identifier;
+    const standImageComponentRef = StandImageService.currentStandImageShowing.get(characterIdentifier);
     if (standImageComponentRef && standImageComponentRef.instance) {
       standImageComponentRef.instance.toFarewell();
+    }
+  }
+
+  destroy(characterIdentifier: GameCharacter | string, identifier: DataElement | string) {
+    if (characterIdentifier instanceof GameCharacter) characterIdentifier = characterIdentifier.identifier;
+    if (identifier instanceof DataElement) identifier = identifier.identifier;
+    for (const pair of StandImageService.currentStandImageShowing) {
+      const standImageComponentRef = pair[1];
+      if (!standImageComponentRef) continue;
+      if (!standImageComponentRef.instance || !standImageComponentRef.instance.standElement || standImageComponentRef.instance.standElement.identifier == identifier) {
+        standImageComponentRef.destroy();
+        StandImageService.currentStandImageShowing.delete(characterIdentifier);
+      }
     }
   }
 

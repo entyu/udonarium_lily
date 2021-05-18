@@ -7,6 +7,7 @@ import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { StandConditionType } from '@udonarium/stand-list';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
+import { element } from 'protractor';
 import { ModalService } from 'service/modal.service';
 
 @Component({

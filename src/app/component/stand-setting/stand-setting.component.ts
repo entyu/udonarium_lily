@@ -117,6 +117,10 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   delele(standElement: DataElement, index: number) {
+    EventSystem.call('DELETE_STAND_IMAGE', {
+      characterIdentifier: this.character.identifier,
+      identifier: standElement.identifier
+    });
     if (!this.character || !this.character.standList || !window.confirm('スタンド設定を削除しますか？')) return;
     this.standSettingXML = standElement.toXml();
     let elm = this.character.standList.removeChild(standElement);
