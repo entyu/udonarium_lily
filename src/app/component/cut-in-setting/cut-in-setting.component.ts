@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CutInList } from '@udonarium/cut-in-list';
 import { CutIn } from '@udonarium/cut-in';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -14,6 +14,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ImageTag } from '@udonarium/image-tag';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { CutInService } from 'service/cut-in.service';
+import { PeerCursor } from '@udonarium/peer-cursor';
 
 
 @Component({
@@ -77,6 +78,28 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     return CutInService.nowShowingIdentifiers().includes(this.selectedCutIn.identifier);
   }
   
+  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+  get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
+
+  get myColor(): string {
+    if (PeerCursor.myCursor
+      && PeerCursor.myCursor.color
+      && PeerCursor.myCursor.color != PeerCursor.CHAT_TRANSPARENT_COLOR) {
+      return PeerCursor.myCursor.color;
+    }
+    return PeerCursor.CHAT_DEFAULT_COLOR;
+  }
+
+  get sendToColor(): string {
+    let object = ObjectStore.instance.get(this.sendTo);
+    if (object instanceof PeerCursor) {
+      return object.color;
+    }
+    return PeerCursor.CHAT_DEFAULT_COLOR;
+  }
+
+  sendTo: string = '';
+
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
@@ -230,17 +253,38 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   playCutIn() {
     if (!this.selectedCutIn) return;
-    EventSystem.call('PLAY_CUT_IN', { 
+    const sendObj = {
       identifier: this.selectedCutIn.identifier,
-      test: false
-    });
+      secret: this.sendTo ? true : false,
+      sender: PeerCursor.myCursor.peerId
+    };
+    if (sendObj.secret) {
+      const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
+      if (targetPeer) {
+        if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('PLAY_CUT_IN', sendObj, targetPeer.peerId);
+        EventSystem.call('PLAY_CUT_IN', sendObj, PeerCursor.myCursor.peerId);
+      }
+    } else {
+      EventSystem.call('PLAY_CUT_IN', sendObj);
+    }
   }
 
   stopCutIn() {
     if (!this.selectedCutIn) return;
-    EventSystem.call('STOP_CUT_IN', { 
-      identifier: this.selectedCutIn.identifier
-    });
+    const sendObj = {
+      identifier: this.selectedCutIn.identifier,
+      secret: this.sendTo ? true : false,
+      sender: PeerCursor.myCursor.peerId
+    };
+    if (sendObj.secret) {
+      const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
+      if (targetPeer) {
+        if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('STOP_CUT_IN', sendObj, targetPeer.peerId);
+        EventSystem.call('STOP_CUT_IN', sendObj, PeerCursor.myCursor.peerId);
+      }
+    } else {
+      EventSystem.call('STOP_CUT_IN', sendObj);
+    }
   }
 
   testCutIn() {
