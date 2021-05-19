@@ -45,6 +45,9 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   get cutInCond(): string { return this.selectedCutIn.value + ''; }
   set cutInCond(cutInCond: string) { if (this.isEditable) this.selectedCutIn.value = cutInCond; }
 
+  get cutInIsPreventOutBounds(): boolean { return this.selectedCutIn.isPreventOutBounds; }
+  set cutInIsPreventOutBounds(isPreventOutBounds: boolean) { if (this.isEditable) this.selectedCutIn.isPreventOutBounds = isPreventOutBounds; }
+
   get cutInWidth(): number { return this.selectedCutIn.width; }
   set cutInWidth(cutInWidth: number) { if (this.isEditable) this.selectedCutIn.width = cutInWidth; }
 
@@ -241,15 +244,6 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
   }
-  
-  helpCutIn() {
-    let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 460 };
-    let textView = this.panelService.open(TextViewComponent, option);
-    textView.title = 'カットインヘルプ';
-    textView.text = 
-`　`;
-  }
 
   playCutIn() {
     if (!this.selectedCutIn) return;
@@ -295,5 +289,18 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
         test: true
       });
     });
+  }
+
+  helpCutIn() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 460 };
+    let textView = this.panelService.open(TextViewComponent, option);
+    textView.title = 'カットインヘルプ';
+    textView.text = 
+`　カットインの名前、持続時間、位置と画像の幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます。
+
+　デフォルトでは後から表示されるカットイン画像がより前面になりますが、Z-Index（重なり順）を指定することで制御可能です。カットインにタグを指定した場合、同じタグが指定されたカットインが表示される際に前のものは終了します。
+
+　カットイン画像はドラッグによって移動可能です。またダブルクリックで閉じ、右クリックでコンテキストメニューから操作が可能です。`;
   }
 }

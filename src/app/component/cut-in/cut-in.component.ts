@@ -79,7 +79,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     return this._imageFile;
   }
 
-  get pixcelWidth(): number {
+  get pixcelWidthPreAdjust(): number {
     let ret = 0;
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
@@ -89,6 +89,22 @@ export class CutInComponent implements OnInit, OnDestroy {
         ? (document.documentElement.offsetHeight * this.cutIn.height * (this.naturalWidth / this.naturalHeight) / 100)
         : (document.documentElement.clientWidth * this.cutIn.width / 100);
     }
+    return ret;
+  }
+
+  get pixcelWidth(): number {
+    let ret = this.pixcelWidthPreAdjust;
+    if (this.cutIn.isPreventOutBounds) {
+      if (this.isAjustAspect) {
+        if (this.isAjustAspectWidth) {
+          ret = document.documentElement.clientWidth;
+        } else {
+          ret = ret * (document.documentElement.offsetHeight / this.pixcelHeightPreAdjust)
+        }
+      } else if (ret > document.documentElement.clientWidth) {
+        ret = document.documentElement.clientWidth;
+      }
+    }
     if (ret < 100) {
       // とりあえず、あとで考える
       ret = 100;
@@ -96,7 +112,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     return ret;
   }
 
-  get pixcelHeight(): number {
+  get pixcelHeightPreAdjust(): number {
     let ret = 0;
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) { 
@@ -106,20 +122,84 @@ export class CutInComponent implements OnInit, OnDestroy {
         ? (document.documentElement.clientWidth * this.cutIn.width * (this.naturalHeight / this.naturalWidth) / 100)
         : (document.documentElement.offsetHeight * this.cutIn.height / 100);
     }
+    return ret;
+  }
+
+  get pixcelHeight(): number {
+    let ret = this.pixcelHeightPreAdjust;
+    if (this.cutIn.isPreventOutBounds) {
+      if (this.isAjustAspect) {
+        if (this.isAjustAspectWidth) {
+          ret = ret * (document.documentElement.offsetWidth / this.pixcelWidthPreAdjust)
+        } else {
+          ret = document.documentElement.offsetHeight;
+        }
+      } else if (ret > document.documentElement.offsetHeight) {
+        ret = document.documentElement.offsetHeight;
+      }
+    }
     if (ret < 100) {
+      // とりあえず、あとで考える
       ret = 100;
     }
     return ret;
   }
 
+  private get isAjustAspect(): boolean {
+    return (this.cutIn.width <= 0 || this.cutIn.height <= 0) 
+      && (this.pixcelWidthPreAdjust > document.documentElement.clientWidth || this.pixcelHeightPreAdjust > document.documentElement.offsetHeight);
+  }
+
+  // アス比合わせて画面に納める際にどちらの幅を画面いっぱいに合わせるか
+  private get isAjustAspectWidth(): boolean {
+    const pixcelWidthPreAdjust = this.pixcelWidthPreAdjust;
+    const pixcelHeightPreAdjust = this.pixcelHeightPreAdjust;
+    if (pixcelWidthPreAdjust > document.documentElement.clientWidth) {
+      //幅が超えるのでとりあえず幅を合わせて高さが超えないか見る
+      if (document.documentElement.offsetHeight < pixcelHeightPreAdjust * (document.documentElement.clientWidth / pixcelWidthPreAdjust)) {
+        // 高さが超える場合は高さを画面いっぱいに
+        return false;
+      }
+      return true;
+    } else if (pixcelHeightPreAdjust > document.documentElement.offsetHeight) {
+      // 幅は超えずに高さのみ超えるので高さを画面いっぱい
+      return false
+    }
+    return false;
+  }
+
   get pixcelPosX(): number {
-    if (!this.cutIn) return 0;
-    return (document.documentElement.clientWidth * this.cutIn.posX / 100) - this.pixcelWidth / 2;
+    let ret = 0;
+    if (!this.cutIn) return ret;
+    ret = (document.documentElement.clientWidth * this.cutIn.posX / 100) - this.pixcelWidth / 2;
+    if (this.cutIn.isPreventOutBounds) {
+      const leftOffset = (this.pixcelWidth / 2) - (document.documentElement.clientWidth * this.cutIn.posX / 100);
+      if (leftOffset > 0) {
+        ret += leftOffset;
+      }
+      const rightOffset = -(document.documentElement.clientWidth - (document.documentElement.clientWidth * this.cutIn.posX / 100) - this.pixcelWidth / 2);
+      if (rightOffset > 0) {
+        ret -= rightOffset;
+      }
+    }
+    return ret;
   }
 
   get pixcelPosY(): number {
-    if (!this.cutIn) return 0;
-    return (document.documentElement.offsetHeight * this.cutIn.posY / 100) - this.pixcelHeight / 2;
+    let ret = 0;
+    if (!this.cutIn) return ret;
+    ret = (document.documentElement.offsetHeight * this.cutIn.posY / 100) - this.pixcelHeight / 2;
+    if (this.cutIn.isPreventOutBounds) {
+      const topOffset = (this.pixcelHeight / 2) - (document.documentElement.offsetHeight * this.cutIn.posY / 100)
+      if (topOffset > 0) {
+        ret += topOffset;
+      }
+      const bottomOffset = -(document.documentElement.offsetHeight - (document.documentElement.offsetHeight * this.cutIn.posY / 100) - this.pixcelHeight / 2);
+      if (bottomOffset > 0) {
+        ret -= bottomOffset;
+      }
+    }
+    return ret;
   }
 
   get zIndex(): number {
@@ -131,7 +211,6 @@ export class CutInComponent implements OnInit, OnDestroy {
     let ret = ''; 
     if (!this.sender) return ret;
     let object = PeerCursor.findByPeerId(this.sender);
-    console.log(object)
     if (object instanceof PeerCursor) {
       ret = object.name;
     }
