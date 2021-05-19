@@ -1,7 +1,6 @@
 import { ImageFile } from './core/file-storage/image-file';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
-import { StringUtil } from './core/system/util/string-util';
 
 @SyncObject('cut-in')
 export class CutIn extends ObjectNode {
@@ -10,22 +9,23 @@ export class CutIn extends ObjectNode {
   @SyncVar() duration: number = 6;
 
   @SyncVar() width: number = 0;
-  @SyncVar() height: number = 35;
+  @SyncVar() height: number = 0;
   @SyncVar() posX: number = 50;
   @SyncVar() posY: number = 50;
   @SyncVar() zIndex: number = 0;
   @SyncVar() isFrontOfStand: boolean = false;
-  @SyncVar() isNoOutBound: boolean = false; //ToDO 見切れ防止
+  @SyncVar() isPreventOutBounds: boolean = false;
   @SyncVar() imageIdentifier: string = ImageFile.Empty.identifier;
 
   @SyncVar() audioName: string = '';
-  @SyncVar() isLoop: boolean = false;
   @SyncVar() audioIdentifier: string = '';
+  @SyncVar() isLoop: boolean = false;
+  @SyncVar() volume: number = 50;
 
   get conditionTexts(): string[] {
-    if (!this.value) return [];
+    if (this.value == null || (this.value + '').trim() == '') return [];
     return Array.from(new Set((<string>this.value).split(/[\r\n]+/).map(row => {
-      return row ? StringUtil.toHalfWidth(row.trim()).toUpperCase() : '';
+      return row ? row.trim() : '';
     })));
   }
 }
