@@ -329,24 +329,26 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           imageIdentifier = this.character.imageFile ? this.character.imageFile.identifier : null;
         }
         const standInfo = this.character.standList.matchStandInfo(text, imageIdentifier, this.standName);
-        if (standInfo.farewell) {
-          this.farewellStand();
-        } else if (this.isUseStandImage && this.isUseStandImageOnChatTab && standInfo.standElementIdentifier) {
-          standIdentifier = standInfo.standElementIdentifier;
-          const sendObj = {
-            characterIdentifier: this.character.identifier, 
-            standIdentifier: standInfo.standElementIdentifier, 
-            color: this.character.chatPalette ? this.character.chatPalette.color : PeerCursor.CHAT_DEFAULT_COLOR,
-            secret: this.sendTo ? true : false
-          };
-          if (sendObj.secret) {
-            const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
-            if (targetPeer) {
-              if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetPeer.peerId);
-              EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+        if (this.isUseStandImage && this.isUseStandImageOnChatTab) {
+          if (standInfo.farewell) {
+            this.farewellStand();
+          } else if (standInfo.standElementIdentifier) {
+            standIdentifier = standInfo.standElementIdentifier;
+            const sendObj = {
+              characterIdentifier: this.character.identifier, 
+              standIdentifier: standInfo.standElementIdentifier, 
+              color: this.character.chatPalette ? this.character.chatPalette.color : PeerCursor.CHAT_DEFAULT_COLOR,
+              secret: this.sendTo ? true : false
+            };
+            if (sendObj.secret) {
+              const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
+              if (targetPeer) {
+                if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('POPUP_STAND_IMAGE', sendObj, targetPeer.peerId);
+                EventSystem.call('POPUP_STAND_IMAGE', sendObj, PeerCursor.myCursor.peerId);
+              }
+            } else {
+              EventSystem.call('POPUP_STAND_IMAGE', sendObj);
             }
-          } else {
-            EventSystem.call('POPUP_STAND_IMAGE', sendObj);
           }
         }
         matchMostLongText = standInfo.matchMostLongText;
