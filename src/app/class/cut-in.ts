@@ -13,6 +13,7 @@ export class CutIn extends ObjectNode {
   @SyncVar() posX: number = 50;
   @SyncVar() posY: number = 50;
   @SyncVar() zIndex: number = 0;
+  @SyncVar() objectFitType: number = 0; //0:fill 1:cover
   @SyncVar() isFrontOfStand: boolean = false;
   @SyncVar() isPreventOutBounds: boolean = false;
   @SyncVar() imageIdentifier: string = ImageFile.Empty.identifier;
@@ -22,10 +23,10 @@ export class CutIn extends ObjectNode {
   @SyncVar() isLoop: boolean = false;
   @SyncVar() volume: number = 50;
 
-  get conditionTexts(): string[] {
+  get postfies(): string[] {
     if (this.value == null || (this.value + '').trim() == '') return [];
-    return Array.from(new Set((<string>this.value).split(/[\r\n]+/).map(row => {
-      return row ? row.trim() : '';
-    })));
+    return Array.from(new Set((<string>this.value).split(/[\r\n]+/g).map(row => {
+      return row ? row.trimRight() : '';
+    }))).filter(row => row != '');
   }
 }
