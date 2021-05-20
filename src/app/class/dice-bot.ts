@@ -374,10 +374,10 @@ export class DiceBot extends GameObject {
 
     let matchMostLongText = '';
     // ダイスボットへのスタンドの反応
-    if (!isSecret && !originalMessage.standName && originalMessage.isUseStandImage) {
-      const gameCharacter = ObjectStore.instance.get(originalMessage.characterIdentifier);
-      if (gameCharacter instanceof GameCharacter) {
-        const standInfo = gameCharacter.standList.matchStandInfo(result, originalMessage.imageIdentifier);
+    const gameCharacter = ObjectStore.instance.get(originalMessage.characterIdentifier);
+    if (gameCharacter instanceof GameCharacter) {
+      const standInfo = gameCharacter.standList.matchStandInfo(result, originalMessage.imageIdentifier);
+      if (!isSecret && !originalMessage.standName && originalMessage.isUseStandImage) {
         if (standInfo.farewell) {
           const sendObj = {
             characterIdentifier: gameCharacter.identifier
@@ -414,12 +414,12 @@ export class DiceBot extends GameObject {
             }
           }
         }
-        matchMostLongText = standInfo.matchMostLongText;
       }
+      matchMostLongText = standInfo.matchMostLongText;
     }
-
+    
     const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
-    // ダイスのカットイン反応
+    // ダイスによるカットイン発生
     const cutInInfo = CutInList.instance.matchCutInInfo(result);
     if (!isSecret && chatTab.isUseStandImage) {
       for (const identifier of cutInInfo.identifiers) {
@@ -439,7 +439,7 @@ export class DiceBot extends GameObject {
         }
       }
     }
-    
+
     // 切り取り
     if (matchMostLongText.length < cutInInfo.matchMostLongText.length) matchMostLongText = cutInInfo.matchMostLongText;
     if (matchMostLongText && diceBotMessage.text) {
