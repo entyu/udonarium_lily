@@ -89,6 +89,13 @@
           <b>Height (0=指定なし): </b><input [(ngModel)]="cutInHeight" type="range"　title="{{cutInHeight}}" min="{{minSize}}" max="{{maxSize}}" style="width: 180px" name="cutIHeight" [attr.disabled]="!isEditable ? '' : null" />
           <input [(ngModel)]="cutInHeight" type="number" min="{{minSize}}" max="{{maxSize * 2}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="padding-left: 2px">%</b>
         </div>
+        <div style="padding-left: 1em">
+          <b>元画像と縦横比が異なる場合: </b>
+          <select [(ngModel)]="objectFitType">
+            <option [value]="0" [selected]="objectFitType == 0">伸縮する</option>
+            <option [value]="1" [selected]="objectFitType == 1">切り取る</option>
+          </select>
+        </div>
       </div>
       <hr/>
       <div>

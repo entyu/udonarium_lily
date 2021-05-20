@@ -14,6 +14,7 @@ import { DiceRollTableList } from './dice-roll-table-list';
 
 import Loader from 'bcdice/lib/loader/loader';
 import GameSystemClass from 'bcdice/lib/game_system';
+import { CutInList } from './cut-in-list';
 
 export interface DiceBotInfo {
   script: string;
@@ -371,6 +372,7 @@ export class DiceBot extends GameObject {
       isUseStandImage: originalMessage.isUseStandImage
     };
 
+    let matchMostLongText = '';
     // ダイスボットへのスタンドの反応
     if (!isSecret && !originalMessage.standName && originalMessage.isUseStandImage) {
       const gameCharacter = ObjectStore.instance.get(originalMessage.characterIdentifier);
@@ -412,10 +414,36 @@ export class DiceBot extends GameObject {
             }
           }
         }
-        if (standInfo.matchMostLongText && diceBotMessage.text) {
-          diceBotMessage.text = diceBotMessage.text.slice(0, diceBotMessage.text.length - standInfo.matchMostLongText.length);
+        matchMostLongText = standInfo.matchMostLongText;
+      }
+    }
+
+    const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
+    // ダイスのカットイン反応
+    const cutInInfo = CutInList.instance.matchCutInInfo(result);
+    if (!isSecret && chatTab.isUseStandImage) {
+      for (const identifier of cutInInfo.identifiers) {
+        const sendObj = {
+          identifier: identifier, 
+          secret: originalMessage.to ? true : false,
+          sender: PeerCursor.myCursor.peerId
+        };
+        if (sendObj.secret) {
+          const targetPeer = PeerCursor.findByUserId(originalMessage.to);
+          if (targetPeer) {
+            if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('PLAY_CUT_IN', sendObj, targetPeer.peerId);
+            EventSystem.call('PLAY_CUT_IN', sendObj, PeerCursor.myCursor.peerId);
+          }
+        } else {
+          EventSystem.call('PLAY_CUT_IN', sendObj);
         }
       }
+    }
+    
+    // 切り取り
+    if (matchMostLongText.length < cutInInfo.matchMostLongText.length) matchMostLongText = cutInInfo.matchMostLongText;
+    if (matchMostLongText && diceBotMessage.text) {
+      diceBotMessage.text = diceBotMessage.text.slice(0, diceBotMessage.text.length - matchMostLongText.length);
     }
 
     if (originalMessage.to != null && 0 < originalMessage.to.length) {
@@ -424,7 +452,6 @@ export class DiceBot extends GameObject {
         diceBotMessage.to += ' ' + originalMessage.from;
       }
     }
-    let chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
     if (chatTab) chatTab.addMessage(diceBotMessage);
   }
 

@@ -54,6 +54,9 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   get cutInHeight(): number { return this.selectedCutIn.height; }
   set cutInHeight(cutInHeight: number) { if (this.isEditable) this.selectedCutIn.height = cutInHeight; }
 
+  get objectFitType(): number { return this.selectedCutIn.objectFitType; }
+  set objectFitType(objectFitType: number) { if (this.isEditable) this.selectedCutIn.objectFitType = objectFitType; }
+
   get cutInPosX(): number { return this.selectedCutIn.posX; }
   set cutInPosX(cutInPosX: number) { if (this.isEditable) this.selectedCutIn.posX = cutInPosX; }
 
@@ -297,10 +300,10 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     let textView = this.panelService.open(TextViewComponent, option);
     textView.title = 'カットインヘルプ';
     textView.text = 
-`　カットインの名前、持続時間、位置と画像の幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます。
+`　カットインの名前、持続時間、位置と画像の幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。サイズの幅（Width）と高さ（Height）のどちらかを0とした場合、元画像の縦横比を保って拡大縮小します。また、「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます。ただしカットインの最小幅、高さは100ピクセルで、この数値は最優先されます。
 
-　デフォルトでは後から表示されるカットイン画像がより前面になりますが、Z-Index（重なり順）を指定することで制御可能です。カットインにタグを指定した場合、同じタグが指定されたカットインが表示される際に前のものは終了します。
+　デフォルトでは後から表示されるカットイン画像がより前面になりますが、Z-Index（重なり順）を指定することで制御可能です。カットインにタグを指定した場合、同じタグが指定されたカットインが表示される際に以前のものは終了します。
 
-　カットイン画像はドラッグによって移動可能です。またダブルクリックで閉じ、右クリックでコンテキストメニューから操作が可能です。`;
+　カットイン画像はドラッグによって移動可能です。またダブルクリックで閉じ、右クリックでコンテキストメニューから操作が可能です（現在、「閉じる」「ウィンドウの背面に表示」「最小化」が可能）。`;
   }
 }

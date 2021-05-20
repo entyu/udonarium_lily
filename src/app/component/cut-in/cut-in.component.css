@@ -4,7 +4,10 @@
 }
 
 img:hover {
-  outline: 2px dashed blue; 
+  outline: 2px dotted blue; 
+}
+.container.minimaize img {
+  outline: 2px solid blue;
 }
 
 .grow {
@@ -48,9 +51,4 @@ img:hover {
   padding: 0px 3px;
   font-weight: bolder;
   font-size: smaller;
-  visibility: hidden;
-}
-
-.container:hover .name-indicator {
-  visibility: visible;
 }

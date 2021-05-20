@@ -1,7 +1,13 @@
 import { SyncObject } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml } from './core/synchronize-object/object-serializer';
+import { StringUtil } from './core/system/util/string-util';
 import { CutIn } from './cut-in';
+
+export interface CutInInfo {
+  identifiers: string[],
+  matchMostLongText: string
+}
 
 @SyncObject('cut-in-list')
 export class CutInList extends ObjectNode implements InnerXml {
@@ -45,5 +51,38 @@ export class CutInList extends ObjectNode implements InnerXml {
     
     super.parseInnerXml.apply(CutInList.instance, [element]);
     this.destroy();
+  }
+
+  // マッチしたものから、タグが空のものすべて、同じタグのものはランダムに1個づつを返す
+  matchCutInInfo(text: string): CutInInfo {
+    text = StringUtil.toHalfWidth(text).toUpperCase().trimRight();
+    let textTagMatch = '';
+    let tagMatch = new Map<string, CutIn>();
+    const matchCutIn: CutIn[] = [];
+
+    // ランダムに並べ替えておく
+    for (const cutIn of this.cutIns.map<[number, CutIn]>(cutIn => [Math.random(), cutIn]).sort((a, b) => { return a[0] - b[0]; }).map(pair => pair[1])) {
+      if (!cutIn) continue;
+      let isMatch = false;
+      for (const postfix of cutIn.postfies) {
+        if (text.endsWith(StringUtil.toHalfWidth(postfix).toUpperCase().trimRight())) {
+          isMatch = true;
+          if ((postfix.slice(0, 1) == '@' || postfix.slice(0, 1) == '＠') && textTagMatch.length < postfix.length) textTagMatch = postfix;
+        }
+      }
+      if (isMatch) {
+        const tag = cutIn.tag;
+        if (tag != null && tag.trim().length > 0) {
+          tagMatch.set(StringUtil.toHalfWidth(tag).toUpperCase().trim(), cutIn);
+        } else {
+          matchCutIn.push(cutIn);
+        }
+      }
+    }
+    matchCutIn.push(...tagMatch.values());
+    return {
+      identifiers: matchCutIn.map<[number, CutIn]>(cutIn => [Math.random(), cutIn]).sort((a, b) => { return a[0] - b[0]; }).map(pair => pair[1].identifier),
+      matchMostLongText: textTagMatch
+    };
   }
 }

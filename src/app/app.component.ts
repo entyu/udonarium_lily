@@ -389,7 +389,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         break;
       case 'CutInSettingComponent':
         component = CutInSettingComponent;
-        option = { width: 700, height: 475 };
+        option = { width: 700, height: 500 };
         break;
     }
     if (component) {

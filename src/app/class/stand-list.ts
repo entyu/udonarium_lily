@@ -57,7 +57,7 @@ export class StandList extends DataElement {
 
     // 退去コマンド
     ['＠退去', '@farewell'].forEach((command) => {
-      if (StringUtil.toHalfWidth(text).toUpperCase().endsWith(StringUtil.toHalfWidth(command).toUpperCase())) {
+      if (StringUtil.toHalfWidth(text).trimRight().toUpperCase().endsWith(StringUtil.toHalfWidth(command).toUpperCase())) {
         if ((command.slice(0, 1) == '@' || command.slice(0, 1) == '＠') && textTagMatch.length < command.length) textTagMatch = command;
         farewell = true;
       }
@@ -91,8 +91,8 @@ export class StandList extends DataElement {
         if (postfies 
           && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
           for (let postfix of postfies.split(/[\r\n]+/g)) {
-            if (!postfix || postfix.length == 0) continue;
-            if (StringUtil.toHalfWidth(text).toUpperCase().endsWith(StringUtil.toHalfWidth(postfix).toUpperCase())) {
+            if (postfix == null || postfix.trim().length == 0) continue;
+            if (StringUtil.toHalfWidth(text).toUpperCase().trimRight().endsWith(StringUtil.toHalfWidth(postfix).trimRight().toUpperCase())) {
               if ((postfix.slice(0, 1) == '@' || postfix.slice(0, 1) == '＠') && textTagMatch.length < postfix.length) textTagMatch = postfix;
               conditionPostfix = true;
             }

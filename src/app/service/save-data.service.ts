@@ -16,6 +16,7 @@ import * as Beautify from 'vkbeautify';
 
 import { ImageTagList } from '@udonarium/image-tag-list';
 import { ChatTab } from '@udonarium/chat-tab';
+import { CutInList } from '@udonarium/cut-in-list';
 
 type UpdateCallback = (percent: number) => void;
 
@@ -38,10 +39,12 @@ export class SaveDataService {
     let roomXml = this.convertToXml(new Room());
     let chatXml = this.convertToXml(ChatTabList.instance);
     let diceRollTableXml = this.convertToXml(DiceRollTableList.instance);
+    let cutInXml = this.convertToXml(CutInList.instance);
     let summarySetting = this.convertToXml(DataSummarySetting.instance);
     files.push(new File([roomXml], 'data.xml', { type: 'text/plain' }));
     files.push(new File([chatXml], 'chat.xml', { type: 'text/plain' }));
     files.push(new File([diceRollTableXml], 'rollTable.xml', { type: 'text/plain' }));
+    files.push(new File([cutInXml], 'cutIn.xml', { type: 'text/plain' }));
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));
 
     //files = files.concat(this.searchImageFiles(roomXml));

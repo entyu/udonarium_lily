@@ -14,15 +14,15 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   animations: [
     trigger('cutInInOut', [
       transition('void => *', [
-        animate('132ms ease-in', keyframes([
-          style({ opacity: 0, transform: 'scale(0.4)', offset: 0 }),
-          style({ opacity: 1.0, transform: 'scale(1.0)', offset: 1.0 })
+        animate('330ms ease-in', keyframes([
+          style({ opacity: 0, offset: 0 }),
+          style({ opacity: 1.0, offset: 1.0 })
         ]))
       ]),
       transition('* => void', [
-        animate('132ms ease-out', keyframes([
-          style({ transform: 'scale(1.0)', offset: 0 }),
-          style({ opacity: 0, transform: 'scale(0.4)', offset: 1.0 })
+        animate('330ms ease-in', keyframes([
+          style({ opacity: 1.0, offset: 0 }),
+          style({ opacity: 0, offset: 1.0 })
         ]))
       ])
     ])
@@ -39,9 +39,11 @@ export class CutInComponent implements OnInit, OnDestroy {
   private _isVisible = false;
   private _isEnd = false;
 
+  isMinimize = false;
   isBackyard = false;
   isSecret = false;
   isTest = false;
+  isIndicateSender = false;
   sender = '';
   
   cutInImageTransformOrigin = 'center';
@@ -80,6 +82,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get pixcelWidthPreAdjust(): number {
+    if (this.isMinimize) return 100;
     let ret = 0;
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
@@ -105,14 +108,16 @@ export class CutInComponent implements OnInit, OnDestroy {
         ret = document.documentElement.clientWidth;
       }
     }
-    if (ret < 100) {
-      // とりあえず、あとで考える
+    if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelWidthAspectMinimun > ret) {
+      ret = this.pixelWidthAspectMinimun;
+    } else if (ret < 100) {
       ret = 100;
     }
     return ret;
   }
 
   get pixcelHeightPreAdjust(): number {
+    if (this.isMinimize) return 100;
     let ret = 0;
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) { 
@@ -122,6 +127,15 @@ export class CutInComponent implements OnInit, OnDestroy {
         ? (document.documentElement.clientWidth * this.cutIn.width * (this.naturalHeight / this.naturalWidth) / 100)
         : (document.documentElement.offsetHeight * this.cutIn.height / 100);
     }
+    return ret;
+  }
+
+  get pixelWidthAspectMinimun() {
+    let ret = 100;
+    if (!this.cutIn) return ret;
+    if (this.naturalWidth > this.naturalHeight) {
+      ret = 100 * this.naturalWidth / this.naturalHeight;
+    } 
     return ret;
   }
 
@@ -138,10 +152,20 @@ export class CutInComponent implements OnInit, OnDestroy {
         ret = document.documentElement.offsetHeight;
       }
     }
-    if (ret < 100) {
-      // とりあえず、あとで考える
+    if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelHeightAspectMinimun > ret) {
+      ret = this.pixelHeightAspectMinimun;
+    } else if (ret < 100) {
       ret = 100;
     }
+    return ret;
+  }
+
+  get pixelHeightAspectMinimun() {
+    let ret = 100;
+    if (!this.cutIn) return ret;
+    if (this.naturalWidth < this.naturalHeight) {
+      ret = 100 * this.naturalHeight / this.naturalWidth;
+    } 
     return ret;
   }
 
@@ -205,6 +229,14 @@ export class CutInComponent implements OnInit, OnDestroy {
   get zIndex(): number {
     if (!this.cutIn || this.isBackyard) return 0;
     return (this.cutIn.isFrontOfStand ? 1500000 : 500000) + this.cutIn.zIndex;
+  }
+
+  get objectFit(): string {
+    if (!this.cutIn) return 'none';
+    //if ((this.pixcelWidth <= 100 || this.pixcelHeight <= 100)
+    //  && (this.isMinimize || this.cutIn.width <= 0 || this.cutIn.height <= 0)) return 'contain';
+    //if (this.isMinimize) return 'contain';
+    return this.cutIn.objectFitType == 0 ? 'fill' : 'cover';
   }
 
   get senderName() {
@@ -273,8 +305,18 @@ export class CutInComponent implements OnInit, OnDestroy {
       },
       ContextMenuSeparator,
       {
+        name: `${this.isIndicateSender ? '☑' : '☐'}送信者を表示`,
+        action: () => { this.isIndicateSender = !this.isIndicateSender; },
+        selfOnly: true
+      },
+      {
         name: `${this.isBackyard ? '☑' : '☐'}ウィンドウの背後に表示`,
         action: () => { this.isBackyard = !this.isBackyard; },
+        selfOnly: true
+      },
+      {
+        name: `${this.isMinimize ? '☑' : '☐'}最小化`,
+        action: () => { this.isMinimize = !this.isMinimize; },
         selfOnly: true
       }
     ], this.cutIn.name);
