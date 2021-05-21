@@ -4,10 +4,10 @@
 }
 
 img:hover {
-  outline: 2px dotted blue; 
+  outline: 2px dotted #22F;
 }
 .container.minimaize img {
-  outline: 2px solid blue;
+  outline: 2px solid #22F;
 }
 
 .grow {
@@ -40,14 +40,13 @@ img:hover {
   font-size: smaller;
   padding: 0px 3px 2px 3px;
   font-weight: bolder;
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 .name-indicator {
   position: absolute;
   pointer-events: none;
   z-index: 10;
-  color: blue;
   padding: 0px 3px;
   font-weight: bolder;
   font-size: smaller;

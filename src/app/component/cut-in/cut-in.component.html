@@ -1,6 +1,6 @@
 <div *ngIf="isVisible" appDraggable [draggable.allowOverHalf]="true"
   #cutInContainerElement class="container" 
-  @cutInInOut (@cutInInOut.done)="isVisible ? null : end()"
+  @cutInFadeInOut (@cutInFadeInOut.done)="isVisible ? null : end()"
   style="position: absolute"
   [style.width.px]="pixcelWidth"
   [style.height.px]="pixcelHeight"
