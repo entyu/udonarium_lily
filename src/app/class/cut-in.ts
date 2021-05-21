@@ -26,7 +26,7 @@ export class CutIn extends ObjectNode {
   get postfies(): string[] {
     if (this.value == null || (this.value + '').trim() == '') return [];
     return Array.from(new Set((<string>this.value).split(/[\r\n]+/g).map(row => {
-      return row ? row.trimRight() : '';
+      return row != null ? row.trimRight() : '';
     }))).filter(row => row != '');
   }
 }

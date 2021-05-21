@@ -12,7 +12,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   templateUrl: './cut-in.component.html',
   styleUrls: ['./cut-in.component.css'],
   animations: [
-    trigger('cutInInOut', [
+    trigger('cutInFadeInOut', [
       transition('void => *', [
         animate('330ms ease-in', keyframes([
           style({ opacity: 0, offset: 0 }),
@@ -70,7 +70,6 @@ export class CutInComponent implements OnInit, OnDestroy {
   set isVisible(isVisible: boolean) { this._isVisible = isVisible; }
 
   get isEnd():boolean { return !this.cutIn || this._isEnd; }
-  set isEnd(isEnd: boolean) { this._isEnd = isEnd; }
 
   get cutInImage(): ImageFile {
     if (!this.cutIn) return this._imageFile;
@@ -264,6 +263,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   play() {
+    if (this.isEnd) return;
     this.ngZone.run(() => {
       this._isVisible = true;
     });
@@ -281,6 +281,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   end() {
+    stop();
     this._isEnd = true;
   }
 
