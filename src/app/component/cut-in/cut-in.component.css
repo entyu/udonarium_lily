@@ -3,6 +3,18 @@
   padding: 0px;
 }
 
+.is-grab {
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.is-grabbing {
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
 img:hover {
   outline: 2px dotted #22F;
 }

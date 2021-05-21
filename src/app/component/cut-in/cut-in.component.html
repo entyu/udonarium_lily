@@ -8,8 +8,13 @@
   [style.top.px]="pixcelPosY"
   [style.z-index]="zIndex"
   [style.pointer-events]="isVisible ? 'auto' : 'none'"
-  [ngClass]="{test: isTest, secret: isSecret, minimaize: isMinimize}"
-  (dblclick)="stop()">
+  [ngClass]="{test: isTest, secret: isSecret, minimaize: isMinimize, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  (dblclick)="stop()"
+  (mousedown)="draggstart()"
+  (mouseup)="draggend()"
+  (mouseleave)="draggend()"
+  (mouseout)="draggend()"
+  (mousemove)="isPointerDragging ? draggstart() : false">
   <div *ngIf="isTest" class="test-indicator grow" style="top: 0px; left: 0px">TEST</div>
   <div *ngIf="isTest" class="test-indicator grow" style="top: 0px; right: 0px; text-align: right">TEST</div>
   <div *ngIf="isTest" class="test-indicator grow" style="bottom: 0px; left: 0px">TEST</div>

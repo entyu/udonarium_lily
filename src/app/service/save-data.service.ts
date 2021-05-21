@@ -49,6 +49,7 @@ export class SaveDataService {
     let images: ImageFile[] = [];
     images = images.concat(this.searchImageFiles(roomXml));
     images = images.concat(this.searchImageFiles(chatXml));
+    images = images.concat(this.searchImageFiles(cutInXml));
     for (const image of images) {
       if (image.state === ImageState.COMPLETE) {
         files.push(new File([image.blob], image.identifier + '.' + MimeType.extension(image.blob.type), { type: image.blob.type }));
