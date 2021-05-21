@@ -50,8 +50,8 @@
         <div>
           <button [attr.disabled]="!isEditable ? '' : null" (click)="testCutIn()"><b>テスト (自分だけ見る)<sup class="self-only">*</sup></b></button>
           <span style="margin-left: 2em">
-            <button style="margin-right: 0px" [attr.disabled]="!isEditable ? '' : null" (click)="playCutIn()"><b><i class="material-icons" style="font-size: smaller">play_arrow</i>送信</b></button>
-            <button style="margin-left: 0px" [attr.disabled]="!isEditable ? '' : null" (click)="stopCutIn()"><b><i class="material-icons" style="font-size: smaller">stop</i>終了</b></button>
+            <button style="margin-right: 0px" [attr.disabled]="!isEditable ? '' : null" (click)="playCutIn()"><b><i class="material-icons" style="font-size: smaller">play_arrow</i>再生</b></button>
+            <button style="margin-left: 0px" [attr.disabled]="!isEditable ? '' : null" (click)="stopCutIn()"><b><i class="material-icons" style="font-size: smaller">stop</i>停止</b></button>
             <span style="white-space: nowrap"> ➡
               <select style="max-width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
                 <option value="" class="not-specified">全員</option>

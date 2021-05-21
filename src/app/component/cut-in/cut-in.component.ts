@@ -51,7 +51,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   private naturalWidth = 0;
   private naturalHeight = 0;
   
-  math = Math;
+  private _dragging = false;
 
   constructor(
     private pointerDeviceService: PointerDeviceService,
@@ -64,6 +64,18 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     clearTimeout(this._timeoutId);
+  }
+
+  get isPointerDragging(): boolean { return this._dragging; }
+  draggstart() { 
+    this.ngZone.run(() => {
+     this._dragging = true;
+    });
+  }
+  draggend() {
+    this.ngZone.run(() => {
+      this._dragging = false;
+    });
   }
 
   get isVisible():boolean { return this.cutIn && this._isVisible; }
@@ -277,6 +289,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   stop() {
     this.ngZone.run(() => {
       this._isVisible = false;
+      this._dragging = false;
     });
   }
 
