@@ -80,6 +80,9 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   get cutInSEIsLoop(): boolean { return this.selectedCutIn.isLoop; }
   set cutInSEIsLoop(isLoop: boolean) { if (this.isEditable) this.selectedCutIn.isLoop = isLoop; }
 
+  get cutInType(): number { return this.selectedCutIn.animationType; }
+  set cutInType(cutInType: number) { if (this.isEditable) this.selectedCutIn.animationType = cutInType; }
+
   get isEmpty(): boolean { return this.cutIns.length < 1; }
   get isDeleted(): boolean { return this.selectedCutIn ? ObjectStore.instance.get(this.selectedCutIn.identifier) == null : false; }
   get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
@@ -325,15 +328,15 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     textView.text = 
 `　カットインの名前、表示時間、位置と画像の幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。サイズの幅（Width）と高さ（Height）のどちらかを0とした場合、元画像の縦横比を保って拡大縮小します。また、「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます（ただしカットインの最小幅、高さは100ピクセルとなります）。
 
-　デフォルトでは後から表示されるカットイン画像がより前面になりますが、重なり順（Z-Index）を指定することで制御可能です。カットインにタグを設定した場合、同じタグが指定されたカットインが表示される際に、以前のものは終了します。また、チャット末尾条件を満たすカットインが複数ある場合、
+　デフォルトでは後から表示されるカットイン画像がより前面になりますが、重なり順（Z-Index）を指定することで制御可能です。カットインにタグを設定した場合、同じタグが指定されたカットインが表示される際に、以前のものは停止します。また、チャット末尾条件を満たすカットインが複数ある場合、
 
 　　・タグが設定されていないものはすべて表示
 　　・タグが設定されたものは、同じタグのものの中からランダムに1つ表示
 
 となります。
 
-　カットイン画像はドラッグによって移動可能です。またダブルクリックで閉じる（自分だけ終了）、右クリックでコンテキストメニューから操作が可能です（現在、「閉じる」「ウィンドウの背面に表示」「最小化」が可能）。
+　カットイン画像はドラッグによって移動可能です。またダブルクリックで閉じる（自分だけ停止）、右クリックでコンテキストメニューから操作が可能です（現在、「閉じる」「ウィンドウの背面に表示」「最小化」が可能）。
 
-　アップロードされた音楽ファイルをカットイン表示時の効果音として設定できます。音量にはジュークボックスの設定（「テスト (自分だけ見る)」の場合は試聴音量）が使用されます。表示時間や手動停止によってカットインが終了した際には、途中であっても音声も終了します。カットインや部屋のセーブデータ（zip）には音楽ファイルは含まれませんので、必要でしたら別途アップロードしてください（カットインと音楽ファイルのリンクはファイルの内容によります、同名の別ファイルをアップロードしても再リンクされません）。`;
+　アップロードされた音楽ファイルをカットイン表示時の効果音として設定できます。音量にはジュークボックスの設定（「テスト (自分だけ見る)」の場合は試聴音量）が使用されます。表示時間や手動操作によってカットインが停止した際には、途中であっても音声も停止します。カットインや部屋のセーブデータ（zip）には音楽ファイルは含まれませんので、必要でしたら別途アップロードしてください（カットインと音楽ファイルのリンクはファイルの内容によります、同名の別ファイルをアップロードしても再リンクされません）。`;
   }
 }
