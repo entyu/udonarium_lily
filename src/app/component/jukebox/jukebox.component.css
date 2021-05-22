@@ -19,11 +19,38 @@
 }
 
 .box {
+  font-size: smaller;
   border-bottom:1px dotted #888;
+  vertical-align: baseline;
+}
+.box.last {
+  border-bottom:0px none transparent;
 }
 
 .volume {
   display: inline-block;
   width: 3em;
   text-align: right;
+}
+
+input[type=number] {
+  text-align: right;
+}
+
+.self-only {
+  color: red;
+}
+button .self-only {
+  vertical-align: text-top;
+}
+
+.box button {
+  font-size: 12px;
+  height: 26px;
+  width: 5.6em;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+button .material-icons {
+  font-size: 12px;
 }

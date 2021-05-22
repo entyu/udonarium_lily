@@ -27,10 +27,14 @@ export class JukeboxComponent implements OnInit, OnDestroy {
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
 
+  get percentAuditionVolume(): number { return Math.floor(AudioPlayer.auditionVolume * 100); }
+  set percentAuditionVolume(percentAuditionVolume: number) { AudioPlayer.auditionVolume = percentAuditionVolume / 100; }
+
+  get percentVolume(): number { return Math.floor(AudioPlayer.volume * 100); }
+  set percentVolume(percentVolume: number) { AudioPlayer.volume = percentVolume / 100; }
+
   readonly auditionPlayer: AudioPlayer = new AudioPlayer();
   private lazyUpdateTimer: NodeJS.Timer = null;
-
-  math = Math;
 
   constructor(
     private modalService: ModalService,
