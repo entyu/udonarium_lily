@@ -110,7 +110,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     ChatTabList.instance.addChatTab('メインタブ', 'MainTab');
     ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
 
-    CutInList.instance; // 初期化
+    CutInList.instance.initialize();
 
     let sampleDiceRollTable = new DiceRollTable('SampleDiceRollTable');
     sampleDiceRollTable.initialize();
