@@ -18,8 +18,10 @@
     <button *ngIf="audio !== jukebox?.audio" (click)="playBGM(audio)" [disabled]="!audio.isReady"><i class="material-icons">loop</i>ＢＧＭ</button>
     <button *ngIf="audio === jukebox?.audio" (click)="stopBGM(audio)" [disabled]="!audio.isReady"><i class="material-icons">stop</i>ＢＧＭ</button>
     <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused && audio != jukebox?.audio" style="padding-left: 2px"><b>【試聴中】</b></span>
-    <span *ngIf="audio === jukebox?.audio && auditionPlayer?.paused" style="padding-left: 2px"><b>【ＢＧＭ】</b></span>
-    <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused && audio === jukebox?.audio" style="padding-left: 2px"><b>【試聴/BGM】</b></span>
+    <ng-container *ngIf="audio === jukebox?.audio">
+      <span *ngIf="audio != auditionPlayer?.audio || (audio == auditionPlayer?.audio && auditionPlayer?.paused)" style="padding-left: 2px"><b>【ＢＧＭ】</b></span>
+      <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" style="padding-left: 2px"><b>【試聴/BGM】</b></span>
+    </ng-container>
     <span style="font-size: smaller" style="padding-left: 2px">{{audio.name}}</span>
   </div>
   <div *ngIf="audios.length < 1" >アップロードされた音楽ファイルはここに表示されます。</div>
