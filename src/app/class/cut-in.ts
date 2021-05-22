@@ -1,3 +1,5 @@
+import { templateSourceUrl } from '@angular/compiler';
+import { AudioStorage } from './core/file-storage/audio-storage';
 import { ImageFile } from './core/file-storage/image-file';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
@@ -18,10 +20,13 @@ export class CutIn extends ObjectNode {
   @SyncVar() isPreventOutBounds: boolean = false;
   @SyncVar() imageIdentifier: string = ImageFile.Empty.identifier;
 
-  @SyncVar() audioName: string = '';
+  @SyncVar() audioFileName: string = '';
   @SyncVar() audioIdentifier: string = '';
   @SyncVar() isLoop: boolean = false;
-  @SyncVar() volume: number = 50;
+
+  get isValidAudio(): boolean {
+    return this.audioFileName.length == 0 || this.audioIdentifier.length == 0 || !!AudioStorage.instance.get(this.audioIdentifier);
+  }
 
   get postfies(): string[] {
     if (this.value == null || (this.value + '').trim() == '') return [];
