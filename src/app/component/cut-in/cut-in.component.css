@@ -16,10 +16,10 @@
 }
 
 img:hover {
-  outline: 2px dotted #22F;
+  outline: 3px dotted #22F;
 }
 .container.minimaize img {
-  outline: 2px solid #22F;
+  outline: 3px solid #22F;
 }
 
 .grow {
