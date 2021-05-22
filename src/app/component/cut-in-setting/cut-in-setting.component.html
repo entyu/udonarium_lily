@@ -110,7 +110,7 @@
           </div>
           <div style="padding-left: 1em">
             <b>音楽ファイル: </b>
-            <select style="min-width: 10em; max-width: 15em" 
+            <select style="min-width: 10em; max-width: 20em" 
               [(ngModel)]="cutInAudioIdentifier" 
               [ngClass]="{'not-specified': cutInAudioIdentifier == ''}" 
               [attr.disabled]="!isEditable || isPlaying ? '' : null"

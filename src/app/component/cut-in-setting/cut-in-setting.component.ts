@@ -309,6 +309,10 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onAudioFileChange(identifier: string='') {
     if (!identifier && this.selectedCutIn) identifier = this.selectedCutIn.audioIdentifier;
+    if (identifier == '') {
+      this.cutInAudioFileName = '';
+      return;
+    }
     const audio = AudioStorage.instance.get(identifier);
     this.cutInAudioFileName = audio ? audio.name : '';
   }
@@ -330,6 +334,6 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
 　カットイン画像はドラッグによって移動可能です。またダブルクリックで閉じる（自分だけ終了）、右クリックでコンテキストメニューから操作が可能です（現在、「閉じる」「ウィンドウの背面に表示」「最小化」が可能）。
 
-　アップロードされた音楽ファイルをカットイン表示時の効果音に指定できます。音量にはジュークボックスの設定（「テスト (自分だけ見る)」の場合は試聴音量）が使用されます。なお、表示時間や手動停止によってカットインが終了した際に、音声も停止します（音声の途中、あるいは繰り返しが指定されている場合も同様）。カットインや部屋のセーブデータ（zip）には音楽ファイルは含まれませんので、必要でしたら別途アップロードしてください（カットインと音楽ファイルのリンクはファイルの内容によります、同名の別ファイルをアップしても再リンクされません）。`;
+　アップロードされた音楽ファイルをカットイン表示時の効果音として設定できます。音量にはジュークボックスの設定（「テスト (自分だけ見る)」の場合は試聴音量）が使用されます。表示時間や手動停止によってカットインが終了した際には、途中であっても音声も終了します。カットインや部屋のセーブデータ（zip）には音楽ファイルは含まれませんので、必要でしたら別途アップロードしてください（カットインと音楽ファイルのリンクはファイルの内容によります、同名の別ファイルをアップロードしても再リンクされません）。`;
   }
 }
