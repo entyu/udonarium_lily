@@ -100,3 +100,7 @@ input[type='number'] {
   color: red;
   vertical-align: text-top;
 }
+
+.section {
+  margin-top: 0.4em;
+}

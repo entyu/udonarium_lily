@@ -15,6 +15,8 @@ import { ImageTag } from '@udonarium/image-tag';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { CutInService } from 'service/cut-in.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { AudioFile } from '@udonarium/core/file-storage/audio-file';
+import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 
 
 @Component({
@@ -66,8 +68,17 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   get cutInZIndex(): number { return this.selectedCutIn.zIndex; }
   set cutInZIndex(cutInZIndex: number) { if (this.isEditable) this.selectedCutIn.zIndex = cutInZIndex; }
 
-  get cutInIsFrontOdStand(): boolean { return this.selectedCutIn.isFrontOfStand; }
-  set cutInIsFrontOdStand(cutInIsFrontOdStand: boolean) { if (this.isEditable) this.selectedCutIn.isFrontOfStand = cutInIsFrontOdStand; }
+  get cutInIsFrontOfStand(): boolean { return this.selectedCutIn.isFrontOfStand; }
+  set cutInIsFrontOfStand(isFrontOfStand: boolean) { if (this.isEditable) this.selectedCutIn.isFrontOfStand = isFrontOfStand; }
+
+  get cutInAudioIdentifier(): string { return this.selectedCutIn.audioIdentifier; }
+  set cutInAudioIdentifier(audioIdentifier: string) { if (this.isEditable) this.selectedCutIn.audioIdentifier = audioIdentifier; }
+  
+  get cutInAudioFileName(): string { return this.selectedCutIn.audioFileName; }
+  set cutInAudioFileName(audioFileName: string) { if (this.isEditable) this.selectedCutIn.audioFileName = audioFileName; }
+
+  get cutInSEIsLoop(): boolean { return this.selectedCutIn.isLoop; }
+  set cutInSEIsLoop(isLoop: boolean) { if (this.isEditable) this.selectedCutIn.isLoop = isLoop; }
 
   get isEmpty(): boolean { return this.cutIns.length < 1; }
   get isDeleted(): boolean { return this.selectedCutIn ? ObjectStore.instance.get(this.selectedCutIn.identifier) == null : false; }
@@ -79,9 +90,14 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     return file ? file : ImageFile.Empty;
   }
   
-  get isNowShowing(): boolean {
+  get isPlaying(): boolean {
     if (!this.selectedCutIn) return false;
     return CutInService.nowShowingIdentifiers().includes(this.selectedCutIn.identifier);
+  }
+
+  get isValidAudio(): boolean {
+    if (!this.selectedCutIn) return true;
+    return this.selectedCutIn.isValidAudio;
   }
   
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
@@ -104,8 +120,9 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     return PeerCursor.CHAT_DEFAULT_COLOR;
   }
 
-  sendTo: string = '';
+  get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
 
+  sendTo: string = '';
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
@@ -119,12 +136,8 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'カットイン設定');
     EventSystem.register(this)
-      .on('DELETE_GAME_OBJECT', 1000, event => {
-        if (!this.selectedCutIn || event.data.identifier !== this.selectedCutIn.identifier) return;
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (object !== null) {
-          this.selectedCutInXml = object.toXml();
-        }
+      .on('SYNCHRONIZE_AUDIO_LIST', -1000, event => {
+        this.onAudioFileChange();
       });
   }
 
@@ -294,16 +307,29 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  onAudioFileChange(identifier: string='') {
+    if (!identifier && this.selectedCutIn) identifier = this.selectedCutIn.audioIdentifier;
+    const audio = AudioStorage.instance.get(identifier);
+    this.cutInAudioFileName = audio ? audio.name : '';
+  }
+
   helpCutIn() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 460 };
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 480 };
     let textView = this.panelService.open(TextViewComponent, option);
     textView.title = 'カットインヘルプ';
     textView.text = 
-`　カットインの名前、持続時間、位置と画像の幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。サイズの幅（Width）と高さ（Height）のどちらかを0とした場合、元画像の縦横比を保って拡大縮小します。また、「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます。ただしカットインの最小幅、高さは100ピクセルで、この数値は最優先されます。
+`　カットインの名前、表示時間、位置と画像の幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。サイズの幅（Width）と高さ（Height）のどちらかを0とした場合、元画像の縦横比を保って拡大縮小します。また、「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます。ただしカットインの最小幅、高さは100ピクセルとなります。
 
-　デフォルトでは後から表示されるカットイン画像がより前面になりますが、Z-Index（重なり順）を指定することで制御可能です。カットインにタグを指定した場合、同じタグが指定されたカットインが表示される際に以前のものは終了します。
+　デフォルトでは後から表示されるカットイン画像がより前面になりますが、重なり順（Z-Index）を指定することで制御可能です。カットインにタグを設定した場合、同じタグが指定されたカットインが表示される際に、以前のものは終了します。また、チャット末尾条件を満たすカットインが複数ある場合、
 
-　カットイン画像はドラッグによって移動可能です。またダブルクリックで閉じ、右クリックでコンテキストメニューから操作が可能です（現在、「閉じる」「ウィンドウの背面に表示」「最小化」が可能）。`;
+　　１．タグが設定されていないものはすべて表示
+　　２．タグが接待されたものは、同じタグ中からランダムに1つ表示
+
+となります。
+
+　カットイン画像はドラッグによって移動可能です。またダブルクリックで閉じる（自分だけ終了）、右クリックでコンテキストメニューから操作が可能です（現在、「閉じる」「ウィンドウの背面に表示」「最小化」が可能）。
+
+　アップロードされた音楽ファイルをカットイン表示時の効果音に指定できます。音量にはジュークボックスの設定（「テスト (自分だけ見る)」の場合は試聴音量）が使用されます。なお、表示時間や手動停止によってカットインが終了した際に、音声も停止します（音声の途中、あるいは繰り返しが指定されている場合も同様）。カットインや部屋のセーブデータ（zip）には音楽ファイルは含まれませんので、必要でしたら別途アップロードしてください。`;
   }
 }

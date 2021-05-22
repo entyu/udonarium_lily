@@ -1,7 +1,10 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
+import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { EventSystem } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
@@ -50,8 +53,9 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   private naturalWidth = 0;
   private naturalHeight = 0;
-  
   private _dragging = false;
+
+  private readonly audioPlayer = new AudioPlayer();
 
   constructor(
     private pointerDeviceService: PointerDeviceService,
@@ -59,8 +63,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     private ngZone: NgZone
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     clearTimeout(this._timeoutId);
@@ -276,26 +279,42 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   play() {
     if (this.isEnd) return;
-    this.ngZone.run(() => {
-      this._isVisible = true;
-    });
-    if (this.cutIn.duration > 0) {
-      this._timeoutId = setTimeout(() => {
-        this.stop();
-      }, this.cutIn.duration * 1000);
+    if (this._isVisible) {
+      this.audioPlayer.play();
+    } else {
+      this.ngZone.run(() => {
+        this._isVisible = true;
+        const audio = AudioStorage.instance.get(this.cutIn.audioIdentifier);
+        if (audio) {
+          this.audioPlayer.volumeType = this.isTest ? VolumeType.AUDITION : VolumeType.MASTER;
+          this.audioPlayer.loop = this.cutIn.isLoop;
+          this.audioPlayer.play(audio);
+        }
+      });
+      if (this.cutIn.duration > 0) {
+        this._timeoutId = setTimeout(() => {
+          this.stop();
+          this._timeoutId = null;
+        }, this.cutIn.duration * 1000);
+      }
     }
+  }
+
+  pause() {
+    this.audioPlayer.pause();
   }
 
   stop() {
     this.ngZone.run(() => {
       this._isVisible = false;
       this._dragging = false;
+      this.audioPlayer.stop();
     });
   }
 
   end() {
-    stop();
     this._isEnd = true;
+    this.audioPlayer.stop();
   }
 
   onImageLoad() {
@@ -332,7 +351,24 @@ export class CutInComponent implements OnInit, OnDestroy {
         name: `${this.isMinimize ? '☑' : '☐'}最小化`,
         action: () => { this.isMinimize = !this.isMinimize; },
         selfOnly: true
+      },
+      /*
+      ContextMenuSeparator,
+      {
+        name: '効果音の開始／最初から',
+        action: () => { this.audioPlayer.play() },
+        disabled: !(this.cutIn && this.cutIn.audioIdentifier && this.cutIn.isValidAudio), 
+        selfOnly: true,
+        materialIcon: 'play_arrow'
+      },
+      {
+        name: '効果音の停止',
+        action: () => { this.audioPlayer.stop() },
+        disabled: !this.audioPlayer.paused && !(this.cutIn && this.cutIn.audioIdentifier && this.cutIn.isValidAudio), 
+        selfOnly: true,
+        materialIcon: 'stop'
       }
+      */
     ], this.cutIn.name);
   }
 
