@@ -41,8 +41,15 @@
             <b style="font-size: smaller">Duration (0=無制限): </b><input type="number" min="0" max="1000" [(ngModel)]="cutInDuration" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="font-size: smaller; padding-left: 2px">sec.</b>
           </div>
           <div style="padding-left: 2px">
+            <b style="font-size: smaller">Cut In: </b>
+            <select [(ngModel)]="cutInType">
+              <option [value]="0" [selected]="objectFitType == 0">浮き出る</option>
+              <option [value]="1" [selected]="objectFitType == 1">飛び出す</option>
+            </select>
+          </div>
+          <div style="padding-left: 2px">
             <b style="font-size: smaller">チャット末尾: </b><br>
-            <textarea style="width: 100%; height: 5em" placeholder="1行に一つ、冒頭@を付けるとマッチ時にテキストから切り取り&#13;&#10;@街並み&#13;&#10;@朝の日差し" [(ngModel)]="cutInCond" [attr.disabled]="!isEditable ? '' : null"></textarea>
+            <textarea style="width: 100%; height: 3em" placeholder="1行に一つ、冒頭@でマッチ時にテキストから切り取り&#13;&#10;@街並み" [(ngModel)]="cutInCond" [attr.disabled]="!isEditable ? '' : null"></textarea>
           </div>
         </div>
       </div>
@@ -51,7 +58,7 @@
           <button [attr.disabled]="!isEditable ? '' : null" (click)="testCutIn()"><b>テスト (自分だけ見る)<sup class="self-only">*</sup></b></button>
           <span style="margin-left: 2em">
             <button style="margin-right: 0px" [attr.disabled]="!isEditable ? '' : null" (click)="playCutIn()"><b><i class="material-icons" style="font-size: smaller">play_arrow</i>再生</b></button>
-            <button style="margin-left: 0px" [attr.disabled]="!isEditable ? '' : null" (click)="stopCutIn()"><b><i class="material-icons" style="font-size: smaller">stop</i>終了</b></button>
+            <button style="margin-left: 0px" [attr.disabled]="!isEditable ? '' : null" (click)="stopCutIn()"><b><i class="material-icons" style="font-size: smaller">stop</i>停止</b></button>
             <span style="white-space: nowrap"> ➡
               <select style="max-width: 10em" [(ngModel)]="sendTo" [ngClass]="{'not-specified': sendTo == ''}" [ngStyle]="{'color': (sendTo == '' ? null : sendToColor), 'font-weight': (sendTo == '' ? 'normal' : 'bolder')}">
                 <option value="" class="not-specified">全員</option>

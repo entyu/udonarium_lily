@@ -16,6 +16,7 @@ export class CutIn extends ObjectNode {
   @SyncVar() posY: number = 50;
   @SyncVar() zIndex: number = 0;
   @SyncVar() objectFitType: number = 0; //0:fill 1:cover
+  @SyncVar() animationType: number = 0 // 0:フェード 1:バウンス
   @SyncVar() isFrontOfStand: boolean = false;
   @SyncVar() isPreventOutBounds: boolean = false;
   @SyncVar() imageIdentifier: string = ImageFile.Empty.identifier;

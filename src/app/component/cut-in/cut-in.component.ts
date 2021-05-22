@@ -28,7 +28,21 @@ import { PointerDeviceService } from 'service/pointer-device.service';
           style({ opacity: 0, offset: 1.0 })
         ]))
       ])
-    ])
+    ]),
+    trigger('cutInBounceInOut', [
+      transition('void => *', [
+        animate('600ms ease', keyframes([
+          style({ transform: 'scale3d(0, 0, 0)', offset: 0 }),
+          style({ transform: 'scale3d(1.5, 1.5, 1.5)', offset: 0.5 }),
+          style({ transform: 'scale3d(0.75, 0.75, 0.75)', offset: 0.75 }),
+          style({ transform: 'scale3d(1.125, 1.125, 1.125)', offset: 0.875 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate(100, style({ transform: 'scale3d(0, 0, 0)' }))
+      ])
+    ]),
   ]
 })
 export class CutInComponent implements OnInit, OnDestroy {
@@ -66,6 +80,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   ngOnInit(): void { }
 
   ngOnDestroy(): void {
+    EventSystem.unregister(this, 'UPDATE_AUDIO_RESOURE');
     clearTimeout(this._timeoutId);
   }
 
@@ -253,6 +268,11 @@ export class CutInComponent implements OnInit, OnDestroy {
     return this.cutIn.objectFitType == 0 ? 'fill' : 'cover';
   }
 
+  get animationType(): number {
+    if (this.isEnd) return 0;
+    return this.cutIn.animationType;
+  }
+
   get senderName() {
     let ret = ''; 
     if (!this.sender) return ret;
@@ -280,16 +300,12 @@ export class CutInComponent implements OnInit, OnDestroy {
   play() {
     if (this.isEnd) return;
     if (this._isVisible) {
+      //TODO pauseからの再開
       this.audioPlayer.play();
     } else {
       this.ngZone.run(() => {
         this._isVisible = true;
-        const audio = AudioStorage.instance.get(this.cutIn.audioIdentifier);
-        if (audio) {
-          this.audioPlayer.volumeType = this.isTest ? VolumeType.AUDITION : VolumeType.MASTER;
-          this.audioPlayer.loop = this.cutIn.isLoop;
-          this.audioPlayer.play(audio);
-        }
+        this._play();
       });
       if (this.cutIn.duration > 0) {
         this._timeoutId = setTimeout(() => {
@@ -300,11 +316,28 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
   }
 
+  private _play() {
+    if (this.isEnd) return;
+    const audio = AudioStorage.instance.get(this.cutIn.audioIdentifier);
+    if (audio && audio.isReady) {
+      this.audioPlayer.volumeType = this.isTest ? VolumeType.AUDITION : VolumeType.MASTER;
+      this.audioPlayer.loop = this.cutIn.isLoop;
+      this.audioPlayer.play(audio);
+    } else {
+      EventSystem.register(this)
+      .on('UPDATE_AUDIO_RESOURE', -100, event => {
+        this._play();
+      });
+    }
+  }
+
   pause() {
+    //TODO
     this.audioPlayer.pause();
   }
 
   stop() {
+    EventSystem.unregister(this, 'UPDATE_AUDIO_RESOURE');
     this.ngZone.run(() => {
       this._isVisible = false;
       this._dragging = false;

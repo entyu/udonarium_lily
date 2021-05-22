@@ -1,6 +1,37 @@
-<div *ngIf="isVisible" appDraggable [draggable.allowOverHalf]="true"
+<div *ngIf="isVisible && animationType == 0" appDraggable [draggable.allowOverHalf]="true"
   #cutInContainerElement class="container" 
   @cutInFadeInOut (@cutInFadeInOut.done)="isVisible ? null : end()"
+  style="position: absolute"
+  [style.width.px]="pixcelWidth"
+  [style.height.px]="pixcelHeight"
+  [style.left.px]="pixcelPosX"
+  [style.top.px]="pixcelPosY"
+  [style.z-index]="zIndex"
+  [style.pointer-events]="isVisible ? 'auto' : 'none'"
+  [ngClass]="{test: isTest, secret: isSecret, minimaize: isMinimize, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  (dblclick)="stop()"
+  (mousedown)="draggstart()"
+  (mouseup)="draggend()"
+  (mouseleave)="draggend()"
+  (mouseout)="draggend()"
+  (mousemove)="isPointerDragging ? draggstart() : false">
+  <div *ngIf="isTest" class="test-indicator grow" style="top: 0px; left: 0px">TEST</div>
+  <div *ngIf="isTest" class="test-indicator grow" style="top: 0px; right: 0px; text-align: right">TEST</div>
+  <div *ngIf="isTest" class="test-indicator grow" style="bottom: 0px; left: 0px">TEST</div>
+  <div *ngIf="isTest" class="test-indicator grow" style="bottom: 0px; right: 0px; text-align: right">TEST</div>
+  <div *ngIf="isSecret" class="secret-indicator grow" style="top: 0px; left: 0px"><i class="material-icons" style="font-size: smaller">visibility</i> For Your Eyes Only</div>
+  <div *ngIf="isSecret" class="secret-indicator grow" style="bottom: 0px; right: 0px; text-align: right">For Your Eyes Only <i class="material-icons" style="font-size: smaller">visibility</i></div>
+  <div *ngIf="isIndicateSender" class="name-indicator grow" style="top: 0px; right: 0px; text-align: right"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
+  <div *ngIf="isIndicateSender" class="name-indicator grow" style="bottom: 0px; left: 0px"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
+  <img #cutInImageElement 
+    style="width: 100%; height: 100%; margin: 0px; padding: 0px"
+    [style.pointer-events]="isVisible ? 'auto' : 'none'"
+    [style.object-fit]="objectFit"
+    [src]="cutInImage.url | safe: 'resourceUrl'" (load)="onImageLoad()" (contextmenu)="onContextMenu($event)">
+</div>
+<div *ngIf="isVisible && animationType == 1" appDraggable [draggable.allowOverHalf]="true"
+  #cutInContainerElement class="container" 
+  @cutInBounceInOut (@cutInBounceInOut.done)="isVisible ? null : end()"
   style="position: absolute"
   [style.width.px]="pixcelWidth"
   [style.height.px]="pixcelHeight"
