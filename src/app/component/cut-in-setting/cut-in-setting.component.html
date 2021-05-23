@@ -46,6 +46,7 @@
               <option [value]="0" [selected]="objectFitType == 0">浮き出る</option>
               <option [value]="1" [selected]="objectFitType == 1">飛び出す</option>
             </select>
+            <label style="margin-left: 1em; font-size: smaller"><input name="borderStyle" type="checkbox" (click)="borderStyle = borderStyle == 0 ? 1 : 0" [checked]="borderStyle == 1" [attr.disabled]="!isEditable ? '' : null"><b>枠あり</b></label>
           </div>
           <div style="padding-left: 2px">
             <b style="font-size: smaller">チャット末尾: </b><br>

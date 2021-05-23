@@ -47,7 +47,6 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 })
 export class CutInComponent implements OnInit, OnDestroy {
   @ViewChild('cutInImageElement', { static: false }) cutInImageElement: ElementRef;
-  @ViewChild('cutInContainerElement', { static: false }) cutInContainerElement: ElementRef;
   @Input() cutIn: CutIn;
 
   private _imageFile: ImageFile = ImageFile.Empty;
@@ -267,6 +266,8 @@ export class CutInComponent implements OnInit, OnDestroy {
     //if (this.isMinimize) return 'contain';
     return this.cutIn.objectFitType == 0 ? 'fill' : 'cover';
   }
+
+  get isBorder() { return this.cutIn && this.cutIn.borderStyle > 0; }
 
   get animationType(): number {
     if (this.isEnd) return 0;
