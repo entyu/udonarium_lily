@@ -84,13 +84,13 @@ export class StandList extends DataElement {
       if (conditionType == StandConditionType.Default) {
         defautStands.push(standElement);
       } else {
-        const postfies = (standElement.getFirstElementByName('postfix') ? standElement.getFirstElementByName('postfix').value.toString() : null);
+        const postfixes = (standElement.getFirstElementByName('postfix') ? standElement.getFirstElementByName('postfix').value.toString() : null);
         const targetImageIdentifiers = (standElement.getFirstElementByName('targetImageIdentifier') ? standElement.getElementsByName('targetImageIdentifier').map(e => e.value) : []);
         let conditionPostfix = false;
         let conditionImage = false;
-        if (postfies 
+        if (postfixes 
           && (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage)) {
-          for (let postfix of postfies.split(/[\r\n]+/g)) {
+          for (let postfix of postfixes.split(/[\r\n]+/g)) {
             if (postfix == null || postfix.trim().length == 0) continue;
             if (StringUtil.toHalfWidth(text).toUpperCase().trimRight().endsWith(StringUtil.toHalfWidth(postfix).trimRight().toUpperCase())) {
               if ((postfix.slice(0, 1) == '@' || postfix.slice(0, 1) == '＠') && textTagMatch.length < postfix.length) textTagMatch = postfix;

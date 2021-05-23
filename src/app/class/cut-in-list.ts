@@ -64,7 +64,7 @@ export class CutInList extends ObjectNode implements InnerXml {
     for (const cutIn of this.cutIns.map<[number, CutIn]>(cutIn => [Math.random(), cutIn]).sort((a, b) => { return a[0] - b[0]; }).map(pair => pair[1])) {
       if (!cutIn) continue;
       let isMatch = false;
-      for (const postfix of cutIn.postfies) {
+      for (const postfix of cutIn.postfixes) {
         if (text.endsWith(StringUtil.toHalfWidth(postfix).toUpperCase().trimRight())) {
           isMatch = true;
           if ((postfix.slice(0, 1) == '@' || postfix.slice(0, 1) == '＠') && textTagMatch.length < postfix.length) textTagMatch = postfix;

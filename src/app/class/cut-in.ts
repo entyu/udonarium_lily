@@ -29,7 +29,7 @@ export class CutIn extends ObjectNode {
     return this.audioFileName.length == 0 || this.audioIdentifier.length == 0 || !!AudioStorage.instance.get(this.audioIdentifier);
   }
 
-  get postfies(): string[] {
+  get postfixes(): string[] {
     if (this.value == null || (this.value + '').trim() == '') return [];
     return Array.from(new Set((<string>this.value).split(/[\r\n]+/g).map(row => {
       return row != null ? row.trimRight() : '';
