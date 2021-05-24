@@ -39,6 +39,7 @@ export class CutInService {
     CutInService.cutInComponentRefQueue = CutInService.cutInComponentRefQueue.filter(cutInComponentRef => cutInComponentRef && cutInComponentRef.instance);
     const nowCutInComponentRef = CutInService.defaultParentViewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(CutInComponent));
     nowCutInComponentRef.instance.cutIn = cutIn;
+    nowCutInComponentRef.instance.animationType = cutIn.animationType;
     nowCutInComponentRef.instance.isSecret = isSecret;
     nowCutInComponentRef.instance.isTest = isTest;
     nowCutInComponentRef.instance.sender = sender;

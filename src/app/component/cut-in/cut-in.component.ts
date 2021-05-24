@@ -85,12 +85,15 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 export class CutInComponent implements OnInit, OnDestroy {
   @ViewChild('cutInImageElement', { static: false }) cutInImageElement: ElementRef;
   @Input() cutIn: CutIn;
+  @Input() animationType: number = 0;
 
   private _imageFile: ImageFile = ImageFile.Empty;
   private _timeoutId;
 
   private _isVisible = false;
   private _isEnd = false;
+  
+  isPlayerVisible = false;
 
   isMinimize = false;
   isBackyard = false;
@@ -113,7 +116,13 @@ export class CutInComponent implements OnInit, OnDestroy {
     private ngZone: NgZone
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    // YoutubePlayerのサイズ
+    if (this.cutIn && this.cutIn.videoId) {
+      this.naturalWidth = 480;
+      this.naturalHeight = 270;
+    }
+  }
 
   ngOnDestroy(): void {
     EventSystem.unregister(this, 'UPDATE_AUDIO_RESOURE');
@@ -301,15 +310,20 @@ export class CutInComponent implements OnInit, OnDestroy {
     //if ((this.pixcelWidth <= 100 || this.pixcelHeight <= 100)
     //  && (this.isMinimize || this.cutIn.width <= 0 || this.cutIn.height <= 0)) return 'contain';
     //if (this.isMinimize) return 'contain';
+    if (this.videoId) return 'contain';
     return this.cutIn.objectFitType == 0 ? 'fill' : 'cover';
   }
 
-  get isBorder() { return this.cutIn && this.cutIn.borderStyle > 0; }
-
-  get animationType(): number {
-    if (this.isEnd) return 0;
-    return this.cutIn.animationType;
+  get videoId(): string {
+    if (!this.cutIn) return '';
+    return this.cutIn.videoId;
   }
+
+  get videoVolume(): number {
+    return (this.isTest ? AudioPlayer.auditionVolume : AudioPlayer.volume) * 100;
+  }
+
+  get isBorder() { return this.cutIn && this.cutIn.borderStyle > 0; }
 
   get senderName() {
     let ret = ''; 
@@ -389,8 +403,25 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   onImageLoad() {
+    if (this.videoId) {
+      this.naturalWidth = 480;
+      this.naturalHeight = 270;
+      return;
+    }
     this.naturalWidth = this.cutInImageElement.nativeElement.naturalWidth;
     this.naturalHeight = this.cutInImageElement.nativeElement.naturalHeight;
+  }
+
+  onPlayerReady($event) {
+    $event.target.setVolume(this.videoVolume);
+    $event.target.playVideo();
+  }
+
+  onPlayerStateChange($event) {
+    const state = $event.data;
+    console.log($event.data)
+    if (state == 1) this.isPlayerVisible = true;
+    if (state == 0 || state == 5) this.isPlayerVisible = false;
   }
 
   @HostListener('contextmenu', ['$event'])
