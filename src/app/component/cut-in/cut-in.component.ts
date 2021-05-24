@@ -15,6 +15,19 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   templateUrl: './cut-in.component.html',
   styleUrls: ['./cut-in.component.css'],
   animations: [
+    trigger('cutInNone', [
+      transition('void => *', [
+        animate('10ms ease-in', keyframes([
+          style({ opacity: 0, offset: 0 }),
+          style({ opacity: 1.0, offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate('10ms ease-in', keyframes([
+          style({ opacity: 0, offset: 1.0 })
+        ]))
+      ])
+    ]),
     trigger('cutInFadeInOut', [
       transition('void => *', [
         animate('330ms ease-in', keyframes([
@@ -41,6 +54,30 @@ import { PointerDeviceService } from 'service/pointer-device.service';
       ]),
       transition('* => void', [
         animate(100, style({ transform: 'scale3d(0, 0, 0)' }))
+      ])
+    ]),
+    trigger('cutInOpenInOut', [
+      transition('void => *', [
+        animate('262ms ease', keyframes([
+          style({ opacity: 0, transform: 'scale3d(0, 1.0, 1.0)', offset: 0 }),
+          style({ opacity: 1, transform: 'scale3d(1.125, 1.0, 1.0)', offset: 0.75 }),
+          style({ opacity: 1, transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate(100, style({ opacity: 0, transform: 'scale3d(0, 1.0, 1.0)' }))
+      ])
+    ]),
+    trigger('cutInOpenInOut2', [
+      transition('void => *', [
+        animate('262ms ease', keyframes([
+          style({ opacity: 0, transform: 'scale3d(1.0, 0, 1.0)', offset: 0 }),
+          style({ opacity: 1, transform: 'scale3d(1.0, 1.125, 1.0)', offset: 0.75 }),
+          style({ opacity: 1,transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
+        ]))
+      ]),
+      transition('* => void', [
+        animate(100, style({ opacity: 0, transform: 'scale3d(1.0, 0, 1.0)' }))
       ])
     ]),
   ]
