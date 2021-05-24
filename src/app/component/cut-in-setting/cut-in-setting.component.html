@@ -21,7 +21,7 @@
             <div *ngIf="isEditable" style="position: absolute; top: 1px; left: -1px; z-index: 5">
               <button (click)="openModal()"><b>画像変更</b></button>
             </div>
-            <img style="width: 160px; height: 160px; object-fit: contain" [ngClass]="{ blackout: !isShowHideImages && getHidden(cutInImage) }" [src]="cutInImage.url | safe: 'resourceUrl'">
+            <img style="width: 160px; height: 160px; object-fit: contain" [ngClass]="{ blackout: !isShowHideImages && getHidden(cutInImage) }" [src]="cutInImageUrl | safe: 'resourceUrl'">
           </div>
         </div>
         <div style="display: flex; flex-direction: column; width: 100%">
@@ -42,8 +42,8 @@
           </div>
           <div style="padding-left: 2px">
             <b style="font-size: smaller">Cut In: </b>
-            <select [(ngModel)]="cutInType" style="min-width: 8em" [attr.disabled]="!isEditable ? '' : null">
-              <option [value]="-1" [selected]="cutInType == -1">即時</option>
+            <select [(ngModel)]="cutInType" style="min-width: 8em" [attr.disabled]="!isEditable || isPlaying ? '' : null">
+              <option [value]="-1" [selected]="cutInType == -1">即時出現</option>
               <option [value]="0" [selected]="cutInType == 0">浮き出る</option>
               <option [value]="1" [selected]="cutInType == 1">飛び出す</option>
               <option [value]="2" [selected]="cutInType == 2">開く（左右）</option>

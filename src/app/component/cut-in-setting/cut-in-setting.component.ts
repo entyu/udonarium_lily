@@ -96,6 +96,11 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     return file ? file : ImageFile.Empty;
   }
   
+  get cutInImageUrl(): string {
+    if (!this.selectedCutIn) return ImageFile.Empty.url;
+    return (!this.selectedCutIn.videoId) ? this.cutInImage.url : `https://img.youtube.com/vi/${this.selectedCutIn.videoId}/hqdefault.jpg`;
+  }
+
   get isPlaying(): boolean {
     if (!this.selectedCutIn) return false;
     return CutInService.nowShowingIdentifiers().includes(this.selectedCutIn.identifier);

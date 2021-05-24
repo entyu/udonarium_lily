@@ -15,18 +15,7 @@
   (mouseleave)="draggend()"
   (mouseout)="draggend()"
   (mousemove)="isPointerDragging ? draggstart() : false">
-  <div *ngIf="isTest" class="test-indicator grow left-top">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow right-top">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow left-bottom">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow right-bottom">TEST</div>
-  <div *ngIf="isSecret" class="secret-indicator grow left-top"><i class="material-icons" style="font-size: smaller">visibility</i> For Your Eyes Only</div>
-  <div *ngIf="isSecret" class="secret-indicator grow right-bottom" style="text-align: right">For Your Eyes Only <i class="material-icons" style="font-size: smaller">visibility</i></div>
-  <div *ngIf="isIndicateSender" class="name-indicator grow right-top" style="text-align: right"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
-  <div *ngIf="isIndicateSender" class="name-indicator grow left-bottom"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
-  <img #cutInImageElement 
-    [style.pointer-events]="isVisible ? 'auto' : 'none'"
-    [style.object-fit]="objectFit"
-    [src]="cutInImage.url | safe: 'resourceUrl'" (load)="onImageLoad()" (contextmenu)="onContextMenu($event)">
+  <ng-container *ngTemplateOutlet="image"></ng-container>
 </div>
 <div *ngIf="isVisible && animationType == 0" appDraggable [draggable.allowOverHalf]="true"
   #cutInContainerElement class="container" 
@@ -45,19 +34,7 @@
   (mouseleave)="draggend()"
   (mouseout)="draggend()"
   (mousemove)="isPointerDragging ? draggstart() : false">
-  <div *ngIf="isTest" class="test-indicator grow left-top">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow right-top">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow left-bottom">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow right-bottom">TEST</div>
-  <div *ngIf="isSecret" class="secret-indicator grow left-top"><i class="material-icons" style="font-size: smaller">visibility</i> For Your Eyes Only</div>
-  <div *ngIf="isSecret" class="secret-indicator grow right-bottom" style="text-align: right">For Your Eyes Only <i class="material-icons" style="font-size: smaller">visibility</i></div>
-  <div *ngIf="isIndicateSender" class="name-indicator grow right-top" style="text-align: right"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
-  <div *ngIf="isIndicateSender" class="name-indicator grow left-bottom"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
-  <img #cutInImageElement 
-    style="width: 100%; height: 100%; margin: 0px; padding: 0px"
-    [style.pointer-events]="isVisible ? 'auto' : 'none'"
-    [style.object-fit]="objectFit"
-    [src]="cutInImage.url | safe: 'resourceUrl'" (load)="onImageLoad()" (contextmenu)="onContextMenu($event)">
+  <ng-container *ngTemplateOutlet="image"></ng-container>
 </div>
 <div *ngIf="isVisible && animationType == 1" appDraggable [draggable.allowOverHalf]="true"
   #cutInContainerElement class="container" 
@@ -76,19 +53,7 @@
   (mouseleave)="draggend()"
   (mouseout)="draggend()"
   (mousemove)="isPointerDragging ? draggstart() : false">
-  <div *ngIf="isTest" class="test-indicator grow left-top">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow right-top">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow left-bottom">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow right-bottom">TEST</div>
-  <div *ngIf="isSecret" class="secret-indicator grow left-top"><i class="material-icons" style="font-size: smaller">visibility</i> For Your Eyes Only</div>
-  <div *ngIf="isSecret" class="secret-indicator grow right-bottom" style="text-align: right">For Your Eyes Only <i class="material-icons" style="font-size: smaller">visibility</i></div>
-  <div *ngIf="isIndicateSender" class="name-indicator grow right-top" style="text-align: right"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
-  <div *ngIf="isIndicateSender" class="name-indicator grow left-bottom"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
-  <img #cutInImageElement 
-    style="width: 100%; height: 100%; margin: 0px; padding: 0px"
-    [style.pointer-events]="isVisible ? 'auto' : 'none'"
-    [style.object-fit]="objectFit"
-    [src]="cutInImage.url | safe: 'resourceUrl'" (load)="onImageLoad()" (contextmenu)="onContextMenu($event)">
+  <ng-container *ngTemplateOutlet="image"></ng-container>
 </div>
 <div *ngIf="isVisible && animationType == 2" appDraggable [draggable.allowOverHalf]="true"
   #cutInContainerElement class="container" 
@@ -107,18 +72,7 @@
   (mouseleave)="draggend()"
   (mouseout)="draggend()"
   (mousemove)="isPointerDragging ? draggstart() : false">
-  <div *ngIf="isTest" class="test-indicator grow left-top">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow right-top">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow left-bottom">TEST</div>
-  <div *ngIf="isTest" class="test-indicator grow right-bottom">TEST</div>
-  <div *ngIf="isSecret" class="secret-indicator grow left-top"><i class="material-icons" style="font-size: smaller">visibility</i> For Your Eyes Only</div>
-  <div *ngIf="isSecret" class="secret-indicator grow right-bottom" style="text-align: right">For Your Eyes Only <i class="material-icons" style="font-size: smaller">visibility</i></div>
-  <div *ngIf="isIndicateSender" class="name-indicator grow right-top" style="text-align: right"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
-  <div *ngIf="isIndicateSender" class="name-indicator grow left-bottom"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
-  <img #cutInImageElement 
-    [style.pointer-events]="isVisible ? 'auto' : 'none'"
-    [style.object-fit]="objectFit"
-    [src]="cutInImage.url | safe: 'resourceUrl'" (load)="onImageLoad()" (contextmenu)="onContextMenu($event)">
+  <ng-container *ngTemplateOutlet="image"></ng-container>
 </div>
 <div *ngIf="isVisible && animationType == 3" appDraggable [draggable.allowOverHalf]="true"
   #cutInContainerElement class="container" 
@@ -137,6 +91,9 @@
   (mouseleave)="draggend()"
   (mouseout)="draggend()"
   (mousemove)="isPointerDragging ? draggstart() : false">
+  <ng-container *ngTemplateOutlet="image"></ng-container>
+</div>
+<ng-template #image>
   <div *ngIf="isTest" class="test-indicator grow left-top">TEST</div>
   <div *ngIf="isTest" class="test-indicator grow right-top">TEST</div>
   <div *ngIf="isTest" class="test-indicator grow left-bottom">TEST</div>
@@ -145,8 +102,19 @@
   <div *ngIf="isSecret" class="secret-indicator grow right-bottom" style="text-align: right">For Your Eyes Only <i class="material-icons" style="font-size: smaller">visibility</i></div>
   <div *ngIf="isIndicateSender" class="name-indicator grow right-top" style="text-align: right"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
   <div *ngIf="isIndicateSender" class="name-indicator grow left-bottom"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
+  <youtube-player *ngIf="videoId" 
+    style="position: absolute; pointer-events: none;"
+    [style.visibility]="isPlayerVisible ? 'visible' : 'hidden'"
+    [videoId]="videoId" 
+    suggestedQuality="default" 
+    [height]="pixcelHeight - (isBorder ? 6 : 0)" 
+    [width]="pixcelWidth - (isBorder ? 6 : 0)"
+    [playerVars]="{autoplay: 0, controls: 0, loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist', playlist: videoId, disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
+    (ready)="onPlayerReady($event)"
+    (stateChange)="onPlayerStateChange($event)"
+  ></youtube-player>
   <img #cutInImageElement 
     [style.pointer-events]="isVisible ? 'auto' : 'none'"
     [style.object-fit]="objectFit"
-    [src]="cutInImage.url | safe: 'resourceUrl'" (load)="onImageLoad()" (contextmenu)="onContextMenu($event)">
-</div>
+    [src]="!videoId ? cutInImage.url : 'https://img.youtube.com/vi/' + videoId + '/maxresdefault.jpg' | safe: 'resourceUrl'" (load)="onImageLoad()" (contextmenu)="onContextMenu($event)">
+</ng-template>
