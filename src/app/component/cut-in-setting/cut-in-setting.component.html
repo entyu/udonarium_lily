@@ -38,11 +38,11 @@
             <b style="font-size: smaller; margin-left: 1em">Tag: </b><input type="text" style="width: 3em" placeholder="Tag" [(ngModel)]="cutInTag" [attr.disabled]="!isEditable ? '' : null">
           </div>
           <div style="padding-left: 2px; padding-top: 2px">
-            <b style="font-size: smaller">Duration (0=無制限): </b><input type="number" min="0" max="1000" [(ngModel)]="cutInDuration" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="font-size: smaller; padding-left: 2px">sec.</b>
+            <b style="font-size: smaller">Duration (0=無制限): </b><input type="number" min="0" max="1000" [(ngModel)]="cutInDuration" style="width: 3.5em" [attr.disabled]="!isEditable || isPlaying ? '' : null"><b style="font-size: smaller; padding-left: 2px">sec.</b>
           </div>
           <div style="padding-left: 2px">
             <b style="font-size: smaller">Cut In: </b>
-            <select [(ngModel)]="cutInType">
+            <select [(ngModel)]="cutInType" [attr.disabled]="!isEditable || isPlaying ? '' : null">
               <option [value]="0" [selected]="objectFitType == 0">浮き出る</option>
               <option [value]="1" [selected]="objectFitType == 1">飛び出す</option>
             </select>

@@ -84,7 +84,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   set cutInType(cutInType: number) { if (this.isEditable) this.selectedCutIn.animationType = cutInType; }
 
   get borderStyle(): number { return this.selectedCutIn.borderStyle; }
-  set borderStyle(borderStyle: number) { if (this.isEditable) this.selectedCutIn.borderStyle = borderStyle; console.log(this.selectedCutIn.borderStyle) }
+  set borderStyle(borderStyle: number) { if (this.isEditable) this.selectedCutIn.borderStyle = borderStyle; }
 
   get isEmpty(): boolean { return this.cutIns.length < 1; }
   get isDeleted(): boolean { return this.selectedCutIn ? ObjectStore.instance.get(this.selectedCutIn.identifier) == null : false; }
