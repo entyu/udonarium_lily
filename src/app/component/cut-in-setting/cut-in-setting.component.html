@@ -4,7 +4,7 @@
       <button style="font-size: smaller; margin-bottom: 3px" (click)="add()">カットインの追加</button>
     </div>
     <select #cutInSelecter style="width: 12em;" size="15" (change)="onChangeCutIn($event.target.value)">
-      <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}">{{ cutIn.name + (cutIn.isValidAudio ? '' : '⚠️' )}}</option>
+      <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}" [style.color]="cutIn.isValidAudio ? '' : 'red'">{{(cutIn.isValidAudio ? '' : '⚠️' ) + cutIn.name }}</option>
     </select>
   </div>
   <div class="flex-item">
@@ -42,9 +42,12 @@
           </div>
           <div style="padding-left: 2px">
             <b style="font-size: smaller">Cut In: </b>
-            <select [(ngModel)]="cutInType" [attr.disabled]="!isEditable || isPlaying ? '' : null">
-              <option [value]="0" [selected]="objectFitType == 0">浮き出る</option>
-              <option [value]="1" [selected]="objectFitType == 1">飛び出す</option>
+            <select [(ngModel)]="cutInType" style="min-width: 8em" [attr.disabled]="!isEditable ? '' : null">
+              <option [value]="-1" [selected]="cutInType == -1">即時</option>
+              <option [value]="0" [selected]="cutInType == 0">浮き出る</option>
+              <option [value]="1" [selected]="cutInType == 1">飛び出す</option>
+              <option [value]="2" [selected]="cutInType == 2">開く（左右）</option>
+              <option [value]="3" [selected]="cutInType == 3">開く（上下）</option>
             </select>
             <label style="margin-left: 1em; font-size: smaller"><input name="borderStyle" type="checkbox" (click)="borderStyle = borderStyle == 0 ? 1 : 0" [checked]="borderStyle == 1" [attr.disabled]="!isEditable ? '' : null"><b>枠あり</b></label>
           </div>
