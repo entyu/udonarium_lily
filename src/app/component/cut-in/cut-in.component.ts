@@ -60,7 +60,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
       transition('void => *', [
         animate('262ms ease', keyframes([
           style({ opacity: 0, transform: 'scale3d(0, 1.0, 1.0)', offset: 0 }),
-          style({ opacity: 1, transform: 'scale3d(1.125, 1.0, 1.0)', offset: 0.75 }),
+          style({ opacity: 1, transform: 'scale3d(1.1, 1.0, 1.0)', offset: 0.875 }),
           style({ opacity: 1, transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
         ]))
       ]),
@@ -72,7 +72,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
       transition('void => *', [
         animate('262ms ease', keyframes([
           style({ opacity: 0, transform: 'scale3d(1.0, 0, 1.0)', offset: 0 }),
-          style({ opacity: 1, transform: 'scale3d(1.0, 1.125, 1.0)', offset: 0.75 }),
+          style({ opacity: 1, transform: 'scale3d(1.0, 1.1, 1.0)', offset: 0.875 }),
           style({ opacity: 1,transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
         ]))
       ]),
