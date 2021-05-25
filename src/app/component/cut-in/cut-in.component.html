@@ -102,8 +102,8 @@
   <div *ngIf="isSecret" class="secret-indicator grow right-bottom" style="text-align: right">For Your Eyes Only <i class="material-icons" style="font-size: smaller">visibility</i></div>
   <div *ngIf="isIndicateSender" class="name-indicator grow right-top" style="text-align: right"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
   <div *ngIf="isIndicateSender" class="name-indicator grow left-bottom"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBorder ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
-  <youtube-player *ngIf="videoId" 
-    style="position: absolute; pointer-events: none;"
+  <youtube-player #videoPlayerComponent *ngIf="videoId" 
+    style="position: absolute; pointer-events: none"
     [style.visibility]="isPlayerVisible ? 'visible' : 'hidden'"
     [videoId]="videoId" 
     suggestedQuality="default" 

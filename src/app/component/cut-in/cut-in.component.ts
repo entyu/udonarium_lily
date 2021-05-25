@@ -1,5 +1,6 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { YouTubePlayer } from '@angular/youtube-player';
 import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -7,7 +8,9 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { EventSystem } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ModalService } from 'service/modal.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 @Component({
@@ -84,6 +87,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 })
 export class CutInComponent implements OnInit, OnDestroy {
   @ViewChild('cutInImageElement', { static: false }) cutInImageElement: ElementRef;
+  @ViewChild('videoPlayerComponent', { static: false }) videoPlayer: YouTubePlayer;
   @Input() cutIn: CutIn;
   @Input() animationType: number = 0;
 
@@ -113,10 +117,15 @@ export class CutInComponent implements OnInit, OnDestroy {
   constructor(
     private pointerDeviceService: PointerDeviceService,
     private contextMenuService: ContextMenuService,
+    private modalService: ModalService,
     private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
+    EventSystem.register(this)
+      .on('CHANGE_JUKEBOX_VOLUME', -100, event => {
+        if (this.videoPlayer) this.videoPlayer.setVolume(this.videoVolume);
+      });
     // YoutubePlayerのサイズ
     if (this.cutIn && this.cutIn.videoId) {
       this.naturalWidth = 480;
@@ -126,6 +135,7 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     EventSystem.unregister(this, 'UPDATE_AUDIO_RESOURE');
+    EventSystem.unregister(this, 'CHANGE_JUKEBOX_VOLUME');
     clearTimeout(this._timeoutId);
   }
 
@@ -310,7 +320,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     //if ((this.pixcelWidth <= 100 || this.pixcelHeight <= 100)
     //  && (this.isMinimize || this.cutIn.width <= 0 || this.cutIn.height <= 0)) return 'contain';
     //if (this.isMinimize) return 'contain';
-    if (this.videoId) return 'contain';
+    //if (this.videoId) return 'contain';
     return this.cutIn.objectFitType == 0 ? 'fill' : 'cover';
   }
 
@@ -414,14 +424,17 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   onPlayerReady($event) {
     $event.target.setVolume(this.videoVolume);
+    //console.log('ready')
     $event.target.playVideo();
   }
 
   onPlayerStateChange($event) {
     const state = $event.data;
-    console.log($event.data)
+    //console.log($event.data)
     if (state == 1) this.isPlayerVisible = true;
-    if (state == 0 || state == 5) this.isPlayerVisible = false;
+    if (state == 0 || state == 5) {
+      this.isPlayerVisible = false;
+    }
   }
 
   @HostListener('contextmenu', ['$event'])
@@ -454,6 +467,18 @@ export class CutInComponent implements OnInit, OnDestroy {
         action: () => { this.isMinimize = !this.isMinimize; },
         selfOnly: true
       },
+      (!this.videoId ? null : ContextMenuSeparator),
+      (!this.videoId ? null :
+        {
+          name: 'YouTubeで開く',
+          action: () => { 
+            this.modalService.open(OpenUrlComponent, { url: `https://www.youtube.com/watch?v=${this.cutIn.videoId}`, title: this.cutIn.name });
+          },
+          //disabled: !StringUtil.validUrl(url),
+          //error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
+          isOuterLink: true
+        }
+      )
       /*
       ContextMenuSeparator,
       {

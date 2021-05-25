@@ -34,7 +34,7 @@ img {
   border: 3px ridge #dde;
 }
 .container.is-border img {
-  border: 1px solid #555;
+  border: 1px solid black;
   box-sizing: border-box;
 }
 
