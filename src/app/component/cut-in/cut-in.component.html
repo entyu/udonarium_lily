@@ -8,7 +8,7 @@
   [style.top.px]="pixcelPosY"
   [style.z-index]="zIndex"
   [style.pointer-events]="isVisible ? 'auto' : 'none'"
-  [ngClass]="{video: videoId, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
   (dblclick)="stop()"
   (mousedown)="draggstart()"
   (mouseup)="draggend()"
@@ -27,7 +27,7 @@
   [style.top.px]="pixcelPosY"
   [style.z-index]="zIndex"
   [style.pointer-events]="isVisible ? 'auto' : 'none'"
-  [ngClass]="{video: videoId, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
   (dblclick)="stop()"
   (mousedown)="draggstart()"
   (mouseup)="draggend()"
@@ -46,7 +46,7 @@
   [style.top.px]="pixcelPosY"
   [style.z-index]="zIndex"
   [style.pointer-events]="isVisible ? 'auto' : 'none'"
-  [ngClass]="{video: videoId, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
   (dblclick)="stop()"
   (mousedown)="draggstart()"
   (mouseup)="draggend()"
@@ -65,7 +65,7 @@
   [style.top.px]="pixcelPosY"
   [style.z-index]="zIndex"
   [style.pointer-events]="isVisible ? 'auto' : 'none'"
-  [ngClass]="{video: videoId, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
   (dblclick)="stop()"
   (mousedown)="draggstart()"
   (mouseup)="draggend()"
@@ -84,7 +84,7 @@
   [style.top.px]="pixcelPosY"
   [style.z-index]="zIndex"
   [style.pointer-events]="isVisible ? 'auto' : 'none'"
-  [ngClass]="{video: videoId, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
   (dblclick)="stop()"
   (mousedown)="draggstart()"
   (mouseup)="draggend()"
@@ -104,7 +104,7 @@
   <div *ngIf="isIndicateSender" class="name-indicator grow left-bottom"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
   <youtube-player #videoPlayerComponent *ngIf="videoId" 
     style="position: absolute; pointer-events: none"
-    [style.visibility]="isPlayerVisible ? 'visible' : 'hidden'"
+    [style.visibility]="isPlayerVisible && !isSoundOnly ? 'visible' : 'hidden'"
     [videoId]="videoId" 
     suggestedQuality="default" 
     [height]="pixcelHeight - (isBordered ? 6 : 0)" 
@@ -113,12 +113,13 @@
     (ready)="onPlayerReady($event)"
     (stateChange)="onPlayerStateChange($event)"
   ></youtube-player>
-  <img *ngIf="videoId" #cutInImageElement 
+  <img *ngIf="videoId && !isSoundOnly" #cutInImageElement 
     [style.pointer-events]="isVisible ? 'auto' : 'none'"
     [style.object-fit]="objectFit"
     [src]="'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg'"
+    (error)="onErrorFallback()"
     (contextmenu)="onContextMenu($event)">
-  <img *ngIf="!videoId" #cutInImageElement 
+  <img *ngIf="!videoId || isSoundOnly" #cutInImageElement 
     [style.pointer-events]="isVisible ? 'auto' : 'none'"
     [style.object-fit]="objectFit"
     [src]="cutInImage.url | safe: 'resourceUrl'"

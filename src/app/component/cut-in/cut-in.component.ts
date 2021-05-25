@@ -108,8 +108,17 @@ export class CutInComponent implements OnInit, OnDestroy {
   
   cutInImageTransformOrigin = 'center';
 
-  private naturalWidth = 0;
-  private naturalHeight = 0;
+  private _naturalWidth = 0;
+  private _naturalHeight = 0;
+  private get naturalWidth(): number {
+    if (this.videoId && !this.isSoundOnly) return 480;
+    return this._naturalWidth;
+  }
+  private get naturalHeight(): number {
+    if (this.videoId && !this.isSoundOnly) return 270;
+    return this._naturalHeight;
+  }
+
   private _dragging = false;
 
   private readonly audioPlayer = new AudioPlayer();
@@ -126,11 +135,6 @@ export class CutInComponent implements OnInit, OnDestroy {
       .on('CHANGE_JUKEBOX_VOLUME', -100, event => {
         if (this.videoPlayer) this.videoPlayer.setVolume(this.videoVolume);
       });
-    // YoutubePlayerのサイズ
-    if (this.cutIn && this.cutIn.videoId) {
-      this.naturalWidth = 480;
-      this.naturalHeight = 270;
-    }
   }
 
   ngOnDestroy(): void {
@@ -331,7 +335,9 @@ export class CutInComponent implements OnInit, OnDestroy {
     return (this.isTest ? AudioPlayer.auditionVolume : AudioPlayer.volume) * 100;
   }
 
-  get isBordered() { return this.cutIn && this.cutIn.borderStyle > 0; }
+  get isBordered(): boolean { return this.cutIn && this.cutIn.borderStyle > 0; }
+
+  get isSoundOnly(): boolean { return this.cutIn && this.cutIn.isSoundOnly; }
 
   get senderName() {
     let ret = ''; 
@@ -411,8 +417,8 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   onImageLoad() {
-    this.naturalWidth = this.cutInImageElement.nativeElement.naturalWidth;
-    this.naturalHeight = this.cutInImageElement.nativeElement.naturalHeight;
+    this._naturalWidth = this.cutInImageElement.nativeElement.naturalWidth;
+    this._naturalHeight = this.cutInImageElement.nativeElement.naturalHeight;
   }
 
   onPlayerReady($event) {
@@ -428,6 +434,13 @@ export class CutInComponent implements OnInit, OnDestroy {
     if (state == 0 || state == 5) {
       this.isPlayerVisible = false;
     }
+  }
+
+  // ToDo
+  onErrorFallback() {
+    console.log('fallback')
+    if (!this.videoId) return;
+    this.cutInImageElement.nativeElement.src = 'https://img.youtube.com/vi/' + this.videoId + '/default.jpg'
   }
 
   @HostListener('contextmenu', ['$event'])
@@ -491,5 +504,4 @@ export class CutInComponent implements OnInit, OnDestroy {
       */
     ], this.cutIn.name);
   }
-
 }
