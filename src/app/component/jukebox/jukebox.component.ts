@@ -24,10 +24,10 @@ import { CutInLauncher } from '@udonarium/cut-in-launcher';
 export class JukeboxComponent implements OnInit, OnDestroy {
 
   get volume(): number { return AudioPlayer.volume; }
-  set volume(volume: number) { AudioPlayer.volume = volume; }
+  set volume(volume: number) { AudioPlayer.volume = volume; EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); }
 
   get auditionVolume(): number { return AudioPlayer.auditionVolume; }
-  set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; }
+  set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); }
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }

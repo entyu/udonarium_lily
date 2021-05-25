@@ -16,15 +16,26 @@
   cursor: grabbing;
 }
 
-img:hover {
-  outline: 2px dotted #22F;
-}
-.container.minimaize img {
-  outline: 2px solid #22F;
+img {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
 }
 
-.container.is-border img {
+.container:hover {
+  outline: 3px dotted #22F;
+}
+.container.minimaize {
+  outline: 3px solid #22F;
+}
+
+.container.is-border {
   border: 3px ridge #dde;
+}
+.container.is-border img {
+  border: 1px solid black;
+  box-sizing: border-box;
 }
 
 .grow {
@@ -84,21 +95,4 @@ img:hover {
 .right-bottom {
   right: 0px;
   bottom: 0px;
-}
-
-.is-border .left-top {
-  left: 3px;
-  top: 3px;
-}
-.is-border .left-bottom {
-  left: 3px;
-  bottom: -3px;
-}
-.is-border .right-top {
-  right: -3px;
-  top: 3px;
-}
-.is-border .right-bottom {
-  right: -3px;
-  bottom: -3px;
 }

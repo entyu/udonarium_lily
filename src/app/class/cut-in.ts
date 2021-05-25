@@ -22,7 +22,7 @@ export class CutIn extends ObjectNode {
   @SyncVar() isPreventOutBounds: boolean = false;
   @SyncVar() imageIdentifier: string = ImageFile.Empty.identifier;
 
-  @SyncVar() videoId: string = 'QODhVO2rftI';
+  @SyncVar() videoId: string = 'k1pHUUB3iF8';
 
   @SyncVar() audioFileName: string = '';
   @SyncVar() audioIdentifier: string = '';
