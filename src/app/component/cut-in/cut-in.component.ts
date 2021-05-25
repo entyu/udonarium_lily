@@ -322,7 +322,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   get objectFit(): string {
     if (!this.cutIn) return 'none';
     //if (this.isMinimize) return 'contain';
-    if (this.videoId || this.cutIn.objectFitType == 2) return 'contain';
+    if ((this.videoId && !this.isSoundOnly) || this.cutIn.objectFitType == 2) return 'contain';
     return this.cutIn.objectFitType == 1 ? 'cover' : 'fill';
   }
 
