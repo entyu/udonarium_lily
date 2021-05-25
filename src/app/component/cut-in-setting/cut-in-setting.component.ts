@@ -17,6 +17,7 @@ import { CutInService } from 'service/cut-in.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
+import { UUID } from '@udonarium/core/system/util/uuid';
 
 
 @Component({
@@ -28,6 +29,8 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('cutInSelecter') cutInSelecter: ElementRef<HTMLSelectElement>;
   readonly minSize: number = 0;
   readonly maxSize: number = 100;
+
+  panelId: string;
 
   isShowHideImages = false;
   selectedCutIn: CutIn = null;
@@ -90,6 +93,17 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   get isDeleted(): boolean { return this.selectedCutIn ? ObjectStore.instance.get(this.selectedCutIn.identifier) == null : false; }
   get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
 
+  get cutInIsVideo(): boolean { return this.selectedCutIn.isVideoCutIn; }
+  set cutInIsVideo(isVideo: boolean) { if (this.isEditable) this.selectedCutIn.isVideoCutIn = isVideo; }
+
+  get cutInVideoURL(): string { return this.selectedCutIn.videoUrl; }
+  set cutInVideoURL(videoUrl: string) { if (this.isEditable) this.selectedCutIn.videoUrl = videoUrl; }
+
+  get cutInVideoId(): string {
+    if (!this.selectedCutIn) return '';
+    return this.selectedCutIn.videoId;
+  }
+
   get cutInImage(): ImageFile {
     if (!this.selectedCutIn) return ImageFile.Empty;
     let file = ImageStorage.instance.get(this.selectedCutIn.imageIdentifier);
@@ -150,6 +164,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('SYNCHRONIZE_AUDIO_LIST', -1000, event => {
         this.onAudioFileChange();
       });
+    this.panelId = UUID.generateUuid();
   }
 
   ngAfterViewInit() {
@@ -188,7 +203,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isSaveing = true;
     this.progresPercent = 0;
 
-    let fileName: string = 'cunIn_' + this.selectedCutIn.name;
+    let fileName: string = 'cutIn_' + this.selectedCutIn.name;
 
     await this.saveDataService.saveGameObjectAsync(this.selectedCutIn, fileName, percent => {
       this.progresPercent = percent;
@@ -330,11 +345,12 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   helpCutIn() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 490 };
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 530 };
     let textView = this.panelService.open(TextViewComponent, option);
     textView.title = 'カットインヘルプ';
     textView.text = 
-`　カットインの名前、表示時間、位置と画像の幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。サイズの幅（Width）と高さ（Height）のどちらかを0とした場合、元画像の縦横比を保って拡大縮小します。また、「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます（ただしカットインの最小幅、高さは100ピクセルとなります）。
+`　カットインの名前、表示時間、位置と画像の幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。サイズの幅（Width）と高さ（Height）のどちらかを0とした場合、元画像の縦横比を保って拡大縮小します。
+　横位置（PosX）と縦位置（PosY）は、画面の左上隅からカットイン画像の中心位置までの距離となります。また、「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます（ただし、カットインの最小幅、高さは100ピクセルとなります）。
 
 　デフォルトでは後から表示されるカットイン画像がより前面になりますが、重なり順（Z-Index）を指定することで制御可能です。カットインにタグを設定した場合、同じタグが指定されたカットインが表示される際に、以前のものは停止します。また、チャット末尾条件を満たすカットインが複数ある場合、
 
@@ -345,6 +361,8 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
 　カットイン画像はドラッグによって移動可能です。またダブルクリックで閉じる（自分だけ停止）、右クリックでコンテキストメニューから操作が可能です（現在、「閉じる」「ウィンドウの背面に表示」「最小化」が可能）。
 
-　アップロードされた音楽ファイルをカットイン表示時の効果音として設定できます。音量にはジュークボックスの設定（「テスト (自分だけ見る)」の場合は試聴音量）が使用されます。表示時間や手動操作によってカットインが停止した際には、途中であっても音声も停止します。カットインや部屋のセーブデータ（zip）には音楽ファイルは含まれませんので、必要でしたら別途アップロードしてください（カットインと音楽ファイルのリンクはファイルの内容によります、同名の別ファイルをアップロードしても再リンクされません）。`;
+　アップロードされた音楽ファイルをカットイン表示時の効果音として設定できます。音量にはジュークボックスの設定（「テスト (自分だけ見る)」の場合は試聴音量）が使用されます。表示時間や手動操作によってカットインが停止した際には、途中であっても音声も停止します。カットインや部屋のセーブデータ（zip）には音楽ファイルは含まれませんので、必要でしたら別途アップロードしてください（カットインと音楽ファイルのリンクはファイルの内容によります、同名の別ファイルをアップロードしても再リンクされません）。
+
+　カットインに動画を使用する場合、URLは現在YouTubeのもののみ、また再生リストには対応していません。`;
   }
 }
