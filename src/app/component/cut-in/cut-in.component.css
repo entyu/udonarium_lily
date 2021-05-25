@@ -1,6 +1,8 @@
 .container {
   margin: 0px;
   padding: 0px;
+}
+.container.video {
   background-color: black;
 }
 
@@ -30,10 +32,10 @@ img {
   outline: 3px solid #22F;
 }
 
-.container.is-border {
+.container.is-bordered {
   border: 3px ridge #dde;
 }
-.container.is-border img {
+.container.is-bordered img {
   border: 1px solid black;
   box-sizing: border-box;
 }

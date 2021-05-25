@@ -317,11 +317,9 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   get objectFit(): string {
     if (!this.cutIn) return 'none';
-    //if ((this.pixcelWidth <= 100 || this.pixcelHeight <= 100)
-    //  && (this.isMinimize || this.cutIn.width <= 0 || this.cutIn.height <= 0)) return 'contain';
     //if (this.isMinimize) return 'contain';
-    //if (this.videoId) return 'contain';
-    return this.cutIn.objectFitType == 0 ? 'fill' : 'cover';
+    if (this.videoId || this.cutIn.objectFitType == 2) return 'contain';
+    return this.cutIn.objectFitType == 1 ? 'cover' : 'fill';
   }
 
   get videoId(): string {
@@ -333,7 +331,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     return (this.isTest ? AudioPlayer.auditionVolume : AudioPlayer.volume) * 100;
   }
 
-  get isBorder() { return this.cutIn && this.cutIn.borderStyle > 0; }
+  get isBordered() { return this.cutIn && this.cutIn.borderStyle > 0; }
 
   get senderName() {
     let ret = ''; 
@@ -413,11 +411,6 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   onImageLoad() {
-    if (this.videoId) {
-      this.naturalWidth = 480;
-      this.naturalHeight = 270;
-      return;
-    }
     this.naturalWidth = this.cutInImageElement.nativeElement.naturalWidth;
     this.naturalHeight = this.cutInImageElement.nativeElement.naturalHeight;
   }

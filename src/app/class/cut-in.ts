@@ -1,8 +1,8 @@
-import { templateSourceUrl } from '@angular/compiler';
 import { AudioStorage } from './core/file-storage/audio-storage';
 import { ImageFile } from './core/file-storage/image-file';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
+import { StringUtil } from './core/system/util/string-util';
 
 @SyncObject('cut-in')
 export class CutIn extends ObjectNode {
@@ -22,17 +22,32 @@ export class CutIn extends ObjectNode {
   @SyncVar() isPreventOutBounds: boolean = false;
   @SyncVar() imageIdentifier: string = ImageFile.Empty.identifier;
 
-  @SyncVar() videoId: string = 'k1pHUUB3iF8';
+  @SyncVar() isVideoCutIn: boolean = false;
+  @SyncVar() videoUrl: string = '';
 
   @SyncVar() audioFileName: string = '';
   @SyncVar() audioIdentifier: string = '';
   @SyncVar() isLoop: boolean = false;
 
+  get videoId(): string {
+    if (!this.isVideoCutIn || !this.videoUrl) return '';
+    let ret = this.videoUrl;
+    if (StringUtil.validUrl(this.videoUrl)) {
+      if (!(new URL(this.videoUrl)).hostname.endsWith('youtube.com')) return '';
+      let tmp = this.videoUrl.split('v=');
+      if (tmp[1]) ret = encodeURI(tmp[1].split(/[\&\#\/]/)[0]);
+    } else {
+      // IDだけを許可すべきか？
+      return '';
+    }
+    return ret.replace(/[\<\>\/\:\s\r\n]/g, '');
+  }
+
   get isValidAudio(): boolean {
     return this.audioFileName.length == 0 || this.audioIdentifier.length == 0 || !!AudioStorage.instance.get(this.audioIdentifier);
   }
 
-  get postfies(): string[] {
+  get postfixes(): string[] {
     if (this.value == null || (this.value + '').trim() == '') return [];
     return Array.from(new Set((<string>this.value).split(/[\r\n]+/g).map(row => {
       return row != null ? row.trimRight() : '';
