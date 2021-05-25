@@ -99,6 +99,9 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   get cutInVideoURL(): string { return this.selectedCutIn.videoUrl; }
   set cutInVideoURL(videoUrl: string) { if (this.isEditable) this.selectedCutIn.videoUrl = videoUrl; }
 
+  get cutInisSoundOnly(): boolean { return this.selectedCutIn.isSoundOnly; }
+  set cutInisSoundOnly(isSoundOnly: boolean) { if (this.isEditable)  this.selectedCutIn.isSoundOnly = isSoundOnly; }
+
   get cutInVideoId(): string {
     if (!this.selectedCutIn) return '';
     return this.selectedCutIn.videoId;
@@ -112,7 +115,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   
   get cutInImageUrl(): string {
     if (!this.selectedCutIn) return ImageFile.Empty.url;
-    return (!this.selectedCutIn.videoId) ? this.cutInImage.url : `https://img.youtube.com/vi/${this.selectedCutIn.videoId}/hqdefault.jpg`;
+    return (!this.selectedCutIn.videoId || this.cutInisSoundOnly) ? this.cutInImage.url : `https://img.youtube.com/vi/${this.selectedCutIn.videoId}/hqdefault.jpg`;
   }
 
   get isPlaying(): boolean {

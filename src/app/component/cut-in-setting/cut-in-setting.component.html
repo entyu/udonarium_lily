@@ -14,14 +14,14 @@
     <ng-container *ngIf="!isEmpty && selectedCutIn">
       <div style="display: flex">
         <div>
-          <div (dblclick)="isEditable && !cutInVideoId ? openModal() : false" style="position: relative; overflow: hidden">
-            <div *ngIf="!cutInVideoId && getHidden(cutInImage)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none; z-index: 5">
+          <div (dblclick)="isEditable && (!cutInVideoId || cutInisSoundOnly) ? openModal() : false" style="position: relative; overflow: hidden">
+            <div *ngIf="(!cutInVideoId || cutInisSoundOnly) && getHidden(cutInImage)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none; z-index: 5">
               <i class="material-icons" [class]="isShowHideImages ? 'red-eye': 'grow'" style="margin-right: 2px; font-size: 16px; display: block">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
             </div>
             <div *ngIf="isEditable" style="position: absolute; top: 1px; left: -1px; z-index: 5">
-              <button *ngIf="!cutInVideoId" (click)="openModal()"><b>画像変更</b></button>
+              <button *ngIf="!cutInVideoId || cutInisSoundOnly" (click)="openModal()"><b>画像変更</b></button>
             </div>
-            <img style="width: 160px; height: 160px; object-fit: contain" [ngClass]="{ blackout: !cutInVideoId && !isShowHideImages && getHidden(cutInImage) }" [src]="cutInImageUrl | safe: 'resourceUrl'">
+            <img style="width: 160px; height: 160px; object-fit: contain" [ngClass]="{ blackout: (!cutInVideoId || cutInisSoundOnly) && !isShowHideImages && getHidden(cutInImage) }" [src]="cutInImageUrl | safe: 'resourceUrl'">
           </div>
         </div>
         <div style="display: flex; flex-direction: column; width: 100%">
@@ -137,7 +137,8 @@
           </div>
           <div style="padding-left: 1em">
             <input type="radio" name="{{panelId}}-media" id="{{panelId}}-media-video" [(ngModel)]="cutInIsVideo" [checked]="cutInIsVideo" [value]="true" [attr.disabled]="!isEditable || isPlaying ? '' : null">
-            <label for="{{panelId}}-media-video"><b>動画URL: </b></label><input type="text" style="width: 24em" [(ngModel)]="cutInVideoURL" [attr.disabled]="!cutInIsVideo || !isEditable || isPlaying ? '' : null"> 
+            <label for="{{panelId}}-media-video"><b>動画URL: </b></label><input type="text" style="width: 23em" [(ngModel)]="cutInVideoURL" [attr.disabled]="!cutInIsVideo || !isEditable || isPlaying ? '' : null"> 
+            <label style="margin-left: 3px"><input name="cutInisSoundOnly" type="checkbox" [(ngModel)]="cutInisSoundOnly" [checked]="cutInisSoundOnly" [value]="true" [attr.disabled]="!cutInIsVideo || !isEditable || isPlaying ? '' : null"><b>音のみ</b></label>
           </div>
         </div>
       </div>
