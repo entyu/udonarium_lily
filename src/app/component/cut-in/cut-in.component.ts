@@ -361,11 +361,11 @@ export class CutInComponent implements OnInit, OnDestroy {
     if (this.isEnd) return;
     if (this._isVisible) {
       //TODO pauseからの再開
-      this.audioPlayer.play();
+      if (!this.cutIn.videoId) this.audioPlayer.play();
     } else {
       this.ngZone.run(() => {
         this._isVisible = true;
-        this._play();
+        if (!this.cutIn.videoId) this._play();
       });
       if (this.cutIn.duration > 0) {
         this._timeoutId = setTimeout(() => {
@@ -382,18 +382,18 @@ export class CutInComponent implements OnInit, OnDestroy {
     if (audio && audio.isReady) {
       this.audioPlayer.volumeType = this.isTest ? VolumeType.AUDITION : VolumeType.MASTER;
       this.audioPlayer.loop = this.cutIn.isLoop;
-      this.audioPlayer.play(audio);
+      if (!this.cutIn.videoId) this.audioPlayer.play(audio);
     } else {
       EventSystem.register(this)
       .on('UPDATE_AUDIO_RESOURE', -100, event => {
-        this._play();
+        if (!this.cutIn.videoId) this._play();
       });
     }
   }
 
   pause() {
     //TODO
-    this.audioPlayer.pause();
+    if (!this.cutIn.videoId) this.audioPlayer.pause();
   }
 
   stop() {
