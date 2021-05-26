@@ -137,7 +137,10 @@
           </div>
           <div style="padding-left: 1em">
             <input type="radio" name="{{panelId}}-media" id="{{panelId}}-media-video" [(ngModel)]="cutInIsVideo" [checked]="cutInIsVideo" [value]="true" [attr.disabled]="!isEditable || isPlaying ? '' : null">
-            <label for="{{panelId}}-media-video"><b>動画URL: </b></label><input type="text" style="width: 24em" [(ngModel)]="cutInVideoURL" [attr.disabled]="!cutInIsVideo || !isEditable || isPlaying ? '' : null"> 
+            <label for="{{panelId}}-media-video"><b>動画URL: </b></label><input type="text" style="width: 24em" [(ngModel)]="cutInVideoURL" [attr.disabled]="!cutInIsVideo || !isEditable || isPlaying ? '' : null">
+          </div>
+          <div style="padding-left: 2.5em">
+            <a href="https://www.youtube.com/terms" target="_blank" class="outer-link" (click)="openYouTubeTerms()">YouTube 利用規約</a>
           </div>
         </div>
       </div>
