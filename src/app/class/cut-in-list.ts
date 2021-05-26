@@ -60,6 +60,7 @@ export class CutInList extends ObjectNode implements InnerXml {
     let tagMatch = new Map<string, CutIn>();
     const matchCutIn: CutIn[] = [];
 
+    let videoFound = false;
     // ランダムに並べ替えておく
     for (const cutIn of this.cutIns.map<[number, CutIn]>(cutIn => [Math.random(), cutIn]).sort((a, b) => { return a[0] - b[0]; }).map(pair => pair[1])) {
       if (!cutIn) continue;
@@ -80,6 +81,21 @@ export class CutInList extends ObjectNode implements InnerXml {
       }
     }
     matchCutIn.push(...tagMatch.values());
+    // 動画を一個だけ残す、その際にタグがあるものを優先する
+    /*
+    matchCutIn.reverse();
+    let foundVideo = false;
+    for (let i = 0; i < matchCutIn.length; i++) {
+      if (matchCutIn[i] && !!matchCutIn[i].videoId) {
+        if (!foundVideo) {
+          foundVideo = true;
+        } else {
+          matchCutIn.splice(i, 1);
+        }
+      }
+    }
+    */
+    // 再度シャッフルして出現順をランダムに
     return {
       identifiers: matchCutIn.map<[number, CutIn]>(cutIn => [Math.random(), cutIn]).sort((a, b) => { return a[0] - b[0]; }).map(pair => pair[1].identifier),
       matchMostLongText: textTagMatch

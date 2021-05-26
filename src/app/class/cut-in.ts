@@ -24,7 +24,8 @@ export class CutIn extends ObjectNode {
 
   @SyncVar() isVideoCutIn: boolean = false;
   @SyncVar() videoUrl: string = '';
-  @SyncVar() isSoundOnly: boolean = false;
+  // 規約準拠のため常時falseに変更 ToDO 取り除く
+  isSoundOnly: boolean = false;
 
   @SyncVar() audioFileName: string = '';
   @SyncVar() audioIdentifier: string = '';

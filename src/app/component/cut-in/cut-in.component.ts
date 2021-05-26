@@ -105,7 +105,8 @@ export class CutInComponent implements OnInit, OnDestroy {
   isTest = false;
   isIndicateSender = false;
   sender = '';
-  
+  videoId = '';
+
   cutInImageTransformOrigin = 'center';
 
   private _naturalWidth = 0;
@@ -134,12 +135,18 @@ export class CutInComponent implements OnInit, OnDestroy {
     EventSystem.register(this)
       .on('CHANGE_JUKEBOX_VOLUME', -100, event => {
         if (this.videoPlayer) this.videoPlayer.setVolume(this.videoVolume);
+      })
+      .on('PLAY_VIDEO_CUT_IN', -1000, event => {
+        if (this.cutIn && this.cutIn.identifier != event.data.identifier && !!this.videoId) {
+          this.stop();
+        }
       });
   }
 
   ngOnDestroy(): void {
     EventSystem.unregister(this, 'UPDATE_AUDIO_RESOURE');
     EventSystem.unregister(this, 'CHANGE_JUKEBOX_VOLUME');
+    EventSystem.unregister(this, 'PLAY_VIDEO_CUT_IN');
     clearTimeout(this._timeoutId);
   }
 
@@ -170,7 +177,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get pixcelWidthPreAdjust(): number {
-    if (this.isMinimize) return 100;
+    if (this.isMinimize) return 128;
     let ret = 0;
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
@@ -198,14 +205,14 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelWidthAspectMinimun > ret) {
       ret = this.pixelWidthAspectMinimun;
-    } else if (ret < 100) {
-      ret = 100;
+    } else if (ret < 128) {
+      ret = 128;
     }
     return ret;
   }
 
   get pixcelHeightPreAdjust(): number {
-    if (this.isMinimize) return 100;
+    if (this.isMinimize) return 128;
     let ret = 0;
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) { 
@@ -219,10 +226,10 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get pixelWidthAspectMinimun() {
-    let ret = 100;
+    let ret = 128;
     if (!this.cutIn) return ret;
     if (this.naturalWidth > this.naturalHeight) {
-      ret = 100 * this.naturalWidth / this.naturalHeight;
+      ret = 128 * this.naturalWidth / this.naturalHeight;
     } 
     return ret;
   }
@@ -242,17 +249,17 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelHeightAspectMinimun > ret) {
       ret = this.pixelHeightAspectMinimun;
-    } else if (ret < 100) {
-      ret = 100;
+    } else if (ret < 128) {
+      ret = 128;
     }
     return ret;
   }
 
   get pixelHeightAspectMinimun() {
-    let ret = 100;
+    let ret = 128;
     if (!this.cutIn) return ret;
     if (this.naturalWidth < this.naturalHeight) {
-      ret = 100 * this.naturalHeight / this.naturalWidth;
+      ret = 128 * this.naturalHeight / this.naturalWidth;
     } 
     return ret;
   }
@@ -326,11 +333,12 @@ export class CutInComponent implements OnInit, OnDestroy {
     return this.cutIn.objectFitType == 1 ? 'cover' : 'fill';
   }
 
+  /*
   get videoId(): string {
     if (!this.cutIn) return '';
     return this.cutIn.videoId;
   }
-
+*/
   get videoVolume(): number {
     return (this.isTest ? AudioPlayer.auditionVolume : AudioPlayer.volume) * 100;
   }
@@ -430,7 +438,10 @@ export class CutInComponent implements OnInit, OnDestroy {
   onPlayerStateChange($event) {
     const state = $event.data;
     //console.log($event.data)
-    if (state == 1) this.isPlayerVisible = true;
+    if (state == 1) {
+      this.isPlayerVisible = true;
+      if (this.cutIn) EventSystem.trigger('PLAY_VIDEO_CUT_IN', {identifier: this.cutIn.identifier})
+    }
     if (state == 0 || state == 5) {
       this.isPlayerVisible = false;
     }

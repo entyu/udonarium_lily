@@ -348,17 +348,18 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   helpCutIn() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 550 };
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 600 };
     let textView = this.panelService.open(TextViewComponent, option);
     textView.title = 'カットインヘルプ';
     textView.text = 
 `　カットインの名前、表示時間、位置と画像の幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。サイズの幅（Width）と高さ（Height）のどちらかを0とした場合、元画像の縦横比を保って拡大縮小します。
 　横位置（PosX）と縦位置（PosY）は、画面の左上隅からカットイン画像の中心位置までの距離となります。また、「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます（ただし、カットインの最小幅、高さは100ピクセルとなります）。
 
-　デフォルトでは後から表示されるカットイン画像がより前面になりますが、重なり順（Z-Index）を指定することで制御可能です。カットインにタグを設定した場合、同じタグが指定されたカットインが表示される際に、以前のものは停止します。また、チャット末尾条件を満たすカットインが複数ある場合、
+　デフォルトでは後から表示されるカットイン画像がより前面になりますが、重なり順（Z-Index）を指定することで制御可能です。同じカットインを再生する場合、動画を生成するカットインを再生する場合、同じタグが指定されたカットインを再生する場合は、以前のものは停止します。また、チャット末尾条件を満たすカットインが複数ある場合、
 
 　　・タグが設定されていないものはすべて表示
 　　・タグが設定されたものは、同じタグのものの中からランダムに1つ表示
+　　・動画を再生するカットインは上記の中から1つのみ表示
 
 となります。
 
