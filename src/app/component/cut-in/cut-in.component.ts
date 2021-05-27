@@ -91,7 +91,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   @Input() cutIn: CutIn;
   @Input() animationType: number = 0;
 
-  static readonly MIN_SIZE = 200;
+  static readonly MIN_SIZE = 250;
 
   private _imageFile: ImageFile = ImageFile.Empty;
   private _timeoutId;
