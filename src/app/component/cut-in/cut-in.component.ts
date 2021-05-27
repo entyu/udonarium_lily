@@ -99,7 +99,6 @@ export class CutInComponent implements OnInit, OnDestroy {
   private _isEnd = false;
   
   videoStateTransition = false;
-  isPlayerVisible = false;
 
   isMinimize = false;
   isBackyard = false;
@@ -442,7 +441,6 @@ export class CutInComponent implements OnInit, OnDestroy {
     const state = $event.data;
     //console.log($event.data)
     if (state == 1) {
-      this.isPlayerVisible = true;
       this.videoStateTransition = true;
       this._timeoutIdVideo = setTimeout(() => {
         this.ngZone.run(() => {
@@ -462,7 +460,6 @@ export class CutInComponent implements OnInit, OnDestroy {
       }, 200);
     }
     if (state == 5) {
-      this.isPlayerVisible = false;
       this.videoStateTransition = true;
       this._timeoutIdVideo = setTimeout(() => {
         this.ngZone.run(() => {
