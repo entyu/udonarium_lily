@@ -19,6 +19,7 @@ import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { CutInComponent } from 'component/cut-in/cut-in.component';
 
 
 @Component({
@@ -359,7 +360,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     textView.title = 'カットインヘルプ';
     textView.text = 
 `　カットインの名前、表示時間、位置と画像の幅と高さ（それぞれ画面サイズに対する相対指定）、チャット送信時にカットインが表示される条件を設定できます。サイズの幅（Width）と高さ（Height）のどちらかを0とした場合、元画像の縦横比を保って拡大縮小します。
-　横位置（PosX）と縦位置（PosY）は、画面の左上隅からカットイン画像の中心位置までの距離となります。また、動画を再生する場合および「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます（ただし、カットインの最小幅、高さは128ピクセルとなります）。
+　横位置（PosX）と縦位置（PosY）は、画面の左上隅からカットイン画像の中心位置までの距離となります。また、動画を再生する場合および「見切れ防止」にチェックを入れた場合、画面内に収まるように位置とサイズが調整されます（ただし、カットインの最小幅、高さは${CutInComponent.MIN_SIZE}ピクセルとなります）。
 
 　動画を再生するカットインは必ず前面、その他は後から表示されるカットイン画像がより前面になりますが、重なり順（Z-Index）を指定することで制御可能です。同じカットインを再生する場合、動画を生成するカットインを再生する場合、同じタグが指定されたカットインを再生する場合は、以前のものは停止します。また、チャット末尾条件を満たすカットインが複数ある場合、
 

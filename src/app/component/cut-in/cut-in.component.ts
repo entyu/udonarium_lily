@@ -91,6 +91,8 @@ export class CutInComponent implements OnInit, OnDestroy {
   @Input() cutIn: CutIn;
   @Input() animationType: number = 0;
 
+  static readonly MIN_SIZE = 200;
+
   private _imageFile: ImageFile = ImageFile.Empty;
   private _timeoutId;
 
@@ -177,7 +179,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get pixcelWidthPreAdjust(): number {
-    if (this.isMinimize) return 128;
+    if (this.isMinimize) return CutInComponent.MIN_SIZE;
     let ret = 0;
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
@@ -205,14 +207,14 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelWidthAspectMinimun > ret) {
       ret = this.pixelWidthAspectMinimun;
-    } else if (ret < 128) {
-      ret = 128;
+    } else if (ret < CutInComponent.MIN_SIZE) {
+      ret = CutInComponent.MIN_SIZE;
     }
     return ret;
   }
 
   get pixcelHeightPreAdjust(): number {
-    if (this.isMinimize) return 128;
+    if (this.isMinimize) return CutInComponent.MIN_SIZE;
     let ret = 0;
     if (!this.cutIn) return ret;
     if (this.cutIn.width <= 0 && this.cutIn.height <= 0) { 
@@ -226,10 +228,10 @@ export class CutInComponent implements OnInit, OnDestroy {
   }
 
   get pixelWidthAspectMinimun() {
-    let ret = 128;
+    let ret = CutInComponent.MIN_SIZE;
     if (!this.cutIn) return ret;
     if (this.naturalWidth > this.naturalHeight) {
-      ret = 128 * this.naturalWidth / this.naturalHeight;
+      ret = CutInComponent.MIN_SIZE * this.naturalWidth / this.naturalHeight;
     } 
     return ret;
   }
@@ -249,17 +251,17 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelHeightAspectMinimun > ret) {
       ret = this.pixelHeightAspectMinimun;
-    } else if (ret < 128) {
-      ret = 128;
+    } else if (ret < CutInComponent.MIN_SIZE) {
+      ret = CutInComponent.MIN_SIZE;
     }
     return ret;
   }
 
   get pixelHeightAspectMinimun() {
-    let ret = 128;
+    let ret = CutInComponent.MIN_SIZE;
     if (!this.cutIn) return ret;
     if (this.naturalWidth < this.naturalHeight) {
-      ret = 128 * this.naturalHeight / this.naturalWidth;
+      ret = CutInComponent.MIN_SIZE * this.naturalHeight / this.naturalWidth;
     } 
     return ret;
   }
@@ -328,7 +330,7 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   get objectFit(): string {
     if (!this.cutIn) return 'none';
-    //if (this.isMinimize) return 'contain';
+    if (this.isMinimize) return 'contain';
     if ((this.videoId && !this.isSoundOnly) || this.cutIn.objectFitType == 2) return 'contain';
     return this.cutIn.objectFitType == 1 ? 'cover' : 'fill';
   }
