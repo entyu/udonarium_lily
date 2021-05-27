@@ -35,7 +35,8 @@ export class CutIn extends ObjectNode {
     if (!this.isVideoCutIn || !this.videoUrl) return '';
     let ret = this.videoUrl;
     if (StringUtil.validUrl(this.videoUrl)) {
-      if (!(new URL(this.videoUrl)).hostname.endsWith('youtube.com')) return '';
+      const hostname = (new URL(this.videoUrl)).hostname
+      if (hostname != 'youtube.com' && hostname != 'www.youtube.com') return '';
       let tmp = this.videoUrl.split('v=');
       if (tmp[1]) ret = encodeURI(tmp[1].split(/[\&\#\/]/)[0]);
     } else {
