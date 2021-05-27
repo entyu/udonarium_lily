@@ -106,6 +106,7 @@
   <div [style.width.px]="pixcelWidth + 3" [style.height.px]="19" class="handler bottom" [ngStyle]="{transform: 'translateX(' + (isBordered ? 6 : 3) + 'px) translateY('+ (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
   <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler left" [ngStyle]="{transform: 'translateX(-' + (isBordered ? 6 : 3) + 'px) translateY(-' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
   <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler right" [ngStyle]="{transform: 'translateX(' + (isBordered ? 6 : 3) + 'px) translateY(' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
+  <div *ngIf="!videoId" [style.width.px]="pixcelWidth" [style.height.px]="pixcelHeight" class="handler" (contextmenu)="onContextMenu($event)"></div>
   <youtube-player #videoPlayerComponent *ngIf="videoId" 
     style="position: absolute;"
     [style.pointer-events]="videoStateTransition ? 'none' : 'auto'"
@@ -125,7 +126,6 @@
     (error)="onErrorFallback()"
     (contextmenu)="onContextMenu($event)">
   <img *ngIf="!videoId || isSoundOnly" #cutInImageElement 
-    [style.pointer-events]="isVisible ? 'auto' : 'none'"
     [style.object-fit]="objectFit"
     [src]="cutInImage.url | safe: 'resourceUrl'"
     (load)="onImageLoad()"
