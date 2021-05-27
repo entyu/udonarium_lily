@@ -7,7 +7,7 @@
   [style.left.px]="pixcelPosX"
   [style.top.px]="pixcelPosY"
   [style.z-index]="zIndex"
-  [style.pointer-events]="isVisible ? 'auto' : 'none'"
+  [style.pointer-events]="isVisible && !videoId ? 'auto' : 'none'"
   [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
   (dblclick)="stop()"
   (mousedown)="draggstart()"
@@ -26,7 +26,7 @@
   [style.left.px]="pixcelPosX"
   [style.top.px]="pixcelPosY"
   [style.z-index]="zIndex"
-  [style.pointer-events]="isVisible ? 'auto' : 'none'"
+  [style.pointer-events]="isVisible && !videoId ? 'auto' : 'none'"
   [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
   (dblclick)="stop()"
   (mousedown)="draggstart()"
@@ -107,7 +107,8 @@
   <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler left" [ngStyle]="{transform: 'translateX(-' + (isBordered ? 6 : 3) + 'px) translateY(-' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
   <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler right" [ngStyle]="{transform: 'translateX(' + (isBordered ? 6 : 3) + 'px) translateY(' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
   <youtube-player #videoPlayerComponent *ngIf="videoId" 
-    style="position: absolute; pointer-events: auto"
+    style="position: absolute;"
+    [style.pointer-events]="videoStateTransition ? 'none' : 'auto'"
     [style.visibility]="isPlayerVisible && !isSoundOnly ? 'visible' : 'hidden'"
     [videoId]="videoId" 
     suggestedQuality="default" 
@@ -120,6 +121,7 @@
   <img *ngIf="videoId && !isSoundOnly" #cutInImageElement 
     style="pointer-events: none"
     [style.object-fit]="objectFit"
+    [style.pointer-events]="!isPlayerVisible ? 'auto' : 'none'"
     [src]="'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg'"
     (error)="onErrorFallback()"
     (contextmenu)="onContextMenu($event)">

@@ -103,6 +103,7 @@ img {
   /* border: 1px solid red; */
   position:absolute;
   z-index: 20;
+  pointer-events: auto;
 }
 .handler.top {
   top: 0px;
