@@ -8,9 +8,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { EventSystem } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
 import { PeerCursor } from '@udonarium/peer-cursor';
-import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
-import { ModalService } from 'service/modal.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 @Component({
