@@ -120,11 +120,9 @@
     (stateChange)="onPlayerStateChange($event)" (contextmenu)="onContextMenu($event)">
   </youtube-player>
   <img *ngIf="videoId && !isSoundOnly" #cutInImageElement 
-    style="pointer-events: auto"
     [style.object-fit]="objectFit"
     [src]="'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg'"
-    (error)="onErrorFallback()"
-    (contextmenu)="onContextMenu($event)">
+    (error)="onErrorFallback()">
   <img *ngIf="!videoId || isSoundOnly" #cutInImageElement 
     [style.object-fit]="objectFit"
     [src]="cutInImage.url | safe: 'resourceUrl'"
