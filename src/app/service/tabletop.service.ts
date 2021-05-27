@@ -8,6 +8,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInList } from '@udonarium/cut-in-list';
+import { DiceBot } from '@udonarium/dice-bot';
 import { DiceRollTable } from '@udonarium/dice-roll-table';
 import { DiceRollTableList } from '@udonarium/dice-roll-table-list';
 import { DiceSymbol } from '@udonarium/dice-symbol';
@@ -103,6 +104,13 @@ export class TabletopService {
           gameObject.posZ = pointer.z;
           this.placeToTabletop(gameObject);
           SoundEffect.play(PresetSound.piecePut);
+          /* TODO ダイスボット読むか検討
+          if (gameObject instanceof GameCharacter && gameObject.chatPalette) {
+            DiceBot.getHelpMessage(gameObject.chatPalette.dicebot).then(help => {
+              console.log('onChangeGameType done\n' + help);
+            });
+          }
+          */
         } else if (gameObject instanceof ChatTab) {
           ChatTabList.instance.addChatTab(gameObject);
         } else if (gameObject instanceof DiceRollTable) {

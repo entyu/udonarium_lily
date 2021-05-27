@@ -290,12 +290,14 @@ export class DiceBot extends GameObject {
             }
           }
           if (!isDiceRollTableMatch) {
-            // COMMAND_PATTERN使用。ダイスボット切り替えた時点で読み込む前提（chat-inputの動作依存、良くない）
+            // 読み込まれていないダイスボットのロード、COMMAND_PATTERN使用
             if (!DiceBot.apiUrl) {
+              if (!DiceBot.loadedDiceBots[gameType]) {
+                DiceBot.loadedDiceBots[gameType] = await DiceBot.loader.dynamicLoad(gameType);
+              }
               if (!DiceBot.loadedDiceBots[gameType]) gameType = 'DiceBot';
               if (!DiceBot.loadedDiceBots[gameType].COMMAND_PATTERN.test(rollText)) return;
             }
-            
             // スペース区切りのChoiceコマンドへの対応
             let isChoice = false;
             //ToDO バージョン調べる
