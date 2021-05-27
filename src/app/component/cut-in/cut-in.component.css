@@ -98,3 +98,25 @@ img {
   right: 0px;
   bottom: 0px;
 }
+
+.handler {
+  /* border: 1px solid red; */
+  position:absolute;
+  z-index: 20;
+}
+.handler.top {
+  top: 0px;
+  left: 0px;
+} 
+.handler.bottom {
+  bottom: 0px;
+  right: 0px;
+} 
+.handler.left {
+  top: 0px;
+  left: 0px;
+}
+.handler.right {
+  right: 0px;
+  bottom: 0px;
+}

@@ -102,8 +102,12 @@
   <div *ngIf="isSecret" class="secret-indicator grow right-bottom" style="text-align: right">For Your Eyes Only <i class="material-icons" style="font-size: smaller">visibility</i></div>
   <div *ngIf="isIndicateSender" class="name-indicator grow right-top" style="text-align: right"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
   <div *ngIf="isIndicateSender" class="name-indicator grow left-bottom"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
+  <div [style.width.px]="pixcelWidth + 3" [style.height.px]="19" class="handler top" [ngStyle]="{transform: 'translateX(-' + (isBordered ? 6 : 3) + 'px) translateY(-' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
+  <div [style.width.px]="pixcelWidth + 3" [style.height.px]="19" class="handler bottom" [ngStyle]="{transform: 'translateX(' + (isBordered ? 6 : 3) + 'px) translateY('+ (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
+  <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler left" [ngStyle]="{transform: 'translateX(-' + (isBordered ? 6 : 3) + 'px) translateY(-' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
+  <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler right" [ngStyle]="{transform: 'translateX(' + (isBordered ? 6 : 3) + 'px) translateY(' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
   <youtube-player #videoPlayerComponent *ngIf="videoId" 
-    style="position: absolute; pointer-events: none"
+    style="position: absolute; pointer-events: auto"
     [style.visibility]="isPlayerVisible && !isSoundOnly ? 'visible' : 'hidden'"
     [videoId]="videoId" 
     suggestedQuality="default" 
@@ -111,10 +115,10 @@
     [height]="pixcelHeight - (isBordered ? 6 : 0)" 
     [playerVars]="{controls: 0, loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist', playlist: videoId, disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
     (ready)="onPlayerReady($event)"
-    (stateChange)="onPlayerStateChange($event)"
-  ></youtube-player>
+    (stateChange)="onPlayerStateChange($event)" (contextmenu)="onContextMenu($event)">
+  </youtube-player>
   <img *ngIf="videoId && !isSoundOnly" #cutInImageElement 
-    [style.pointer-events]="isVisible ? 'auto' : 'none'"
+    style="pointer-events: none"
     [style.object-fit]="objectFit"
     [src]="'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg'"
     (error)="onErrorFallback()"
