@@ -18,6 +18,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { UUID } from '@udonarium/core/system/util/uuid';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 
 @Component({
@@ -346,9 +347,14 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.cutInAudioFileName = audio ? audio.name : '';
   }
 
+  openYouTubeTerms() {
+    this.modalService.open(OpenUrlComponent, { url: 'https://www.youtube.com/terms', title: 'YouTube 利用規約' });
+    return false;
+  }
+
   helpCutIn() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 600 };
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 620 };
     let textView = this.panelService.open(TextViewComponent, option);
     textView.title = 'カットインヘルプ';
     textView.text = 
@@ -357,16 +363,16 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
 　デフォルトでは後から表示されるカットイン画像がより前面になりますが、重なり順（Z-Index）を指定することで制御可能です。同じカットインを再生する場合、動画を生成するカットインを再生する場合、同じタグが指定されたカットインを再生する場合は、以前のものは停止します。また、チャット末尾条件を満たすカットインが複数ある場合、
 
-　　・タグが設定されていないものはすべて表示
-　　・タグが設定されたものは、同じタグのものの中からランダムに1つ表示
-　　・動画を再生するカットインは上記の中から1つのみ表示
+　　・タグが設定されていないものはすべて
+　　・タグが設定されたものは、同じタグのものの中からランダムに1つ
+　　・動画を再生するカットインは上記の中からランダムに1つを選択
 
 となります。
 
-　カットイン画像はドラッグによって移動可能です。またダブルクリックで閉じる（自分だけ停止）、右クリックでコンテキストメニューから操作が可能です（現在、「閉じる」「ウィンドウの背面に表示」「最小化」が可能）。
+　カットインはドラッグによって移動可能です（動画を再生するカットインは隅をドラッグ）。またダブルクリックで閉じる（自分だけ停止）、右クリックでコンテキストメニューから操作が可能です（「閉じる」「ウィンドウの背面に表示」「最小化」が可能、動画を再生するカットインは隅で受付）。
 
 　アップロードされた音楽ファイルをカットイン表示時の効果音として設定できます。音量にはジュークボックスの設定（「テスト (自分だけ見る)」の場合は試聴音量）が使用されます。表示時間や手動操作によってカットインが停止した際には、途中であっても音声も停止します。カットインや部屋のセーブデータ（zip）には音楽ファイルは含まれませんので、必要でしたら別途アップロードしてください（カットインと音楽ファイルのリンクはファイルの内容によります、同名の別ファイルをアップロードしても再リンクされません）。
 
-　カットインに動画を使用する場合、URLは現在YouTubeのもののみ、また再生リストには対応していません。`;
+　カットインに動画を使用する場合、URLは現在YouTubeのみ、また再生リストURLには対応していません。また、動画を使用したカットインは最前面（スタンドより前）に表示されます。動画を利用する際は権利者およびYouTubeの定めた利用規約を参照し、順守してください。`;
   }
 }

@@ -87,8 +87,8 @@
             <input [(ngModel)]="cutInPosY" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="padding-left: 2px">%</b>
           </div>
           <div style="padding-left: 1em">
-            <b>Z-Index (大きいものが前): </b><input [(ngModel)]="cutInZIndex" type="number" min="{{-maxSize}}" max="{{maxSize}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null">
-            <label style="margin-left: 0.6em"><input name="cutInIsFrontOfStand" type="checkbox" [(ngModel)]="cutInIsFrontOfStand" [checked]="cutInIsFrontOfStand" [value]="true" [attr.disabled]="!isEditable ? '' : null"><b>スタンドの前面に表示</b></label>
+            <b>Z-Index (大きいものが前): </b><input [(ngModel)]="cutInZIndex" type="number" min="{{-maxSize}}" max="{{maxSize}}" style="width: 3.5em" [attr.disabled]="!isEditable  || cutInIsVideo ? '' : null">
+            <label style="margin-left: 0.6em"><input name="cutInIsFrontOfStand" type="checkbox" [(ngModel)]="cutInIsFrontOfStand" [checked]="cutInIsFrontOfStand" [value]="true" [attr.disabled]="!isEditable || cutInIsVideo ? '' : null"><b>スタンドの前面に表示</b></label>
           </div>
         </div>
         <div class="section">

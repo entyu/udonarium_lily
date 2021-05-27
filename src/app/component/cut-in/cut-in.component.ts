@@ -323,7 +323,7 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   get zIndex(): number {
     if (!this.cutIn || this.isBackyard) return 0;
-    return (this.cutIn.isFrontOfStand ? 1500000 : 500000) + this.cutIn.zIndex;
+    return (this.cutIn.isFrontOfStand || this.videoId ? 1500000 : 500000) + this.cutIn.zIndex + (this.videoId ? 1000 : 0);
   }
 
   get objectFit(): string {
@@ -442,7 +442,7 @@ export class CutInComponent implements OnInit, OnDestroy {
       this.isPlayerVisible = true;
       if (this.cutIn) EventSystem.trigger('PLAY_VIDEO_CUT_IN', {identifier: this.cutIn.identifier})
     }
-    if (state == 0 || state == 5) {
+    if (state == 5) {
       this.isPlayerVisible = false;
     }
   }
@@ -484,6 +484,7 @@ export class CutInComponent implements OnInit, OnDestroy {
         action: () => { this.isMinimize = !this.isMinimize; },
         selfOnly: true
       },
+            /*
       (!this.videoId ? null : ContextMenuSeparator),
       (!this.videoId ? null :
         {
@@ -496,7 +497,6 @@ export class CutInComponent implements OnInit, OnDestroy {
           isOuterLink: true
         }
       )
-      /*
       ContextMenuSeparator,
       {
         name: '効果音の開始／最初から',
