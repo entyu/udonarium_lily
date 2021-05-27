@@ -36,7 +36,7 @@
   (mousemove)="isPointerDragging ? draggstart() : false">
   <ng-container *ngTemplateOutlet="image"></ng-container>
 </div>
-<div *ngIf="isVisible && animationType == 1" appDraggable [draggable.allowOverHalf]="true"
+<div *ngIf="isVisible && animationType == 1" appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
   #cutInContainerElement class="container" 
   @cutInBounceInOut (@cutInBounceInOut.done)="isVisible ? null : end()"
   style="position: absolute"
@@ -55,7 +55,7 @@
   (mousemove)="isPointerDragging ? draggstart() : false">
   <ng-container *ngTemplateOutlet="image"></ng-container>
 </div>
-<div *ngIf="isVisible && animationType == 2" appDraggable [draggable.allowOverHalf]="true"
+<div *ngIf="isVisible && animationType == 2" appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
   #cutInContainerElement class="container" 
   @cutInOpenInOut (@cutInOpenInOut.done)="isVisible ? null : end()"
   style="position: absolute"
@@ -74,7 +74,7 @@
   (mousemove)="isPointerDragging ? draggstart() : false">
   <ng-container *ngTemplateOutlet="image"></ng-container>
 </div>
-<div *ngIf="isVisible && animationType == 3" appDraggable [draggable.allowOverHalf]="true"
+<div *ngIf="isVisible && animationType == 3" appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
   #cutInContainerElement class="container" 
   @cutInOpenInOut2 (@cutInOpenInOut2.done)="isVisible ? null : end()"
   style="position: absolute"
