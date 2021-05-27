@@ -192,7 +192,7 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   get pixcelWidth(): number {
     let ret = this.pixcelWidthPreAdjust;
-    if (this.cutIn.isPreventOutBounds) {
+    if (this.cutIn.isPreventOutBounds || this.videoId) {
       if (this.isAjustAspect) {
         if (this.isAjustAspectWidth) {
           ret = document.documentElement.clientWidth;
@@ -236,7 +236,7 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   get pixcelHeight(): number {
     let ret = this.pixcelHeightPreAdjust;
-    if (this.cutIn.isPreventOutBounds) {
+    if (this.cutIn.isPreventOutBounds || this.videoId) {
       if (this.isAjustAspect) {
         if (this.isAjustAspectWidth) {
           ret = ret * (document.documentElement.offsetWidth / this.pixcelWidthPreAdjust)
@@ -291,7 +291,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     let ret = 0;
     if (!this.cutIn) return ret;
     ret = (document.documentElement.clientWidth * this.cutIn.posX / 100) - this.pixcelWidth / 2;
-    if (this.cutIn.isPreventOutBounds) {
+    if (this.cutIn.isPreventOutBounds || this.videoId) {
       const leftOffset = (this.pixcelWidth / 2) - (document.documentElement.clientWidth * this.cutIn.posX / 100);
       if (leftOffset > 0) {
         ret += leftOffset;
@@ -308,7 +308,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     let ret = 0;
     if (!this.cutIn) return ret;
     ret = (document.documentElement.offsetHeight * this.cutIn.posY / 100) - this.pixcelHeight / 2;
-    if (this.cutIn.isPreventOutBounds) {
+    if (this.cutIn.isPreventOutBounds || this.videoId) {
       const topOffset = (this.pixcelHeight / 2) - (document.documentElement.offsetHeight * this.cutIn.posY / 100)
       if (topOffset > 0) {
         ret += topOffset;
