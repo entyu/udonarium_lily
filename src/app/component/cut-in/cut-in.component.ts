@@ -95,10 +95,12 @@ export class CutInComponent implements OnInit, OnDestroy {
 
   private _imageFile: ImageFile = ImageFile.Empty;
   private _timeoutId;
+  private _timeoutIdVideo;
 
   private _isVisible = false;
   private _isEnd = false;
   
+  videoStateTransition = false;
   isPlayerVisible = false;
 
   isMinimize = false;
@@ -129,7 +131,6 @@ export class CutInComponent implements OnInit, OnDestroy {
   constructor(
     private pointerDeviceService: PointerDeviceService,
     private contextMenuService: ContextMenuService,
-    private modalService: ModalService,
     private ngZone: NgZone
   ) { }
 
@@ -150,6 +151,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     EventSystem.unregister(this, 'CHANGE_JUKEBOX_VOLUME');
     EventSystem.unregister(this, 'PLAY_VIDEO_CUT_IN');
     clearTimeout(this._timeoutId);
+    clearTimeout(this._timeoutIdVideo);
   }
 
   get isPointerDragging(): boolean { return this._dragging; }
@@ -386,6 +388,7 @@ export class CutInComponent implements OnInit, OnDestroy {
       if (this.cutIn.duration > 0) {
         this._timeoutId = setTimeout(() => {
           this.stop();
+          clearTimeout(this._timeoutId);
           this._timeoutId = null;
         }, this.cutIn.duration * 1000);
       }
@@ -442,10 +445,33 @@ export class CutInComponent implements OnInit, OnDestroy {
     //console.log($event.data)
     if (state == 1) {
       this.isPlayerVisible = true;
+      this.videoStateTransition = true;
+      this._timeoutIdVideo = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.videoStateTransition = false;
+          this._timeoutIdVideo = null;
+        });
+      }, 200);
       if (this.cutIn) EventSystem.trigger('PLAY_VIDEO_CUT_IN', {identifier: this.cutIn.identifier})
+    }
+    if (state == 2) {
+      this.videoStateTransition = true;
+      this._timeoutIdVideo = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.videoStateTransition = false;
+          this._timeoutIdVideo = null;
+        });
+      }, 200);
     }
     if (state == 5) {
       this.isPlayerVisible = false;
+      this.videoStateTransition = true;
+      this._timeoutIdVideo = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.videoStateTransition = false;
+          this._timeoutIdVideo = null;
+        });
+      }, 200);
     }
   }
 
