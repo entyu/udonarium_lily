@@ -106,24 +106,27 @@
   <div [style.width.px]="pixcelWidth + 3" [style.height.px]="19" class="handler bottom" [ngStyle]="{transform: 'translateX(' + (isBordered ? 6 : 3) + 'px) translateY('+ (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
   <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler left" [ngStyle]="{transform: 'translateX(-' + (isBordered ? 6 : 3) + 'px) translateY(-' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
   <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler right" [ngStyle]="{transform: 'translateX(' + (isBordered ? 6 : 3) + 'px) translateY(' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
-  <div *ngIf="!videoId" [style.width.px]="pixcelWidth" [style.height.px]="pixcelHeight" class="handler" (contextmenu)="onContextMenu($event)"></div>
+  <div *ngIf="!videoId" style="pointer-events: auto" [style.width.px]="pixcelWidth" [style.height.px]="pixcelHeight" class="handler" (contextmenu)="onContextMenu($event)"></div>
   <youtube-player #videoPlayerComponent *ngIf="videoId" 
-    style="position: absolute;"
-    [style.pointer-events]="videoStateTransition ? 'none' : 'auto'"
+    style="position: absolute; pointer-events: auto"
     [style.visibility]="videoId && !isSoundOnly ? 'visible' : 'hidden'"
     [videoId]="videoId" 
     suggestedQuality="default" 
     [width]="pixcelWidth - (isBordered ? 6 : 0)"
     [height]="pixcelHeight - (isBordered ? 6 : 0)" 
-    [playerVars]="{autoplay: 1, controls: 0, loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist', playlist: videoId, disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
+    [playerVars]="{autoplay: 1, controls: 0, loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist', list: (playListId ? playListId : null), playlist: (playListId ? null : videoId), disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
     (ready)="onPlayerReady($event)"
     (stateChange)="onPlayerStateChange($event)">
   </youtube-player>
   <img *ngIf="videoId && !isSoundOnly" #cutInImageElement 
+    style="pointer-events: auto"
+    draggable="false"
     [style.object-fit]="objectFit"
     [src]="'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg'"
     (error)="onErrorFallback()">
   <img *ngIf="!videoId || isSoundOnly" #cutInImageElement 
+    style="pointer-events: none"
+    draggable="false"
     [style.object-fit]="objectFit"
     [src]="cutInImage.url | safe: 'resourceUrl'"
     (load)="onImageLoad()"
