@@ -107,6 +107,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   isIndicateSender = false;
   sender = '';
   videoId = '';
+  playListId = '';
 
   cutInImageTransformOrigin = 'center';
 

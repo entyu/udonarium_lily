@@ -33,14 +33,26 @@ export class CutIn extends ObjectNode {
 
   get videoId(): string {
     if (!this.isVideoCutIn || !this.videoUrl) return '';
-    let ret = this.videoUrl;
+    let ret = '';
     if (StringUtil.validUrl(this.videoUrl)) {
       if (!(new URL(this.videoUrl)).hostname.endsWith('youtube.com')) return '';
       let tmp = this.videoUrl.split('v=');
       if (tmp[1]) ret = encodeURI(tmp[1].split(/[\&\#\/]/)[0]);
     } else {
       // IDだけを許可すべきか？
-      return '';
+      return ret = '';
+    }
+    return ret.replace(/[\<\>\/\:\s\r\n]/g, '');
+  }
+
+  get playListId(): string {
+    if (!this.isVideoCutIn || !this.videoId) return '';
+    let ret = '';
+    if (StringUtil.validUrl(this.videoUrl)) {
+      let tmp = this.videoUrl.split('list=');
+      if (tmp[1]) ret = encodeURI(tmp[1].split(/[\&\#\/]/)[0]);
+    } else {
+      return ret = '';
     }
     return ret.replace(/[\<\>\/\:\s\r\n]/g, '');
   }

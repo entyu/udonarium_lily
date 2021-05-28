@@ -41,6 +41,7 @@ export class CutInService {
     nowCutInComponentRef.instance.cutIn = cutIn;
     nowCutInComponentRef.instance.animationType = cutIn.animationType;
     nowCutInComponentRef.instance.videoId = cutIn.videoId;
+    nowCutInComponentRef.instance.playListId = cutIn.playListId;
     nowCutInComponentRef.instance.isSecret = isSecret;
     nowCutInComponentRef.instance.isTest = isTest;
     nowCutInComponentRef.instance.sender = sender;
