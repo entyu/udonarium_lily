@@ -30,21 +30,21 @@ export class SaveDataService {
     private ngZone: NgZone
   ) { }
 
-  saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
+  saveRoomAsync(fileName: string = 'fly_ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
     return SaveDataService.queue.add((resolve, reject) => resolve(this._saveRoomAsync(fileName, updateCallback)));
   }
 
-  private _saveRoomAsync(fileName: string = 'ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
+  private _saveRoomAsync(fileName: string = 'fly_ルームデータ', updateCallback?: UpdateCallback): Promise<void> {
     let files: File[] = [];
     let roomXml = this.convertToXml(new Room());
     let chatXml = this.convertToXml(ChatTabList.instance);
     let diceRollTableXml = this.convertToXml(DiceRollTableList.instance);
     let cutInXml = this.convertToXml(CutInList.instance);
     let summarySetting = this.convertToXml(DataSummarySetting.instance);
-    files.push(new File([roomXml], 'data.xml', { type: 'text/plain' }));
-    files.push(new File([chatXml], 'chat.xml', { type: 'text/plain' }));
-    files.push(new File([diceRollTableXml], 'rollTable.xml', { type: 'text/plain' }));
-    files.push(new File([cutInXml], 'cutIn.xml', { type: 'text/plain' }));
+    files.push(new File([roomXml], 'fly_data.xml', { type: 'text/plain' }));
+    files.push(new File([chatXml], 'fly_chat.xml', { type: 'text/plain' }));
+    files.push(new File([diceRollTableXml], 'fly_rollTable.xml', { type: 'text/plain' }));
+    files.push(new File([cutInXml], 'fly_cutIn.xml', { type: 'text/plain' }));
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));
 
     //files = files.concat(this.searchImageFiles(roomXml));
@@ -60,19 +60,19 @@ export class SaveDataService {
     }
     let imageTagXml = this.convertToXml(ImageTagList.create(images));
 
-    files.push(new File([imageTagXml], 'imageTag.xml', { type: 'text/plain' }));
+    files.push(new File([imageTagXml], 'fly_imageTag.xml', { type: 'text/plain' }));
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 
-  saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
+  saveGameObjectAsync(gameObject: GameObject, fileName: string = 'fly_xml_data', updateCallback?: UpdateCallback): Promise<void> {
     return SaveDataService.queue.add((resolve, reject) => resolve(this._saveGameObjectAsync(gameObject, fileName, updateCallback)));
   }
 
-  private _saveGameObjectAsync(gameObject: GameObject, fileName: string = 'xml_data', updateCallback?: UpdateCallback): Promise<void> {
+  private _saveGameObjectAsync(gameObject: GameObject, fileName: string = 'fly_xml_data', updateCallback?: UpdateCallback): Promise<void> {
     let files: File[] = [];
     let xml: string = this.convertToXml(gameObject);
 
-    files.push(new File([xml], 'data.xml', { type: 'text/plain' }));
+    files.push(new File([xml], 'fly_data.xml', { type: 'text/plain' }));
     //files = files.concat(this.searchImageFiles(xml));
     
     let images: ImageFile[] = [];
@@ -84,7 +84,7 @@ export class SaveDataService {
     }
     let imageTagXml = this.convertToXml(ImageTagList.create(images));
     
-    files.push(new File([imageTagXml], 'imageTag.xml', { type: 'text/plain' }));
+    files.push(new File([imageTagXml], 'fly_imageTag.xml', { type: 'text/plain' }));
     return this.saveAsync(files, this.appendTimestamp(fileName), updateCallback);
   }
 
@@ -154,6 +154,6 @@ export class SaveDataService {
   saveChatLog(logFormat: number, fileName: string, chatTab: ChatTab=null, dateFormat='HH:mm') {
     const mimeType = (logFormat == 0 ? 'text/plain' : 'text/html');
     const ext = (logFormat == 0 ? '.txt' : '.html');
-    saveAs(new Blob([chatTab ? chatTab.log(logFormat, dateFormat) : ChatTabList.instance.log(logFormat, dateFormat)], {type: `${mimeType};charset=utf-8`}), this.appendTimestamp(fileName) + ext);
+    saveAs(new Blob([chatTab ? chatTab.log(logFormat, dateFormat) : ChatTabList.instance.log(logFormat, dateFormat)], {type: `${mimeType};charset=utf-8`}), 'fly_' + this.appendTimestamp(fileName) + ext);
   }
 }

@@ -96,7 +96,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
     this.isSaveing = true;
     this.progresPercent = 0;
 
-    let fileName: string = 'rollTable_' + this.selectedDiceRollTable.name;
+    let fileName: string = 'fly_rollTable_' + this.selectedDiceRollTable.name;
 
     await this.saveDataService.saveGameObjectAsync(this.selectedDiceRollTable, fileName, percent => {
       this.progresPercent = percent;

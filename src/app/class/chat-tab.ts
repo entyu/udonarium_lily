@@ -78,7 +78,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
 <html lang="ja-JP">
 <head>
 <meta charset="UTF-8">
-<title>チャットログ：${ StringUtil.escapeHtml(this.name) }</title>
+<title>Udonarium with Fly：チャットログ：${ StringUtil.escapeHtml(this.name) }</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
 ${ ChatMessage.logCss() }

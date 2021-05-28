@@ -418,7 +418,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
       ? Network.peerContext.roomName
-      : 'ルームデータ';
+      : 'fly_ルームデータ';
     await this.saveDataService.saveRoomAsync(roomName, percent => {
       this.progresPercent = percent;
     });

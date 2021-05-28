@@ -213,7 +213,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isSaveing = true;
     this.progresPercent = 0;
 
-    let fileName: string = 'cutIn_' + this.selectedCutIn.name;
+    let fileName: string = 'fly_cutIn_' + this.selectedCutIn.name;
 
     await this.saveDataService.saveGameObjectAsync(this.selectedCutIn, fileName, percent => {
       this.progresPercent = percent;
