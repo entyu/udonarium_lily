@@ -16,7 +16,7 @@
           [innerHTML]="stringUtil.escapeHtml(chatMessage.from) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: true, stripTrailingSlash: true, email: false, phone: false}"></span>
         <span *ngIf="!compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
         <span *ngIf="compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
-        <ng-container *ngIf="!(!compact && isEditable); else editor"></ng-container>
+        <ng-container *ngIf="!isEditable; else editor"></ng-container>
       </div>
       <div class="text msg-text">
         <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
@@ -47,7 +47,7 @@
   <span><s>（シークレットダイス）</s></span>
 </ng-template>
 <ng-template #editor>
-  <span class="edit-buttons" [style.visibility]="isEditing ? 'visible' : ''" style="margin-left: 4px; white-space: nowrap">
+  <span class="edit-buttons" [ngClass]="{editing: isEditing}" [style.visibility]="isEditing ? 'visible' : ''" style="margin-left: 4px; white-space: nowrap">
     <button *ngIf="!isEditing" class="edit-button" (click)="editStart()" title="編集"><i class="material-icons small-font">edit</i></button>
     <button *ngIf="!isEditing" class="edit-button" aria-hidden="true" style="visibility: hidden"><i class="material-icons small-font">clear</i></button>
     <button *ngIf="isEditing" class="edit-button" [disabled]="editingText.trim().length == 0" (click)="editEnd()" title="確定"><i class="material-icons small-font">done</i></button>

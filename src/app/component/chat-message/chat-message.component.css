@@ -214,3 +214,22 @@ textarea {
   padding: 0px 3px;
   text-align: left;
 }
+.container.compact .msg-name {
+  flex-grow: 0;
+}
+.container.compact .msg-text {
+  flex-grow: 1;
+}
+
+.container.compact .edit-buttons {
+  display: none;
+}
+.container.compact:hover .edit-buttons {
+  display: inline-block;
+}
+.container.compact .edit-buttons.editing {
+  display: inline-block;
+}
+.container.compact textarea {
+  margin: -2px -2px -2px -2px;
+}
