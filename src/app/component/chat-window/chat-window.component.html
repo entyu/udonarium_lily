@@ -13,7 +13,7 @@
       </label>
       <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>タブ設定</button>
       <button class="tab-setting small-font" (click)="showLogOutput()"><i class="material-icons small-font">history_edu</i>ログ</button>
-      <label class="tab-setting small-font" style="padding: 1px 4px; margin-left: 2px; height: 24px; box-sizing: border-box" [ngClass]="{compact: isCompact}"><input name="isCompact" type="checkbox" [(ngModel)]="isCompact" [value]="true" [checked]="isCompact" >簡易表示<sup style="color: red">*</sup></label>
+      <label class="tab-setting small-font" style="padding: 1px 4px 1px 2px; margin-left: 2px; height: 24px; box-sizing: border-box" [ngClass]="{compact: isCompact}"><input name="isCompact" type="checkbox" [(ngModel)]="isCompact" [value]="true" [checked]="isCompact" >簡易表示<sup style="color: red">*</sup></label>
     </div>
   </form>
   <chat-input [chatTabidentifier]="chatTabidentifier" [(gameType)]="gameType" [(sendFrom)]="sendFrom" (chat)="sendChat($event)"></chat-input>
