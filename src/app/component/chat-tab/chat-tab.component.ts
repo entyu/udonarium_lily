@@ -305,7 +305,7 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     }
   }
 
-  private onScroll() {
+  onScroll() {
     this.scrollEventShortTimer.reset();
     if (!this.scrollEventLongTimer.isActive) {
       this.scrollEventLongTimer.reset();
