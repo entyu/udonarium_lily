@@ -22,7 +22,7 @@
         <input *ngIf="character" type="checkbox" [(ngModel)]="isUseFaceIcon" checked="{{isUseFaceIcon ? 'checked' : ''}}" (change)="isUseFaceIcon = (isUseFaceIcon ? true : false)" />
         <b *ngIf="character" style="font-size: smaller;">顔IC</b>
       </label>
-      <select style="max-width: 9em" [(ngModel)]="sendFrom" (change)="standName = ''" [ngStyle]="{'color': color, 'font-weight': (sendFrom != myPeer?.identifier ? 'normal' : 'bolder')}">
+      <select [style.max-width]="character ? '10em' : '13.5em'" [(ngModel)]="sendFrom" (change)="standName = ''" [ngStyle]="{'color': color, 'font-weight': (sendFrom != myPeer?.identifier ? 'normal' : 'bolder')}">
         <option *ngIf="!onlyCharacters" value="{{myPeer?.identifier}}" [style.color]="myColor" style="font-weight: bolder;">{{myPeer?.name}}（あなた）</option>
         <option *ngFor="let gameCharacter of gameCharacters" style="font-weight: normal;" [style.color]="gameCharacter.chatPalette && gameCharacter.chatPalette.color && gameCharacter.chatPalette.color != '#ffffff' ? gameCharacter.chatPalette.color : '#444'" value="{{gameCharacter.identifier}}">{{gameCharacter.name}}</option>
       </select>

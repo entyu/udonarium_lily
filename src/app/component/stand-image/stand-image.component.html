@@ -22,7 +22,7 @@
             green: isApplyImageEffect && gameCharacter.aura == 2, cyan: isApplyImageEffect && gameCharacter.aura == 3, red: isApplyImageEffect && gameCharacter.aura == 4,
             magenta: isApplyImageEffect && gameCharacter.aura == 5, yellow: isApplyImageEffect && gameCharacter.aura == 6, white: isApplyImageEffect && gameCharacter.aura == 7}">
             <div class="color-fillter">
-            <img (load)="onImageLoad()" class="stand-image" 
+            <img (load)="onImageLoad()" class="stand-image" draggable="false"
               [style.height]="height > 0 ? height + 'vh' : 'auto'"
               [src]="standImage.url | safe: 'resourceUrl'" 
               #standImageElement 
