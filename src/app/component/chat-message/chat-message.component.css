@@ -63,6 +63,7 @@
   padding-left: 12px;
   padding-right: 12px;
 }
+
 .inverse {
   transform: scaleX(-1);
 }
@@ -191,4 +192,25 @@ textarea {
 }
 .aura.white {
   filter: drop-shadow(0 -4px 6px #ccc) drop-shadow(0 -4px 4px #fff);
+}
+
+.msg-timestamp {
+  white-space: nowrap;
+}
+.container.compact .message {
+  padding: 2px !important;
+}
+.container.compact .body {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.container.compact .msg-from {
+  display: none;
+}
+.container.compact .title,
+.container.compact .text,
+.container.compact .tip {
+  padding: 0px 3px;
+  text-align: left;
 }

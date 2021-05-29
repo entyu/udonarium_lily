@@ -54,6 +54,7 @@ import { COMPOSITION_BUFFER_MODE } from '@angular/forms'
 
 export class ChatMessageComponent implements OnInit, AfterViewInit {
   @Input() chatMessage: ChatMessage;
+  @Input() compact: boolean = false;
   @ViewChild('msgFrom', { static: true }) msgFromElm: ElementRef;
   @ViewChild('message', { static: false }) messageElm: ElementRef;
   @ViewChild('edit', { static: false }) editElm: ElementRef<HTMLTextAreaElement>;

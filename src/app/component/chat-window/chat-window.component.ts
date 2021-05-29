@@ -17,6 +17,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 })
 export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   sendFrom: string = 'Guest';
+  isCompact = false;
 
   get gameType(): string { return this.chatMessageService.gameType; }
   set gameType(gameType: string) { this.chatMessageService.gameType = gameType; }
