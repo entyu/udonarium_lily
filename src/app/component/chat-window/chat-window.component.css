@@ -90,3 +90,12 @@
   vertical-align: middle;
   font-size: 1.0rem;
 }
+
+label.compact {
+  background-color: #555;
+  color: #CCC;
+}
+
+sup {
+  vertical-align: text-top;
+}
