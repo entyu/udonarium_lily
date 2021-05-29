@@ -35,9 +35,16 @@ export class CutIn extends ObjectNode {
     if (!this.isVideoCutIn || !this.videoUrl) return '';
     let ret = '';
     if (StringUtil.validUrl(this.videoUrl)) {
-      if (!(new URL(this.videoUrl)).hostname.endsWith('youtube.com')) return '';
-      let tmp = this.videoUrl.split('v=');
-      if (tmp[1]) ret = encodeURI(tmp[1].split(/[\&\#\/]/)[0]);
+      const hostname = (new URL(this.videoUrl)).hostname
+      if (hostname == 'youtube.com' || hostname == 'www.youtube.com') { 
+        let tmp = this.videoUrl.split('v=');
+        if (tmp[1]) ret = encodeURI(tmp[1].split(/[\&\#\/]/)[0]);
+      } else if (hostname == 'youtu.be') {
+        let tmp = this.videoUrl.split('youtu.be/');
+        if (tmp[1]) ret = encodeURI(tmp[1].split(/[\&\#\/]/)[0]);
+      } else {
+        return '';
+      }
     } else {
       // IDだけを許可すべきか？
       return ret = '';
