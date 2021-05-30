@@ -13,7 +13,7 @@
       <div class="title">
         <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
         <span #msgFrom class='tip msg-from' 
-          [innerHTML]="stringUtil.escapeHtml(chatMessage.from) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: true, stripTrailingSlash: true, email: false, phone: false}"></span>
+          [innerHTML]="htmlEscapedFrom" (click)="onLinkClick($event)"></span>
         <span *ngIf="!compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
         <span *ngIf="compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
         <ng-container *ngIf="!isEditable; else editor"></ng-container>
@@ -37,7 +37,7 @@
   <div [style.display]="isEditing ? 'none' : 'block'">
     <span style="display: inline-block">
       <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
-        [innerHTML]="stringUtil.escapeHtml(lastNewLineAdjust(chatMessage.text)) | linky:{urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, truncate: {length: 48, location: 'end'}, decodePercentEncoding: false, stripPrefix: false, stripTrailingSlash: false, email: false, phone: false}"></span>
+        [innerHTML]="htmlEscapedText" (click)="onLinkClick($event)"></span>
       <span *ngIf="!isEditing && chatMessage.isEdited" class="is-edited"><b style="white-space: nowrap">編集済</b> {{chatMessage.lastUpdate | date:'M/d H:mm'}}</span>
       <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px; margin-left: 3px;">結果を公開</button>
     </span>

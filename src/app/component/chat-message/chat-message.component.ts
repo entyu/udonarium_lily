@@ -11,6 +11,7 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { EventSystem } from '@udonarium/core/system';
 
 import { COMPOSITION_BUFFER_MODE } from '@angular/forms'
+import Autolinker from 'autolinker';
 
 @Component({
   selector: 'chat-message',
@@ -52,7 +53,7 @@ import { COMPOSITION_BUFFER_MODE } from '@angular/forms'
   ]
 })
 
-export class ChatMessageComponent implements OnInit, AfterViewInit {
+export class ChatMessageComponent implements OnInit {
   @Input() chatMessage: ChatMessage;
   @Input() compact: boolean = false;
   @ViewChild('msgFrom', { static: true }) msgFromElm: ElementRef;
@@ -93,44 +94,37 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     return this.chatMessage.isEditable;
   }
 
-  ngAfterViewInit() {
-    if (this.msgFromElm && this.msgFromElm.nativeElement) {
-      const anchor = this.msgFromElm.nativeElement.querySelector('A[href]');
-      if (anchor) {
-        const href = anchor.getAttribute('href');
-        if (StringUtil.validUrl(href)) {
-          if (!StringUtil.sameOrigin(href)) {
-            anchor.classList.add('outer-link');
-            anchor.addEventListener('click', (e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              this.modalService.open(OpenUrlComponent, { url: href });
-            }, true);
+  get htmlEscapedFrom():string  {
+    return this._htmlEscapeLinking(this.chatMessage.from, true);
+  } 
+
+  get htmlEscapedText():string  {
+    return this._htmlEscapeLinking(this.chatMessage.text);
+  }
+
+  private _htmlEscapeLinking(str, shorten=false): string {
+    return Autolinker.link(StringUtil.escapeHtml(this.lastNewLineAdjust(str)), {
+      urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, 
+      truncate: {length: 48, location: 'end'}, 
+      decodePercentEncoding: shorten, 
+      stripPrefix: shorten, 
+      stripTrailingSlash: shorten, 
+      email: false, 
+      phone: false,
+      replaceFn : function(m) {
+        if (m.getType() == 'url' && StringUtil.validUrl(m.getAnchorHref())) {
+          if (StringUtil.sameOrigin(m.getAnchorHref())) {
+            return true;
+          } else {
+            const tag = m.buildTag();
+            tag.setAttr('rel', 'nofollow');
+            tag.addClass('outer-link');
+            return tag;
           }
-        } else {
-          anchor.removeAttribute('href');
-          anchor.removeAttribute('target');
         }
+        return false;
       }
-    }
-    if (this.messageElm && this.messageElm.nativeElement) {
-      this.messageElm.nativeElement.querySelectorAll('A[href]').forEach(anchor => {
-        const href = anchor.getAttribute('href');
-        if (StringUtil.validUrl(href)) {
-          if (!StringUtil.sameOrigin(href)) {
-            anchor.classList.add('outer-link');
-            anchor.addEventListener('click', (e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              this.modalService.open(OpenUrlComponent, { url: href });
-            }, true);
-          }
-        } else {
-          anchor.removeAttribute('href');
-          anchor.removeAttribute('target');
-        }
-      });
-    }
+    });
   }
 
   discloseMessage() {
@@ -154,24 +148,6 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
       if (!this.chatMessage.isSecret) this.chatMessage.lastUpdate = Date.now();
       this.chatMessage.text = this.editingText;
       this.isEditing = false;
-      setTimeout(() => {
-        this.messageElm.nativeElement.querySelectorAll('A[href]').forEach(anchor => {
-          const href = anchor.getAttribute('href');
-          if (StringUtil.validUrl(href)) {
-            if (!StringUtil.sameOrigin(href)) {
-              anchor.classList.add('outer-link');
-              anchor.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                this.modalService.open(OpenUrlComponent, { url: href });
-              }, true);
-            }
-          } else {
-            anchor.removeAttribute('href');
-            anchor.removeAttribute('target');
-          }
-        });
-      });
     } else {
       this.editCancel();
     }
@@ -185,5 +161,18 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   lastNewLineAdjust(str: string): string {
     if (str == null) return '';
     return ((this.isEditing || !(this.chatMessage.isEdited || this.chatMessage.isSecret)) && str.lastIndexOf("\n") == str.length - 1) ? str + "\n" : str;
+  }
+
+  onLinkClick($event) {
+    //console.log($event.target.tagName);
+    if ($event && $event.target.tagName == 'A') {
+      const href = $event.target.getAttribute('href');
+      if (!StringUtil.sameOrigin(href)) {
+        $event.preventDefault();
+        this.modalService.open(OpenUrlComponent, { url: $event.target.getAttribute('href') });
+        return false;
+      }
+    }
+    return true;
   }
 }
