@@ -197,6 +197,10 @@ textarea {
 .msg-timestamp {
   white-space: nowrap;
 }
+
+.container.compact {
+  overflow: hidden;
+}
 .container.compact .message {
   padding: 2px !important;
 }
@@ -231,5 +235,5 @@ textarea {
   display: inline-block;
 }
 .container.compact textarea {
-  margin: -2px -2px -2px -2px;
+  margin: -3px -3px -3px -3px;
 }
