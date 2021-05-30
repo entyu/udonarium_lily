@@ -56,8 +56,6 @@ import Autolinker from 'autolinker';
 export class ChatMessageComponent implements OnInit {
   @Input() chatMessage: ChatMessage;
   @Input() compact: boolean = false;
-  @ViewChild('msgFrom', { static: true }) msgFromElm: ElementRef;
-  @ViewChild('message', { static: false }) messageElm: ElementRef;
   @ViewChild('edit', { static: false }) editElm: ElementRef<HTMLTextAreaElement>;
 
   imageFile: ImageFile = ImageFile.Empty;

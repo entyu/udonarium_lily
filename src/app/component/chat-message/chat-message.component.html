@@ -12,7 +12,7 @@
     <div class="body">
       <div class="title">
         <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
-        <span #msgFrom class='tip msg-from' 
+        <span class='tip msg-from' 
           [innerHTML]="htmlEscapedFrom" (click)="onLinkClick($event)"></span>
         <span *ngIf="!compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
         <span *ngIf="compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
@@ -36,7 +36,7 @@
   </div>
   <div [style.display]="isEditing ? 'none' : 'block'">
     <span style="display: inline-block">
-      <span #message [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
+      <span [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''" 
         [innerHTML]="htmlEscapedText" (click)="onLinkClick($event)"></span>
       <span *ngIf="!isEditing && chatMessage.isEdited" class="is-edited"><b style="white-space: nowrap">編集済</b> {{chatMessage.lastUpdate | date:'M/d H:mm'}}</span>
       <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()" style="padding-top: 1px; padding-bottom: 1px; margin-left: 3px;">結果を公開</button>
