@@ -201,6 +201,9 @@ textarea {
 .container.compact {
   overflow: hidden;
 }
+.container.compact.editing {
+  padding-top: 1px;
+}
 .container.compact .message {
   padding: 2px !important;
 }
@@ -231,7 +234,7 @@ textarea {
 .container.compact:hover .edit-buttons {
   display: inline-block;
 }
-.container.compact .edit-buttons.editing {
+.container.compact.editing .edit-buttons {
   display: inline-block;
 }
 .container.compact textarea {

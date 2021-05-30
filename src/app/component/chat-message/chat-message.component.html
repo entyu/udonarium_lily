@@ -1,4 +1,4 @@
-<div class="container" [ngClass]="{compact: compact}">
+<div class="container" [ngClass]="{compact: compact, editing: isEditing}">
   <div class="message"
     [style.border-left-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
     [style.border-right-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
@@ -47,7 +47,7 @@
   <span><s>（シークレットダイス）</s></span>
 </ng-template>
 <ng-template #editor>
-  <span class="edit-buttons" [ngClass]="{editing: isEditing}" [style.visibility]="isEditing ? 'visible' : ''" style="margin-left: 4px; white-space: nowrap">
+  <span class="edit-buttons" [style.visibility]="isEditing ? 'visible' : ''" style="margin-left: 4px; white-space: nowrap">
     <button *ngIf="!isEditing" class="edit-button" (click)="editStart()" title="編集"><i class="material-icons small-font">edit</i></button>
     <button *ngIf="!isEditing" class="edit-button" aria-hidden="true" style="visibility: hidden"><i class="material-icons small-font">clear</i></button>
     <button *ngIf="isEditing" class="edit-button" [disabled]="editingText.trim().length == 0" (click)="editEnd()" title="確定"><i class="material-icons small-font">done</i></button>
