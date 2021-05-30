@@ -487,7 +487,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
       {
-        name: '閉じる（自分のみ終了）',
+        name: '閉じる（自分のみ停止）',
         action: () => { this.stop(); },
         default: true,
         selfOnly: true
