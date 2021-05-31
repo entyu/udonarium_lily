@@ -201,29 +201,40 @@ textarea {
 .container.compact {
   overflow: hidden;
 }
+
 .container.compact.editing {
   padding-top: 1px;
 }
+
 .container.compact .message {
   padding: 2px !important;
 }
+
 .container.compact .body {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
 }
+
 .container.compact .msg-from {
   display: none;
 }
+
+.container.compact .title {
+  min-width: 6em;
+}
+
 .container.compact .title,
 .container.compact .text,
 .container.compact .tip {
   padding: 0px 3px;
   text-align: left;
 }
+
 .container.compact .msg-name {
   flex-grow: 0;
 }
+
 .container.compact .msg-text {
   flex-grow: 1;
 }
@@ -231,12 +242,12 @@ textarea {
 .container.compact .edit-buttons {
   display: none;
 }
-.container.compact:hover .edit-buttons {
-  display: inline-block;
-}
+
+.container.compact:hover .edit-buttons,
 .container.compact.editing .edit-buttons {
   display: inline-block;
 }
+
 .container.compact textarea {
   margin: -3px -3px -3px -3px;
 }

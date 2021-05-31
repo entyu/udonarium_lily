@@ -16,10 +16,13 @@
           [innerHTML]="htmlEscapedFrom" (click)="onLinkClick($event)"></span>
         <span *ngIf="!compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
         <span *ngIf="compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
-        <ng-container *ngIf="!isEditable; else editor"></ng-container>
+        <ng-container *ngIf="!(isEditable && !compact); else editor"></ng-container>
       </div>
       <div class="text msg-text">
         <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
+      </div>
+      <div *ngIf="isEditable && compact">
+        <ng-container *ngTemplateOutlet="editor"></ng-container>
       </div>
     </div>
     <div *ngIf="!isMine && !compact" class="image" [ngClass]="{inverse: chatMessage.isInverseIcon == 1, hollow: chatMessage.isHollowIcon == 1}">
