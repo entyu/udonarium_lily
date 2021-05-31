@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import Autolinker from 'autolinker';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 import { ModalService } from 'service/modal.service';
@@ -10,7 +11,7 @@ import { PanelService } from 'service/panel.service';
   templateUrl: './text-view.component.html',
   styleUrls: ['./text-view.component.css']
 })
-export class TextViewComponent implements OnInit, AfterViewInit {
+export class TextViewComponent implements OnInit {
   @ViewChild('message') messageElm: ElementRef;
   
   @Input() text: string|string[] = '';
@@ -33,26 +34,43 @@ export class TextViewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    if (this.messageElm) {
-      this.messageElm.nativeElement.querySelectorAll('A[href]').forEach(anchor => {
-        const href = anchor.getAttribute('href');
-        if (StringUtil.validUrl(href)) {
-          if (!StringUtil.sameOrigin(href)) {
-            anchor.classList.add('outer-link');
-            anchor.addEventListener('click', (e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              this.modalService.open(OpenUrlComponent, { url: href });
-            }, true);
+  htmlEscapeLinking(str, shorten=false): string {
+    return Autolinker.link(StringUtil.escapeHtml(str), {
+      urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, 
+      truncate: {length: 96, location: 'end'}, 
+      decodePercentEncoding: shorten, 
+      stripPrefix: shorten, 
+      stripTrailingSlash: shorten, 
+      email: false, 
+      phone: false,
+      replaceFn : function(m) {
+        if (m.getType() == 'url' && StringUtil.validUrl(m.getAnchorHref())) {
+          if (StringUtil.sameOrigin(m.getAnchorHref())) {
+            return true;
+          } else {
+            const tag = m.buildTag();
+            tag.setAttr('rel', 'nofollow');
+            tag.addClass('outer-link');
+            return tag;
           }
-        } else {
-          anchor.removeAttribute('href');
-          anchor.removeAttribute('target');
         }
-      });
-    }
+        return false;
+      }
+    });
   }
 
   isObj(val) { return typeof val == 'object'; }
+
+  onLinkClick($event) {
+    //console.log($event.target.tagName);
+    if ($event && $event.target.tagName == 'A') {
+      const href = $event.target.getAttribute('href');
+      if (!StringUtil.sameOrigin(href)) {
+        $event.preventDefault();
+        this.modalService.open(OpenUrlComponent, { url: $event.target.getAttribute('href') });
+        return false;
+      }
+    }
+    return true;
+  }
 }
