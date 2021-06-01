@@ -46,7 +46,19 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get isLock(): boolean { return this.gameTableMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
 
+  get altitude(): number { return this.gameTableMask.altitude; }
+  set altitude(altitude: number) { this.gameTableMask.altitude = altitude; }
+
+  get isAltitudeIndicate(): boolean { return this.gameTableMask.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameTableMask.isAltitudeIndicate = isAltitudeIndicate; }
+
+  get textNoteAltitude(): number {
+    return +this.altitude.toFixed(1); 
+  }
+
   gridSize: number = 50;
+  math = Math;
+  viewRotateZ = 10;
 
   movableOption: MovableOption = {};
 
@@ -78,6 +90,12 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      })
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
       });
     this.movableOption = {
       tabletopObject: this.gameTableMask,
@@ -136,6 +154,26 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
           }
         }
       ),
+      ContextMenuSeparator,
+      (this.isAltitudeIndicate
+        ? {
+          name: '☑ 高度の表示', action: () => {
+            this.isAltitudeIndicate = false;
+          }
+        } : {
+          name: '☐ 高度の表示', action: () => {
+            this.isAltitudeIndicate = true;
+          }
+        }),
+      {
+        name: '高度を0にする', action: () => {
+          if (this.altitude != 0) {
+            this.altitude = 0;
+            SoundEffect.play(PresetSound.sweep);
+          }
+        },
+        altitudeHande: this.gameTableMask
+      },
       ContextMenuSeparator,
       { name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableMask); } },
       (this.gameTableMask.getUrls().length <= 0 ? null : {
@@ -196,7 +234,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'マップマスク設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
-    let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 330 };
+    let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 380 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }
