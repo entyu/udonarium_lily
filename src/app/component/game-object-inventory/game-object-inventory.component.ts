@@ -29,8 +29,10 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
 
   selectTab: string = 'table';
   selectedIdentifier: string = '';
+  multiMoveTargets: Set<GameCharacter> = new Set();
 
   isEdit: boolean = false;
+  isMultiMove: boolean = false;
   disptimer = null;
 
   get sortTag(): string { return this.inventoryService.sortTag; }
@@ -196,6 +198,13 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     this.isEdit = !this.isEdit;
   }
 
+  toggleMultiMove() {
+    if (this.isMultiMove) {
+      this.multiMoveTargets.clear();
+    }
+    this.isMultiMove = !this.isMultiMove;
+  }
+
   cleanInventory() {
     let tabTitle = this.getTabTitle(this.selectTab);
     let gameObjects = this.getGameObjects(this.selectTab);
@@ -204,6 +213,46 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       this.deleteGameObject(gameObject);
     }
     SoundEffect.play(PresetSound.sweep);
+  }
+
+  toggleMultiMoveTarget(e: Event, gameObject: GameCharacter) {
+    if (!(e.target instanceof HTMLInputElement)) { return; }
+    if (e.target.checked) {
+      this.multiMoveTargets.add(gameObject);
+    } else {
+      this.multiMoveTargets.delete(gameObject);
+    }
+  }
+
+  onMultiMoveContextMenu() {
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
+
+    let position = this.pointerDeviceService.pointers[0];
+    let actions: ContextMenuAction[] = [];
+    let locations = [
+      { name: 'table', alias: 'テーブルに移動' },
+      { name: 'common', alias: '共有イベントリに移動' },
+      { name: Network.peerId, alias: '個人イベントリに移動' },
+      { name: 'graveyard', alias: '墓場に移動' }
+    ];
+    for (let location of locations) {
+      if (this.selectTab === location.name) continue;
+      actions.push({
+        name: location.alias, action: () => {
+          this.multiMove(location.name);
+          this.toggleMultiMove();
+          SoundEffect.play(PresetSound.piecePut);
+        }
+      });
+    }
+
+    this.contextMenuService.open(position, actions, "一括移動");
+  }
+
+  multiMove(location: string) {
+    for (let gameObject of this.multiMoveTargets) {
+      gameObject.setLocation(location);
+    }
   }
 
   private cloneGameObject(gameObject: TabletopObject) {
