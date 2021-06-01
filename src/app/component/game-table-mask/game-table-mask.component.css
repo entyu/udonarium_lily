@@ -86,3 +86,7 @@
   text-shadow: #444 0px 0px 3px;
   backface-visibility: hidden;
 }
+
+.fall {
+  transition: transform 64ms ease-in;
+}
