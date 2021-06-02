@@ -104,17 +104,17 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   font-size: 24px;
-  color: rgb(104, 101, 101);
+  color: #444;
   z-index: 5;
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow: 
-  #fff 0px 0px 1px, 
-  #fff 0px 0px 1px, 
-  #fff 0px 0px 1px, 
-  #fff 0px 0px 1px, 
-  #fff 0px 0px 1px, 
-  #fff 0px 0px 1px,
-  #fff 0px 0px 1px,
-  #fff 0px 0px 1px;
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px;
 }
