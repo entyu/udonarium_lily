@@ -209,10 +209,10 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   color: #CCF;
 }
 .dicebot-message .msg-text.is-success {
-  color:#06f;
+  color:#17f;
 }
 .dicebot-message .msg-text.is-failure {
-  color:#F00;
+  color:#F05;
 }
 .direct-message.dicebot-message .msg-text.is-success {
   color:#adF;
