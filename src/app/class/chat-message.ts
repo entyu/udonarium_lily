@@ -99,6 +99,11 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isEditable(): boolean { return !this.isSystem && this.from === Network.peerContext.userId }
   get isFaceIcon(): boolean { return !this.isSystem && (!this.characterIdentifier || this.tags.indexOf('noface') < 0); }
 
+  get isSuccess(): boolean { return this.isDicebot && -1 < this.tags.indexOf('success'); }
+  get isFailure(): boolean { return this.isDicebot && -1 < this.tags.indexOf('failure'); }
+  get isCritical(): boolean { return this.isDicebot && -1 < this.tags.indexOf('critical'); }
+  get isFumble(): boolean { return this.isDicebot && -1 < this.tags.indexOf('fumble'); }
+
   //とりあえず
   private locale = 'en-US';
   
@@ -133,6 +138,13 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     if (this.isDirect || this.isSecret) messageClassNames.push('direct-message');
     if (this.isSystem) messageClassNames.push('system-message');
     if (this.isDicebot || this.isCalculate) messageClassNames.push('dicebot-message');
+    
+    let messageTextClassNames = ['msg-text'];
+    if (this.isSuccess) messageTextClassNames.push('is-success');
+    if (this.isFailure) messageTextClassNames.push('is-failure');
+    if (this.isCritical) messageTextClassNames.push('is-critical');
+    if (this.isFumble) messageTextClassNames.push('is-fumble');
+
     const color = StringUtil.escapeHtml(this.color ? this.color : PeerCursor.CHAT_DEFAULT_COLOR);
     const colorStyle = this.isSpecialColor ? '' : ` style="color: ${ color }"`;
 
@@ -168,7 +180,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 
     return `<div class="${ messageClassNames.join(' ') }" style="border-left-color: ${ color }">
   <div class="msg-header">${ tabNameHtml }${ dateHtml }<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</div>
-  <div class="msg-text"><span${ colorStyle }>${ textAutoLinkedHtml }</span>${ lastUpdateHtml }</div>
+  <div class="${ messageTextClassNames.join(' ') }"><span${ colorStyle }>${ textAutoLinkedHtml }</span>${ lastUpdateHtml }</div>
 </div>`;
   }
 
@@ -191,10 +203,22 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   color: #CCC;
 }
 .dicebot-message .msg-text {
-  color: #22F;
+  color: #11F;
 }
 .direct-message.dicebot-message .msg-text {
   color: #CCF;
+}
+.dicebot-message .msg-text.is-success {
+  color:#06f;
+}
+.dicebot-message .msg-text.is-failure {
+  color:#F00;
+}
+.direct-message.dicebot-message .msg-text.is-success {
+  color:#adF;
+}
+.direct-message.dicebot-message .msg-text.is-failure {
+  color:#F66;
 }
 .dicebot-message .msg-name,
 .dicebot-message .msg-text {

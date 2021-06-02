@@ -18,7 +18,7 @@
         <span *ngIf="compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
         <ng-container *ngIf="!(isEditable && !compact); else editor"></ng-container>
       </div>
-      <div class="text msg-text">
+      <div class="text msg-text" [ngClass]="{ 'is-success': chatMessage.isSuccess, 'is-failure': chatMessage.isFailure, 'is-critical': chatMessage.isCritical, 'is-fumble': chatMessage.isFumble }">
         <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
       </div>
       <div *ngIf="isEditable && compact">

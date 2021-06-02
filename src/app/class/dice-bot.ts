@@ -34,6 +34,10 @@ interface DiceRollResult {
   isDiceRollTable?: boolean;
   tableName?: string;
   isEmptyDice?: boolean;
+  isSuccess?: boolean;
+  isFailure?: boolean;
+  isCritical?: boolean;
+  isFumble?: boolean;
 }
 
 // bcdice-js custom loader class
@@ -246,7 +250,7 @@ export class DiceBot extends GameObject {
           let rollText: string = (regArray[4] != null) ? regArray[4] : text;
 
           if (!rollText || repeat <= 0) return;
-          let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true };
+          let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true, isSuccess: true, isFailure: true };
           
           //ダイスボット表
           let isDiceRollTableMatch = false;
@@ -330,6 +334,10 @@ export class DiceBot extends GameObject {
                 finalResult.result += rollResult.result;
                 finalResult.isSecret = finalResult.isSecret || rollResult.isSecret || isRepSecret;
                 finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
+                finalResult.isSuccess = finalResult.isSuccess && rollResult.isSuccess;
+                finalResult.isFailure = finalResult.isFailure && rollResult.isFailure;
+                finalResult.isCritical = finalResult.isCritical && rollResult.isCritical;
+                finalResult.isFumble = finalResult.isFumble && rollResult.isFumble;
                 if (1 < repeat) finalResult.result += ` #${i + 1}\n`;
               }
             }
@@ -352,6 +360,10 @@ export class DiceBot extends GameObject {
     let result: string = rollResult.result;
     const isSecret: boolean = rollResult.isSecret;
     const isEmptyDice: boolean = rollResult.isEmptyDice;
+    const isSuccess: boolean = rollResult.isSuccess;
+    const isFailure: boolean = rollResult.isFailure;
+    const isCritical: boolean = rollResult.isCritical;
+    const isFumble: boolean = rollResult.isFumble;
 
     if (result.length < 1) return;
     if (!rollResult.isDiceRollTable) result = result.replace(/[＞]/g, s => '→').trim();
@@ -359,6 +371,10 @@ export class DiceBot extends GameObject {
     let tag = 'system';
     if (isSecret) tag += ' secret';
     if (isEmptyDice) tag += ' empty';
+    if (isSuccess) tag += ' success';
+    if (isFailure) tag += ' failure';
+    if (isCritical) tag += ' critical';
+    if (isFumble) tag += ' fumble';
 
     let diceBotMessage: ChatMessageContext = {
       identifier: '',
@@ -474,7 +490,8 @@ export class DiceBot extends GameObject {
               throw new Error(response.statusText);
             })
             .then(json => {
-              return { result: (gameType) + json.result + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, isEmptyDice: (json.dices && json.dices.length == 0) };
+              return { result: (gameType) + json.result + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, isEmptyDice: (json.dices && json.dices.length == 0),
+                isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble };
             })
             .catch(e => {
               //console.error(e);
@@ -488,7 +505,12 @@ export class DiceBot extends GameObject {
             let result = ac.result + cv.result;
             let isSecret = ac.isSecret || cv.isSecret;
             let isEmptyDice = ac.isEmptyDice && cv.isEmptyDice;
-            return { result: result, isSecret: isSecret, isEmptyDice: isEmptyDice };
+            let isSuccess = ac.isSuccess && cv.isSuccess;
+            let isFailure = ac.isFailure && cv.isFailure;
+            let isCritical = ac.isCritical && cv.isCritical;
+            let isFumble = ac.isFumble && cv.isFumble;
+            return { result: result, isSecret: isSecret, isEmptyDice: isEmptyDice, 
+              isSuccess: isSuccess, isFailure: isFailure, isCritical: isCritical, isFumble: isFumble };
           }, { result: '', isSecret: false, isEmptyDice: true }) })
       );
     } else {
@@ -508,7 +530,8 @@ export class DiceBot extends GameObject {
             console.log('diceRoll!!!', result);
             console.log('isSecret!!!', result.secret);
             console.log('isEmptyDice!!!', !result.rands || result.rands.length == 0);
-            return { result: result.text, isSecret: result.secret, isEmptyDice: !result.rands || result.rands.length == 0 };
+            return { result: result.text, isSecret: result.secret, isEmptyDice: !result.rands || result.rands.length == 0,
+              isSuccess: result.success, isFailure: result.failure, isCritical: result.critical, isFumble: result.fumble };
           } catch (e) {
             console.error(e);
           }
