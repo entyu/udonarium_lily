@@ -253,7 +253,8 @@ export class DiceBot extends GameObject {
           rollText = rollText.replace(/Ⅾ/g, 'D');
 
           if (!rollText || repeat <= 0) return;
-          let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true, isSuccess: true, isFailure: true };
+          let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
+            isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
           
           //ダイスボット表
           let isDiceRollTableMatch = false;
@@ -337,10 +338,10 @@ export class DiceBot extends GameObject {
                 finalResult.result += rollResult.result;
                 finalResult.isSecret = finalResult.isSecret || rollResult.isSecret || isRepSecret;
                 finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
-                finalResult.isSuccess = finalResult.isSuccess && rollResult.isSuccess;
+                finalResult.isSuccess = finalResult.isSuccess || rollResult.isSuccess;
                 finalResult.isFailure = finalResult.isFailure && rollResult.isFailure;
-                finalResult.isCritical = finalResult.isCritical && rollResult.isCritical;
-                finalResult.isFumble = finalResult.isFumble && rollResult.isFumble;
+                finalResult.isCritical = finalResult.isCritical || rollResult.isCritical;
+                finalResult.isFumble = finalResult.isFumble || rollResult.isFumble;
                 if (1 < repeat) finalResult.result += ` #${i + 1}\n`;
               }
             }
@@ -508,13 +509,13 @@ export class DiceBot extends GameObject {
             let result = ac.result + cv.result;
             let isSecret = ac.isSecret || cv.isSecret;
             let isEmptyDice = ac.isEmptyDice && cv.isEmptyDice;
-            let isSuccess = ac.isSuccess && cv.isSuccess;
+            let isSuccess = ac.isSuccess || cv.isSuccess;
             let isFailure = ac.isFailure && cv.isFailure;
-            let isCritical = ac.isCritical && cv.isCritical;
-            let isFumble = ac.isFumble && cv.isFumble;
+            let isCritical = ac.isCritical || cv.isCritical;
+            let isFumble = ac.isFumble || cv.isFumble;
             return { result: result, isSecret: isSecret, isEmptyDice: isEmptyDice, 
               isSuccess: isSuccess, isFailure: isFailure, isCritical: isCritical, isFumble: isFumble };
-          }, { result: '', isSecret: false, isEmptyDice: true }) })
+          }, { result: '', isSecret: false, isEmptyDice: true, isSuccess: false, isFailure: true, isCritical: false, isFumble: false }) })
       );
     } else {
       return DiceBot.queue.add((async () => {
