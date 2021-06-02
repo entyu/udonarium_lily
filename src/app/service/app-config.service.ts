@@ -18,7 +18,8 @@ export interface AppConfig {
     mode: string
   },
   dice?: {
-    url?: string
+    url?: string,
+    api?: number
   }
 }
 
@@ -42,7 +43,8 @@ export class AppConfigService {
       mode: ''
     },
     dice: {
-      url: ''
+      url: '',
+      api: 1
     }
   }
 

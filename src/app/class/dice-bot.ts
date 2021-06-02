@@ -58,6 +58,7 @@ export class DiceBot extends GameObject {
   private static readonly loadedDiceBots: { [gameType: string]: GameSystemClass } = {};
 
   public static apiUrl: string = null;
+  public static apiVersion: number = 1;
   public static adminUrl: string = null;
 
   public static diceBotInfos: DiceBotInfo[] = DiceBot.loader.listAvailableGameSystems()
@@ -482,7 +483,9 @@ export class DiceBot extends GameObject {
   static diceRollAsync(message: string, gameType: string, repeat: number = 1): Promise<DiceRollResult> {
     gameType = gameType ? gameType : 'DiceBot';
     if (DiceBot.apiUrl) {
-      const request = DiceBot.apiUrl + '/v1/diceroll?system=' + (gameType ? encodeURIComponent(gameType) : 'DiceBot') + '&command=' + encodeURIComponent(message);
+      const request = DiceBot.apiVersion == 1 
+        ? DiceBot.apiUrl + '/v1/diceroll?system=' + (gameType ? encodeURIComponent(gameType) : 'DiceBot') + '&command=' + encodeURIComponent(message)
+        : `${DiceBot.apiUrl}/v2/game_system/${(gameType ? encodeURIComponent(gameType) : 'DiceBot')}/roll?command=${encodeURIComponent(message)}`;
       const promisise = [];
       for (let i = 1; i <= repeat; i++) {
         promisise.push(
@@ -494,7 +497,9 @@ export class DiceBot extends GameObject {
               throw new Error(response.statusText);
             })
             .then(json => {
-              return { result: (gameType) + json.result + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, isEmptyDice: (json.dices && json.dices.length == 0),
+              console.log(JSON.stringify(json))
+              return { result: (gameType) + (DiceBot.apiVersion == 1 ? json.result : json.text) + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, 
+                isEmptyDice: DiceBot.apiVersion == 1 ? (json.dices && json.dices.length == 0) : (json.rands && json.rands.length == 0),
                 isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble };
             })
             .catch(e => {
@@ -548,20 +553,22 @@ export class DiceBot extends GameObject {
     gameType = gameType ? gameType : 'DiceBot';
     if (DiceBot.apiUrl) {
       const promisise = [
-        fetch(DiceBot.apiUrl + '/v1/systeminfo?system=DiceBot', {mode: 'cors'})
+        fetch(DiceBot.apiVersion == 1 ? DiceBot.apiUrl + '/v1/systeminfo?system=DiceBot' : `${DiceBot.apiUrl}/v2/game_system/DiceBot`, {mode: 'cors'})
           .then(response => { return response.json() })
       ];
       if (gameType && gameType != 'DiceBot') {
         promisise.push(
-          fetch(DiceBot.apiUrl + '/v1/systeminfo?system=' + encodeURIComponent(gameType), {mode: 'cors'})
+          fetch(DiceBot.apiVersion == 1 ? DiceBot.apiUrl + '/v1/systeminfo?system=' + encodeURIComponent(gameType) : `${DiceBot.apiUrl}/v2/game_system/${encodeURIComponent(gameType)}`, {mode: 'cors'})
             .then(response => { return response.json() })
         );
       }
       return Promise.all(promisise)
         .then(jsons => { 
           return jsons.map(json => {
-            if (json.systeminfo && json.systeminfo.info) {
+            if (DiceBot.apiVersion == 1 && json.systeminfo && json.systeminfo.info) {
               return json.systeminfo.info.replace('部屋のシステム名', 'チャットパレットなどのシステム名');
+            } else if (json.help_message) {
+              return json.help_message.replace('部屋のシステム名', 'チャットパレットなどのシステム名');
             } else {
               return 'ダイスボット情報がありません。';
             }                

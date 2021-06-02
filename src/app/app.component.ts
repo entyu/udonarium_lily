@@ -181,19 +181,22 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on<AppConfig>('LOAD_CONFIG', event => {
         console.log('LOAD_CONFIG !!!', event.data);
         if (event.data.dice && event.data.dice.url) {
+          const API_VERSION = event.data.dice.api;
+          //console.log(api)
           //ToDO BCDice-API管理者情報表示の良いUI思いつかないのでペンディング
           //fetch(event.data.dice.url + '/v1/admin', {mode: 'cors'})
           //  .then(response => { return response.json() })
           //  .then(infos => { DiceBot.adminUrl = infos.url });
-          fetch(event.data.dice.url + '/v1/names', {mode: 'cors'})
+          fetch(event.data.dice.url + (API_VERSION == 1 ? '/v1/names' : '/v2/game_system'), {mode: 'cors'})
             .then(response => { return response.json() })
             .then(infos => {
               let apiUrl = event.data.dice.url;
               DiceBot.apiUrl = (apiUrl.substr(apiUrl.length - 1) === '/') ? apiUrl.substr(0, apiUrl.length - 1) : apiUrl;
+              DiceBot.apiVersion = API_VERSION;
               DiceBot.diceBotInfos = [];
               //DiceBot.diceBotInfos.push(
-              let tempInfos = infos.names
-                .filter(info => info.system != 'DiceBot')
+              let tempInfos = (API_VERSION == 1 ? infos.names : infos.game_system)
+                .filter(info => (API_VERSION == 1 ? info.system : info.id) != 'DiceBot')
                 .map(info => {
                   let normalize = (info.sort_key && info.sort_key.indexOf('国際化') < 0) ? info.sort_key : info.name.normalize('NFKD');
                   for (let replaceData of DiceBot.replaceData) {
@@ -216,7 +219,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                   return info;
                 })
                 .map(info => {
-                  const lang = /.+\:(.+)/.exec(info.system);
+                  const lang = /.+\:(.+)/.exec((API_VERSION == 1 ? info.system : info.id));
                   info.lang = lang ? lang[1] : 'A';
                   return info;
                 })
@@ -226,7 +229,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                     : a.normalize == b.normalize ? 0 
                     : a.normalize < b.normalize ? -1 : 1;
                 });
-              DiceBot.diceBotInfos.push(...tempInfos.map(info => { return { script: info.system, game: info.name } }));
+              DiceBot.diceBotInfos.push(...tempInfos.map(info => { return { script: (API_VERSION == 1 ? info.system : info.id), game: info.name } }));
               if (tempInfos.length > 0) {
                 let sentinel = tempInfos[0].normalize.substr(0, 1);
                 let group = { index: tempInfos[0].normalize.substr(0, 1), infos: [] };
@@ -242,7 +245,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                     DiceBot.diceBotInfosIndexed.push(group);
                     group = { index: index, infos: [] };
                   }
-                  group.infos.push({ script: info.system, game: info.name });
+                  group.infos.push({ script: (API_VERSION == 1 ? info.system : info.id), game: info.name });
                 }
                 DiceBot.diceBotInfosIndexed.push(group);
                 DiceBot.diceBotInfosIndexed.sort((a, b) => a.index == b.index ? 0 : a.index < b.index ? -1 : 1);
