@@ -46,6 +46,8 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get isLock(): boolean { return this.gameTableMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
   
+  get fontSize(): number { return this.gameTableMask.fontsize; }
+  set fontSize(fontSize: number) { this.gameTableMask.fontsize = fontSize; }
   get text(): string { return this.gameTableMask.text; }
   set text(text: string) { this.gameTableMask.text = text; }
 
@@ -237,7 +239,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'マップマスク設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
-    let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 380 };
+    let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 440 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }

@@ -14,6 +14,16 @@ export class GameTableMask extends TabletopObject {
     let num = element ? <number>element.currentValue / <number>element.value : 1;
     return Number.isNaN(num) ? 1 : num;
   }
+  
+  get fontsize(): number { 
+    let element = this.getElement('fontsize', this.commonDataElement);
+    if (!element && this.commonDataElement) {
+      this.commonDataElement.appendChild(DataElement.create('fontsize', 18, { }, 'fontsize_' + this.identifier));
+    }
+    return element ? +element.value : 18;
+  }
+  set fontsize(fontsize: number) { this.setCommonValue('fontsize', fontsize); }
+  
   get text(): string { 
     let element = this.getElement('text', this.commonDataElement);
     if (!element && this.commonDataElement) {
@@ -37,8 +47,9 @@ export class GameTableMask extends TabletopObject {
     object.commonDataElement.appendChild(DataElement.create('width', width, {}, 'width_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('height', height, {}, 'height_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('opacity', opacity, { type: 'numberResource', currentValue: opacity }, 'opacity_' + object.identifier));
+    object.commonDataElement.appendChild(DataElement.create('fontsize', 18, { }, 'fontsize_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('text', '', { type: 'note', currentValue: '' }, 'text_' + object.identifier));
-    object.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + object.identifier));
+    object.commonDataElement.appendChild(DataElement.create('altitude', 0, { }, 'altitude_' + object.identifier));
     object.initialize();
 
     return object;
