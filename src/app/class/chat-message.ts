@@ -140,10 +140,12 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     if (this.isDicebot || this.isCalculate) messageClassNames.push('dicebot-message');
     
     let messageTextClassNames = ['msg-text'];
-    if (this.isSuccess) messageTextClassNames.push('is-success');
-    if (this.isFailure) messageTextClassNames.push('is-failure');
-    if (this.isCritical) messageTextClassNames.push('is-critical');
-    if (this.isFumble) messageTextClassNames.push('is-fumble');
+    if (!this.isSecret || this.isSendFromSelf) {
+      if (this.isSuccess) messageTextClassNames.push('is-success');
+      if (this.isFailure) messageTextClassNames.push('is-failure');
+      if (this.isCritical) messageTextClassNames.push('is-critical');
+      if (this.isFumble) messageTextClassNames.push('is-fumble');
+    }
 
     const color = StringUtil.escapeHtml(this.color ? this.color : PeerCursor.CHAT_DEFAULT_COLOR);
     const colorStyle = this.isSpecialColor ? '' : ` style="color: ${ color }"`;
