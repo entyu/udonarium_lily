@@ -14,6 +14,14 @@ export class GameTableMask extends TabletopObject {
     let num = element ? <number>element.currentValue / <number>element.value : 1;
     return Number.isNaN(num) ? 1 : num;
   }
+  get text(): string { 
+    let element = this.getElement('text', this.commonDataElement);
+    if (!element && this.commonDataElement) {
+      this.commonDataElement.appendChild(DataElement.create('text', '', { type: 'note', currentValue: '' }, 'text_' + this.identifier));
+    }
+    return element ? element.value + '' : '';
+  }
+  set text(text: string) { this.setCommonValue('text', text); }
 
   static create(name: string, width: number, height: number, opacity: number, identifier?: string): GameTableMask {
     let object: GameTableMask = null;
@@ -29,6 +37,7 @@ export class GameTableMask extends TabletopObject {
     object.commonDataElement.appendChild(DataElement.create('width', width, {}, 'width_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('height', height, {}, 'height_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('opacity', opacity, { type: 'numberResource', currentValue: opacity }, 'opacity_' + object.identifier));
+    object.commonDataElement.appendChild(DataElement.create('text', '', { type: 'note', currentValue: '' }, 'text_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + object.identifier));
     object.initialize();
 

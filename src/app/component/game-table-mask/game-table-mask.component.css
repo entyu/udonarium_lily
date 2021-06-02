@@ -90,3 +90,31 @@
 .fall {
   transition: transform 64ms ease-in;
 }
+
+.text {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: bolder;
+  text-align: center;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-size: 24px;
+  color: rgb(104, 101, 101);
+  z-index: 5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 
+  #fff 0px 0px 1px, 
+  #fff 0px 0px 1px, 
+  #fff 0px 0px 1px, 
+  #fff 0px 0px 1px, 
+  #fff 0px 0px 1px, 
+  #fff 0px 0px 1px,
+  #fff 0px 0px 1px,
+  #fff 0px 0px 1px;
+}
