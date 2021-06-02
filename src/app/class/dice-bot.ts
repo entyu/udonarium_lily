@@ -249,6 +249,9 @@ export class DiceBot extends GameObject {
           const repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
           let rollText: string = (regArray[4] != null) ? regArray[4] : text;
 
+          //ローマ数字のⅮの置き換え
+          rollText = rollText.replace(/Ⅾ/g, 'D');
+
           if (!rollText || repeat <= 0) return;
           let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true, isSuccess: true, isFailure: true };
           
