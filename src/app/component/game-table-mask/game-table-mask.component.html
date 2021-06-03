@@ -7,11 +7,11 @@
     <div [style.font-size.px]="fontSize + 9">{{text}}</div>
   </div>
   <div class="border is-fit-full is-3d"
-    style="pointer-events: auto" 
-    [style.background-color]="imageFile.url.length < 1 ? 'rgba(10, 10, 10,' + opacity +')' : null"
+    style="pointer-events: auto" [style.opacity]="opacity" 
+    [style.background-color]="imageFile.url.length < 1 || isBlend ? color : null"
     [ngClass]="{fall: altitude == 0, image: imageFile.url.length >= 1}" 
     [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
-    <img *ngIf="imageFile.url.length >= 1" class="is-fit-full" style="pointer-events: none" [style.opacity]="opacity" [src]="imageFile.url | safe: 'resourceUrl'">
+    <img *ngIf="imageFile.url.length >= 1" class="is-fit-full" style="pointer-events: none" [src]="imageFile.url | safe: 'resourceUrl'">
   </div>
   <div *ngIf="isLock" class="lock-icon is-center is-3d" style="pointer-events: none; z-index: 10" [ngClass]="{fall: altitude == 0}" [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
     <i class="material-icons is-3d" style="pointer-events: none">lock</i>

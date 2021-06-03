@@ -200,3 +200,38 @@ input[type='range']::-ms-tooltip {
   font-size: smaller;
 }
 
+input[type="color"]:hover,
+input[type="color"]:not(:hover) {
+  appearance: auto;
+  width: 44px;
+  height: 26px;
+  background-color: rgb(239, 239, 239);
+  cursor: default;
+  color: black;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(118, 118, 118);
+  border-image: initial;
+  padding: 1px 2px;
+}
+@media (prefers-color-scheme: dark) {
+  input[type="color"]:hover,
+  input[type="color"]:not(:hover) {
+    background-color: rgb(59, 59, 59);
+    color: white;
+    border-color: rgb(133, 133, 133);
+  }
+}
+
+.grow {
+  font-weight: bolder;
+  text-shadow: 
+    #fff 0px 0px 2px, 
+    #fff 0px 0px 2px, 
+    #fff 0px 0px 2px, 
+    #fff 0px 0px 2px, 
+    #fff 0px 0px 2px, 
+    #fff 0px 0px 2px,
+    #fff 0px 0px 2px,
+    #fff 0px 0px 2px;
+}

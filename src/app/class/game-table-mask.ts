@@ -5,6 +5,7 @@ import { TabletopObject } from './tabletop-object';
 @SyncObject('table-mask')
 export class GameTableMask extends TabletopObject {
   @SyncVar() isLock: boolean = false;
+  @SyncVar() isBlend: boolean = false;
 
   get name(): string { return this.getCommonValue('name', ''); }
   get width(): number { return this.getCommonValue('width', 1); }
@@ -33,6 +34,15 @@ export class GameTableMask extends TabletopObject {
   }
   set text(text: string) { this.setCommonValue('text', text); }
 
+  get color(): string { 
+    let element = this.getElement('color', this.commonDataElement);
+    if (!element && this.commonDataElement) {
+      this.commonDataElement.appendChild(DataElement.create('color', "#0a0a0a", { type: 'color' }, 'color_' + this.identifier));
+    }
+    return element ? element.value + '' : '';
+  }
+  set color(color: string) { this.setCommonValue('color', color); }
+
   static create(name: string, width: number, height: number, opacity: number, identifier?: string): GameTableMask {
     let object: GameTableMask = null;
 
@@ -46,6 +56,7 @@ export class GameTableMask extends TabletopObject {
     object.commonDataElement.appendChild(DataElement.create('name', name, {}, 'name_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('width', width, {}, 'width_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('height', height, {}, 'height_' + object.identifier));
+    object.commonDataElement.appendChild(DataElement.create('color', "#0a0a0a", { type: 'color' }, 'color_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('opacity', opacity, { type: 'numberResource', currentValue: opacity }, 'opacity_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('fontsize', 18, { }, 'fontsize_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('text', '', { type: 'note', currentValue: '' }, 'text_' + object.identifier));

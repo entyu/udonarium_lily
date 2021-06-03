@@ -75,6 +75,10 @@
               <button style="width: 1.6rem" [attr.disabled]="!stringUtil.validUrl(value) ? '' : null" (click)="stringUtil.validUrl(value) ? openUrl(value) : false"><i class="material-icons" style="font-size: 1.0rem">{{ !stringUtil.validUrl(value) ? 'link_off' : (stringUtil.sameOrigin(value) ? 'link' : 'open_in_new') }}</i></button>
             </span>
           </ng-container>
+          <ng-container *ngSwitchCase="'color'">
+            <input type="color" style="width: 1em; margin-right: 1px" [(ngModel)]="value" />
+            <span class="grow" style="width: 80%; color: #444; padding: 2px 4px" [style.background-color]="value">{{value}}</span>
+          </ng-container>
           <ng-container *ngSwitchDefault>
             <!-- size属性がないと小さくならない -->
             <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div>

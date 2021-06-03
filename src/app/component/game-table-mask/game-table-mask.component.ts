@@ -45,11 +45,15 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get imageFile(): ImageFile { return this.gameTableMask.imageFile; }
   get isLock(): boolean { return this.gameTableMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
-  
+  get isBlend(): boolean { return this.gameTableMask.isBlend; }
+  set isBlend(isBlend: boolean) { this.gameTableMask.isBlend = isBlend; }
+
   get fontSize(): number { return this.gameTableMask.fontsize; }
-  set fontSize(fontSize: number) { this.gameTableMask.fontsize = fontSize; }
+  //set fontSize(fontSize: number) { this.gameTableMask.fontsize = fontSize; }
   get text(): string { return this.gameTableMask.text; }
-  set text(text: string) { this.gameTableMask.text = text; }
+  //set text(text: string) { this.gameTableMask.text = text; }
+  get color(): string { return this.gameTableMask.color; }
+  //set color(color: string) { this.gameTableMask.color = color; }
 
   get altitude(): number { return this.gameTableMask.altitude; }
   set altitude(altitude: number) { this.gameTableMask.altitude = altitude; }
@@ -156,6 +160,20 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
           name: '☐ 固定', action: () => {
             this.isLock = true;
             SoundEffect.play(PresetSound.lock);
+          }
+        }
+      ),
+      (this.isBlend
+        ? {
+          name: '☑ 画像と色を重ねる', action: () => {
+            this.isBlend = false;
+            SoundEffect.play(PresetSound.sweep);
+          }
+        }
+        : {
+          name: '☐ 画像と色を重ねる', action: () => {
+            this.isBlend = true;
+            SoundEffect.play(PresetSound.sweep);
           }
         }
       ),
