@@ -22,8 +22,6 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
   @SyncVar() syncDummyCounter: number = 0;
 
-  @SyncVar() selectedIconNum: number = 0;
-
   _selectedTachieNum: number = 0;
 
   get selectedTachieNum(): number {
@@ -51,20 +49,39 @@ export class GameCharacter extends TabletopObject {
 
   }
 
+  private getIconNumElement(): DataElement {
+    const iconNum = this.detailDataElement.getFirstElementByName('ICON');
+    if (!iconNum || !iconNum.isNumberResource) return null;
+    return iconNum;
+  }
+
   nextIcon() {
-    if (this.selectedIconNum >= this.imageDataElement.children.length - 1) {
-      this.selectedIconNum = 0;
+    const iconNum = this.getIconNumElement();
+    if (!iconNum) return;
+
+    const n = <number>iconNum.currentValue;
+    if (n >= this.imageDataElement.children.length - 1) {
+      iconNum.currentValue = 0;
     } else {
-      this.selectedIconNum += 1;
+      iconNum.currentValue = n + 1;
     }
-    console.log("set selectedIconNum " + this.selectedIconNum);
+    console.log("set selectedIconNum " + iconNum.currentValue);
   }
 
   get imageFile(): ImageFile {
     if (!this.imageDataElement) return ImageFile.Empty;
-    const image = this.imageDataElement.children[this.selectedIconNum];
-    const file = ImageStorage.instance.get(<string>image.value)
-    return file ? file : ImageFile.Empty;
+
+    const iconNum = this.getIconNumElement();
+    if (!iconNum) {
+      const image: DataElement = this.imageDataElement.getFirstElementByName('imageIdentifier');
+      return image ? ImageStorage.instance.get(<string>image.value) : ImageFile.Empty;
+    } else {
+      let n = <number>iconNum.currentValue;
+      if (n > this.imageDataElement.children.length - 1) n = this.imageDataElement.children.length - 1;
+      const image = this.imageDataElement.children[n];
+      const file = ImageStorage.instance.get(<string>image.value)
+      return file ? file : ImageFile.Empty;
+    }
   }
 
   get name(): string { return this.getCommonValue('name', ''); }
@@ -112,6 +129,19 @@ export class GameCharacter extends TabletopObject {
       this.detailDataElement.appendChild(testElement);
       testElement.appendChild(DataElement.create('POS', 11, { 'type': 'numberResource', 'currentValue': '0' }, 'POS_' + this.identifier));
     }
+
+    let iconNum = this.detailDataElement.getElementsByName('コマ画像');
+    if( iconNum.length == 0 ){
+      let element: DataElement = DataElement.create('コマ画像', '', {}, 'コマ画像' + this.identifier);
+      this.detailDataElement.appendChild(element);
+      element.appendChild(DataElement.create(
+        'ICON',
+        this.imageDataElement.children.length - 1,
+        { 'type': 'numberResource', 'currentValue': 0 },
+        'ICON_' + this.identifier
+      ));
+    }
+
     let isbuff = this.buffDataElement.getElementsByName('バフ/デバフ');
     if( isbuff.length == 0 ){
       let buffElement: DataElement = DataElement.create('バフ/デバフ', '', {}, 'バフ/デバフ' + this.identifier);
