@@ -1,5 +1,7 @@
 import { ChatPalette,BuffPalette } from './chat-palette';
 
+import { ImageFile } from './core/file-storage/image-file';
+import { ImageStorage } from './core/file-storage/image-storage';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
@@ -20,24 +22,24 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
   @SyncVar() syncDummyCounter: number = 0;
 
-  _selectedTachieNum:number = 0;
-  
-  get selectedTachieNum(): number { 
-    
+  @SyncVar() selectedIconNum: number = 0;
+
+  _selectedTachieNum: number = 0;
+
+  get selectedTachieNum(): number {
     if( this._selectedTachieNum > ( this.imageDataElement.children.length - 1) ){
       this._selectedTachieNum = this.imageDataElement.children.length - 1;
     }
     if( this._selectedTachieNum < 0 ){
       this._selectedTachieNum = 0;
     }
-   
-    return this._selectedTachieNum; 
+
+    return this._selectedTachieNum;
   }
 
-  set selectedTachieNum(num : number){ 
-    
+  set selectedTachieNum(num : number){
     console.log("set selectedTachieNum NUM=" + num +" len" + this.imageDataElement.children.length);
-    
+
     if( num > ( this.imageDataElement.children.length - 1 ) ){
       num = this.imageDataElement.children.length - 1;
     }
@@ -49,8 +51,22 @@ export class GameCharacter extends TabletopObject {
 
   }
 
-  
-  
+  nextIcon() {
+    if (this.selectedIconNum >= this.imageDataElement.children.length - 1) {
+      this.selectedIconNum = 0;
+    } else {
+      this.selectedIconNum += 1;
+    }
+    console.log("set selectedIconNum " + this.selectedIconNum);
+  }
+
+  get imageFile(): ImageFile {
+    if (!this.imageDataElement) return ImageFile.Empty;
+    const image = this.imageDataElement.children[this.selectedIconNum];
+    const file = ImageStorage.instance.get(<string>image.value)
+    return file ? file : ImageFile.Empty;
+  }
+
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
 
@@ -65,13 +81,13 @@ export class GameCharacter extends TabletopObject {
 
   TestExec() {
     console.log('TestExec');
- 
-  }  
+
+  }
   get remoteController(): BuffPalette {
     for (let child of this.children) {
       if (child instanceof BuffPalette){
         return child;
-      } 
+      }
     }
     return null;
   }
@@ -87,9 +103,9 @@ export class GameCharacter extends TabletopObject {
   }
 
   addExtendData(){
-    
+
     this.addBuffDataElement();
-    
+
     let istachie = this.detailDataElement.getElementsByName('立ち絵位置');
     if( istachie.length == 0 ){
       let testElement: DataElement = DataElement.create('立ち絵位置', '', {}, '立ち絵位置' + this.identifier);
@@ -118,7 +134,7 @@ export class GameCharacter extends TabletopObject {
     let objectname:string;
     let reg = new RegExp('^(.*)_([0-9]+)$');
     let res = cloneObject.name.match(reg);
-    
+
     let cloneNumber:number = 0;
     if(res != null && res.length == 3) {
       objectname = res[1];
@@ -131,7 +147,7 @@ export class GameCharacter extends TabletopObject {
     let list = ObjectStore.instance.getObjects(GameCharacter);
     for (let character of list ) {
       if( character.location.name == 'graveyard' ) continue;
-      
+
       res = character.name.match(reg);
       if(res != null && res.length == 3 && res[1] == objectname) {
         let numberChk = parseInt(res[2]) + 1 ;
@@ -143,7 +159,7 @@ export class GameCharacter extends TabletopObject {
 
     cloneObject.name = objectname + '_' + cloneNumber;
     cloneObject.update();
-    
+
     return cloneObject;
 
   }
@@ -194,7 +210,7 @@ export class GameCharacter extends TabletopObject {
     testElement.appendChild(DataElement.create('Lv7', '頑強', {}, 'Lv7' + this.identifier));
     testElement.appendChild(DataElement.create('Lv9', '薙ぎ払い', {}, 'Lv9' + this.identifier));
     testElement.appendChild(DataElement.create('自動', '治癒適正', {}, '自動' + this.identifier));
-    
+
     //
     let domParser: DOMParser = new DOMParser();
     let gameCharacterXMLDocument: Document = domParser.parseFromString(this.rootDataElement.toXml(), 'application/xml');
@@ -237,7 +253,7 @@ export class GameCharacter extends TabletopObject {
     //TEST
     let testElement: DataElement = DataElement.create('情報', '', {}, '情報' + this.identifier);
     this.detailDataElement.appendChild(testElement);
-    testElement.appendChild(DataElement.create('説明', 
+    testElement.appendChild(DataElement.create('説明',
 `このキャラクターはキャラクターBの補助用のコマを作るときのサンプルです。
 まず、このキャラクターはキャラクターシートの設定で「テーブルインベントリ非表示」「発言をしない」のチェックが入っています。
 このように設定したキャラクターは「非表示」で足元のサークルの色が青に変わり、テーブルインベントリやリリィ追加機能のカウンターリモコンに表示されなくなります。
@@ -251,7 +267,7 @@ export class GameCharacter extends TabletopObject {
 定義されていても持っていない項目は表示されないのでこのコマからはHPや能力値を削っています。
 ゲームごとに使いやすいように使ってください。
 `, { 'type': 'note' }, '説明' + this.identifier));
-    testElement.appendChild(DataElement.create('持ち物', 
+    testElement.appendChild(DataElement.create('持ち物',
 `こういった文章も見やすくなります。
 アイテム1：3個　効果〇〇
 アイテム2：3個　効果パーティ内一人のHPをXXする
@@ -274,7 +290,7 @@ export class GameCharacter extends TabletopObject {
     this.appendChild(palette);
     this.addExtendData();
 
-    
+
 
 
   }
