@@ -48,6 +48,8 @@ import { ModalService } from 'service/modal.service';
 export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
   @ViewChild('cardImage', { static: false }) cardImageElement: ElementRef;
+  @ViewChild('fullCardImage', { static: false }) fullCardImageElement: ElementRef<HTMLElement>;
+
   @Input() tabletopObject: TabletopObject = null;
 
   @Input() left: number = 0;
@@ -55,6 +57,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
 
   naturalWidth = 0;
   naturalHeight = 0;
+
   stringUtil = StringUtil;
 
   private _imageFile: ImageFile = ImageFile.Empty;
@@ -259,21 +262,35 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     this.naturalWidth = this.cardImageElement.nativeElement.naturalWidth;
     this.naturalHeight = this.cardImageElement.nativeElement.naturalHeight;
   }
+  onFullCardImageLoad() {
+    if (!this.cardImageElement) return;
+    this.naturalWidth = this.cardImageElement.nativeElement.naturalWidth;
+    this.naturalHeight = this.cardImageElement.nativeElement.naturalHeight;
+  }
 
   get imageAreaRect(): {width: number, height: number, top: number, left: number} {
-    const rect = {width: 0, height: 0, top: 8, left: 8};
+    return this.calcImageAreaRect(250, 330, 8);
+  }
+
+  get fullImageAreaRect(): {width: number, height: number, top: number, left: number} {
+    return this.calcImageAreaRect(document.documentElement.clientWidth, document.documentElement.offsetHeight, 16);
+  }
+
+  private calcImageAreaRect(areaWidth: number, areaHeight: number, offset: number): {width: number, height: number, top: number, left: number} {
+    const rect = {width: 0, height: 0, top: offset, left: offset};
     if (this.naturalWidth == 0 || this.naturalHeight == 0) return rect;
 
-    const viewWidth = 250 - 16;
-    const maxViewHeigth = 330 - 16;
+    const viewWidth = areaWidth - offset * 2;
+    const viewHeight = areaHeight - offset * 2;
 
-    if ((this.naturalHeight * viewWidth / this.naturalWidth) > maxViewHeigth) {
-      rect.width = this.naturalWidth * maxViewHeigth / this.naturalHeight;
-      rect.height = maxViewHeigth;
-      rect.left = 8 + (viewWidth - rect.width) / 2;
+    if ((this.naturalHeight * viewWidth / this.naturalWidth) > viewHeight) {
+      rect.width = this.naturalWidth * viewHeight / this.naturalHeight;
+      rect.height = viewHeight;
+      rect.left = offset + (viewWidth - rect.width) / 2;
     } else {
       rect.width = viewWidth;
       rect.height = this.naturalHeight * viewWidth / this.naturalWidth;
+      rect.top = offset + (viewHeight - rect.height) / 2;
     }
 
     return rect;
