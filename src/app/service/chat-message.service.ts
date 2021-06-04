@@ -135,21 +135,22 @@ export class ChatMessageService {
 
       if( matchHide ){ //非表示コマンド
         chatMessage.imageIdentifier = '';
+        chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
       }else if( matchNum ){ //インデックス指定
-
         const num: number = parseInt( matchNum[1] );
         const newIdentifier = this.findImageIdentifier( sendFrom,num );
         if( newIdentifier ){
           chatMessage.imageIdentifier = newIdentifier;
+          chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
         }
       }else{
         const tachieName = matchesArray[1];
         const newIdentifier = this.findImageIdentifierName( sendFrom,tachieName );
         if( newIdentifier ){
           chatMessage.imageIdentifier = newIdentifier;
+          chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
         }
       }
-      chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
     }
     return chatTab.addMessage(chatMessage);
   }
@@ -177,20 +178,17 @@ export class ChatMessageService {
   private makeMessageName(sendFrom: string, sendTo?: string): string {
     let sendFromName = this.findObjectName(sendFrom);
     if (sendTo == null || sendTo.length < 1) return sendFromName;
-
     let sendToName = this.findObjectName(sendTo);
     return sendFromName + ' > ' + sendToName;
   }
 
-
   private findImageIdentifierName(sendFrom,name:string): string {
+// 完全一致
     let object = ObjectStore.instance.get(sendFrom);
-// 完全一致 
     if (object instanceof GameCharacter) {
       let data:DataElement = object.imageDataElement;
       for (let child of data.children) {
         if (child instanceof DataElement) {
-          console.log( "child" + child.getAttribute('currentValue') );
           if (child.getAttribute('currentValue') == name){
             console.log( "HIT!!" + child.getAttribute('currentValue') + '=' + name);
             const img = ImageStorage.instance.get(<string>child.value);
@@ -200,7 +198,7 @@ export class ChatMessageService {
           }
         }
       }
-
+// 部分前方一致
       for (let child of data.children) {
         if (child instanceof DataElement) {
           console.log( "child" + child.getAttribute('currentValue') );
