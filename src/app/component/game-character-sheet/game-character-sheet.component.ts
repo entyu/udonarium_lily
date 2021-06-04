@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { EventSystem, Network } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
@@ -73,6 +73,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   ]
 })
 export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('mainImage', { static: false }) mainImageElement: ElementRef;
 
   @Input() tabletopObject: TabletopObject = null;
   isEdit: boolean = false;
@@ -82,6 +83,9 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   isSaveing: boolean = false;
   progresPercent: number = 0;
+
+  mainImageWidth = 0;
+  mainImageHeight = 0;
 
   constructor(
     private saveDataService: SaveDataService,
@@ -340,6 +344,11 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     let option: PanelOption = { left: coordinate.x - 400, top: coordinate.y - 175, width: 720, height: 572 };
     let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
     component.character = <GameCharacter>this.tabletopObject;
+  }
+
+  onMainImageLoad() {
+    this.mainImageWidth = this.mainImageElement.nativeElement.clientWidth;
+    this.mainImageHeight = this.mainImageElement.nativeElement.clientHeight;
   }
 
   identify(index, obj){

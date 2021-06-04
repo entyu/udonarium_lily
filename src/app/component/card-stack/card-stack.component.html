@@ -5,6 +5,10 @@
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
     <div *ngIf="topCard && imageFile" @bounceInOut (@shuffle.start)="animationShuffleStarted($event)" (@shuffle.done)="animationShuffleDone($event)"
       [@shuffle]="animeState">
+      <div *ngIf="topCard.isFront" class="text" style="width: 100%; height: 100%"
+        [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}">
+        <div [style.font-size.px]="topCard.fontsize + 9" [style.color]="topCard.color">{{topCard.text}}</div>
+      </div>
       <img class="card-image" [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
     <ng-container *ngIf="!isIconHidden">
@@ -21,10 +25,10 @@
         <i class="material-icons">autorenew</i>
       </div>
     </ng-container>
-    <div *ngIf="isShowTotal" class="name-tag is-nowrap is-black-background" [ngStyle]="{'transform': 'translateY(-50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+    <div *ngIf="isShowTotal" class="name-tag is-nowrap is-black-background" style="z-index: 10" [ngStyle]="{'transform': 'translateY(-50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
       <span>{{cards.length}}枚</span>
     </div>
-    <div *ngIf="hasOwner" class="name-tag has-length-limit is-nowrap is-black-background" style="color: whitesmoke" [ngStyle]="{'background-color': ownerColor,'transform': 'translateY(50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+    <div *ngIf="hasOwner" class="name-tag has-length-limit is-nowrap is-black-background" style="z-index: 10; color: whitesmoke" [ngStyle]="{'background-color': ownerColor,'transform': 'translateY(50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
       <span><b>{{ownerName}}</b> が確認中</span>
     </div>
   </div>

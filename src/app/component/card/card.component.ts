@@ -50,6 +50,17 @@ import { ModalService } from 'service/modal.service';
         ]))
       ])
     ]),
+    trigger('flipOpen', [
+      transition(':enter', [
+        animate('200ms ease', keyframes([
+          style({ transform: 'scale3d(0, 1.0, 1.0)', offset: 0 }),
+          style({ transform: 'scale3d(0, 1.2, 1.2)', offset: 0.5 }),
+          style({ transform: 'scale3d(0, 0.75, 0.75)', offset: 0.75 }),
+          style({ transform: 'scale3d(0.5, 1.125, 1.125)', offset: 0.875 }),
+          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
+        ]))
+      ])
+    ]),
     trigger('slidInOut', [
       transition('void => *', [
         animate('200ms ease', keyframes([
@@ -76,6 +87,13 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   set owner(owner: string) { this.card.owner = owner; }
   get zindex(): number { return this.card.zindex; }
   get size(): number { return this.adjustMinBounds(this.card.size); }
+
+  get fontSize(): number { return this.card.fontsize; }
+  set fontSize(fontSize: number) { this.card.fontsize = fontSize; }
+  get text(): string { return this.card.text; }
+  set text(text: string) { this.card.text = text; }
+  get color(): string { return this.card.color; }
+  set color(color: string) { this.card.color = color; }
 
   get isHand(): boolean { return this.card.isHand; }
   get isFront(): boolean { return this.card.isFront; }

@@ -3,6 +3,9 @@
   <div @slidInOut class="is-pointer-events-none">
     <div class="component-content is-pointer-events-auto"
       appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
+      <div *ngIf="isFront || isHand" @flipOpen class="text" style="width: 100%; height: 100%" [style.opacity]="isHand ? 0.7 : 1.0">
+        <div [@inverse]="state" [style.font-size.px]="fontSize + 9" [style.color]="color">{{text}}</div>
+      </div>
       <img [@inverse]="state" *ngIf="imageFile" class="card-image" [src]="(isFront ? frontImage.url : backImage.url) | safe: 'resourceUrl'">
       <div *ngIf="!isFront && hasOwner && 0 < ownerName.length" class="name-tag is-nowrap has-length-limit is-black-background" [ngStyle]="{'background-color': ownerColor, 'transform': 'translateY(-75%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
         <span><b>{{ownerName}}</b></span>
