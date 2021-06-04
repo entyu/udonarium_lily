@@ -11,8 +11,10 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { DataElement } from '@udonarium/data-element';
 
 import { DiceBot } from '@udonarium/dice-bot';
+
 
 const HOURS = 60 * 60 * 1000;
 
@@ -122,25 +124,33 @@ export class ChatMessageService {
       sendFrom: sendFrom //lily
     };
 
-    // ハイド処理
-    let chkMessage = ' ' + StringUtil.toHalfWidth(text).toLowerCase();
-    let matches_array = chkMessage.match(/\s@(\S+)$/i);
-    if( matches_array ){
-      if( RegExp.$1 == 'hide' )
-        chatMessage.imageIdentifier = '';
-        
-      chatMessage.text = text.replace(/([@＠]\S+)$/i,'');
-    }
-    
     // 立ち絵置き換え
-    let matches_array_num = chkMessage.match(/\s@(\d+)$/i);
-    if( matches_array_num ){
-      let num: number = parseInt(RegExp.$1);
-      chatMessage.imageIdentifier = this.findImageIdentifier(sendFrom,num);
+    let chkMessage = ' ' + text;
 
-      chatMessage.text = text.replace(/([@＠]\S+)$/i,'');
+    let matchesArray = chkMessage.match(/\s[@＠](\S+)\s*$/i);
+    if( matchesArray ){
+      console.log( matchesArray );
+      const matchHide = matchesArray[1].match(/^[hHｈＨ][iIｉＩ][dDｄＤ][eEｅＥ]$/);
+      const matchNum = matchesArray[1].match(/(\d+)$/);
+
+      if( matchHide ){ //非表示コマンド
+        chatMessage.imageIdentifier = '';
+      }else if( matchNum ){ //インデックス指定
+
+        const num: number = parseInt( matchNum[1] );
+        const newIdentifier = this.findImageIdentifier( sendFrom,num );
+        if( newIdentifier ){
+          chatMessage.imageIdentifier = newIdentifier;
+        }
+      }else{
+        const tachieName = matchesArray[1];
+        const newIdentifier = this.findImageIdentifierName( sendFrom,tachieName );
+        if( newIdentifier ){
+          chatMessage.imageIdentifier = newIdentifier;
+        }
+      }
+      chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
     }
-
     return chatTab.addMessage(chatMessage);
   }
 
@@ -172,11 +182,44 @@ export class ChatMessageService {
     return sendFromName + ' > ' + sendToName;
   }
 
-  private findImageIdentifier(sendFrom,index:number): string {
 
+  private findImageIdentifierName(sendFrom,name:string): string {
+    let object = ObjectStore.instance.get(sendFrom);
+// 完全一致 
+    if (object instanceof GameCharacter) {
+      let data:DataElement = object.imageDataElement;
+      for (let child of data.children) {
+        if (child instanceof DataElement) {
+          console.log( "child" + child.getAttribute('currentValue') );
+          if (child.getAttribute('currentValue') == name){
+            console.log( "HIT!!" + child.getAttribute('currentValue') + '=' + name);
+            const img = ImageStorage.instance.get(<string>child.value);
+            if( img ){
+              return  img.identifier;
+            }
+          }
+        }
+      }
+
+      for (let child of data.children) {
+        if (child instanceof DataElement) {
+          console.log( "child" + child.getAttribute('currentValue') );
+          if ( child.getAttribute('currentValue').indexOf( name ) == 0 ){
+            console.log( "HIT!!" + child.getAttribute('currentValue') + '=' + name);
+            const img = ImageStorage.instance.get(<string>child.value);
+            if( img ){
+              return  img.identifier;
+            }
+          }
+        }
+      }
+    }
+    return '';
+  }
+
+  private findImageIdentifier(sendFrom,index:number): string {
     let object = ObjectStore.instance.get(sendFrom);
     if (object instanceof GameCharacter) {
-      console.log("object.imageDataElement.children.length"+ object.imageDataElement.children.length);
       if( object.imageDataElement.children.length  > index ){
         let img = ImageStorage.instance.get(<string>object.imageDataElement.children[index].value);
         if( img ){
@@ -187,8 +230,7 @@ export class ChatMessageService {
     } else if (object instanceof PeerCursor) {
       return object.imageIdentifier;
     }
-    return sendFrom;
-
+    return '';
   }
 
 //entyu
