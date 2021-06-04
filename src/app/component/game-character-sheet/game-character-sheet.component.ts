@@ -347,6 +347,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   onMainImageLoad() {
+    if (!this.mainImageElement) return;
     this.mainImageWidth = this.mainImageElement.nativeElement.clientWidth;
     this.mainImageHeight = this.mainImageElement.nativeElement.clientHeight;
   }

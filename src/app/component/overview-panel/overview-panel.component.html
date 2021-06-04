@@ -31,8 +31,16 @@
   <div class="component-content is-small-size"
     [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
     <div *ngIf="hasImage" style="position: relative;">
-      <img class="card-image" [src]="imageUrl | safe: 'resourceUrl'" />
-      <button class="zoom-button" (click)="chanageImageView(true)">
+      <div *ngIf="card.aliasName == 'card' && (card.isFront || card.isHand)" class="text" style="z-index: 5; top: 8px"
+        [style.width.px]="imageAreaRect.width" [style.height.px]="imageAreaRect.height" [style.left.px]="imageAreaRect.left">
+        <div [style.font-size.px]="(card.fontsize + 9) * imageAreaRect.width / (card.size * 50)" [style.color]="card.color">{{card.text}}</div>
+      </div>
+      <div *ngIf="card.aliasName == 'card-stack' && card.topCard.isFront" class="text" style="z-index: 5; top: 8px"
+        [style.width.px]="imageAreaRect.width" [style.height.px]="imageAreaRect.height" [style.left.px]="imageAreaRect.left">
+        <div [style.font-size.px]="(card.topCard.fontsize + 9) * imageAreaRect.width / (card.topCard.size * 50)" [style.color]="card.topCard.color">{{card.topCard.text}}</div>
+      </div>
+      <img #cardImage class="card-image" [src]="imageUrl | safe: 'resourceUrl'" (load)="onCardImageLoad()" />
+      <button class="zoom-button" (click)="chanageImageView(true)" style="z-index: 10">
         <i class="material-icons">zoom_in</i>
       </button>
       <div *ngIf="card.hasOwner && 0 < card.ownerName.length" class="component-owner position-right-bottom"

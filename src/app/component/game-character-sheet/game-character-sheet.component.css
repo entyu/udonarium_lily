@@ -259,7 +259,8 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-
+  pointer-events: none;
+  
   font-weight: bolder;
   text-align: center;
   white-space: pre-wrap;

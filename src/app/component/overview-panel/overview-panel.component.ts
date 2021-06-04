@@ -47,11 +47,14 @@ import { ModalService } from 'service/modal.service';
 })
 export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
+  @ViewChild('cardImage', { static: false }) cardImageElement: ElementRef;
   @Input() tabletopObject: TabletopObject = null;
 
   @Input() left: number = 0;
   @Input() top: number = 0;
 
+  naturalWidth = 0;
+  naturalHeight = 0;
   stringUtil = StringUtil;
 
   private _imageFile: ImageFile = ImageFile.Empty;
@@ -249,5 +252,30 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   }
   private getInventoryTags(gameObject: TabletopObject): DataElement[] {
     return this.inventoryService.tableInventory.dataElementMap.get(gameObject.identifier);
+  }
+
+  onCardImageLoad() {
+    if (!this.cardImageElement) return;
+    this.naturalWidth = this.cardImageElement.nativeElement.naturalWidth;
+    this.naturalHeight = this.cardImageElement.nativeElement.naturalHeight;
+  }
+
+  get imageAreaRect(): {width: number, height: number, top: number, left: number} {
+    const rect = {width: 0, height: 0, top: 8, left: 8};
+    if (this.naturalWidth == 0 || this.naturalHeight == 0) return rect;
+
+    const viewWidth = 250 - 16;
+    const maxViewHeigth = 330 - 16;
+
+    if ((this.naturalHeight * viewWidth / this.naturalWidth) > maxViewHeigth) {
+      rect.width = this.naturalWidth * maxViewHeigth / this.naturalHeight;
+      rect.height = maxViewHeigth;
+      rect.left = 8 + (viewWidth - rect.width) / 2;
+    } else {
+      rect.width = viewWidth;
+      rect.height = this.naturalHeight * viewWidth / this.naturalWidth;
+    }
+
+    return rect;
   }
 }
