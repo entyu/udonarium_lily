@@ -204,7 +204,7 @@ input[type="color"]:hover,
 input[type="color"]:not(:hover) {
   appearance: auto;
   width: 44px;
-  height: 26px;
+  height: 22px;
   background-color: rgb(239, 239, 239);
   cursor: default;
   color: black;
@@ -223,8 +223,10 @@ input[type="color"]:not(:hover) {
   }
 }
 
-.grow {
+.color-sample {
+  display: inline-block;
   font-weight: bolder;
+  width: 6em;
   text-shadow: 
     #fff 0px 0px 2px, 
     #fff 0px 0px 2px, 

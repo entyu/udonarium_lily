@@ -41,7 +41,7 @@
 </ng-container>
 <div *ngIf="tabletopObject" class="flex-container">
   <img class="shadow-image" [src]="tabletopObject.shadowImageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.shadowImageFile.name" (click)="openModal('shadowImageIdentifier', true)">
-  <div *ngIf="0 < tabletopObject.imageFile?.url.length || 0 < tabletopObject.faceIcons?.length" class="box main-image-box">
+  <div *ngIf="(0 < tabletopObject.imageFile?.url.length || 0 < tabletopObject.faceIcons?.length) && tabletopObject.aliasName != 'table-mask'" class="box main-image-box">
     <div class="icons-box">
       <div *ngFor="let faceIconImage of tabletopObject.faceIcons; index as i; trackBy: identify">
         <div @bounceInOut *ngIf="0 < faceIconImage.url.length" class="icon-image-box" [ngClass]="{'current-icon': tabletopObject.currntIconIndex == i}">
@@ -64,7 +64,7 @@
     <span style="display: inline-block;" class="inverser" [ngClass]="{inverse: tabletopObject.isInverse}">
       <span class="aura" [ngClass]="{black: tabletopObject.aura == 0, blue: tabletopObject.aura == 1, green: tabletopObject.aura == 2, cyan: tabletopObject.aura == 3, red: tabletopObject.aura == 4, magenta: tabletopObject.aura == 5, yellow: tabletopObject.aura == 6, white: tabletopObject.aura == 7}">
         <img class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" 
-          [ngClass]="{'black-paint': tabletopObject.isBlackPaint, 'hollow': tabletopObject.isHollow}"
+          [ngClass]="{'black-paint': tabletopObject.isBlackPaint, 'hollow': tabletopObject.isHollow, small: tabletopObject.aliasName == ''}"
           (dblclick)="openMainImageModal()" 
           [@switchImage]="tabletopObject.currntImageIndex" />
       </span>

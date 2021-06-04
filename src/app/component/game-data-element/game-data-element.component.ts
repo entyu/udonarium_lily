@@ -54,6 +54,10 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     return false;
   }
 
+  get identifier(): string {
+    return this.gameDataElement.identifier;
+  }
+
   private updateTimer: NodeJS.Timer = null;
 
   constructor(
