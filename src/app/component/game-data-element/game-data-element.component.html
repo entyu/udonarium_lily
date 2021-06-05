@@ -76,8 +76,8 @@
             </span>
           </ng-container>
           <ng-container *ngSwitchCase="'colors'">
-            <label class="color-sample" style="padding: 0px; width: 6.5em; text-align: center" [style.color]="value" [style.background-color]="currentValue"><input type="color" style="width: 100%" [(ngModel)]="value" />{{value}}</label>
-            <label class="color-sample" style="padding: 0px; width: 6.5em; text-align: center" [style.color]="value" [style.background-color]="currentValue"><input type="color" style="width: 100%" [(ngModel)]="currentValue" />({{currentValue}})</label>
+            <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 6.5em" [style.color]="value" [style.background-color]="currentValue"><input type="color" style="width: 1em" [(ngModel)]="value" />{{value}}</label>
+            <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 7.5em" [style.color]="value" [style.background-color]="currentValue"><input type="color" style="width: 1em" [(ngModel)]="currentValue" />({{currentValue}})</label>
           </ng-container>
           <ng-container *ngSwitchCase="'color'">
             <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 6.5em" [style.color]="value"><input type="color" style="width: 1em" [(ngModel)]="value" />{{value}}</label>

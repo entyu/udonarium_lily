@@ -46,12 +46,8 @@ export class Card extends TabletopObject {
   }
   set text(text: string) { this.setCommonValue('text', text); }
 
-  get color(): string { 
-    let element = this.getElement('color', this.commonDataElement);
-    if (!element && this.commonDataElement) {
-      this.commonDataElement.appendChild(DataElement.create('color', "#555555", { type: 'color' }, 'color_' + this.identifier));
-    }
-    return element ? element.value + '' : '#555555';
+  get color(): string {
+    return this.getCommonValue('color', '#555555');
   }
   set color(color: string) { this.setCommonValue('color', color); }
 
