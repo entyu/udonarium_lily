@@ -108,6 +108,29 @@ export class TabletopActionService {
     return diceSymbol;
   }
 
+  createBlankCard(position: PointerCoordinate): Card {
+    const frontUrl = './assets/images/trump/blank_card.png';
+    const backUrl = './assets/images/trump/z01.gif';
+    let frontImage: ImageFile;
+    let backImage: ImageFile;
+
+    frontImage = ImageStorage.instance.get(frontUrl);
+    if (!frontImage) {
+      frontImage = ImageStorage.instance.add(frontUrl);
+      ImageTag.create(frontImage.identifier).tag = '*default カード';
+    }
+    backImage = ImageStorage.instance.get(backUrl);
+    if (!backImage) {
+      backImage = ImageStorage.instance.add(backUrl);
+      ImageTag.create(backImage.identifier).tag = '*default カード';
+    }
+    let card = Card.create('カード', frontImage.identifier, backImage.identifier);
+    card.location.x = position.x - 25;
+    card.location.y = position.y - 25;
+    card.posZ = position.z;
+    return card;
+  }
+
   createTrump(position: PointerCoordinate): CardStack {
     let cardStack = CardStack.create('トランプ山札');
     cardStack.location.x = position.x - 25;
@@ -233,6 +256,7 @@ export class TabletopActionService {
       this.getCreateTableMaskMenu(position),
       this.getCreateTerrainMenu(position),
       this.getCreateTextNoteMenu(position),
+      this.getCreateBlankCardMenu(position),
       this.getCreateTrumpMenu(position),
       this.getCreateDiceSymbolMenu(position),
     ];
@@ -270,6 +294,15 @@ export class TabletopActionService {
     return {
       name: '共有メモを作成', action: () => {
         this.createTextNote(position);
+        SoundEffect.play(PresetSound.cardPut);
+      }
+    }
+  }
+
+  private getCreateBlankCardMenu(position: PointerCoordinate): ContextMenuAction {
+    return {
+      name: 'ブランクカードを作成', action: () => {
+        this.createBlankCard(position);
         SoundEffect.play(PresetSound.cardPut);
       }
     }

@@ -67,6 +67,7 @@ export class TabletopObject extends ObjectNode {
     return this._imageFile;
   }
   get imageFiles(): ImageFile[] {
+    if (!this.imageDataElement) return [];
     let elements = this.imageDataElement.getElementsByName('imageIdentifier');
     return elements.map((element) => {
       let file: ImageFile = ImageStorage.instance.get(<string>element.value);
@@ -87,6 +88,7 @@ export class TabletopObject extends ObjectNode {
     return null;
   }
   get faceIcons(): ImageFile[] {
+    if (!this.imageDataElement) return [];
     let elements = this.imageDataElement.getElementsByName('faceIcon');
     return elements.map((element) => {
       let file: ImageFile = ImageStorage.instance.get(<string>element.value);
