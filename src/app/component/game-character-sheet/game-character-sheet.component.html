@@ -3,7 +3,7 @@
   <ng-container *ngSwitchCase="'numberResource'">
   </ng-container>
   <ng-container *ngSwitchCase="'card'">
-    <button (click)="openModal('front')">表面の画像を変更</button>
+    <button (click)="openModal('front')" [disabled]="!tabletopObject.isFront && !tabletopObject.isHand">表面の画像を変更</button>
     <button (click)="openModal('back')">裏面の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchCase="'card-stack'">
@@ -79,7 +79,8 @@
   <ng-container *ngIf="tabletopObject.commonDataElement">
     <div class="flex-item">
       <div class="table">
-        <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [tableTopObjectName]="tableTopObjectName" [isTagLocked]="true"></div>
+        <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [tableTopObjectName]="tableTopObjectName" [isTagLocked]="true"
+          [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand"></div>
       </div>
       <div *ngIf="tabletopObject.aliasName === 'character'" style="text-align: right; margin-top: 3px;">
         <button style="font-size: 11px; color: #444;" (click)="showChatPalette()">チャットパレットを表示</button>

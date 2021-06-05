@@ -1,4 +1,4 @@
-<ng-container *ngIf="gameDataElement">
+<ng-container *ngIf="gameDataElement && !(isHideText && (name == 'text' || name == 'fontsize' || name == 'color'))">
   <ng-container *ngIf="gameDataElement.children.length < 1">
     <div *ngIf="isEdit" class="table-cell table-cell_solid">
       <ng-container *ngTemplateOutlet="editButtons"></ng-container>
@@ -108,7 +108,7 @@
       </div>
       <div class="table" *ngIf="0 < gameDataElement.children.length">
         <div game-data-element class="table-row" *ngFor="let childElement of gameDataElement.children"
-          [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit" [isTagLocked]="isTagLocked"></div>
+          [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit" [isTagLocked]="isTagLocked" [isHideText]="isHideText"></div>
       </div>
     </div>
   </ng-container>
