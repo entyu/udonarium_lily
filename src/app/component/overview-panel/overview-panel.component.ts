@@ -22,6 +22,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ModalService } from 'service/modal.service';
+import { Card } from '@udonarium/card';
 
 @Component({
   selector: 'overview-panel',
@@ -294,5 +295,9 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     }
 
     return rect;
+  }
+
+  calcFontSize(card: Card, width: number): number {
+    return (card.fontsize + 9) * width / (card.size * 50);
   }
 }
