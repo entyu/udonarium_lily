@@ -23,6 +23,8 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ModalService } from 'service/modal.service';
 import { Card } from '@udonarium/card';
+import { CardStack } from '@udonarium/card-stack';
+import { element } from 'protractor';
 
 @Component({
   selector: 'overview-panel',
@@ -56,6 +58,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   @Input() left: number = 0;
   @Input() top: number = 0;
 
+  gridSize = 50;
   naturalWidth = 0;
   naturalHeight = 0;
 
@@ -269,21 +272,21 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     this.naturalHeight = this.cardImageElement.nativeElement.naturalHeight;
   }
 
-  get imageAreaRect(): {width: number, height: number, top: number, left: number} {
+  get imageAreaRect(): {width: number, height: number, top: number, left: number, scale: number} {
     return this.calcImageAreaRect(250, 330, 8);
   }
 
-  get fullImageAreaRect(): {width: number, height: number, top: number, left: number} {
+  get fullImageAreaRect(): {width: number, height: number, top: number, left: number, scale: number} {
     return this.calcImageAreaRect(document.documentElement.clientWidth, document.documentElement.offsetHeight, 16);
   }
 
-  private calcImageAreaRect(areaWidth: number, areaHeight: number, offset: number): {width: number, height: number, top: number, left: number} {
-    const rect = {width: 0, height: 0, top: offset, left: offset};
+  private calcImageAreaRect(areaWidth: number, areaHeight: number, offset: number): {width: number, height: number, top: number, left: number, scale: number} {
+    const rect = {width: 0, height: 0, top: offset, left: offset, scale: 1};
     if (this.naturalWidth == 0 || this.naturalHeight == 0) return rect;
 
     const viewWidth = areaWidth - offset * 2;
     const viewHeight = areaHeight - offset * 2;
-
+    // scale使わなかった頃の名残
     if ((this.naturalHeight * viewWidth / this.naturalWidth) > viewHeight) {
       rect.width = this.naturalWidth * viewHeight / this.naturalHeight;
       rect.height = viewHeight;
@@ -292,12 +295,49 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       rect.width = viewWidth;
       rect.height = this.naturalHeight * viewWidth / this.naturalWidth;
       rect.top = offset + (viewHeight - rect.height) / 2;
-    }
+    } 
 
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    if (card) {
+      rect.scale = rect.width / (card.size * this.gridSize);
+      rect.width = card.size * this.gridSize;
+      rect.height = rect.width * this.naturalHeight / this.naturalWidth;
+    }
     return rect;
   }
 
-  calcFontSize(card: Card, width: number): number {
-    return (card.fontsize + 9) * width / (card.size * 50);
+  get cardColor(): string {
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    return card ? card.color : '#555555';
+  }
+
+  get cardFontSize(): number {
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    return card ? card.fontsize + 9 : 18;
+  }
+
+  get cardText(): number {
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    return card ? card.text : '';
   }
 }

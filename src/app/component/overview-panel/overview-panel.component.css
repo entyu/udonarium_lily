@@ -577,6 +577,8 @@ button.link:disabled:hover {
 }
 
 .text {
+  transform-origin: left top;
+
   position: absolute;
   display: flex;
   align-items: center;

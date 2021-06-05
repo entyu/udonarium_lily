@@ -84,6 +84,10 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
+  gridSize = 50;
+  naturalWidth = 0;
+  naturalHeight = 0;
+
   mainImageWidth = 0;
   mainImageHeight = 0;
 
@@ -350,9 +354,76 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     if (!this.mainImageElement) return;
     this.mainImageWidth = this.mainImageElement.nativeElement.clientWidth;
     this.mainImageHeight = this.mainImageElement.nativeElement.clientHeight;
+    this.naturalWidth = this.mainImageElement.nativeElement.naturalWidth;
+    this.naturalHeight = this.mainImageElement.nativeElement.naturalHeight;
   }
 
   identify(index, obj){
     return obj.identifier;  
+  }
+
+  get imageAreaRreact(): {width: number, height: number, top: number, left: number, scale: number} {
+    return this.calcImageAreaRect(this.mainImageWidth, this.mainImageHeight, 0);
+  }
+
+  private calcImageAreaRect(areaWidth: number, areaHeight: number, offset: number): {width: number, height: number, top: number, left: number, scale: number} {
+    const rect = {width: 0, height: 0, top: offset, left: offset, scale: 1};
+    if (this.naturalWidth == 0 || this.naturalHeight == 0) return rect;
+
+    const viewWidth = areaWidth - offset * 2;
+    const viewHeight = areaHeight - offset * 2;
+    // scale使わなかった頃の名残
+    if ((this.naturalHeight * viewWidth / this.naturalWidth) > viewHeight) {
+      rect.width = this.naturalWidth * viewHeight / this.naturalHeight;
+      rect.height = viewHeight;
+      rect.left = offset + (viewWidth - rect.width) / 2;
+    } else {
+      rect.width = viewWidth;
+      rect.height = this.naturalHeight * viewWidth / this.naturalWidth;
+      rect.top = offset + (viewHeight - rect.height) / 2;
+    } 
+
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    if (card) {
+      rect.scale = rect.width / (card.size * this.gridSize);
+      rect.width = card.size * this.gridSize;
+      rect.height = rect.width * this.naturalHeight / this.naturalWidth;
+    }
+    return rect;
+  }
+
+  get cardColor(): string {
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    return card ? card.color : '#555555';
+  }
+
+  get cardFontSize(): number {
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    return card ? card.fontsize + 9 : 18;
+  }
+
+  get cardText(): number {
+    let card = null;
+    if (this.tabletopObject instanceof CardStack) {
+      card = this.tabletopObject.topCard;
+    } else if (this.tabletopObject instanceof Card) {
+      card = this.tabletopObject;
+    }
+    return card ? card.text : '';
   }
 }

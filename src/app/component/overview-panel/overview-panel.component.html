@@ -31,14 +31,11 @@
   <div class="component-content is-small-size"
     [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
     <div *ngIf="hasImage" style="position: relative;">
-      <div *ngIf="card.aliasName == 'card' && (card.isFront || card.isHand)" class="text" style="z-index: 5; top: 8px"
-        [style.width.px]="imageAreaRect.width" [style.height.px]="imageAreaRect.height" [style.left.px]="imageAreaRect.left">
-        <div [style.font-size.px]="calcFontSize(card, imageAreaRect.width)" [style.color]="card.color"
-        [ngStyle]="{transform: calcFontSize(card, imageAreaRect.width) < 10 ? 'scale(' +  calcFontSize(card, imageAreaRect.width) / 10 + ')' : null}">{{card.text}}</div>
-      </div>
-      <div *ngIf="card.aliasName == 'card-stack' && card.topCard.isFront" class="text" style="z-index: 5; top: 8px"
-        [style.width.px]="imageAreaRect.width" [style.height.px]="imageAreaRect.height" [style.left.px]="imageAreaRect.left">
-        <div [style.font-size.px]="calcFontSize(card.topCard, imageAreaRect.width)" [style.color]="card.topCard.color">{{card.topCard.text}}</div>
+      <div *ngIf="(card.aliasName == 'card' && (card.isFront || card.isHand)) || (card.aliasName == 'card-stack' && card.topCard.isFront)"
+        class="text" style="z-index: 5; top: 8px"
+        [style.width.px]="imageAreaRect.width" [style.height.px]="imageAreaRect.height" [style.left.px]="imageAreaRect.left" 
+        [ngStyle]="{transform: 'scale(' + imageAreaRect.scale + ')'}">
+        <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
       </div>
       <img #cardImage class="card-image" [src]="imageUrl | safe: 'resourceUrl'" (load)="onCardImageLoad()" />
       <button class="zoom-button" (click)="chanageImageView(true)" style="z-index: 10">
@@ -242,15 +239,13 @@
 
 <ng-template #imageView>
   <div class="image-view-background is-fill" (click)="chanageImageView(false)" [@fadeInOut]="'in'">
-    <div *ngIf="tabletopObject.aliasName == 'card' && (tabletopObject.isFront || tabletopObject.isHand)" class="text fullgrow" style="z-index: 5"
-      [style.width.px]="fullImageAreaRect.width" [style.height.px]="fullImageAreaRect.height" [style.left.px]="fullImageAreaRect.left" [style.top.px]="fullImageAreaRect.top + 2">
-      <div [style.font-size.px]="calcFontSize(tabletopObject, fullImageAreaRect.width)" [style.color]="tabletopObject.color">{{tabletopObject.text}}</div>
+    <div *ngIf="(tabletopObject.aliasName == 'card' && (tabletopObject.isFront || tabletopObject.isHand)) || (tabletopObject.aliasName == 'card-stack' && tabletopObject.topCard.isFront)"
+      class="text fullgrow" style="z-index: 5"
+      [style.width.px]="fullImageAreaRect.width" [style.height.px]="fullImageAreaRect.height" [style.left.px]="fullImageAreaRect.left" [style.top.px]="fullImageAreaRect.top"
+      [ngStyle]="{transform: 'scale(' + fullImageAreaRect.scale + ')'}">
+      <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
     </div>
-    <div *ngIf="tabletopObject.aliasName == 'card-stack' && tabletopObject.topCard.isFront" class="text fullgrow" style="z-index: 5"
-      [style.width.px]="fullImageAreaRect.width" [style.height.px]="fullImageAreaRect.height" [style.left.px]="fullImageAreaRect.left" [style.top.px]="fullImageAreaRect.top + 2">
-      <div [style.font-size.px]="calcFontSize(tabletopObject.topCard, fullImageAreaRect.width)" [style.color]="tabletopObject.topCard.color">{{tabletopObject.topCard.text}}</div>
-    </div>
-    <div class="close-button is-pointer-events-none"><i class="material-icons">close</i></div>
+    <div class="close-button is-pointer-events-none" style="z-index: 10"><i class="material-icons">close</i></div>
     <img #fullCardImage class="contain-image" [src]="imageUrl | safe: 'resourceUrl'" />
   </div>
 </ng-template>
