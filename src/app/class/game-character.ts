@@ -55,19 +55,6 @@ export class GameCharacter extends TabletopObject {
     return iconNum;
   }
 
-  nextIcon() {
-    const iconNum = this.getIconNumElement();
-    if (!iconNum) return;
-
-    const n = <number>iconNum.currentValue;
-    if (n >= this.imageDataElement.children.length - 1) {
-      iconNum.currentValue = 0;
-    } else {
-      iconNum.currentValue = n + 1;
-    }
-    console.log("set selectedIconNum " + iconNum.currentValue);
-  }
-
   get imageFile(): ImageFile {
     if (!this.imageDataElement) return ImageFile.Empty;
 

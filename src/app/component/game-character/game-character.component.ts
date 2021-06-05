@@ -192,11 +192,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     SoundEffect.play(PresetSound.piecePut);
   }
 
-  onDoubleClick() {
-    console.log("game character doubleclick");
-    this.gameCharacter.nextIcon();
-  }
-
   private adjustMinBounds(value: number, min: number = 0): number {
     return value < min ? min : value;
   }
