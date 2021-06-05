@@ -256,7 +256,7 @@ input {
 
 .text {
   transform-origin: left top;
-  
+
   position: absolute;
   display: flex;
   align-items: center;
@@ -275,12 +275,12 @@ input {
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow: 
-  #fff 0px 0px 4px, 
-  #fff 0px 0px 4px, 
-  #fff 0px 0px 4px, 
-  #fff 0px 0px 4px, 
-  #fff 0px 0px 4px, 
-  #fff 0px 0px 4px,
-  #fff 0px 0px 4px,
-  #fff 0px 0px 4px;
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px;
 }

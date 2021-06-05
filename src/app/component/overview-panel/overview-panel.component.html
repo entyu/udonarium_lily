@@ -240,7 +240,7 @@
 <ng-template #imageView>
   <div class="image-view-background is-fill" (click)="chanageImageView(false)" [@fadeInOut]="'in'">
     <div *ngIf="(tabletopObject.aliasName == 'card' && (tabletopObject.isFront || tabletopObject.isHand)) || (tabletopObject.aliasName == 'card-stack' && tabletopObject.topCard.isFront)"
-      class="text fullgrow" style="z-index: 5"
+      class="text" style="z-index: 5"
       [style.width.px]="fullImageAreaRect.width" [style.height.px]="fullImageAreaRect.height" [style.left.px]="fullImageAreaRect.left" [style.top.px]="fullImageAreaRect.top"
       [ngStyle]="{transform: 'scale(' + fullImageAreaRect.scale + ')'}">
       <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>

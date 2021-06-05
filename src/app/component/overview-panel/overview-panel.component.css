@@ -597,24 +597,12 @@ button.link:disabled:hover {
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow: 
-  #fff 0px 0px 3px, 
-  #fff 0px 0px 3px, 
-  #fff 0px 0px 3px, 
-  #fff 0px 0px 3px, 
-  #fff 0px 0px 3px, 
-  #fff 0px 0px 3px,
-  #fff 0px 0px 3px,
-  #fff 0px 0px 3px;
-}
-
-.fullgrow {
-  text-shadow: 
-  #fff 0px 0px 6px, 
-  #fff 0px 0px 6px, 
-  #fff 0px 0px 6px, 
-  #fff 0px 0px 6px, 
-  #fff 0px 0px 6px, 
-  #fff 0px 0px 6px,
-  #fff 0px 0px 6px,
-  #fff 0px 0px 6px;
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px;
 }
