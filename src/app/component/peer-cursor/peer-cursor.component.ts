@@ -28,6 +28,10 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   private fadeOutTimer: ResettableTimeout = null;
 
   private updateInterval: NodeJS.Timer = null;
+
+  private timestampInterval: NodeJS.Timer = null;
+  private timestampIntervalEnable:boolean =false;
+
   private callcack: any = (e) => this.onMouseMove(e);
 
   private _x: number = 0;
@@ -38,6 +42,12 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
     let maxDelay = Network.peerIds.length * 16.6;
     return maxDelay < 100 ? 100 : maxDelay;
   }
+
+  get delayMsHb(): number {
+    let maxDelay = Network.peerIds.length * 166;
+    return maxDelay < 1000 ? 1000 : maxDelay;
+  }
+
 
   constructor(
     private batchService: BatchService,
@@ -51,19 +61,30 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
         .on('CURSOR_MOVE', event => {
           if (event.sendFrom !== this.cursor.peerId) return;
           this.batchService.add(() => {
-            if( event.data[0] != null && event.data[1] != null && event.data[2] != null){
-              this.stopTransition();
-              this.setAnimatedTransition();
-              this.setPosition(event.data[0], event.data[1], event.data[2]);
-              this.resetFadeOut();
-            }
-            this.cursor.timestamp = event.data[3];
-            console.log( " R CURSOR_MOVE" + event.data[0] +":" + event.data[1] +":" + event.data[2] +"time: " + event.data[3]);
-
+            this.stopTransition();
+            this.setAnimatedTransition();
+            this.setPosition(event.data[0], event.data[1], event.data[2]);
+            this.resetFadeOut();
           }, this);
+        })
+        .on('HEART_BEAT', event => {
+          if (event.sendFrom !== this.cursor.peerId) return;
+            this.cursor.timestamp = event.data[0];
+            this.cursor.timediff = Date.now() - event.data[0];
         });
     }
   }
+
+  private timestampLoop(){
+    if (!this.timestampInterval) {
+      this.timestampInterval = setTimeout(() => {
+        this.timestampInterval = null;
+        EventSystem.call('HEART_BEAT', [Date.now()]);
+        this.timestampLoop();
+      }, this.delayMsHb);
+    }
+  }
+
 
   ngAfterViewInit() {
     if (this.isMine) {
@@ -78,6 +99,8 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.setPosition(0, 0, 0);
       this.resetFadeOut();
     }
+    this.timestampIntervalEnable = true;
+    this.timestampLoop();
   }
 
   ngOnDestroy() {
@@ -86,12 +109,15 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
     EventSystem.unregister(this);
     this.batchService.remove(this);
     if (this.fadeOutTimer) this.fadeOutTimer.clear();
+
+    this.timestampIntervalEnable = false;
+
   }
 
   private onMouseMove(e: any) {
     let x = e.touches ? e.changedTouches[0].pageX : e.pageX;
     let y = e.touches ? e.changedTouches[0].pageY : e.pageY;
-//    if (x === this._x && y === this._y) return;
+    if (x === this._x && y === this._y) return;
     this._x = x;
     this._y = y;
     this._target = e.target;
@@ -104,13 +130,12 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private calcLocalCoordinate(x: number, y: number, target: HTMLElement) {
-    if ( document.getElementById('app-table-layer').contains(target) ){
-      let coordinate: PointerCoordinate = { x: x, y: y, z: 0 };
-      coordinate = this.coordinateService.calcTabletopLocalCoordinate(coordinate, target);
-      EventSystem.call('CURSOR_MOVE', [coordinate.x, coordinate.y, coordinate.z , Date.now()]);
-    }else{
-      EventSystem.call('CURSOR_MOVE', [ null , null , null , Date.now()]);
-    }
+    if (!document.getElementById('app-table-layer').contains(target)) return;
+
+    let coordinate: PointerCoordinate = { x: x, y: y, z: 0 };
+    coordinate = this.coordinateService.calcTabletopLocalCoordinate(coordinate, target);
+
+    EventSystem.call('CURSOR_MOVE', [coordinate.x, coordinate.y, coordinate.z]);
   }
 
   private resetFadeOut() {

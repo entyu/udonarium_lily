@@ -15,8 +15,16 @@ export class PeerCursor extends GameObject {
   @SyncVar() peerId: PeerId = '';
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
+  
+  private _timestamp: number = 0;
+  private _timediff: number = 0;
 
-  timestamp = 0;
+  get timestamp(): number { return this._timestamp; }
+  get timediff(): number { return this._timediff; }
+
+  set timestamp( time: number ){ this._timestamp = time ; }
+  set timediff( time: number ){ this._timediff = time; }
+
 
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
