@@ -134,4 +134,9 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     const peerCursor = PeerCursor.findByPeerId(peerId);
     return peerCursor ? peerCursor.name : '';
   }
+
+  findPeerTime(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.timestamp : '';
+  }
 }

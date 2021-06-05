@@ -51,10 +51,15 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
         .on('CURSOR_MOVE', event => {
           if (event.sendFrom !== this.cursor.peerId) return;
           this.batchService.add(() => {
-            this.stopTransition();
-            this.setAnimatedTransition();
-            this.setPosition(event.data[0], event.data[1], event.data[2]);
-            this.resetFadeOut();
+            if( event.data[0] != null && event.data[1] != null && event.data[2] != null){
+              this.stopTransition();
+              this.setAnimatedTransition();
+              this.setPosition(event.data[0], event.data[1], event.data[2]);
+              this.resetFadeOut();
+            }
+
+            console.log( " R CURSOR_MOVE" + event.data[0] +":" + event.data[1] +":" + event.data[2] +"time: " + event.data[3]);
+
           }, this);
         });
     }
@@ -86,7 +91,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   private onMouseMove(e: any) {
     let x = e.touches ? e.changedTouches[0].pageX : e.pageX;
     let y = e.touches ? e.changedTouches[0].pageY : e.pageY;
-    if (x === this._x && y === this._y) return;
+//    if (x === this._x && y === this._y) return;
     this._x = x;
     this._y = y;
     this._target = e.target;
@@ -99,12 +104,13 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private calcLocalCoordinate(x: number, y: number, target: HTMLElement) {
-    if (!document.getElementById('app-table-layer').contains(target)) return;
-
-    let coordinate: PointerCoordinate = { x: x, y: y, z: 0 };
-    coordinate = this.coordinateService.calcTabletopLocalCoordinate(coordinate, target);
-
-    EventSystem.call('CURSOR_MOVE', [coordinate.x, coordinate.y, coordinate.z]);
+    if ( document.getElementById('app-table-layer').contains(target) ){
+      let coordinate: PointerCoordinate = { x: x, y: y, z: 0 };
+      coordinate = this.coordinateService.calcTabletopLocalCoordinate(coordinate, target);
+      EventSystem.call('CURSOR_MOVE', [coordinate.x, coordinate.y, coordinate.z , Date.now()]);
+    }else{
+      EventSystem.call('CURSOR_MOVE', [ null , null , null , Date.now()]);
+    }
   }
 
   private resetFadeOut() {

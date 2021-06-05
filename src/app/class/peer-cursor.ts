@@ -16,6 +16,8 @@ export class PeerCursor extends GameObject {
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
 
+  timestamp = 0;
+
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
   private static peerIdMap: Map<PeerId, ObjectIdentifier> = new Map();
