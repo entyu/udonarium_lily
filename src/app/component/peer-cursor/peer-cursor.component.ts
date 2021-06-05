@@ -57,7 +57,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
               this.setPosition(event.data[0], event.data[1], event.data[2]);
               this.resetFadeOut();
             }
-
+            this.cursor.timestamp = event.data[3];
             console.log( " R CURSOR_MOVE" + event.data[0] +":" + event.data[1] +":" + event.data[2] +"time: " + event.data[3]);
 
           }, this);
