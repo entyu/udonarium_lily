@@ -51,7 +51,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get fontSize(): number { return this.gameTableMask.fontsize; }
   set fontSize(fontSize: number) { this.gameTableMask.fontsize = fontSize; }
   get text(): string { return this.gameTableMask.text; }
-  set text(text: string) { this.gameTableMask.text = text; EventSystem.call('UPDATE_GAME_OBJECT', this.gameTableMask.identifier) }
+  set text(text: string) { this.gameTableMask.text = text; }
   get color(): string { return this.gameTableMask.color; }
   set color(color: string) { this.gameTableMask.color = color; }
   get bgcolor(): string { return this.gameTableMask.bgcolor; }
