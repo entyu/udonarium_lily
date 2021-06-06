@@ -22,6 +22,9 @@
   </div>
 </ng-container>
 <hr/>
+<div>
+    <span><input [(ngModel)]="myPeer.timeout" type="number" min="1" max="60000" /> ms 以上の通信途絶で警告を出す</span>
+</div>
 <div *ngFor="let context of networkService.peerContexts">
   <div>
     <span *ngIf="!context.isOpen">[接続中]</span>

@@ -8,6 +8,12 @@ import { BatchService } from 'service/batch.service';
 import { CoordinateService } from 'service/coordinate.service';
 import { PointerCoordinate } from 'service/pointer-device.service';
 
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { ChatTab } from '@udonarium/chat-tab';
+import { ChatTabList } from '@udonarium/chat-tab-list';
+
+import { ChatMessageService } from 'service/chat-message.service';
+
 @Component({
   selector: 'peer-cursor, [peer-cursor]',
   templateUrl: './peer-cursor.component.html',
@@ -52,6 +58,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private batchService: BatchService,
     private coordinateService: CoordinateService,
+    private chatMessageService: ChatMessageService,
     private ngZone: NgZone
   ) { }
 
@@ -71,7 +78,25 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
           if (event.sendFrom !== this.cursor.peerId) return;
             this.cursor.timestamp = event.data[0];
             this.cursor.timediff = Date.now() - event.data[0];
+            this.chkDisConnect( this.cursor , this.cursor.timediff );
         });
+    }
+  }
+
+  private disConnectNotified = false;
+  private chkDisConnect( target:PeerCursor , time:number ){
+    const timeout = PeerCursor.myCursor.timeout;
+    if( timeout <= time){
+      if(!this.disConnectNotified){
+        this.disConnectNotified = true;
+        console.log( '通信障害:' + timeout +'ms 越え  計測値:' + timeout + 'ms ID:' + target.userId );
+        const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
+        const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
+        let text = target.name + ' [ ID:' + target.userId + ' ] との通信が' + timeout +  'ms 以上途絶しています。おそらく通信障害です。';
+        this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, "#006633");
+      }
+    }else{
+      this.disConnectNotified = false;
     }
   }
 

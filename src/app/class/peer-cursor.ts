@@ -19,11 +19,17 @@ export class PeerCursor extends GameObject {
   private _timestamp: number = 0;
   private _timediff: number = 0;
 
+  private _timeout: number = 5000;
+
   get timestamp(): number { return this._timestamp; }
   get timediff(): number { return this._timediff; }
 
   set timestamp( time: number ){ this._timestamp = time ; }
   set timediff( time: number ){ this._timediff = time; }
+
+  get timeout(): number { return this._timeout; }
+  set timeout( time: number ){ this._timeout = time; }
+
 
 
   static myCursor: PeerCursor = null;

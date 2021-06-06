@@ -83,6 +83,35 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
+  // システムメッセージ専用
+  sendSystemMessageOnePlayer(chatTab: ChatTab,text:string, sendTo: string, color? :string): ChatMessage {
+
+    let _color;
+    if( !color ){
+      _color = "#006633";
+    }else{
+      _color = color;
+    }
+
+
+    let chatMessage: ChatMessageContext = {
+      from: this.findId(sendTo),
+      to: this.findId(sendTo),
+      name: 'システムメッセージ',
+      imageIdentifier: '',//lily
+      timestamp: this.calcTimeStamp(chatTab),
+      tag: 'DiceBot to-pl-system-message',
+      text: text,
+      imagePos: -1,//lily
+      messColor: _color,//lily
+      sendFrom: null //lily
+    };
+    
+    return chatTab.addMessage(chatMessage);
+    
+  }
+
+
   // 本家からachieNum?: number color? :string を追加
   sendMessage(chatTab: ChatTab, text: string, gameSystem: GameSystemClass | null, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string): ChatMessage {
 
