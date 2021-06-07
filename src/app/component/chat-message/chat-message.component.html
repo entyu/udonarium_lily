@@ -20,7 +20,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="chatSimpleDispFlag">
-    <div class="message" [ngClass]="{'direct-message': ((chatMessage.isDirect || chatMessage.isSecret) && !chatMessage.isSystemToPL ) , 
+    <div class="message-small" [ngClass]="{'direct-message': ((chatMessage.isDirect || chatMessage.isSecret) && !chatMessage.isSystemToPL ) , 
     'system-message':chatMessage.isSystem, 'dicebot-message': chatMessage.isDicebot}"
     >
       <div class="body" [ngStyle]="{'color': chatMessage.messColor }">
