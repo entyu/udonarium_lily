@@ -119,9 +119,23 @@ export class GameCharacter extends TabletopObject {
 
     let iconNum = this.detailDataElement.getElementsByName('コマ画像');
     if( iconNum.length == 0 ){
-      let element: DataElement = DataElement.create('コマ画像', '', {}, 'コマ画像' + this.identifier);
-      this.detailDataElement.appendChild(element);
-      element.appendChild(DataElement.create(
+      let elementKoma: DataElement = DataElement.create('コマ画像', '', {}, 'コマ画像' + this.identifier);
+      this.detailDataElement.appendChild(elementKoma);
+
+      //コマ画像作成時は立ち絵の次に差し込み
+      let tachies = this.detailDataElement.getElementsByName('立ち絵位置');
+      if( tachies.length != 0 ){
+        let parentElement = tachies[0].parent;
+        let index: number = parentElement.children.indexOf(tachies[0]);
+        console.log("立ち絵の次に差し込み INdex" + index);
+        if (index < parentElement.children.length - 1) {
+          let nextElement = parentElement.children[index + 1];
+          console.log("立ち絵の次に差し込み nextElement" + nextElement);
+          
+          parentElement.insertBefore(elementKoma, nextElement);
+        }
+      }
+      elementKoma.appendChild(DataElement.create(
         'ICON',
         this.imageDataElement.children.length - 1,
         { 'type': 'numberResource', 'currentValue': 0 },

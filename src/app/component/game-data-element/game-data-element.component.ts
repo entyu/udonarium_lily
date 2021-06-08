@@ -92,10 +92,21 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     });
   }
 
-  addImageElement() {
-    this.gameDataElement.appendChild(DataElement.create('imageIdentifier', '', { type: 'image' }));
+  updateKomaIconMaxValue(root: DataElement){
+    let image = root.getFirstElementByName('image');
+    let icon = root.getElementsByName('ICON');
+    if(icon){
+      icon[0].value = image.children.length - 1;
+      if( icon[0].currentValue > icon[0].value ) icon[0].currentValue = icon[0].value;
+    }
   }
 
+  addImageElement() {
+    this.gameDataElement.appendChild(DataElement.create('imageIdentifier', '', { type: 'image' }));
+    const root: DataElement = <DataElement>this.gameDataElement.parent;
+
+    this.updateKomaIconMaxValue(root);
+  }
 
   addElement() {
     this.gameDataElement.appendChild(DataElement.create('タグ', '', {}));
@@ -105,9 +116,12 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     this.gameDataElement.destroy();
   }
 
-
   deleteImageElement() {
-    if( this.gameDataElement.parent.children[0] != this.gameDataElement)    this.gameDataElement.destroy();
+    const root: DataElement = <DataElement>this.gameDataElement.parent.parent;
+    if( this.gameDataElement.parent.children[0] != this.gameDataElement){
+      this.gameDataElement.destroy();
+      this.updateKomaIconMaxValue(root);
+    }
   }
 
 
@@ -125,7 +139,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     let index: number = parentElement.children.indexOf(this.gameDataElement);
     if (index < parentElement.children.length - 1) {
       let nextElement = parentElement.children[index + 1];
-      parentElement.insertBefore(nextElement, this.gameDataElement);
+      parentElement.insertBefore(nextElement, this.gameDataElement.parent);
     }
   }
 
