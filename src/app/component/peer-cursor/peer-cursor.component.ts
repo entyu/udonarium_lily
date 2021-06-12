@@ -75,37 +75,71 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
           }, this);
         })
         .on('HEART_BEAT', event => {
+//          console.log( 'HEART_BEAT\n' + event.sendFrom + ' >\n ' + this.cursor.peerId );
           if (event.sendFrom !== this.cursor.peerId) return;
-            this.cursor.timestamp = event.data[0];
-            this.cursor.timediff = Date.now() - event.data[0];
-            this.chkDisConnect( this.cursor , this.cursor.timediff );
+            this.cursor.timestampSend = event.data[0];
+            this.cursor.timestampReceive = Date.now();
+            this.cursor.timeDiffDown = this.cursor.timestampReceive - this.cursor.timestampSend + PeerCursor.myCursor.debugReceiveDelay;
+            this.cursor.timeDiffUp = this.cursor.timestampSend - this.cursor.timestampReceive + 100;
         });
     }
   }
 
-  private disConnectNotified = false;
-  private chkDisConnect( target:PeerCursor , time:number ){
-    const timeout = PeerCursor.myCursor.timeout;
-    if( timeout <= time){
+
+  private disConnectNotified = true;
+  private chkDisConnect( ){
+
+    const timeout = PeerCursor.myCursor.timeout * 1000;
+    const elapsedTime = Date.now() - this.cursor.timestampReceive;
+
+    if( timeout <= elapsedTime){
       if(!this.disConnectNotified){
         this.disConnectNotified = true;
-        console.log( '通信障害:' + timeout +'ms 越え  計測値:' + timeout + 'ms ID:' + target.userId );
+
         const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
         const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
-        let text = target.name + ' [ ID:' + target.userId + ' ] との通信が' + timeout +  'ms 以上途絶しています。おそらく通信障害です。';
+        let text = this.cursor.userId + '['+this.cursor.name + '] さんとの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上途切れています。通信障害の可能性があります。';
+
         this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, "#006633");
       }
     }else{
+      if( this.disConnectNotified == true ){
+        
+        setTimeout(() => {
+          this.timestampInterval = null;
+          const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
+          const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
+          let text = this.cursor.userId + '['+this.cursor.name + '] さんと接続しました。';
+          this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, "#006633");
+        }, 1000);
+      }
       this.disConnectNotified = false;
     }
   }
 
+  private logoutMessage(){
+    
+    const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
+    const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
+    let text = this.cursor.userId + '['+this.cursor.name + '] さんがログアウトしました。';
+    this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, "#006633");
+    
+  }
+
   private timestampLoop(){
+    if(!this.timestampIntervalEnable) return;
     if (!this.timestampInterval) {
       this.timestampInterval = setTimeout(() => {
         this.timestampInterval = null;
-        EventSystem.call('HEART_BEAT', [Date.now()]);
+
+        if( PeerCursor.myCursor.peerId == this.cursor.peerId ){
+          let timestanmp = Date.now() + PeerCursor.myCursor.debugTimeShift;
+          EventSystem.call('HEART_BEAT', [ timestanmp ]);
+        }else{
+          this.chkDisConnect();
+        }
         this.timestampLoop();
+
       }, this.delayMsHb);
     }
   }
@@ -124,11 +158,15 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.setPosition(0, 0, 0);
       this.resetFadeOut();
     }
+
     this.timestampIntervalEnable = true;
     this.timestampLoop();
   }
 
   ngOnDestroy() {
+
+    this.logoutMessage();
+
     document.body.removeEventListener('mousemove', this.callcack);
     document.body.removeEventListener('touchmove', this.callcack);
     EventSystem.unregister(this);
@@ -184,4 +222,5 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   private setPosition(x: number, y: number, z: number) {
     this.cursorElement.style.transform = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(' + z + 'px)';
   }
+
 }

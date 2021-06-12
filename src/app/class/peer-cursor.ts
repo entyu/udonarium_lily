@@ -16,27 +16,53 @@ export class PeerCursor extends GameObject {
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
   
-  private _timestamp: number = 0;
-  private _timediff: number = 0;
+  private _timestampSend: number = -1;
+  private _timestampReceive: number = -1;
 
-  private _timeout: number = 5000;
+  private _timeDiffUp: number = 0;
+  private _timeDiffDown: number = 0;
 
-  get timestamp(): number { return this._timestamp; }
-  get timediff(): number { return this._timediff; }
+  private _timeout: number = 40;// ’PˆÊ•b
 
-  set timestamp( time: number ){ this._timestamp = time ; }
-  set timediff( time: number ){ this._timediff = time; }
+  private _debugTimeShift: number = 0;
+  private _debugReceiveDelay: number = 0;
 
-  get timeout(): number { return this._timeout; }
+  get timestampSend(): number { return this._timestampSend; }
+  set timestampSend( time: number ){ this._timestampSend = time ; }
+
+  get timestampReceive(): number { return this._timestampReceive; }
+  set timestampReceive( time: number ){ this._timestampReceive = time + this._debugReceiveDelay; }
+
+  get timeDiffUp(): number { return this._timeDiffUp; }
+  set timeDiffUp( time: number ){ this._timeDiffUp = time; }
+
+  get timeDiffDown(): number { return this._timeDiffDown; }
+  set timeDiffDown( time: number ){ this._timeDiffDown = time; }
+
+  get debugTimeShift(): number { return this._debugTimeShift; }
+  set debugTimeShift( time: number ){ this._debugTimeShift = time; }
+
+  get debugReceiveDelay(): number { return this._debugReceiveDelay; }
+  set debugReceiveDelay( time: number ){ this._debugReceiveDelay = time; }
+
+  get timeout(): number { return this._timeout > 0 ? this._timeout : 1 ; }
   set timeout( time: number ){ this._timeout = time; }
-
-
+/*
+  get latency(): number { 
+    if( this.timeDiffUp < 0 || this.timeDiffDown < 0) return null; 
+    
+  }
+*/
 
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
   private static peerIdMap: Map<PeerId, ObjectIdentifier> = new Map();
   chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
-
+  
+  get latency(): number {
+    let time = ( this.timeDiffUp + this.timeDiffDown )/2;
+    return time < 0 ? 0 : time;
+  }
   
   private _diceImageType: string = "";
   private _diceImageIndex: number = -1;

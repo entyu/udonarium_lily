@@ -23,6 +23,8 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   gameRoomService = ObjectStore.instance;
   help: string = '';
 
+  disptimer = null;
+
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
   constructor(
@@ -41,10 +43,15 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('OPEN_NETWORK', event => {
         this.ngZone.run(() => { });
       });
+
+    this.disptimer = setInterval(() => {
+      this.dispInfo();
+    }, 1000 );
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+    this.disptimer = null;
   }
 
   changeIcon() {
@@ -135,8 +142,36 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     return peerCursor ? peerCursor.name : '';
   }
 
-  findPeerTimeDiff(peerId: string) {
+  findPeerTimeSend(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.timediff : '';
+    return peerCursor ? peerCursor.timestampSend : 0 ;
   }
+
+  findPeerTimeReceive(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.timestampReceive : 0 ;
+  }
+
+  findPeerTimeDiffUp(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.timeDiffUp : 0 ;
+  }
+
+  findPeerTimeDiffDown(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.timeDiffDown : 0 ;
+  }
+
+  findPeerTimeDiffAve(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    if( !peerCursor ) return '--'
+    
+    return peerCursor ? peerCursor.timeDiffDown : 0 ;
+  }
+
+  myTime :number = 0;
+  dispInfo(){
+    this.myTime = Date.now();
+  }
+
 }

@@ -1,3 +1,19 @@
+.user {
+  display: table;
+}
+
+.user_icon {
+  display: table-cell;
+  vertical-align: top;
+  width: 160px;
+}
+
+.user_info {
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+
 .image {
   padding: 0px;
   width: 128px;
