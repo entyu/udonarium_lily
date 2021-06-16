@@ -98,7 +98,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
         const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
-        let text = this.cursor.userId + '['+this.cursor.name + '] さんとの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上途切れています。通信障害の可能性があります。';
+        let text = this.cursor.userId + '['+this.cursor.name + '] さんからあなたへの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上受信できません。通信障害の可能性があります。';
 
         this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, "#006633");
       }
@@ -109,7 +109,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
           this.timestampInterval = null;
           const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
           const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
-          let text = this.cursor.userId + '['+this.cursor.name + '] さんと接続しました。';
+          let text = 'あなたと' + this.cursor.userId + '['+this.cursor.name + '] さんの接続を確認しました。';
           this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, "#006633");
         }, 1000);
       }
