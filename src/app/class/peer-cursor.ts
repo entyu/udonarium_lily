@@ -47,12 +47,6 @@ export class PeerCursor extends GameObject {
 
   get timeout(): number { return this._timeout > 0 ? this._timeout : 1 ; }
   set timeout( time: number ){ this._timeout = time; }
-/*
-  get latency(): number { 
-    if( this.timeDiffUp < 0 || this.timeDiffDown < 0) return null; 
-    
-  }
-*/
 
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
@@ -80,8 +74,6 @@ export class PeerCursor extends GameObject {
       return "";
     }
   }
-
-  
 
   get isMine(): boolean { return (PeerCursor.myCursor && PeerCursor.myCursor === this); }
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }

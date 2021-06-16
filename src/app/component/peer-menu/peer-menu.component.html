@@ -44,7 +44,7 @@
     <span *ngIf="findPeerTimeReceive(context.peerId) <= 0">接続確認：[-:--:--]</span>
     <span *ngIf="findPeerTimeReceive(context.peerId) > 0">接続確認：[{{findPeerTimeReceive(context.peerId) | date:'HH:mm:ss'}}]</span>
     <br>
-    <span>時差下り：{{findPeerTimeDiffDown(context.peerId)}}ms</span>
+    <span>伝送遅延+時計差下り：{{findPeerTimeDiffDown(context.peerId)}}ms 上り：{{findPeerTimeDiffUp(context.peerId)}}ms</span>
   </div>
 </div>
 <div>

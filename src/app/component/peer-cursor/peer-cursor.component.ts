@@ -44,6 +44,8 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   private _y: number = 0;
   private _target: HTMLElement;
 
+  networkService = Network;
+
   get delayMs(): number {
     let maxDelay = Network.peerIds.length * 16.6;
     return maxDelay < 100 ? 100 : maxDelay;
@@ -77,10 +79,18 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
         .on('HEART_BEAT', event => {
 //          console.log( 'HEART_BEAT\n' + event.sendFrom + ' >\n ' + this.cursor.peerId );
           if (event.sendFrom !== this.cursor.peerId) return;
-            this.cursor.timestampSend = event.data[0];
-            this.cursor.timestampReceive = Date.now();
-            this.cursor.timeDiffDown = this.cursor.timestampReceive - this.cursor.timestampSend + PeerCursor.myCursor.debugReceiveDelay;
-            this.cursor.timeDiffUp = this.cursor.timestampSend - this.cursor.timestampReceive + 100;
+
+          this.cursor.timestampSend = event.data[0];
+          this.cursor.timestampReceive = Date.now();
+          this.cursor.timeDiffDown = this.cursor.timestampReceive - this.cursor.timestampSend + PeerCursor.myCursor.debugReceiveDelay;
+
+          const messId = event.data[1];
+          const diffUp = event.data[2];
+          if(messId == PeerCursor.myCursor.peerId){
+            if(diffUp != null){
+              this.cursor.timeDiffUp = diffUp;
+            }
+          }
         });
     }
   }
@@ -126,6 +136,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
     
   }
 
+  private indexCounter :number = 0;
   private timestampLoop(){
     if(!this.timestampIntervalEnable) return;
     if (!this.timestampInterval) {
@@ -133,13 +144,33 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.timestampInterval = null;
 
         if( PeerCursor.myCursor.peerId == this.cursor.peerId ){
-          let timestanmp = Date.now() + PeerCursor.myCursor.debugTimeShift;
-          EventSystem.call('HEART_BEAT', [ timestanmp ]);
+          const peerlength = this.networkService.peerContexts.length;
+          if( peerlength ){
+            if(peerlength <= this.indexCounter) this.indexCounter = 0;
+            let timestanmp = Date.now() + PeerCursor.myCursor.debugTimeShift;
+            let peerContext = null;
+            if(this.networkService.peerContexts[this.indexCounter]){
+              peerContext = this.networkService.peerContexts[this.indexCounter]
+            }
+            let id = '';
+            if(peerContext){
+              if(this.networkService.peerContexts[this.indexCounter].isOpen){
+                id = this.networkService.peerContexts[this.indexCounter].peerId;
+              }
+            }
+
+            const peerCursor = PeerCursor.findByPeerId(id);
+            const diffDown = peerCursor ? peerCursor.timeDiffDown : null ;
+
+            EventSystem.call('HEART_BEAT', [ timestanmp , id , diffDown]);
+            console.log( 'peerlength:' + peerlength + 'this.indexCounter' + this.indexCounter +' id:' + id);
+            this.indexCounter ++;
+          }
         }else{
           this.chkDisConnect();
         }
-        this.timestampLoop();
 
+        this.timestampLoop();
       }, this.delayMsHb);
     }
   }
