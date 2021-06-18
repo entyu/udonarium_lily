@@ -23,6 +23,11 @@ import IdoDice from './IdoDice';
 // 追加カスタムダイスは下記追記
 // import *** from './***';
 
+interface ResourceEditOption {
+  limitMinMax: boolean;
+  zeroLimit: boolean;
+  isErr: boolean;
+}
 
 interface ResourceEdit {
   target: string;
@@ -35,12 +40,15 @@ interface ResourceEdit {
   hitName: string;
   calcAns: number;
   detaElm: DataElement;
+  
+  option: ResourceEditOption;
 }
 
 interface DiceRollResult {
   result: string;
   isSecret: boolean;
 }
+
 
 // bcdice-js custom loader class
 class WebpackLoader extends Loader {
@@ -109,21 +117,7 @@ export class DiceBot extends GameObject {
       return { result: '', isSecret: false };
     });
   }
-/*
-  static getDiceBotId(gameType: string): Promise<string> {
-    return DiceBot.queue.add(async (resolve, reject) => {
-      let id = '';
-      try {
-        const gameSystem = await DiceBot.loadGameSystemAsync(gameType);
-        id = gameSystem.ID;
-      } catch (e) {
-        console.error(e);
-      }
-      resolve(id);
-      return;
-    });
-  }
-*/
+
   static getHelpMessage(gameType: string): Promise<string> {
     return DiceBot.queue.add(async (resolve, reject) => {
       let help = '';
@@ -296,28 +290,26 @@ export class DiceBot extends GameObject {
       })
 
       // ダイスからぶりによる擬似的なダイス交換を行う
-
+      //
       // 注※
       // 空振り処理は実装しているが
       // 数学上　実行によって実行後の判定の成功率やダイスの偏りに影響は及ぼさない
-
+      //
       // コードを実装した円柱は、採用しているユドナリウムリリィのダイスの乱数発生器にχ二乗検定による統計的検証は行い、
       // 乱数性質に問題がないことは確認、理解した上で作っている
-
       // あくまで
       // 『ダイスを交換したり　悪い出目が偶然続いたときに　ダイスを空振りしてお祓いをしたくなる　今日のダイスは偏っている気がする』など
       // 人間の心理をターゲートとしたコマンドである
-
+      //
       // このコマンドでダイスロール時に表示されるアイコンが変更されるがこれは視覚上演出であり
       // 空振りした回数やダイスの乱数とは無関係に差し替えている
-
+      //
       // 別のオンラインセッションツールの「どどんとふむせる」のまそっぷ機能のオマージュであり(細部実装は異なる)
-
+      //
       // 性質上　2021年エイプリールフールコマンドとして実装した
       // 実装意図はユーモアであることを記しておく
 
       .on('APRIL_MESSAGE', async event => {
-//        console.log('えいぷりる実行判定');
 
         const chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) { return; }
@@ -377,7 +369,6 @@ export class DiceBot extends GameObject {
         }else{
           PeerCursor.myCursor.diceImageIndex = newDiceImageIndex;
         }
-//        console.log('えいぷりる ダイスImage:' + PeerCursor.myCursor.diceImageIdentifier);
 
         const changeFate0 = 100;
 
@@ -509,7 +500,39 @@ export class DiceBot extends GameObject {
         }
       }
     }
+  }
 
+
+  resourceEditParseOption( text : string): ResourceEditOption{
+
+    let ans: ResourceEditOption = {
+      limitMinMax: false,
+      zeroLimit: false,
+      isErr: false
+    };
+    
+    const mat = StringUtil.toHalfWidth(text).match(/([A-CE-Z]+)$/i);
+    console.log(mat);
+    if(!mat) return ans;
+    let option = mat[1];
+
+    if( option.match(/L/i) ){
+      option = option.replace(/L/i, '');
+      ans.limitMinMax = true;
+    }
+
+    if( option.match(/Z/i) ){
+      option = option.replace(/Z/i, '');
+      ans.zeroLimit = true;
+    }else{
+      ans.zeroLimit = false;
+    }
+
+    if( option.length != 0){
+      ans.isErr = true;
+    }
+
+    return ans;
   }
 
   async resourceEditProcess( result: string[] , originalMessage: ChatMessage){
@@ -537,7 +560,8 @@ export class DiceBot extends GameObject {
         isDiceRoll: false,
         hitName: '',
         calcAns: 0,
-        detaElm : null
+        detaElm : null,
+        option : null
       };
 
       const replaceText = oneText.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=');
@@ -549,9 +573,15 @@ export class DiceBot extends GameObject {
 
       const reg1: string = resourceEditResult[1];
       const reg2: string = resourceEditResult[2];
-      const reg3: string = resourceEditResult[3];
+      const reg3: string = resourceEditResult[3].replace(/[A-CE-ZＡ-ＣＥ-Ｚ]+$/i,'');
 
       console.log( reg1 + '/' + reg2 + '/' + reg3 );
+
+      const optionCommand = this.resourceEditParseOption(resourceEditResult[3]);
+      if(optionCommand.isErr){
+        return ; // 実行失敗
+      }
+      oneResourceEdit.option = optionCommand;
 
       oneResourceEdit.target = reg1;                                                       // 操作対象検索文字タイプ生値
       oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(reg1);                    // 操作対象検索文字半角化
@@ -614,36 +644,58 @@ export class DiceBot extends GameObject {
     let calc = 0;
     let isDiceRoll = false;
     for ( const edit of allEditList) {
+      let optionText = '';
       if (edit.detaElm.type == 'numberResource') {
         oldValueS = (edit.detaElm.currentValue as string) ;
 
         if (edit.operator == '=') {
           calc = edit.calcAns;
         } else {
-          calc = parseInt(oldValueS, 10) + edit.calcAns;
+          const flag = edit.option.zeroLimit;
+          if (flag && edit.operator == '+' && (edit.calcAns < 0)) {
+            calc = parseInt(oldValueS, 10) + 0;
+            optionText = '(0制限)';
+          }else if (flag && edit.operator == '-' && (edit.calcAns > 0)) {
+            calc = parseInt(oldValueS, 10) + 0;
+            optionText = '(0制限)';
+          }else{
+            calc = parseInt(oldValueS, 10) + edit.calcAns;
+          }
         }
+        
+        if( edit.option.limitMinMax ){
+          if( calc > parseInt(edit.detaElm.value as string,10) ){
+            calc = parseInt(edit.detaElm.value as string,10);
+            optionText = '(最大)';
+          }
+          if( calc < 0 ){
+            calc = 0;
+            optionText = '(最小)';
+          }
+        }
+        
         edit.detaElm.currentValue = calc;
 
       } else if (edit.detaElm.type != 'note') {
         oldValueS = (edit.detaElm.value as string) ;
-
         if (edit.operator == '=') {
           calc = edit.calcAns;
-        } else {
-          calc = parseInt(oldValueS, 10) + edit.calcAns;
+        }else{
+          const flag = edit.option.zeroLimit;
+          if (flag && edit.operator == '+' && (edit.calcAns < 0)) {
+            calc = parseInt(oldValueS, 10) + 0;
+            optionText = '(0制限)';
+          }else if (flag && edit.operator == '-' && (edit.calcAns > 0)) {
+            calc = parseInt(oldValueS, 10) + 0;
+            optionText = '(0制限)';
+          }else{
+            calc = parseInt(oldValueS, 10) + edit.calcAns;
+          }
         }
         edit.detaElm.value = calc;
       }
-      /*
-      let textoperator;
-      if( edit.operator == '='){
-        textoperator = ' ＞ ';
-      }else{
-        textoperator = edit.operator;
-      }
-      */
       const operatorText = edit.operator == '-' ? '' : edit.operator;
-      text += edit.hitName + ':' + oldValueS + operatorText + edit.diceResult + '＞' + calc + '    ';
+      text += edit.hitName + ':' + oldValueS + operatorText + edit.diceResult + '＞' + calc + optionText + '    ';
       if ( edit.isDiceRoll ) { isDiceRoll = true; }
     }
     text = text.replace(/\s\s\s\s$/, '');
