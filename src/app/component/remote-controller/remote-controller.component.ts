@@ -106,6 +106,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
   remotNumber = 0;
 
   recoveryLimitFlag = false;
+  recoveryLimitFlagMin = false;
 
   disptimer = null;
 
@@ -517,6 +518,10 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
           if ( this.recoveryLimitFlag && data.currentValue >= data.value ){
             maxRecoveryMess = '(最大)';
             data.currentValue = data.value;
+          }
+          if ( this.recoveryLimitFlagMin && data.currentValue <= 0 ){
+            maxRecoveryMess = '(最小)';
+            data.currentValue = 0;
           }
           newNum = (data.currentValue as number);
         }
