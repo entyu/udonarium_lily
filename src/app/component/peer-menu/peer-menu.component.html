@@ -30,14 +30,13 @@
 </ng-container>
 <hr/>
 <div>
-    <span><input [(ngModel)]="myPeer.timeout" type="number" min="1" max="600" /> 秒以上通信できない参加者情報をチャットに表示</span><br>
-    <span>接続情報詳細を表示<input type="checkbox" value="dispDetailFlag"  [(ngModel)]="dispDetailFlag"></span><br>
-
+  <span><input [(ngModel)]="myPeer.timeout" type="number" min="1" max="600" /> 秒以上通信できない参加者情報をチャットに表示</span><br>
+  <span>接続情報詳細を表示<input type="checkbox" value="dispDetailFlag"  [(ngModel)]="dispDetailFlag"></span><br>
 </div>
 <div *ngIf="myPeer.name=='円柱'">
-    デバッグ機能<br>
-    <input [(ngModel)]="myPeer.debugReceiveDelay" type="number" />：仮想受信遅延[ms]<br>
-    <input [(ngModel)]="myPeer.debugTimeShift" type="number" />：タイムシフト[ms]<br>
+  デバッグ機能<br>
+  <input [(ngModel)]="myPeer.debugReceiveDelay" type="number" />：仮想受信遅延[ms]<br>
+  <input [(ngModel)]="myPeer.debugTimeShift" type="number" />：タイムシフト[ms]<br>
 </div>
 <div *ngFor="let context of networkService.peerContexts" style="font-size: 15px;">
   <div>
