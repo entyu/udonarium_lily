@@ -18,13 +18,13 @@ import { PanelService } from 'service/panel.service';
 })
 export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  targetUserId: string = '';
-  networkService = Network
+  targetUserId = '';
+  networkService = Network;
   gameRoomService = ObjectStore.instance;
-  help: string = '';
+  help = '';
 
   disptimer = null;
-  dispDetailFlag: boolean = true;
+  dispDetailFlag = true;
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
@@ -80,7 +80,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   async connectPeerHistory() {
     this.help = '';
     let conectPeers: PeerContext[] = [];
-    let roomId: string = '';
+    let roomId = '';
 
     for (let peerId of this.appConfigService.peerHistory) {
       let context = PeerContext.parse(peerId);
@@ -165,12 +165,12 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   findPeerTimeLatency(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);
-    if( !peerCursor ) return '--'
-    
+    if ( !peerCursor ) return '--';
+
     return peerCursor ? peerCursor.timeLatency / 1000 : 99999 ;
   }
 
-  myTime :number = 0;
+  myTime = 0;
   dispInfo(){
     this.myTime = Date.now();
   }

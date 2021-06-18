@@ -12,7 +12,7 @@
     },
     "array-type": false,
     "arrow-return-shorthand": true,
-    "curly": true,
+    "curly": false,
     "deprecation": {
       "severity": "warning"
     },
@@ -33,7 +33,7 @@
       140
     ],
     "member-ordering": [
-      true,
+      false,
       {
         "order": [
           "static-field",
@@ -121,6 +121,7 @@
         "check-typecast"
       ]
     },
+    "prefer-const": false,
     "component-class-suffix": true,
     "contextual-lifecycle": true,
     "directive-class-suffix": true,

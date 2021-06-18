@@ -26,7 +26,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() cursor: PeerCursor = PeerCursor.myCursor;
 
   get iconUrl(): string { return this.cursor.image.url; }
-  get name(): string { return this.cursor.name }
+  get name(): string { return this.cursor.name; }
   get isMine(): boolean { return this.cursor.isMine; }
 
   private cursorElement: HTMLElement = null;
@@ -36,12 +36,12 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateInterval: NodeJS.Timer = null;
 
   private timestampInterval: NodeJS.Timer = null;
-  private timestampIntervalEnable:boolean =false;
+  private timestampIntervalEnable = false;
 
   private callcack: any = (e) => this.onMouseMove(e);
 
-  private _x: number = 0;
-  private _y: number = 0;
+  private _x = 0;
+  private _y = 0;
   private _target: HTMLElement;
 
   networkService = Network;
@@ -86,8 +86,8 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
           const messId = event.data[1];
           const diffUp = event.data[2];
-          if(messId == PeerCursor.myCursor.peerId){
-            if(diffUp != null){
+          if (messId == PeerCursor.myCursor.peerId){
+            if (diffUp != null){
               this.cursor.timeDiffUp = diffUp;
               this.cursor.timeLatency = diffUp + this.cursor.timeDiffDown;
             }
@@ -103,25 +103,25 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
     const timeout = PeerCursor.myCursor.timeout * 1000;
     const elapsedTime = Date.now() - this.cursor.timestampReceive;
 
-    if( timeout <= elapsedTime){
-      if(!this.disConnectNotified){
+    if ( timeout <= elapsedTime){
+      if (!this.disConnectNotified){
         this.disConnectNotified = true;
 
         const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
         const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
-        let text = this.cursor.userId + '['+this.cursor.name + '] さんからあなたへの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上受信できません。通信障害の可能性があります。';
+        let text = this.cursor.userId + '[' + this.cursor.name + '] さんからあなたへの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上受信できません。通信障害の可能性があります。';
 
-        this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, "#006633");
+        this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
       }
     }else{
-      if( this.disConnectNotified == true ){
-        
+      if ( this.disConnectNotified == true ){
+
         setTimeout(() => {
           this.timestampInterval = null;
           const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
           const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
-          let text = 'あなたと' + this.cursor.userId + '['+this.cursor.name + '] さんの接続を確認しました。';
-          this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, "#006633");
+          let text = 'あなたと' + this.cursor.userId + '[' + this.cursor.name + '] さんの接続を確認しました。';
+          this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
         }, 1000);
       }
       this.disConnectNotified = false;
@@ -129,33 +129,33 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private logoutMessage(){
-    
+
     const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
     const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
-    let text = this.cursor.userId + '['+this.cursor.name + '] さんがログアウトしました。';
-    this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, "#006633");
-    
+    let text = this.cursor.userId + '[' + this.cursor.name + '] さんがログアウトしました。';
+    this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
+
   }
 
-  private indexCounter :number = 0;
+  private indexCounter = 0;
   private timestampLoop(){
-    if(!this.timestampIntervalEnable) return;
+    if (!this.timestampIntervalEnable) return;
     if (!this.timestampInterval) {
       this.timestampInterval = setTimeout(() => {
         this.timestampInterval = null;
 
-        if( PeerCursor.myCursor.peerId == this.cursor.peerId ){
+        if ( PeerCursor.myCursor.peerId == this.cursor.peerId ){
           const peerlength = this.networkService.peerContexts.length;
-          if( peerlength ){
-            if(peerlength <= this.indexCounter) this.indexCounter = 0;
+          if ( peerlength ){
+            if (peerlength <= this.indexCounter) this.indexCounter = 0;
             let timestanmp = Date.now() + PeerCursor.myCursor.debugTimeShift;
             let peerContext = null;
-            if(this.networkService.peerContexts[this.indexCounter]){
-              peerContext = this.networkService.peerContexts[this.indexCounter]
+            if (this.networkService.peerContexts[this.indexCounter]){
+              peerContext = this.networkService.peerContexts[this.indexCounter];
             }
             let id = '';
-            if(peerContext){
-              if(this.networkService.peerContexts[this.indexCounter].isOpen){
+            if (peerContext){
+              if (this.networkService.peerContexts[this.indexCounter].isOpen){
                 id = this.networkService.peerContexts[this.indexCounter].peerId;
               }
             }
@@ -164,7 +164,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
             const diffDown = peerCursor ? peerCursor.timeDiffDown : null ;
 
             EventSystem.call('HEART_BEAT', [ timestanmp , id , diffDown]);
-            console.log( 'peerlength:' + peerlength + 'this.indexCounter' + this.indexCounter +' id:' + id);
+            console.log( 'peerlength:' + peerlength + 'this.indexCounter' + this.indexCounter + ' id:' + id);
             this.indexCounter ++;
           }
         }else{
@@ -227,7 +227,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   private calcLocalCoordinate(x: number, y: number, target: HTMLElement) {
     if (!document.getElementById('app-table-layer').contains(target)) return;
 
-    let coordinate: PointerCoordinate = { x: x, y: y, z: 0 };
+    let coordinate: PointerCoordinate = { x, y, z: 0 };
     coordinate = this.coordinateService.calcTabletopLocalCoordinate(coordinate, target);
 
     EventSystem.call('CURSOR_MOVE', [coordinate.x, coordinate.y, coordinate.z]);

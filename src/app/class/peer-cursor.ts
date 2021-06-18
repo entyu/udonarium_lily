@@ -19,14 +19,14 @@ export class PeerCursor extends GameObject {
   private _timestampSend: number = -1;
   private _timestampReceive: number = -1;
 
-  private _timeDiffUp: number = 0;
-  private _timeDiffDown: number = 0;
-  private _timeLatency: number = 99999;
+  private _timeDiffUp = 0;
+  private _timeDiffDown = 0;
+  private _timeLatency = 99999;
 
-  private _timeout: number = 40;// �P�ʕb
+  private _timeout = 40; // 単位秒
 
-  private _debugTimeShift: number = 0;
-  private _debugReceiveDelay: number = 0;
+  private _debugTimeShift = 0;
+  private _debugReceiveDelay = 0;
 
   get timestampSend(): number { return this._timestampSend; }
   set timestampSend( time: number ){ this._timestampSend = time ; }
@@ -56,12 +56,7 @@ export class PeerCursor extends GameObject {
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
   private static peerIdMap: Map<PeerId, ObjectIdentifier> = new Map();
   chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
-  
-  get latency(): number {
-    let time = ( this.timeDiffUp + this.timeDiffDown )/2;
-    return time < 0 ? 0 : time;
-  }
-  
+
   private _diceImageType: string = "";
   private _diceImageIndex: number = -1;
   
