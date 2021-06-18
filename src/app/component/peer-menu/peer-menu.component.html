@@ -31,6 +31,8 @@
 <hr/>
 <div>
     <span><input [(ngModel)]="myPeer.timeout" type="number" min="1" max="600" /> 秒以上通信できない参加者情報をチャットに表示</span><br>
+    <span>接続情報詳細を表示<input type="checkbox" value="dispDetailFlag"  [(ngModel)]="dispDetailFlag"></span><br>
+
 </div>
 <div *ngIf="myPeer.name=='円柱'">
     デバッグ機能<br>
@@ -43,8 +45,9 @@
     <span>他の参加者：{{findUserId(context.peerId)}} [{{findPeerName(context.peerId)}}] </span>
     <span *ngIf="findPeerTimeReceive(context.peerId) <= 0">接続確認：[-:--:--]</span>
     <span *ngIf="findPeerTimeReceive(context.peerId) > 0">接続確認：[{{findPeerTimeReceive(context.peerId) | date:'HH:mm:ss'}}]</span>
-    <br>
-    <span>伝送遅延+時計差下り：{{findPeerTimeDiffDown(context.peerId)}}ms 上り：{{findPeerTimeDiffUp(context.peerId)}}ms 往復時間：{{findPeerTimeLatency(context.peerId)}}秒</span>
+    <div *ngIf="dispDetailFlag">
+      <span >往復通信時間：{{findPeerTimeLatency(context.peerId)}}秒 伝送時間+時計差受信：{{findPeerTimeDiffDown(context.peerId)}}ms 送信：{{findPeerTimeDiffUp(context.peerId)}}ms </span>
+    </div>
   </div>
 </div>
 <div>

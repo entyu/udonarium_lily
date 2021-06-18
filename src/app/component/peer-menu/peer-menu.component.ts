@@ -24,6 +24,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   help: string = '';
 
   disptimer = null;
+  dispDetailFlag: boolean = true;
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
