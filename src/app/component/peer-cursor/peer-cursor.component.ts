@@ -89,6 +89,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
           if(messId == PeerCursor.myCursor.peerId){
             if(diffUp != null){
               this.cursor.timeDiffUp = diffUp;
+              this.cursor.timeLatency = diffUp + this.cursor.timeDiffDown;
             }
           }
         });

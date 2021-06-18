@@ -21,6 +21,7 @@ export class PeerCursor extends GameObject {
 
   private _timeDiffUp: number = 0;
   private _timeDiffDown: number = 0;
+  private _timeLatency: number = 99999;
 
   private _timeout: number = 40;// ’PˆÊ•b
 
@@ -38,6 +39,9 @@ export class PeerCursor extends GameObject {
 
   get timeDiffDown(): number { return this._timeDiffDown; }
   set timeDiffDown( time: number ){ this._timeDiffDown = time; }
+
+  get timeLatency(): number { return this._timeLatency; }
+  set timeLatency( time: number ){ this._timeLatency = time; }
 
   get debugTimeShift(): number { return this._debugTimeShift; }
   set debugTimeShift( time: number ){ this._debugTimeShift = time; }

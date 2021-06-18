@@ -162,11 +162,11 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     return peerCursor ? peerCursor.timeDiffDown : 0 ;
   }
 
-  findPeerTimeDiffAve(peerId: string) {
+  findPeerTimeLatency(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);
     if( !peerCursor ) return '--'
     
-    return peerCursor ? peerCursor.timeDiffDown : 0 ;
+    return peerCursor ? peerCursor.timeLatency / 1000 : 99999 ;
   }
 
   myTime :number = 0;
