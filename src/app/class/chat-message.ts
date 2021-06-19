@@ -75,4 +75,6 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
   get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
   
+  get isSystemToPL(): boolean { return -1 < this.tags.indexOf('to-pl-system-message') ? true : false; }
+
 }

@@ -11,8 +11,10 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { DataElement } from '@udonarium/data-element';
 
 import { DiceBot } from '@udonarium/dice-bot';
+
 
 const HOURS = 60 * 60 * 1000;
 
@@ -81,6 +83,35 @@ export class ChatMessageService {
     return Math.floor(this.timeOffset + (performance.now() - this.performanceOffset));
   }
 
+  // システムメッセージ専用
+  sendSystemMessageOnePlayer(chatTab: ChatTab,text:string, sendTo: string, color? :string): ChatMessage {
+
+    let _color;
+    if( !color ){
+      _color = "#006633";
+    }else{
+      _color = color;
+    }
+
+
+    let chatMessage: ChatMessageContext = {
+      from: this.findId(sendTo),
+      to: this.findId(sendTo),
+      name: 'システムメッセージ',
+      imageIdentifier: '',//lily
+      timestamp: this.calcTimeStamp(chatTab),
+      tag: 'DiceBot to-pl-system-message',
+      text: text,
+      imagePos: -1,//lily
+      messColor: _color,//lily
+      sendFrom: null //lily
+    };
+    
+    return chatTab.addMessage(chatMessage);
+    
+  }
+
+
   // 本家からachieNum?: number color? :string を追加
   sendMessage(chatTab: ChatTab, text: string, gameSystem: GameSystemClass | null, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string): ChatMessage {
 
@@ -122,25 +153,34 @@ export class ChatMessageService {
       sendFrom: sendFrom //lily
     };
 
-    // ハイド処理
-    let chkMessage = ' ' + StringUtil.toHalfWidth(text).toLowerCase();
-    let matches_array = chkMessage.match(/\s@(\S+)$/i);
-    if( matches_array ){
-      if( RegExp.$1 == 'hide' )
-        chatMessage.imageIdentifier = '';
-        
-      chatMessage.text = text.replace(/([@＠]\S+)$/i,'');
-    }
-    
     // 立ち絵置き換え
-    let matches_array_num = chkMessage.match(/\s@(\d+)$/i);
-    if( matches_array_num ){
-      let num: number = parseInt(RegExp.$1);
-      chatMessage.imageIdentifier = this.findImageIdentifier(sendFrom,num);
+    let chkMessage = ' ' + text;
 
-      chatMessage.text = text.replace(/([@＠]\S+)$/i,'');
+    let matchesArray = chkMessage.match(/\s[@＠](\S+)\s*$/i);
+    if( matchesArray ){
+      console.log( matchesArray );
+      const matchHide = matchesArray[1].match(/^[hHｈＨ][iIｉＩ][dDｄＤ][eEｅＥ]$/);
+      const matchNum = matchesArray[1].match(/(\d+)$/);
+
+      if( matchHide ){ //非表示コマンド
+        chatMessage.imageIdentifier = '';
+        chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
+      }else if( matchNum ){ //インデックス指定
+        const num: number = parseInt( matchNum[1] );
+        const newIdentifier = this.findImageIdentifier( sendFrom,num );
+        if( newIdentifier ){
+          chatMessage.imageIdentifier = newIdentifier;
+          chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
+        }
+      }else{
+        const tachieName = matchesArray[1];
+        const newIdentifier = this.findImageIdentifierName( sendFrom,tachieName );
+        if( newIdentifier ){
+          chatMessage.imageIdentifier = newIdentifier;
+          chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
+        }
+      }
     }
-
     return chatTab.addMessage(chatMessage);
   }
 
@@ -167,16 +207,46 @@ export class ChatMessageService {
   private makeMessageName(sendFrom: string, sendTo?: string): string {
     let sendFromName = this.findObjectName(sendFrom);
     if (sendTo == null || sendTo.length < 1) return sendFromName;
-
     let sendToName = this.findObjectName(sendTo);
     return sendFromName + ' > ' + sendToName;
   }
 
-  private findImageIdentifier(sendFrom,index:number): string {
-
+  private findImageIdentifierName(sendFrom,name:string): string {
+// 完全一致
     let object = ObjectStore.instance.get(sendFrom);
     if (object instanceof GameCharacter) {
-      console.log("object.imageDataElement.children.length"+ object.imageDataElement.children.length);
+      let data:DataElement = object.imageDataElement;
+      for (let child of data.children) {
+        if (child instanceof DataElement) {
+          if (child.getAttribute('currentValue') == name){
+            console.log( "HIT!!" + child.getAttribute('currentValue') + '=' + name);
+            const img = ImageStorage.instance.get(<string>child.value);
+            if( img ){
+              return  img.identifier;
+            }
+          }
+        }
+      }
+// 部分前方一致
+      for (let child of data.children) {
+        if (child instanceof DataElement) {
+          console.log( "child" + child.getAttribute('currentValue') );
+          if ( child.getAttribute('currentValue').indexOf( name ) == 0 ){
+            console.log( "HIT!!" + child.getAttribute('currentValue') + '=' + name);
+            const img = ImageStorage.instance.get(<string>child.value);
+            if( img ){
+              return  img.identifier;
+            }
+          }
+        }
+      }
+    }
+    return '';
+  }
+
+  private findImageIdentifier(sendFrom,index:number): string {
+    let object = ObjectStore.instance.get(sendFrom);
+    if (object instanceof GameCharacter) {
       if( object.imageDataElement.children.length  > index ){
         let img = ImageStorage.instance.get(<string>object.imageDataElement.children[index].value);
         if( img ){
@@ -187,8 +257,7 @@ export class ChatMessageService {
     } else if (object instanceof PeerCursor) {
       return object.imageIdentifier;
     }
-    return sendFrom;
-
+    return '';
   }
 
 //entyu

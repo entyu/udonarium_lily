@@ -1,15 +1,22 @@
 <div *ngIf="myPeer">
   <button (click)="changeIcon()">アイコンを変更する</button>
-  <div *ngIf="myPeer.image" class="image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
-    (click)="changeIcon()">
-    <!--<img *ngIf="myPeer.image" [src]="myPeer.image.url | safe: 'resourceUrl'" />-->
-  </div>
-  <span>あなたのニックネーム：  <input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span>
 </div>
-<div>
-  <span>あなたのID：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
-  <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
-  </span>
+<div class="user">
+  <div class="user_icon">
+    <ng-container *ngIf="myPeer">
+      <div *ngIf="myPeer.image" class="image cover" [style.background-image]="'url(' + myPeer.image.url + ')' | safe: 'style' "
+      (click)="changeIcon()">
+    </div>
+    </ng-container>
+  </div>
+  <div class="user_info">
+    <span *ngIf="myPeer">あなたのニックネーム：  <input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span><br>
+    <span>ID：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
+    <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span><br>
+    <span>ブラウザ時刻：</span>
+    <span>{{myTime | date:'yy/MM/dd HH:mm:ss'}}</span>
+    </span>
+  </div>
 </div>
 <!--<div>host ID:{{networkService.hostPeerID}}</div>-->
 <ng-container *ngIf="networkService.peerContext.isRoom">
@@ -22,10 +29,24 @@
   </div>
 </ng-container>
 <hr/>
-<div *ngFor="let context of networkService.peerContexts">
+<div>
+  <span><input [(ngModel)]="myPeer.timeout" type="number" min="1" max="600" /> 秒以上通信できない参加者情報をチャットに表示</span><br>
+  <span>接続情報詳細を表示<input type="checkbox" value="dispDetailFlag"  [(ngModel)]="dispDetailFlag"></span><br>
+</div>
+<div *ngIf="myPeer.name=='円柱'">
+  デバッグ機能<br>
+  <input [(ngModel)]="myPeer.debugReceiveDelay" type="number" />：仮想受信遅延[ms]<br>
+  <input [(ngModel)]="myPeer.debugTimeShift" type="number" />：タイムシフト[ms]<br>
+</div>
+<div *ngFor="let context of networkService.peerContexts" style="font-size: 15px;">
   <div>
     <span *ngIf="!context.isOpen">[接続中]</span>
-    <span>他の参加者：{{findUserId(context.peerId)}} [{{findPeerName(context.peerId)}}]</span>
+    <span>他の参加者：{{findUserId(context.peerId)}} [{{findPeerName(context.peerId)}}] </span>
+    <span *ngIf="findPeerTimeReceive(context.peerId) <= 0">接続確認：[-:--:--]</span>
+    <span *ngIf="findPeerTimeReceive(context.peerId) > 0">接続確認：[{{findPeerTimeReceive(context.peerId) | date:'HH:mm:ss'}}]</span>
+    <div *ngIf="dispDetailFlag">
+      <span >往復通信時間：{{findPeerTimeLatency(context.peerId)}}秒 伝送時間+時計差受信：{{findPeerTimeDiffDown(context.peerId)}}ms 送信：{{findPeerTimeDiffUp(context.peerId)}}ms </span>
+    </div>
   </div>
 </div>
 <div>

@@ -18,10 +18,13 @@ import { PanelService } from 'service/panel.service';
 })
 export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  targetUserId: string = '';
-  networkService = Network
+  targetUserId = '';
+  networkService = Network;
   gameRoomService = ObjectStore.instance;
-  help: string = '';
+  help = '';
+
+  disptimer = null;
+  dispDetailFlag = true;
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
@@ -41,10 +44,15 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('OPEN_NETWORK', event => {
         this.ngZone.run(() => { });
       });
+
+    this.disptimer = setInterval(() => {
+      this.dispInfo();
+    }, 1000 );
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+    this.disptimer = null;
   }
 
   changeIcon() {
@@ -72,7 +80,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   async connectPeerHistory() {
     this.help = '';
     let conectPeers: PeerContext[] = [];
-    let roomId: string = '';
+    let roomId = '';
 
     for (let peerId of this.appConfigService.peerHistory) {
       let context = PeerContext.parse(peerId);
@@ -134,4 +142,37 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     const peerCursor = PeerCursor.findByPeerId(peerId);
     return peerCursor ? peerCursor.name : '';
   }
+
+  findPeerTimeSend(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.timestampSend : 0 ;
+  }
+
+  findPeerTimeReceive(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.timestampReceive : 0 ;
+  }
+
+  findPeerTimeDiffUp(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.timeDiffUp : 0 ;
+  }
+
+  findPeerTimeDiffDown(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.timeDiffDown : 0 ;
+  }
+
+  findPeerTimeLatency(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    if ( !peerCursor ) return '--';
+
+    return peerCursor ? peerCursor.timeLatency / 1000 : 99999 ;
+  }
+
+  myTime = 0;
+  dispInfo(){
+    this.myTime = Date.now();
+  }
+
 }

@@ -96,8 +96,17 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     return this._chatMessages;
   }
 
+  private chatMessagesDisplayableLength(chatMessages: ChatMessage[]): number{
+    let length = 0;
+    for (let message of chatMessages) {
+      if (message.isDisplayable) length++;
+    }
+    return length;
+  }
+
   get minScrollHeight(): number {
-    let length = this.chatTab ? this.chatTab.chatMessages.length : this.sampleMessages.length;
+//    let length = this.chatTab ? this.chatTab.chatMessages.length : this.sampleMessages.length;
+    let length = this.chatTab ? this.chatMessagesDisplayableLength(this.chatTab.chatMessages) : this.sampleMessages.length;
     return (length < 10000 ? length : 10000) * this.minMessageHeight;
   }
 

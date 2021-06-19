@@ -15,13 +15,48 @@ export class PeerCursor extends GameObject {
   @SyncVar() peerId: PeerId = '';
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
+  
+  private _timestampSend: number = -1;
+  private _timestampReceive: number = -1;
+
+  private _timeDiffUp = 0;
+  private _timeDiffDown = 0;
+  private _timeLatency = 99999;
+
+  private _timeout = 40; // 単位秒
+
+  private _debugTimeShift = 0;
+  private _debugReceiveDelay = 0;
+
+  get timestampSend(): number { return this._timestampSend; }
+  set timestampSend( time: number ){ this._timestampSend = time ; }
+
+  get timestampReceive(): number { return this._timestampReceive; }
+  set timestampReceive( time: number ){ this._timestampReceive = time + this._debugReceiveDelay; }
+
+  get timeDiffUp(): number { return this._timeDiffUp; }
+  set timeDiffUp( time: number ){ this._timeDiffUp = time; }
+
+  get timeDiffDown(): number { return this._timeDiffDown; }
+  set timeDiffDown( time: number ){ this._timeDiffDown = time; }
+
+  get timeLatency(): number { return this._timeLatency; }
+  set timeLatency( time: number ){ this._timeLatency = time; }
+
+  get debugTimeShift(): number { return this._debugTimeShift; }
+  set debugTimeShift( time: number ){ this._debugTimeShift = time; }
+
+  get debugReceiveDelay(): number { return this._debugReceiveDelay; }
+  set debugReceiveDelay( time: number ){ this._debugReceiveDelay = time; }
+
+  get timeout(): number { return this._timeout > 0 ? this._timeout : 1 ; }
+  set timeout( time: number ){ this._timeout = time; }
 
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
   private static peerIdMap: Map<PeerId, ObjectIdentifier> = new Map();
   chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
 
-  
   private _diceImageType: string = "";
   private _diceImageIndex: number = -1;
   
@@ -38,8 +73,6 @@ export class PeerCursor extends GameObject {
       return "";
     }
   }
-
-  
 
   get isMine(): boolean { return (PeerCursor.myCursor && PeerCursor.myCursor === this); }
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }

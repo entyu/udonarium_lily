@@ -206,6 +206,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     setInterval(() => {
       this.dispcounter = this.dispcounter +1;
       if( this.dispcounter >100 )this.dispcounter = 0;
+//      PeerCursor.myCursor.time = new Date();
     }, 200 );
   }
 
