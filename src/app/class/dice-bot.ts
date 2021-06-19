@@ -510,25 +510,23 @@ export class DiceBot extends GameObject {
       zeroLimit: false,
       isErr: false
     };
-    
     const mat = StringUtil.toHalfWidth(text).match(/([A-CE-Z]+)$/i);
-    console.log(mat);
-    if(!mat) return ans;
+    if (!mat) return ans;
     let option = mat[1];
 
-    if( option.match(/L/i) ){
+    if (option.match(/L/i)){
       option = option.replace(/L/i, '');
       ans.limitMinMax = true;
     }
 
-    if( option.match(/Z/i) ){
+    if (option.match(/Z/i)){
       option = option.replace(/Z/i, '');
       ans.zeroLimit = true;
     }else{
       ans.zeroLimit = false;
     }
 
-    if( option.length != 0){
+    if (option.length != 0){
       ans.isErr = true;
     }
 
@@ -573,12 +571,12 @@ export class DiceBot extends GameObject {
 
       const reg1: string = resourceEditResult[1];
       const reg2: string = resourceEditResult[2];
-      const reg3: string = resourceEditResult[3].replace(/[A-CE-ZＡ-ＣＥ-Ｚ]+$/i,'');
+      const reg3: string = resourceEditResult[3].replace(/[A-CE-ZＡ-ＣＥ-Ｚ]+$/i, '');
 
       console.log( reg1 + '/' + reg2 + '/' + reg3 );
 
       const optionCommand = this.resourceEditParseOption(resourceEditResult[3]);
-      if(optionCommand.isErr){
+      if (optionCommand.isErr){
         return ; // 実行失敗
       }
       oneResourceEdit.option = optionCommand;
@@ -647,7 +645,6 @@ export class DiceBot extends GameObject {
       let optionText = '';
       if (edit.detaElm.type == 'numberResource') {
         oldValueS = (edit.detaElm.currentValue as string) ;
-
         if (edit.operator == '=') {
           calc = edit.calcAns;
         } else {
@@ -662,18 +659,16 @@ export class DiceBot extends GameObject {
             calc = parseInt(oldValueS, 10) + edit.calcAns;
           }
         }
-        
-        if( edit.option.limitMinMax ){
-          if( calc > parseInt(edit.detaElm.value as string,10) ){
-            calc = parseInt(edit.detaElm.value as string,10);
+        if (edit.option.limitMinMax){
+          if (calc > parseInt(edit.detaElm.value as string, 10)){
+            calc = parseInt(edit.detaElm.value as string, 10);
             optionText = '(最大)';
           }
-          if( calc < 0 ){
+          if (calc < 0 ){
             calc = 0;
             optionText = '(最小)';
           }
         }
-        
         edit.detaElm.currentValue = calc;
 
       } else if (edit.detaElm.type != 'note') {
