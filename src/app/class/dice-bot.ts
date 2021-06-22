@@ -264,8 +264,10 @@ export class DiceBot extends GameObject {
             if (diceRollTable.command != null && rollText.trim().toUpperCase() === 'S' + diceRollTable.command.trim().toUpperCase()) {
               isDiceRollTableMatch = true;
               isSecret = true;
+              finalResult.isFailure = false;
             } else if (diceRollTable.command != null && rollText.trim().toUpperCase() === diceRollTable.command.trim().toUpperCase()) {
               isDiceRollTableMatch = true;
+              finalResult.isFailure = false;
             }
             if (isDiceRollTableMatch) {
               finalResult.isDiceRollTable = true;
@@ -498,7 +500,7 @@ export class DiceBot extends GameObject {
             })
             .then(json => {
               console.log(JSON.stringify(json))
-              return { result: (gameType) + (DiceBot.apiVersion == 1 ? json.result : json.text) + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, 
+              return { result: (gameType) + ' ' + (DiceBot.apiVersion == 1 ? json.result : json.text) + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, 
                 isEmptyDice: DiceBot.apiVersion == 1 ? (json.dices && json.dices.length == 0) : (json.rands && json.rands.length == 0),
                 isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble };
             })
@@ -539,7 +541,7 @@ export class DiceBot extends GameObject {
             console.log('diceRoll!!!', result);
             console.log('isSecret!!!', result.secret);
             console.log('isEmptyDice!!!', !result.rands || result.rands.length == 0);
-            return { result: result.text, isSecret: result.secret, isEmptyDice: !result.rands || result.rands.length == 0,
+            return { result: gameType + ' : ' + result.text, isSecret: result.secret, isEmptyDice: !result.rands || result.rands.length == 0,
               isSuccess: result.success, isFailure: result.failure, isCritical: result.critical, isFumble: result.fumble };
           } catch (e) {
             console.error(e);
