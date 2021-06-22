@@ -138,8 +138,8 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     let parentElement = this.gameDataElement.parent;
     let index: number = parentElement.children.indexOf(this.gameDataElement);
     if (index < parentElement.children.length - 1) {
-      let nextElement = parentElement.children[index + 1];
-      parentElement.insertBefore(nextElement, this.gameDataElement.parent);
+      let nextElement = index < parentElement.children.length - 2 ? parentElement.children[index + 2] : null;
+      parentElement.insertBefore(this.gameDataElement, nextElement);
     }
   }
 
