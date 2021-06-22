@@ -1,0 +1,49 @@
+.image-box {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.image {
+  padding: 0px;
+  width: 64px;
+  height: 64px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.image img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.text {
+    transform-origin: left top;
+  
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  
+    font-weight: bolder;
+    text-align: center;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    font-size: 24px;
+    color: #444;
+    z-index: 5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 
+    #fff 0px 0px 2px, 
+    #fff 0px 0px 2px, 
+    #fff 0px 0px 2px, 
+    #fff 0px 0px 2px, 
+    #fff 0px 0px 2px, 
+    #fff 0px 0px 2px,
+    #fff 0px 0px 2px,
+    #fff 0px 0px 2px;
+  }

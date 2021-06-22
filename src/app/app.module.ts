@@ -71,6 +71,7 @@ import { LinkyModule } from 'ngx-linky';
 import { ChatLogOutputComponent } from './component/chat-log-output/chat-log-output.component';
 
 import { YouTubePlayerModule } from "@angular/youtube-player";
+import { CardListImageComponent } from './component/card-list-image/card-list-image.component';
 
 @NgModule({
   declarations: [
@@ -124,7 +125,8 @@ import { YouTubePlayerModule } from "@angular/youtube-player";
     DiceRollTableSettingComponent,
     CutInComponent,
     CutInSettingComponent,
-    ChatLogOutputComponent
+    ChatLogOutputComponent,
+    CardListImageComponent
   ],
   imports: [
     BrowserModule,
