@@ -222,6 +222,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     } else {
       this.multiMoveTargets.delete(gameObject);
     }
+    console.log([...this.multiMoveTargets].map(x => x.identifier));
   }
 
   onMultiMoveContextMenu() {
@@ -245,6 +246,15 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         }
       });
     }
+    if (this.selectTab == 'graveyard') {
+      actions.push({
+        name: '墓場から削除', action: () => {
+          this.multiDelete();
+          this.toggleMultiMove();
+          SoundEffect.play(PresetSound.sweep);
+        }
+      })
+    }
 
     this.contextMenuService.open(position, actions, "一括移動");
   }
@@ -252,6 +262,16 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   multiMove(location: string) {
     for (let gameObject of this.multiMoveTargets) {
       gameObject.setLocation(location);
+    }
+  }
+
+  multiDelete() {
+    let inGraveyard = new Set([...this.multiMoveTargets].filter(x => x.location.name == 'graveyard'));
+    if (inGraveyard.size < 1) return;
+
+    if (!confirm(`選択したもののうち墓場に存在する${inGraveyard.size}個の要素を完全に削除しますか？`)) return;
+    for (const gameObject of inGraveyard) {
+      this.deleteGameObject(gameObject);
     }
   }
 
