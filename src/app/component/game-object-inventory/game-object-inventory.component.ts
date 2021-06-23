@@ -226,7 +226,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     } else {
       this.multiMoveTargets.delete(gameObject.identifier);
     }
-    console.log([...this.multiMoveTargets]);
+    console.log(`multimove selected ${[...this.multiMoveTargets]}`);
   }
 
   allTabBoxCheck() {
@@ -333,6 +333,14 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   selectGameObject(gameObject: GameObject) {
+    if (this.isMultiMove) {
+      if (this.multiMoveTargets.has(gameObject.identifier)) {
+        this.multiMoveTargets.delete(gameObject.identifier);
+      } else {
+        this.multiMoveTargets.add(gameObject.identifier);
+      }
+      console.log(`multimove selected ${[...this.multiMoveTargets]}`);
+    }
     let aliasName: string = gameObject.aliasName;
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
     EventSystem.trigger('HIGHTLIGHT_TABLETOP_OBJECT', { identifier: gameObject.identifier });
