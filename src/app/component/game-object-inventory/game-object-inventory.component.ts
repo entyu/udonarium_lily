@@ -29,7 +29,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
 
   selectTab: string = 'table';
   selectedIdentifier: string = '';
-  multiMoveTargets: Set<GameCharacter> = new Set();
+  multiMoveTargets: Set<string> = new Set();
 
   isEdit: boolean = false;
   isMultiMove: boolean = false;
@@ -218,11 +218,11 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   toggleMultiMoveTarget(e: Event, gameObject: GameCharacter) {
     if (!(e.target instanceof HTMLInputElement)) { return; }
     if (e.target.checked) {
-      this.multiMoveTargets.add(gameObject);
+      this.multiMoveTargets.add(gameObject.identifier);
     } else {
-      this.multiMoveTargets.delete(gameObject);
+      this.multiMoveTargets.delete(gameObject.identifier);
     }
-    console.log([...this.multiMoveTargets].map(x => x.identifier));
+    console.log([...this.multiMoveTargets]);
   }
 
   onMultiMoveContextMenu() {
@@ -260,13 +260,22 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   multiMove(location: string) {
-    for (let gameObject of this.multiMoveTargets) {
-      gameObject.setLocation(location);
+    for (const gameObjectIdentifier of this.multiMoveTargets) {
+      let gameObject = ObjectStore.instance.get(gameObjectIdentifier);
+      if (gameObject instanceof GameCharacter) {
+        gameObject.setLocation(location);
+      }
     }
   }
 
   multiDelete() {
-    let inGraveyard = new Set([...this.multiMoveTargets].filter(x => x.location.name == 'graveyard'));
+    let inGraveyard: Set<GameCharacter> = new Set();
+    for (const gameObjectIdentifier of this.multiMoveTargets) {
+      let gameObject: GameCharacter = ObjectStore.instance.get(gameObjectIdentifier);
+      if (gameObject instanceof GameCharacter && gameObject.location.name == 'graveyard') {
+        inGraveyard.add(gameObject);
+      }
+    }
     if (inGraveyard.size < 1) return;
 
     if (!confirm(`選択したもののうち墓場に存在する${inGraveyard.size}個の要素を完全に削除しますか？`)) return;

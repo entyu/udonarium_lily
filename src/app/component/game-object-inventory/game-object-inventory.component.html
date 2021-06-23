@@ -77,7 +77,7 @@
     </div>
     <div class="object-tags-box">
       <div class="table-cell"  *ngIf="isMultiMove">
-        <input type="checkbox" [checked]="multiMoveTargets.has(gameObject)" (change)="toggleMultiMoveTarget($event, gameObject)" />
+        <input type="checkbox" [checked]="multiMoveTargets.has(gameObject.identifier)" (change)="toggleMultiMoveTarget($event, gameObject)" />
       </div>
       <div class="table-cell">
         <div class="image-box">
