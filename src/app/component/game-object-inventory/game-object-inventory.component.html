@@ -56,8 +56,8 @@
 </ng-template>
 <ng-template #inventoryMultiMove>
   <ng-container *ngIf="isMultiMove">
-    <div style="padding-top: 6px;">
-      一括移動:
+    <div style="font-size: 0.8em;">
+      <span style="font-weight: bold">一括移動:</span>
       <button class="tab-setting small-font" (click)="allTabBoxCheck();">
         <ng-container *ngIf="existsMultiMoveSelectedInTab(); else selectAll">全解除口↓</ng-container>
         <ng-template #selectAll>全選択〆↓</ng-template>
@@ -67,7 +67,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="!isMultiMove">
-    <div style="padding-top: 6px;">
+    <div>
       <button class="tab-setting small-font" (click)="toggleMultiMove()"><i class="material-icons small-font">settings</i>一括移動</button>
     </div>
   </ng-container>
