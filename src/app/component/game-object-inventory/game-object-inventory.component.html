@@ -58,6 +58,10 @@
   <ng-container *ngIf="isMultiMove">
     <div style="padding-top: 6px;">
       一括移動:
+      <button class="tab-setting small-font" (click)="allTabBoxCheck();">
+        <ng-container *ngIf="existsMultiMoveSelectedInTab(); else selectAll">全解除口↓</ng-container>
+        <ng-template #selectAll>全選択〆↓</ng-template>
+      </button>
       <button class="tab-setting small-font" (click)="onMultiMoveContextMenu()"><i class="material-icons small-font">settings</i>実行</button>
       <button class="tab-setting small-font" (click)="toggleMultiMove()"><i class="material-icons small-font">settings</i>キャンセル</button>
     </div>

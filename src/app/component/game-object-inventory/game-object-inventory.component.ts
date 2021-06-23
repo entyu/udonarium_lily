@@ -215,6 +215,10 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     SoundEffect.play(PresetSound.sweep);
   }
 
+  existsMultiMoveSelectedInTab(): boolean {
+    return this.getGameObjects(this.selectTab).some(x => this.multiMoveTargets.has(x.identifier))
+  }
+
   toggleMultiMoveTarget(e: Event, gameObject: GameCharacter) {
     if (!(e.target instanceof HTMLInputElement)) { return; }
     if (e.target.checked) {
@@ -223,6 +227,14 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       this.multiMoveTargets.delete(gameObject.identifier);
     }
     console.log([...this.multiMoveTargets]);
+  }
+
+  allTabBoxCheck() {
+    if (this.existsMultiMoveSelectedInTab()) {
+      this.getGameObjects(this.selectTab).forEach(x => this.multiMoveTargets.delete(x.identifier));
+    } else {
+      this.getGameObjects(this.selectTab).forEach(x => this.multiMoveTargets.add(x.identifier));
+    }
   }
 
   onMultiMoveContextMenu() {
