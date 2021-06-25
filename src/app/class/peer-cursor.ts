@@ -23,6 +23,11 @@ export class PeerCursor extends GameObject {
   private _timeDiffDown = 0;
   private _timeLatency = 99999;
 
+  private _firstTimeSignNo = -1;
+  private _rastTimeSignNo = -1;
+  private _totalTimeSignNum = 0;
+
+
   private _timeout = 40; // 単位秒
 
   private _debugTimeShift = 0;
@@ -51,6 +56,17 @@ export class PeerCursor extends GameObject {
 
   get timeout(): number { return this._timeout > 0 ? this._timeout : 1 ; }
   set timeout( time: number ){ this._timeout = time; }
+
+  get firstTimeSignNo(): number { return this._firstTimeSignNo; }
+  set firstTimeSignNo( num: number ){ this._firstTimeSignNo = num ; }
+
+  get rastTimeSignNo(): number { return this._rastTimeSignNo; }
+  set rastTimeSignNo( num: number ){ this._rastTimeSignNo = num ; }
+
+  get totalTimeSignNum(): number { return this._totalTimeSignNum; }
+  set totalTimeSignNum( num: number ){ this._totalTimeSignNum = num ; }
+
+
 
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();

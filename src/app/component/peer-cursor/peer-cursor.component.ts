@@ -164,7 +164,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
             const diffDown = peerCursor ? peerCursor.timeDiffDown : null ;
 
             EventSystem.call('HEART_BEAT', [ timestanmp , id , diffDown]);
-            console.log( 'peerlength:' + peerlength + 'this.indexCounter' + this.indexCounter + ' id:' + id);
+//            console.log( 'peerlength:' + peerlength + 'this.indexCounter' + this.indexCounter + ' id:' + id);
             this.indexCounter ++;
           }
         }else{
