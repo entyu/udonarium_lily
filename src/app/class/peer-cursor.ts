@@ -24,7 +24,7 @@ export class PeerCursor extends GameObject {
   private _timeLatency = 99999;
 
   private _firstTimeSignNo = -1;
-  private _rastTimeSignNo = -1;
+  private _lastTimeSignNo = -1;
   private _totalTimeSignNum = 0;
 
 
@@ -60,8 +60,8 @@ export class PeerCursor extends GameObject {
   get firstTimeSignNo(): number { return this._firstTimeSignNo; }
   set firstTimeSignNo( num: number ){ this._firstTimeSignNo = num ; }
 
-  get rastTimeSignNo(): number { return this._rastTimeSignNo; }
-  set rastTimeSignNo( num: number ){ this._rastTimeSignNo = num ; }
+  get lastTimeSignNo(): number { return this._lastTimeSignNo; }
+  set lastTimeSignNo( num: number ){ this._lastTimeSignNo = num ; }
 
   get totalTimeSignNum(): number { return this._totalTimeSignNum; }
   set totalTimeSignNum( num: number ){ this._totalTimeSignNum = num ; }

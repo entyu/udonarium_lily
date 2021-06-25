@@ -86,6 +86,13 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
           const messId = event.data[1];
           const diffUp = event.data[2];
+          
+          this.cursor.lastTimeSignNo = event.data[3];
+          if (this.cursor.firstTimeSignNo < 0){
+            this.cursor.firstTimeSignNo = event.data[3];
+          }
+          this.cursor.totalTimeSignNum++;
+          
           if (messId == PeerCursor.myCursor.peerId){
             if (diffUp != null){
               this.cursor.timeDiffUp = diffUp;
@@ -137,6 +144,8 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+
+  private secdCounter = 0;
   private indexCounter = 0;
   private timestampLoop(){
     if (!this.timestampIntervalEnable) return;
@@ -163,9 +172,10 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
             const peerCursor = PeerCursor.findByPeerId(id);
             const diffDown = peerCursor ? peerCursor.timeDiffDown : null ;
 
-            EventSystem.call('HEART_BEAT', [ timestanmp , id , diffDown]);
+            EventSystem.call('HEART_BEAT', [ timestanmp , id , diffDown , this.secdCounter]);
 //            console.log( 'peerlength:' + peerlength + 'this.indexCounter' + this.indexCounter + ' id:' + id);
             this.indexCounter ++;
+            this.secdCounter ++;
           }
         }else{
           this.chkDisConnect();
