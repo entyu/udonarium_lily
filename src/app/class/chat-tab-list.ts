@@ -1,5 +1,5 @@
 import { ChatTab } from './chat-tab';
-import { SyncObject } from './core/synchronize-object/decorator';
+import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml } from './core/synchronize-object/object-serializer';
 
@@ -9,6 +9,21 @@ import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
 @SyncObject('chat-tab-list')
 export class ChatTabList extends ObjectNode implements InnerXml {
+
+  @SyncVar() systemMessageTabIndex: number = 0;
+
+  get sysMessTab(){
+    const tabs = this.children as ChatTab[];
+    let tab;
+    if (this.systemMessageTabIndex >= tabs.length){
+      this.systemMessageTabIndex = tabs.length-1;
+    }
+    if (this.systemMessageTabIndex <0 ){
+      this.systemMessageTabIndex = 0;
+    }
+    tab = tabs[ this.systemMessageTabIndex ];
+    return tab;
+  }
 
   public tachieHeightValue = 200;
   public minTachieSize = 100;
