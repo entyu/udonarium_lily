@@ -34,6 +34,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   progresPercent: number = 0;
 
   allowDeleteLog = false;
+  allowDeleteTab = false;
 
   constructor(
     private modalService: ModalService,
