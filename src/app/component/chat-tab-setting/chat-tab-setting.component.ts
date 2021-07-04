@@ -34,7 +34,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
   systemTab(): ChatTab{
     const tab = ObjectStore.instance.get<ChatTab>(this.systemTabIdentifier);
-    return tab;
+    return tab
   }
 
 

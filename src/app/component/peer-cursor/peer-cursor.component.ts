@@ -28,6 +28,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   get iconUrl(): string { return this.cursor.image.url; }
   get name(): string { return this.cursor.name; }
   get isMine(): boolean { return this.cursor.isMine; }
+  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
 
   private cursorElement: HTMLElement = null;
   private opacityElement: HTMLElement = null;
@@ -110,14 +111,16 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
     const timeout = PeerCursor.myCursor.timeout * 1000;
     const elapsedTime = Date.now() - this.cursor.timestampReceive;
 
+    const chatTabList = ObjectStore.instance.get<ChatTabList>('ChatTabList');
+    let chatTabidentifier = chatTabList.systemMessageTabIdentifier;
+    if (!chatTabidentifier ) chatTabidentifier = this.chatMessageService.chatTabs[0].identifier;
+
     if ( timeout <= elapsedTime){
       if (!this.disConnectNotified){
         this.disConnectNotified = true;
 
-        const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
         const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
         let text = this.cursor.userId + '[' + this.cursor.name + '] さんからあなたへの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上受信できません。通信障害の可能性があります。';
-
         this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
       }
     }else{
@@ -125,10 +128,11 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
         setTimeout(() => {
           this.timestampInterval = null;
-          const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
           const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
           let text = 'あなたと' + this.cursor.userId + '[' + this.cursor.name + '] さんの接続を確認しました。';
-          this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
+          if(chatTabidentifier){
+            this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
+          }
         }, 1000);
       }
       this.disConnectNotified = false;
@@ -137,7 +141,9 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private logoutMessage(){
 
-    const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
+    const chatTabList = ObjectStore.instance.get<ChatTabList>('ChatTabList');
+    let chatTabidentifier = chatTabList.systemMessageTabIdentifier;
+    if (!chatTabidentifier ) chatTabidentifier = this.chatMessageService.chatTabs[0].identifier;
     const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
     let text = this.cursor.userId + '[' + this.cursor.name + '] さんがログアウトしました。';
     this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
