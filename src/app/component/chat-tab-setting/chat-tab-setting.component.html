@@ -7,12 +7,12 @@
       <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
     </select>
     <div style="font-size: 12px;">
-      システムメッセージ表示
+      <button (click)="setSysTab()">システム表示先指定</button>
     </div>
-    <ng-select class="ud-select" style="width: 12em;"  [clearable]="false" 
-    (change)="onChangeSelectTab($event)" [ngModel]="selectedTab?.identifier"><!--[(ngModel)]="sendFrom"-->
-      <ng-option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</ng-option>
-    </ng-select>
+    <div style="width: 10em;overflow: hidden;" size="9" >
+      {{systemTab()?.name}}
+<!!--{{systemTabIdentifier}}-->
+    </div>
   </div>
   <div class="flex-item">
     <ng-container *ngIf="!isEmpty && selectedTab">

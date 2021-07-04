@@ -10,19 +10,14 @@ import { PeerContext } from '@udonarium/core/system/network/peer-context';
 @SyncObject('chat-tab-list')
 export class ChatTabList extends ObjectNode implements InnerXml {
 
-  @SyncVar() systemMessageTabIndex: number = 0;
-
-  get sysMessTab(){
-    const tabs = this.children as ChatTab[];
-    let tab;
-    if (this.systemMessageTabIndex >= tabs.length){
-      this.systemMessageTabIndex = tabs.length-1;
-    }
-    if (this.systemMessageTabIndex <0 ){
-      this.systemMessageTabIndex = 0;
-    }
-    tab = tabs[ this.systemMessageTabIndex ];
-    return tab;
+  @SyncVar() _systemMessageTabIdentifier: string = null;
+  
+  set systemMessageTabIdentifier(tabIdentifier: string){
+    this._systemMessageTabIdentifier = tabIdentifier;
+  }
+  
+  get systemMessageTabIdentifier(): string{
+    return this._systemMessageTabIdentifier;
   }
 
   public tachieHeightValue = 200;

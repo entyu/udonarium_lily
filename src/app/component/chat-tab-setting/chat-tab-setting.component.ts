@@ -22,6 +22,31 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   selectedTab: ChatTab = null;
   selectedTabXml: string = '';
 
+  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
+
+  get systemTabIdentifier(): string {
+    return this.chatTabList.systemMessageTabIdentifier;
+  }
+  
+  set systemTabIdentifier(tabidentifier: string){
+    this.chatTabList.systemMessageTabIdentifier = tabidentifier;
+  }
+
+  systemTab(): ChatTab{
+    const tab = ObjectStore.instance.get<ChatTab>(this.systemTabIdentifier);
+    return tab;
+  }
+
+
+  setSysTab(){
+    if (! this.selectedTab){
+      this.chatTabList.systemMessageTabIdentifier = null;
+    }else{
+      this.chatTabList.systemMessageTabIdentifier = this.selectedTab.identifier;
+    }
+  }
+
+
   get tabName(): string { return this.selectedTab.name; }
   set tabName(tabName: string) { if (this.isEditable) this.selectedTab.name = tabName; }
 
@@ -29,6 +54,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   get isEmpty(): boolean { return this.chatMessageService.chatTabs.length < 1 }
   get isDeleted(): boolean { return this.selectedTab ? ObjectStore.instance.get(this.selectedTab.identifier) == null : false; }
   get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
+
 
   isSaveing: boolean = false;
   progresPercent: number = 0;
@@ -41,7 +67,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     private panelService: PanelService,
     private chatMessageService: ChatMessageService,
     private saveDataService: SaveDataService
-  ) { }
+  ) {}
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'チャットタブ設定');
@@ -51,8 +77,10 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (object !== null) {
           this.selectedTabXml = object.toXml();
+
         }
       });
+    
   }
 
   ngOnDestroy() {
@@ -62,6 +90,11 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   onChangeSelectTab(identifier: string) {
     this.selectedTab = ObjectStore.instance.get<ChatTab>(identifier);
     this.selectedTabXml = '';
+  }
+
+  onChangeSystemTab(identifier: string) {
+    this.systemTabIdentifier = identifier;
+    this.chatTabList.systemMessageTabIdentifier = this.systemTabIdentifier;
   }
 
   create() {
