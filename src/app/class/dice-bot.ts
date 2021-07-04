@@ -263,7 +263,7 @@ export class DiceBot extends GameObject {
 
               const splitOneTable = tablePalette[i].split(/[:：,，\s]/);
               if ( splitOneTable[0] == rolledDiceNum[0] ){
-                tableAns = tablePalette[i];
+                tableAns = tablePalette[i].replace(/\\n/g, '\n');
               }
             }
 
