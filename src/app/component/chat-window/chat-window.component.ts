@@ -15,6 +15,9 @@ import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-tab
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 
+import { VoteMenuComponent } from 'component/vote-menu/vote-menu.component';
+
+
 @Component({
   selector: 'chat-window',
   templateUrl: './chat-window.component.html',
@@ -150,6 +153,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     let coordinate = this.pointerDeviceService.pointers[0];
     let option: PanelOption = { left: coordinate.x + 50, top: coordinate.y - 450, width: 650, height: 400 };
     let component = this.panelService.open<DiceTableSettingComponent>(DiceTableSettingComponent, option);
+  }
+
+  showVoteMenu() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x + 50, top: coordinate.y - 450, width: 650, height: 400 };
+    let component = this.panelService.open<VoteMenuComponent>(VoteMenuComponent, option);
   }
 
   sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number , messColor:string }) {

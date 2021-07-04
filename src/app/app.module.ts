@@ -65,6 +65,9 @@ import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 
+import { VoteMenuComponent } from 'component/vote-menu/vote-menu.component';
+import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
+
 import { AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
 import { ContextMenuService } from 'service/context-menu.service';
@@ -119,7 +122,10 @@ import { AppComponent } from './app.component';
     CutInBgmComponent,
     CutInWindowComponent,
     DiceTableSettingComponent,
-    
+
+    VoteMenuComponent,
+    VoteWindowComponent,
+
     LobbyComponent,
     ModalComponent,
     OverviewPanelComponent,

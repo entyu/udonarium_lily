@@ -1,0 +1,65 @@
+<div class="flex-container">
+点呼メニューテスト
+<!--
+  <div class="flex-item no-grow">
+    <div>
+      <button (click)="create()">チャットタブを作る</button>
+    </div>
+    <select style="width: 10em;" size="10" (change)="onChangeSelectTab($event.target.value)" [ngModel]="selectedTab?.identifier">
+      <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
+    </select>
+    <div style="font-size: 12px;">
+      <button (click)="setSysTab()">システム表示先指定</button>
+    </div>
+    <div style="width: 10em;overflow: hidden;" size="9" >
+      {{systemTab()?.name}}
+    </div>
+  </div>
+  <div class="flex-item">
+    <ng-container *ngIf="!isEmpty && selectedTab">
+      <div>タブ名 :
+        <input [(ngModel)]="tabName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+      </div>
+      <hr/>
+      <div>
+        <ng-container *ngIf="!isDeleted">
+          <div style="padding-left:45px">
+          タブ削除を有効にする<input type="checkbox" value="allowDeleteTab"  [(ngModel)]="allowDeleteTab">
+          </div>
+          <button (click)="upTabIndex()">↑</button>
+          <button (click)="downTabIndex()">↓</button>
+          <button [disabled]="isSaveing" (click)="save()">
+            <div style="position: relative;">
+              <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
+              <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
+            </div>
+          </button>
+          <span style="display:inline-block; width:2em;"></span>
+          <button class="danger" (click)="delete()" [attr.disabled]="chatTabs.length <= 1 ? '' : null"
+          [attr.disabled]="!allowDeleteTab ? '' : null">選択タブ削除</button><br>
+        </ng-container>
+        <ng-container *ngIf="isDeleted">
+          <button (click)="restore()">元に戻す</button>
+        </ng-container>
+        <ng-container *ngIf="!isDeleted">
+        <hr>
+          <button (click)="saveLog()" style = "width:9em">ログ保存</button><span style= "font-size:12px">リストから選んだログを保存</span><br>
+          <button (click)="saveAllLog()" style = "width:9em">全タブログ保存</button><span style= "font-size:12px">時系列順にまとめて保存</span>
+        </ng-container>
+        <hr>
+        <br><br>
+        <ng-container *ngIf="!isDeleted">
+          ログの消去機能を有効にする<input type="checkbox" value="allowDeleteLog"  [(ngModel)]="allowDeleteLog"><br>
+          <button class="danger" (click)="deleteLog()" [attr.disabled]="chatTabs.length <= 1 ? '' : null" style = "width:9em"
+          [attr.disabled]="!allowDeleteLog ? '' : null"
+          >選択ログ消去</button>
+          <button class="danger" (click)="deleteLogALL()" [attr.disabled]="chatTabs.length <= 1 ? '' : null" style = "width:9em"
+          [attr.disabled]="!allowDeleteLog ? '' : null"
+          >全ログ消去</button>
+        </ng-container>
+
+      </div>
+    </ng-container>
+  </div>
+-->
+</div>
