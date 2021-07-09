@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { ChatTab } from '@udonarium/chat-tab';
-import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
@@ -11,6 +9,7 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
 
 @Component({
@@ -19,48 +18,14 @@ import { PeerCursor } from '@udonarium/peer-cursor';
   styleUrls: ['./vote-menu.component.css']
 })
 export class VoteMenuComponent implements OnInit, OnDestroy {
-  selectedTab: ChatTab = null;
-  selectedTabXml: string = '';
 
-  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
+  networkService = Network;
 
-  get systemTabIdentifier(): string {
-    return this.chatTabList.systemMessageTabIdentifier;
-  }
-  
-  set systemTabIdentifier(tabidentifier: string){
-    this.chatTabList.systemMessageTabIdentifier = tabidentifier;
-  }
-
-  systemTab(): ChatTab{
-    const tab = ObjectStore.instance.get<ChatTab>(this.systemTabIdentifier);
-    return tab
-  }
+  get peerList() { return this.networkService.peerContexts; }
+  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
 
-  setSysTab(){
-    if (! this.selectedTab){
-      this.chatTabList.systemMessageTabIdentifier = null;
-    }else{
-      this.chatTabList.systemMessageTabIdentifier = this.selectedTab.identifier;
-    }
-  }
-
-
-  get tabName(): string { return this.selectedTab.name; }
-  set tabName(tabName: string) { if (this.isEditable) this.selectedTab.name = tabName; }
-
-  get chatTabs(): ChatTab[] { return this.chatMessageService.chatTabs; }
-  get isEmpty(): boolean { return this.chatMessageService.chatTabs.length < 1 }
-  get isDeleted(): boolean { return this.selectedTab ? ObjectStore.instance.get(this.selectedTab.identifier) == null : false; }
-  get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
-
-
-  isSaveing: boolean = false;
-  progresPercent: number = 0;
-
-  allowDeleteLog = false;
-  allowDeleteTab = false;
+//  get chatTabs(): ChatTab[] { return this.chatMessageService.chatTabs; }
 
   constructor(
     private modalService: ModalService,
@@ -71,6 +36,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'チャットタブ設定');
+/*
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', 1000, event => {
         if (!this.selectedTab || event.data.identifier !== this.selectedTab.identifier) return;
@@ -80,146 +46,11 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
 
         }
       });
-    
+*/
   }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
   }
 
-  onChangeSelectTab(identifier: string) {
-    this.selectedTab = ObjectStore.instance.get<ChatTab>(identifier);
-    this.selectedTabXml = '';
-  }
-
-  onChangeSystemTab(identifier: string) {
-    this.systemTabIdentifier = identifier;
-    this.chatTabList.systemMessageTabIdentifier = this.systemTabIdentifier;
-  }
-
-  create() {
-    ChatTabList.instance.addChatTab('タブ');
-  }
-
-  async save() {
-    if (!this.selectedTab || this.isSaveing) return;
-    this.isSaveing = true;
-    this.progresPercent = 0;
-
-    let fileName: string = 'chat_' + this.selectedTab.name;
-
-    await this.saveDataService.saveGameObjectAsync(this.selectedTab, fileName, percent => {
-      this.progresPercent = percent;
-    });
-
-    setTimeout(() => {
-      this.isSaveing = false;
-      this.progresPercent = 0;
-    }, 500);
-  }
-
-  get roomName():string {
-    let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
-      ? Network.peerContext.roomName
-      : 'ルームデータ';
-    return roomName;
-  }
-
-  private appendTimestamp(fileName: string): string {
-    let date = new Date();
-    let year = date.getFullYear();
-    let month = ('00' + (date.getMonth() + 1)).slice(-2);
-    let day = ('00' + date.getDate()).slice(-2);
-    let hours = ('00' + date.getHours()).slice(-2);
-    let minutes = ('00' + date.getMinutes()).slice(-2);
-
-    return fileName + `_${year}-${month}-${day}_${hours}${minutes}`;
-  }
-  
-  saveLog(){
-    if (!this.selectedTab) return;
-    let fileName: string = this.roomName + '_log_' + this.selectedTab.name;
-    let fileName_: string = this.appendTimestamp( fileName ) ;
-
-    this.saveDataService.saveHtmlChatLog(this.selectedTab, fileName_);
-  }
-
-  saveAllLog(){
-
-    let fileName: string = this.roomName + '_log_' + '全タブ';
-    let fileName_: string = this.appendTimestamp( fileName ) ;
-  
-    this.saveDataService.saveHtmlChatLogAll( fileName_);
-    
-  }
-
-
-
-  delete() {
-    if (!this.isEmpty && this.selectedTab) {
-      this.selectedTabXml = this.selectedTab.toXml();
-      this.selectedTab.destroy();
-    }
-  }
-
-  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-
-  deleteLog(){
-    if( !this.allowDeleteLog ) return;
-
-    if (!this.isEmpty && this.selectedTab) {
-      while( this.selectedTab.children.length > 0)
-        this.selectedTab.children[0].destroy();
-        this.selectedTab.tachieReset();
-    }
-    let mess = 'ログをクリアしました'
-    let gameSystem = null;
-    let sendTo ='';
-    this.chatMessageService.sendMessage(this.selectedTab, mess, gameSystem, this.myPeer.identifier, sendTo , 0 , '#000000' );
-  }
-
-  deleteLogALL(){
-    if( !this.allowDeleteLog ) return;
-    
-    let mess = 'ログをクリアしました'
-    let gameSystem = null;
-    let sendTo ='';
-    
-    for (let child of ChatTabList.instance.chatTabs) {
-      while( child.children.length > 0){
-        child.children[0].destroy();
-        child.tachieReset();
-      }
-      this.chatMessageService.sendMessage(child, mess, gameSystem, this.myPeer.identifier, sendTo , 0 , '#000000' );
-    }
-  }
-
-
-  restore() {
-    if (this.selectedTab && this.selectedTabXml) {
-      let restoreTable = <ChatTab>ObjectSerializer.instance.parseXml(this.selectedTabXml);
-      ChatTabList.instance.addChatTab(restoreTable);
-      this.selectedTabXml = '';
-    }
-  }
-
-  upTabIndex() {
-    if (!this.selectedTab) return;
-    let parentElement = this.selectedTab.parent;
-    let index: number = parentElement.children.indexOf(this.selectedTab);
-    if (0 < index) {
-      let prevElement = parentElement.children[index - 1];
-      parentElement.insertBefore(this.selectedTab, prevElement);
-    }
-  }
-
-  downTabIndex() {
-    if (!this.selectedTab) return;
-    let parentElement = this.selectedTab.parent;
-    let index: number = parentElement.children.indexOf(this.selectedTab);
-    if (index < parentElement.children.length - 1) {
-      let nextElement = parentElement.children[index + 1];
-      parentElement.insertBefore(nextElement, this.selectedTab);
-    }
-  }
 }
