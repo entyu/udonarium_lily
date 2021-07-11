@@ -35,7 +35,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'チャットタブ設定');
+    Promise.resolve().then(() => this.modalService.title = this.panelService.title = '点呼/投票設定');
 /*
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', 1000, event => {
@@ -47,6 +47,16 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
         }
       });
 */
+  }
+
+  findUserId(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.userId : '';
+  }
+
+  findPeerName(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.name : '';
   }
 
   ngOnDestroy() {
