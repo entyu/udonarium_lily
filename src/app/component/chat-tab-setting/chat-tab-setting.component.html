@@ -7,7 +7,7 @@
       <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
     </select>
     <div style="font-size: 12px;">
-      <button (click)="setSysTab()">システム表示先指定</button>
+      <button (click)="onChangeSystemTab()">システム表示先指定</button>
     </div>
     <div style="width: 10em;overflow: hidden;" size="9" >
       {{systemTab()?.name}}

@@ -112,26 +112,24 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
     const elapsedTime = Date.now() - this.cursor.timestampReceive;
 
     const chatTabList = ObjectStore.instance.get<ChatTabList>('ChatTabList');
-    let chatTabidentifier = chatTabList.systemMessageTabIdentifier;
-    if (!chatTabidentifier ) chatTabidentifier = this.chatMessageService.chatTabs[0].identifier;
+    const sysTab = chatTabList.systemMessageTab;
 
     if ( timeout <= elapsedTime){
       if (!this.disConnectNotified){
         this.disConnectNotified = true;
-
-        const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
-        let text = this.cursor.userId + '[' + this.cursor.name + '] さんからあなたへの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上受信できません。通信障害の可能性があります。';
-        this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
+        if(sysTab){
+          let text = this.cursor.userId + '[' + this.cursor.name + '] さんからあなたへの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上受信できません。通信障害の可能性があります。';
+          this.chatMessageService.sendSystemMessageOnePlayer( sysTab , text , PeerCursor.myCursor.identifier, '#006633');
+        }
       }
     }else{
       if ( this.disConnectNotified == true ){
 
         setTimeout(() => {
           this.timestampInterval = null;
-          const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
           let text = 'あなたと' + this.cursor.userId + '[' + this.cursor.name + '] さんの接続を確認しました。';
-          if(chatTabidentifier){
-            this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
+          if(sysTab){
+            this.chatMessageService.sendSystemMessageOnePlayer( sysTab , text , PeerCursor.myCursor.identifier, '#006633');
           }
         }, 1000);
       }
@@ -140,16 +138,13 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private logoutMessage(){
-
     const chatTabList = ObjectStore.instance.get<ChatTabList>('ChatTabList');
-    let chatTabidentifier = chatTabList.systemMessageTabIdentifier;
-    if (!chatTabidentifier ) chatTabidentifier = this.chatMessageService.chatTabs[0].identifier;
-    const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
-    let text = this.cursor.userId + '[' + this.cursor.name + '] さんがログアウトしました。';
-    this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
-
+    const sysTab = chatTabList.systemMessageTab;
+    if(sysTab){
+      let text = this.cursor.userId + '[' + this.cursor.name + '] さんがログアウトしました。';
+      this.chatMessageService.sendSystemMessageOnePlayer( sysTab , text , PeerCursor.myCursor.identifier, '#006633');
+    }
   }
-
 
   private secdCounter = 0;
   private indexCounter = 0;

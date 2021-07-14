@@ -24,26 +24,16 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
   get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
 
-  get systemTabIdentifier(): string {
-    return this.chatTabList.systemMessageTabIdentifier;
+  get systemTabIndex(): number {
+    return this.chatTabList.systemMessageTabIndex;
   }
   
-  set systemTabIdentifier(tabidentifier: string){
-    this.chatTabList.systemMessageTabIdentifier = tabidentifier;
+  set systemTabIndex(index: number){
+    this.chatTabList.systemMessageTabIndex = index;
   }
 
   systemTab(): ChatTab{
-    const tab = ObjectStore.instance.get<ChatTab>(this.systemTabIdentifier);
-    return tab
-  }
-
-
-  setSysTab(){
-    if (! this.selectedTab){
-      this.chatTabList.systemMessageTabIdentifier = null;
-    }else{
-      this.chatTabList.systemMessageTabIdentifier = this.selectedTab.identifier;
-    }
+    return this.chatTabList.systemMessageTab;
   }
 
 
@@ -92,9 +82,14 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     this.selectedTabXml = '';
   }
 
-  onChangeSystemTab(identifier: string) {
-    this.systemTabIdentifier = identifier;
-    this.chatTabList.systemMessageTabIdentifier = this.systemTabIdentifier;
+  onChangeSystemTab(){
+    if (!this.selectedTab ){
+      this.chatTabList.systemMessageTabIndex = 0;
+    }else{
+      const parentElement = this.selectedTab.parent;
+      const index: number = parentElement.children.indexOf(this.selectedTab);
+      this.chatTabList.systemMessageTabIndex = index;
+    }
   }
 
   create() {
