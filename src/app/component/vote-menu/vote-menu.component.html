@@ -2,16 +2,21 @@
 点呼メニューテスト
   <ng-container *ngTemplateOutlet="inventoryTab"></ng-container>
   <div *ngIf="peerList.length < 1">自分だけ</div>
-
-  <div *ngFor="let context of peerList" style="font-size: 15px;">{{findPeerName(context.peerId)}}
+<!--
+  <div *ngFor="let peer of peerList" style="font-size: 15px;">
     <ng-container *ngTemplateOutlet="voteTargets; context:{ peer : peer }"></ng-container>
   </div>
+-->
+  <div *ngFor="let peer of peerList" style="font-size: 15px;" [ngClass]="{'box': true}">
+    <ng-container *ngTemplateOutlet="voteTargets; context:{ peer : peer }"></ng-container>
+  </div>
+
 </div>
 <!--
 
        (click)=""  (dblclick)=""
        (click)="selectGameObject(gameObject)"  (dblclick)="focusToObject($event, gameObject)"
-       [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
+       [ngClass]="{'box': true,}">
 
 -->
 
@@ -41,15 +46,37 @@
 
 <ng-template #voteTargets let-peer="peer">
   <div class="inventory-object">
-    <div class="object-name">
-      <button style="font-size: 0.8em; padding: 2px 5px;" >
-<!-- *ngIf="selectedIdentifier === gameObject.identifier" (click)="onContextMenu($event, gameObject)" -->
-        <i class="material-icons" style="font-size: 1em;">settings</i>
-      </button>
-    </div>
-<!--
     <div class="object-tags-box">
-      <div class="table-cell"  *ngIf="isMultiMove">
+      <div class="table-cell">
+        <div class="object-name" style="width:3em;">
+          対象
+        </div>
+        <div style="height:64px;" class="message">
+          <div><input type="checkbox" [checked]="false"/></div>
+        </div>
+      </div>
+      <div class="table-cell">
+        <div class="object-name">
+          {{findPeerName(peer.peerId)}}
+        </div>
+        <div class="image-box">
+          <div *ngIf="findPeerImage(peer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerImage(peer.peerId).url + ')' | safe: 'style' "></div>
+        </div>
+      </div>
+      <div class="table-cell">
+        <div class="object-name">
+          操作キャラ
+        </div>
+        <div class="image-box">
+          <div *ngIf="findPeerImage(peer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerImage(peer.peerId).url + ')' | safe: 'style' "></div>
+        </div>
+      </div>
+      <div class="table-cell message">
+          現在接続が切れていると考えられる相手です
+      </div>
+
+<!--
+      <div class="table-cell">
         <input type="checkbox" [checked]="multiMoveTargets.has(gameObject.identifier)" (change)="toggleMultiMoveTarget($event, gameObject)" />
       </div>
       <div class="table-cell">
@@ -64,7 +91,7 @@
           </ng-container>
         </div>
       </div>
-    </div>
 -->
+    </div>
   </div>
 </ng-template>

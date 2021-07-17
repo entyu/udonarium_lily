@@ -59,6 +59,12 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
     return peerCursor ? peerCursor.name : '';
   }
 
+  findPeerImage(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.image : null;
+  }
+
+
   ngOnDestroy() {
     EventSystem.unregister(this);
   }
