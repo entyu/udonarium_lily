@@ -37,14 +37,14 @@
 </ng-template>
 
 <ng-template #voteTargets let-peer="peer">
-  <div class="inventory-object">
+  <div class="inventory-object" (click)="voteBlockClick(peer.peerId)">
     <div class="object-tags-box">
       <div class="table-cell">
-        <div class="object-name" style="width:3em;">
-          対象
+        <div class="object-name" style="width:6em;">
+          送信対象
         </div>
         <div style="height:64px;" class="message">
-          <div><input type="checkbox" [checked]="false"/></div>
+          <div><input type="checkbox" [checked]="!peer.disConnectNotified" id = {{peer.peerId}}_{{initTimestamp}} (change) ="onChange(peer.peerId)" name="vote_chk"/></div>
         </div>
       </div>
       <div class="table-cell">

@@ -19,6 +19,7 @@ import { PeerContext } from '@udonarium/core/system/network/peer-context';
 })
 export class VoteMenuComponent implements OnInit, OnDestroy {
 
+  private initTimestamp : number = 0;
   networkService = Network;
 
   get peerList() { return this.networkService.peerContexts; }
@@ -32,7 +33,9 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
     private panelService: PanelService,
     private chatMessageService: ChatMessageService,
     private saveDataService: SaveDataService
-  ) {}
+  ) {
+    this.initTimestamp = Date.now();
+  }
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = '点呼/投票設定');
@@ -47,6 +50,15 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
         }
       });
 */
+  }
+
+  voteBlockClick(id){
+    let box = <HTMLInputElement>document.getElementById(id + '_' + this.initTimestamp);
+    box.checked = !box.checked;
+  }
+
+  onChange(id) {
+    this.voteBlockClick(id);
   }
 
   findUserId(peerId: string) {
