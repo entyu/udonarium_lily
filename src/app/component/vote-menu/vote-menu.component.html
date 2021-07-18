@@ -1,16 +1,9 @@
 <div class="component">
-点呼メニューテスト
-  <ng-container *ngTemplateOutlet="inventoryTab"></ng-container>
+  <ng-container *ngTemplateOutlet="voteTop"></ng-container>
   <div *ngIf="peerList.length < 1">自分だけ</div>
-<!--
-  <div *ngFor="let peer of peerList" style="font-size: 15px;">
-    <ng-container *ngTemplateOutlet="voteTargets; context:{ peer : peer }"></ng-container>
-  </div>
--->
   <div *ngFor="let peer of peerList" style="font-size: 15px;" [ngClass]="{'box': true}">
     <ng-container *ngTemplateOutlet="voteTargets; context:{ peer : peer }"></ng-container>
   </div>
-
 </div>
 <!--
 
@@ -29,7 +22,7 @@
   </div>
 -->
 
-<ng-template #inventoryTab>
+<ng-template #voteTop>
   <form class="is-sticky-top">
     <div class="tab">
 試験用TOPメニュー
@@ -42,7 +35,6 @@
     </div>
   </form>
 </ng-template>
-
 
 <ng-template #voteTargets let-peer="peer">
   <div class="inventory-object">
@@ -65,33 +57,20 @@
       </div>
       <div class="table-cell">
         <div class="object-name">
-          操作キャラ
+          <ng-container *ngIf="findPeerLastControlName(peer.peerId)">{{findPeerLastControlName(peer.peerId)}}</ng-container>
+          <ng-container *ngIf="!findPeerLastControlName(peer.peerId)">操作キャラなし</ng-container>
         </div>
         <div class="image-box">
-          <div *ngIf="findPeerImage(peer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerImage(peer.peerId).url + ')' | safe: 'style' "></div>
+          <div *ngIf="findPeerLastControlImage(peer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerLastControlImage(peer.peerId).url + ')' | safe: 'style' "></div>
+          <div *ngIf="!findPeerLastControlImage(peer.peerId)" class="image cover" [style.background-image]=""></div>
         </div>
       </div>
       <div class="table-cell message">
+        <ng-container *ngIf="peer.disConnectNotified">
           現在接続が切れていると考えられる相手です
+        </ng-container>
       </div>
 
-<!--
-      <div class="table-cell">
-        <input type="checkbox" [checked]="multiMoveTargets.has(gameObject.identifier)" (change)="toggleMultiMoveTarget($event, gameObject)" />
-      </div>
-      <div class="table-cell">
-        <div class="image-box">
-          <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
-        </div>
-      </div>
-      <div class="table-cell">
-        <div *ngIf="gameObject.rootDataElement">
-          <ng-container *ngFor="let dataElm of getInventoryTags(gameObject); trackBy: trackByGameObject">
-            <ng-container *ngTemplateOutlet="dataElmTag; context:{ dataElm: dataElm}"></ng-container>
-          </ng-container>
-        </div>
-      </div>
--->
     </div>
   </div>
 </ng-template>

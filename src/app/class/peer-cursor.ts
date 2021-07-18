@@ -15,7 +15,10 @@ export class PeerCursor extends GameObject {
   @SyncVar() peerId: PeerId = '';
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
-  
+
+  @SyncVar() lastControlImageIdentifier: string = '';
+  @SyncVar() lastControlCharacterName: string = '';
+
   private _timestampSend: number = -1;
   private _timestampReceive: number = -1;
 
@@ -92,6 +95,7 @@ export class PeerCursor extends GameObject {
 
   get isMine(): boolean { return (PeerCursor.myCursor && PeerCursor.myCursor === this); }
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
+  get lastControlImage(): ImageFile { return ImageStorage.instance.get(this.lastControlImageIdentifier); }
 
   // GameObject Lifecycle
   onStoreAdded() {

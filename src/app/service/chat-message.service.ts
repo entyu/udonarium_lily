@@ -153,6 +153,8 @@ export class ChatMessageService {
       sendFrom: sendFrom //lily
     };
 
+    this.setLastControlInfoToPeer(sendFrom, this.findImageIdentifier(sendFrom,imgIndex), sendTo);
+
     // 立ち絵置き換え
     let chkMessage = ' ' + text;
 
@@ -209,6 +211,28 @@ export class ChatMessageService {
     if (sendTo == null || sendTo.length < 1) return sendFromName;
     let sendToName = this.findObjectName(sendTo);
     return sendFromName + ' > ' + sendToName;
+  }
+
+  private setLastControlInfoToPeer(sendFrom: string, imageIdentifier: string, sendTo?: string): string {
+    const sendFromName = this.findObjectName(sendFrom);
+    const peerCursor = PeerCursor.myCursor;
+
+    console.log('setLastControlInfoToPeer');
+    console.log('sendFromName:' + sendFromName);
+    if(!peerCursor ) {
+      return;
+    }
+    console.log('peerCursor:' + peerCursor);
+    if (sendTo == null || sendTo.length < 1) {
+      if(peerCursor.lastControlImageIdentifier != imageIdentifier){
+        peerCursor.lastControlImageIdentifier = imageIdentifier;
+      }
+      if(peerCursor.lastControlCharacterName != sendFromName){
+        peerCursor.lastControlCharacterName = sendFromName;
+      }
+    }else{
+    // 秘話時は操作なし
+    }
   }
 
   private findImageIdentifierName(sendFrom,name:string): string {
