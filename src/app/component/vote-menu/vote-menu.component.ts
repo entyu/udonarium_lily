@@ -21,6 +21,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
 
   private initTimestamp : number = 0;
   networkService = Network;
+  voteContentsText = '';
 
   get peerList() { return this.networkService.peerContexts; }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }

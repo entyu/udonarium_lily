@@ -1,37 +1,19 @@
 <div class="component">
   <ng-container *ngTemplateOutlet="voteTop"></ng-container>
-  <div *ngIf="peerList.length < 1">自分だけ</div>
+  <div *ngIf="peerList.length < 1">自分しか部屋にいません</div>
   <div *ngFor="let peer of peerList" style="font-size: 15px;" [ngClass]="{'box': true}">
     <ng-container *ngTemplateOutlet="voteTargets; context:{ peer : peer }"></ng-container>
   </div>
 </div>
-<!--
-
-       (click)=""  (dblclick)=""
-       (click)="selectGameObject(gameObject)"  (dblclick)="focusToObject($event, gameObject)"
-       [ngClass]="{'box': true,}">
-
--->
-
-<!--    <ng-container *ngIf="!gameObject.hideInventory && gameObject.location.name == 'table'"> -->
-<!--
-  <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
-     (click)="selectGameObject(gameObject)"  (dblclick)="focusToObject($event, gameObject)"
-     [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
-    <ng-container *ngTemplateOutlet="gameObjectTags; context:{ gameObject: gameObject}"></ng-container>
-  </div>
--->
 
 <ng-template #voteTop>
   <form class="is-sticky-top">
     <div class="tab">
-試験用TOPメニュー
-<!--
-      <label *ngFor="let inventoryType of inventoryTypes">
-        <input name="tab" type="radio" value="{{inventoryType}}" ng-control="options" [(ngModel)]="selectTab">
-        <div>{{getTabTitle(inventoryType)}} ({{getInventory(inventoryType).length}})</div>
-      </label>
--->
+      <div>試験用TOPメニュー</div>
+      
+      <input type="radio" [checked]="true" name= {{initTimestamp}}_votetype value="rollcall" >点呼
+      <input type="radio" name = {{initTimestamp}}_votetype  value="vote" >投票
+      <input [(ngModel)]="voteContentsText" placeholder="投票内容を記述" name="voteContents" />
     </div>
   </form>
 </ng-template>
