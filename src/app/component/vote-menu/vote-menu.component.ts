@@ -11,7 +11,6 @@ import { SaveDataService } from 'service/save-data.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
-
 @Component({
   selector: 'app-vote-menu',
   templateUrl: './vote-menu.component.html',
@@ -22,12 +21,9 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   private initTimestamp : number = 0;
   networkService = Network;
   voteContentsText = '';
-
+  isRollCall = false;
   get peerList() { return this.networkService.peerContexts; }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-
-
-//  get chatTabs(): ChatTab[] { return this.chatMessageService.chatTabs; }
 
   constructor(
     private modalService: ModalService,
@@ -40,17 +36,37 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = '点呼/投票設定');
-/*
-    EventSystem.register(this)
-      .on('DELETE_GAME_OBJECT', 1000, event => {
-        if (!this.selectedTab || event.data.identifier !== this.selectedTab.identifier) return;
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (object !== null) {
-          this.selectedTabXml = object.toXml();
+  }
 
-        }
-      });
-*/
+  selectedNum():number{
+    let count = 0;
+    const list = this.peerList;
+    for( let peer of list ){
+      let box = <HTMLInputElement>document.getElementById(peer.peerId + '_' + this.initTimestamp);
+      if(!box)return;
+
+      if(box.checked){
+        count++;
+      }
+    }
+    return count;
+  }
+
+  send(){
+    const list = this.peerList;
+    const list2 = [];
+    for( let peer of list ){
+      let box = <HTMLInputElement>document.getElementById(peer.peerId + '_' + this.initTimestamp);
+      
+      if(box.checked){
+        list2.push(peer);
+      }
+    }
+  }
+
+  onChangeType(name){
+    let box = <HTMLInputElement>document.getElementById('rollcall' + '_' + this.initTimestamp);
+    this.isRollCall = !box.checked;
   }
 
   voteBlockClick(id){
