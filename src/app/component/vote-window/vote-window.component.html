@@ -1,3 +1,48 @@
-<div class="vote">
-  点呼状況画面テスト
+<div class="component">
+  <ng-container *ngTemplateOutlet="voteTop"></ng-container>
+  <div *ngFor="let answer of answerList" style="font-size: 15px;" [ngClass]="{'box': true}">
+    <ng-container *ngTemplateOutlet="voteAnswers; context:{ answer : answer }"></ng-container>
+  </div>
 </div>
+
+<ng-template #voteTop>
+  <form class="is-sticky-top">
+    <div class="tab">
+      <div>投票数:{{votedNum()}}/{{answerList.length}}</div>
+      <div *ngFor="let answer of answerList" style="font-size: 15px;" [ngClass]="{'box': true}">
+        <ng-container *ngTemplateOutlet="voteAnswers; context:{ answer : answer }"></ng-container>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #voteAnswers let-answer="answer">
+  <div class="inventory-object">
+    <div class="object-tags-box">
+      <div class="table-cell">
+        <div class="object-name">
+          {{findPeerName(answer.peerId)}}
+        </div>
+        <div class="image-box">
+          <div *ngIf="findPeerImage(answer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerImage(answer.peerId).url + ')' | safe: 'style' "></div>
+        </div>
+      </div>
+      <div class="table-cell">
+        <div class="object-name">
+          <ng-container *ngIf="findPeerLastControlName(answer.peerId)">{{findPeerLastControlName(answer.peerId)}}</ng-container>
+          <ng-container *ngIf="!findPeerLastControlName(answer.peerId)">操作キャラなし</ng-container>
+        </div>
+        <div class="image-box">
+          <div *ngIf="findPeerLastControlImage(answer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerLastControlImage(answer.peerId).url + ')' | safe: 'style' "></div>
+          <div *ngIf="!findPeerLastControlImage(answer.peerId)" class="image cover" [style.background-image]=""></div>
+        </div>
+      </div>
+      <div class="table-cell message">
+        <ng-container *ngIf="answer.answer">
+          dispAnswer(answer.answer);
+        </ng-container>
+      </div>
+
+    </div>
+  </div>
+</ng-template>

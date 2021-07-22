@@ -22,6 +22,7 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 
 import { CutIn } from '@udonarium/cut-in';
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
+import { Vote, VoteContext } from '@udonarium/vote';
 
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -104,6 +105,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let cutInLauncher = new CutInLauncher('CutInLauncher');
     cutInLauncher.initialize();
 
+    let vote = new Vote('Vote');
+    vote.initialize();
+
     let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
     soundEffect.initialize();
 
@@ -152,6 +156,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PeerCursor.myCursor.imageIdentifier = noneIconImage.identifier;
 
     EventSystem.register(this)
+      .on('START_VOTE', event => { 
+        this.startVote();
+      })  
       .on('START_CUT_IN', event => { 
         this.startCutIn( event.data.cutIn );
       })  
@@ -212,6 +219,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+  }
+
+  startVote(){
+    
+    console.log( '点呼/投票イベント_スタート' );
+    
   }
 
   startCutIn( cutIn : CutIn ){

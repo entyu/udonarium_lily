@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { SyncObject, SyncVar } from '@udonarium/core/synchronize-object/decorator';
+import { GameObject, ObjectContext } from '@udonarium/core/synchronize-object/game-object';
+
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
@@ -9,7 +12,9 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
+import { PeerContext, IPeerContext } from '@udonarium/core/system/network/peer-context';
+
+import { Vote, VoteContext } from '@udonarium/vote';
 
 @Component({
   selector: 'app-vote-menu',
@@ -22,8 +27,10 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   networkService = Network;
   voteContentsText = '';
   isRollCall = false;
+
   get peerList() { return this.networkService.peerContexts; }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+  get vote(): Vote { return ObjectStore.instance.get<Vote>('Vote'); }
 
   constructor(
     private modalService: ModalService,
@@ -39,29 +46,33 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   }
 
   selectedNum():number{
+    return this.selectedList.length;
+  }
+
+  selectedList():IPeerContext[] {
     let count = 0;
     const list = this.peerList;
+    let sendList: IPeerContext[] = [];
     for( let peer of list ){
       let box = <HTMLInputElement>document.getElementById(peer.peerId + '_' + this.initTimestamp);
-      if(!box)return;
+      if(!box)return null;
 
       if(box.checked){
-        count++;
+        sendList.push(peer);
       }
     }
-    return count;
+    return sendList;
   }
 
   send(){
-    const list = this.peerList;
-    const list2 = [];
-    for( let peer of list ){
-      let box = <HTMLInputElement>document.getElementById(peer.peerId + '_' + this.initTimestamp);
-      
-      if(box.checked){
-        list2.push(peer);
-      }
-    }
+    let vote = this.vote;
+    let question = '点呼テストです';
+    let choicesInput = 'あ12  い345 う678 '
+    let choicesInput_ = choicesInput.replace(/\s*$/i,'');
+    let choices = choicesInput_.split(/\s/i);
+    let peerList = this.selectedList();
+    vote.makeVote(PeerCursor.myCursor.peerId ,question, peerList , choices);
+    vote.startVote();
   }
 
   onChangeType(name){
@@ -77,6 +88,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   onChange(id) {
     this.voteBlockClick(id);
   }
+
 
   findUserId(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);

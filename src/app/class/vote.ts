@@ -1,32 +1,51 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
+import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
 import { EventSystem } from './core/system';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 
-import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { ModalService } from 'service/modal.service';
 
 import { PeerCursor } from '@udonarium/peer-cursor';
+import { PeerContext, IPeerContext } from '@udonarium/core/system/network/peer-context';
 
+export interface VoteContext {
+  peerId: string;
+  answer: number;
+}
 
-@SyncObject('vote')
+@SyncObject('Vote')
 export class Vote extends GameObject {
-  @SyncVar() name: string = '';
-  
   @SyncVar() initTimeStamp = 0;
-  @SyncVar() question: string = '点呼'
-  @SyncVar() choices: string[] = []
-  
-  update(question, targetPeerList, choices){
-    
-    
-    
-    initTimeStamp = Date.now();
+  @SyncVar() question: string = '';
+  @SyncVar() voteAnswer: VoteContext[] = [];
+  @SyncVar() choices: string[] = [];
+  @SyncVar() chairId: string = '';
+
+  makeVote(chairId : string ,question: string, targetPeers: IPeerContext[], choices: string[]){
+    this.chairId = chairId;
+    this.question = question;
+    this.choices = choices;
+
+    this.voteAnswer = [];
+    for( let target in targetPeers){
+      let vote: VoteContext = {
+        peerId: target,
+        answer: -1,
+      }
+      this.voteAnswer.push(vote);
+    }
+
+    this.initTimeStamp = Date.now();
   }
-  
+
+  startVote(){
+    EventSystem.trigger('START_VOTE', { });
+  }
 
   // GameObject Lifecycle
   onStoreAdded() {
@@ -38,4 +57,17 @@ export class Vote extends GameObject {
     super.onStoreRemoved();
   }
 
+  // override
+  apply(context: ObjectContext) {
+
+    console.log('Vote apply() CALL');
+
+    const initTimeStamp = this.initTimeStamp;
+    super.apply(context);
+
+    if ( initTimeStamp !== this.initTimeStamp ){
+      this.startVote();
+    }
+
+  }
 }
