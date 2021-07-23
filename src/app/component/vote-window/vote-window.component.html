@@ -8,10 +8,12 @@
 <ng-template #voteTop>
   <form class="is-sticky-top">
     <div class="tab">
-      <div>“Š•[”:{{votedNum()}}/{{answerList.length}}</div>
+      <div>æŠ•ç¥¨æ•°:{{votedNum()}}/{{answerList.length}}</div>
+<!--
       <div *ngFor="let answer of answerList" style="font-size: 15px;" [ngClass]="{'box': true}">
         <ng-container *ngTemplateOutlet="voteAnswers; context:{ answer : answer }"></ng-container>
       </div>
+-->
     </div>
   </form>
 </ng-template>
@@ -30,7 +32,7 @@
       <div class="table-cell">
         <div class="object-name">
           <ng-container *ngIf="findPeerLastControlName(answer.peerId)">{{findPeerLastControlName(answer.peerId)}}</ng-container>
-          <ng-container *ngIf="!findPeerLastControlName(answer.peerId)">‘€ìƒLƒƒƒ‰‚È‚µ</ng-container>
+          <ng-container *ngIf="!findPeerLastControlName(answer.peerId)">æ“ä½œã‚­ãƒ£ãƒ©ãªã—</ng-container>
         </div>
         <div class="image-box">
           <div *ngIf="findPeerLastControlImage(answer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerLastControlImage(answer.peerId).url + ')' | safe: 'style' "></div>
@@ -38,11 +40,12 @@
         </div>
       </div>
       <div class="table-cell message">
+<!--
         <ng-container *ngIf="answer.answer">
           dispAnswer(answer.answer);
         </ng-container>
+-->
       </div>
-
     </div>
   </div>
 </ng-template>

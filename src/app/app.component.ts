@@ -44,9 +44,9 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SaveDataService } from 'service/save-data.service';
 
-
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
+import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
 
 
 @Component({
@@ -222,9 +222,18 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   startVote(){
-    
     console.log( '点呼/投票イベント_スタート' );
-    
+    let option: PanelOption = { left: 0, top: 0, width: 650, height: 400 };
+    option.title = '点呼/投票';
+
+    let margin_w = (window.innerWidth - option.width)/2;
+    let margin_h = (window.innerHeight - option.height)/2 ;
+    if( margin_w < 0 )margin_w = 0 ;
+    if( margin_h < 0 )margin_h = 0 ;
+    option.left = margin_w ;
+    option.top = margin_h;
+    let component = this.panelService.open(VoteWindowComponent, option);
+
   }
 
   startCutIn( cutIn : CutIn ){

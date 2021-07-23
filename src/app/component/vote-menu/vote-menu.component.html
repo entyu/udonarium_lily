@@ -10,6 +10,7 @@
   <form class="is-sticky-top">
     <div class="tab">
       <div>試験用TOPメニュー 選択数:{{selectedNum()}}</div>
+        <input type="checkbox" value="includSelf"  [(ngModel)]="includSelf" name="includSelf" id = includSelf_{{initTimestamp}} (click)="changeIncludSelf()" ><span>自分を含める</span>
         <input type="radio" [checked] ="true" name = "vote_rollcall" id = rollcall_{{initTimestamp}} value="rollcall" (change) = "onChangeType()" ><span>点呼</span>
         <input type="radio" name = "vote_rollcall" id = vote_{{initTimestamp}}  value="vote" (change) = "onChangeType()" ><span>投票</span>
         <input [(ngModel)]="voteContentsText" placeholder="投票内容を記述" name="voteContents" [attr.disabled]="!isRollCall ? '' : null" style="margin-left:2em;width:15em;"/>

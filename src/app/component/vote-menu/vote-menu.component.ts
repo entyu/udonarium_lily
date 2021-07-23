@@ -27,6 +27,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   networkService = Network;
   voteContentsText = '';
   isRollCall = false;
+  includSelf = false;
 
   get peerList() { return this.networkService.peerContexts; }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
@@ -49,16 +50,16 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
     return this.selectedList.length;
   }
 
-  selectedList():IPeerContext[] {
+  selectedList():string[] {
     let count = 0;
     const list = this.peerList;
-    let sendList: IPeerContext[] = [];
+    let sendList: string[] = [];
     for( let peer of list ){
       let box = <HTMLInputElement>document.getElementById(peer.peerId + '_' + this.initTimestamp);
       if(!box)return null;
 
       if(box.checked){
-        sendList.push(peer);
+        sendList.push(peer.peerId);
       }
     }
     return sendList;
@@ -71,8 +72,16 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
     let choicesInput_ = choicesInput.replace(/\s*$/i,'');
     let choices = choicesInput_.split(/\s/i);
     let peerList = this.selectedList();
+
+    if(this.includSelf ){
+      peerList.push(this.myPeer.peerId);
+    }
     vote.makeVote(PeerCursor.myCursor.peerId ,question, peerList , choices);
     vote.startVote();
+  }
+
+  changeIncludSelf(){
+    // 処理なし
   }
 
   onChangeType(name){

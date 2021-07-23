@@ -26,13 +26,13 @@ export class Vote extends GameObject {
   @SyncVar() choices: string[] = [];
   @SyncVar() chairId: string = '';
 
-  makeVote(chairId : string ,question: string, targetPeers: IPeerContext[], choices: string[]){
+  makeVote(chairId : string ,question: string, targetPeerId: string[], choices: string[]){
     this.chairId = chairId;
     this.question = question;
     this.choices = choices;
 
     this.voteAnswer = [];
-    for( let target in targetPeers){
+    for( let target of targetPeerId){
       let vote: VoteContext = {
         peerId: target,
         answer: -1,
@@ -44,6 +44,7 @@ export class Vote extends GameObject {
   }
 
   startVote(){
+    EventSystem.trigger('END_OLD_VOTE', { });
     EventSystem.trigger('START_VOTE', { });
   }
 
