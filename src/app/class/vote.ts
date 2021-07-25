@@ -43,6 +43,13 @@ export class Vote extends GameObject {
     this.initTimeStamp = Date.now();
   }
 
+  chkToMe():boolean{
+    for( let one of this.voteAnswer){
+      if(PeerCursor.myCursor.peerId == one.peerId )return true;
+    }
+    return false;
+  }
+
   startVote(){
     EventSystem.trigger('END_OLD_VOTE', { });
     EventSystem.trigger('START_VOTE', { });

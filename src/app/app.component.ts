@@ -223,6 +223,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   startVote(){
     console.log( '点呼/投票イベント_スタート' );
+    let vote = ObjectStore.instance.get<Vote>('Vote');
+    if(!vote.chkToMe() )return;
+
     let option: PanelOption = { left: 0, top: 0, width: 650, height: 400 };
     option.title = '点呼/投票';
 

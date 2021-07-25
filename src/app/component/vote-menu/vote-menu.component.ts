@@ -26,6 +26,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   private initTimestamp : number = 0;
   networkService = Network;
   voteContentsText = '';
+  voteTitle = '投票'
   isRollCall = false;
   includSelf = false;
 
@@ -47,7 +48,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   }
 
   selectedNum():number{
-    return this.selectedList.length;
+    return this.selectedList().length;
   }
 
   selectedList():string[] {
@@ -62,20 +63,26 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
         sendList.push(peer.peerId);
       }
     }
+    if(this.includSelf ){
+      sendList.push(this.myPeer.peerId);
+    }
     return sendList;
   }
 
   send(){
     let vote = this.vote;
-    let question = '点呼テストです';
-    let choicesInput = 'あ12  い345 う678 '
+    let question = this.voteTitle;
+    let choicesInput;
+
+    if(this.isRollCall ){
+      choicesInput = 'OK NG';
+    }else{
+      choicesInput = this.voteContentsText.length == 0 ? 'OK NG' : this.voteContentsText;
+    }
     let choicesInput_ = choicesInput.replace(/\s*$/i,'');
     let choices = choicesInput_.split(/\s/i);
     let peerList = this.selectedList();
 
-    if(this.includSelf ){
-      peerList.push(this.myPeer.peerId);
-    }
     vote.makeVote(PeerCursor.myCursor.peerId ,question, peerList , choices);
     vote.startVote();
   }
