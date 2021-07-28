@@ -9,11 +9,9 @@
   <form class="is-sticky-top">
     <div class="tab">
       <div>投票数:{{votedNum()}}/{{answerList.length}}</div>
-<!--
-      <div *ngFor="let answer of answerList" style="font-size: 15px;" [ngClass]="{'box': true}">
-        <ng-container *ngTemplateOutlet="voteAnswers; context:{ answer : answer }"></ng-container>
-      </div>
--->
+      <ng-container *ngFor="let choice of vote.choices" style="font-size: 15px;">
+        <button (click)="voting(choice)" name={{choice}} id={{choice}}>{{choice}}</button>
+      </ng-container>
     </div>
   </form>
 </ng-template>

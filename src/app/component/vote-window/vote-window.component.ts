@@ -58,7 +58,11 @@ export class VoteWindowComponent implements AfterViewInit,OnInit, OnDestroy {
         }
       });
   }
+
+  voting(choice: string){
     
+  }
+
   ngAfterViewInit() {
   }
 

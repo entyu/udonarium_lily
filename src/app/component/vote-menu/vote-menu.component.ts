@@ -27,7 +27,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   networkService = Network;
   voteContentsText = '';
   voteTitle = '投票'
-  isRollCall = false;
+  isRollCall = true;
   includSelf = false;
 
   get peerList() { return this.networkService.peerContexts; }
@@ -75,9 +75,9 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
     let choicesInput;
 
     if(this.isRollCall ){
-      choicesInput = 'OK NG';
+      choicesInput = '準備完了';
     }else{
-      choicesInput = this.voteContentsText.length == 0 ? 'OK NG' : this.voteContentsText;
+      choicesInput = this.voteContentsText.length == 0 ? '賛成 反対' : this.voteContentsText;
     }
     let choicesInput_ = choicesInput.replace(/\s*$/i,'');
     let choices = choicesInput_.split(/\s/i);
@@ -85,6 +85,8 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
 
     vote.makeVote(PeerCursor.myCursor.peerId ,question, peerList , choices);
     vote.startVote();
+
+    this.panelService.close();
   }
 
   changeIncludSelf(){
