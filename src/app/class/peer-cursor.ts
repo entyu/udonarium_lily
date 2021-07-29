@@ -18,6 +18,8 @@ export class PeerCursor extends GameObject {
 
   @SyncVar() lastControlImageIdentifier: string = '';
   @SyncVar() lastControlCharacterName: string = '';
+  @SyncVar() lastControlImageIndex: number = 0;
+  @SyncVar() lastControlSendFrom: string = '';
 
   private _timestampSend: number = -1;
   private _timestampReceive: number = -1;

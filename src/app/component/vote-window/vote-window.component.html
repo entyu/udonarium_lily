@@ -10,7 +10,7 @@
     <div class="tab">
       <div>投票数:{{votedNum()}}/{{answerList.length}}</div>
       <ng-container *ngFor="let choice of vote.choices" style="font-size: 15px;">
-        <button (click)="voting(choice)" name={{choice}} id={{choice}}>{{choice}}</button>
+        <button (click)="voting(choice)" name={{choice}} id={{choice}}>{{choice}}:{{countAnswerByString(choice)}}人</button>
       </ng-container>
     </div>
   </form>
@@ -38,11 +38,9 @@
         </div>
       </div>
       <div class="table-cell message">
-<!--
-        <ng-container *ngIf="answer.answer">
-          dispAnswer(answer.answer);
-        </ng-container>
--->
+        <ng-container *ngIf="answer.answer == -1">未投票</ng-container>
+        <ng-container *ngIf="answer.answer == -2">棄権</ng-container>
+        <ng-container *ngIf="answer.answer >= 0">{{indexToChoice(answer.answer)}}</ng-container>
       </div>
     </div>
   </div>

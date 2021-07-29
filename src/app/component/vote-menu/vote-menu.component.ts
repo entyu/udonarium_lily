@@ -6,6 +6,8 @@ import { GameObject, ObjectContext } from '@udonarium/core/synchronize-object/ga
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { ChatTab } from '@udonarium/chat-tab';
+import { ChatTabList } from '@udonarium/chat-tab-list';
 
 import { ChatMessageService } from 'service/chat-message.service';
 import { ModalService } from 'service/modal.service';
@@ -83,9 +85,9 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
     let choices = choicesInput_.split(/\s/i);
     let peerList = this.selectedList();
 
-    vote.makeVote(PeerCursor.myCursor.peerId ,question, peerList , choices);
+    vote.makeVote(PeerCursor.myCursor.peerId ,question, peerList , choices ,this.isRollCall);
     vote.startVote();
-
+    this.chatMessageService.sendSystemMessageLastSendCharactor('点呼開始！');
     this.panelService.close();
   }
 
@@ -95,7 +97,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
 
   onChangeType(name){
     let box = <HTMLInputElement>document.getElementById('rollcall' + '_' + this.initTimestamp);
-    this.isRollCall = !box.checked;
+    this.isRollCall = box.checked;
   }
 
   voteBlockClick(id){

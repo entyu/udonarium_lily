@@ -20,13 +20,16 @@ export interface VoteContext {
 
 @SyncObject('Vote')
 export class Vote extends GameObject {
+
   @SyncVar() initTimeStamp = 0;
   @SyncVar() question: string = '';
   @SyncVar() voteAnswer: VoteContext[] = [];
   @SyncVar() choices: string[] = [];
   @SyncVar() chairId: string = '';
+  @SyncVar() isRollCall = false;
 
-  makeVote(chairId : string ,question: string, targetPeerId: string[], choices: string[]){
+  makeVote(chairId : string ,question: string, targetPeerId: string[], choices: string[], isRollCall: boolean){
+    this.isRollCall = isRollCall;
     this.chairId = chairId;
     this.question = question;
     this.choices = choices;

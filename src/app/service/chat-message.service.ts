@@ -93,7 +93,6 @@ export class ChatMessageService {
       _color = color;
     }
 
-
     let chatMessage: ChatMessageContext = {
       from: this.findId(sendTo),
       to: this.findId(sendTo),
@@ -109,6 +108,17 @@ export class ChatMessageService {
     
     return chatTab.addMessage(chatMessage);
     
+  }
+
+  // 最終発言キャラでシステム発言
+  sendSystemMessageLastSendCharactor(text: string){
+    const chatTabList = ObjectStore.instance.get<ChatTabList>('ChatTabList');
+    const sysTab = chatTabList.systemMessageTab;
+    const sendFrom = PeerCursor.myCursor.lastControlSendFrom ? PeerCursor.myCursor.lastControlSendFrom : PeerCursor.myCursor.identifier;
+    let imgIndex = PeerCursor.myCursor.lastControlImageIndex;
+    const imageIdentifier = this.findImageIdentifier(sendFrom, imgIndex);
+    if(imageIdentifier != PeerCursor.myCursor.lastControlImageIdentifier ) imgIndex = 0;
+    this.sendMessage(sysTab, text, null, sendFrom, null,imgIndex , '#006633');
   }
 
 
@@ -152,8 +162,8 @@ export class ChatMessageService {
       messColor: _color,//lily
       sendFrom: sendFrom //lily
     };
-
-    this.setLastControlInfoToPeer(sendFrom, this.findImageIdentifier(sendFrom,imgIndex), sendTo);
+console.log(text+' '+sendFrom+' '+sendTo+' '+tachieNum);
+    this.setLastControlInfoToPeer(sendFrom, this.findImageIdentifier(sendFrom,imgIndex), tachieNum, sendTo);
 
     // 立ち絵置き換え
     let chkMessage = ' ' + text;
@@ -213,12 +223,10 @@ export class ChatMessageService {
     return sendFromName + ' > ' + sendToName;
   }
 
-  private setLastControlInfoToPeer(sendFrom: string, imageIdentifier: string, sendTo?: string): string {
+  private setLastControlInfoToPeer(sendFrom: string, imageIdentifier: string, imgindex: number, sendTo?: string): string {
     const sendFromName = this.findObjectName(sendFrom);
     const peerCursor = PeerCursor.myCursor;
 
-    console.log('setLastControlInfoToPeer');
-    console.log('sendFromName:' + sendFromName);
     if(!peerCursor ) {
       return;
     }
@@ -230,6 +238,8 @@ export class ChatMessageService {
       if(peerCursor.lastControlCharacterName != sendFromName){
         peerCursor.lastControlCharacterName = sendFromName;
       }
+      peerCursor.lastControlSendFrom = sendFrom;
+      peerCursor.lastControlImageIndex = imgindex;
     }else{
     // 秘話時は操作なし
     }

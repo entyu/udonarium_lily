@@ -226,7 +226,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let vote = ObjectStore.instance.get<Vote>('Vote');
     if(!vote.chkToMe() )return;
 
-    let option: PanelOption = { left: 0, top: 0, width: 650, height: 400 };
+    let option: PanelOption = { left: 0, top: 0, width: 450, height: 400 };
     option.title = '点呼/投票';
 
     let margin_w = (window.innerWidth - option.width)/2;
