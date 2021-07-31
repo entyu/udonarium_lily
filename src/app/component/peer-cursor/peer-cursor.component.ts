@@ -105,7 +105,6 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  private disConnectNotified = true;
   private chkDisConnect( ){
 
     const timeout = PeerCursor.myCursor.timeout * 1000;
@@ -115,15 +114,15 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
     const sysTab = chatTabList.systemMessageTab;
 
     if ( timeout <= elapsedTime){
-      if (!this.disConnectNotified){
-        this.disConnectNotified = true;
+      if (!this.cursor.isDisConnect){
+        this.cursor.isDisConnect = true;
         if(sysTab){
           let text = this.cursor.userId + '[' + this.cursor.name + '] さんからあなたへの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上受信できません。通信障害の可能性があります。';
           this.chatMessageService.sendSystemMessageOnePlayer( sysTab , text , PeerCursor.myCursor.identifier, '#006633');
         }
       }
     }else{
-      if ( this.disConnectNotified == true ){
+      if ( this.cursor.isDisConnect == true ){
 
         setTimeout(() => {
           this.timestampInterval = null;
@@ -133,7 +132,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }, 1000);
       }
-      this.disConnectNotified = false;
+      this.cursor.isDisConnect = false;
     }
   }
 

@@ -32,11 +32,14 @@ export class PeerCursor extends GameObject {
   private _lastTimeSignNo = -1;
   private _totalTimeSignNum = 0;
 
-
   private _timeout = 40; // 単位秒
+  private _isDisConnect: boolean = true;
 
   private _debugTimeShift = 0;
   private _debugReceiveDelay = 0;
+
+  get isDisConnect(): boolean { return this._isDisConnect; }
+  set isDisConnect( flag: boolean ){ this._isDisConnect = flag ; }
 
   get timestampSend(): number { return this._timestampSend; }
   set timestampSend( time: number ){ this._timestampSend = time ; }

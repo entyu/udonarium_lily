@@ -38,7 +38,10 @@
           送信対象
         </div>
         <div style="height:64px;" class="message">
-          <div><input type="checkbox" [checked]="!peer.disConnectNotified" id = {{peer.peerId}}_{{initTimestamp}} (change) ="onChange(peer.peerId)" name="vote_chk"/></div>
+          <div>
+            <input type="checkbox" 
+            id = {{peer.peerId}}_{{initTimestamp}} (change) ="onChange(peer.peerId)" name="vote_chk"/>
+          </div>
         </div>
       </div>
       <div class="table-cell">
@@ -60,11 +63,10 @@
         </div>
       </div>
       <div class="table-cell message">
-        <ng-container *ngIf="peer.disConnectNotified">
+        <div [hidden] ="!isPeerIsDisConnect(peer.peerId)">
           現在接続が切れていると考えられる相手です
-        </ng-container>
+        </div>
       </div>
-
     </div>
   </div>
 </ng-template>

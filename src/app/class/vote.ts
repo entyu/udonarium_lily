@@ -15,7 +15,7 @@ import { PeerContext, IPeerContext } from '@udonarium/core/system/network/peer-c
 
 export interface VoteContext {
   peerId: string;
-  answer: number;
+  answer: number;// 投票選択肢のindex値、-1:未投票、-2:棄権
 }
 
 @SyncObject('Vote')
@@ -24,6 +24,7 @@ export class Vote extends GameObject {
   @SyncVar() initTimeStamp = 0;
   @SyncVar() question: string = '';
   @SyncVar() voteAnswer: VoteContext[] = [];
+  @SyncVar() lastVotePeerId = '';
   @SyncVar() choices: string[] = [];
   @SyncVar() chairId: string = '';
   @SyncVar() isRollCall = false;
@@ -42,8 +43,62 @@ export class Vote extends GameObject {
       }
       this.voteAnswer.push(vote);
     }
-
+    this.lastVotePeerId = '';
     this.initTimeStamp = Date.now();
+  }
+
+  isVoteEnd(peerId: string): boolean{
+    let ans = this.answerById(peerId);
+    if(!ans) return true;
+
+    return ans.answer != -1 ? true : false;
+  }
+
+  voting(choice: string | null, peerId: string){
+    let ans = this.answerById(peerId);
+    if(choice){
+      ans.answer = this.choices.indexOf(choice);
+    }else{
+      ans.answer = -2;
+    }
+    // 配列要素の中身の更新だと同期が行われないので単一変数を更新してトリガーする
+    this.lastVotePeerId = peerId;
+  }
+
+  answerById(peerId:string): VoteContext{
+    for(let ans of this.voteAnswer){
+      if(ans.peerId == peerId )return ans;
+    }
+    return null;
+  }
+
+  votedTotalNum(): number{
+    const answer: VoteContext[] = this.voteAnswer;
+    let count = 0;
+    for( let ans of answer){
+      if( ans.answer >= 0 || ans.answer == -2){count++ ;}
+    }
+    return count;
+  }
+
+  votedNumByIndex(index: number): number{
+    const answer: VoteContext[] = this.voteAnswer;
+    let count = 0;
+    for( let ans of answer){
+      if( ans.answer == index){count++ ;}
+    }
+    return count;
+  }
+
+  votedNumByChoice(choice: string): number{
+    const index = this.choices.indexOf(choice);
+    return this.votedNumByIndex(index);
+  }
+
+  indexToChoice(index: number): string{
+    if(index < 0)return '';
+    if(index >= this.choices.length )return '';
+    return this.choices[index];
   }
 
   chkToMe():boolean{

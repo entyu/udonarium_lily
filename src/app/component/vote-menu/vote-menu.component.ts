@@ -47,6 +47,27 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = '点呼/投票設定');
+    this.setDefaultCheck();
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.setDefaultCheck();
+    }, 0);
+  }
+
+  isPeerIsDisConnect(peerId: string): boolean{
+    return PeerCursor.findByPeerId(peerId).isDisConnect;
+  }
+
+  setDefaultCheck(){
+    const list = this.peerList;
+    for( let peer of list ){
+      let box = <HTMLInputElement>document.getElementById(peer.peerId + '_' + this.initTimestamp);
+      if(box){
+        box.checked = !this.isPeerIsDisConnect(peer.peerId);
+      }
+    }
   }
 
   selectedNum():number{
@@ -59,10 +80,10 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
     let sendList: string[] = [];
     for( let peer of list ){
       let box = <HTMLInputElement>document.getElementById(peer.peerId + '_' + this.initTimestamp);
-      if(!box)return null;
-
-      if(box.checked){
-        sendList.push(peer.peerId);
+      if(box){
+        if(box.checked){
+          sendList.push(peer.peerId);
+        }
       }
     }
     if(this.includSelf ){
@@ -74,12 +95,15 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   send(){
     let vote = this.vote;
     let question = this.voteTitle;
-    let choicesInput;
+    let choicesInput: string;
+    let startMessage: string;
 
     if(this.isRollCall ){
       choicesInput = '準備完了';
+      startMessage = '点呼開始！';
     }else{
       choicesInput = this.voteContentsText.length == 0 ? '賛成 反対' : this.voteContentsText;
+      startMessage = '投票開始！';
     }
     let choicesInput_ = choicesInput.replace(/\s*$/i,'');
     let choices = choicesInput_.split(/\s/i);
@@ -87,7 +111,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
 
     vote.makeVote(PeerCursor.myCursor.peerId ,question, peerList , choices ,this.isRollCall);
     vote.startVote();
-    this.chatMessageService.sendSystemMessageLastSendCharactor('点呼開始！');
+    this.chatMessageService.sendSystemMessageLastSendCharactor(startMessage);
     this.panelService.close();
   }
 

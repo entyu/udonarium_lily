@@ -26,10 +26,6 @@ export class VoteWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   get vote(): Vote { return ObjectStore.instance.get<Vote>('Vote'); }
   get answerList(): VoteContext[] { return this.vote.voteAnswer }
 
-  choiceToIndex(choice: string){
-    return this.vote.choices.indexOf(choice);
-  }
-
   numberOfVote(index: number): number{
     const list: VoteContext[] = this.answerList;
     let count = 0;
@@ -39,49 +35,15 @@ export class VoteWindowComponent implements AfterViewInit,OnInit, OnDestroy {
     return count;
   }
 
-  answerById(peerId:string): VoteContext{
-    const list: VoteContext[] = this.answerList;
-    for(let ans of list){
-      if(ans.peerId == peerId )return ans;
-    }
-    return null;
+  isMyVoteEnd(): boolean{
+    return this.vote.isVoteEnd(PeerCursor.myCursor.peerId );
   }
 
-  voting(choice: string){
-    let ans = this.answerById(PeerCursor.myCursor.peerId);
-    ans.answer = this.vote.choices.indexOf(choice);
+  voteSend(choice){
+    this.vote.voting(choice, PeerCursor.myCursor.peerId);
     let text = this.vote.isRollCall ? '点呼：' : '投票：';
     text += choice;
     this.chatMessageService.sendSystemMessageLastSendCharactor(text);
-  }
-
-  countAnswer(index: number): number{
-    const answer: VoteContext[] = this.answerList;
-    let count = 0;
-    for( let ans of answer){
-      if( ans.answer == index){count++ ;}
-    }
-    return count;
-  }
-
-  countAnswerByString(choice: string): number{
-    const index = this.choiceToIndex(choice);
-    return this.countAnswer(index);
-  }
-
-  indexToChoice(index: number): string{
-    if(index < 0)return '';
-    if(index >= this.vote.choices.length )return '';
-    return this.vote.choices[index];
-  }
-
-  votedNum(){
-    const answer: VoteContext[] = this.answerList;
-    let count = 0;
-    for( let ans of answer){
-      if( ans.answer >= 0 || ans.answer == -2){count++ ;}
-    }
-    return count;
   }
 
   constructor(
@@ -133,6 +95,13 @@ export class VoteWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if(!this.isMyVoteEnd() && this.timestamp == this.vote.initTimeStamp){
+      this.vote.voting(null, PeerCursor.myCursor.peerId );
+      let text = this.vote.isRollCall ? '点呼：' : '投票：';
+      text += '棄権しました';
+      this.chatMessageService.sendSystemMessageLastSendCharactor(text);
+    }
+
     EventSystem.unregister(this);
   }
 
