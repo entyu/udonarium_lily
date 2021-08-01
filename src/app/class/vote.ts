@@ -15,25 +15,26 @@ import { PeerContext, IPeerContext } from '@udonarium/core/system/network/peer-c
 
 export interface VoteContext {
   peerId: string;
-  answer: number;// “Š•[‘I‘ðŽˆ‚Ìindex’lA-1:–¢“Š•[A-2:ŠüŒ 
+  answer: number;// æŠ•ç¥¨é¸æŠžè‚¢ã®indexå€¤ã€-1:æœªæŠ•ç¥¨ã€-2:æ£„æ¨©
 }
 
 @SyncObject('Vote')
 export class Vote extends GameObject {
 
   @SyncVar() initTimeStamp = 0;
-  @SyncVar() question: string = '';
+  @SyncVar() voteTitle: string = '';
   @SyncVar() voteAnswer: VoteContext[] = [];
   @SyncVar() lastVotePeerId = '';
   @SyncVar() choices: string[] = [];
   @SyncVar() chairId: string = '';
   @SyncVar() isRollCall = false;
+  @SyncVar() isFinish = false;
 
-  makeVote(chairId : string ,question: string, targetPeerId: string[], choices: string[], isRollCall: boolean){
+  makeVote(chairId : string ,voteTitle: string, targetPeerId: string[], choices: string[], isRollCall: boolean){
     this.isRollCall = isRollCall;
     this.chairId = chairId;
-    this.question = question;
     this.choices = choices;
+    this.voteTitle = voteTitle;
 
     this.voteAnswer = [];
     for( let target of targetPeerId){
@@ -61,8 +62,33 @@ export class Vote extends GameObject {
     }else{
       ans.answer = -2;
     }
-    // ”z—ñ—v‘f‚Ì’†g‚ÌXV‚¾‚Æ“¯Šú‚ªs‚í‚ê‚È‚¢‚Ì‚Å’Pˆê•Ï”‚ðXV‚µ‚ÄƒgƒŠƒK[‚·‚é
+    // é…åˆ—è¦ç´ ã®ä¸­èº«ã®æ›´æ–°ã ã¨åŒæœŸãŒè¡Œã‚ã‚Œãªã„ã®ã§å˜ä¸€å¤‰æ•°ã‚’æ›´æ–°ã—ã¦ãƒˆãƒªã‚¬ãƒ¼ã™ã‚‹
     this.lastVotePeerId = peerId;
+
+    this.chkFinishVote();
+  }
+
+  chkFinishVote(){
+    if ( this.chairId == PeerCursor.myCursor.peerId && this.votedTotalNum() == this.voteAnswer.length ){
+      let text_ : string;
+      if(this.isRollCall ){
+        text_ = 'ç‚¹å‘¼çµ‚äº†' + '(' + this.votedTotalNum() + '/' + this.voteAnswer.length + ')';
+        if( this.votedNumByIndex(-2) != 0){
+          text_ += ' æ£„æ¨©ï¼š' + this.votedNumByIndex(-2);
+        }
+      }else{
+        text_ = 'æŠ•ç¥¨çµ‚äº†';
+        for(let cho of this.choices){
+          text_ += ' ' + cho + 'ï¼š' + this.votedNumByChoice(cho);
+        }
+        if( this.votedNumByIndex(-2) != 0){
+          text_ += ' æ£„æ¨©ï¼š' + this.votedNumByIndex(-2);
+        }
+      }
+      setTimeout(() => {
+        EventSystem.trigger('FINISH_VOTE', { text : text_ });
+      }, 1);
+    }
   }
 
   answerById(peerId:string): VoteContext{
@@ -135,5 +161,6 @@ export class Vote extends GameObject {
       this.startVote();
     }
 
+    this.chkFinishVote();
   }
 }

@@ -42,7 +42,7 @@ export class VoteWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   voteSend(choice){
     this.vote.voting(choice, PeerCursor.myCursor.peerId);
     let text = this.vote.isRollCall ? '点呼：' : '投票：';
-    text += choice;
+    text += choice + '(' + this.vote.votedTotalNum() + '/' + this.answerList.length + ')';
     this.chatMessageService.sendSystemMessageLastSendCharactor(text);
   }
 
@@ -98,7 +98,7 @@ export class VoteWindowComponent implements AfterViewInit,OnInit, OnDestroy {
     if(!this.isMyVoteEnd() && this.timestamp == this.vote.initTimeStamp){
       this.vote.voting(null, PeerCursor.myCursor.peerId );
       let text = this.vote.isRollCall ? '点呼：' : '投票：';
-      text += '棄権しました';
+      text += '棄権しました' + '(' + this.vote.votedTotalNum() + '/' + this.answerList.length + ')';
       this.chatMessageService.sendSystemMessageLastSendCharactor(text);
     }
 

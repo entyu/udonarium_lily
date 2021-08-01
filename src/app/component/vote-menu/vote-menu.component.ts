@@ -57,7 +57,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   }
 
   isPeerIsDisConnect(peerId: string): boolean{
-    return PeerCursor.findByPeerId(peerId).isDisConnect;
+    return PeerCursor.findByPeerId(peerId) ? PeerCursor.findByPeerId(peerId).isDisConnect : true;
   }
 
   setDefaultCheck(){
@@ -94,22 +94,23 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
 
   send(){
     let vote = this.vote;
-    let question = this.voteTitle;
-    let choicesInput: string;
+    let voteTitle: string;
+    let choicesInput: string = this.voteContentsText.replace(/\s*$/i,'').replace(/^\s*/i,'');
     let startMessage: string;
 
     if(this.isRollCall ){
       choicesInput = '準備完了';
       startMessage = '点呼開始！';
+      voteTitle = '点呼';
     }else{
-      choicesInput = this.voteContentsText.length == 0 ? '賛成 反対' : this.voteContentsText;
+      choicesInput = choicesInput.length == 0 ? '賛成 反対' : choicesInput;
       startMessage = '投票開始！';
+      voteTitle = this.voteTitle;
     }
-    let choicesInput_ = choicesInput.replace(/\s*$/i,'');
-    let choices = choicesInput_.split(/\s/i);
+    let choices = choicesInput.split(/\s+/i);
     let peerList = this.selectedList();
 
-    vote.makeVote(PeerCursor.myCursor.peerId ,question, peerList , choices ,this.isRollCall);
+    vote.makeVote(PeerCursor.myCursor.peerId ,voteTitle , peerList , choices ,this.isRollCall);
     vote.startVote();
     this.chatMessageService.sendSystemMessageLastSendCharactor(startMessage);
     this.panelService.close();

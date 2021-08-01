@@ -18,7 +18,7 @@
         <div style = "display:table-cell;">
           <span style = "display:inline-block;width:5em;margin-left:0.5em;">タイトル:</span><input [(ngModel)]="voteTitle" placeholder="" 
           name="voteTitle" [attr.disabled]="isRollCall ? '' : null" style="width:15em;"/><br>
-          <span style = "display:inline-block;width:5em;margin-left:0.5em;">選択肢:</span><input [(ngModel)]="voteContentsText" placeholder="スペース区切り 未入力でOK/NG" 
+          <span style = "display:inline-block;width:5em;margin-left:0.5em;">選択肢:</span><input [(ngModel)]="voteContentsText" placeholder="スペース区切 未入力で賛成/反対" 
           name="voteContents" [attr.disabled]="isRollCall ? '' : null" style="width:15em;"/>
         </div>
         <div style = "display:table-cell;">

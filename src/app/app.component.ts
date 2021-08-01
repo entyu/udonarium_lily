@@ -159,6 +159,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on('START_VOTE', event => { 
         this.startVote();
       })  
+      .on('FINISH_VOTE', event => { 
+        this.finishVote( event.data.text );
+      })  
       .on('START_CUT_IN', event => { 
         this.startCutIn( event.data.cutIn );
       })  
@@ -236,7 +239,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     option.left = margin_w ;
     option.top = margin_h;
     let component = this.panelService.open(VoteWindowComponent, option);
+  }
 
+  finishVote(text: string){
+    console.log( '投票集計完了' );
+    this.chatMessageService.sendSystemMessageLastSendCharactor(text);
   }
 
   startCutIn( cutIn : CutIn ){

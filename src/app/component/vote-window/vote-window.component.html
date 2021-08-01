@@ -8,12 +8,20 @@
 <ng-template #voteTop>
   <form class="is-sticky-top">
     <div class="tab">
-      <div>投票数:{{vote.votedTotalNum()}}/{{vote.voteAnswer.length}}</div>
+      <div>
+        {{vote.voteTitle}}
+      </div>
+      <div>
+        投票数:{{vote.votedTotalNum()}}/{{vote.voteAnswer.length}} 
+        (棄権：{{vote.votedNumByIndex(-2)}})<span style="font-size:12px">※投票前に閉じると棄権</span>
+      </div>
+      <div>
       <ng-container *ngFor="let choice of vote.choices" style="font-size: 15px;">
         <button (click)="voteSend(choice)" name={{choice}} id={{choice}} 
         [attr.disabled]="isMyVoteEnd() ? '' : null">
         {{choice}}:{{vote.votedNumByChoice(choice)}}人</button>
       </ng-container>
+      </div>
     </div>
   </form>
 </ng-template>
