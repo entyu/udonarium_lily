@@ -22,6 +22,21 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   selectedTab: ChatTab = null;
   selectedTabXml: string = '';
 
+  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
+
+  get systemTabIndex(): number {
+    return this.chatTabList.systemMessageTabIndex;
+  }
+  
+  set systemTabIndex(index: number){
+    this.chatTabList.systemMessageTabIndex = index;
+  }
+
+  systemTab(): ChatTab{
+    return this.chatTabList.systemMessageTab;
+  }
+
+
   get tabName(): string { return this.selectedTab.name; }
   set tabName(tabName: string) { if (this.isEditable) this.selectedTab.name = tabName; }
 
@@ -30,17 +45,19 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   get isDeleted(): boolean { return this.selectedTab ? ObjectStore.instance.get(this.selectedTab.identifier) == null : false; }
   get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
 
+
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
   allowDeleteLog = false;
+  allowDeleteTab = false;
 
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
     private chatMessageService: ChatMessageService,
     private saveDataService: SaveDataService
-  ) { }
+  ) {}
 
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'チャットタブ設定');
@@ -50,8 +67,10 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (object !== null) {
           this.selectedTabXml = object.toXml();
+
         }
       });
+    
   }
 
   ngOnDestroy() {
@@ -61,6 +80,16 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   onChangeSelectTab(identifier: string) {
     this.selectedTab = ObjectStore.instance.get<ChatTab>(identifier);
     this.selectedTabXml = '';
+  }
+
+  onChangeSystemTab(){
+    if (!this.selectedTab ){
+      this.chatTabList.systemMessageTabIndex = 0;
+    }else{
+      const parentElement = this.selectedTab.parent;
+      const index: number = parentElement.children.indexOf(this.selectedTab);
+      this.chatTabList.systemMessageTabIndex = index;
+    }
   }
 
   create() {

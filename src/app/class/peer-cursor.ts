@@ -13,20 +13,33 @@ type ObjectIdentifier = string;
 export class PeerCursor extends GameObject {
   @SyncVar() userId: UserId = '';
   @SyncVar() peerId: PeerId = '';
-  @SyncVar() name: string = '';
-  @SyncVar() imageIdentifier: string = '';
-  
-  private _timestampSend: number = -1;
-  private _timestampReceive: number = -1;
+  @SyncVar() name = '';
+  @SyncVar() imageIdentifier = '';
+
+  @SyncVar() lastControlImageIdentifier = '';
+  @SyncVar() lastControlCharacterName = '';
+  @SyncVar() lastControlImageIndex = 0;
+  @SyncVar() lastControlSendFrom = '';
+
+  private _timestampSend = -1;
+  private _timestampReceive = -1;
 
   private _timeDiffUp = 0;
   private _timeDiffDown = 0;
   private _timeLatency = 99999;
 
+  private _firstTimeSignNo = -1;
+  private _lastTimeSignNo = -1;
+  private _totalTimeSignNum = 0;
+
   private _timeout = 40; // 単位秒
+  private _isDisConnect = true;
 
   private _debugTimeShift = 0;
   private _debugReceiveDelay = 0;
+
+  get isDisConnect(): boolean { return this._isDisConnect; }
+  set isDisConnect( flag: boolean ){ this._isDisConnect = flag ; }
 
   get timestampSend(): number { return this._timestampSend; }
   set timestampSend( time: number ){ this._timestampSend = time ; }
@@ -52,30 +65,42 @@ export class PeerCursor extends GameObject {
   get timeout(): number { return this._timeout > 0 ? this._timeout : 1 ; }
   set timeout( time: number ){ this._timeout = time; }
 
+  get firstTimeSignNo(): number { return this._firstTimeSignNo; }
+  set firstTimeSignNo( num: number ){ this._firstTimeSignNo = num ; }
+
+  get lastTimeSignNo(): number { return this._lastTimeSignNo; }
+  set lastTimeSignNo( num: number ){ this._lastTimeSignNo = num ; }
+
+  get totalTimeSignNum(): number { return this._totalTimeSignNum; }
+  set totalTimeSignNum( num: number ){ this._totalTimeSignNum = num ; }
+
+
+
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
   private static peerIdMap: Map<PeerId, ObjectIdentifier> = new Map();
-  chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
+  chatColorCode: string[]  = ['#000000', '#FF0000', '#0099FF'];
 
-  private _diceImageType: string = "";
-  private _diceImageIndex: number = -1;
-  
+  private _diceImageType = '';
+  private _diceImageIndex = -1;
+
   get diceImageType(): string { return this._diceImageType; }
   get diceImageIndex(): number { return this._diceImageIndex; }
 
-  set diceImageType( type:string ){ this._diceImageType = type ; }
+  set diceImageType( type: string ){ this._diceImageType = type ; }
   set diceImageIndex( index: number ){ this._diceImageIndex = index; }
-  
-  get diceImageIdentifier(): string { 
-    if( this.diceImageType != ""){
-      return this.diceImageType + "_dice" + "[" + this.diceImageIndex.toString().padStart(2,'0') + "]"; 
+
+  get diceImageIdentifier(): string {
+    if ( this.diceImageType != ''){
+      return this.diceImageType + '_dice' + '[' + this.diceImageIndex.toString().padStart(2, '0') + ']';
     }else{
-      return "";
+      return '';
     }
   }
 
   get isMine(): boolean { return (PeerCursor.myCursor && PeerCursor.myCursor === this); }
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
+  get lastControlImage(): ImageFile { return ImageStorage.instance.get(this.lastControlImageIdentifier); }
 
   // GameObject Lifecycle
   onStoreAdded() {

@@ -6,6 +6,13 @@
     <select style="width: 10em;" size="10" (change)="onChangeSelectTab($event.target.value)" [ngModel]="selectedTab?.identifier">
       <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
     </select>
+    <div style="font-size: 12px;">
+      <button (click)="onChangeSystemTab()">システム表示先指定</button>
+    </div>
+    <div style="width: 10em;overflow: hidden;" size="9" >
+      {{systemTab()?.name}}
+<!!--{{systemTabIdentifier}}-->
+    </div>
   </div>
   <div class="flex-item">
     <ng-container *ngIf="!isEmpty && selectedTab">
@@ -15,6 +22,9 @@
       <hr/>
       <div>
         <ng-container *ngIf="!isDeleted">
+          <div style="padding-left:45px">
+          タブ削除を有効にする<input type="checkbox" value="allowDeleteTab"  [(ngModel)]="allowDeleteTab">
+          </div>
           <button (click)="upTabIndex()">↑</button>
           <button (click)="downTabIndex()">↓</button>
           <button [disabled]="isSaveing" (click)="save()">
@@ -24,7 +34,8 @@
             </div>
           </button>
           <span style="display:inline-block; width:2em;"></span>
-          <button class="danger" (click)="delete()" [attr.disabled]="chatTabs.length <= 1 ? '' : null">選択タブ削除</button>
+          <button class="danger" (click)="delete()" [attr.disabled]="chatTabs.length <= 1 ? '' : null"
+          [attr.disabled]="!allowDeleteTab ? '' : null">選択タブ削除</button><br>
         </ng-container>
         <ng-container *ngIf="isDeleted">
           <button (click)="restore()">元に戻す</button>

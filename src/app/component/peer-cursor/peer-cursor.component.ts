@@ -28,6 +28,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   get iconUrl(): string { return this.cursor.image.url; }
   get name(): string { return this.cursor.name; }
   get isMine(): boolean { return this.cursor.isMine; }
+  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
 
   private cursorElement: HTMLElement = null;
   private opacityElement: HTMLElement = null;
@@ -86,6 +87,13 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
           const messId = event.data[1];
           const diffUp = event.data[2];
+          
+          this.cursor.lastTimeSignNo = event.data[3];
+          if (this.cursor.firstTimeSignNo < 0){
+            this.cursor.firstTimeSignNo = event.data[3];
+          }
+          this.cursor.totalTimeSignNum++;
+          
           if (messId == PeerCursor.myCursor.peerId){
             if (diffUp != null){
               this.cursor.timeDiffUp = diffUp;
@@ -97,46 +105,47 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  private disConnectNotified = true;
   private chkDisConnect( ){
 
     const timeout = PeerCursor.myCursor.timeout * 1000;
     const elapsedTime = Date.now() - this.cursor.timestampReceive;
 
+    const chatTabList = ObjectStore.instance.get<ChatTabList>('ChatTabList');
+    const sysTab = chatTabList.systemMessageTab;
+
     if ( timeout <= elapsedTime){
-      if (!this.disConnectNotified){
-        this.disConnectNotified = true;
-
-        const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
-        const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
-        let text = this.cursor.userId + '[' + this.cursor.name + '] さんからあなたへの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上受信できません。通信障害の可能性があります。';
-
-        this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
+      if (!this.cursor.isDisConnect){
+        this.cursor.isDisConnect = true;
+        if(sysTab){
+          let text = this.cursor.userId + '[' + this.cursor.name + '] さんからあなたへの接続確認信号が' + PeerCursor.myCursor.timeout + '秒以上受信できません。通信障害の可能性があります。';
+          this.chatMessageService.sendSystemMessageOnePlayer( sysTab , text , PeerCursor.myCursor.identifier, '#006633');
+        }
       }
     }else{
-      if ( this.disConnectNotified == true ){
+      if ( this.cursor.isDisConnect == true ){
 
         setTimeout(() => {
           this.timestampInterval = null;
-          const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
-          const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
           let text = 'あなたと' + this.cursor.userId + '[' + this.cursor.name + '] さんの接続を確認しました。';
-          this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
+          if(sysTab){
+            this.chatMessageService.sendSystemMessageOnePlayer( sysTab , text , PeerCursor.myCursor.identifier, '#006633');
+          }
         }, 1000);
       }
-      this.disConnectNotified = false;
+      this.cursor.isDisConnect = false;
     }
   }
 
   private logoutMessage(){
-
-    const chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
-    const chatTab = ObjectStore.instance.get<ChatTab>(chatTabidentifier);
-    let text = this.cursor.userId + '[' + this.cursor.name + '] さんがログアウトしました。';
-    this.chatMessageService.sendSystemMessageOnePlayer( chatTab , text , PeerCursor.myCursor.identifier, '#006633');
-
+    const chatTabList = ObjectStore.instance.get<ChatTabList>('ChatTabList');
+    const sysTab = chatTabList.systemMessageTab;
+    if(sysTab){
+      let text = this.cursor.userId + '[' + this.cursor.name + '] さんがログアウトしました。';
+      this.chatMessageService.sendSystemMessageOnePlayer( sysTab , text , PeerCursor.myCursor.identifier, '#006633');
+    }
   }
 
+  private secdCounter = 0;
   private indexCounter = 0;
   private timestampLoop(){
     if (!this.timestampIntervalEnable) return;
@@ -163,9 +172,10 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
             const peerCursor = PeerCursor.findByPeerId(id);
             const diffDown = peerCursor ? peerCursor.timeDiffDown : null ;
 
-            EventSystem.call('HEART_BEAT', [ timestanmp , id , diffDown]);
-            console.log( 'peerlength:' + peerlength + 'this.indexCounter' + this.indexCounter + ' id:' + id);
+            EventSystem.call('HEART_BEAT', [ timestanmp , id , diffDown , this.secdCounter]);
+//            console.log( 'peerlength:' + peerlength + 'this.indexCounter' + this.indexCounter + ' id:' + id);
             this.indexCounter ++;
+            this.secdCounter ++;
           }
         }else{
           this.chkDisConnect();

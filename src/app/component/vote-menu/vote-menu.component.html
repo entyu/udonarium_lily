@@ -1,0 +1,72 @@
+<div class="component">
+  <ng-container *ngTemplateOutlet="voteTop"></ng-container>
+  <div *ngIf="peerList.length < 1">自分しか部屋にいません</div>
+  <div *ngFor="let peer of peerList" style="font-size: 15px;" [ngClass]="{'box': true}">
+    <ng-container *ngTemplateOutlet="voteTargets; context:{ peer : peer }"></ng-container>
+  </div>
+</div>
+
+<ng-template #voteTop>
+  <form class="is-sticky-top">
+    <div class="tab">
+      <div style = "display:table;">
+        <div style = "display:table-cell;">
+          <input type="checkbox" value="includSelf"  [(ngModel)]="includSelf" name="includSelf" id = includSelf_{{initTimestamp}} (click)="changeIncludSelf()" ><span>自分を含める</span>
+          <input type="radio" [checked] ="true" name = "vote_rollcall" id = rollcall_{{initTimestamp}} value="rollcall" (change) = "onChangeType()" ><span>点呼</span>
+          <input type="radio" name = "vote_rollcall" id = vote_{{initTimestamp}}  value="vote" (change) = "onChangeType()" ><span>投票</span>
+        </div>
+        <div style = "display:table-cell;">
+          <span style = "display:inline-block;width:5em;margin-left:0.5em;">タイトル:</span><input [(ngModel)]="voteTitle" placeholder="" 
+          name="voteTitle" [attr.disabled]="isRollCall ? '' : null" style="width:15em;"/><br>
+          <span style = "display:inline-block;width:5em;margin-left:0.5em;">選択肢:</span><input [(ngModel)]="voteContentsText" placeholder="スペース区切 未入力で賛成/反対" 
+          name="voteContents" [attr.disabled]="isRollCall ? '' : null" style="width:15em;"/>
+        </div>
+        <div style = "display:table-cell;">
+          <button (click)="send()" [attr.disabled]="selectedNum()==0 ? '' : null">送信</button><br>
+          <span style = "display:inline-block;margin-left:0.5em;">人数:{{selectedNum()}}</span>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #voteTargets let-peer="peer">
+  <div class="inventory-object" (click)="voteBlockClick(peer.peerId)">
+    <div class="object-tags-box">
+      <div class="table-cell">
+        <div class="object-name" style="width:6em;">
+          送信対象
+        </div>
+        <div style="height:64px;" class="message">
+          <div>
+            <input type="checkbox" 
+            id = {{peer.peerId}}_{{initTimestamp}} (change) ="onChange(peer.peerId)" name="vote_chk"/>
+          </div>
+        </div>
+      </div>
+      <div class="table-cell">
+        <div class="object-name">
+          {{findPeerName(peer.peerId)}}
+        </div>
+        <div class="image-box">
+          <div *ngIf="findPeerImage(peer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerImage(peer.peerId).url + ')' | safe: 'style' "></div>
+        </div>
+      </div>
+      <div class="table-cell">
+        <div class="object-name">
+          <ng-container *ngIf="findPeerLastControlName(peer.peerId)">{{findPeerLastControlName(peer.peerId)}}</ng-container>
+          <ng-container *ngIf="!findPeerLastControlName(peer.peerId)">操作キャラなし</ng-container>
+        </div>
+        <div class="image-box">
+          <div *ngIf="findPeerLastControlImage(peer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerLastControlImage(peer.peerId).url + ')' | safe: 'style' "></div>
+          <div *ngIf="!findPeerLastControlImage(peer.peerId)" class="image cover" [style.background-image]=""></div>
+        </div>
+      </div>
+      <div class="table-cell message">
+        <div [hidden] ="!isPeerIsDisConnect(peer.peerId)">
+          現在接続が切れていると考えられる相手です
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
