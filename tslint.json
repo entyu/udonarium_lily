@@ -43,6 +43,7 @@
         ]
       }
     ],
+    "no-angle-bracket-type-assertion": false,
     "no-console": [
       true,
       "debug",

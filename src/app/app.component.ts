@@ -59,10 +59,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
-  private openPanelCount: number = 0;
-  isSaveing: boolean = false;
-  progresPercent: number = 0;
-  dispcounter : number = 10 ;//表示更新用ダミーカットインを閉じるときに無理やり更新させている。
+  private openPanelCount = 0;
+  isSaveing = false;
+  progresPercent = 0;
+  dispcounter = 10 ; // 表示更新用ダミーカットインを閉じるときに無理やり更新させている。
 
 
   constructor(
@@ -156,20 +156,20 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PeerCursor.myCursor.imageIdentifier = noneIconImage.identifier;
 
     EventSystem.register(this)
-      .on('START_VOTE', event => { 
+      .on('START_VOTE', event => {
         this.startVote();
-      })  
-      .on('FINISH_VOTE', event => { 
+      })
+      .on('FINISH_VOTE', event => {
         this.finishVote( event.data.text );
-      })  
-      .on('START_CUT_IN', event => { 
+      })
+      .on('START_CUT_IN', event => {
         this.startCutIn( event.data.cutIn );
-      })  
-      .on('STOP_CUT_IN', event => { 
-        if( ! event.data.cutIn ) return;
-        console.log('カットインイベント_ストップ'  + event.data.cutIn.name ); 
-        
-      })  
+      })
+      .on('STOP_CUT_IN', event => {
+        if ( ! event.data.cutIn ) return;
+        console.log('カットインイベント_ストップ'  + event.data.cutIn.name );
+
+      })
       .on('UPDATE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('DELETE_GAME_OBJECT', event => { this.lazyNgZoneUpdate(event.isSendFromSelf); })
       .on('SYNCHRONIZE_AUDIO_LIST', event => { if (event.isSendFromSelf) this.lazyNgZoneUpdate(false); })
@@ -214,8 +214,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
     }, 0);
     setInterval(() => {
-      this.dispcounter = this.dispcounter +1;
-      if( this.dispcounter >100 )this.dispcounter = 0;
+      this.dispcounter = this.dispcounter + 1;
+      if ( this.dispcounter > 100 )this.dispcounter = 0;
 //      PeerCursor.myCursor.time = new Date();
     }, 200 );
   }
@@ -227,15 +227,15 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   startVote(){
     console.log( '点呼/投票イベント_スタート' );
     let vote = ObjectStore.instance.get<Vote>('Vote');
-    if(!vote.chkToMe() )return;
+    if (!vote.chkToMe() )return;
 
     let option: PanelOption = { left: 0, top: 0, width: 450, height: 400 };
     option.title = '点呼/投票';
 
-    let margin_w = (window.innerWidth - option.width)/2;
-    let margin_h = (window.innerHeight - option.height)/2 ;
-    if( margin_w < 0 )margin_w = 0 ;
-    if( margin_h < 0 )margin_h = 0 ;
+    let margin_w = (window.innerWidth - option.width) / 2;
+    let margin_h = (window.innerHeight - option.height) / 2 ;
+    if ( margin_w < 0 )margin_w = 0 ;
+    if ( margin_h < 0 )margin_h = 0 ;
     option.left = margin_w ;
     option.top = margin_h;
     let component = this.panelService.open(VoteWindowComponent, option);
@@ -246,28 +246,28 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.chatMessageService.sendSystemMessageLastSendCharactor(text);
   }
 
-  startCutIn( cutIn : CutIn ){
-    if( ! cutIn ) return;
+  startCutIn( cutIn: CutIn ){
+    if ( ! cutIn ) return;
     console.log( 'カットインイベント_スタート' + cutIn.name );
-    let option: PanelOption = { width: 200, height: 100, left: 300 ,top: 100};
+    let option: PanelOption = { width: 200, height: 100, left: 300 , top: 100};
     option.title = 'カットイン : ' + cutIn.name ;
-    
-    console.log( '画面領域 w:' + window.innerWidth + ' h:'+ window.innerHeight );
-    
+
+    console.log( '画面領域 w:' + window.innerWidth + ' h:' + window.innerHeight );
+
     let cutin_w = cutIn.width;
     let cutin_h = cutIn.height;
 
-    console.log( '画像サイズ w:' + cutin_w + ' h:'+ cutin_h );
-    
+    console.log( '画像サイズ w:' + cutin_w + ' h:' + cutin_h );
+
     let margin_w = window.innerWidth - cutin_w ;
     let margin_h = window.innerHeight - cutin_h - 25 ;
-    
-    if( margin_w < 0 )margin_w = 0 ;
-    if( margin_h < 0 )margin_h = 0 ;
-    
+
+    if ( margin_w < 0 )margin_w = 0 ;
+    if ( margin_h < 0 )margin_h = 0 ;
+
     let margin_x = margin_w * cutIn.x_pos / 100;
     let margin_y = margin_h * cutIn.y_pos / 100;
-    
+
     option.width = cutin_w ;
     option.height = cutin_h + 25 ;
     option.left = margin_x ;
@@ -278,12 +278,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let component = this.panelService.open(CutInWindowComponent, option);
     component.cutIn = cutIn;
     component.startCutIn();
-    
+
   }
 
   open(componentName: string) {
-    let component: { new(...args: any[]): any } = null;
-    let option: PanelOption = { width: 450, height: 600, left: 100 }
+    let component: new(...args: any[]) => any = null;
+    let option: PanelOption = { width: 450, height: 600, left: 100 };
     switch (componentName) {
       case 'PeerMenuComponent':
         component = PeerMenuComponent;
@@ -340,7 +340,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   handleFileSelect(event: Event) {
-    let input = <HTMLInputElement>event.target;
+    let input = <HTMLInputElement> event.target;
     let files = input.files;
     if (files.length) FileArchiver.instance.load(files);
     input.value = '';
