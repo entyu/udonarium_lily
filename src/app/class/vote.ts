@@ -15,33 +15,33 @@ import { PeerContext, IPeerContext } from '@udonarium/core/system/network/peer-c
 
 export interface VoteContext {
   peerId: string;
-  answer: number;// 投票選択肢のindex値、-1:未投票、-2:棄権
+  answer: number; // 投票選択肢のindex値、-1:未投票、-2:棄権
 }
 
 @SyncObject('Vote')
 export class Vote extends GameObject {
 
   @SyncVar() initTimeStamp = 0;
-  @SyncVar() voteTitle: string = '';
+  @SyncVar() voteTitle = '';
   @SyncVar() voteAnswer: VoteContext[] = [];
   @SyncVar() lastVotePeerId = '';
   @SyncVar() choices: string[] = [];
-  @SyncVar() chairId: string = '';
+  @SyncVar() chairId = '';
   @SyncVar() isRollCall = false;
   @SyncVar() isFinish = false;
 
-  makeVote(chairId : string ,voteTitle: string, targetPeerId: string[], choices: string[], isRollCall: boolean){
+  makeVote(chairId: string , voteTitle: string, targetPeerId: string[], choices: string[], isRollCall: boolean){
     this.isRollCall = isRollCall;
     this.chairId = chairId;
     this.choices = choices;
     this.voteTitle = voteTitle;
 
     this.voteAnswer = [];
-    for( let target of targetPeerId){
+    for ( let target of targetPeerId){
       let vote: VoteContext = {
         peerId: target,
         answer: -1,
-      }
+      };
       this.voteAnswer.push(vote);
     }
     this.lastVotePeerId = '';
@@ -50,14 +50,14 @@ export class Vote extends GameObject {
 
   isVoteEnd(peerId: string): boolean{
     let ans = this.answerById(peerId);
-    if(!ans) return true;
+    if (!ans) return true;
 
     return ans.answer != -1 ? true : false;
   }
 
   voting(choice: string | null, peerId: string){
     let ans = this.answerById(peerId);
-    if(choice){
+    if (choice){
       ans.answer = this.choices.indexOf(choice);
     }else{
       ans.answer = -2;
@@ -70,18 +70,18 @@ export class Vote extends GameObject {
 
   chkFinishVote(){
     if ( this.chairId == PeerCursor.myCursor.peerId && this.votedTotalNum() == this.voteAnswer.length ){
-      let text_ : string;
-      if(this.isRollCall ){
+      let text_: string;
+      if (this.isRollCall ){
         text_ = '点呼終了' + '(' + this.votedTotalNum() + '/' + this.voteAnswer.length + ')';
-        if( this.votedNumByIndex(-2) != 0){
+        if ( this.votedNumByIndex(-2) != 0){
           text_ += ' 棄権：' + this.votedNumByIndex(-2);
         }
       }else{
         text_ = '投票終了';
-        for(let cho of this.choices){
+        for (let cho of this.choices){
           text_ += ' ' + cho + '：' + this.votedNumByChoice(cho);
         }
-        if( this.votedNumByIndex(-2) != 0){
+        if ( this.votedNumByIndex(-2) != 0){
           text_ += ' 棄権：' + this.votedNumByIndex(-2);
         }
       }
@@ -91,9 +91,9 @@ export class Vote extends GameObject {
     }
   }
 
-  answerById(peerId:string): VoteContext{
-    for(let ans of this.voteAnswer){
-      if(ans.peerId == peerId )return ans;
+  answerById(peerId: string): VoteContext{
+    for (let ans of this.voteAnswer){
+      if (ans.peerId == peerId )return ans;
     }
     return null;
   }
@@ -101,8 +101,8 @@ export class Vote extends GameObject {
   votedTotalNum(): number{
     const answer: VoteContext[] = this.voteAnswer;
     let count = 0;
-    for( let ans of answer){
-      if( ans.answer >= 0 || ans.answer == -2){count++ ;}
+    for ( let ans of answer){
+      if ( ans.answer >= 0 || ans.answer == -2){count++ ; }
     }
     return count;
   }
@@ -110,8 +110,8 @@ export class Vote extends GameObject {
   votedNumByIndex(index: number): number{
     const answer: VoteContext[] = this.voteAnswer;
     let count = 0;
-    for( let ans of answer){
-      if( ans.answer == index){count++ ;}
+    for ( let ans of answer){
+      if ( ans.answer == index){count++ ; }
     }
     return count;
   }
@@ -122,14 +122,14 @@ export class Vote extends GameObject {
   }
 
   indexToChoice(index: number): string{
-    if(index < 0)return '';
-    if(index >= this.choices.length )return '';
+    if (index < 0)return '';
+    if (index >= this.choices.length )return '';
     return this.choices[index];
   }
 
-  chkToMe():boolean{
-    for( let one of this.voteAnswer){
-      if(PeerCursor.myCursor.peerId == one.peerId )return true;
+  chkToMe(): boolean{
+    for ( let one of this.voteAnswer){
+      if (PeerCursor.myCursor.peerId == one.peerId )return true;
     }
     return false;
   }

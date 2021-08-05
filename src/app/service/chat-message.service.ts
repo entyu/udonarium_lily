@@ -84,11 +84,11 @@ export class ChatMessageService {
   }
 
   // システムメッセージ専用
-  sendSystemMessageOnePlayer(chatTab: ChatTab,text:string, sendTo: string, color? :string): ChatMessage {
+  sendSystemMessageOnePlayer(chatTab: ChatTab, text: string, sendTo: string, color?: string): ChatMessage {
 
     let _color;
-    if( !color ){
-      _color = "#006633";
+    if ( !color ){
+      _color = '#006633';
     }else{
       _color = color;
     }
@@ -97,7 +97,7 @@ export class ChatMessageService {
       from: this.findId(sendTo),
       to: this.findId(sendTo),
       name: 'システムメッセージ',
-      imageIdentifier: '',//lily
+      imageIdentifier: '', // lily
       timestamp: this.calcTimeStamp(chatTab),
       tag: 'DiceBot to-pl-system-message',
       text: text,
@@ -105,9 +105,9 @@ export class ChatMessageService {
       messColor: _color,//lily
       sendFrom: null //lily
     };
-    
+
     return chatTab.addMessage(chatMessage);
-    
+
   }
 
   // 最終発言キャラでシステム発言
@@ -117,29 +117,29 @@ export class ChatMessageService {
     const sendFrom = PeerCursor.myCursor.lastControlSendFrom ? PeerCursor.myCursor.lastControlSendFrom : PeerCursor.myCursor.identifier;
     let imgIndex = PeerCursor.myCursor.lastControlImageIndex;
     const imageIdentifier = this.findImageIdentifier(sendFrom, imgIndex);
-    if(imageIdentifier != PeerCursor.myCursor.lastControlImageIdentifier ) imgIndex = 0;
-    this.sendMessage(sysTab, text, null, sendFrom, null,imgIndex , '#006633');
+    if (imageIdentifier != PeerCursor.myCursor.lastControlImageIdentifier ) imgIndex = 0;
+    this.sendMessage(sysTab, text, null, sendFrom, null, imgIndex , '#006633');
   }
 
 
   // 本家からachieNum?: number color? :string を追加
-  sendMessage(chatTab: ChatTab, text: string, gameSystem: GameSystemClass | null, sendFrom: string, sendTo?: string, tachieNum?: number, color? :string): ChatMessage {
+  sendMessage(chatTab: ChatTab, text: string, gameSystem: GameSystemClass | null, sendFrom: string, sendTo?: string, tachieNum?: number, color?: string): ChatMessage {
 
     let img;
     let imgIndex;
-    if( tachieNum > 0 ){
+    if ( tachieNum > 0 ){
       imgIndex = tachieNum;
     }else{
       imgIndex = 0;
     }
-    
+
     let _color;
-    if( !color ){
-      _color = "#000000";
+    if ( !color ){
+      _color = '#000000';
     }else{
       _color = color;
     }
-    
+
     let dicebot = ObjectStore.instance.get<DiceBot>('DiceBot');
     let chatMessageTag: string;
     if (gameSystem == null) {
@@ -154,7 +154,7 @@ export class ChatMessageService {
       from: Network.peerContext.userId,
       to: this.findId(sendTo),
       name: this.makeMessageName(sendFrom, sendTo),
-      imageIdentifier: this.findImageIdentifier(sendFrom,imgIndex),//lily
+      imageIdentifier: this.findImageIdentifier(sendFrom, imgIndex), // lily
       timestamp: this.calcTimeStamp(chatTab),
       tag: chatMessageTag,
       text: text,
@@ -162,34 +162,34 @@ export class ChatMessageService {
       messColor: _color,//lily
       sendFrom: sendFrom //lily
     };
-console.log(text+' '+sendFrom+' '+sendTo+' '+tachieNum);
-    this.setLastControlInfoToPeer(sendFrom, this.findImageIdentifier(sendFrom,imgIndex), tachieNum, sendTo);
+    console.log(text + ' ' + sendFrom + ' ' + sendTo + ' ' + tachieNum);
+    this.setLastControlInfoToPeer(sendFrom, this.findImageIdentifier(sendFrom, imgIndex), tachieNum, sendTo);
 
     // 立ち絵置き換え
     let chkMessage = ' ' + text;
 
     let matchesArray = chkMessage.match(/\s[@＠](\S+)\s*$/i);
-    if( matchesArray ){
+    if ( matchesArray ){
       console.log( matchesArray );
       const matchHide = matchesArray[1].match(/^[hHｈＨ][iIｉＩ][dDｄＤ][eEｅＥ]$/);
       const matchNum = matchesArray[1].match(/(\d+)$/);
 
-      if( matchHide ){ //非表示コマンド
+      if ( matchHide ){ // 非表示コマンド
         chatMessage.imageIdentifier = '';
-        chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
-      }else if( matchNum ){ //インデックス指定
+        chatMessage.text = text.replace(/([@＠]\S+\s*)$/i, '');
+      }else if ( matchNum ){ // インデックス指定
         const num: number = parseInt( matchNum[1] );
-        const newIdentifier = this.findImageIdentifier( sendFrom,num );
-        if( newIdentifier ){
+        const newIdentifier = this.findImageIdentifier( sendFrom, num );
+        if ( newIdentifier ){
           chatMessage.imageIdentifier = newIdentifier;
-          chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
+          chatMessage.text = text.replace(/([@＠]\S+\s*)$/i, '');
         }
       }else{
         const tachieName = matchesArray[1];
-        const newIdentifier = this.findImageIdentifierName( sendFrom,tachieName );
-        if( newIdentifier ){
+        const newIdentifier = this.findImageIdentifierName( sendFrom, tachieName );
+        if ( newIdentifier ){
           chatMessage.imageIdentifier = newIdentifier;
-          chatMessage.text = text.replace(/([@＠]\S+\s*)$/i,'');
+          chatMessage.text = text.replace(/([@＠]\S+\s*)$/i, '');
         }
       }
     }
@@ -227,15 +227,15 @@ console.log(text+' '+sendFrom+' '+sendTo+' '+tachieNum);
     const sendFromName = this.findObjectName(sendFrom);
     const peerCursor = PeerCursor.myCursor;
 
-    if(!peerCursor ) {
+    if (!peerCursor ) {
       return;
     }
     console.log('peerCursor:' + peerCursor);
     if (sendTo == null || sendTo.length < 1) {
-      if(peerCursor.lastControlImageIdentifier != imageIdentifier){
+      if (peerCursor.lastControlImageIdentifier != imageIdentifier){
         peerCursor.lastControlImageIdentifier = imageIdentifier;
       }
-      if(peerCursor.lastControlCharacterName != sendFromName){
+      if (peerCursor.lastControlCharacterName != sendFromName){
         peerCursor.lastControlCharacterName = sendFromName;
       }
       peerCursor.lastControlSendFrom = sendFrom;
@@ -245,17 +245,17 @@ console.log(text+' '+sendFrom+' '+sendTo+' '+tachieNum);
     }
   }
 
-  private findImageIdentifierName(sendFrom,name:string): string {
+  private findImageIdentifierName(sendFrom, name: string): string {
 // 完全一致
     let object = ObjectStore.instance.get(sendFrom);
     if (object instanceof GameCharacter) {
-      let data:DataElement = object.imageDataElement;
+      let data: DataElement = object.imageDataElement;
       for (let child of data.children) {
         if (child instanceof DataElement) {
           if (child.getAttribute('currentValue') == name){
-            console.log( "HIT!!" + child.getAttribute('currentValue') + '=' + name);
-            const img = ImageStorage.instance.get(<string>child.value);
-            if( img ){
+            console.log( 'HIT!!' + child.getAttribute('currentValue') + '=' + name);
+            const img = ImageStorage.instance.get(<string> child.value);
+            if ( img ){
               return  img.identifier;
             }
           }
@@ -264,11 +264,11 @@ console.log(text+' '+sendFrom+' '+sendTo+' '+tachieNum);
 // 部分前方一致
       for (let child of data.children) {
         if (child instanceof DataElement) {
-          console.log( "child" + child.getAttribute('currentValue') );
+          console.log( 'child' + child.getAttribute('currentValue') );
           if ( child.getAttribute('currentValue').indexOf( name ) == 0 ){
-            console.log( "HIT!!" + child.getAttribute('currentValue') + '=' + name);
-            const img = ImageStorage.instance.get(<string>child.value);
-            if( img ){
+            console.log( 'HIT!!' + child.getAttribute('currentValue') + '=' + name);
+            const img = ImageStorage.instance.get(<string> child.value);
+            if ( img ){
               return  img.identifier;
             }
           }
@@ -278,12 +278,12 @@ console.log(text+' '+sendFrom+' '+sendTo+' '+tachieNum);
     return '';
   }
 
-  private findImageIdentifier(sendFrom,index:number): string {
+  private findImageIdentifier(sendFrom, index: number): string {
     let object = ObjectStore.instance.get(sendFrom);
     if (object instanceof GameCharacter) {
-      if( object.imageDataElement.children.length  > index ){
-        let img = ImageStorage.instance.get(<string>object.imageDataElement.children[index].value);
-        if( img ){
+      if ( object.imageDataElement.children.length  > index ){
+        let img = ImageStorage.instance.get(<string> object.imageDataElement.children[index].value);
+        if ( img ){
           return  img.identifier;
         }
       }
@@ -294,15 +294,15 @@ console.log(text+' '+sendFrom+' '+sendTo+' '+tachieNum);
     return '';
   }
 
-//entyu
+// entyu
   private findImagePos(identifier: string): number {
     let object = ObjectStore.instance.get(identifier);
     if (object instanceof GameCharacter) {
 //        let element = object.getElement('POS', object.detailDataElement);
-        let element = object.detailDataElement.getFirstElementByName('POS'); //1.13.xとのmargeで修正
-        if(element)
-            if( 0 <= <number>element.currentValue && <number>element.currentValue <= 11)
-                return <number>element.currentValue;
+        let element = object.detailDataElement.getFirstElementByName('POS'); // 1.13.xとのmargeで修正
+        if (element)
+            if ( 0 <= <number> element.currentValue && <number> element.currentValue <= 11)
+                return <number> element.currentValue;
         return 0;
     }
     return -1;

@@ -13,16 +13,16 @@ type ObjectIdentifier = string;
 export class PeerCursor extends GameObject {
   @SyncVar() userId: UserId = '';
   @SyncVar() peerId: PeerId = '';
-  @SyncVar() name: string = '';
-  @SyncVar() imageIdentifier: string = '';
+  @SyncVar() name = '';
+  @SyncVar() imageIdentifier = '';
 
-  @SyncVar() lastControlImageIdentifier: string = '';
-  @SyncVar() lastControlCharacterName: string = '';
-  @SyncVar() lastControlImageIndex: number = 0;
-  @SyncVar() lastControlSendFrom: string = '';
+  @SyncVar() lastControlImageIdentifier = '';
+  @SyncVar() lastControlCharacterName = '';
+  @SyncVar() lastControlImageIndex = 0;
+  @SyncVar() lastControlSendFrom = '';
 
-  private _timestampSend: number = -1;
-  private _timestampReceive: number = -1;
+  private _timestampSend = -1;
+  private _timestampReceive = -1;
 
   private _timeDiffUp = 0;
   private _timeDiffDown = 0;
@@ -33,7 +33,7 @@ export class PeerCursor extends GameObject {
   private _totalTimeSignNum = 0;
 
   private _timeout = 40; // 単位秒
-  private _isDisConnect: boolean = true;
+  private _isDisConnect = true;
 
   private _debugTimeShift = 0;
   private _debugReceiveDelay = 0;
@@ -79,22 +79,22 @@ export class PeerCursor extends GameObject {
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
   private static peerIdMap: Map<PeerId, ObjectIdentifier> = new Map();
-  chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
+  chatColorCode: string[]  = ['#000000', '#FF0000', '#0099FF'];
 
-  private _diceImageType: string = "";
-  private _diceImageIndex: number = -1;
-  
+  private _diceImageType = '';
+  private _diceImageIndex = -1;
+
   get diceImageType(): string { return this._diceImageType; }
   get diceImageIndex(): number { return this._diceImageIndex; }
 
-  set diceImageType( type:string ){ this._diceImageType = type ; }
+  set diceImageType( type: string ){ this._diceImageType = type ; }
   set diceImageIndex( index: number ){ this._diceImageIndex = index; }
-  
-  get diceImageIdentifier(): string { 
-    if( this.diceImageType != ""){
-      return this.diceImageType + "_dice" + "[" + this.diceImageIndex.toString().padStart(2,'0') + "]"; 
+
+  get diceImageIdentifier(): string {
+    if ( this.diceImageType != ''){
+      return this.diceImageType + '_dice' + '[' + this.diceImageIndex.toString().padStart(2, '0') + ']';
     }else{
-      return "";
+      return '';
     }
   }
 

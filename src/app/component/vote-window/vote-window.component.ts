@@ -20,17 +20,17 @@ import { Vote, VoteContext } from '@udonarium/vote';
   styleUrls: ['./vote-window.component.css']
 
 })
-export class VoteWindowComponent implements AfterViewInit,OnInit, OnDestroy {
+export class VoteWindowComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private timestamp = 0;
   get vote(): Vote { return ObjectStore.instance.get<Vote>('Vote'); }
-  get answerList(): VoteContext[] { return this.vote.voteAnswer }
+  get answerList(): VoteContext[] { return this.vote.voteAnswer; }
 
   numberOfVote(index: number): number{
     const list: VoteContext[] = this.answerList;
     let count = 0;
-    for(let ans of list){
-      if(ans.answer == index )count ++;
+    for (let ans of list){
+      if (ans.answer == index )count ++;
     }
     return count;
   }
@@ -52,15 +52,15 @@ export class VoteWindowComponent implements AfterViewInit,OnInit, OnDestroy {
     private changeDetectionRef: ChangeDetectorRef,
     private chatMessageService: ChatMessageService,
     private ngZone: NgZone
-  ) { 
+  ) {
     this.timestamp = this.vote.initTimeStamp;
   }
 
   ngOnInit() {
     EventSystem.register(this)
-      .on('END_OLD_VOTE', event => { 
+      .on('END_OLD_VOTE', event => {
         console.log('古い投票を終了');
-        if( this.timestamp != this.vote.initTimeStamp ){
+        if ( this.timestamp != this.vote.initTimeStamp ){
           this.panelService.close();
         }
       });
@@ -95,7 +95,7 @@ export class VoteWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(!this.isMyVoteEnd() && this.timestamp == this.vote.initTimeStamp){
+    if (!this.isMyVoteEnd() && this.timestamp == this.vote.initTimeStamp){
       this.vote.voting(null, PeerCursor.myCursor.peerId );
       let text = this.vote.isRollCall ? '点呼：' : '投票：';
       text += '棄権しました' + '(' + this.vote.votedTotalNum() + '/' + this.answerList.length + ')';

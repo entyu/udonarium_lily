@@ -25,10 +25,10 @@ import { Vote, VoteContext } from '@udonarium/vote';
 })
 export class VoteMenuComponent implements OnInit, OnDestroy {
 
-  private initTimestamp : number = 0;
+  private initTimestamp = 0;
   networkService = Network;
   voteContentsText = '';
-  voteTitle = '投票'
+  voteTitle = '投票';
   isRollCall = true;
   includSelf = false;
 
@@ -62,31 +62,31 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
 
   setDefaultCheck(){
     const list = this.peerList;
-    for( let peer of list ){
-      let box = <HTMLInputElement>document.getElementById(peer.peerId + '_' + this.initTimestamp);
-      if(box){
+    for ( let peer of list ){
+      let box = <HTMLInputElement> document.getElementById(peer.peerId + '_' + this.initTimestamp);
+      if (box){
         box.checked = !this.isPeerIsDisConnect(peer.peerId);
       }
     }
   }
 
-  selectedNum():number{
+  selectedNum(): number{
     return this.selectedList().length;
   }
 
-  selectedList():string[] {
+  selectedList(): string[] {
     let count = 0;
     const list = this.peerList;
     let sendList: string[] = [];
-    for( let peer of list ){
-      let box = <HTMLInputElement>document.getElementById(peer.peerId + '_' + this.initTimestamp);
-      if(box){
-        if(box.checked){
+    for ( let peer of list ){
+      let box = <HTMLInputElement> document.getElementById(peer.peerId + '_' + this.initTimestamp);
+      if (box){
+        if (box.checked){
           sendList.push(peer.peerId);
         }
       }
     }
-    if(this.includSelf ){
+    if (this.includSelf ){
       sendList.push(this.myPeer.peerId);
     }
     return sendList;
@@ -95,10 +95,10 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   send(){
     let vote = this.vote;
     let voteTitle: string;
-    let choicesInput: string = this.voteContentsText.replace(/\s*$/i,'').replace(/^\s*/i,'');
+    let choicesInput: string = this.voteContentsText.replace(/\s*$/i, '').replace(/^\s*/i, '');
     let startMessage: string;
 
-    if(this.isRollCall ){
+    if (this.isRollCall ){
       choicesInput = '準備完了';
       startMessage = '点呼開始！';
       voteTitle = '点呼';
@@ -110,7 +110,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
     let choices = choicesInput.split(/\s+/i);
     let peerList = this.selectedList();
 
-    vote.makeVote(PeerCursor.myCursor.peerId ,voteTitle , peerList , choices ,this.isRollCall);
+    vote.makeVote(PeerCursor.myCursor.peerId , voteTitle , peerList , choices , this.isRollCall);
     vote.startVote();
     this.chatMessageService.sendSystemMessageLastSendCharactor(startMessage);
     this.panelService.close();
@@ -121,12 +121,12 @@ export class VoteMenuComponent implements OnInit, OnDestroy {
   }
 
   onChangeType(name){
-    let box = <HTMLInputElement>document.getElementById('rollcall' + '_' + this.initTimestamp);
+    let box = <HTMLInputElement> document.getElementById('rollcall' + '_' + this.initTimestamp);
     this.isRollCall = box.checked;
   }
 
   voteBlockClick(id){
-    let box = <HTMLInputElement>document.getElementById(id + '_' + this.initTimestamp);
+    let box = <HTMLInputElement> document.getElementById(id + '_' + this.initTimestamp);
     box.checked = !box.checked;
   }
 
