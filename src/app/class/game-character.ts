@@ -320,10 +320,98 @@ export class GameCharacter extends TabletopObject {
     palette.initialize();
     this.appendChild(palette);
     this.addExtendData();
+  }
 
+  decreaseBuffRound(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let sum: number;
+        oldNumS = (data.value as string);
+        sum = parseInt(oldNumS);
+        sum = sum - 1;
+        data.value = sum;
+      }
+    }
+  }
 
+  deleteZeroRoundBuff(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let num: number;
+        oldNumS = (data.value as string);
+        num = parseInt(oldNumS);
+        if ( num <= 0){
+        data.destroy();
+        }
+      }
+    }
+  }
 
+  addBuffRound(name: string, _info?: string , _round?: number){
+    let info = '';
+    let round = 3;
 
+    if(_info ){
+      info = _info;
+    }
+
+    if(_round ){
+      round = _round;
+    }
+
+    if(this.buffDataElement.children){
+      let dataElm = this.buffDataElement.children[0];
+      let data = this.buffDataElement.getFirstElementByName( name );
+      if ( data ){
+        data.value = round;
+        data.currentValue = info;
+      }else{
+        dataElm.appendChild(DataElement.create(name, round , { type: 'numberResource', currentValue: info }, ));
+      }
+    }
+  }
+
+  changeStatusValue(name: string, type: string, addValue: number, limitMin ?: boolean ,limitMax ?: boolean ): string{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    let text = '';
+
+    console.log(data + name);
+    if ( data ){
+      let oldNumS = '';
+      let newNum: number;
+      let sum: number;
+
+      if ( type == 'value') {
+        oldNumS = (data.value as string);
+        sum = parseInt(oldNumS);
+        sum = sum + addValue;
+        data.value = sum;
+        newNum = (data.value as number);
+      }
+
+      let maxRecoveryMess = '';
+      if ( type == 'currentValue'){
+        oldNumS = (data.currentValue as string);
+        sum = parseInt(oldNumS);
+        sum = sum + addValue;
+        data.currentValue = sum;
+        if ( limitMax && data.currentValue >= data.value ){
+          maxRecoveryMess = '(最大)';
+          data.currentValue = data.value;
+        }
+        if ( limitMin && data.currentValue <= 0 ){
+          maxRecoveryMess = '(最小)';
+          data.currentValue = 0;
+        }
+        newNum = (data.currentValue as number);
+      }
+      text = text + '[' + this.name + ' ' + oldNumS + '>' + newNum + maxRecoveryMess + '] ';
+    }
+    return text;
   }
 
 }
