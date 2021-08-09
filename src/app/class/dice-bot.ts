@@ -36,7 +36,6 @@ interface ResourceEdit {
   command: string;
   isDiceRoll: boolean;
   calcAns: number;
-  charactor: GameCharacter;
   option: ResourceEditOption;
 }
 
@@ -557,7 +556,6 @@ export class DiceBot extends GameObject {
         command: '',
         isDiceRoll: false,
         calcAns: 0,
-        charactor : object,
         option : null
       };
 
@@ -603,18 +601,13 @@ export class DiceBot extends GameObject {
       try {
         const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameSystem);
         if (!rollResult.result) { return null; }
-
         const splitResult = rollResult.result.split(' ＞ ');
         oneResourceEdit.diceResult = splitResult[splitResult.length - 2].replace(/\+\(1\[1\]\-1\)$/, '');
-
         const resultMatch = rollResult.result.match(/([-+]?\d+)$/); // 計算結果だけ格納
-        console.log( 'calcAns:' + resultMatch[1]);
-
         oneResourceEdit.calcAns = parseInt(resultMatch[1], 10);
       } catch (e) {
         console.error(e);
       }
-      console.log( 'target:' + oneResourceEdit.target + ' operator:' + oneResourceEdit.operator + ' command:' + oneResourceEdit.command + ' ans:' + oneResourceEdit.calcAns);
       allEditList.push( oneResourceEdit );
     }
 
@@ -628,31 +621,15 @@ export class DiceBot extends GameObject {
     return;
   }
 
-/*
-  private chkBuffCommand(command: string){
-    if( command.match(/^[&＆]R[-+]$/i) ){
-      return true;
-    }else if( command.match(/^[&＆]D$/i) ){
-      return true;
-    }else if( command.match(/^[&＆].+[-]$/i) ){
-      return true;
-    }else if( command.split('/').length <= 3 ){
-      return true;
-    }
-    return false;
-  }
-*/
   private resourceBuffEdit( allEditList: ResourceEdit[] , buffList: string[], originalMessage: ChatMessage ,character: GameCharacter){
     let text = '';
-    
-    console.log('resourceBuffEdit');
-    let calc = 0;
+// リソース処理
     let isDiceRoll = false;
     for ( const edit of allEditList) {
       let optionText = '';
-      let oldNum = edit.charactor.getStatusValue(edit.target, 'now');
+      let oldNum = character.getStatusValue(edit.target, 'now');
       let newNum :number = 0;
-      let maxNum = edit.charactor.getStatusValue(edit.target, 'max');
+      let maxNum = character.getStatusValue(edit.target, 'max');
 
       if (edit.operator == '=') {
         newNum = edit.calcAns;
@@ -678,35 +655,51 @@ export class DiceBot extends GameObject {
           optionText = '(最小)';
         }
       }
-      edit.charactor.setStatusValue(edit.target, 'now',newNum);
+      character.setStatusValue(edit.target, 'now',newNum);
       const operatorText = edit.operator == '-' ? '' : edit.operator;
       text += edit.target + ':' + oldNum + operatorText + edit.diceResult + '＞' + newNum + optionText + '    ';
       if ( edit.isDiceRoll ) { isDiceRoll = true; }
     }
-    text = text.replace(/\s\s\s\s$/, '');
-
-/*
-    let buffReslt = '';
+// バフ処理
     for ( let command of buffList) {
       if( command.match(/^&R-$/i) ){
-        
-      }else if( command.match(/^&R-$/i) ){
-        
+        character.decreaseBuffRound();
+        text += 'バフRを減少';
+        text += '    ';
+      }else if( command.match(/^&R[+]$/i) ){
+        character.decreaseBuffRound();
+        text += 'バフRを増加';
+        text += '    ';
       }else if( command.match(/^&D$/i) ){
-
+        character.deleteZeroRoundBuff();
+        text += '0R以下のバフを消去';
+        text += '    ';
       }else if( command.match(/^&.+-$/i) ){
-
+        let match = command.match(/^&(.+)-$/i)
+        console.log('match'+match);
+        const reg1 = match[1];
+        if(character.deleteBuff(reg1) ){
+          text += reg1 + 'を消去';
+          text += '    ';
+        }
       }else{
-        const addCommand = command.split('/');
-        const reg1 = addCommand[0];
-        const reg2 = addCommand.length>1 ? addCommand[1] : '';
-        const reg3 = addCommand.length>2 ? addCommand[2] : '';
-        
-        
+        const splittext = command.replace(/^&/i,'').split('/');
+        let round = 3;
+        let sub = '';
+        let buffname = '';
+        let bufftext = '';
+        buffname = splittext[0];
+        bufftext = splittext[0];
+        if ( splittext.length > 1){ sub = splittext[1]; bufftext = bufftext + '/' + splittext[1]; }
+        if ( splittext.length > 2){ round = parseInt(splittext[2]); bufftext = bufftext + '/' + round + 'R'; }
+        character.addBuffRound(buffname, sub, round);
+        text += 'バフを付与 ' + bufftext;
+        text += '    ';
       }
     }
-*/
-    console.log( 'text:' + text);
+    text = text.replace(/\s\s\s\s$/, '');
+
+    if( text == '')return;
     let fromText;
     let nameText;
     if ( isDiceRoll ){
@@ -728,10 +721,8 @@ export class DiceBot extends GameObject {
       text,
       messColor: originalMessage.messColor
     };
-
     const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
     if (chatTab) { chatTab.addMessage(resourceMessage); }
-
   }
 
   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {

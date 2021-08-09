@@ -322,6 +322,17 @@ export class GameCharacter extends TabletopObject {
     this.addExtendData();
   }
 
+  deleteBuff(name: string):boolean{
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      const data = (dataElm as DataElement).getFirstElementByName(name);
+      if(!data)return false;
+      data.destroy();
+      return true;
+    }
+    return false;
+  }
+
   decreaseBuffRound(){
     if (this.buffDataElement.children){
       const dataElm = this.buffDataElement.children[0];
@@ -331,6 +342,20 @@ export class GameCharacter extends TabletopObject {
         oldNumS = (data.value as string);
         sum = parseInt(oldNumS);
         sum = sum - 1;
+        data.value = sum;
+      }
+    }
+  }
+
+  increaseBuffRound(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let sum: number;
+        oldNumS = (data.value as string);
+        sum = parseInt(oldNumS);
+        sum = sum + 1;
         data.value = sum;
       }
     }
@@ -354,15 +379,12 @@ export class GameCharacter extends TabletopObject {
   addBuffRound(name: string, _info?: string , _round?: number){
     let info = '';
     let round = 3;
-
     if(_info ){
       info = _info;
     }
-
     if(_round ){
       round = _round;
     }
-
     if(this.buffDataElement.children){
       let dataElm = this.buffDataElement.children[0];
       let data = this.buffDataElement.getFirstElementByName( name );
@@ -438,7 +460,6 @@ export class GameCharacter extends TabletopObject {
     if(!data)return false;
     let type = this.getStatusType(name, nowOrMax);
     let text = '';
-
     if(type == null) return false;
 
     if ( type == 'value') {
@@ -464,7 +485,6 @@ export class GameCharacter extends TabletopObject {
     if ( type == 'value') {
       this.setStatusValue(name, nowOrMax, sum);
     }
-
     let maxRecoveryMess = '';
     if ( type == 'currentValue'){
       if ( sum >= data.value && limitMax){
