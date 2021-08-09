@@ -31,16 +31,12 @@ interface ResourceEditOption {
 
 interface ResourceEdit {
   target: string;
-  targetHalfWidth: string;
   operator: string;
   diceResult: string;
   command: string;
   isDiceRoll: boolean;
-
-  hitName: string;
   calcAns: number;
-  detaElm: DataElement;
-  
+  charactor: GameCharacter;
   option: ResourceEditOption;
 }
 
@@ -481,27 +477,34 @@ export class DiceBot extends GameObject {
     if (chatTab) { chatTab.addMessage(diceBotMessage); }
   }
 
+
   private checkResourceEditCommand( originalMessage: ChatMessage ){
     const splitText = originalMessage.text.split(/\s/);
-    let result = null;
+    let resourceCommand: string[] = [];
+    let buffCommand: string[] = [];
 
     const allEditList: ResourceEdit[] = null;
 
-    console.log( 'checkResourceEditCommand' + splitText);
+    console.log( 'splitText' + splitText);
 
     for (const chktxt of splitText) {
       console.log('chktxt' + chktxt);
-      if (chktxt.match(/^[:：].+/gi)) {
-        console.log( 'checkResourceEditCommand 2');
+      if (chktxt.match(/^[:：&＆]/i)) {
 
-        result = chktxt.match(/[:：][^:：]+/gi);
-        if ( result ){
-          this.resourceEditProcess( result , originalMessage );
+        let resultRes = chktxt.match(/[:：][^:：&＆]+/gi);
+        let resultBuff = chktxt.match(/[&＆][^:：&＆]+/gi);
+        if ( resultRes ){
+          resourceCommand = resourceCommand.concat(resultRes);
+        }
+        if ( resultBuff ){
+          buffCommand = buffCommand.concat(resultBuff);
         }
       }
     }
-  }
 
+    console.log( 'checkResourceEditCommand' + resourceCommand);
+    this.resourceEditProcess( resourceCommand , buffCommand, originalMessage );
+  }
 
   resourceEditParseOption( text : string): ResourceEditOption{
 
@@ -533,7 +536,7 @@ export class DiceBot extends GameObject {
     return ans;
   }
 
-  async resourceEditProcess( result: string[] , originalMessage: ChatMessage){
+  async resourceEditProcess(resourceCommand: string[], buffCommand: string[], originalMessage: ChatMessage){
 
     const object = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
     if (object instanceof GameCharacter) {
@@ -544,32 +547,28 @@ export class DiceBot extends GameObject {
     }
 
     const allEditList: ResourceEdit[] = [];
-    let data: DataElement ;
     const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tags ? originalMessage.tags[0] : '');
 
-
-    for ( const oneText of result ){
+    for ( const oneText of resourceCommand ){
       const oneResourceEdit: ResourceEdit = {
         target: '',
-        targetHalfWidth: '',
         operator: '',
         diceResult: '',
         command: '',
         isDiceRoll: false,
-        hitName: '',
         calcAns: 0,
-        detaElm : null,
+        charactor : object,
         option : null
       };
 
       const replaceText = oneText.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=');
-
       console.log('リソース変更：' + replaceText);
       const resourceEditRegExp = /[:]([^-+=]+)([-+=])(.+)/;
       const resourceEditResult = replaceText.match(resourceEditRegExp);
       if (!resourceEditResult) { return ; }
 
       const reg1: string = resourceEditResult[1];
+      const reg1HalfWidth: string = StringUtil.toHalfWidth(reg1);
       const reg2: string = resourceEditResult[2];
       const reg3: string = resourceEditResult[3].replace(/[A-CE-ZＡ-ＣＥ-Ｚ]+$/i, '');
 
@@ -581,8 +580,14 @@ export class DiceBot extends GameObject {
       }
       oneResourceEdit.option = optionCommand;
 
-      oneResourceEdit.target = reg1;                                                       // 操作対象検索文字タイプ生値
-      oneResourceEdit.targetHalfWidth = StringUtil.toHalfWidth(reg1);                    // 操作対象検索文字半角化
+      if(object.chkChangeStatusValue(reg1,'now')){
+        oneResourceEdit.target = reg1;                             // 操作対象検索文字タイプ生値
+      }else if(object.chkChangeStatusValue(reg1HalfWidth, 'now')){
+        oneResourceEdit.target = reg1HalfWidth;                    // 操作対象検索文字半角化
+      }else{
+        return ; // 対象なし実行失敗
+      }
+
       oneResourceEdit.operator = reg2;                                                 // 演算符号
       const commandPrefix = reg2 == '-' ? '-' : '';
       oneResourceEdit.command = commandPrefix + StringUtil.toHalfWidth(reg3) + '+(1d1-1)';
@@ -593,23 +598,6 @@ export class DiceBot extends GameObject {
       } else {
         oneResourceEdit.isDiceRoll = false;
       }
-
-      // 操作対象検索
-      data = object.detailDataElement.getFirstElementByName(oneResourceEdit.target);
-      if (data) {
-        oneResourceEdit.hitName = oneResourceEdit.target;
-        oneResourceEdit.detaElm = data;
-      } else {
-        data =  object.detailDataElement.getFirstElementByName(oneResourceEdit.targetHalfWidth);
-        if (data) {
-          oneResourceEdit.hitName = oneResourceEdit.targetHalfWidth;
-          oneResourceEdit.detaElm = data;
-        } else {
-          // 検索リソースヒットせず
-          return ; // 実行失敗
-        }
-      }
-      console.log('oneResourceEdit.detaElm :V' + oneResourceEdit.detaElm.value + ' cV ' + oneResourceEdit.detaElm.currentValue);
 
       // ダイスロール及び四則演算
       try {
@@ -630,71 +618,94 @@ export class DiceBot extends GameObject {
       allEditList.push( oneResourceEdit );
     }
 
-    this.resourceEdit( allEditList , originalMessage);
+    let repBuffCommandList :string[] = [];
+    for ( const oneText of buffCommand ){
+      const replaceText = oneText.replace('＆', '&').replace('＋', '+').replace('－', '-').replace('＝', '=');
+      repBuffCommandList.push(replaceText);
+    }
+
+    this.resourceBuffEdit( allEditList ,repBuffCommandList, originalMessage, object);
     return;
   }
 
-  private resourceEdit( allEditList: ResourceEdit[] , originalMessage: ChatMessage){
+/*
+  private chkBuffCommand(command: string){
+    if( command.match(/^[&＆]R[-+]$/i) ){
+      return true;
+    }else if( command.match(/^[&＆]D$/i) ){
+      return true;
+    }else if( command.match(/^[&＆].+[-]$/i) ){
+      return true;
+    }else if( command.split('/').length <= 3 ){
+      return true;
+    }
+    return false;
+  }
+*/
+  private resourceBuffEdit( allEditList: ResourceEdit[] , buffList: string[], originalMessage: ChatMessage ,character: GameCharacter){
     let text = '';
-    let oldValueS = '';
-    const oldValue = 0;
-
+    
+    console.log('resourceBuffEdit');
     let calc = 0;
     let isDiceRoll = false;
     for ( const edit of allEditList) {
       let optionText = '';
-      if (edit.detaElm.type == 'numberResource') {
-        oldValueS = (edit.detaElm.currentValue as string) ;
-        if (edit.operator == '=') {
-          calc = edit.calcAns;
-        } else {
-          const flag = edit.option.zeroLimit;
-          if (flag && edit.operator == '+' && (edit.calcAns < 0)) {
-            calc = parseInt(oldValueS, 10) + 0;
-            optionText = '(0制限)';
-          }else if (flag && edit.operator == '-' && (edit.calcAns > 0)) {
-            calc = parseInt(oldValueS, 10) + 0;
-            optionText = '(0制限)';
-          }else{
-            calc = parseInt(oldValueS, 10) + edit.calcAns;
-          }
-        }
-        if (edit.option.limitMinMax){
-          if (calc > parseInt(edit.detaElm.value as string, 10)){
-            calc = parseInt(edit.detaElm.value as string, 10);
-            optionText = '(最大)';
-          }
-          if (calc < 0 ){
-            calc = 0;
-            optionText = '(最小)';
-          }
-        }
-        edit.detaElm.currentValue = calc;
+      let oldNum = edit.charactor.getStatusValue(edit.target, 'now');
+      let newNum :number = 0;
+      let maxNum = edit.charactor.getStatusValue(edit.target, 'max');
 
-      } else if (edit.detaElm.type != 'note') {
-        oldValueS = (edit.detaElm.value as string) ;
-        if (edit.operator == '=') {
-          calc = edit.calcAns;
+      if (edit.operator == '=') {
+        newNum = edit.calcAns;
+      } else {
+        const flag = edit.option.zeroLimit;
+        if (flag && edit.operator == '+' && (edit.calcAns < 0)) {
+          newNum = oldNum + 0;
+          optionText = '(0制限)';
+        }else if (flag && edit.operator == '-' && (edit.calcAns > 0)) {
+          newNum = oldNum + 0;
+          optionText = '(0制限)';
         }else{
-          const flag = edit.option.zeroLimit;
-          if (flag && edit.operator == '+' && (edit.calcAns < 0)) {
-            calc = parseInt(oldValueS, 10) + 0;
-            optionText = '(0制限)';
-          }else if (flag && edit.operator == '-' && (edit.calcAns > 0)) {
-            calc = parseInt(oldValueS, 10) + 0;
-            optionText = '(0制限)';
-          }else{
-            calc = parseInt(oldValueS, 10) + edit.calcAns;
-          }
+          newNum = oldNum + edit.calcAns;
         }
-        edit.detaElm.value = calc;
       }
+      if (edit.option.limitMinMax && maxNum != null){
+        if (newNum > maxNum){
+          newNum = maxNum;
+          optionText = '(最大)';
+        }
+        if (newNum < 0 ){
+          newNum = 0;
+          optionText = '(最小)';
+        }
+      }
+      edit.charactor.setStatusValue(edit.target, 'now',newNum);
       const operatorText = edit.operator == '-' ? '' : edit.operator;
-      text += edit.hitName + ':' + oldValueS + operatorText + edit.diceResult + '＞' + calc + optionText + '    ';
+      text += edit.target + ':' + oldNum + operatorText + edit.diceResult + '＞' + newNum + optionText + '    ';
       if ( edit.isDiceRoll ) { isDiceRoll = true; }
     }
     text = text.replace(/\s\s\s\s$/, '');
 
+/*
+    let buffReslt = '';
+    for ( let command of buffList) {
+      if( command.match(/^&R-$/i) ){
+        
+      }else if( command.match(/^&R-$/i) ){
+        
+      }else if( command.match(/^&D$/i) ){
+
+      }else if( command.match(/^&.+-$/i) ){
+
+      }else{
+        const addCommand = command.split('/');
+        const reg1 = addCommand[0];
+        const reg2 = addCommand.length>1 ? addCommand[1] : '';
+        const reg3 = addCommand.length>2 ? addCommand[2] : '';
+        
+        
+      }
+    }
+*/
     console.log( 'text:' + text);
     let fromText;
     let nameText;

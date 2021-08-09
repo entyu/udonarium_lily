@@ -102,20 +102,20 @@
                   <div *ngSwitchCase="'numberResource'">
                     <label >
                       <input name="controller" type="radio" value="{{dataElm.name + '現在値'}}" 
-                      ng-control="options" (click)="remoteSelect(dataElm.name,'currentValue',(dataElm.name + '現在値'))" />
+                      ng-control="options" (click)="remoteSelect(dataElm.name,'now',(dataElm.name + '現在値'))" />
                       <div>{{dataElm.name + '現在値'}}</div>
                     </label>
 
                     <label >
                       <input name="controller" type="radio" value="{{dataElm.name + '最大値'}}"
-                      ng-control="options" (click)="remoteSelect(dataElm.name,'value',(dataElm.name + '最大値'))" />
+                      ng-control="options" (click)="remoteSelect(dataElm.name,'max',(dataElm.name + '最大値'))" />
                       <div>{{dataElm.name + '最大値'}}</div>
                     </label>
                   </div>
 
                   <label *ngSwitchDefault>
                     <input name="controller" type="radio" value="{{dataElm.name}}" 
-                     ng-control="options" (click)="remoteSelect(dataElm.name,'value',dataElm.name)" />
+                     ng-control="options" (click)="remoteSelect(dataElm.name,'now',dataElm.name)" />
                     <div>{{dataElm.name}}</div>
                   </label>
 

@@ -29,7 +29,7 @@ import { GameCharacterBuffViewComponent } from 'component/game-character-buff-vi
 
 class RemoteControllerSelect {
     name: string;
-    type: string;
+    nowOrMax: string;
     dispName: string;
 }
 
@@ -113,7 +113,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
 
   remoteControllerSelect: RemoteControllerSelect = {
     name : '',
-    type : '',
+    nowOrMax : '',
     dispName : ''
   };
   remoteControllerRadio = '';
@@ -146,9 +146,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     this.remoteNumber = -this.remoteNumber;
   }
 
-  remoteSelect( name: string , type: string , dispName: string ){
+  remoteSelect( name: string , nowOrMax: string , dispName: string ){
     this.remoteControllerSelect.name = name;
-    this.remoteControllerSelect.type = type;
+    this.remoteControllerSelect.nowOrMax = nowOrMax;
     this.remoteControllerSelect.dispName = dispName;
   }
 
@@ -430,9 +430,9 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     }
     for (const object of gameCharacters){
       const name = this.remoteControllerSelect.name;
-      const type = this.remoteControllerSelect.type;
+      const nowOrMax = this.remoteControllerSelect.nowOrMax;
       const addValue = this.remoteNumber;
-      text += object.changeStatusValue(name, type, addValue, this.recoveryLimitFlagMin, this.recoveryLimitFlag );
+      text += object.changeStatusValue(name, nowOrMax, addValue, this.recoveryLimitFlagMin, this.recoveryLimitFlag );
     }
     if ( text != '' ){
       let hugou = '+';
