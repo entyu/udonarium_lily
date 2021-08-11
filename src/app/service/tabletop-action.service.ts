@@ -168,18 +168,6 @@ export class TabletopActionService {
     tableSelecter.viewTableIdentifier = gameTable.identifier;
   }
 
-
-  //バフ追加
-  addBuffRound(character :GameCharacter,name:string,subcom:string,round:number){
-    // @ts-ignore
-    if(character.buffDataElement.children){
-      for (let dataElm of character.buffDataElement.children){
-        dataElm.appendChild(DataElement.create(name, round , { 'type': 'numberResource', 'currentValue': subcom }, name + '_' + character.identifier ));
-        return;
-      }
-    }
-  }
-
   initAprilDiceImage(){
     let file: ImageFile = null;
     let fileContext: ImageContext = null;
@@ -371,7 +359,7 @@ export class TabletopActionService {
     ImageTag.create(testFile.identifier).tag = 'モンスター';    //本家PR #92より
 
     testCharacter.createTestGameDataElement('モンスターA', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ1' , '防+1' , 3);
+    testCharacter.addBuffRound('テストバフ1' , '防+1' );
 
     //-------------------------
     testCharacter = new GameCharacter('testCharacter_2');
@@ -407,7 +395,7 @@ export class TabletopActionService {
     testCharacter.location.y = 11 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターA', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ2' , '攻撃+10' , 1);
+    testCharacter.addBuffRound('テストバフ2' , '攻撃+10' , 1);
     
     //-------------------------
     testCharacter = new GameCharacter('testCharacter_5');
@@ -418,7 +406,7 @@ export class TabletopActionService {
     testCharacter.location.y = 12 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターB', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ2' , '攻撃+10' , 1);
+    testCharacter.addBuffRound('テストバフ2' , '攻撃+10' , 1);
 
     //-------------------------
 
@@ -433,7 +421,7 @@ export class TabletopActionService {
     testCharacter.location.x = 5 * 50;
     testCharacter.location.y = 13 * 50;
     testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ3' , '回避+5' , 1);
+    testCharacter.addBuffRound('テストバフ3' );
     
   }
 

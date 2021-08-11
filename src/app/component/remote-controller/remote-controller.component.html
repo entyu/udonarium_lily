@@ -46,16 +46,16 @@
               <span *ngIf="isEdit">バフパレット確定</span>
             </button>
             <BR>
-            <button type="submit" (click)="remotBuffRoundSelect()" style="width:10em">
+            <button type="submit" (click)="decBuffRoundSelect()" style="width:10em">
             <span>バフR減少/選択</span>
             </button>
-            <button type="submit" (click)="remotBuffRoundALL()" style="width:10em">
+            <button type="submit" (click)="decBuffRoundAll()" style="width:10em">
               <span>バフR減少/全員</span>
             </button>
-            <button type="submit" (click)="remotBuffDeleteZeroRoundSelect()" style="width:10em">
+            <button type="submit" (click)="deleteZeroRoundBuffSelect()" style="width:10em">
               <span>0R以下消去/選択</span>
             </button>
-            <button type="submit" (click)="remotBuffDeleteZeroRoundALL()" style="width:10em">
+            <button type="submit" (click)="deleteZeroRoundBuffAll()" style="width:10em">
               <span>0R以下消去/全員</span>
             </button>
           </div>
@@ -75,11 +75,11 @@
       <div>
         変更量
         <input style="width: 3.0em;   font-size: 1.2em;" size="1" 
-        type="number" [(ngModel)]="this.remotNumber" placeholder="Value" />
+        type="number" [(ngModel)]="this.remoteNumber" placeholder="Value" />
         <button (click)="reverseValue()" >
           <span > ± </span>
         </button>
-        <button type="submit"  (click)="remotChangeValue()" >
+        <button type="submit"  (click)="remoteChangeValue()" >
           <span >操作</span>
         </button>
         <div style="float:right;text-align:right;margin-top:5px;">
@@ -102,20 +102,20 @@
                   <div *ngSwitchCase="'numberResource'">
                     <label >
                       <input name="controller" type="radio" value="{{dataElm.name + '現在値'}}" 
-                      ng-control="options" (click)="remotSelect(dataElm.name,'currentValue',(dataElm.name + '現在値'))" />
+                      ng-control="options" (click)="remoteSelect(dataElm.name,'now',(dataElm.name + '現在値'))" />
                       <div>{{dataElm.name + '現在値'}}</div>
                     </label>
 
                     <label >
                       <input name="controller" type="radio" value="{{dataElm.name + '最大値'}}"
-                      ng-control="options" (click)="remotSelect(dataElm.name,'value',(dataElm.name + '最大値'))" />
+                      ng-control="options" (click)="remoteSelect(dataElm.name,'max',(dataElm.name + '最大値'))" />
                       <div>{{dataElm.name + '最大値'}}</div>
                     </label>
                   </div>
 
                   <label *ngSwitchDefault>
                     <input name="controller" type="radio" value="{{dataElm.name}}" 
-                     ng-control="options" (click)="remotSelect(dataElm.name,'value',dataElm.name)" />
+                     ng-control="options" (click)="remoteSelect(dataElm.name,'now',dataElm.name)" />
                     <div>{{dataElm.name}}</div>
                   </label>
 

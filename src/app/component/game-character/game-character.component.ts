@@ -25,6 +25,7 @@ import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.s
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
+import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component';
 
 @Component({
   selector: 'game-character',
@@ -152,6 +153,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
       { name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } },
+      { name: 'バフ編集', action: () => { this.showBuffEdit(this.gameCharacter) } },
       ContextMenuSeparator,
       {
         name: '共有イベントリに移動', action: () => {
@@ -218,4 +220,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let component = this.panelService.open<RemoteControllerComponent>(RemoteControllerComponent, option);
     component.character = gameObject;
   }
+
+  private showBuffEdit(gameObject: GameCharacter) {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 420, height: 300 };
+    option.title = gameObject.name + 'のバフ編集';
+    let component = this.panelService.open<GameCharacterBuffViewComponent>(GameCharacterBuffViewComponent, option);
+    component.character = gameObject;
+  }
+
 }

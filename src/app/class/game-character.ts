@@ -320,10 +320,216 @@ export class GameCharacter extends TabletopObject {
     palette.initialize();
     this.appendChild(palette);
     this.addExtendData();
+  }
+
+  deleteBuff(name: string):boolean{
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      const data = (dataElm as DataElement).getFirstElementByName(name);
+      if(!data)return false;
+      data.destroy();
+      return true;
+    }
+    return false;
+  }
+
+  decreaseBuffRound(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let sum: number;
+        oldNumS = (data.value as string);
+        sum = parseInt(oldNumS);
+        sum = sum - 1;
+        data.value = sum;
+      }
+    }
+  }
+
+  increaseBuffRound(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let sum: number;
+        oldNumS = (data.value as string);
+        sum = parseInt(oldNumS);
+        sum = sum + 1;
+        data.value = sum;
+      }
+    }
+  }
+
+  deleteZeroRoundBuff(){
+    if (this.buffDataElement.children){
+      const dataElm = this.buffDataElement.children[0];
+      for (const data  of dataElm.children){
+        let oldNumS = '';
+        let num: number;
+        oldNumS = (data.value as string);
+        num = parseInt(oldNumS);
+        if ( num <= 0){
+        data.destroy();
+        }
+      }
+    }
+  }
+
+  addBuffRound(name: string, _info?: string , _round?: number){
+    let info = '';
+    let round = 3;
+    if(_info ){
+      info = _info;
+    }
+    if(_round ){
+      round = _round;
+    }
+    if(this.buffDataElement.children){
+      let dataElm = this.buffDataElement.children[0];
+      let data = this.buffDataElement.getFirstElementByName( name );
+      if ( data ){
+        data.value = round;
+        data.currentValue = info;
+      }else{
+        dataElm.appendChild(DataElement.create(name, round , { type: 'numberResource', currentValue: info }, ));
+      }
+    }
+  }
+
+  chkChangeStatus(name: string, nowOrMax: string): boolean{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return false;
+    if(data.type == 'numberResource'){
+      if(nowOrMax == 'now' || nowOrMax =='max'){
+        return true;
+      }
+    }else if(data.type == ''){
+      if(nowOrMax == 'now'){
+        return true;
+      }
+    }else if(data.type == 'note'){
+      if(nowOrMax == 'now'){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getStatusType(name: string, nowOrMax: string): string{
+    let type = '';
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return null;
+    
+    if(data.type == 'numberResource'){
+      if(nowOrMax == 'now'){
+        type = 'currentValue';
+      }else if(nowOrMax == 'max'){
+        type = 'value';
+      }
+    }else if(data.type == ''){
+      if(nowOrMax == 'now'){
+        type = 'value';
+      }else{
+        return null;
+      }
+    }else{
+      return null;
+    }
+    return type;
+  }
+
+  getStatusTextType(name: string): string{
+    let type = '';
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return null;
+    
+    if(data.type == 'numberResource'){
+      type = 'currentValue';
+    }else{
+      type = 'value';
+    }
+    return type;
+  }
+
+  getStatusValue(name: string, nowOrMax: string): number{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return null;
+    let type = this.getStatusType(name, nowOrMax);
+    if(type == null) return null;
+
+    let oldNumS = '';
+    let newNum: number;
+    let sum: number;
+    console.log('getStatusValue type' + type);
+
+    if ( type == 'value') {
+      oldNumS = (data.value as string);
+    }
+    if ( type == 'currentValue'){
+      oldNumS = (data.currentValue as string);
+    }
+    return parseInt(oldNumS);
+  }
+
+  setStatusValue(name: string, nowOrMax: string, setValue: number): boolean{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return false;
+    let type = this.getStatusType(name, nowOrMax);
+    if(type == null) return false;
+
+    if ( type == 'value') {
+      data.value = setValue;
+    }
+    if ( type == 'currentValue'){
+      data.currentValue = setValue;
+    }
+    return true;
+  }
+
+  setStatusText(name: string, text: string): boolean{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return false;
+    let type = this.getStatusTextType(name);
+    if(type == null) return false;
+    if ( type == 'value') {
+      data.value = text;
+    }
+    if ( type == 'currentValue'){
+      data.currentValue = text;
+    }
+    return true;
+  }
 
 
+  changeStatusValue(name: string, nowOrMax: string, addValue: number, limitMin ?: boolean ,limitMax ?: boolean ): string{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    let text = '';
+    let type = this.getStatusType(name, nowOrMax);
+    if(!data)return text;
 
+    let newNum: number;
+    let oldNum :number = this.getStatusValue(name,nowOrMax);
+    if(oldNum == null) return text;
+    let sum = oldNum + addValue;
 
+    if ( type == 'value') {
+      this.setStatusValue(name, nowOrMax, sum);
+    }
+    let maxRecoveryMess = '';
+    if ( type == 'currentValue'){
+      if ( sum >= data.value && limitMax){
+        maxRecoveryMess = '(最大)';
+        sum = this.getStatusValue(name,'max');
+      }
+      if ( limitMin && sum <= 0 && limitMin){
+        maxRecoveryMess = '(最小)';
+        sum = 0;
+      }
+      this.setStatusValue(name, nowOrMax, sum);
+    }
+    text = text + '[' + this.name + ' ' + oldNum + '>' + sum + maxRecoveryMess + '] ';
+    return text;
   }
 
 }
