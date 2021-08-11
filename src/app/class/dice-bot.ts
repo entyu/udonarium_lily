@@ -502,7 +502,7 @@ export class DiceBot extends GameObject {
     this.resourceEditProcess( resourceCommand , buffCommand, originalMessage );
   }
 
-  resourceEditParseOption( text : string): ResourceEditOption{
+  resourceEditParseOption( text: string): ResourceEditOption{
 
     let ans: ResourceEditOption = {
       limitMinMax: false,
@@ -528,16 +528,10 @@ export class DiceBot extends GameObject {
     if (option.length != 0){
       ans.isErr = true;
     }
-
     return ans;
   }
 
-  private replaceEditCalc():boolean{
-    
-    return true;
-  }
-
-  private resourceCommandToEdit(oneResourceEdit: ResourceEdit,text: string,object: GameCharacter):boolean{
+  private resourceCommandToEdit(oneResourceEdit: ResourceEdit, text: string, object: GameCharacter): boolean{
 
     const replaceText = text.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=').replace('＞', '>');
     console.log('リソース変更：' + replaceText);
@@ -550,15 +544,15 @@ export class DiceBot extends GameObject {
     const reg2: string = resourceEditResult[2];
     oneResourceEdit.operator = reg2;                            // 演算符号
 
-    if(object.chkChangeStatus(reg1,'now')){
+    if (object.chkChangeStatus(reg1, 'now')){
       oneResourceEdit.target = reg1;                             // 操作対象検索文字タイプ生値
-    }else if(object.chkChangeStatus(reg1HalfWidth, 'now')){
+    }else if (object.chkChangeStatus(reg1HalfWidth, 'now')){
       oneResourceEdit.target = reg1HalfWidth;                    // 操作対象検索文字半角化
     }else{
       return false; // 対象なし実行失敗
     }
 
-    if( oneResourceEdit.operator == '>' ){
+    if ( oneResourceEdit.operator == '>' ){
       oneResourceEdit.replace = resourceEditResult[3];
     }else{
       let reg3: string = resourceEditResult[3].replace(/[A-CE-ZＡ-ＣＥ-Ｚ]+$/i, '');
@@ -609,9 +603,9 @@ export class DiceBot extends GameObject {
         option : null
       };
 
-      if( !this.resourceCommandToEdit(oneResourceEdit, oneText, object) )return;
+      if ( !this.resourceCommandToEdit(oneResourceEdit, oneText, object) )return;
 
-      if(oneResourceEdit.operator != '>'){
+      if (oneResourceEdit.operator != '>'){
         // ダイスロール及び四則演算
         try {
           const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameSystem);
@@ -627,26 +621,26 @@ export class DiceBot extends GameObject {
       allEditList.push( oneResourceEdit );
     }
 
-    let repBuffCommandList :string[] = [];
+    let repBuffCommandList: string[] = [];
     for ( const oneText of buffCommand ){
       const replaceText = oneText.replace('＆', '&').replace(/＋$/, '+').replace(/－$/, '-');
       repBuffCommandList.push(replaceText);
     }
 
-    this.resourceBuffEdit( allEditList ,repBuffCommandList, originalMessage, object);
+    this.resourceBuffEdit( allEditList , repBuffCommandList, originalMessage, object);
     return;
   }
 
-  private resourceTextEdit(edit: ResourceEdit,character: GameCharacter):string{
+  private resourceTextEdit(edit: ResourceEdit, character: GameCharacter): string{
     character.setStatusText(edit.target, edit.replace);
     let ansText = edit.target + '＞' + edit.replace + '    ';
     return ansText;
   }
 
-  private resourceEdit(edit: ResourceEdit,character: GameCharacter):string{
+  private resourceEdit(edit: ResourceEdit, character: GameCharacter): string{
     let optionText = '';
     let oldNum = character.getStatusValue(edit.target, 'now');
-    let newNum :number = 0;
+    let newNum = 0;
     let maxNum = character.getStatusValue(edit.target, 'max');
 
     if (edit.operator == '=') {
@@ -673,36 +667,36 @@ export class DiceBot extends GameObject {
         optionText = '(最小)';
       }
     }
-    character.setStatusValue(edit.target, 'now',newNum);
+    character.setStatusValue(edit.target, 'now', newNum);
     const operatorText = edit.operator == '-' ? '' : edit.operator;
     const ansText = edit.target + ':' + oldNum + operatorText + edit.diceResult + '＞' + newNum + optionText + '    ';
     return ansText;
   }
 
-  private buffEdit(command: string, character: GameCharacter):string{
+  private buffEdit(command: string, character: GameCharacter): string{
     let text = '';
-    if( command.match(/^&R-$/i) ){
+    if ( command.match(/^&R-$/i) ){
       character.decreaseBuffRound();
       text += 'バフRを減少';
       text += '    ';
-    }else if( command.match(/^&R[+]$/i) ){
+    }else if ( command.match(/^&R[+]$/i) ){
       character.increaseBuffRound();
       text += 'バフRを増加';
       text += '    ';
-    }else if( command.match(/^&D$/i) ){
+    }else if ( command.match(/^&D$/i) ){
       character.deleteZeroRoundBuff();
       text += '0R以下のバフを消去';
       text += '    ';
-    }else if( command.match(/^&.+-$/i) ){
-      let match = command.match(/^&(.+)-$/i)
-      console.log('match'+match);
+    }else if ( command.match(/^&.+-$/i) ){
+      let match = command.match(/^&(.+)-$/i);
+      console.log('match' + match);
       const reg1 = match[1];
-      if(character.deleteBuff(reg1) ){
+      if (character.deleteBuff(reg1) ){
         text += reg1 + 'を消去';
         text += '    ';
       }
     }else{
-      const splittext = command.replace(/^&/i,'').split('/');
+      const splittext = command.replace(/^&/i, '').split('/');
       let round = 3;
       let sub = '';
       let buffname = '';
@@ -717,13 +711,13 @@ export class DiceBot extends GameObject {
     }
     return text;
   }
-  
-  private resourceBuffEdit( allEditList: ResourceEdit[] , buffList: string[], originalMessage: ChatMessage ,character: GameCharacter){
+
+  private resourceBuffEdit( allEditList: ResourceEdit[] , buffList: string[], originalMessage: ChatMessage , character: GameCharacter){
     let text = '';
 // リソース処理
     let isDiceRoll = false;
     for ( const edit of allEditList) {
-      if(edit.operator == '>'){
+      if (edit.operator == '>'){
         text += this.resourceTextEdit(edit, character);
       }else{
         text += this.resourceEdit(edit, character);
@@ -736,7 +730,7 @@ export class DiceBot extends GameObject {
     }
     text = text.replace(/\s\s\s\s$/, '');
 
-    if( text == '')return;
+    if ( text == '')return;
     let fromText;
     let nameText;
     if ( isDiceRoll ){
