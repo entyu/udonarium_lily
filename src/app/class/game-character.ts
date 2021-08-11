@@ -397,14 +397,18 @@ export class GameCharacter extends TabletopObject {
     }
   }
 
-  chkChangeStatusValue(name: string, nowOrMax: string): boolean{
+  chkChangeStatus(name: string, nowOrMax: string): boolean{
     const data = this.detailDataElement.getFirstElementByName(name);
     if(!data)return false;
     if(data.type == 'numberResource'){
       if(nowOrMax == 'now' || nowOrMax =='max'){
         return true;
       }
-    }else if(data.type != 'note'){
+    }else if(data.type == ''){
+      if(nowOrMax == 'now'){
+        return true;
+      }
+    }else if(data.type == 'note'){
       if(nowOrMax == 'now'){
         return true;
       }
@@ -423,7 +427,7 @@ export class GameCharacter extends TabletopObject {
       }else if(nowOrMax == 'max'){
         type = 'value';
       }
-    }else if(data.type != 'note'){
+    }else if(data.type == ''){
       if(nowOrMax == 'now'){
         type = 'value';
       }else{
@@ -431,6 +435,19 @@ export class GameCharacter extends TabletopObject {
       }
     }else{
       return null;
+    }
+    return type;
+  }
+
+  getStatusTextType(name: string): string{
+    let type = '';
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return null;
+    
+    if(data.type == 'numberResource'){
+      type = 'currentValue';
+    }else{
+      type = 'value';
     }
     return type;
   }
@@ -459,7 +476,6 @@ export class GameCharacter extends TabletopObject {
     const data = this.detailDataElement.getFirstElementByName(name);
     if(!data)return false;
     let type = this.getStatusType(name, nowOrMax);
-    let text = '';
     if(type == null) return false;
 
     if ( type == 'value') {
@@ -470,6 +486,21 @@ export class GameCharacter extends TabletopObject {
     }
     return true;
   }
+
+  setStatusText(name: string, text: string): boolean{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return false;
+    let type = this.getStatusTextType(name);
+    if(type == null) return false;
+    if ( type == 'value') {
+      data.value = text;
+    }
+    if ( type == 'currentValue'){
+      data.currentValue = text;
+    }
+    return true;
+  }
+
 
   changeStatusValue(name: string, nowOrMax: string, addValue: number, limitMin ?: boolean ,limitMax ?: boolean ): string{
     const data = this.detailDataElement.getFirstElementByName(name);

@@ -34,6 +34,7 @@ interface ResourceEdit {
   operator: string;
   diceResult: string;
   command: string;
+  replace: string;
   isDiceRoll: boolean;
   calcAns: number;
   option: ResourceEditOption;
@@ -481,13 +482,9 @@ export class DiceBot extends GameObject {
     const splitText = originalMessage.text.split(/\s/);
     let resourceCommand: string[] = [];
     let buffCommand: string[] = [];
-
     const allEditList: ResourceEdit[] = null;
 
-    console.log( 'splitText' + splitText);
-
     for (const chktxt of splitText) {
-      console.log('chktxt' + chktxt);
       if (chktxt.match(/^[:：&＆]/i)) {
 
         let resultRes = chktxt.match(/[:：][^:：&＆]+/gi);
@@ -535,6 +532,58 @@ export class DiceBot extends GameObject {
     return ans;
   }
 
+  private replaceEditCalc():boolean{
+    
+    return true;
+  }
+
+  private resourceCommandToEdit(oneResourceEdit: ResourceEdit,text: string,object: GameCharacter):boolean{
+
+    const replaceText = text.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=').replace('＞', '>');
+    console.log('リソース変更：' + replaceText);
+    const resourceEditRegExp = /[:]([^-+=>]+)([-+=>])(.+)/;
+    const resourceEditResult = replaceText.match(resourceEditRegExp);
+    if (!resourceEditResult) { return false; }
+
+    const reg1: string = resourceEditResult[1];
+    const reg1HalfWidth: string = StringUtil.toHalfWidth(reg1);
+    const reg2: string = resourceEditResult[2];
+    oneResourceEdit.operator = reg2;                            // 演算符号
+
+    if(object.chkChangeStatus(reg1,'now')){
+      oneResourceEdit.target = reg1;                             // 操作対象検索文字タイプ生値
+    }else if(object.chkChangeStatus(reg1HalfWidth, 'now')){
+      oneResourceEdit.target = reg1HalfWidth;                    // 操作対象検索文字半角化
+    }else{
+      return false; // 対象なし実行失敗
+    }
+
+    if( oneResourceEdit.operator == '>' ){
+      oneResourceEdit.replace = resourceEditResult[3];
+    }else{
+      let reg3: string = resourceEditResult[3].replace(/[A-CE-ZＡ-ＣＥ-Ｚ]+$/i, '');
+      const commandPrefix = oneResourceEdit.operator == '-' ? '-' : '';
+      oneResourceEdit.command = commandPrefix + StringUtil.toHalfWidth(reg3) + '+(1d1-1)';
+      // 操作量C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
+
+      console.log( reg1 + '/' + reg2 + '/' + reg3 );
+      reg3 = reg3.replace(/[A-CE-ZＡ-ＣＥ-Ｚ]+$/i, '');
+
+      const optionCommand = this.resourceEditParseOption(resourceEditResult[3]);
+      if (optionCommand.isErr){
+        return false; // 実行失敗
+      }
+      oneResourceEdit.option = optionCommand;
+
+      if (StringUtil.toHalfWidth(reg3).match(/\d[dD]/)) {
+        oneResourceEdit.isDiceRoll = true;
+      } else {
+        oneResourceEdit.isDiceRoll = false;
+      }
+    }
+    return true;
+  }
+
   async resourceEditProcess(resourceCommand: string[], buffCommand: string[], originalMessage: ChatMessage){
 
     const object = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
@@ -554,66 +603,33 @@ export class DiceBot extends GameObject {
         operator: '',
         diceResult: '',
         command: '',
+        replace: '',
         isDiceRoll: false,
         calcAns: 0,
         option : null
       };
 
-      const replaceText = oneText.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=');
-      console.log('リソース変更：' + replaceText);
-      const resourceEditRegExp = /[:]([^-+=]+)([-+=])(.+)/;
-      const resourceEditResult = replaceText.match(resourceEditRegExp);
-      if (!resourceEditResult) { return ; }
+      if( !this.resourceCommandToEdit(oneResourceEdit, oneText, object) )return;
 
-      const reg1: string = resourceEditResult[1];
-      const reg1HalfWidth: string = StringUtil.toHalfWidth(reg1);
-      const reg2: string = resourceEditResult[2];
-      const reg3: string = resourceEditResult[3].replace(/[A-CE-ZＡ-ＣＥ-Ｚ]+$/i, '');
-
-      console.log( reg1 + '/' + reg2 + '/' + reg3 );
-
-      const optionCommand = this.resourceEditParseOption(resourceEditResult[3]);
-      if (optionCommand.isErr){
-        return ; // 実行失敗
-      }
-      oneResourceEdit.option = optionCommand;
-
-      if(object.chkChangeStatusValue(reg1,'now')){
-        oneResourceEdit.target = reg1;                             // 操作対象検索文字タイプ生値
-      }else if(object.chkChangeStatusValue(reg1HalfWidth, 'now')){
-        oneResourceEdit.target = reg1HalfWidth;                    // 操作対象検索文字半角化
-      }else{
-        return ; // 対象なし実行失敗
-      }
-
-      oneResourceEdit.operator = reg2;                                                 // 演算符号
-      const commandPrefix = reg2 == '-' ? '-' : '';
-      oneResourceEdit.command = commandPrefix + StringUtil.toHalfWidth(reg3) + '+(1d1-1)';
-      // 操作量C()とダイスロールが必要な場合分けをしないために+(1d1-1)を付加してダイスロール命令にしている
-
-      if (StringUtil.toHalfWidth(reg3).match(/\d[dD]/)) {
-        oneResourceEdit.isDiceRoll = true;
-      } else {
-        oneResourceEdit.isDiceRoll = false;
-      }
-
-      // ダイスロール及び四則演算
-      try {
-        const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameSystem);
-        if (!rollResult.result) { return null; }
-        const splitResult = rollResult.result.split(' ＞ ');
-        oneResourceEdit.diceResult = splitResult[splitResult.length - 2].replace(/\+\(1\[1\]\-1\)$/, '');
-        const resultMatch = rollResult.result.match(/([-+]?\d+)$/); // 計算結果だけ格納
-        oneResourceEdit.calcAns = parseInt(resultMatch[1], 10);
-      } catch (e) {
-        console.error(e);
+      if(oneResourceEdit.operator != '>'){
+        // ダイスロール及び四則演算
+        try {
+          const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameSystem);
+          if (!rollResult.result) { return null; }
+          const splitResult = rollResult.result.split(' ＞ ');
+          oneResourceEdit.diceResult = splitResult[splitResult.length - 2].replace(/\+\(1\[1\]\-1\)$/, '');
+          const resultMatch = rollResult.result.match(/([-+]?\d+)$/); // 計算結果だけ格納
+          oneResourceEdit.calcAns = parseInt(resultMatch[1], 10);
+        } catch (e) {
+          console.error(e);
+        }
       }
       allEditList.push( oneResourceEdit );
     }
 
     let repBuffCommandList :string[] = [];
     for ( const oneText of buffCommand ){
-      const replaceText = oneText.replace('＆', '&').replace('＋', '+').replace('－', '-').replace('＝', '=');
+      const replaceText = oneText.replace('＆', '&').replace(/＋$/, '+').replace(/－$/, '-');
       repBuffCommandList.push(replaceText);
     }
 
@@ -621,81 +637,102 @@ export class DiceBot extends GameObject {
     return;
   }
 
+  private resourceTextEdit(edit: ResourceEdit,character: GameCharacter):string{
+    character.setStatusText(edit.target, edit.replace);
+    let ansText = edit.target + '＞' + edit.replace + '    ';
+    return ansText;
+  }
+
+  private resourceEdit(edit: ResourceEdit,character: GameCharacter):string{
+    let optionText = '';
+    let oldNum = character.getStatusValue(edit.target, 'now');
+    let newNum :number = 0;
+    let maxNum = character.getStatusValue(edit.target, 'max');
+
+    if (edit.operator == '=') {
+      newNum = edit.calcAns;
+    } else {
+      const flag = edit.option.zeroLimit;
+      if (flag && edit.operator == '+' && (edit.calcAns < 0)) {
+        newNum = oldNum + 0;
+        optionText = '(0制限)';
+      }else if (flag && edit.operator == '-' && (edit.calcAns > 0)) {
+        newNum = oldNum + 0;
+        optionText = '(0制限)';
+      }else{
+        newNum = oldNum + edit.calcAns;
+      }
+    }
+    if (edit.option.limitMinMax && maxNum != null){
+      if (newNum > maxNum){
+        newNum = maxNum;
+        optionText = '(最大)';
+      }
+      if (newNum < 0 ){
+        newNum = 0;
+        optionText = '(最小)';
+      }
+    }
+    character.setStatusValue(edit.target, 'now',newNum);
+    const operatorText = edit.operator == '-' ? '' : edit.operator;
+    const ansText = edit.target + ':' + oldNum + operatorText + edit.diceResult + '＞' + newNum + optionText + '    ';
+    return ansText;
+  }
+
+  private buffEdit(command: string, character: GameCharacter):string{
+    let text = '';
+    if( command.match(/^&R-$/i) ){
+      character.decreaseBuffRound();
+      text += 'バフRを減少';
+      text += '    ';
+    }else if( command.match(/^&R[+]$/i) ){
+      character.increaseBuffRound();
+      text += 'バフRを増加';
+      text += '    ';
+    }else if( command.match(/^&D$/i) ){
+      character.deleteZeroRoundBuff();
+      text += '0R以下のバフを消去';
+      text += '    ';
+    }else if( command.match(/^&.+-$/i) ){
+      let match = command.match(/^&(.+)-$/i)
+      console.log('match'+match);
+      const reg1 = match[1];
+      if(character.deleteBuff(reg1) ){
+        text += reg1 + 'を消去';
+        text += '    ';
+      }
+    }else{
+      const splittext = command.replace(/^&/i,'').split('/');
+      let round = 3;
+      let sub = '';
+      let buffname = '';
+      let bufftext = '';
+      buffname = splittext[0];
+      bufftext = splittext[0];
+      if ( splittext.length > 1){ sub = splittext[1]; bufftext = bufftext + '/' + splittext[1]; }
+      if ( splittext.length > 2){ round = parseInt(splittext[2]); bufftext = bufftext + '/' + round + 'R'; }
+      character.addBuffRound(buffname, sub, round);
+      text += 'バフを付与 ' + bufftext;
+      text += '    ';
+    }
+    return text;
+  }
+  
   private resourceBuffEdit( allEditList: ResourceEdit[] , buffList: string[], originalMessage: ChatMessage ,character: GameCharacter){
     let text = '';
 // リソース処理
     let isDiceRoll = false;
     for ( const edit of allEditList) {
-      let optionText = '';
-      let oldNum = character.getStatusValue(edit.target, 'now');
-      let newNum :number = 0;
-      let maxNum = character.getStatusValue(edit.target, 'max');
-
-      if (edit.operator == '=') {
-        newNum = edit.calcAns;
-      } else {
-        const flag = edit.option.zeroLimit;
-        if (flag && edit.operator == '+' && (edit.calcAns < 0)) {
-          newNum = oldNum + 0;
-          optionText = '(0制限)';
-        }else if (flag && edit.operator == '-' && (edit.calcAns > 0)) {
-          newNum = oldNum + 0;
-          optionText = '(0制限)';
-        }else{
-          newNum = oldNum + edit.calcAns;
-        }
+      if(edit.operator == '>'){
+        text += this.resourceTextEdit(edit, character);
+      }else{
+        text += this.resourceEdit(edit, character);
       }
-      if (edit.option.limitMinMax && maxNum != null){
-        if (newNum > maxNum){
-          newNum = maxNum;
-          optionText = '(最大)';
-        }
-        if (newNum < 0 ){
-          newNum = 0;
-          optionText = '(最小)';
-        }
-      }
-      character.setStatusValue(edit.target, 'now',newNum);
-      const operatorText = edit.operator == '-' ? '' : edit.operator;
-      text += edit.target + ':' + oldNum + operatorText + edit.diceResult + '＞' + newNum + optionText + '    ';
       if ( edit.isDiceRoll ) { isDiceRoll = true; }
     }
 // バフ処理
     for ( let command of buffList) {
-      if( command.match(/^&R-$/i) ){
-        character.decreaseBuffRound();
-        text += 'バフRを減少';
-        text += '    ';
-      }else if( command.match(/^&R[+]$/i) ){
-        character.decreaseBuffRound();
-        text += 'バフRを増加';
-        text += '    ';
-      }else if( command.match(/^&D$/i) ){
-        character.deleteZeroRoundBuff();
-        text += '0R以下のバフを消去';
-        text += '    ';
-      }else if( command.match(/^&.+-$/i) ){
-        let match = command.match(/^&(.+)-$/i)
-        console.log('match'+match);
-        const reg1 = match[1];
-        if(character.deleteBuff(reg1) ){
-          text += reg1 + 'を消去';
-          text += '    ';
-        }
-      }else{
-        const splittext = command.replace(/^&/i,'').split('/');
-        let round = 3;
-        let sub = '';
-        let buffname = '';
-        let bufftext = '';
-        buffname = splittext[0];
-        bufftext = splittext[0];
-        if ( splittext.length > 1){ sub = splittext[1]; bufftext = bufftext + '/' + splittext[1]; }
-        if ( splittext.length > 2){ round = parseInt(splittext[2]); bufftext = bufftext + '/' + round + 'R'; }
-        character.addBuffRound(buffname, sub, round);
-        text += 'バフを付与 ' + bufftext;
-        text += '    ';
-      }
+      text += this.buffEdit(command, character);
     }
     text = text.replace(/\s\s\s\s$/, '');
 
