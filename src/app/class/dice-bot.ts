@@ -675,15 +675,15 @@ export class DiceBot extends GameObject {
 
   private buffEdit(command: string, character: GameCharacter): string{
     let text = '';
-    if ( command.match(/^&R-$/i) ){
+    if ( command.match(/^&[RＲrｒ]-$/i) ){
       character.decreaseBuffRound();
       text += 'バフRを減少';
       text += '    ';
-    }else if ( command.match(/^&R[+]$/i) ){
+    }else if ( command.match(/^&[RＲrｒ][+]$/i) ){
       character.increaseBuffRound();
       text += 'バフRを増加';
       text += '    ';
-    }else if ( command.match(/^&D$/i) ){
+    }else if ( command.match(/^&[DＤdｄ]$/i) ){
       character.deleteZeroRoundBuff();
       text += '0R以下のバフを消去';
       text += '    ';
