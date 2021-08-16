@@ -9,9 +9,8 @@
     <div style="font-size: 12px;">
       <button (click)="onChangeSystemTab()">システム表示先指定</button>
     </div>
-    <div style="width: 10em;overflow: hidden;" size="9" >
-      {{systemTab()?.name}}
-<!!--{{systemTabIdentifier}}-->
+    <div style="width: 10em;overflow: hidden;font-size: 14px;">
+      現在システム表示先：<br>{{systemTab()?.name}}
     </div>
   </div>
   <div class="flex-item">

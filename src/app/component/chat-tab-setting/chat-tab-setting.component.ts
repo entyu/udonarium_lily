@@ -152,8 +152,16 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
   delete() {
     if (!this.isEmpty && this.selectedTab) {
+
+      let parentElement = this.selectedTab.parent;
+      let index: number = parentElement.children.indexOf(this.selectedTab);
       this.selectedTabXml = this.selectedTab.toXml();
       this.selectedTab.destroy();
+
+      if(this.systemTabIndex > index ){
+        this.systemTabIndex --;
+      }
+      this.chkSystemTabIndex();
     }
   }
 
@@ -198,6 +206,12 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     }
   }
 
+  chkSystemTabIndex(){
+    let list = this.chatTabList;
+    if(this.systemTabIndex >= list.children.length) this.systemTabIndex = list.children.length-1;
+    if(this.systemTabIndex < 0) this.systemTabIndex = 0;
+  }
+
   upTabIndex() {
     if (!this.selectedTab) return;
     let parentElement = this.selectedTab.parent;
@@ -205,6 +219,12 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     if (0 < index) {
       let prevElement = parentElement.children[index - 1];
       parentElement.insertBefore(this.selectedTab, prevElement);
+      if(this.systemTabIndex == index ){
+        this.systemTabIndex --;
+      }else if(this.systemTabIndex == index-1 ){
+        this.systemTabIndex ++;
+      }
+      this.chkSystemTabIndex();
     }
   }
 
@@ -215,6 +235,12 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     if (index < parentElement.children.length - 1) {
       let nextElement = parentElement.children[index + 1];
       parentElement.insertBefore(nextElement, this.selectedTab);
+      if(this.systemTabIndex == index ){
+        this.systemTabIndex ++;
+      }else if(this.systemTabIndex == index+1 ){
+        this.systemTabIndex --;
+      }
+      this.chkSystemTabIndex();
     }
   }
 }
