@@ -318,7 +318,7 @@ export class DiceBot extends GameObject {
                 && (!DiceRollTableList.instance.diceRollTables.map(diceRollTable => diceRollTable.command).some(command => command != null && command.trim().toUpperCase() === 'CHOICE'))) {
               rollText = rollText.trim().replace(/[　\s]+/g, ' ');
               isChoice = true;
-            } else if ((choiceMatch = /^(S?CHOICE\[[^\[\]]+\])/ig.exec(rollText.trim())) || (choiceMatch = /^(S?CHOICE\([^\(\)]+\))/ig.exec(rollText.trim()))) {
+            } else if ((choiceMatch = /^(S?CHOICE\d*\[[^\[\]]+\])/ig.exec(rollText.trim())) || (choiceMatch = /^(S?CHOICE\d*\([^\(\)]+\))/ig.exec(rollText.trim()))) {
               rollText = choiceMatch[1];
               isChoice = true;
             } else {
@@ -328,7 +328,7 @@ export class DiceBot extends GameObject {
             if (DiceBot.apiUrl) {
               // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
               //ToDO APIのバージョン調べて新しければCOMMAND_PATTERN使う？（いつ読み込もう？）
-              if (!isChoice && !(/choice\[.*\]/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) return;
+              if (!isChoice && !(/choice\d*\[.*\]/i.test(rollText) || /^[a-zA-Z0-9!-/:-@¥[-`{-~\}]+$/.test(rollText))) return;
               //BCDice-API の繰り返し機能を利用する、結果の形式が縦に長いのと、更新していないBCDice-APIサーバーもありそうなのでまだ実装しない
               //finalResult = await DiceBot.diceRollAsync(repCommand ? (repCommand + repeat + ' ' + rollText) : rollText, gameType, repCommand ? 1 : repeat);
               finalResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);
