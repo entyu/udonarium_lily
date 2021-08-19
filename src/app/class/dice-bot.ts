@@ -244,7 +244,7 @@ export class DiceBot extends GameObject {
         gameType = gameType ? gameType : 'DiceBot';
 
         try {
-          const regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?\s+)?([^\n]*)?/ig.exec(text);
+          const regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?[ 　]+)?([^\n]*)?/ig.exec(text);
           const repCommand = regArray[2];
           const isRepSecret = repCommand && repCommand.toUpperCase().indexOf('S') === 0;
           const repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
@@ -261,11 +261,11 @@ export class DiceBot extends GameObject {
           let isDiceRollTableMatch = false;
           for (const diceRollTable of DiceRollTableList.instance.diceRollTables) {
             let isSecret = false;
-            if (diceRollTable.command != null && rollText.trim().toUpperCase() === 'S' + diceRollTable.command.trim().toUpperCase()) {
+            if (diceRollTable.command != null && StringUtil.toHalfWidth(rollText.trim()).toUpperCase() === 'S' + StringUtil.toHalfWidth(diceRollTable.command.trim()).toUpperCase()) {
               isDiceRollTableMatch = true;
               isSecret = true;
               finalResult.isFailure = false;
-            } else if (diceRollTable.command != null && rollText.trim().toUpperCase() === diceRollTable.command.trim().toUpperCase()) {
+            } else if (diceRollTable.command != null && StringUtil.toHalfWidth(rollText.trim()).toUpperCase() === StringUtil.toHalfWidth(diceRollTable.command.trim()).toUpperCase()) {
               isDiceRollTableMatch = true;
               finalResult.isFailure = false;
             }
