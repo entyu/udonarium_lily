@@ -28,6 +28,36 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
   get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
 
+  displayNum = 0;
+  chekcdDisplayIndex = -1;
+  headMessagesTimeStamp = 0;
+  headMessagesSendFrom = "";
+
+  resetDisplayableMessageCount(){
+    this.displayNum = 0;
+    this.chekcdDisplayIndex = -1;
+  }
+
+  displayableMessagesLength(): number{
+    if(!this.chatMessages) return 0;
+    if(!this.chatMessages[0]) return 0;
+    
+    if( this.headMessagesSendFrom != this.chatMessages[0].sendFrom || this.headMessagesTimeStamp != this.chatMessages[0].timestamp){
+      this.resetDisplayableMessageCount();
+      this.headMessagesSendFrom = this.chatMessages[0].sendFrom;
+      this.headMessagesTimeStamp = this.chatMessages[0].timestamp;
+    }
+    let lastIndex = this.chatMessages.length - 1;
+    if( this.chekcdDisplayIndex < lastIndex){
+      for( let i = this.chekcdDisplayIndex + 1 ; i <= lastIndex ; i++){
+        if( this.chatMessages[i].isDisplayable ) this.displayNum++;
+      }
+    }
+    this.chekcdDisplayIndex = lastIndex;
+    return this.displayNum;
+  }
+
+
   tachieReset(){
     this.imageIdentifier = ['a','b','c','d','e','f','g','h','i','j','k','l'];
     this.imageCharactorName = ['#0','#1','#2','#3','#4','#5','#6','#7','#8','#9','#10','#11'];

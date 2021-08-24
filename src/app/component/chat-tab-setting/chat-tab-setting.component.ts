@@ -148,8 +148,6 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     
   }
 
-
-
   delete() {
     if (!this.isEmpty && this.selectedTab) {
 
@@ -171,9 +169,10 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     if( !this.allowDeleteLog ) return;
 
     if (!this.isEmpty && this.selectedTab) {
-      while( this.selectedTab.children.length > 0)
+      while( this.selectedTab.children.length > 0){
         this.selectedTab.children[0].destroy();
-        this.selectedTab.tachieReset();
+      }
+      this.selectedTab.tachieReset();
     }
     let mess = 'ログをクリアしました'
     let gameSystem = null;
@@ -191,8 +190,8 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     for (let child of ChatTabList.instance.chatTabs) {
       while( child.children.length > 0){
         child.children[0].destroy();
-        child.tachieReset();
       }
+      child.tachieReset();
       this.chatMessageService.sendMessage(child, mess, gameSystem, this.myPeer.identifier, sendTo , 0 , '#000000' );
     }
   }
