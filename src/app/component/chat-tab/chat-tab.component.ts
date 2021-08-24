@@ -88,7 +88,6 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       this.needUpdate = false;
       let chatMessages = this.chatTab ? this.chatTab.chatMessages : [];
       this.adjustIndex();
-
       this._chatMessages = chatMessages.slice(this.topIndex, this.bottomIndex + 1);
       this.topTimestamp = 0 < this._chatMessages.length ? this._chatMessages[0].timestamp : 0;
       this.botomTimestamp = 0 < this._chatMessages.length ? this._chatMessages[this._chatMessages.length - 1].timestamp : 0;
@@ -102,6 +101,17 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       if (message.isDisplayable) length++;
     }
     return length;
+  }
+
+  private chatMessagesDisplayableTopIndex(chatMessages: ChatMessage[],dispLength: number): number{
+    let len = chatMessages.length;
+    let count = 0;
+    let i = len - 1 ;
+    for ( ; i >= 0 ; i--) {
+      if (chatMessages[0].isDisplayable) count++;
+      if ( count >= dispLength) return i;
+    }
+    return i ;
   }
 
   get minScrollHeight(): number {
@@ -222,13 +232,15 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
 
   resetMessages() {
     let lastIndex = this.chatTab.chatMessages.length - 1;
-    this.topIndex = lastIndex - Math.floor(this.panelService.scrollablePanel.clientHeight / this.minMessageHeight);
+//    this.topIndex = lastIndex - Math.floor(this.panelService.scrollablePanel.clientHeight / this.minMessageHeight);
+    this.topIndex = this.chatMessagesDisplayableTopIndex( this.chatTab.chatMessages, Math.floor(this.panelService.scrollablePanel.clientHeight / this.minMessageHeight) + 1 );
     this.bottomIndex = lastIndex;
     this.needUpdate = true;
     this.preScrollTop = -1;
     this.scrollSpeed = 0;
     this.topElm = this.bottomElm = null;
     this.adjustIndex();
+    console.log("resetMessages top:" + this.topIndex + " bottom:" + this.bottomIndex );
     this.changeDetector.markForCheck();
   }
 
