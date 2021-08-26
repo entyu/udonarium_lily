@@ -20,14 +20,14 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 })
 export class ChatTabSettingComponent implements OnInit, OnDestroy {
   selectedTab: ChatTab = null;
-  selectedTabXml: string = '';
+  selectedTabXml = '';
 
   get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
 
   get systemTabIndex(): number {
     return this.chatTabList.systemMessageTabIndex;
   }
-  
+
   set systemTabIndex(index: number){
     this.chatTabList.systemMessageTabIndex = index;
   }
@@ -41,13 +41,13 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   set tabName(tabName: string) { if (this.isEditable) this.selectedTab.name = tabName; }
 
   get chatTabs(): ChatTab[] { return this.chatMessageService.chatTabs; }
-  get isEmpty(): boolean { return this.chatMessageService.chatTabs.length < 1 }
+  get isEmpty(): boolean { return this.chatMessageService.chatTabs.length < 1; }
   get isDeleted(): boolean { return this.selectedTab ? ObjectStore.instance.get(this.selectedTab.identifier) == null : false; }
   get isEditable(): boolean { return !this.isEmpty && !this.isDeleted; }
 
 
-  isSaveing: boolean = false;
-  progresPercent: number = 0;
+  isSaveing = false;
+  progresPercent = 0;
 
   allowDeleteLog = false;
   allowDeleteTab = false;
@@ -70,7 +70,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
         }
       });
-    
+
   }
 
   ngOnDestroy() {
@@ -113,7 +113,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
-  get roomName():string {
+  get roomName(): string {
     let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
       ? Network.peerContext.roomName
       : 'ルームデータ';
@@ -130,7 +130,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
     return fileName + `_${year}-${month}-${day}_${hours}${minutes}`;
   }
-  
+
   saveLog(){
     if (!this.selectedTab) return;
     let fileName: string = this.roomName + '_log_' + this.selectedTab.name;
@@ -143,9 +143,9 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
     let fileName: string = this.roomName + '_log_' + '全タブ';
     let fileName_: string = this.appendTimestamp( fileName ) ;
-  
+
     this.saveDataService.saveHtmlChatLogAll( fileName_);
-    
+
   }
 
   delete() {
@@ -156,7 +156,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
       this.selectedTabXml = this.selectedTab.toXml();
       this.selectedTab.destroy();
 
-      if(this.systemTabIndex > index ){
+      if (this.systemTabIndex > index ){
         this.systemTabIndex --;
       }
       this.chkSystemTabIndex();
@@ -166,29 +166,29 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
   deleteLog(){
-    if( !this.allowDeleteLog ) return;
+    if ( !this.allowDeleteLog ) return;
 
     if (!this.isEmpty && this.selectedTab) {
-      while( this.selectedTab.children.length > 0){
+      while ( this.selectedTab.children.length > 0){
         this.selectedTab.children[0].destroy();
       }
       this.selectedTab.tachieReset();
     }
-    let mess = 'ログをクリアしました'
+    let mess = 'ログをクリアしました';
     let gameSystem = null;
-    let sendTo ='';
+    let sendTo = '';
     this.chatMessageService.sendMessage(this.selectedTab, mess, gameSystem, this.myPeer.identifier, sendTo , 0 , '#000000' );
   }
 
   deleteLogALL(){
-    if( !this.allowDeleteLog ) return;
-    
-    let mess = 'ログをクリアしました'
+    if ( !this.allowDeleteLog ) return;
+
+    let mess = 'ログをクリアしました';
     let gameSystem = null;
-    let sendTo ='';
-    
+    let sendTo = '';
+
     for (let child of ChatTabList.instance.chatTabs) {
-      while( child.children.length > 0){
+      while ( child.children.length > 0){
         child.children[0].destroy();
       }
       child.tachieReset();
@@ -199,7 +199,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
   restore() {
     if (this.selectedTab && this.selectedTabXml) {
-      let restoreTable = <ChatTab>ObjectSerializer.instance.parseXml(this.selectedTabXml);
+      let restoreTable = <ChatTab> ObjectSerializer.instance.parseXml(this.selectedTabXml);
       ChatTabList.instance.addChatTab(restoreTable);
       this.selectedTabXml = '';
     }
@@ -207,8 +207,8 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
   chkSystemTabIndex(){
     let list = this.chatTabList;
-    if(this.systemTabIndex >= list.children.length) this.systemTabIndex = list.children.length-1;
-    if(this.systemTabIndex < 0) this.systemTabIndex = 0;
+    if (this.systemTabIndex >= list.children.length) this.systemTabIndex = list.children.length - 1;
+    if (this.systemTabIndex < 0) this.systemTabIndex = 0;
   }
 
   upTabIndex() {
@@ -218,9 +218,9 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     if (0 < index) {
       let prevElement = parentElement.children[index - 1];
       parentElement.insertBefore(this.selectedTab, prevElement);
-      if(this.systemTabIndex == index ){
+      if (this.systemTabIndex == index ){
         this.systemTabIndex --;
-      }else if(this.systemTabIndex == index-1 ){
+      }else if (this.systemTabIndex == index - 1 ){
         this.systemTabIndex ++;
       }
       this.chkSystemTabIndex();
@@ -234,9 +234,9 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     if (index < parentElement.children.length - 1) {
       let nextElement = parentElement.children[index + 1];
       parentElement.insertBefore(nextElement, this.selectedTab);
-      if(this.systemTabIndex == index ){
+      if (this.systemTabIndex == index ){
         this.systemTabIndex ++;
-      }else if(this.systemTabIndex == index+1 ){
+      }else if (this.systemTabIndex == index + 1 ){
         this.systemTabIndex --;
       }
       this.chkSystemTabIndex();
