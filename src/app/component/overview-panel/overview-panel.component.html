@@ -181,7 +181,7 @@
         <div class="value">
           <div style="display: inline-block; width: min-content;">
             <div class="hidden-spacer" style="margin-right: 2em;">{{dataElm.currentValue}}</div>
-            <input class="input" type="number" size="1" [(ngModel)]="dataElm.currentValue" />
+            <input class="input" type="number" [style]="'color:' + dataElm.nowValueColor +';'" size="1" [(ngModel)]="dataElm.currentValue" />
           </div>
           <div style="display: inline;"> / {{dataElm.value}}</div>
         </div>

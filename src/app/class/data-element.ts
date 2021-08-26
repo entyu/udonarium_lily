@@ -64,4 +64,18 @@ export class DataElement extends ObjectNode {
     let self:GameObject = <GameObject>this;
     return self.identifier;
   }
+
+  get nowValueColor(): string{
+    if(this.name.match(/^[SsＳｓ][AaＡａ][NnＮn]$/i) || this.name.match(/^正気度$/i) ){
+      if( this.isNumberResource ){
+        let current :number = (this.currentValue as number);
+        let value :number = (this.value as number);
+        if( current <= (value *4/5) && current == this.currentValue && value == this.value){
+          return "#D22";
+        }
+      }
+    }
+    return "#444";
+  }
+
 }
