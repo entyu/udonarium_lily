@@ -208,6 +208,7 @@ export class GameCharacter extends TabletopObject {
     let resourceElement: DataElement = DataElement.create('リソース', '', {}, 'リソース' + this.identifier);
     let hpElement: DataElement = DataElement.create('HP', 200, { 'type': 'numberResource', 'currentValue': '200' }, 'HP_' + this.identifier);
     let mpElement: DataElement = DataElement.create('MP', 100, { 'type': 'numberResource', 'currentValue': '100' }, 'MP_' + this.identifier);
+//    let sanElement: DataElement = DataElement.create('SAN', 60, { 'type': 'numberResource', 'currentValue': '48' }, 'SAN_' + this.identifier);
 
     this.commonDataElement.appendChild(nameElement);
     this.commonDataElement.appendChild(sizeElement);
@@ -215,6 +216,7 @@ export class GameCharacter extends TabletopObject {
     this.detailDataElement.appendChild(resourceElement);
     resourceElement.appendChild(hpElement);
     resourceElement.appendChild(mpElement);
+//    resourceElement.appendChild(sanElement);
 
     //TEST
     let testElement: DataElement = DataElement.create('情報', '', {}, '情報' + this.identifier);

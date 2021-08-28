@@ -181,7 +181,7 @@
                   <div style="padding: 2px;">&nbsp;</div><div style="padding: 2px;">/</div>
                 </div>
                 <div class="table-cell">
-                  <input class="input tag-value" size="1" [(ngModel)]="dataElm.currentValue" 
+                  <input class="input tag-value" [style]="'color:' + dataElm.nowValueColor +';'" size="1" [(ngModel)]="dataElm.currentValue" 
                   placeholder="" />
                   <input class="input tag-value" size="1" [(ngModel)]="dataElm.value" 
                   placeholder="" />
