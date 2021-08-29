@@ -35,22 +35,22 @@ export class Vote extends GameObject {
 
   voteAnswerByPeerId(peerId: string): number{
     let peer = PeerCursor.findByPeerId(peerId);
-    if(peer ){
-      if(peer.voteId == this.voteId){
+    if (peer ){
+      if (peer.voteId == this.voteId){
         return peer.voteAnswer;
       }else{
-        return -1;// 未投票
+        return -1; // 未投票
       }
     }else{
-      return -2;// 棄権扱いにする
+      return -2; // 棄権扱いにする
     }
     return -1;
   }
-  
+
   get voteAnswer(): number[]{
-    let answer :number[] = [];
-    
-    for(let peerId of this.targetPeerId){
+    let answer: number[] = [];
+
+    for (let peerId of this.targetPeerId){
       answer.push(this.voteAnswerByPeerId(peerId));
     }
     return answer;
@@ -71,8 +71,8 @@ export class Vote extends GameObject {
     for (let targetPeer of this.targetPeerId){
       if (targetPeer == peerId ){
         let peer = PeerCursor.findByPeerId(peerId);
-        if(!peer) return true;
-        if(peer.voteId == this.voteId)return true;
+        if (!peer) return true;
+        if (peer.voteId == this.voteId)return true;
       }
     }
     return false;
