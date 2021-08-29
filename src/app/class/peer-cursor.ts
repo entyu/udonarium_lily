@@ -4,6 +4,7 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { EventSystem, Network } from './core/system';
+import { Vote, VoteContext } from '@udonarium/vote';
 
 type UserId = string;
 type PeerId = string;
@@ -20,6 +21,10 @@ export class PeerCursor extends GameObject {
   @SyncVar() lastControlCharacterName = '';
   @SyncVar() lastControlImageIndex = 0;
   @SyncVar() lastControlSendFrom = '';
+
+// 点呼/投票回答 回答選択肢Indexと回答した投票のID
+  @SyncVar() voteAnswer = -1; // 投票選択肢のindex値、-2:棄権
+  @SyncVar() voteId = -1; // 回答した投票のID
 
   private _timestampSend = -1;
   private _timestampReceive = -1;
@@ -74,7 +79,7 @@ export class PeerCursor extends GameObject {
   get totalTimeSignNum(): number { return this._totalTimeSignNum; }
   set totalTimeSignNum( num: number ){ this._totalTimeSignNum = num ; }
 
-
+  get vote(): Vote { return ObjectStore.instance.get<Vote>('Vote'); }
 
   static myCursor: PeerCursor = null;
   private static userIdMap: Map<UserId, ObjectIdentifier> = new Map();
@@ -169,7 +174,13 @@ export class PeerCursor extends GameObject {
       PeerCursor.peerIdMap.set(peerId, this.identifier);
       PeerCursor.peerIdMap.delete(this.peerId);
     }
+
+    let voteId = this.voteId;
     super.apply(context);
+
+    if (voteId != this.voteId){
+      this.vote.chkFinishVote();
+    }
   }
 
   isPeerAUdon(): boolean {

@@ -15,7 +15,6 @@ import { PeerContext, IPeerContext } from '@udonarium/core/system/network/peer-c
 
 export interface VoteContext {
   peerId: string;
-  answer: number; // 投票選択肢のindex値、-1:未投票、-2:棄権
 }
 
 @SyncObject('Vote')
@@ -23,56 +22,78 @@ export class Vote extends GameObject {
 
   @SyncVar() initTimeStamp = 0;
   @SyncVar() voteTitle = '';
-  @SyncVar() voteAnswer: VoteContext[] = [];
-  @SyncVar() lastVotePeerId = '';
+//  @SyncVar() voteAnswer: VoteContext[] = [];
+
+  @SyncVar() targetPeerId: string[] = [];
+
+//  @SyncVar() lastVotePeerId = '';
   @SyncVar() choices: string[] = [];
   @SyncVar() chairId = '';
   @SyncVar() isRollCall = false;
   @SyncVar() isFinish = false;
+  @SyncVar() voteId = 0;
+
+  voteAnswerByPeerId(peerId: string): number{
+    let peer = PeerCursor.findByPeerId(peerId);
+    if(peer ){
+      if(peer.voteId == this.voteId){
+        return peer.voteAnswer;
+      }else{
+        return -1;// 未投票
+      }
+    }else{
+      return -2;// 棄権扱いにする
+    }
+    return -1;
+  }
+  
+  get voteAnswer(): number[]{
+    let answer :number[] = [];
+    
+    for(let peerId of this.targetPeerId){
+      answer.push(this.voteAnswerByPeerId(peerId));
+    }
+    return answer;
+  }
 
   makeVote(chairId: string , voteTitle: string, targetPeerId: string[], choices: string[], isRollCall: boolean){
     this.isRollCall = isRollCall;
     this.chairId = chairId;
     this.choices = choices;
     this.voteTitle = voteTitle;
+    this.voteId ++;
 
-    this.voteAnswer = [];
-    for ( let target of targetPeerId){
-      let vote: VoteContext = {
-        peerId: target,
-        answer: -1,
-      };
-      this.voteAnswer.push(vote);
-    }
-    this.lastVotePeerId = '';
+    this.targetPeerId = targetPeerId;
     this.initTimeStamp = Date.now();
   }
 
   isVoteEnd(peerId: string): boolean{
-    let ans = this.answerById(peerId);
-    if (!ans) return true;
-
-    return ans.answer != -1 ? true : false;
+    for (let targetPeer of this.targetPeerId){
+      if (targetPeer == peerId ){
+        let peer = PeerCursor.findByPeerId(peerId);
+        if(!peer) return true;
+        if(peer.voteId == this.voteId)return true;
+      }
+    }
+    return false;
   }
 
   voting(choice: string | null, peerId: string){
-    let ans = this.answerById(peerId);
     if (choice){
-      ans.answer = this.choices.indexOf(choice);
+      PeerCursor.myCursor.voteAnswer = this.choices.indexOf(choice);
     }else{
-      ans.answer = -2;
+      PeerCursor.myCursor.voteAnswer = -2;
     }
-    // 配列要素の中身の更新だと同期が行われないので単一変数を更新してトリガーする
-    this.lastVotePeerId = peerId;
+    PeerCursor.myCursor.voteId = this.voteId;
 
     this.chkFinishVote();
   }
 
   chkFinishVote(){
-    if ( this.chairId == PeerCursor.myCursor.peerId && this.votedTotalNum() == this.voteAnswer.length ){
+    if ( this.chairId == PeerCursor.myCursor.peerId && this.votedTotalNum() == this.targetPeerId.length ){
       let text_: string;
       if (this.isRollCall ){
-        text_ = '点呼終了' + '(' + this.votedTotalNum() + '/' + this.voteAnswer.length + ')';
+        text_ = '点呼終了' + '(' + this.votedTotalNum() + '/' + this.targetPeerId.length + ')';
         if ( this.votedNumByIndex(-2) != 0){
           text_ += ' 棄権：' + this.votedNumByIndex(-2);
         }
@@ -91,27 +112,20 @@ export class Vote extends GameObject {
     }
   }
 
-  answerById(peerId: string): VoteContext{
-    for (let ans of this.voteAnswer){
-      if (ans.peerId == peerId )return ans;
-    }
-    return null;
-  }
-
   votedTotalNum(): number{
-    const answer: VoteContext[] = this.voteAnswer;
+    const answer: number[] = this.voteAnswer;
     let count = 0;
     for ( let ans of answer){
-      if ( ans.answer >= 0 || ans.answer == -2){count++ ; }
+      if ( ans >= 0 || ans == -2){count++ ; }
     }
     return count;
   }
 
   votedNumByIndex(index: number): number{
-    const answer: VoteContext[] = this.voteAnswer;
+    const answer: number[] = this.voteAnswer;
     let count = 0;
     for ( let ans of answer){
-      if ( ans.answer == index){count++ ; }
+      if ( ans == index){count++ ; }
     }
     return count;
   }
@@ -128,8 +142,8 @@ export class Vote extends GameObject {
   }
 
   chkToMe(): boolean{
-    for ( let one of this.voteAnswer){
-      if (PeerCursor.myCursor.peerId == one.peerId )return true;
+    for ( let target of this.targetPeerId){
+      if (PeerCursor.myCursor.peerId == target )return true;
     }
     return false;
   }
