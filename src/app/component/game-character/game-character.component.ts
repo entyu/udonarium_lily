@@ -194,6 +194,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     return this._dialog;
   }
 
+  selected = false;
   private _dialog = null;
   private dialogTimeOutId = null;
   private chatIntervalId = null;
@@ -298,6 +299,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         this.ngZone.run(() => {
           this.viewRotateX = event.data['x'];
           this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
+      })
+      .on<object>('SELECT_TABLETOP_OBJECT', -1000, event => {
+        this.ngZone.run(() => {
+          if (event.data['highlight'] && event.data['identifier'] === this.gameCharacter.identifier) {
+            this.selected = true;
+          } else {
+            this.selected = false;
+          }
           this.changeDetector.markForCheck();
         });
       })

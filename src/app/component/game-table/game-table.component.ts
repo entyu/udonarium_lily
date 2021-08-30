@@ -123,6 +123,33 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }, 50);
         this.removeFocus();
+      })
+      .on('FOCUS_TABLETOP_OBJECT', event => {
+        setTimeout(() => {
+          console.log(`move table to focus (${event.data.x}, ${event.data.y})`);
+          this.gameTable.nativeElement.style.transition = '0.1s ease-out';
+          setTimeout(() => {
+            this.gameTable.nativeElement.style.transition = null;
+          }, 100);
+          // 座標変換
+          let centerX = this.gridCanvas.nativeElement.clientWidth / 2;
+          let centerY = this.gridCanvas.nativeElement.clientHeight / 2;
+          let movedX = event.data.x - centerX;
+          let movedY = event.data.y - centerY;
+          let movedZ = event.data.z;
+          // z軸回転
+          let rotateZRad = this.viewRotateZ / 180 * Math.PI;
+          let rotatedMovedX = movedX * Math.cos(rotateZRad) - movedY * Math.sin(rotateZRad);
+          let zRotatedMovedY = movedX * Math.sin(rotateZRad) + movedY * Math.cos(rotateZRad);
+          // x軸回転
+          let rotateXRad = this.viewRotateX / 180 * Math.PI;
+          let rotatedMovedY = zRotatedMovedY * Math.cos(rotateXRad);
+          let rotatedMovedZ = zRotatedMovedY * Math.sin(rotateXRad) + movedZ * Math.sin(rotateXRad);
+          // 移動
+          this.setTransform(
+            100 - rotatedMovedX - this.viewPotisonX, -rotatedMovedY - this.viewPotisonY, -rotatedMovedZ - this.viewPotisonZ, 0, 0, 0
+          );
+        }, 50);
       });
     this.tabletopActionService.makeDefaultTable();
     this.tabletopActionService.makeDefaultTabletopObjects();

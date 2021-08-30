@@ -137,6 +137,15 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     let position = this.pointerDeviceService.pointers[0];
     
     let actions: ContextMenuAction[] = [];
+    actions.push({
+      name: 'テーブルから探す',
+      action: () => {
+        if (gameObject.location.name === 'table') EventSystem.trigger('FOCUS_TABLETOP_OBJECT', { x: gameObject.location.x, y: gameObject.location.y, z: gameObject.posZ + (gameObject.altitude > 0 ? gameObject.altitude * 50 : 0) });
+      },
+      default: gameObject.location.name === 'table',
+      disabled: gameObject.location.name !== 'table'
+    });
+    actions.push(ContextMenuSeparator);
     if (gameObject.imageFiles.length > 1) {
       actions.push({
         name: '画像切り替え',
@@ -415,8 +424,14 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   selectGameObject(gameObject: GameObject) {
-    let aliasName: string = gameObject.aliasName;
-    EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
+    EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName, highlight: true });
+  }
+
+  focusGameObject(e: Event, gameObject: GameCharacter) {
+    if (!(e.target instanceof HTMLElement)) return;
+    if (new Set(['input', 'button']).has(e.target.tagName.toLowerCase())) return;
+    if (gameObject.location.name !== 'table') return;
+    EventSystem.trigger('FOCUS_TABLETOP_OBJECT', { x: gameObject.location.x, y: gameObject.location.y, z: gameObject.posZ + (gameObject.altitude > 0 ? gameObject.altitude * 50 : 0) });
   }
 
   private deleteGameObject(gameObject: GameObject) {
