@@ -24,13 +24,13 @@ export class VoteWindowComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private timestamp = 0;
   get vote(): Vote { return ObjectStore.instance.get<Vote>('Vote'); }
-  get answerList(): VoteContext[] { return this.vote.voteAnswer; }
+  get answerList(): number[] { return this.vote.voteAnswer; }
 
   numberOfVote(index: number): number{
-    const list: VoteContext[] = this.answerList;
+    const list: number[] = this.answerList;
     let count = 0;
     for (let ans of list){
-      if (ans.answer == index )count ++;
+      if (ans == index )count ++;
     }
     return count;
   }
