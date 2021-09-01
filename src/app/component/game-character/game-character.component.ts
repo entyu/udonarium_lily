@@ -302,9 +302,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           this.changeDetector.markForCheck();
         });
       })
-      .on<object>('SELECT_TABLETOP_OBJECT', -1000, event => {
+      .on<object>('MULTI_SELECT_TABLETOP_OBJECT', -1000, event => {
         this.ngZone.run(() => {
-          if (event.data['highlight'] && event.data['identifier'] === this.gameCharacter.identifier) {
+          if (event.data['identifier'] === this.gameCharacter.identifier) {
             this.selected = true;
           } else {
             this.selected = false;

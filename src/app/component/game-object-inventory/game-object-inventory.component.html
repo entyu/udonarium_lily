@@ -3,7 +3,7 @@
   <ng-container *ngTemplateOutlet="inventoryViewSetting"></ng-container>
   <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
   <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject"
-    (click)="selectGameObject(gameObject)" (dblclick)="focusGameObject($event, gameObject)" [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
+    (click)="selectGameObject(gameObject)" (dblclick)="focusGameObject(gameObject, $event)" [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier)}">
     <ng-container *ngTemplateOutlet="gameObjectTags; context:{ gameObject: gameObject}"></ng-container>
   </div>
   <div *ngIf="selectTab === 'graveyard'" style="padding-top: 6px;">

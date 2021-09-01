@@ -144,7 +144,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
           // x軸回転
           let rotateXRad = this.viewRotateX / 180 * Math.PI;
           let rotatedMovedY = zRotatedMovedY * Math.cos(rotateXRad);
-          let rotatedMovedZ = zRotatedMovedY * Math.sin(rotateXRad) + movedZ * Math.sin(rotateXRad);
+          let rotatedMovedZ = zRotatedMovedY * Math.sin(rotateXRad) + movedZ;
           // 移動
           this.setTransform(
             100 - rotatedMovedX - this.viewPotisonX, -rotatedMovedY - this.viewPotisonY, -rotatedMovedZ - this.viewPotisonZ, 0, 0, 0

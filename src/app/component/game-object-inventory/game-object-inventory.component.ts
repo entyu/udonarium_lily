@@ -424,10 +424,12 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   selectGameObject(gameObject: GameObject) {
-    EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName, highlight: true });
+    EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
+    // 将来複数選択可能にする
+    EventSystem.trigger('MULTI_SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
   }
 
-  focusGameObject(e: Event, gameObject: GameCharacter) {
+  focusGameObject(gameObject: GameCharacter, e: Event, ) {
     if (!(e.target instanceof HTMLElement)) return;
     if (new Set(['input', 'button']).has(e.target.tagName.toLowerCase())) return;
     if (gameObject.location.name !== 'table') return;
