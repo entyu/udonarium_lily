@@ -114,7 +114,7 @@
     suggestedQuality="default" 
     [width]="pixcelWidth - (isBordered ? 6 : 0)"
     [height]="pixcelHeight - (isBordered ? 6 : 0)" 
-    [playerVars]="{autoplay: 1, controls: 0, loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist', list: (playListId ? playListId : null), playlist: (playListId ? null : videoId), disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
+    [playerVars]="{autoplay: 1, controls: 0, start: cutIn.videoStart, loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist', list: (playListId ? playListId : null), playlist: (playListId ? null : videoId), disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
     (ready)="onPlayerReady($event)"
     (stateChange)="onPlayerStateChange($event)">
   </youtube-player>
