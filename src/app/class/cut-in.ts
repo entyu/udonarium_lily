@@ -38,10 +38,10 @@ export class CutIn extends ObjectNode {
       const hostname = (new URL(this.videoUrl)).hostname
       if (hostname == 'youtube.com' || hostname == 'www.youtube.com') { 
         let tmp = this.videoUrl.split('v=');
-        if (tmp[1]) ret = encodeURI(tmp[1].split(/[\&\#\/]/)[0]);
+        if (tmp[1]) ret = encodeURI(tmp[1].split(/[\?\&\#\/]/)[0]);
       } else if (hostname == 'youtu.be') {
         let tmp = this.videoUrl.split('youtu.be/');
-        if (tmp[1]) ret = encodeURI(tmp[1].split(/[\&\#\/]/)[0]);
+        if (tmp[1]) ret = encodeURI(tmp[1].split(/[\?\&\#\/]/)[0]);
       } else {
         return '';
       }
@@ -50,6 +50,13 @@ export class CutIn extends ObjectNode {
       return ret = '';
     }
     return ret.replace(/[\<\>\/\:\s\r\n]/g, '');
+  }
+
+  get videoStart(): number {
+    if (!this.isVideoCutIn || !this.videoUrl || !this.videoId) return 0;
+    const result = /[\&\?]t\=(\d+)/i.exec(this.videoUrl);
+    if (result && result[1]) return +result[1];
+    return 0; 
   }
 
   get playListId(): string {
