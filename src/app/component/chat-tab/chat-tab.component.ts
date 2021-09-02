@@ -100,7 +100,7 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     let count = 0;
     let i = len - 1 ;
     for ( ; i >= 0 ; i--) {
-      if (chatMessages[0].isDisplayable) count++;
+      if (chatMessages[i].isDisplayable) count++;
       if ( count >= dispLength) return i;
     }
     return i ;

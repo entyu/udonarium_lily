@@ -28,35 +28,10 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
   get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
 
-  displayNum = 0;
-  chekcdDisplayIndex = -1;
-  headMessagesTimeStamp = 0;
-  headMessagesSendFrom = '';
-
-  resetDisplayableMessageCount(){
-    this.displayNum = 0;
-    this.chekcdDisplayIndex = -1;
-  }
-
+  private _displayableMessageNum = 0;
   displayableMessagesLength(): number{
-    if (!this.chatMessages) return 0;
-    if (!this.chatMessages[0]) return 0;
-
-    if ( this.headMessagesSendFrom != this.chatMessages[0].sendFrom || this.headMessagesTimeStamp != this.chatMessages[0].timestamp){
-      this.resetDisplayableMessageCount();
-      this.headMessagesSendFrom = this.chatMessages[0].sendFrom;
-      this.headMessagesTimeStamp = this.chatMessages[0].timestamp;
-    }
-    let lastIndex = this.chatMessages.length - 1;
-    if ( this.chekcdDisplayIndex < lastIndex){
-      for ( let i = this.chekcdDisplayIndex + 1 ; i <= lastIndex ; i++){
-        if ( this.chatMessages[i].isDisplayable ) this.displayNum++;
-      }
-    }
-    this.chekcdDisplayIndex = lastIndex;
-    return this.displayNum;
+    return this._displayableMessageNum;
   }
-
 
   tachieReset(){
     this.imageIdentifier = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
@@ -130,8 +105,10 @@ export class ChatTab extends ObjectNode implements InnerXml {
     if (child.parent === this && child instanceof ChatMessage && child.isDisplayable) {
       if (this.children.length == 1){ // ログデリート時
         this._unreadLength = 1;
+        this._displayableMessageNum = 1;
       }else{
         this._unreadLength++;
+        this._displayableMessageNum++;
       }
 
       if ( child.to != null && child.to !== '') {
