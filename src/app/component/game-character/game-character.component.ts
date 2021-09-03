@@ -302,9 +302,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           this.changeDetector.markForCheck();
         });
       })
-      .on<object>('MULTI_SELECT_TABLETOP_OBJECT', -1000, event => {
+      .on<object>('SELECT_TABLETOP_OBJECT', -1000, event => {
+        // とりあえず
         this.ngZone.run(() => {
-          if (event.data['identifier'] === this.gameCharacter.identifier) {
+          if (event.data['highlighting'] && event.data['identifier'] === this.gameCharacter.identifier) {
             this.selected = true;
           } else {
             this.selected = false;
@@ -591,6 +592,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       EventSystem.call('FAREWELL_CHAT_BALLOON', { characterIdentifier: this.gameCharacter.identifier });
     }
     SoundEffect.play(PresetSound.piecePut);
+    this.selected = false;
   }
 
   onImageLoad() {

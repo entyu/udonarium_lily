@@ -143,7 +143,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         if (gameObject.location.name === 'table') EventSystem.trigger('FOCUS_TABLETOP_OBJECT', { x: gameObject.location.x, y: gameObject.location.y, z: gameObject.posZ + (gameObject.altitude > 0 ? gameObject.altitude * 50 : 0) });
       },
       default: gameObject.location.name === 'table',
-      disabled: gameObject.location.name !== 'table'
+      disabled: gameObject.location.name !== 'table',
+      selfOnly: true
     });
     actions.push(ContextMenuSeparator);
     if (gameObject.imageFiles.length > 1) {
@@ -424,9 +425,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   }
 
   selectGameObject(gameObject: GameObject) {
-    EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
-    // 将来複数選択可能にする
-    EventSystem.trigger('MULTI_SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
+    EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName, highlighting: true });
   }
 
   focusGameObject(gameObject: GameCharacter, e: Event, ) {
