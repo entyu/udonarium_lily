@@ -40,11 +40,13 @@ https://github.com/TK11235/udonarium
 ユーザ自身でWebサーバを用意し、そのサーバにユドナリウムリリィを設置して利用することができます。  
 以下のファイルをダウンロードして解凍し、Webサーバに配置してください。  
 
-最新版v1.03.0　
+最新版v1.04.0　
 
-https://github.com/entyu/udonarium_lily/releases/download/v1.03.0/udonarium_lily-v1.03.0.zip
+https://github.com/entyu/udonarium_lily/releases/download/%EF%BD%961.04.0/udonarium_lily-v1.04.0.zip
 
 旧バージョン
+
+https://github.com/entyu/udonarium_lily/releases/download/v1.03.0/udonarium_lily-v1.03.0.zip
 
 https://github.com/entyu/udonarium_lily/releases/download/v1.02.2/udonarium_lily-v1.02.2.zip
 
