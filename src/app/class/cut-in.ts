@@ -52,11 +52,37 @@ export class CutIn extends ObjectNode {
     return ret.replace(/[\<\>\/\:\s\r\n]/g, '');
   }
 
-  get videoStart(): number {
-    if (!this.isVideoCutIn || !this.videoUrl || !this.videoId) return 0;
-    const result = /[\&\?]t\=(\d+)/i.exec(this.videoUrl);
-    if (result && result[1]) return +result[1];
-    return 0; 
+  get videoStart(): string {
+    if (!this.isVideoCutIn || !this.videoUrl || !this.videoId) return null;
+    const result = /[\&\?](?:start|t)\=([\dhms]+)/i.exec(this.videoUrl);
+    if (result && result[1]) {
+      return this._sec(result[1]);
+    }
+    return null; 
+  }
+
+  get videoEnd(): string {
+    if (!this.isVideoCutIn || !this.videoUrl || !this.videoId) return null;
+    const result = /[\&\?]end\=([\dhms]+)/i.exec(this.videoUrl);
+    if (result && result[1]) {
+      return this._sec(result[1]);
+    }
+    return null; 
+  }
+
+  private _sec(str: string): string {
+    if (!str) return null;
+    let tmp = null;
+    if (tmp = /^(\d+)$/.exec(str)) {
+      return tmp[1];
+    } else if (tmp = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/i.exec(str)) {
+      let sec = 0;
+      if (tmp[1]) sec += +tmp[1] * 60 * 60;
+      if (tmp[2]) sec += +tmp[2] * 60;
+      if (tmp[3]) sec += +tmp[3];
+      return '' + sec;
+    }
+    return null;
   }
 
   get playListId(): string {
