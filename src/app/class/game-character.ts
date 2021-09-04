@@ -252,6 +252,12 @@ export class GameCharacter extends TabletopObject {
     palette.setPalette(`チャットパレット入力例：
 2d6+1 ダイスロール
 １ｄ２０＋{敏捷}＋｛格闘｝　{name}の格闘！
+
+自己バフ、リソース操作コマンド例：
+&マッスルベアー/筋B+2/3
+:MP-3
+&マッスルベアー/筋B+2/3:MP-3
+
 //敏捷=10+{敏捷A}
 //敏捷A=10
 //格闘＝１`);
