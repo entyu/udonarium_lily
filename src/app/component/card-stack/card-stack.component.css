@@ -84,6 +84,7 @@
 
 .rotate-grab {
   display: none;
+  z-index: 11;
 }
 
 .component:hover .rotate-grab {
