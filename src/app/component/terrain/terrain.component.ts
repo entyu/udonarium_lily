@@ -392,13 +392,13 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.isSurfaceShading) return ret;
     switch (this.slopeDirection) {
       case SlopeDirection.TOP:
-        ret = 0.5;
+        ret = 0.4;
         break;
       case SlopeDirection.BOTTOM:
         ret = 1.0;
         break;
       case SlopeDirection.LEFT:
-        ret = 0.7;
+        ret = 0.6;
         break;
       case SlopeDirection.RIGHT:
         ret = 0.9;
