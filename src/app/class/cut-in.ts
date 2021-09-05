@@ -61,15 +61,6 @@ export class CutIn extends ObjectNode {
     return null; 
   }
 
-  get videoEnd(): string {
-    if (!this.isVideoCutIn || !this.videoUrl || !this.videoId) return null;
-    const result = /[\&\?]end\=([\dhms]+)/i.exec(this.videoUrl);
-    if (result && result[1]) {
-      return this._sec(result[1]);
-    }
-    return null; 
-  }
-
   private _sec(str: string): string {
     if (!str) return null;
     let tmp = null;
