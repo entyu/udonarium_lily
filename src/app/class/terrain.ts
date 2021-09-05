@@ -9,6 +9,13 @@ export enum TerrainViewState {
   WALL = 2,
   ALL = 3,
 }
+export enum SlopeDirection {
+  NONE = 0,
+  TOP = 1,
+  BOTTOM = 2,
+  LEFT = 3,
+  RIGHT = 4,
+}
 
 @SyncObject('terrain')
 export class Terrain extends TabletopObject {
@@ -19,6 +26,7 @@ export class Terrain extends TabletopObject {
   @SyncVar() isSurfaceShading: boolean = true
   @SyncVar() isInteract: boolean = true;
   @SyncVar() isSlope: boolean = false;
+  @SyncVar() slopeDirection: number = SlopeDirection.NONE;
 
   get width(): number { return this.getCommonValue('width', 1); }
   set width(width: number) { this.setCommonValue('width', width); }

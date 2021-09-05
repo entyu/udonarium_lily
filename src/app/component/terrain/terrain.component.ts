@@ -16,7 +16,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { Terrain, TerrainViewState } from '@udonarium/terrain';
+import { SlopeDirection, Terrain, TerrainViewState } from '@udonarium/terrain';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { InputHandler } from 'directive/input-handler';
@@ -67,7 +67,20 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   set isInteract(isInteract: boolean) { this.terrain.isInteract = isInteract; }
 
   get isSlope(): boolean { return this.terrain.isSlope; }
-  set isSlope(isSlope: boolean) { this.terrain.isSlope = isSlope; }
+  set isSlope(isSlope: boolean) {
+    this.terrain.isSlope = isSlope;
+    if (!isSlope) this.terrain.slopeDirection = SlopeDirection.NONE;
+  }
+
+  get slopeDirection(): number {
+    if (!this.terrain.isSlope) return SlopeDirection.NONE;
+    if (this.terrain.isSlope && this.terrain.slopeDirection === SlopeDirection.NONE) return SlopeDirection.BOTTOM;
+    return this.terrain.slopeDirection;
+  }
+  set slopeDirection(slopeDirection: number) {
+    this.terrain.isSlope = (slopeDirection != SlopeDirection.NONE);
+    this.terrain.slopeDirection = slopeDirection;
+  }
   
   get isAltitudeIndicate(): boolean { return this.terrain.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.terrain.isAltitudeIndicate = isAltitudeIndicate; }
@@ -92,6 +105,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   rotableOption: RotableOption = {};
 
   math = Math;
+  slopeDirectionState = SlopeDirection;
 
   private input: InputHandler = null;
 
@@ -190,6 +204,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }),
       ContextMenuSeparator,
+      /*
       (this.isSlope
         ? {
           name: '☑ 傾斜', action: () => {
@@ -200,6 +215,35 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
             this.isSlope = true;
           }
         }),
+      */
+      { name: '傾斜', action: null, subActions: [
+        {
+          name: `${ this.slopeDirection == SlopeDirection.NONE ? '◉' : '○' } なし`, action: () => {
+            this.slopeDirection = SlopeDirection.NONE;
+          }
+        },
+        ContextMenuSeparator,
+        {
+          name: `${ this.slopeDirection == SlopeDirection.TOP ? '◉' : '○' } 上（北）`, action: () => {
+            this.slopeDirection = SlopeDirection.TOP;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.BOTTOM ? '◉' : '○' } 下（南）`, action: () => {
+            this.slopeDirection = SlopeDirection.BOTTOM;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.LEFT ? '◉' : '○' } 左（西）`, action: () => {
+            this.slopeDirection = SlopeDirection.LEFT;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.RIGHT ? '◉' : '○' } 右（東）`, action: () => {
+            this.slopeDirection = SlopeDirection.RIGHT;
+          }
+        }
+      ]},
       { name: '壁の表示', action: null, subActions: [
         {
           name: `${ this.hasWall && this.isSurfaceShading ? '◉' : '○' } 通常`, action: () => {
@@ -317,6 +361,50 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onMoved() {
     SoundEffect.play(PresetSound.blockPut);
+  }
+
+  get floorModCss() {
+    let ret = '';
+    let tmp = 0;
+    switch (this.slopeDirection) {
+      case SlopeDirection.TOP:
+        tmp = Math.atan(this.height / this.depth);
+        ret = ' rotateX(' + tmp + 'rad) scaleY(' + (1 / Math.cos(tmp)) + ')';
+        break;
+      case SlopeDirection.BOTTOM:
+        tmp = Math.atan(this.height / this.depth);
+        ret = ' rotateX(' + -tmp + 'rad) scaleY(' + (1 / Math.cos(tmp)) + ')';
+        break;
+      case SlopeDirection.LEFT:
+        tmp = Math.atan(this.height / this.width);
+        ret = ' rotateY(' + -tmp + 'rad) scaleX(' + (1 / Math.cos(tmp)) + ')';
+        break;
+      case SlopeDirection.RIGHT:
+        tmp = Math.atan(this.height / this.width);
+        ret = ' rotateY(' + tmp + 'rad) scaleX(' + (1 / Math.cos(tmp)) + ')';
+        break;
+    }
+    return ret;
+  }
+
+  get floorBrightness() {
+    let ret = 1.0;
+    if (!this.isSurfaceShading) return ret;
+    switch (this.slopeDirection) {
+      case SlopeDirection.TOP:
+        ret = 0.5;
+        break;
+      case SlopeDirection.BOTTOM:
+        ret = 1.0;
+        break;
+      case SlopeDirection.LEFT:
+        ret = 0.7;
+        break;
+      case SlopeDirection.RIGHT:
+        ret = 0.9;
+        break;
+    }
+    return ret;
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {
