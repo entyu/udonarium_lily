@@ -21,6 +21,7 @@ import { FileSelecterComponent } from 'component/file-selecter/file-selecter.com
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 import { SaveDataService } from 'service/save-data.service';
 
+
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 @Component({
@@ -277,9 +278,12 @@ export class CutInListComponent implements OnInit, OnDestroy {
     }
     return 0;
   }
-
-
-
+/*
+  openYouTubeTerms() {
+    this.modalService.open(OpenUrlComponent, { url: 'https://www.youtube.com/terms', title: 'YouTube 利用規約' });
+    return false;
+  }
+*/
   previewCutIn(){
     if( this.selectedCutIn.originalSize ){
       let imageurl = this.selectedCutIn.cutInImage.url;

@@ -68,6 +68,15 @@
         チャット末尾発動：<input type="checkbox" [(ngModel)]="chatActivate" name="chatActivate" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
       <div>
+        <div style="padding-left: 1em">
+          <input type="radio" name="{{panelId}}-media" id="{{panelId}}-media-video" [(ngModel)]="cutInIsVideo" [checked]="cutInIsVideo" [value]="true" [attr.disabled]="!isEditable || isPlaying ? '' : null">
+            <label for="{{panelId}}-media-video"><b>動画URL: </b></label><input type="text" style="width: 24em" [(ngModel)]="cutInVideoURL" [attr.disabled]="!cutInIsVideo || !isEditable || isPlaying ? '' : null">
+        </div>
+        <div style="padding-left: 2.5em">
+          <a href="https://www.youtube.com/terms" target="_blank" class="outer-link" (click)="openYouTubeTerms()">YouTube 利用規約</a>
+        </div>
+      </div>
+      <div>
 <p style="font-size:0.4em">※カットインの挙動<br>
 タグ名称が同名のカットインは先に再生しているものを停止します(タグ空欄含む)<br>
 タグ名称が空欄で音楽が設定されている場合、ジュークボックスのBGMを停止します<br>
@@ -75,8 +84,7 @@
 銃撃音のSE等、BGMと同時再生したいカットインはタグを設定してください<br>
 </p>
       </div>
-
-<!-- 動画再生は後日検討。youtubeより.mp4に対法した方が実装上は良いのかも知れない
+<!--
       <div>
         Youtube再生 :<input type="checkbox" [(ngModel)]="cutInUseOutUrl" name="cutInUseOutUrl" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
