@@ -13,6 +13,7 @@ export class OpenUrlComponent implements OnInit, OnDestroy {
   url: string = '';
   title: string = '';
   subTitle: string = '';
+  urlObj: URL;
 
   constructor(
     private panelService: PanelService,
@@ -21,11 +22,21 @@ export class OpenUrlComponent implements OnInit, OnDestroy {
     this.url = modalService.option.url ? modalService.option.url : '';
     this.title = modalService.option.title ? modalService.option.title : '';
     this.subTitle = modalService.option.subTitle ? modalService.option.subTitle : '';
+    this.urlObj = (this.isValid ? new URL(this.url) : null);
+  }
+
+  get isValid(): boolean {
+    return StringUtil.validUrl(this.url.trim());
+  }
+
+  get isOuter(): boolean {
+    if (!this.isValid) return false;
+    return window.location.origin != this.urlObj.origin;
   }
 
   ngOnInit() {
     Promise.resolve().then(() => {
-      let titleBar = 'URLを開く';
+      let titleBar = '外部URLを開く';
       if (this.title) {
         titleBar += ('〈' + this.title + (this.subTitle ? `：${this.subTitle}` : '') + '〉');
       } else if (this.subTitle) {
@@ -41,11 +52,11 @@ export class OpenUrlComponent implements OnInit, OnDestroy {
   }
 
   openUrl() {
-    window.open(this.url.trim());
+    window.open(this.url.trim(), '_blank', 'noopener');
     this.modalService.resolve(true);
   }
-  
-  validUrl(): boolean {
-    return StringUtil.validUrl(this.url.trim());
+
+  cancel() {
+    this.modalService.resolve(false);
   }
 }
