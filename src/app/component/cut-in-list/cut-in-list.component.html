@@ -13,7 +13,13 @@
         <div>
           画像
           <div (click)="openCutInImageModal()"  style="height:120px;" >
-            <img height="120" [src]="cutInImage.url | safe: 'resourceUrl'">
+            <img height="120" [src]="cutInImageUrl | safe: 'resourceUrl'">
+<!--
+            <img style="height: 120px; object-fit: contain" 
+[ngClass]="{ blackout: (!cutInVideoId || cutInisSoundOnly) && !isShowHideImages && getHidden(cutInImage) }" 
+[src]="cutInImageUrl | safe: 'resourceUrl'">
+cutInImage.url
+-->
           </div>
         </div>
         <div>
@@ -68,13 +74,17 @@
         チャット末尾発動：<input type="checkbox" [(ngModel)]="chatActivate" name="chatActivate" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
       <div>
-        <div style="padding-left: 1em">
-          <input type="radio" name="{{panelId}}-media" id="{{panelId}}-media-video" [(ngModel)]="cutInIsVideo" [checked]="cutInIsVideo" [value]="true" [attr.disabled]="!isEditable || isPlaying ? '' : null">
-            <label for="{{panelId}}-media-video"><b>動画URL: </b></label><input type="text" style="width: 24em" [(ngModel)]="cutInVideoURL" [attr.disabled]="!cutInIsVideo || !isEditable || isPlaying ? '' : null">
-        </div>
-        <div style="padding-left: 2.5em">
-          <a href="https://www.youtube.com/terms" target="_blank" class="outer-link" (click)="openYouTubeTerms()">YouTube 利用規約</a>
-        </div>
+        YouTube再生 :<input type="checkbox" [(ngModel)]="cutInIsVideo" name="cutInIsVideo" [attr.disabled]="!isEditable ? '' : null"/>
+        URL :<input [(ngModel)]="cutInVideoURL" placeholder="URL" [attr.disabled]="!isEditable ? '' : null" />
+<ng-container *ngIf="selectedCutIn">
+<br>
+TEST_ID:{{selectedCutIn.videoId}}<br>
+cutInIsVideo:{{cutInIsVideo}}
+</ng-container>
+      </div>
+      <div>
+        <a href="https://www.youtube.com/terms" target="_blank" class="outer-link" (click)="openYouTubeTerms()">YouTube 利用規約</a>
+        :機能使用前に確認ください
       </div>
       <div>
 <p style="font-size:0.4em">※カットインの挙動<br>
@@ -85,11 +95,11 @@
 </p>
       </div>
 <!--
+            <label for="{{panelId}}-media-video"><b>動画URL: </b></label><input type="text" style="width: 24em" [(ngModel)]="cutInVideoURL" [attr.disabled]="!cutInIsVideo || !isEditable || isPlaying ? '' : null">
+          <input type="radio" name="{{panelId}}-media" id="{{panelId}}-media-video" [(ngModel)]="cutInIsVideo" [checked]="cutInIsVideo" [value]="true" [attr.disabled]="!isEditable || isPlaying ? '' : null">
       <div>
-        Youtube再生 :<input type="checkbox" [(ngModel)]="cutInUseOutUrl" name="cutInUseOutUrl" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
       <div>
-        URL :<input [(ngModel)]="cutInOutUrl" placeholder="URL" [attr.disabled]="!isEditable ? '' : null" />
       </div>
 -->
       <hr/>

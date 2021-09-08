@@ -21,6 +21,7 @@ import { FileSelecterComponent } from 'component/file-selecter/file-selecter.com
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 import { SaveDataService } from 'service/save-data.service';
 
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -99,8 +100,6 @@ export class CutInListComponent implements OnInit, OnDestroy {
   }
 
 
-
-
   get cutInX_Pos(): number { return this.isEditable ? this.selectedCutIn.x_pos : 0 ; }
   set cutInX_Pos(cutInX_Pos: number) { if (this.isEditable) this.selectedCutIn.x_pos = cutInX_Pos; }
 
@@ -119,11 +118,11 @@ export class CutInListComponent implements OnInit, OnDestroy {
   get cutInOutTime(): number { return this.isEditable ? this.selectedCutIn.outTime : 0 ; }
   set cutInOutTime(cutInOutTime: number) { if (this.isEditable) this.selectedCutIn.outTime = cutInOutTime; }
 
-  get cutInUseOutUrl(): boolean { return this.isEditable ? this.selectedCutIn.useOutUrl : false ; }
-  set cutInUseOutUrl(cutInUseOutUrl: boolean) { if (this.isEditable) this.selectedCutIn.useOutUrl = cutInUseOutUrl; }
+  get cutInIsVideo(): boolean { return this.isEditable ? this.selectedCutIn.isVideoCutIn : false ;}
+  set cutInIsVideo(isVideo: boolean) { if (this.isEditable) this.selectedCutIn.isVideoCutIn = isVideo; }
 
-  get cutInOutUrl(): string { return this.isEditable ? this.selectedCutIn.outUrl : '' ; }
-  set cutInOutUrl(cutInOutUrl: string) { if (this.isEditable) this.selectedCutIn.outUrl = cutInOutUrl; }
+  get cutInVideoURL(): string { return this.isEditable ? this.selectedCutIn.videoUrl: '' ; }
+  set cutInVideoURL(videoUrl: string) { if (this.isEditable) this.selectedCutIn.videoUrl = videoUrl; }
 
   get cutInTagName(): string { return this.isEditable ? this.selectedCutIn.tagName : '' ; }
   set cutInTagName(cutInTagName: string) { if (this.isEditable) this.selectedCutIn.tagName = cutInTagName; }
@@ -153,6 +152,11 @@ export class CutInListComponent implements OnInit, OnDestroy {
   }
 
   get isEmpty(): boolean { return false ; }
+
+  get cutInImageUrl(): string {
+    if (!this.selectedCutIn) return ImageFile.Empty.url;
+    return !this.selectedCutIn.videoId  ? this.cutInImage.url : `https://img.youtube.com/vi/${this.selectedCutIn.videoId}/hqdefault.jpg`;
+  }
 
   isSaveing: boolean = false;
   progresPercent: number = 0;
@@ -278,12 +282,12 @@ export class CutInListComponent implements OnInit, OnDestroy {
     }
     return 0;
   }
-/*
+
   openYouTubeTerms() {
     this.modalService.open(OpenUrlComponent, { url: 'https://www.youtube.com/terms', title: 'YouTube 利用規約' });
     return false;
   }
-*/
+
   previewCutIn(){
     if( this.selectedCutIn.originalSize ){
       let imageurl = this.selectedCutIn.cutInImage.url;

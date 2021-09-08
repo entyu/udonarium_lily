@@ -60,6 +60,8 @@ import { RemoteControllerComponent } from 'component/remote-controller/remote-co
 import { ControllerInputComponent } from 'component/controller-input/controller-input.component';  
 import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component'; 
 
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
+
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
@@ -117,6 +119,8 @@ import { AppComponent } from './app.component';
     GameTableSettingComponent,
     GameTableComponent,
     JukeboxComponent,
+
+    OpenUrlComponent,
 
     CutInListComponent,
     CutInBgmComponent,

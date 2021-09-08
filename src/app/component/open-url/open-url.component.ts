@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
-import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 @Component({
   selector: 'open-url',
@@ -26,7 +25,7 @@ export class OpenUrlComponent implements OnInit, OnDestroy {
   }
 
   get isValid(): boolean {
-    return StringUtil.validUrl(this.url.trim());
+    return this.validUrl(this.url.trim());
   }
 
   get isOuter(): boolean {
@@ -45,6 +44,16 @@ export class OpenUrlComponent implements OnInit, OnDestroy {
       this.modalService.title = this.panelService.title = titleBar;
     });
     EventSystem.register(this);
+  }
+
+  validUrl(url: string): boolean {
+    if (!url) return false;
+    try {
+      new URL(url.trim());
+    } catch (e) {
+      return false;
+    }
+    return /^https?\:\/\//.test(url.trim());
   }
 
   ngOnDestroy() {

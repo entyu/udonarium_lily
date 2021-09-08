@@ -97,7 +97,7 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   openCutInList() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 650, height: 700 };
+    let option: PanelOption = { left: coordinate.x+25, top: coordinate.y+25, width: 650, height: 740 };
     this.panelService.open<CutInListComponent>(CutInListComponent, option);
   }
 
