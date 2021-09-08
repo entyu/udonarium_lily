@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
+//import { YouTubePlayer } from '@angular/youtube-player';
 import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
@@ -44,6 +45,8 @@ import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 */
 })
 export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
+
+//  @ViewChild('videoPlayerComponent', { static: false }) videoPlayer: YouTubePlayer;
 
   left : number = 0;
   top : number = 0;
