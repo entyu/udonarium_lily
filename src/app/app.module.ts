@@ -62,6 +62,7 @@ import { GameCharacterBuffViewComponent } from 'component/game-character-buff-vi
 
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
+import { YouTubePlayerModule } from "@angular/youtube-player";
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
@@ -158,6 +159,7 @@ import { AppComponent } from './app.component';
     CommonModule,
     FormsModule,
     LinkyModule,
+    YouTubePlayerModule,
     NgSelectModule,
   ],
   providers: [

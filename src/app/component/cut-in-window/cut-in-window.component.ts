@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef , Input, NgZone, OnDestroy, OnInit ,ViewChild } from '@angular/core';
 import { AudioFile } from '@udonarium/core/file-storage/audio-file';
-//import { YouTubePlayer } from '@angular/youtube-player';
+import { YouTubePlayer } from '@angular/youtube-player';
 import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
@@ -45,8 +45,8 @@ import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 */
 })
 export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
-
-//  @ViewChild('videoPlayerComponent', { static: false }) videoPlayer: YouTubePlayer;
+  @ViewChild('cutInImageElement', { static: false }) cutInImageElement: ElementRef;
+  @ViewChild('videoPlayerComponent', { static: false }) videoPlayer: YouTubePlayer;
 
   left : number = 0;
   top : number = 0;
@@ -59,7 +59,16 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   private lazyUpdateTimer: NodeJS.Timer = null;
   readonly audioPlayer: AudioPlayer = new AudioPlayer();
   private cutInTimeOut = null ;
-  
+
+//  private _timeoutId;
+  private _timeoutIdVideo;
+
+//  private _isVisible = false;
+//  private _isEnd = false;
+  videoStateTransition = false;
+
+  isTest = false;
+
   cutIn: CutIn = null;
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
@@ -162,13 +171,64 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
       
       console.log("カットインが未定義で再生された");
     }
-  
-
     this.panelService.width = this.width ;
     this.panelService.height = this.height ;
     this.panelService.left = this.left ;
     this.panelService.top = this.top ;
+  }
 
+  get videoId(): string {
+    if (!this.cutIn) return '';
+    return this.cutIn.videoId;
+  }
+
+  get videoVolume(): number {
+    return (this.isTest ? AudioPlayer.auditionVolume : AudioPlayer.volume) * 100;
+  }
+
+  onPlayerReady($event) {
+    $event.target.setVolume(this.videoVolume);
+    console.log('ready')
+    $event.target.playVideo();
+  }
+
+  onPlayerStateChange($event) {
+    const state = $event.data;
+    console.log($event.data)
+    if (state == 1) {
+      this.videoStateTransition = true;
+      this._timeoutIdVideo = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.videoStateTransition = false;
+          this._timeoutIdVideo = null;
+        });
+      }, 200);
+      if (this.cutIn) EventSystem.trigger('PLAY_VIDEO_CUT_IN', {identifier: this.cutIn.identifier})
+    }
+    if (state == 2) {
+      this.videoStateTransition = true;
+      this._timeoutIdVideo = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.videoStateTransition = false;
+          this._timeoutIdVideo = null;
+        });
+      }, 200);
+    }
+    if (state == 5) {
+      this.videoStateTransition = true;
+      this._timeoutIdVideo = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.videoStateTransition = false;
+          this._timeoutIdVideo = null;
+        });
+      }, 200);
+    }
+  }
+
+  onErrorFallback() {
+    console.log('fallback')
+    if (!this.videoId) return;
+    this.cutInImageElement.nativeElement.src = 'https://img.youtube.com/vi/' + this.videoId + '/default.jpg'
   }
 
   ngOnDestroy() {
