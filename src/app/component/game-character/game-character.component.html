@@ -9,20 +9,20 @@
       <div *ngIf="this.gameCharacter.hideInventory" class="pedestal-inner" [style]="{ 'border': 'solid 6px #A0E0FF'}"></div>
       <div class="pedestal-outer"></div>
       <div class="pedestal-grab rotate-grab">
-<!--°‰ñ“]ƒAƒCƒRƒ“-->
+<!--åºŠå›žè»¢ã‚¢ã‚¤ã‚³ãƒ³-->
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
       <div class="upright-transform is-fit-width is-3d">
-<!--@-->
+<!---->
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
 
 
           <div class="rotate-inner is-3d">
-<!-- ƒoƒt•\Ž¦-->
+<!-- ãƒãƒ•è¡¨ç¤º-->
         <div *ngIf="this.gameCharacter.buffDataElement" >
 
           <ng-container *ngIf="this.gameCharacter.buffDataElement.children.length == 1">
@@ -49,7 +49,7 @@
         </div>
            
 
-<!--–¼‘O•\Ž¦-->
+<!--åå‰è¡¨ç¤º-->
  
             <ng-container *ngIf="this.gameCharacter.nonTalkFlag">
               <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
@@ -70,7 +70,7 @@
 
             <img class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'">
 
-<!--‰ñ“]•”ƒLƒƒƒ‰ã-->
+<!--å›žè»¢éƒ¨ã‚­ãƒ£ãƒ©ä¸Š-->
             <div class="grab-group">
               <div class="rotate-grab rotate-grab-icon of-top"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
