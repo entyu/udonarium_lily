@@ -63,8 +63,11 @@ import { GameCharacterBuffViewComponent } from 'component/game-character-buff-vi
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 import { YouTubePlayerModule } from "@angular/youtube-player";
+
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
+
+import { CutInComponent } from './component/cut-in/cut-in.component';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 
@@ -125,6 +128,7 @@ import { AppComponent } from './app.component';
 
     CutInListComponent,
     CutInBgmComponent,
+    CutInComponent,
     CutInWindowComponent,
     DiceTableSettingComponent,
 
@@ -151,7 +155,7 @@ import { AppComponent } from './app.component';
     TooltipDirective,
     DraggableDirective,
     ResizableDirective,
-    ChatInputComponent,
+    ChatInputComponent
   ],
   imports: [
     BrowserModule,
@@ -160,7 +164,7 @@ import { AppComponent } from './app.component';
     FormsModule,
     LinkyModule,
     YouTubePlayerModule,
-    NgSelectModule,
+    NgSelectModule
   ],
   providers: [
     AppConfigService,
@@ -170,7 +174,7 @@ import { AppComponent } from './app.component';
     GameObjectInventoryService,
     PanelService,
     PointerDeviceService,
-    TabletopService,
+    TabletopService
   ],
   bootstrap: [AppComponent]
 })

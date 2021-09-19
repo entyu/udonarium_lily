@@ -1,4 +1,25 @@
+<!--
 <div *ngIf="isVisible && animationType == -1" appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
+-->
+<div>
+<!--
+  <ng-container *ngTemplateOutlet="image"></ng-container>
+-->{{videoId}} cutin {{isVisible}}
+  <youtube-player #videoPlayerComponent 
+    style="visibility:visible"
+    videoId="ZVexg7S2Vsk" 
+    suggestedQuality="default" 
+    (ready)="onPlayerReady($event)"
+    (stateChange)="onPlayerStateChange($event)">
+  </youtube-player>
+
+</div>
+
+<!--    [videoId]="videoId" -->
+
+
+<!--
+<div appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
   #cutInContainerElement class="container" 
   @cutInNone (@cutInNone.done)="isVisible ? null : end()"
   style="position: absolute"
@@ -15,8 +36,10 @@
   (mouseleave)="draggend()"
   (mouseout)="draggend()"
   (mousemove)="isPointerDragging ? draggstart() : false">
-  <ng-container *ngTemplateOutlet="image"></ng-container>
 </div>
+-->
+
+<!--
 <div *ngIf="isVisible && animationType == 0" appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
   #cutInContainerElement class="container" 
   @cutInFadeInOut (@cutInFadeInOut.done)="isVisible ? null : end()"
@@ -93,13 +116,24 @@
   (mousemove)="isPointerDragging ? draggstart() : false">
   <ng-container *ngTemplateOutlet="image"></ng-container>
 </div>
+-->
+
+<!--
 <ng-template #image>
+-->
+<!--
   <div *ngIf="isTest" class="test-indicator grow left-top">TEST</div>
   <div *ngIf="isTest" class="test-indicator grow right-top">TEST</div>
   <div *ngIf="isTest" class="test-indicator grow left-bottom">TEST</div>
   <div *ngIf="isTest" class="test-indicator grow right-bottom">TEST</div>
+-->
+
+<!--
   <div *ngIf="isSecret" class="secret-indicator grow left-top"><i class="material-icons" style="font-size: smaller">visibility</i> For Your Eyes Only</div>
   <div *ngIf="isSecret" class="secret-indicator grow right-bottom" style="text-align: right">For Your Eyes Only <i class="material-icons" style="font-size: smaller">visibility</i></div>
+-->
+
+<!--
   <div *ngIf="isIndicateSender" class="name-indicator grow right-top" style="text-align: right"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
   <div *ngIf="isIndicateSender" class="name-indicator grow left-bottom"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
   <div [style.width.px]="pixcelWidth + 3" [style.height.px]="19" class="handler top" [ngStyle]="{transform: 'translateX(-' + (isBordered ? 6 : 3) + 'px) translateY(-' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
@@ -107,6 +141,9 @@
   <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler left" [ngStyle]="{transform: 'translateX(-' + (isBordered ? 6 : 3) + 'px) translateY(-' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
   <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler right" [ngStyle]="{transform: 'translateX(' + (isBordered ? 6 : 3) + 'px) translateY(' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
   <div *ngIf="!videoId" style="pointer-events: auto" [style.width.px]="pixcelWidth" [style.height.px]="pixcelHeight" class="handler" (contextmenu)="onContextMenu($event)"></div>
+-->
+
+<!--
   <youtube-player #videoPlayerComponent *ngIf="videoId" 
     style="position: absolute; pointer-events: auto"
     [style.visibility]="videoId && !isSoundOnly ? 'visible' : 'hidden'"
@@ -118,6 +155,9 @@
     (ready)="onPlayerReady($event)"
     (stateChange)="onPlayerStateChange($event)">
   </youtube-player>
+-->
+
+<!--
   <img *ngIf="videoId && !isSoundOnly" #cutInImageElement 
     style="pointer-events: auto"
     draggable="false"
@@ -131,4 +171,7 @@
     [src]="cutInImage.url | safe: 'resourceUrl'"
     (load)="onImageLoad()"
     (contextmenu)="onContextMenu($event)">
+-->
+<!--
 </ng-template>
+-->

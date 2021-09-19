@@ -42,6 +42,8 @@ export class CutIn extends GameObject {
 
   @SyncVar() isVideoCutIn: boolean = false;
   @SyncVar() videoUrl: string = '';
+  // 規約準拠のため常時falseに変更 ToDO 取り除く
+  isSoundOnly: boolean = false;
 
   get audio(): AudioFile { return AudioStorage.instance.get(this.audioIdentifier); }
   private audioPlayer: AudioPlayer = new AudioPlayer();

@@ -25,6 +25,10 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 import { PointerDeviceService } from 'service/pointer-device.service';
 
+//
+import { PeerCursor } from '@udonarium/peer-cursor';
+
+
 @Component({
   selector: 'app-cut-in-list',
   templateUrl: './cut-in-list.component.html',
@@ -302,7 +306,9 @@ export class CutInListComponent implements OnInit, OnDestroy {
     this.cutInLauncher.startCutInMySelf( this.selectedCutIn );
     
   }
+
   
+/*
   playCutIn(){ 
     if( this.selectedCutIn.originalSize ){
       let imageurl = this.selectedCutIn.cutInImage.url;
@@ -324,6 +330,29 @@ export class CutInListComponent implements OnInit, OnDestroy {
     this.cutInLauncher.startCutIn( this.selectedCutIn );
     
   }
+*/
+  playCutIn() {
+    if (!this.selectedCutIn) return;
+    const sendObj = {
+      identifier: this.selectedCutIn.identifier,
+      secret: false,
+      sender: PeerCursor.myCursor.peerId
+    };
+/*
+    if (sendObj.secret) {
+      const targetPeer = ObjectStore.instance.get<PeerCursor>(this.sendTo);
+      if (targetPeer) {
+        if (targetPeer.peerId != PeerCursor.myCursor.peerId) EventSystem.call('PLAY_CUT_IN', sendObj, targetPeer.peerId);
+        EventSystem.call('PLAY_CUT_IN', sendObj, PeerCursor.myCursor.peerId);
+      }
+    } else {
+      EventSystem.call('PLAY_CUT_IN', sendObj);
+    }
+*/
+    EventSystem.call('PLAY_CUT_IN_2',  {cutIn : this.selectedCutIn} );
+  }
+
+
 
   stopCutIn(){
     if(!this.isSelected) return;

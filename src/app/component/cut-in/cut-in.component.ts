@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
 import { AudioPlayer, VolumeType } from '@udonarium/core/file-storage/audio-player';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
@@ -11,83 +11,26 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
+import { PanelOption, PanelService } from 'service/panel.service';
+
+
 @Component({
   selector: 'cut-in',
   templateUrl: './cut-in.component.html',
   styleUrls: ['./cut-in.component.css'],
-  animations: [
-    trigger('cutInNone', [
-      transition('void => *', [
-        animate('10ms ease-in', keyframes([
-          style({ opacity: 0, offset: 0 }),
-          style({ opacity: 1.0, offset: 1.0 })
-        ]))
-      ]),
-      transition('* => void', [
-        animate('10ms ease-in', keyframes([
-          style({ opacity: 0, offset: 1.0 })
-        ]))
-      ])
-    ]),
-    trigger('cutInFadeInOut', [
-      transition('void => *', [
-        animate('330ms ease-in', keyframes([
-          style({ opacity: 0, offset: 0 }),
-          style({ opacity: 1.0, offset: 1.0 })
-        ]))
-      ]),
-      transition('* => void', [
-        animate('330ms ease-in', keyframes([
-          style({ opacity: 1.0, offset: 0 }),
-          style({ opacity: 0, offset: 1.0 })
-        ]))
-      ])
-    ]),
-    trigger('cutInBounceInOut', [
-      transition('void => *', [
-        animate('600ms ease', keyframes([
-          style({ transform: 'scale3d(0, 0, 0)', offset: 0 }),
-          style({ transform: 'scale3d(1.5, 1.5, 1.5)', offset: 0.5 }),
-          style({ transform: 'scale3d(0.75, 0.75, 0.75)', offset: 0.75 }),
-          style({ transform: 'scale3d(1.125, 1.125, 1.125)', offset: 0.875 }),
-          style({ transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
-        ]))
-      ]),
-      transition('* => void', [
-        animate(100, style({ transform: 'scale3d(0, 0, 0)' }))
-      ])
-    ]),
-    trigger('cutInOpenInOut', [
-      transition('void => *', [
-        animate('262ms ease', keyframes([
-          style({ opacity: 0, transform: 'scale3d(0, 1.0, 1.0)', offset: 0 }),
-          style({ opacity: 1, transform: 'scale3d(1.1, 1.0, 1.0)', offset: 0.875 }),
-          style({ opacity: 1, transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
-        ]))
-      ]),
-      transition('* => void', [
-        animate(100, style({ opacity: 0, transform: 'scale3d(0, 1.0, 1.0)' }))
-      ])
-    ]),
-    trigger('cutInOpenInOut2', [
-      transition('void => *', [
-        animate('262ms ease', keyframes([
-          style({ opacity: 0, transform: 'scale3d(1.0, 0, 1.0)', offset: 0 }),
-          style({ opacity: 1, transform: 'scale3d(1.0, 1.1, 1.0)', offset: 0.875 }),
-          style({ opacity: 1,transform: 'scale3d(1.0, 1.0, 1.0)', offset: 1.0 })
-        ]))
-      ]),
-      transition('* => void', [
-        animate(100, style({ opacity: 0, transform: 'scale3d(1.0, 0, 1.0)' }))
-      ])
-    ]),
-  ]
+  
 })
-export class CutInComponent implements OnInit, OnDestroy {
-  @ViewChild('cutInImageElement', { static: false }) cutInImageElement: ElementRef;
+export class CutInComponent implements AfterViewInit, OnInit, OnDestroy {
+
+//  @ViewChild('cutInImageElement', { static: false }) cutInImageElement: ElementRef;
   @ViewChild('videoPlayerComponent', { static: false }) videoPlayer: YouTubePlayer;
   @Input() cutIn: CutIn;
   @Input() animationType: number = 0;
+
+  left : number = 0;
+  top : number = 0;
+  width : number = 200;
+  height : number = 150;
 
   static readonly MIN_SIZE = 250;
 
@@ -114,12 +57,14 @@ export class CutInComponent implements OnInit, OnDestroy {
   private _naturalWidth = 0;
   private _naturalHeight = 0;
   private get naturalWidth(): number {
-    if (this.videoId && !this.isSoundOnly) return 480;
-    return this._naturalWidth;
+    return 480;
+//    if (this.videoId && !this.isSoundOnly) return 480;
+//    return this._naturalWidth;
   }
   private get naturalHeight(): number {
-    if (this.videoId && !this.isSoundOnly) return 270;
-    return this._naturalHeight;
+    return 270;
+//    if (this.videoId && !this.isSoundOnly) return 270;
+//    return this._naturalHeight;
   }
 
   private _dragging = false;
@@ -127,12 +72,66 @@ export class CutInComponent implements OnInit, OnDestroy {
   private readonly audioPlayer = new AudioPlayer();
 
   constructor(
+
+//    private modalService: ModalService,
+    private panelService: PanelService,
+
+
     private pointerDeviceService: PointerDeviceService,
     private contextMenuService: ContextMenuService,
     private ngZone: NgZone
   ) { }
 
+
+  ngAfterViewInit() {
+    if( this.cutIn ){
+      setTimeout(() => {
+        this.moveCutInPos();
+      },0);
+    }
+  }
+
+
+  moveCutInPos(){
+/*    
+    if( this.cutIn ){
+      
+      let cutin_w = this.cutIn.width;
+      let cutin_h = this.cutIn.height;
+
+      let margin_w = window.innerWidth - cutin_w ;
+      let margin_h = window.innerHeight - cutin_h - 25 ;
+    
+      if( margin_w < 0 )margin_w = 0 ;
+      if( margin_h < 0 )margin_h = 0 ;
+    
+      let margin_x = margin_w * this.cutIn.x_pos / 100;
+      let margin_y = margin_h * this.cutIn.y_pos / 100;
+
+      this.width = cutin_w ;
+      this.height = cutin_h + 25 ;
+      this.left = margin_x ;
+      this.top = margin_y;
+    }else{
+      
+      console.log("カットインが未定義で再生された");
+    }
+*/
+      this.width = 600 ;
+      this.height = 400 + 25 ;
+      this.left = 100 ;
+      this.top = 100;
+
+
+    this.panelService.width = this.width ;
+    this.panelService.height = this.height ;
+    this.panelService.left = this.left ;
+    this.panelService.top = this.top ;
+  }
+
+
   ngOnInit(): void {
+/*
     EventSystem.register(this)
       .on('CHANGE_JUKEBOX_VOLUME', -100, event => {
         if (this.videoPlayer) this.videoPlayer.setVolume(this.videoVolume);
@@ -142,12 +141,15 @@ export class CutInComponent implements OnInit, OnDestroy {
           this.stop();
         }
       });
+*/
   }
 
   ngOnDestroy(): void {
+/*    
     EventSystem.unregister(this, 'UPDATE_AUDIO_RESOURE');
     EventSystem.unregister(this, 'CHANGE_JUKEBOX_VOLUME');
     EventSystem.unregister(this, 'PLAY_VIDEO_CUT_IN');
+*/
     clearTimeout(this._timeoutId);
     clearTimeout(this._timeoutIdVideo);
   }
@@ -168,7 +170,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   set isVisible(isVisible: boolean) { this._isVisible = isVisible; }
 
   get isEnd():boolean { return !this.cutIn || this._isEnd; }
-
+/*
   get cutInImage(): ImageFile {
     if (!this.cutIn) return this._imageFile;
     if (this._imageFile.identifier !== this.cutIn.imageIdentifier) { 
@@ -177,7 +179,9 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     return this._imageFile;
   }
+*/
 
+/*
   get pixcelWidthPreAdjust(): number {
     if (this.isMinimize) return CutInComponent.MIN_SIZE;
     let ret = 0;
@@ -191,7 +195,8 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     return ret;
   }
-
+*/
+/*
   get pixcelWidth(): number {
     let ret = this.pixcelWidthPreAdjust;
     if (this.cutIn.isPreventOutBounds || this.videoId) {
@@ -212,7 +217,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     return ret;
   }
-
+*/
   get pixcelHeightPreAdjust(): number {
     if (this.isMinimize) return CutInComponent.MIN_SIZE;
     let ret = 0;
@@ -235,7 +240,7 @@ export class CutInComponent implements OnInit, OnDestroy {
     } 
     return ret;
   }
-
+/*
   get pixcelHeight(): number {
     let ret = this.pixcelHeightPreAdjust;
     if (this.cutIn.isPreventOutBounds || this.videoId) {
@@ -288,7 +293,9 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     return false;
   }
+*/
 
+/*
   get pixcelPosX(): number {
     let ret = 0;
     if (!this.cutIn) return ret;
@@ -322,17 +329,22 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     return ret;
   }
-
+*/
   get zIndex(): number {
     if (!this.cutIn || this.isBackyard) return 0;
-    return (this.cutIn.isFrontOfStand || this.videoId ? 1500000 : 500000) + this.cutIn.zIndex + (this.videoId ? 1000 : 0);
+//    return (this.cutIn.isFrontOfStand || this.videoId ? 1500000 : 500000) + this.cutIn.zIndex + (this.videoId ? 1000 : 0);
+    return 500000;
+
   }
 
   get objectFit(): string {
+    return 'none';
+/*    
     if (!this.cutIn) return 'none';
     if (this.isMinimize) return 'contain';
     if ((this.videoId && !this.isSoundOnly) || this.cutIn.objectFitType == 2) return 'contain';
     return this.cutIn.objectFitType == 1 ? 'cover' : 'fill';
+*/
   }
 
   /*
@@ -345,9 +357,9 @@ export class CutInComponent implements OnInit, OnDestroy {
     return (this.isTest ? AudioPlayer.auditionVolume : AudioPlayer.volume) * 100;
   }
 
-  get isBordered(): boolean { return this.cutIn && this.cutIn.borderStyle > 0; }
+//  get isBordered(): boolean { return this.cutIn && this.cutIn.borderStyle > 0; }
 
-  get isSoundOnly(): boolean { return this.cutIn && this.cutIn.isSoundOnly; }
+//  get isSoundOnly(): boolean { return this.cutIn && this.cutIn.isSoundOnly; }
 
   get senderName() {
     let ret = ''; 
@@ -362,7 +374,7 @@ export class CutInComponent implements OnInit, OnDestroy {
   get isMine() {
     return this.sender === PeerCursor.myCursor.peerId;
   }
-
+/*
   get senderColor() {
     let ret = PeerCursor.CHAT_DEFAULT_COLOR;
     if (!this.sender) return ret;
@@ -372,17 +384,27 @@ export class CutInComponent implements OnInit, OnDestroy {
     }
     return ret;
   }
-
+*/
   play() {
-    if (this.isEnd) return;
+    
+    this.videoId = this.cutIn.videoId;
+    
+//    if (this.isEnd) return;
+
+/*
     if (this._isVisible) {
       //TODO pauseからの再開
       if (!this.cutIn.videoId) this.audioPlayer.play();
     } else {
-      this.ngZone.run(() => {
-        this._isVisible = true;
-        if (!this.cutIn.videoId) this._play();
-      });
+*/
+
+//      this.ngZone.run(() => {
+
+//        this._isVisible = true;
+
+//        if (!this.cutIn.videoId) this._play();
+//      });
+/*
       if (this.cutIn.duration > 0) {
         this._timeoutId = setTimeout(() => {
           this.stop();
@@ -390,10 +412,15 @@ export class CutInComponent implements OnInit, OnDestroy {
           this._timeoutId = null;
         }, this.cutIn.duration * 1000);
       }
+*/
+
+/*
     }
+*/
   }
 
   private _play() {
+/*
     if (this.isEnd) return;
     const audio = AudioStorage.instance.get(this.cutIn.audioIdentifier);
     if (audio && audio.isReady) {
@@ -406,13 +433,16 @@ export class CutInComponent implements OnInit, OnDestroy {
         if (!this.cutIn.videoId) this._play();
       });
     }
+*/
   }
 
+/*
   pause() {
     //TODO
     if (!this.cutIn.videoId) this.audioPlayer.pause();
   }
-
+*/
+/*
   stop() {
     EventSystem.unregister(this, 'UPDATE_AUDIO_RESOURE');
     this.ngZone.run(() => {
@@ -421,26 +451,28 @@ export class CutInComponent implements OnInit, OnDestroy {
       this.audioPlayer.stop();
     });
   }
-
+*/
+/*
   end() {
     this._isEnd = true;
     this.audioPlayer.stop();
   }
-
+*/
+/*
   onImageLoad() {
-    this._naturalWidth = this.cutInImageElement.nativeElement.naturalWidth;
-    this._naturalHeight = this.cutInImageElement.nativeElement.naturalHeight;
+//    this._naturalWidth = this.cutInImageElement.nativeElement.naturalWidth;
+//    this._naturalHeight = this.cutInImageElement.nativeElement.naturalHeight;
   }
-
+*/
   onPlayerReady($event) {
     $event.target.setVolume(this.videoVolume);
-    //console.log('ready')
+    console.log('onPlayerReady');
     $event.target.playVideo();
   }
 
   onPlayerStateChange($event) {
     const state = $event.data;
-    //console.log($event.data)
+    console.log('onPlayerStateChange:' + $event.data)
     if (state == 1) {
       this.videoStateTransition = true;
       this._timeoutIdVideo = setTimeout(() => {
@@ -451,6 +483,7 @@ export class CutInComponent implements OnInit, OnDestroy {
       }, 200);
       if (this.cutIn) EventSystem.trigger('PLAY_VIDEO_CUT_IN', {identifier: this.cutIn.identifier})
     }
+/*
     if (state == 2) {
       this.videoStateTransition = true;
       this._timeoutIdVideo = setTimeout(() => {
@@ -469,13 +502,14 @@ export class CutInComponent implements OnInit, OnDestroy {
         });
       }, 200);
     }
+*/
   }
 
   // ToDo
   onErrorFallback() {
     console.log('fallback')
     if (!this.videoId) return;
-    this.cutInImageElement.nativeElement.src = 'https://img.youtube.com/vi/' + this.videoId + '/default.jpg'
+//    this.cutInImageElement.nativeElement.src = 'https://img.youtube.com/vi/' + this.videoId + '/default.jpg'
   }
 
   @HostListener('contextmenu', ['$event'])
@@ -485,6 +519,7 @@ export class CutInComponent implements OnInit, OnDestroy {
 
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
+/*
     this.contextMenuService.open(position, [
       {
         name: '閉じる（自分のみ停止）',
@@ -508,35 +543,7 @@ export class CutInComponent implements OnInit, OnDestroy {
         action: () => { this.isMinimize = !this.isMinimize; },
         selfOnly: true
       },
-            /*
-      (!this.videoId ? null : ContextMenuSeparator),
-      (!this.videoId ? null :
-        {
-          name: 'YouTubeで開く',
-          action: () => { 
-            this.modalService.open(OpenUrlComponent, { url: `https://www.youtube.com/watch?v=${this.cutIn.videoId}`, title: this.cutIn.name });
-          },
-          //disabled: !StringUtil.validUrl(url),
-          //error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
-          isOuterLink: true
-        }
-      )
-      ContextMenuSeparator,
-      {
-        name: '効果音の開始／最初から',
-        action: () => { this.audioPlayer.play() },
-        disabled: !(this.cutIn && this.cutIn.audioIdentifier && this.cutIn.isValidAudio), 
-        selfOnly: true,
-        materialIcon: 'play_arrow'
-      },
-      {
-        name: '効果音の停止',
-        action: () => { this.audioPlayer.stop() },
-        disabled: !this.audioPlayer.paused && !(this.cutIn && this.cutIn.audioIdentifier && this.cutIn.isValidAudio), 
-        selfOnly: true,
-        materialIcon: 'stop'
-      }
-      */
     ], this.cutIn.name);
+*/
   }
 }
