@@ -48,7 +48,7 @@ import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.comp
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
 
-import { CutInComponent } from 'component/cut-in/cut-in.component';
+//import { CutInComponent } from 'component/cut-in/cut-in.component';
 
 
 @Component({
@@ -172,6 +172,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 //
 
       .on('PLAY_CUT_IN_2', event => {
+/*
         console.log('PLAY_CUT_IN');
         let cutIn = event.data.cutIn;
 //        this.cutInService.play(cutIn, event.data.secret ? event.data.secret : false, event.data.test ? event.data.test : false, event.data.sender);
@@ -207,6 +208,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           component.cutIn = cutIn;
           component.videoId = cutIn.videoId;
         }, 0);
+*/
       })
 
 
@@ -330,9 +332,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 */
     setTimeout(() => {
 
-      let component = this.panelService.open(CutInComponent, option);
+      let component = this.panelService.open(CutInWindowComponent, option);
       component.cutIn = cutIn;
-      component.videoId = cutIn.videoId;
+//      component.videoId = cutIn.videoId;
     }, 0);
 
   }

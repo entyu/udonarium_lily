@@ -45,7 +45,8 @@ import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 */
 })
 export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
-  @ViewChild('cutInImageElement', { static: false }) cutInImageElement: ElementRef;
+
+//  @ViewChild('cutInImageElement', { static: false }) cutInImageElement: ElementRef;
   @ViewChild('videoPlayerComponent', { static: false }) videoPlayer: YouTubePlayer;
 
   left : number = 0;
@@ -70,6 +71,8 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   isTest = false;
 
   cutIn: CutIn = null;
+
+  playListId = '';
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
@@ -228,7 +231,9 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   onErrorFallback() {
     console.log('fallback')
     if (!this.videoId) return;
-    this.cutInImageElement.nativeElement.src = 'https://img.youtube.com/vi/' + this.videoId + '/default.jpg'
+
+// 後で修正
+// this.cutInImageElement.nativeElement.src = 'https://img.youtube.com/vi/' + this.videoId + '/default.jpg'
   }
 
   ngOnDestroy() {

@@ -1,4 +1,5 @@
 <div class="cut-in" *ngIf="cutIn" >
+  {{videoId}}
   <youtube-player #videoPlayerComponent 
     [style.visibility]="isVisible"
     [videoId]="videoId" 
@@ -20,8 +21,6 @@
     [src]="'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg'"
     (error)="onErrorFallback()">
 -->
-
-  {{videoId}}
 
 <!--
   <youtube-player #videoPlayerComponent *ngIf="videoId" 
