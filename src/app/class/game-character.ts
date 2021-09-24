@@ -61,7 +61,8 @@ export class GameCharacter extends TabletopObject {
     const iconNum = this.getIconNumElement();
     if (!iconNum) {
       const image: DataElement = this.imageDataElement.getFirstElementByName('imageIdentifier');
-      return image ? ImageStorage.instance.get(<string>image.value) : ImageFile.Empty;
+      const file = ImageStorage.instance.get(<string>image.value)
+      return file ? file : ImageFile.Empty;
     } else {
       let n = <number>iconNum.currentValue;
       if (n > this.imageDataElement.children.length - 1) n = this.imageDataElement.children.length - 1;
