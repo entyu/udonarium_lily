@@ -53,6 +53,8 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   top : number = 0;
   width : number = 200;
   height : number = 150;
+
+  static readonly MIN_SIZE = 250;
   
   minSize: number = 10;
   maxSize: number = 1200;
@@ -71,8 +73,23 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   isTest = false;
 
   cutIn: CutIn = null;
-
   playListId = '';
+
+  isMinimize = false;
+
+  private _naturalWidth = 0;
+  private _naturalHeight = 0;
+  private get naturalWidth(): number {
+    return 480;
+//    if (this.videoId && !this.isSoundOnly) return 480;
+//    return this._naturalWidth;
+  }
+  private get naturalHeight(): number {
+    return 270;
+//    if (this.videoId && !this.isSoundOnly) return 270;
+//    return this._naturalHeight;
+  }
+
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
@@ -187,6 +204,66 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
 
   get videoVolume(): number {
     return (this.isTest ? AudioPlayer.auditionVolume : AudioPlayer.volume) * 100;
+  }
+
+  get pixcelWidthPreAdjust(): number {
+    if (this.isMinimize) return CutInWindowComponent.MIN_SIZE;
+    let ret = 0;
+    if (!this.cutIn) return ret;
+    if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
+      ret = this.naturalWidth;
+    } else { 
+      ret = (this.cutIn.width <= 0)
+        ? (document.documentElement.offsetHeight * this.cutIn.height * (this.naturalWidth / this.naturalHeight) / 100)
+        : (document.documentElement.clientWidth * this.cutIn.width / 100);
+    }
+    return ret;
+  }
+
+  get pixcelWidth(): number {
+    let ret = this.pixcelWidthPreAdjust;
+    if ( this.videoId) {
+/*
+      if (this.isAjustAspect) {
+        if (this.isAjustAspectWidth) {
+          ret = document.documentElement.clientWidth;
+        } else {
+          ret = ret * (document.documentElement.offsetHeight / this.pixcelHeightPreAdjust)
+        }
+      } else if (ret > document.documentElement.clientWidth) {
+        ret = document.documentElement.clientWidth;
+      }
+    }
+    if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelWidthAspectMinimun > ret) {
+      ret = this.pixelWidthAspectMinimun;
+    } else if (ret < CutInWindowComponent.MIN_SIZE) {
+      ret = CutInWindowComponent.MIN_SIZE;
+*/
+    }
+    return ret;
+  }
+
+  get pixcelHeightPreAdjust(): number {
+    if (this.isMinimize) return CutInWindowComponent.MIN_SIZE;
+    let ret = 0;
+    if (!this.cutIn) return ret;
+    if (this.cutIn.width <= 0 && this.cutIn.height <= 0) { 
+      ret = this.naturalHeight;
+    } else {
+      ret = (this.cutIn.height <= 0)
+        ? (document.documentElement.clientWidth * this.cutIn.width * (this.naturalHeight / this.naturalWidth) / 100)
+        : (document.documentElement.offsetHeight * this.cutIn.height / 100);
+    }
+    return ret;
+  }
+
+  get pixelWidthAspectMinimun() {
+    let ret = CutInWindowComponent.MIN_SIZE;
+    if (!this.cutIn) return ret;
+    if (this.naturalWidth > this.naturalHeight) {
+      ret = CutInWindowComponent.MIN_SIZE * this.naturalWidth / this.naturalHeight;
+    } 
+    return ret;
   }
 
   onPlayerReady($event) {
