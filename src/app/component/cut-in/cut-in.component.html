@@ -1,0 +1,184 @@
+<!--
+<div *ngIf="isVisible && animationType == -1" appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
+-->
+<div>
+<!--
+  <ng-container *ngTemplateOutlet="image"></ng-container>
+-->
+
+  <youtube-player #videoPlayerComponent *ngIf="videoId" 
+    [style.visibility]="videoId ? 'visible' : 'hidden'"
+    [videoId]="videoId" 
+    suggestedQuality="default" 
+    [width]="pixcelWidth"
+    [height]="pixcelHeight" 
+    [playerVars]="{autoplay: 1, controls: 0, start: cutIn.videoStart, loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist', list: (playListId ? playListId : null), playlist: (playListId ? null : videoId), disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
+    (ready)="onPlayerReady($event)"
+    (stateChange)="onPlayerStateChange($event)">
+  </youtube-player>
+
+</div>
+
+<!--　
+-->
+
+<!--     -->
+
+
+<!--
+<div appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
+  #cutInContainerElement class="container" 
+  @cutInNone (@cutInNone.done)="isVisible ? null : end()"
+  style="position: absolute"
+  [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)"
+  [style.height.px]="pixcelHeight - (isBordered ? 6 : 0)"
+  [style.left.px]="pixcelPosX"
+  [style.top.px]="pixcelPosY"
+  [style.z-index]="zIndex"
+  [style.pointer-events]="isVisible && !videoId ? 'auto' : 'none'"
+  [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  (dblclick)="stop()"
+  (mousedown)="draggstart()"
+  (mouseup)="draggend()"
+  (mouseleave)="draggend()"
+  (mouseout)="draggend()"
+  (mousemove)="isPointerDragging ? draggstart() : false">
+</div>
+-->
+
+<!--
+<div *ngIf="isVisible && animationType == 0" appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
+  #cutInContainerElement class="container" 
+  @cutInFadeInOut (@cutInFadeInOut.done)="isVisible ? null : end()"
+  style="position: absolute"
+  [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)"
+  [style.height.px]="pixcelHeight - (isBordered ? 6 : 0)"
+  [style.left.px]="pixcelPosX"
+  [style.top.px]="pixcelPosY"
+  [style.z-index]="zIndex"
+  [style.pointer-events]="isVisible && !videoId ? 'auto' : 'none'"
+  [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  (dblclick)="stop()"
+  (mousedown)="draggstart()"
+  (mouseup)="draggend()"
+  (mouseleave)="draggend()"
+  (mouseout)="draggend()"
+  (mousemove)="isPointerDragging ? draggstart() : false">
+  <ng-container *ngTemplateOutlet="image"></ng-container>
+</div>
+<div *ngIf="isVisible && animationType == 1" appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
+  #cutInContainerElement class="container" 
+  @cutInBounceInOut (@cutInBounceInOut.done)="isVisible ? null : end()"
+  style="position: absolute"
+  [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)"
+  [style.height.px]="pixcelHeight - (isBordered ? 6 : 0)"
+  [style.left.px]="pixcelPosX"
+  [style.top.px]="pixcelPosY"
+  [style.z-index]="zIndex"
+  [style.pointer-events]="isVisible ? 'auto' : 'none'"
+  [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  (dblclick)="stop()"
+  (mousedown)="draggstart()"
+  (mouseup)="draggend()"
+  (mouseleave)="draggend()"
+  (mouseout)="draggend()"
+  (mousemove)="isPointerDragging ? draggstart() : false">
+  <ng-container *ngTemplateOutlet="image"></ng-container>
+</div>
+<div *ngIf="isVisible && animationType == 2" appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
+  #cutInContainerElement class="container" 
+  @cutInOpenInOut (@cutInOpenInOut.done)="isVisible ? null : end()"
+  style="position: absolute"
+  [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)"
+  [style.height.px]="pixcelHeight - (isBordered ? 6 : 0)"
+  [style.left.px]="pixcelPosX"
+  [style.top.px]="pixcelPosY"
+  [style.z-index]="zIndex"
+  [style.pointer-events]="isVisible ? 'auto' : 'none'"
+  [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  (dblclick)="stop()"
+  (mousedown)="draggstart()"
+  (mouseup)="draggend()"
+  (mouseleave)="draggend()"
+  (mouseout)="draggend()"
+  (mousemove)="isPointerDragging ? draggstart() : false">
+  <ng-container *ngTemplateOutlet="image"></ng-container>
+</div>
+<div *ngIf="isVisible && animationType == 3" appDraggable [draggable.allowOverHalf]="true" [draggable.unhandle]="'input,textarea,button,select,option,span,img'"
+  #cutInContainerElement class="container" 
+  @cutInOpenInOut2 (@cutInOpenInOut2.done)="isVisible ? null : end()"
+  style="position: absolute"
+  [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)"
+  [style.height.px]="pixcelHeight - (isBordered ? 6 : 0)"
+  [style.left.px]="pixcelPosX"
+  [style.top.px]="pixcelPosY"
+  [style.z-index]="zIndex"
+  [style.pointer-events]="isVisible ? 'auto' : 'none'"
+  [ngClass]="{video: videoId && !isSoundOnly, test: isTest, secret: isSecret, minimaize: isMinimize, 'is-bordered': isBordered, 'is-grab': !isPointerDragging, 'is-grabbing': isPointerDragging}"
+  (dblclick)="stop()"
+  (mousedown)="draggstart()"
+  (mouseup)="draggend()"
+  (mouseleave)="draggend()"
+  (mouseout)="draggend()"
+  (mousemove)="isPointerDragging ? draggstart() : false">
+  <ng-container *ngTemplateOutlet="image"></ng-container>
+</div>
+-->
+
+<!--
+<ng-template #image>
+-->
+<!--
+  <div *ngIf="isTest" class="test-indicator grow left-top">TEST</div>
+  <div *ngIf="isTest" class="test-indicator grow right-top">TEST</div>
+  <div *ngIf="isTest" class="test-indicator grow left-bottom">TEST</div>
+  <div *ngIf="isTest" class="test-indicator grow right-bottom">TEST</div>
+-->
+
+<!--
+  <div *ngIf="isSecret" class="secret-indicator grow left-top"><i class="material-icons" style="font-size: smaller">visibility</i> For Your Eyes Only</div>
+  <div *ngIf="isSecret" class="secret-indicator grow right-bottom" style="text-align: right">For Your Eyes Only <i class="material-icons" style="font-size: smaller">visibility</i></div>
+-->
+
+<!--
+  <div *ngIf="isIndicateSender" class="name-indicator grow right-top" style="text-align: right"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
+  <div *ngIf="isIndicateSender" class="name-indicator grow left-bottom"><span [style.color]="senderColor"><span style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis" [style.width.px]="pixcelWidth - (isBordered ? 6 : 0)">{{ senderName }}{{ isMine ? '（あなた）' : '' }}</span></span></div>
+  <div [style.width.px]="pixcelWidth + 3" [style.height.px]="19" class="handler top" [ngStyle]="{transform: 'translateX(-' + (isBordered ? 6 : 3) + 'px) translateY(-' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
+  <div [style.width.px]="pixcelWidth + 3" [style.height.px]="19" class="handler bottom" [ngStyle]="{transform: 'translateX(' + (isBordered ? 6 : 3) + 'px) translateY('+ (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
+  <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler left" [ngStyle]="{transform: 'translateX(-' + (isBordered ? 6 : 3) + 'px) translateY(-' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
+  <div [style.width.px]="19" [style.height.px]="pixcelHeight + 3" class="handler right" [ngStyle]="{transform: 'translateX(' + (isBordered ? 6 : 3) + 'px) translateY(' + (isBordered ? 6 : 3) + 'px)'}" (contextmenu)="onContextMenu($event)"></div>
+  <div *ngIf="!videoId" style="pointer-events: auto" [style.width.px]="pixcelWidth" [style.height.px]="pixcelHeight" class="handler" (contextmenu)="onContextMenu($event)"></div>
+-->
+
+<!--
+  <youtube-player #videoPlayerComponent *ngIf="videoId" 
+    style="position: absolute; pointer-events: auto"
+    [style.visibility]="videoId && !isSoundOnly ? 'visible' : 'hidden'"
+    [videoId]="videoId" 
+    suggestedQuality="default" 
+    [width]="pixcelWidth - (isBordered ? 6 : 0)"
+    [height]="pixcelHeight - (isBordered ? 6 : 0)" 
+    [playerVars]="{autoplay: 1, controls: 0, start: cutIn.videoStart, loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist', list: (playListId ? playListId : null), playlist: (playListId ? null : videoId), disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
+    (ready)="onPlayerReady($event)"
+    (stateChange)="onPlayerStateChange($event)">
+  </youtube-player>
+-->
+
+<!--
+  <img *ngIf="videoId && !isSoundOnly" #cutInImageElement 
+    style="pointer-events: auto"
+    draggable="false"
+    [style.object-fit]="objectFit"
+    [src]="'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg'"
+    (error)="onErrorFallback()">
+  <img *ngIf="!videoId || isSoundOnly" #cutInImageElement 
+    style="pointer-events: none"
+    draggable="false"
+    [style.object-fit]="objectFit"
+    [src]="cutInImage.url | safe: 'resourceUrl'"
+    (load)="onImageLoad()"
+    (contextmenu)="onContextMenu($event)">
+-->
+<!--
+</ng-template>
+-->

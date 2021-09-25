@@ -1,0 +1,123 @@
+.container {
+  margin: 0px;
+  padding: 0px;
+}
+.container.video {
+  background-color: black;
+}
+
+.is-grab {
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.is-grabbing {
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
+img {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+.container:hover {
+  outline: 3px dotted #22F;
+}
+.container.minimaize {
+  outline: 3px solid #22F;
+}
+
+.container.is-bordered {
+  border: 3px ridge #dde;
+}
+.container.is-bordered img {
+  border: 1px solid black;
+  box-sizing: border-box;
+}
+
+.grow {
+  text-shadow    : 
+        1px  1px 0px #ffffff,
+      -1px  1px 0px #ffffff,
+        1px -1px 0px #ffffff,
+      -1px -1px 0px #ffffff,
+        1px  0px 0px #ffffff,
+        0px  1px 0px #ffffff,
+      -1px  0px 0px #ffffff,
+        0px -1px 0px #ffffff; 
+}
+
+.test-indicator {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  color: blue;
+  font-size: smaller;
+  padding: 0px 3px 1px 3px;
+  font-weight: bolder;
+}
+
+.secret-indicator {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  color: gray;
+  font-size: smaller;
+  padding: 0px 3px 2px 3px;
+  font-weight: bolder;
+  opacity: 0.6;
+}
+
+.name-indicator {
+  position: absolute;
+  pointer-events: none;
+  z-index: 10;
+  padding: 0px 3px 0px 6px;
+  font-weight: bolder;
+  font-size: smaller;
+}
+
+.left-top {
+  left: 0px;
+  top: 0px;
+}
+.left-bottom {
+  left: 0px;
+  bottom: 0px;
+}
+.right-top {
+  right: 0px;
+  top: 0px;
+}
+.right-bottom {
+  right: 0px;
+  bottom: 0px;
+}
+
+.handler {
+  /* border: 1px solid red; */
+  position:absolute;
+  z-index: 20;
+  pointer-events: auto;
+}
+.handler.top {
+  top: 0px;
+  left: 0px;
+} 
+.handler.bottom {
+  bottom: 0px;
+  right: 0px;
+} 
+.handler.left {
+  top: 0px;
+  left: 0px;
+}
+.handler.right {
+  right: 0px;
+  bottom: 0px;
+}
