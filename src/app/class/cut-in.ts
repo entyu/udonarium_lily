@@ -43,7 +43,62 @@ export class CutIn extends GameObject {
   @SyncVar() isVideoCutIn: boolean = false;
   @SyncVar() videoUrl: string = '';
   // 規約準拠のため常時falseに変更 ToDO 取り除く
-  isSoundOnly: boolean = false;
+//  isSoundOnly: boolean = false;
+
+  private normalMinSizeWidth = 10;
+  private normalMinSizeHeight = 10;
+
+  private normalMaxSizeWidth = 1200;
+  private normalMaxSizeHeight = 1200;
+
+  private videoMinSizeWidth = 448;
+  private videoMinSizeHeight = 252;
+
+  private videoMaxSizeWidth = 1920;
+  private videoMaxSizeHeight = 1080;
+
+  private _defVideoSizeWidth = 640;
+  private _defVideoSizeHeight = 360;
+
+  get defVideoSizeWidth(): number{
+    return this._defVideoSizeWidth;
+  }
+
+  get defVideoSizeHeight(): number{
+    return this._defVideoSizeHeight;
+  }
+
+  minSizeWidth(isVideo : boolean): number{
+    if(isVideo){
+      return this.videoMinSizeWidth;
+    }else{
+      return this.normalMinSizeWidth;
+    }
+  }
+
+  maxSizeWidth(isVideo : boolean): number{
+    if(isVideo){
+      return this.videoMaxSizeWidth;
+    }else{
+      return this.normalMaxSizeWidth;
+    }
+  }
+
+  minSizeHeight(isVideo : boolean): number{
+    if(isVideo){
+      return this.videoMinSizeHeight;
+    }else{
+      return this.normalMinSizeHeight;
+    }
+  }
+
+  maxSizeHeight(isVideo : boolean): number{
+    if(isVideo){
+      return this.videoMaxSizeHeight;
+    }else{
+      return this.normalMaxSizeHeight;
+    }
+  }
 
   get audio(): AudioFile { return AudioStorage.instance.get(this.audioIdentifier); }
   private audioPlayer: AudioPlayer = new AudioPlayer();

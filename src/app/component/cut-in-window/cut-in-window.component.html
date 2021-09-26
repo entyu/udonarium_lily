@@ -1,4 +1,4 @@
-<div class="cut-in" *ngIf="cutIn" >
+<div class="cut-in" *ngIf="cutIn" id="{{cutInAreaId}}">
 <!--
   <youtube-player #videoPlayerComponent *ngIf="videoId" 
     style="position: absolute; pointer-events: auto"
@@ -14,18 +14,25 @@
 -->
 
 <!--
-    [width]="pixcelWidth"
-    [height]="pixcelHeight" 
+
 
 -->
 
   <youtube-player #videoPlayerComponent 
     [style.visibility]="isVisible"
     [videoId]="videoId" 
+    [width]="youTubeWidth"
+    [height]="youTubeHeight" 
     suggestedQuality="default" 
     (ready)="onPlayerReady($event)"
     (stateChange)="onPlayerStateChange($event)">
   </youtube-player>
+<br>
+
+{{youTubeWidth}}:W {{cutInAreaId}}
+<br>
+{{youTubeHeight}}:H
+
 <!--
     [width]="pixcelWidth"
     [height]="pixcelHeight" 

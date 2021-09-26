@@ -35,9 +35,11 @@ import { PeerCursor } from '@udonarium/peer-cursor';
   styleUrls: ['./cut-in-list.component.css']
 })
 export class CutInListComponent implements OnInit, OnDestroy {
-  
-  minSize: number = 10;
-  maxSize: number = 1200;
+
+  minSizeWidth: number = 10;
+  maxSizeWidth: number = 10;
+  minSizeHeight: number = 1200;
+  maxSizeHeight: number = 1200;
 
   get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
   
@@ -46,29 +48,46 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   set cutInWidth(cutInWidth: number) { 
     if (this.isEditable) this.selectedCutIn.width = cutInWidth; 
-
     if( this.keepImageAspect ){
-       this.selectedCutIn.height = Math.floor(  cutInWidth  * this.originalImgHeight() /  this.originalImgWidth() );
-       console.log(" this.keepImageAspect H" + this.selectedCutIn.height);
+      if(this.isYouTubeCutIn){
+        this.selectedCutIn.height = Math.floor( cutInWidth * this.selectedCutIn.defVideoSizeHeight /  this.selectedCutIn.defVideoSizeWidth );
+      }else{
+        this.selectedCutIn.height = Math.floor( cutInWidth * this.originalImgHeight() /  this.originalImgWidth() );
+      }
+      console.log(" this.keepImageAspect H" + this.selectedCutIn.height);
     }
   }
+
   set cutInHeight(cutInHeight: number) {
     if (this.isEditable) this.selectedCutIn.height = cutInHeight; 
-
     if( this.keepImageAspect ){
-       this.selectedCutIn.width = Math.floor(  cutInHeight *  this.originalImgWidth() /  this.originalImgHeight() );
-       console.log(" this.keepImageAspect W" + this.selectedCutIn.width);
+      if(this.isYouTubeCutIn){
+        this.selectedCutIn.height = Math.floor( cutInHeight * this.selectedCutIn.defVideoSizeWidth /  this.selectedCutIn.defVideoSizeHeight );
+      }else{
+        this.selectedCutIn.height = Math.floor(  cutInHeight *  this.originalImgWidth() /  this.originalImgHeight() );
+      }
+      console.log(" this.keepImageAspect W" + this.selectedCutIn.width);
     }
   }
 
-
-  
   get cutInWidth(): number { 
     if( !this.isEditable ) return 0;
     if( !this.selectedCutIn ) return 0;
     
     if( this.cutInOriginalSize ){
-      this.selectedCutIn.width = this.originalImgWidth();
+      if(this.isYouTubeCutIn){
+        const width = this.selectedCutIn.defVideoSizeWidth;
+        if( this.selectedCutIn.width != width){
+          this.selectedCutIn.width = width;
+          console.log(" setCutInYouTubeSize w:" + width);
+        }
+      }else{
+        const width = this.originalImgWidth();
+        if( this.selectedCutIn.width != width ){
+          this.selectedCutIn.width = width;
+          console.log(" setCutInOriginalSize w" + width);
+        }
+      }
     }
     return  this.selectedCutIn.width ; 
   }
@@ -76,20 +95,29 @@ export class CutInListComponent implements OnInit, OnDestroy {
   get cutInHeight(): number { 
     if( !this.isEditable ) return 0;
     if( !this.selectedCutIn ) return 0;
-
     if( this.cutInOriginalSize ){
-      this.selectedCutIn.height = this.originalImgHeight();
+      if(this.isYouTubeCutIn){
+        const height = this.selectedCutIn.defVideoSizeHeight;
+        if( this.selectedCutIn.height != height){
+          this.selectedCutIn.height = height;
+          console.log(" setCutInYouTubeSize h:" + height);
+        }
+      }else{
+        const height = this.originalImgHeight();
+        if( this.selectedCutIn.height != height){
+          this.selectedCutIn.height = height;
+          console.log(" setCutInOriginalSize h" + height);
+        }
+      }
     }
     return  this.selectedCutIn.height ; 
   }
 
-  keepImageAspect: boolean = false;
-  
-  chkImageAspect( ){
 
+  keepImageAspect: boolean = false;
+  chkImageAspect( ){
     if( !this.isEditable ) return 0;
     if( !this.selectedCutIn ) return 0;
-    
     setTimeout(() => { 
       if( this.keepImageAspect ){
         let imageurl = this.selectedCutIn.cutInImage.url;
@@ -97,7 +125,11 @@ export class CutInListComponent implements OnInit, OnDestroy {
           let img = new Image();
           img.src = imageurl;
           console.log("img.height /  img.width " + img.height + " "+  img.width);
-          this.selectedCutIn.height = Math.floor(  this.selectedCutIn.width  * img.height /  img.width );
+          if(this.isYouTubeCutIn){
+            this.selectedCutIn.height = Math.floor( this.selectedCutIn.width * this.selectedCutIn.defVideoSizeHeight /  this.selectedCutIn.defVideoSizeWidth );
+          }else{
+            this.selectedCutIn.height = Math.floor( this.selectedCutIn.width  * img.height /  img.width );
+          }
         }
       }
     });
@@ -146,9 +178,10 @@ export class CutInListComponent implements OnInit, OnDestroy {
     let file = ImageStorage.instance.get(this.selectedCutIn.imageIdentifier);
     return file ? file : ImageFile.Empty;
   }
-  
+
   private lazyUpdateTimer: NodeJS.Timer = null;
   selectedCutIn: CutIn = null;
+  isYouTubeCutIn: boolean = false;
 
   get isSelected(): boolean { return this.selectedCutIn ? true : false; }
   get isEditable(): boolean {
@@ -184,6 +217,7 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   selectCutIn(identifier: string) {
     this.selectedCutIn = ObjectStore.instance.get<CutIn>(identifier);
+    this.isYouTubeCutIn = this.selectedCutIn.videoId  ? true : false;
   }
 
   getCutIns(): CutIn[] {
@@ -290,6 +324,39 @@ export class CutInListComponent implements OnInit, OnDestroy {
   openYouTubeTerms() {
     this.modalService.open(OpenUrlComponent, { url: 'https://www.youtube.com/terms', title: 'YouTube 利用規約' });
     return false;
+  }
+
+  changeYouTubeInfo() {
+
+    if( !this.selectedCutIn )return;
+    const isVideo = this.selectedCutIn.videoId ? true : false;
+    if((!this.isYouTubeCutIn && isVideo) || (this.isYouTubeCutIn && !isVideo)){
+      this.setDefaultControl(isVideo);
+    }
+    this.isYouTubeCutIn = isVideo;
+  }
+
+  setDefaultControl(isVideo: boolean){
+     console.log("setDefaultControl");
+    if( !this.isEditable ) return 0;
+    if( !this.selectedCutIn ) return 0;
+     console.log("setDefaultControl");
+    
+    this.minSizeWidth = this.selectedCutIn.minSizeWidth(isVideo);
+    this.maxSizeWidth = this.selectedCutIn.maxSizeWidth(isVideo);
+    this.minSizeHeight = this.selectedCutIn.minSizeHeight(isVideo);
+    this.maxSizeHeight = this.selectedCutIn.maxSizeHeight(isVideo);
+    
+    if(isVideo){
+       console.log("setDefaultControl isVideo");
+      this.selectedCutIn.width = this.selectedCutIn.defVideoSizeWidth;
+      this.selectedCutIn.height = this.selectedCutIn.defVideoSizeHeight;
+    }else{
+       console.log("setDefaultControl ! isVideo");
+      this.selectedCutIn.width = this.originalImgWidth();
+      this.selectedCutIn.height = this.originalImgHeight();
+    }
+    
   }
 
   previewCutIn(){

@@ -325,17 +325,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     option.isCutIn = true;
     option.cutInIdentifier = cutIn.identifier;
 
-/*
+
     let component = this.panelService.open(CutInWindowComponent, option);
     component.cutIn = cutIn;
     component.startCutIn();
-*/
-    setTimeout(() => {
-
-      let component = this.panelService.open(CutInWindowComponent, option);
-      component.cutIn = cutIn;
-//      component.videoId = cutIn.videoId;
-    }, 0);
 
   }
 
