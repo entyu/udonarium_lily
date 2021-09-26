@@ -27,6 +27,7 @@ export class PanelService {
   height: number = 100;
   isAbleFullScreenButton: boolean = true;
   isAbleCloseButton: boolean = true;
+  isAbleRotateButton: boolean = false;
 
   scrollablePanel: HTMLDivElement = null;
 

@@ -36,6 +36,7 @@ export class UIPanelComponent implements OnInit {
   @Input() set height(height: number) { this.panelService.height = height; }
   @Input() set isAbleFullScreenButton(isAbleFullScreenButton: boolean) { this.panelService.isAbleFullScreenButton = isAbleFullScreenButton; }
   @Input() set isAbleCloseButton(isAbleCloseButton: boolean) { this.panelService.isAbleCloseButton = isAbleCloseButton; }
+  @Input() set isAbleRotateButton(isAbleRotateButton: boolean) { this.panelService.isAbleRotateButton = isAbleRotateButton; }
 
   get title(): string { return this.panelService.title; }
   get left() { return this.panelService.left; }
@@ -44,8 +45,9 @@ export class UIPanelComponent implements OnInit {
   get height() { return this.panelService.height; }
   get isAbleFullScreenButton() { return this.panelService.isAbleFullScreenButton; }
   get isAbleCloseButton() { return this.panelService.isAbleCloseButton; }
-
-  private preLeft: number = 0
+  get isAbleRotateButton() { return this.panelService.isAbleRotateButton; }
+  
+  private preLeft: number = 0;
   private preTop: number = 0;
   private preWidth: number = 100;
   private preHeight: number = 100;

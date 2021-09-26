@@ -5,6 +5,7 @@
     <div class="title-button">
       <button *ngIf="isAbleFullScreenButton" (click)="toggleFullScreen()"><i class="material-icons" style="font-size: 14px;">fullscreen</i></button>
       <button *ngIf="isAbleCloseButton" (click)="close()"><i class="material-icons" style="font-size: 14px;">close</i></button>
+      <button *ngIf="isAbleRotateButton" ><i class="material-icons" style="font-size: 14px;">pivot_table_chart</i></button>
     </div>
     {{panelService.title}}
   </div>

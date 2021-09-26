@@ -85,3 +85,15 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
 .self-only {
   color: red;
 }
+
+nav.horizontal ul > li {
+  display: inline-block;
+  width: 80px;
+}
+
+nav:not(.horizontal) .self-only-indicater {
+  margin-top: 2em;
+}
+nav.horizontal .self-only-indicater {
+  display: none;
+}
