@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -28,7 +28,7 @@ export class UIPanelComponent implements OnInit {
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
   @ViewChild('scrollablePanel', { static: true }) scrollablePanel: ElementRef<HTMLDivElement>;
   @ViewChild('content', { read: ViewContainerRef, static: true }) content: ViewContainerRef;
-
+  
   @Input() set title(title: string) { this.panelService.title = title; }
   @Input() set left(left: number) { this.panelService.left = left; }
   @Input() set top(top: number) { this.panelService.top = top; }
@@ -37,6 +37,8 @@ export class UIPanelComponent implements OnInit {
   @Input() set isAbleFullScreenButton(isAbleFullScreenButton: boolean) { this.panelService.isAbleFullScreenButton = isAbleFullScreenButton; }
   @Input() set isAbleCloseButton(isAbleCloseButton: boolean) { this.panelService.isAbleCloseButton = isAbleCloseButton; }
   @Input() set isAbleRotateButton(isAbleRotateButton: boolean) { this.panelService.isAbleRotateButton = isAbleRotateButton; }
+
+  @Output() rotateEvent = new EventEmitter<boolean>();
 
   get title(): string { return this.panelService.title; }
   get left() { return this.panelService.left; }
@@ -52,7 +54,12 @@ export class UIPanelComponent implements OnInit {
   private preWidth: number = 100;
   private preHeight: number = 100;
 
+  // 今はメニューだけなのでとりあえず
+  private saveWidth: number = 1034;
+  private saveHeight: number = 100;
+
   private isFullScreen: boolean = false;
+  isHorizontal: boolean = false;
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
 
@@ -101,6 +108,24 @@ export class UIPanelComponent implements OnInit {
       this.width = this.preWidth;
       this.height = this.preHeight;
     }
+  }
+
+  toggleRotate() {
+    this.isHorizontal = !this.isHorizontal;
+    this.rotateEvent.emit(this.isHorizontal);
+    const panel = this.draggablePanel.nativeElement;
+    panel.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out';
+    setTimeout(() => {
+      panel.style.transition = null;
+    }, 100);
+    const saveWidth = panel.offsetWidth;
+    const saveHeight = panel.offsetHeight;
+    if (!this.isFullScreen) {
+      panel.style.width = this.saveWidth + 'px';
+      panel.style.height = this.saveHeight + 'px';
+    }
+    this.saveWidth = saveWidth;
+    this.saveHeight = saveHeight;
   }
 
   close() {

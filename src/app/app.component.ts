@@ -66,6 +66,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   isSaveing: boolean = false;
   progresPercent: number = 0;
 
+  isHorizontal = false;
+
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
@@ -510,6 +512,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (confirm('「一斉公開しない」設定ではないダイス、コインをすべて公開します。\nよろしいですか？')) {
       EventSystem.trigger('DICE_ALL_OPEN', null);
     }
+  }
+
+  rotateChange(isHorizontal) {
+    this.isHorizontal = isHorizontal;
   }
 }
 

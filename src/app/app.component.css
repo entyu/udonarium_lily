@@ -86,14 +86,13 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
   color: red;
 }
 
-nav.horizontal ul > li {
+.horizontal ul > li {
   display: inline-block;
-  width: 80px;
+  width: 74px;
 }
-
-nav:not(.horizontal) .self-only-indicater {
+:not(.horizontal) .self-only-indicater {
   margin-top: 2em;
 }
-nav.horizontal .self-only-indicater {
+.horizontal .self-only-indicater {
   display: none;
 }
