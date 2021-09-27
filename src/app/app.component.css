@@ -86,6 +86,10 @@ nav ul a, nav ul a:hover, nav ul a:active, nav ul a:visited {
   color: red;
 }
 
+.horizontal ul {
+  display: flex;
+  flex-wrap: nowrap;
+}
 .horizontal ul > li {
   display: inline-block;
   width: 74px;

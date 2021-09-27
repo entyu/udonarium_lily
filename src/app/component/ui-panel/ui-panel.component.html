@@ -9,7 +9,7 @@
     </div>
     {{panelService.title}}
   </div>
-  <div class="scrollable-panel" #scrollablePanel>
+  <div class="scrollable-panel" [ngClass]="{'horizontal': isHorizontal}" #scrollablePanel>
     <ng-content></ng-content>
     <div #content></div>
   </div>
