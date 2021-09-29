@@ -58,3 +58,15 @@
 .pointer-events-none {
   pointer-events: none;
 }
+
+/* chrome safari opera */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .scrollable-panel  {
+    overflow: overlay;
+  }
+}
+
+.scrollable-panel.horizontal {
+  overflow-x: auto;
+  overflow-y: hidden;
+}

@@ -5,10 +5,11 @@
     <div class="title-button">
       <button *ngIf="isAbleFullScreenButton" (click)="toggleFullScreen()"><i class="material-icons" style="font-size: 14px;">fullscreen</i></button>
       <button *ngIf="isAbleCloseButton" (click)="close()"><i class="material-icons" style="font-size: 14px;">close</i></button>
+      <button *ngIf="isAbleRotateButton" (click)="toggleRotate()"><i class="material-icons" style="font-size: 14px;">pivot_table_chart</i></button>
     </div>
     {{panelService.title}}
   </div>
-  <div class="scrollable-panel" #scrollablePanel>
+  <div class="scrollable-panel" [ngClass]="{'horizontal': isHorizontal}" #scrollablePanel>
     <ng-content></ng-content>
     <div #content></div>
   </div>
