@@ -6,7 +6,7 @@
       <div class="pedestal-inner" [ngClass]="{'is-gray-border': hasOwner}"></div>
       <div class="pedestal-outer"></div>
       <ng-container *ngIf="!isIconHidden">
-      <div class="pedestal-grab rotate-grab">
+      <div class="pedestal-grab rotate-grab is-3d">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
           <div class="material-icons of-back">autorenew</div>
@@ -37,12 +37,12 @@
             </div>
           </div>
         </div>
-        <div style="position: relative; top: -20%;" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" 
+        <div class="is-3d" style="position: relative; top: -20%;" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" 
           [@changeFace]="!isCoin && isVisible ? face : null" [@changeFaceCoin]="isCoin && isVisible ? (face == '表' ? 1 : 2) : null" 
           [@diceRoll]="animeState"
           (@diceRoll.done)="animationShuffleDone($event)">
-          <img *ngIf="!isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)">
-          <img *ngIf="isFlip && isDropShadow && 0 < backFaceImageFile.url.length" class="image shadow" [src]="backFaceImageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)" [style.transform]="isCoin ? 'scaleX(-1)' : 'scaleX(-1) scaleY(-1)'">
+          <img *ngIf="!isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow is-3d" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)">
+          <img *ngIf="isFlip && isDropShadow && 0 < backFaceImageFile.url.length" class="image shadow is-3d" [src]="backFaceImageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)" [style.transform]="isCoin ? 'scaleX(-1)' : 'scaleX(-1) scaleY(-1)'">
         </div>
       </div>
     </div>

@@ -33,18 +33,18 @@
       </ng-container>
     </ng-container>
     <ng-container *ngIf="!isLocked">
-      <div [style.opacity]="isInteract ? '1.0': '0.5'">
-        <div class="pedestal-grab rotate-grab"></div>
-        <div class="rotate-grab of-left-top rotate-grab-icon">
+      <div class="is-3d" [style.opacity]="isInteract ? '1.0': '0.5'" [style.height.px]="height * gridSize">
+        <div class="pedestal-grab rotate-grab is-3d"></div>
+        <div class="rotate-grab of-left-top rotate-grab-icon is-3d">
           <i class="material-icons">autorenew</i>
         </div>
-        <div class="rotate-grab of-left-bottom rotate-grab-icon">
+        <div class="rotate-grab of-left-bottom rotate-grab-icon is-3d">
           <i class="material-icons">autorenew</i>
         </div>
-        <div class="rotate-grab of-right-bottom rotate-grab-icon">
+        <div class="rotate-grab of-right-bottom rotate-grab-icon is-3d">
           <i class="material-icons">autorenew</i>
         </div>
-        <div class="rotate-grab of-right-top rotate-grab-icon">
+        <div class="rotate-grab of-right-top rotate-grab-icon is-3d">
           <i class="material-icons">autorenew</i>
         </div>
       </div>

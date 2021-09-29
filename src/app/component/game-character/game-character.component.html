@@ -4,25 +4,25 @@
   <div class="component-content is-3d" [@bounceInOut]="'in'">
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
       (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-inner" [ngClass]="{'selected': selected, 'not-inventory': !gameCharacter.isInventoryIndicate }"></div>
-      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-outer"></div>
+      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-inner is-3d" [ngClass]="{'selected': selected, 'not-inventory': !gameCharacter.isInventoryIndicate }"></div>
+      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-outer is-3d"></div>
       <div class="pedestal-grab rotate-grab">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
-      <div class="is-pointer-events-none" >
+      <div class="is-pointer-events-none is-3d">
         <div class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio" style="pointer-events: none;"
           [ngStyle]="{'transform-origin': '50% ' + ((size * gridSize) + 'px'), 'transform': 'translateY(-10%) scale(1.0,' + (1.0 / heightWidthRatio) + ') translateY(-' + (99 / heightWidthRatio) + '%) rotateZ(' + roll + 'deg)'}">
           <div class="aura is-3d" style="pointer-events: none;" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-            <div style="pointer-events: none; transition: transform 132ms 0s ease;"
+            <div class="is-3d" style="pointer-events: none; transition: transform 132ms 0s ease;"
               [ngStyle]="{'transform': 'scaleX(' + (isInverse ? '-1' : '1') + ')'}">  
                 <img *ngIf="isDropShadow && (0 < imageFile.url.length || 0 < shadowImageFile.url.length)" [style.height.px]="size * gridSize * heightWidthRatio" class="image drop-shadow is-3d" style="pointer-events: none;" [src]="((0 < shadowImageFile.url.length) ? shadowImageFile.url : imageFile.url) | safe: 'resourceUrl'" 
                   style="filter: brightness(0) blur(1px);"
                   [ngStyle]="{'opacity': isHollow ? 0.4 : 0.7}" [@switchImageShadow]="gameCharacter.currntImageIndex">
-              </div>
             </div>
+          </div>
         </div>
       </div>
       <div class="upright-transform is-fit-width is-3d" [ngClass]="{fall: altitude == 0}" (dblclick)="nextImage()"
@@ -35,22 +35,22 @@
               <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
               <div class="back-tag has-length-limit is-3d">{{name}}</div>
             </div>
-            <div class="is-pointer-events-none" [@switchImage]="gameCharacter.currntImageIndex">
+            <div class="is-pointer-events-none is-3d" [@switchImage]="gameCharacter.currntImageIndex">
               <div class="inverser is-3d" [ngClass]="{inverse: isInverse}">
                 <span class="aura is-3d" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
                   <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio">
-                    <img #characterImage *ngIf="0 < imageFile.url.length" class="image" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'"
+                    <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'"
                     [style.height.px]="size * gridSize * heightWidthRatio" (load)="onImageLoad()">
                   </span>
                 </span>
               </div>
             </div>
-            <div class="grab-group">
-              <div class="rotate-grab rotate-grab-icon of-top"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + (nameplateOffset - 10) + 'px)'}">
+            <div class="grab-group is-3d">
+              <div class="rotate-grab rotate-grab-icon of-top is-3d"
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + (nameplateOffset - 10 - (size * gridSize * heightWidthRatio)) + 'px)'}">
                 <i class="material-icons">autorenew</i>
               </div>
-              <div class="rotate-grab rotate-grab-icon of-bottom"
+              <div class="rotate-grab rotate-grab-icon of-bottom is-3d"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px'}">
                 <i class="material-icons">autorenew</i>
               </div>
@@ -64,14 +64,14 @@
           <div *ngIf="isListen" [@fadeAndScaleInOut]="isEmote" class="is-3d" style="transform-origin: center bottom;" [style.color]="!isEmote && isWhisper ? '#ccc' : dialogColor">
             <div class="is-3d">
               <p class="is-3d chat-bubble-buyo" [style.min-width.px]="dialogChatBubbleMinWidth" [style.border-color]="dialogColor" style="position: absolute; backface-visibility: hidden" 
-                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box"
+                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box is-3d"
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
-                  <img class="face-icon" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
+                  <img class="face-icon is-3d" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
                 </span>{{ dialogText }}</p>
               <p class="is-3d chat-bubble-buyo back" [style.min-width.px]="dialogChatBubbleMinWidth" [style.border-color]="dialogColor" style="backface-visibility: hidden; transform: rotateY(-180deg)"
-                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box"
+                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box is-3d"
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
-                  <img class="face-icon" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
+                  <img class="face-icon is-3d" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
                 </span>{{ dialogText }}</p>
             </div>
           </div>

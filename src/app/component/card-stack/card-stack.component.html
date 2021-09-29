@@ -12,23 +12,23 @@
       <img class="card-image" [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
     <ng-container *ngIf="!isIconHidden">
-      <div class="rotate-grab of-left-top">
+      <div class="rotate-grab of-left-top is-3d">
         <i class="material-icons">autorenew</i>
       </div>
-      <div class="rotate-grab of-left-bottom">
+      <div class="rotate-grab of-left-bottom is-3d">
         <i class="material-icons">autorenew</i>
       </div>
-      <div class="rotate-grab of-right-bottom">
+      <div class="rotate-grab of-right-bottom is-3d">
         <i class="material-icons">autorenew</i>
       </div>
-      <div class="rotate-grab of-right-top">
+      <div class="rotate-grab of-right-top is-3d">
         <i class="material-icons">autorenew</i>
       </div>
     </ng-container>
-    <div *ngIf="isShowTotal" class="name-tag is-nowrap is-black-background" style="z-index: 10" [ngStyle]="{'transform': 'translateY(-50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+    <div *ngIf="isShowTotal" class="name-tag is-nowrap is-black-background is-3d" style="z-index: 10" [ngStyle]="{'transform': 'translateY(-50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
       <span>{{cards.length}}枚</span>
     </div>
-    <div *ngIf="hasOwner" class="name-tag has-length-limit is-nowrap is-black-background" style="z-index: 10; color: whitesmoke" [ngStyle]="{'background-color': ownerColor,'transform': 'translateY(50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+    <div *ngIf="hasOwner" class="name-tag has-length-limit is-nowrap is-black-background is-3d" style="z-index: 10; color: whitesmoke" [ngStyle]="{'background-color': ownerColor,'transform': 'translateY(50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
       <span><b>{{ownerName}}</b> が確認中</span>
     </div>
   </div>
