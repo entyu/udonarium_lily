@@ -54,11 +54,6 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   width : number = 200;
   height : number = 150;
 
-  static readonly MIN_SIZE = 250;
-  
-  minSize: number = 10;
-  maxSize: number = 1200;
-
   private lazyUpdateTimer: NodeJS.Timer = null;
   readonly audioPlayer: AudioPlayer = new AudioPlayer();
   private cutInTimeOut = null ;
@@ -80,17 +75,6 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
 
   private _naturalWidth = 0;
   private _naturalHeight = 0;
-  private get naturalWidth(): number {
-    return 480;
-//    if (this.videoId && !this.isSoundOnly) return 480;
-//    return this._naturalWidth;
-  }
-  private get naturalHeight(): number {
-    return 270;
-//    if (this.videoId && !this.isSoundOnly) return 270;
-//    return this._naturalHeight;
-  }
-
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
@@ -106,7 +90,9 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
     let audio = this.cutIn.audio ;
     if( audio ){
       this.audioPlayer.loop = this.cutIn.isLoop;
-      this.audioPlayer.play( audio );
+      if(!this.cutIn.videoId ){
+        this.audioPlayer.play( audio );
+      }
     }
     
     if( this.cutIn.outTime > 0){
@@ -191,7 +177,6 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
       this.left = margin_x ;
       this.top = margin_y;
     }else{
-      
       console.log("カットインが未定義で再生された");
     }
     this.panelService.width = this.width ;
@@ -219,141 +204,12 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   }
 
   get youTubeWidth(): number {
-    
-    return document.getElementById(this.cutInAreaId) ? document.getElementById(this.cutInAreaId).clientWidth : 375 ;
-//    return this.cutIn.width;
+    return document.getElementById(this.cutInAreaId) ? document.getElementById(this.cutInAreaId).clientWidth : 640 ;
   }
 
   get youTubeHeight(): number {
-    return document.getElementById(this.cutInAreaId) ? document.getElementById(this.cutInAreaId).clientHeight : 250 ;
-//    return this.cutIn.height;
+    return document.getElementById(this.cutInAreaId) ? document.getElementById(this.cutInAreaId).clientHeight : 340 ;
   }
-
-/*
-  get pixcelWidthPreAdjust(): number {
-    if (this.isMinimize) return CutInWindowComponent.MIN_SIZE;
-    let ret = 0;
-    if (!this.cutIn) return ret;
-    if (this.cutIn.width <= 0 && this.cutIn.height <= 0) {
-      ret = this.naturalWidth;
-    } else { 
-      ret = (this.cutIn.width <= 0)
-        ? (document.documentElement.offsetHeight * this.cutIn.height * (this.naturalWidth / this.naturalHeight) / 100)
-        : (document.documentElement.clientWidth * this.cutIn.width / 100);
-    }
-    return ret;
-  }
-*/
-/*
-  get pixcelWidth(): number {
-    let ret = this.pixcelWidthPreAdjust;
-    if ( this.videoId) {
-//      if (this.isAjustAspect) {
-//        if (this.isAjustAspectWidth) {
-          ret = document.documentElement.clientWidth;
-//        } else {
-//          ret = ret * (document.documentElement.offsetHeight / this.pixcelHeightPreAdjust)
-//        }
-//      } else if (ret > document.documentElement.clientWidth) {
-//        ret = document.documentElement.clientWidth;
-//      }
-    }
-
-//    if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelWidthAspectMinimun > ret) {
-//      ret = this.pixelWidthAspectMinimun;
-//    } else if (ret < CutInWindowComponent.MIN_SIZE) {
-//      ret = CutInWindowComponent.MIN_SIZE;
-//    }
-
-    return ret;
-  }
-*/
-/*
-  get pixcelHeightPreAdjust(): number {
-    if (this.isMinimize) return CutInWindowComponent.MIN_SIZE;
-    let ret = 0;
-    if (!this.cutIn) return ret;
-    if (this.cutIn.width <= 0 && this.cutIn.height <= 0) { 
-      ret = this.naturalHeight;
-    } else {
-      ret = (this.cutIn.height <= 0)
-        ? (document.documentElement.clientWidth * this.cutIn.width * (this.naturalHeight / this.naturalWidth) / 100)
-        : (document.documentElement.offsetHeight * this.cutIn.height / 100);
-    }
-    return ret;
-  }
-*/
-
-/*
-  get pixcelHeight(): number {
-    let ret = this.pixcelHeightPreAdjust;
-    if (this.videoId) {
-//      if (this.isAjustAspect) {
-//        if (this.isAjustAspectWidth) {
-          ret = ret * (document.documentElement.offsetWidth / this.pixcelWidthPreAdjust)
-//        } else {
-//          ret = document.documentElement.offsetHeight;
-//        }
-//      } else if (ret > document.documentElement.offsetHeight) {
-//        ret = document.documentElement.offsetHeight;
-//      }
-    }
-
-//    if (!this.isMinimize && (this.cutIn.width <= 0 || this.cutIn.height <= 0) && this.pixelHeightAspectMinimun > ret) {
-//      ret = this.pixelHeightAspectMinimun;
-//    } else if (ret < CutInWindowComponent.MIN_SIZE) {
-//      ret = CutInWindowComponent.MIN_SIZE;
-//    }
-
-    return ret;
-  }
-*/
-
-/*
-  get pixelHeightAspectMinimun() {
-    let ret = CutInWindowComponent.MIN_SIZE;
-    if (!this.cutIn) return ret;
-    if (this.naturalWidth < this.naturalHeight) {
-      ret = CutInWindowComponent.MIN_SIZE * this.naturalHeight / this.naturalWidth;
-    } 
-    return ret;
-  }
-
-  get pixelWidthAspectMinimun() {
-    let ret = CutInWindowComponent.MIN_SIZE;
-    if (!this.cutIn) return ret;
-    if (this.naturalWidth > this.naturalHeight) {
-      ret = CutInWindowComponent.MIN_SIZE * this.naturalWidth / this.naturalHeight;
-    } 
-    return ret;
-  }
-*/
-
-/*
-  private get isAjustAspect(): boolean {
-    return (this.cutIn.width <= 0 || this.cutIn.height <= 0) 
-      && (this.pixcelWidthPreAdjust > document.documentElement.clientWidth || this.pixcelHeightPreAdjust > document.documentElement.offsetHeight);
-  }
-*/
-/*
-  // アス比合わせて画面に納める際にどちらの幅を画面いっぱいに合わせるか
-  private get isAjustAspectWidth(): boolean {
-    const pixcelWidthPreAdjust = this.pixcelWidthPreAdjust;
-    const pixcelHeightPreAdjust = this.pixcelHeightPreAdjust;
-    if (pixcelWidthPreAdjust > document.documentElement.clientWidth) {
-      //幅が超えるのでとりあえず幅を合わせて高さが超えないか見る
-      if (document.documentElement.offsetHeight < pixcelHeightPreAdjust * (document.documentElement.clientWidth / pixcelWidthPreAdjust)) {
-        // 高さが超える場合は高さを画面いっぱいに
-        return false;
-      }
-      return true;
-    } else if (pixcelHeightPreAdjust > document.documentElement.offsetHeight) {
-      // 幅は超えずに高さのみ超えるので高さを画面いっぱい
-      return false
-    }
-    return false;
-  }
-*/
 
   onPlayerReady($event) {
     $event.target.setVolume(this.videoVolume);

@@ -24,14 +24,10 @@
     [width]="youTubeWidth"
     [height]="youTubeHeight" 
     suggestedQuality="default" 
+
     (ready)="onPlayerReady($event)"
     (stateChange)="onPlayerStateChange($event)">
   </youtube-player>
-<br>
-
-{{youTubeWidth}}:W {{cutInAreaId}}
-<br>
-{{youTubeHeight}}:H
 
 <!--
     [width]="pixcelWidth"
