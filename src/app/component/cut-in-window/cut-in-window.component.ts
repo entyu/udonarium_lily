@@ -57,6 +57,7 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   private lazyUpdateTimer: NodeJS.Timer = null;
   readonly audioPlayer: AudioPlayer = new AudioPlayer();
   private cutInTimeOut = null ;
+  timerCHkWindow
 
   private _videoId = '';
 //  private _timeoutId;
@@ -228,7 +229,7 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
           this._timeoutIdVideo = null;
         });
       }, 200);
-      if (this.cutIn) EventSystem.trigger('PLAY_VIDEO_CUT_IN', {identifier: this.cutIn.identifier})
+//      if (this.cutIn) EventSystem.trigger('PLAY_VIDEO_CUT_IN', {identifier: this.cutIn.identifier})
     }
     if (state == 2) {
       this.videoStateTransition = true;
@@ -247,6 +248,10 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
           this._timeoutIdVideo = null;
         });
       }, 200);
+    }
+    if (state == 0 ) {
+      this.cutInTimeOut = null;
+      this.panelService.close();
     }
   }
 

@@ -11,14 +11,11 @@
     <ng-container *ngIf="!isEmpty || selectedCutIn">
       <div class="images-select">
         <div>
-          画像 <ng-container *ngIf="isEditable"><span *ngIf="selectedCutIn.videoId">：YouTube有効</span></ng-container>
-          <div (click)="openCutInImageModal()"  style="height:120px;" >
+          画像 <ng-container *ngIf="isEditable"><span *ngIf="isYouTubeCutIn">：YouTube有効</span></ng-container>
+
+          <div (click)="openCutInImageModal()"  style="height:120px;" class="grow">
             <img height="120" [src]="cutInImageUrl | safe: 'resourceUrl'">
-<!--
-            <img style="height: 120px; object-fit: contain" 
-            [ngClass]="{ blackout: (!cutInVideoId ) && !isShowHideImages && getHidden(cutInImage) }" 
-            [src]="cutInImageUrl | safe: 'resourceUrl'">
--->
+            <i style="font-size: 32px ;margin-left:-28px" class="material-icons">{{ isYouTubeCutIn ? 'movie' : '' }}</i>
           </div>
         </div>
       </div>
