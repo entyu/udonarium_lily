@@ -55,10 +55,10 @@ export class UIPanelComponent implements OnInit {
   private preHeight: number = 100;
 
   // 今はメニューだけなのでとりあえず
-  private saveWidth: number = 1034;
+  private saveWidth: number = 1032;
   private saveHeight: number = 100;
 
-  private isFullScreen: boolean = false;
+  isFullScreen: boolean = false;
   isHorizontal: boolean = false;
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }

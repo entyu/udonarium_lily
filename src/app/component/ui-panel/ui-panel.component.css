@@ -70,3 +70,9 @@
   overflow-x: auto;
   overflow-y: hidden;
 }
+
+.rotateble {
+  display: inline;
+  top: -3px;
+  position: relative;
+}

@@ -2,12 +2,12 @@
   [style.left.px]="left" [style.top.px]="top" [style.width.px]="width" [style.height.px]="height"
   [draggable.stack]="'.draggable-panel'" appDraggable appResizable #draggablePanel>
   <div class="title">
+    <button *ngIf="isAbleRotateButton" style="padding: 0px; height: 14px; margin-top: 3px; margin-left: 1px" (click)="toggleRotate()"><i class="material-icons" style="font-size: 14px;">pivot_table_chart</i></button>
+    <div [ngClass]="{'rotateble': isAbleRotateButton}">{{panelService.title}}</div>
     <div class="title-button">
-      <button *ngIf="isAbleFullScreenButton" (click)="toggleFullScreen()"><i class="material-icons" style="font-size: 14px;">fullscreen</i></button>
+      <button *ngIf="isAbleFullScreenButton" (click)="toggleFullScreen()"><i class="material-icons" [style.font-size.px]="isFullScreen ? 12 : 14">{{ isFullScreen ? 'close_fullscreen' : 'fullscreen' }}</i></button>
       <button *ngIf="isAbleCloseButton" (click)="close()"><i class="material-icons" style="font-size: 14px;">close</i></button>
-      <button *ngIf="isAbleRotateButton" (click)="toggleRotate()"><i class="material-icons" style="font-size: 14px;">pivot_table_chart</i></button>
     </div>
-    {{panelService.title}}
   </div>
   <div class="scrollable-panel" [ngClass]="{'horizontal': isHorizontal}" #scrollablePanel>
     <ng-content></ng-content>
