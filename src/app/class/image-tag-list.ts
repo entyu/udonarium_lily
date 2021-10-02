@@ -13,7 +13,7 @@ export class ImageTagList extends ObjectNode implements InnerXml {
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
-    ObjectStore.instance.remove(this); // ObjectStore‚É‚Í“o˜^‚µ‚È‚¢
+    ObjectStore.instance.remove(this); // ObjectStoreã«ã¯ç™»éŒ²ã—ãªã„
   }
 
   innerXml(): string {

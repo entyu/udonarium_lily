@@ -92,7 +92,6 @@ export class ChatMessageService {
     }else{
       _color = color;
     }
-
     let chatMessage: ChatMessageContext = {
       from: this.findId(sendTo),
       to: this.findId(sendTo),
@@ -105,9 +104,7 @@ export class ChatMessageService {
       messColor: _color,//lily
       sendFrom: null //lily
     };
-
     return chatTab.addMessage(chatMessage);
-
   }
 
   // 最終発言キャラでシステム発言

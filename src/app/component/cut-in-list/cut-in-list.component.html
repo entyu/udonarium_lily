@@ -11,43 +11,50 @@
     <ng-container *ngIf="!isEmpty || selectedCutIn">
       <div class="images-select">
         <div>
-          画像
-          <div (click)="openCutInImageModal()"  style="height:120px;" >
-            <img height="120" [src]="cutInImage.url | safe: 'resourceUrl'">
+          画像 <ng-container *ngIf="isEditable"><span *ngIf="isYouTubeCutIn">：YouTube有効</span></ng-container>
+
+          <div (click)="openCutInImageModal()"  style="height:120px;" class="grow">
+            <img height="120" [src]="cutInImageUrl | safe: 'resourceUrl'">
+            <i style="font-size: 32px ;margin-left:-28px" class="material-icons">{{ isYouTubeCutIn ? 'movie' : '' }}</i>
           </div>
-        </div>
-        <div>
         </div>
       </div>
       <div>名称 :
         <input [(ngModel)]="cutInName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
       </div>
 
-      <div >音楽データ :
-        <button (click)="openCutInBgmModal()">設定</button><br>
-
+      <div >
         <button  (click)="playCutIn()" [disabled]="" >カットイン再生</button>
         <button  (click)="stopCutIn()" [disabled]="" >カットイン停止</button>
         <button  (click)="previewCutIn()" [disabled]="" >自分だけ再生</button><br>
+      </div>
+      <div style = "margin-left:20px">
+        音楽データ :
+        <button (click)="openCutInBgmModal()">設定</button><br>
         LINK:<span *ngIf="isCutInBgmUploaded()" >OK：</span><span *ngIf="!isCutInBgmUploaded()" >NG：</span><br>
         <ng-container *ngIf="!isCutInBgmUploaded()">
           <span *ngIf="cutInAudioName.length>0 " >音楽ファイルがアップされていません</span>
           <span *ngIf="cutInAudioName.length<=0 " >音楽ファイルが設定されていません</span>
         </ng-container>
-        <br>
-        <ng-container *ngIf="isEditable" >{{cutInAudioName}}</ng-container><br>
-
+        <ng-container *ngIf="isCutInBgmUploaded()">
+          <span *ngIf="isEditable" >{{cutInAudioName}}</span>
+          <span *ngIf="!isEditable" ></span>
+        </ng-container>
       </div>
       <div>
-        元サイズで表示：<input type="checkbox" [(ngModel)]="cutInOriginalSize" name="cutInOriginalSize" [attr.disabled]="!isEditable ? '' : null"/>
+        <ng-container *ngIf="isEditable">
+          <span *ngIf="selectedCutIn.videoId">標準サイズで表示：</span>
+          <span *ngIf="!selectedCutIn.videoId">元サイズで表示：</span>
+        </ng-container>
+        <input type="checkbox" [(ngModel)]="cutInOriginalSize" name="cutInOriginalSize" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
       <div>
-        Width :<input [(ngModel)]="cutInWidth" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null">
+        Width :<input [(ngModel)]="cutInWidth" type="number" min="{{minSizeWidth}}" max="{{maxSizeWidth}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null">
         縦横比を維持 :<input type="checkbox" [(ngModel)]="keepImageAspect" name="keepImageAspect" 
         [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null" (click)="chkImageAspect()" />
       </div>
       <div>
-        Height :<input [(ngModel)]="cutInHeight" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null">
+        Height :<input [(ngModel)]="cutInHeight" type="number" min="{{minSizeHeight}}" max="{{maxSizeHeight}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize  ? '' : null">
       </div>
       <div>
         <input [(ngModel)]="cutInX_Pos" type="range" min="0" max="100" name="cutInX_PosWidth" [attr.disabled]="!isEditable ? '' : null"/>
@@ -68,6 +75,12 @@
         チャット末尾発動：<input type="checkbox" [(ngModel)]="chatActivate" name="chatActivate" [attr.disabled]="!isEditable ? '' : null"/>
       </div>
       <div>
+      YouTube再生 :<input type="checkbox" [(ngModel)]="cutInIsVideo" name="cutInIsVideo" [attr.disabled]="!isEditable ? '' : null" (change) = "changeYouTubeInfo()" />
+        URL :<input [(ngModel)]="cutInVideoURL" placeholder="URL" [attr.disabled]="!isEditable ? '' : null" (input) = "changeYouTubeInfo()" /><br>
+        <a href="https://www.youtube.com/terms" target="_blank" class="outer-link" (click)="openYouTubeTerms()">YouTube 利用規約</a>
+        :機能使用前に確認ください
+      </div>
+      <div>
 <p style="font-size:0.4em">※カットインの挙動<br>
 タグ名称が同名のカットインは先に再生しているものを停止します(タグ空欄含む)<br>
 タグ名称が空欄で音楽が設定されている場合、ジュークボックスのBGMを停止します<br>
@@ -75,15 +88,6 @@
 銃撃音のSE等、BGMと同時再生したいカットインはタグを設定してください<br>
 </p>
       </div>
-
-<!-- 動画再生は後日検討。youtubeより.mp4に対法した方が実装上は良いのかも知れない
-      <div>
-        Youtube再生 :<input type="checkbox" [(ngModel)]="cutInUseOutUrl" name="cutInUseOutUrl" [attr.disabled]="!isEditable ? '' : null"/>
-      </div>
-      <div>
-        URL :<input [(ngModel)]="cutInOutUrl" placeholder="URL" [attr.disabled]="!isEditable ? '' : null" />
-      </div>
--->
       <hr/>
       <div>
         <ng-container *ngIf="!isDeleted">

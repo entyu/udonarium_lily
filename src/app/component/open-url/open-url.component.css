@@ -1,0 +1,12 @@
+.url {
+    word-break: break-all;
+}
+.url .outer {
+    font-weight: bold;
+}
+.opt {
+    color: gray;
+}
+.help {
+    font-size: smaller;
+}

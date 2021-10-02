@@ -38,7 +38,7 @@ export class TabletopObject extends ObjectNode {
   get commonDataElement(): DataElement { return this.getElement('common'); }
   get detailDataElement(): DataElement { return this.getElement('detail'); }
 
-  get buffDataElement(): DataElement { return this.getElement('buff'); }//リリィにてバフ機能用の追加
+  get buffDataElement(): DataElement { return this.getElement('buff'); }//繝ｪ繝ｪ繧｣縺ｫ縺ｦ繝舌ヵ讖溯�ｽ逕ｨ縺ｮ霑ｽ蜉
 
 
   addBuffDataElement(){ 

@@ -48,7 +48,6 @@ import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.comp
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -274,6 +273,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     option.top = margin_y;
     option.isCutIn = true;
     option.cutInIdentifier = cutIn.identifier;
+
 
     let component = this.panelService.open(CutInWindowComponent, option);
     component.cutIn = cutIn;

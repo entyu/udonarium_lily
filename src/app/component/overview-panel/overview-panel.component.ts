@@ -225,7 +225,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   }
   
   changeChk(){
-    //Àˆ—‚È‚µ
+    //å®Ÿå‡¦ç†ãªã—
   }
 
   textFocus( dataElmIdentifier ){

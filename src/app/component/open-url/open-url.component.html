@@ -1,0 +1,11 @@
+<div>
+  <div *ngIf="isValid" class="url">{{urlObj.protocol}}//<span [ngClass]="{'outer': isOuter}">{{urlObj.host}}</span>{{urlObj.pathname}}<span class="opt">{{urlObj.search}}{{urlObj.hash}}</span></div>
+  <div *ngIf="!isValid" class="url">{{url}}</div>
+  <hr />
+  <div class="help">
+    <div *ngIf="isValid">このURLを開きますか？（別ウィンドウで開きます、ポップアップを許可してください）</div>
+    <div *ngIf="!isValid">⚠️URLが不正です。</div>
+  </div>
+</div>
+<button type="submit" (click)="openUrl()" [disabled]="!isValid">開く</button>
+<button type="button" (click)="cancel()">キャンセル</button>

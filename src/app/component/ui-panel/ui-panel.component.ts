@@ -2,10 +2,11 @@ import { animate, keyframes, style, transition, trigger } from '@angular/animati
 import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-//
+
 import { EventSystem, Network } from '@udonarium/core/system';
 import { ChatTachieImageComponent } from 'component/chat-tachie-img/chat-tachie-img.component';
-//
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { CutIn } from '@udonarium/cut-in';
 
 @Component({
   selector: 'ui-panel',
@@ -54,59 +55,79 @@ export class UIPanelComponent implements OnInit {
   isFullScreen: boolean = false;
   isMinimized: boolean = false;
 
+  private tachieDispByMouse: boolean = true;
+  private timerCheckWindowSize = null;
+
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
 
   constructor(
     public panelService: PanelService,
     private pointerDeviceService: PointerDeviceService
   ) { }
-  
-  
-  private tachieDispByMouse: boolean = true;
-  
+
   showTachie(flag:boolean){
-    
     this.tachieDispByMouse = flag;
   }
-  
-  
-  
+
   ngOnInit() {
     this.panelService.scrollablePanel = this.scrollablePanel.nativeElement;
-/*
-    EventSystem.register(this)
-      .on('CUT_IN_PANEL_POS_CHANGE', event => { 
-//        console.log('EVENT:CUT_IN_PANEL_POS_CHANGE :' + this.title);
-        if( this.isCutIn ){
-          if( event.data.cutInIdentifier == this.panelService.cutInIdentifier && ( this.panelService.cutInIdentifier.length > 0 ) ){
-            
-            console.log('EVENT:CUT_IN_PANEL_POS_CHANGE >movePanel()');
-            console.log( 'left:' + event.data.left + ' top:' + event.data.top + ' width:'+ event.data.width + ' height:'+ event.data.height);
-            this.movePanel( event.data.left , event.data.top , event.data.width , event.data.height );
-          }
-        }
-      });
-*/
+    this.timerCheckWindowSize = setInterval(() => {
+      this.chkeWindowMinSize();
+    },500);
   }
-  
-/*
-  movePanel( left : number , top : number , width : number , height : number){
-      let panel = this.draggablePanel.nativeElement;
 
-      this.left = left;
-      this.top = top;
-      this.width = width;
-      this.height = height;
+// youtube動画が既定値未満にしないための処理 マニュアルで200*200位上津衣装となっていたのでCutIn側でそれに習う
+  chkeWindowMinSize(){
+    const id = this.panelService.cutInIdentifier;
+    if(!id )return;
+    const cutIn = ObjectStore.instance.get<CutIn>(id);
+    if(!cutIn)return;
+    if(!cutIn.videoId)return;
 
-      panel.style.left = this.left + 'px';
-      panel.style.top = this.top + 'px';
-      panel.style.width = this.width + 'px';
-      panel.style.height = this.height + 'px';
+    let panel = this.draggablePanel.nativeElement
+    console.log('chkeWindowMinSize:' + panel.style.width + ' H:' + panel.style.height);
+    
+    const nowW = parseInt(panel.style.width);
+    const nowH = parseInt(panel.style.height);
+    if (nowW < cutIn.minSizeWidth(true)){
+      panel.style.width = cutIn.minSizeWidth(true) + 'px';
+      console.log('サイズ補正W');
+    }
+    if (nowH < cutIn.minSizeHeight(true)){
+      panel.style.height = cutIn.minSizeHeight(true) + 'px';
+      console.log('サイズ補正H');
+    }
+    // はみ出し防止処理
+    const winW = window.innerWidth;
+    const winH = window.innerHeight;
 
+    const offsetL: number = panel.offsetLeft; 
+    const offsetT: number = panel.offsetTop;
+
+    const overR = offsetL + cutIn.minSizeWidth(true) - winW;
+    if( overR >= 0){
+      const newOffL = offsetL - overR <= 0 ? 0 : offsetL - overR;
+      panel.style.left = newOffL + 'px';
+      console.log('はみ出し防止処理横');
+    }
+
+    const overB = offsetT + cutIn.minSizeHeight(true) - winH;
+    if( overB >= 0){
+      const newOffT = offsetT - overB <= 0 ? 0 : offsetT - overB;
+      panel.style.top = newOffT + 'px';
+      console.log('はみ出し防止処理縦');
+    }
   }
-*/  
+
   toggleMinimize() {
     if (this.isFullScreen) return;
+    const id = this.panelService.cutInIdentifier;
+    if (id){
+      const cutIn = ObjectStore.instance.get<CutIn>(id);
+      if (cutIn.videoId){
+        return;
+      }
+    }
 
     let body  = this.scrollablePanel.nativeElement;
     let panel = this.draggablePanel.nativeElement;
@@ -169,6 +190,10 @@ export class UIPanelComponent implements OnInit {
   }
   
   close() {
+    if( this.timerCheckWindowSize ){
+      clearTimeout(this.timerCheckWindowSize);
+      this.timerCheckWindowSize = null;
+    }
     if (this.panelService) this.panelService.close();
   }
   
