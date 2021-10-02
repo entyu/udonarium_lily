@@ -50,11 +50,11 @@
       </div>
       <div>
         Width :<input [(ngModel)]="cutInWidth" type="number" min="{{minSizeWidth}}" max="{{maxSizeWidth}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null">
-        比率を維持して縦を決定 :<input type="checkbox" [(ngModel)]="keepImageAspect" name="keepImageAspect" 
+        縦横比を維持 :<input type="checkbox" [(ngModel)]="keepImageAspect" name="keepImageAspect" 
         [attr.disabled]="!isEditable || cutInOriginalSize ? '' : null" (click)="chkImageAspect()" />
       </div>
       <div>
-        Height :<input [(ngModel)]="cutInHeight" type="number" min="{{minSizeHeight}}" max="{{maxSizeHeight}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize || keepImageAspect ? '' : null">
+        Height :<input [(ngModel)]="cutInHeight" type="number" min="{{minSizeHeight}}" max="{{maxSizeHeight}}" style="width: 5em;" [attr.disabled]="!isEditable || cutInOriginalSize  ? '' : null">
       </div>
       <div>
         <input [(ngModel)]="cutInX_Pos" type="range" min="0" max="100" name="cutInX_PosWidth" [attr.disabled]="!isEditable ? '' : null"/>

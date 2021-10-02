@@ -62,9 +62,9 @@ export class CutInListComponent implements OnInit, OnDestroy {
     if (this.isEditable) this.selectedCutIn.height = cutInHeight; 
     if( this.keepImageAspect ){
       if(this.isYouTubeCutIn){
-        this.selectedCutIn.height = Math.floor( cutInHeight * this.selectedCutIn.defVideoSizeWidth /  this.selectedCutIn.defVideoSizeHeight );
+        this.selectedCutIn.width = Math.floor( cutInHeight * this.selectedCutIn.defVideoSizeWidth /  this.selectedCutIn.defVideoSizeHeight );
       }else{
-        this.selectedCutIn.height = Math.floor(  cutInHeight *  this.originalImgWidth() /  this.originalImgHeight() );
+        this.selectedCutIn.width = Math.floor(  cutInHeight *  this.originalImgWidth() /  this.originalImgHeight() );
       }
       console.log(" this.keepImageAspect W" + this.selectedCutIn.width);
     }
