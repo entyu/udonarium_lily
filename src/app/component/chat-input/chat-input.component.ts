@@ -385,11 +385,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       //ToDO ちゃんとパースする
       let match;
       let dialog = [];
-      if (StringUtil.isEmote(text)) {
-        dialog.push(text);
-      } else {
-        while ((match = dialogRegExp.exec(text)) !== null) {
-          dialog.push(match[1]);
+      while ((match = dialogRegExp.exec(text)) !== null) {
+        dialog.push(match[1]);
+      }
+      if (dialog.length === 0) {
+        const emoteTest = text.split(/[\s　]/).slice(-1)[0];
+        if (StringUtil.isEmote(emoteTest)) {
+          dialog.push(emoteTest);
         }
       }
       if (dialog.length > 0) {
