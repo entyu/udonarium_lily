@@ -25,24 +25,6 @@ import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
   selector: 'app-cut-in-window',
   templateUrl: './cut-in-window.component.html',
   styleUrls: ['./cut-in-window.component.css']
-/*
-  providers: [
-    PanelService,
-  ],
-  animations: [
-    trigger('flyInOut', [
-      transition('void => *', [
-        animate('100ms ease-out', keyframes([
-          style({ transform: 'scale(0.8, 0.8)', opacity: '0', offset: 0 }),
-          style({ transform: 'scale(1.0, 1.0)', opacity: '1', offset: 1.0 })
-        ]))
-      ]),
-      transition('* => void', [
-        animate(100, style({ transform: 'scale(0, 0)' }))
-      ])
-    ])
-  ]
-*/
 })
 export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
 
@@ -68,8 +50,6 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
 
   cutIn: CutIn = null;
   playListId = '';
-
-//  isMinimize = false;
 
   private _naturalWidth = 0;
   private _naturalHeight = 0;
@@ -115,12 +95,7 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
     private ngZone: NgZone
   ) { }
 
-  ngOnInit() {
-    
-    this.timerCheckWindowSize = setInterval(() => {
-      this.chkeWindowMinSize();
-    },500);
-    
+  ngOnInit(){
     EventSystem.register(this)
       .on('START_CUT_IN', event => { 
         console.log('カットインウィンドウ>Event:START_CUT_IN ' + this.cutIn.name );
@@ -134,7 +109,6 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
         if( this.cutIn ){
           console.log( " 'STOP_CUT_IN_BY_BGM :" + this.cutIn);
           let audio = AudioStorage.instance.get( this.cutIn.audioIdentifier );
-
           if( this.cutIn.tagName == '' && audio ){
             this.panelService.close();
           }
@@ -239,7 +213,6 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
           this._timeoutIdVideo = null;
         });
       }, 200);
-//      if (this.cutIn) EventSystem.trigger('PLAY_VIDEO_CUT_IN', {identifier: this.cutIn.identifier})
     }
     if (state == 2) {
       this.videoStateTransition = true;
@@ -273,11 +246,6 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if( this.timerCheckWindowSize ){
-      clearTimeout(this.timerCheckWindowSize);
-      this.timerCheckWindowSize = null;
-    }
-    
     if( this.cutInTimeOut ){
       clearTimeout(this.cutInTimeOut);
       this.cutInTimeOut = null;

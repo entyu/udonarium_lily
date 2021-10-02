@@ -349,28 +349,28 @@ export class CutInListComponent implements OnInit, OnDestroy {
 
   get minSizeWidth(){
     if(this.selectedCutIn){
-      this._minSizeWidth = this.selectedCutIn.minSizeWidth(this.cutInIsVideo);
+      this._minSizeWidth = this.selectedCutIn.minSizeWidth(this.isYouTubeCutIn);
     }
     return this._minSizeWidth;
   }
 
   get maxSizeWidth(){
     if(this.selectedCutIn){
-      this._maxSizeWidth = this.selectedCutIn.maxSizeWidth(this.cutInIsVideo);
+      this._maxSizeWidth = this.selectedCutIn.maxSizeWidth(this.isYouTubeCutIn);
     }
     return this._maxSizeWidth;
   }
 
   get minSizeHeight(){
     if(this.selectedCutIn){
-      this._minSizeHeight = this.selectedCutIn.minSizeHeight(this.cutInIsVideo);
+      this._minSizeHeight = this.selectedCutIn.minSizeHeight(this.isYouTubeCutIn);
     }
     return this._minSizeHeight;
   }
 
   get maxSizeHeight(){
     if(this.selectedCutIn){
-      this._maxSizeHeight = this.selectedCutIn.maxSizeHeight(this.cutInIsVideo);
+      this._maxSizeHeight = this.selectedCutIn.maxSizeHeight(this.isYouTubeCutIn);
     }
     return this._maxSizeHeight;
   }
