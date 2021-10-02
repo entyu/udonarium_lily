@@ -48,9 +48,6 @@ import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.comp
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
 
-//import { CutInComponent } from 'component/cut-in/cut-in.component';
-
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

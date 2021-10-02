@@ -57,12 +57,12 @@ import { TooltipDirective } from 'directive/tooltip.directive';
 import { SafePipe } from 'pipe/safe.pipe';
 
 import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
-import { ControllerInputComponent } from 'component/controller-input/controller-input.component';  
-import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component'; 
+import { ControllerInputComponent } from 'component/controller-input/controller-input.component';
+import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component';
 
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
-import { YouTubePlayerModule } from "@angular/youtube-player";
+import { YouTubePlayerModule } from '@angular/youtube-player';
 
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
 import { CutInBgmComponent } from 'component/cut-in-bgm/cut-in-bgm.component';
