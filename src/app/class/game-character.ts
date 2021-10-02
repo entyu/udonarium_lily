@@ -22,6 +22,8 @@ export class GameCharacter extends TabletopObject {
   isEmote = false;
 
   get name(): string { return this.getCommonValue('name', ''); }
+  set name(name) { this.setCommonValue('name', name); }
+
   get size(): number { return this.getCommonValue('size', 1); }
 
   get chatPalette(): ChatPalette {

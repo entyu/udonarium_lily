@@ -30,6 +30,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
+import { TabletopService } from 'service/tabletop.service';
 
 @Component({
   selector: 'game-character',
@@ -277,7 +278,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
     private ngZone: NgZone,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private tabletopService: TabletopService,
   ) { }
   
   ngOnInit() {
@@ -573,6 +575,30 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       {
         name: 'コピーを作る', action: () => {
           let cloneObject = this.gameCharacter.clone();
+          cloneObject.location.x += this.gridSize;
+          cloneObject.location.y += this.gridSize;
+          cloneObject.update();
+          SoundEffect.play(PresetSound.piecePut);
+        }
+      },
+      {
+        name: 'コピーを作る（自動採番）', action: () => {
+          const cloneObject = this.gameCharacter.clone();
+          const tmp = cloneObject.name.split('_');
+          let baseName;
+          if (tmp.length > 1 && /\d+/.test(tmp[tmp.length - 1])) {
+            baseName = tmp.slice(0, tmp.length - 1).join('_');
+          } else {
+            baseName = tmp.join('_');
+          }
+          let maxIndex = 0;
+          for (const character of this.tabletopService.characters) {
+            if (character.name.startsWith(baseName)) {
+              let index = character.name.match(/_(\d+)$/) ? +RegExp.$1 : 0;
+              if (index > maxIndex) maxIndex = index;
+            }
+          }
+          cloneObject.name = baseName + '_' + (maxIndex + 1);
           cloneObject.location.x += this.gridSize;
           cloneObject.location.y += this.gridSize;
           cloneObject.update();
