@@ -114,7 +114,18 @@ export class CutInListComponent implements OnInit, OnDestroy {
   }
 
 
-  keepImageAspect: boolean = false;
+  get keepImageAspect():boolean {
+    if( !this.isEditable ) return false;
+    if( !this.selectedCutIn ) return false;
+    return this.selectedCutIn.keepImageAspect;
+  }
+
+  set keepImageAspect(aspect) {
+    if( !this.isEditable ) return;
+    if( !this.selectedCutIn ) return;
+    this.selectedCutIn.keepImageAspect = aspect;
+  }
+
   chkImageAspect( ){
     if( !this.isEditable ) return 0;
     if( !this.selectedCutIn ) return 0;

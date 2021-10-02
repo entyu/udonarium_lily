@@ -39,6 +39,7 @@ export class CutIn extends GameObject {
   @SyncVar() outTime: number = 0;
 
   @SyncVar() isPlaying: boolean = false;
+  @SyncVar() keepImageAspect: boolean = false;
 
   @SyncVar() isVideoCutIn: boolean = false;
   @SyncVar() videoUrl: string = '';
