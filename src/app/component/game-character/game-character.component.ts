@@ -150,16 +150,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let text = StringUtil.cr(dialog.text);
     const isEmote = StringUtil.isEmote(text);
     if (!isEmote) text = text.replace(/[。、]{3}/g, '…').replace(/[。、]{2}/g, '‥').replace(/(。|[\r\n]{2,})/g, "$1                            ").trimEnd(); //改行や。のあと時間を置くためのダーティハック
-    let speechDelay = 1000 / text.length > 36 ? 1000 / text.length : 36;
+    let speechDelay = 1000 / Array.from(text).length > 36 ? 1000 / Array.from(text).length : 36;
     if (speechDelay > 200) speechDelay = 200;
-    if (!isEmote) this.gameCharacter.text = text.slice(0, 1); // Emoteでない場合は最初の一文字は出しておく
+    if (!isEmote) this.gameCharacter.text = Array.from(text)[0]; // Emoteでない場合は最初の一文字は出しておく
     this.dialogTimeOutId = setTimeout(() => {
       this._dialog = null;
       this.gameCharacter.text = '';
       this.gameCharacter.isEmote = false; 
       this.changeDetector.markForCheck();
     //}, text.length * speechDelay + 6000 > 12000 ? text.length * speechDelay + 6000 : 12000);
-    }, text.length * speechDelay + 6000);
+    }, Array.from(text).length * speechDelay + 6000);
     this._dialog = dialog;
     this.gameCharacter.isEmote = isEmote;
     let count = 1;
@@ -169,9 +169,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     }  else {
       this.chatIntervalId = setInterval(() => {
         count++;
-        this.gameCharacter.text = text.slice(0, count);
+        this.gameCharacter.text = Array.from(text).slice(0, count).join('');
         this.changeDetector.markForCheck();
-        if (count >= text.length) {
+        if (count >= Array.from(text).length) {
           clearInterval(this.chatIntervalId);
         }
       }, speechDelay);
@@ -187,7 +187,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get dialogChatBubbleMinWidth(): number {
     const max = (this.gameCharacter.size + 1.8) * this.gridSize;
     const existIcon = this.isUseFaceIcon && this.dialogFaceIcon && this.dialogFaceIcon.url;
-    const dynamic = this.dialogText.length * 11 + 52 + (existIcon ? 32 : 0);
+    const dynamic = Array.from(this.dialogText).length * 11 + 52 + (existIcon ? 32 : 0);
     return max < dynamic ? max : dynamic; 
   }
 
