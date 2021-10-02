@@ -1,23 +1,4 @@
 <div class="cut-in" *ngIf="cutIn" id="{{cutInAreaId}}">
-<!--
-  <youtube-player #videoPlayerComponent *ngIf="videoId" 
-    style="position: absolute; pointer-events: auto"
-    [style.visibility]="videoId && !isSoundOnly ? 'visible' : 'hidden'"
-    [videoId]="videoId" 
-    suggestedQuality="default" 
-    [width]="pixcelWidth - (isBordered ? 6 : 0)"
-    [height]="pixcelHeight - (isBordered ? 6 : 0)" 
-    [playerVars]="{autoplay: 1, controls: 0, start: cutIn.videoStart, loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist', list: (playListId ? playListId : null), playlist: (playListId ? null : videoId), disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
-    (ready)="onPlayerReady($event)"
-    (stateChange)="onPlayerStateChange($event)">
-  </youtube-player>
--->
-
-<!--
-
-
--->
-
   <youtube-player #videoPlayerComponent 
     [style.visibility]="isVisible"
     [videoId]="videoId" 
@@ -28,56 +9,13 @@
     (ready)="onPlayerReady($event)"
     (stateChange)="onPlayerStateChange($event)">
   </youtube-player>
-
 <!--
-    [width]="pixcelWidth"
-    [height]="pixcelHeight" 
-  <img *ngIf="videoId && !isSoundOnly" #cutInImageElement 
+  <img *ngIf="videoId"
     style="pointer-events: auto"
     draggable="false"
     [style.object-fit]="objectFit"
     [src]="'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg'"
     (error)="onErrorFallback()">
--->
-<!--
-  <img *ngIf="!videoId" #cutInImageElement 
-    style="pointer-events: none"
-    draggable="false"
-    [style.object-fit]="objectFit"
-    [src]="cutInImage.url | safe: 'resourceUrl'"
-    (load)="onImageLoad()"
-    (contextmenu)="onContextMenu($event)">
 -->
   <img *ngIf="!videoId" [src]="cutIn.cutInImage.url | safe: 'resourceUrl'">
-
-
-<!--
-    [playerVars]="{autoplay: 1, controls: 0, start: cutIn.videoStart, 
-                  loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist',
-                  list: (playListId ? playListId : null), playlist: (playListId ? null : videoId),
-                  disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
-
-  <img *ngIf="videoId && !isSoundOnly" #cutInImageElement 
-    style="pointer-events: auto"
-    draggable="false"
-    [style.object-fit]="objectFit"
-    [src]="'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg'"
-    (error)="onErrorFallback()">
--->
-
-<!--
-  <youtube-player #videoPlayerComponent *ngIf="videoId" 
-    style="position: absolute; pointer-events: auto"
-    [style.visibility]="videoId && !isSoundOnly ? 'visible' : 'hidden'"
-    [videoId]="videoId" 
-    suggestedQuality="default" 
-    [width]="pixcelWidth - (isBordered ? 6 : 0)"
-    [height]="pixcelHeight - (isBordered ? 6 : 0)" 
-    [playerVars]="{autoplay: 1, controls: 0, start: cutIn.videoStart, loop: (cutIn && cutIn.isLoop ? 1 : 0), playsinline: 1, rel: 0, listType: 'playlist', list: (playListId ? playListId : null), playlist: (playListId ? null : videoId), disablekb: 1, fs: 0, iv_load_policy: 3, modestbranding: 1}"
-    (ready)="onPlayerReady($event)"
-    (stateChange)="onPlayerStateChange($event)">
-  </youtube-player>
--->
-
-<!--  <img *ngIf="!videoId" [src]="cutIn.cutInImage.url | safe: 'resourceUrl'">-->
 </div>

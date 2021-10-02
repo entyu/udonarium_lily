@@ -36,10 +36,10 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 })
 export class CutInListComponent implements OnInit, OnDestroy {
 
-  minSizeWidth: number = 10;
-  maxSizeWidth: number = 10;
-  minSizeHeight: number = 1200;
-  maxSizeHeight: number = 1200;
+  _minSizeWidth: number = 10;
+  _maxSizeWidth: number = 10;
+  _minSizeHeight: number = 1200;
+  _maxSizeHeight: number = 1200;
 
   get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
   
@@ -327,7 +327,7 @@ export class CutInListComponent implements OnInit, OnDestroy {
   }
 
   changeYouTubeInfo() {
-
+    console.log("changeYouTubeInfo");
     if( !this.selectedCutIn )return;
     const isVideo = this.selectedCutIn.videoId ? true : false;
     if((!this.isYouTubeCutIn && isVideo) || (this.isYouTubeCutIn && !isVideo)){
@@ -336,17 +336,44 @@ export class CutInListComponent implements OnInit, OnDestroy {
     this.isYouTubeCutIn = isVideo;
   }
 
+  get minSizeWidth(){
+    if(this.selectedCutIn){
+      this._minSizeWidth = this.selectedCutIn.minSizeWidth(this.cutInIsVideo);
+    }
+    return this._minSizeWidth;
+  }
+
+  get maxSizeWidth(){
+    if(this.selectedCutIn){
+      this._maxSizeWidth = this.selectedCutIn.maxSizeWidth(this.cutInIsVideo);
+    }
+    return this._maxSizeWidth;
+  }
+
+  get minSizeHeight(){
+    if(this.selectedCutIn){
+      this._minSizeHeight = this.selectedCutIn.minSizeHeight(this.cutInIsVideo);
+    }
+    return this._minSizeHeight;
+  }
+
+  get maxSizeHeight(){
+    if(this.selectedCutIn){
+      this._maxSizeHeight = this.selectedCutIn.maxSizeHeight(this.cutInIsVideo);
+    }
+    return this._maxSizeHeight;
+  }
+
   setDefaultControl(isVideo: boolean){
-     console.log("setDefaultControl");
     if( !this.isEditable ) return 0;
     if( !this.selectedCutIn ) return 0;
      console.log("setDefaultControl");
-    
+/*
     this.minSizeWidth = this.selectedCutIn.minSizeWidth(isVideo);
     this.maxSizeWidth = this.selectedCutIn.maxSizeWidth(isVideo);
     this.minSizeHeight = this.selectedCutIn.minSizeHeight(isVideo);
     this.maxSizeHeight = this.selectedCutIn.maxSizeHeight(isVideo);
-    
+*/
     if(isVideo){
        console.log("setDefaultControl isVideo");
       this.selectedCutIn.width = this.selectedCutIn.defVideoSizeWidth;

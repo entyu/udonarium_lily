@@ -2,10 +2,11 @@ import { animate, keyframes, style, transition, trigger } from '@angular/animati
 import { Component, ElementRef, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-//
+
 import { EventSystem, Network } from '@udonarium/core/system';
 import { ChatTachieImageComponent } from 'component/chat-tachie-img/chat-tachie-img.component';
-//
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { CutIn } from '@udonarium/cut-in';
 
 @Component({
   selector: 'ui-panel',
@@ -65,12 +66,9 @@ export class UIPanelComponent implements OnInit {
   private tachieDispByMouse: boolean = true;
   
   showTachie(flag:boolean){
-    
     this.tachieDispByMouse = flag;
   }
-  
-  
-  
+
   ngOnInit() {
     this.panelService.scrollablePanel = this.scrollablePanel.nativeElement;
 /*
@@ -107,7 +105,14 @@ export class UIPanelComponent implements OnInit {
 */  
   toggleMinimize() {
     if (this.isFullScreen) return;
-
+    const id = this.panelService.cutInIdentifier;
+    if (id){
+      const cutIn = ObjectStore.instance.get<CutIn>(id)
+      if( cutIn.videoId ){
+        return;
+      }
+    }
+    
     let body  = this.scrollablePanel.nativeElement;
     let panel = this.draggablePanel.nativeElement;
     if (this.isMinimized) {

@@ -164,54 +164,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on('FINISH_VOTE', event => {
         this.finishVote( event.data.text );
       })
-//
-      .on('PLAY_CUT_IN', event => {
-        console.log('PLAY_CUT_IN');
-        this.startCutIn( event.data.cutIn );
-      })
-//
-
-      .on('PLAY_CUT_IN_2', event => {
-/*
-        console.log('PLAY_CUT_IN');
-        let cutIn = event.data.cutIn;
-//        this.cutInService.play(cutIn, event.data.secret ? event.data.secret : false, event.data.test ? event.data.test : false, event.data.sender);
-
-        let option: PanelOption = { width: 200, height: 100, left: 300 , top: 100};
-        option.title = 'カットイン : ' + cutIn.name ;
-
-        console.log( '画面領域 w:' + window.innerWidth + ' h:' + window.innerHeight );
-
-        let cutin_w = 600;
-        let cutin_h = 400;
-
-        console.log( '画像サイズ w:' + cutin_w + ' h:' + cutin_h );
-
-        let margin_w = window.innerWidth - cutin_w ;
-        let margin_h = window.innerHeight - cutin_h - 25 ;
-
-        if ( margin_w < 0 )margin_w = 0 ;
-        if ( margin_h < 0 )margin_h = 0 ;
-
-        let margin_x = 0;
-        let margin_y = 0;
-
-        option.width = cutin_w ;
-        option.height = cutin_h + 25 ;
-        option.left = margin_x ;
-        option.top = margin_y;
-
-        console.log( 'cutin.videoId:' + cutIn.videoId );
-
-        setTimeout(() => {
-          let component = this.panelService.open(CutInComponent, option);
-          component.cutIn = cutIn;
-          component.videoId = cutIn.videoId;
-        }, 0);
-*/
-      })
-
-
       .on('START_CUT_IN', event => {
         this.startCutIn( event.data.cutIn );
       })

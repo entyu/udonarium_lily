@@ -46,7 +46,7 @@ import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 })
 export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
 
-//  @ViewChild('cutInImageElement', { static: false }) cutInImageElement: ElementRef;
+// @ViewChild('cutInImageElement', { static: false }) cutInImageElement: ElementRef;
   @ViewChild('videoPlayerComponent', { static: false }) videoPlayer: YouTubePlayer;
 
   left : number = 0;
@@ -57,14 +57,11 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   private lazyUpdateTimer: NodeJS.Timer = null;
   readonly audioPlayer: AudioPlayer = new AudioPlayer();
   private cutInTimeOut = null ;
-  timerCHkWindow
+  timerCheckWindowSize = null ;
 
   private _videoId = '';
-//  private _timeoutId;
   private _timeoutIdVideo;
 
-//  private _isVisible = false;
-//  private _isEnd = false;
   videoStateTransition = false;
 
   isTest = false;
@@ -72,7 +69,7 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   cutIn: CutIn = null;
   playListId = '';
 
-  isMinimize = false;
+//  isMinimize = false;
 
   private _naturalWidth = 0;
   private _naturalHeight = 0;
@@ -119,6 +116,11 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    
+    this.timerCheckWindowSize = setInterval(() => {
+      this.chkeWindowMinSize();
+    },500);
+    
     EventSystem.register(this)
       .on('START_CUT_IN', event => { 
         console.log('カットインウィンドウ>Event:START_CUT_IN ' + this.cutIn.name );
@@ -147,9 +149,8 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
         }
       });
   }
-    
-  ngAfterViewInit() {
 
+  ngAfterViewInit() {
     if( this.cutIn ){
       setTimeout(() => {
         this.moveCutInPos();
@@ -160,16 +161,12 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   moveCutInPos(){
     
     if( this.cutIn ){
-      
       let cutin_w = this.cutIn.width;
       let cutin_h = this.cutIn.height;
-
       let margin_w = window.innerWidth - cutin_w ;
       let margin_h = window.innerHeight - cutin_h - 25 ;
-    
       if( margin_w < 0 )margin_w = 0 ;
       if( margin_h < 0 )margin_h = 0 ;
-    
       let margin_x = margin_w * this.cutIn.x_pos / 100;
       let margin_y = margin_h * this.cutIn.y_pos / 100;
 
@@ -184,6 +181,19 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
     this.panelService.height = this.height ;
     this.panelService.left = this.left ;
     this.panelService.top = this.top ;
+  }
+
+  chkeWindowMinSize(){
+    if(this.videoId ){
+       console.log("chkeWindowMinSize 1:" + this.panelService.width);
+      if(this.panelService.width < this.cutIn.minSizeWidth(true)){
+        this.panelService.width = this.cutIn.minSizeWidth(true);
+      }
+      if(this.panelService.height < this.cutIn.minSizeHeight(true)){
+        this.panelService.height = this.cutIn.minSizeHeight(true);
+      }
+       console.log("chkeWindowMinSize 2:" + this.panelService.width);
+    }
   }
 
   get videoId(): string {
@@ -258,20 +268,22 @@ export class CutInWindowComponent implements AfterViewInit,OnInit, OnDestroy {
   onErrorFallback() {
     console.log('fallback')
     if (!this.videoId) return;
-
 // 後で修正
 // this.cutInImageElement.nativeElement.src = 'https://img.youtube.com/vi/' + this.videoId + '/default.jpg'
   }
 
   ngOnDestroy() {
-      if( this.cutInTimeOut ){
-        clearTimeout(this.cutInTimeOut);
-        this.cutInTimeOut = null;
-      }
-      
-      this.stopCutIn();
-      EventSystem.unregister(this);
-      
+    if( this.timerCheckWindowSize ){
+      clearTimeout(this.timerCheckWindowSize);
+      this.timerCheckWindowSize = null;
+    }
+    
+    if( this.cutInTimeOut ){
+      clearTimeout(this.cutInTimeOut);
+      this.cutInTimeOut = null;
+    }
+    this.stopCutIn();
+    EventSystem.unregister(this);
   }
 
   private lazyNgZoneUpdate() {
