@@ -11,6 +11,9 @@ import { ChatInputComponent } from 'component/chat-input/chat-input.component';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelService } from 'service/panel.service';
 
+import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { PointerDeviceService } from 'service/pointer-device.service';
+
 @Component({
   selector: 'chat-palette',
   templateUrl: './chat-palette.component.html',
@@ -40,6 +43,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   sendTo: string = '';
 
   isEdit: boolean = false;
+  isIndexOpen: boolean = false;
   editPalette: string = '';
 
   private doubleClickTimer: NodeJS.Timer = null;
@@ -51,6 +55,9 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
   constructor(
+    private contextMenuService: ContextMenuService,
+    private pointerDeviceService: PointerDeviceService,
+
     public chatMessageService: ChatMessageService,
     private panelService: PanelService
   ) { }
@@ -148,4 +155,27 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       this.palette.setPalette(this.editPalette);
     }
   }
+
+  toggleIndex() {
+
+    let position = this.pointerDeviceService.pointers[0];
+    this.isIndexOpen = this.isIndexOpen ? false : true;
+    
+    if (this.isIndexOpen) {
+      this.contextMenuService.open(position, [
+        { name: '00001', action: () => {  } },
+        { name: '00002', action: () => {  } },
+        { name: '00003', action: () => {  } },
+        { name: '00004', action: () => {  } },
+        { name: '00005', action: () => {  } },
+        { name: '00006', action: () => {  } },
+        { name: '00007', action: () => {  } },
+        { name: '00008', action: () => {  } },
+        { name: '00009', action: () => {  } },
+        ],'TEST');
+    } else {
+      // 今のとこなし仮
+    }
+ }
+  
 }
