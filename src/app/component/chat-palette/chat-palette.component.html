@@ -1,4 +1,4 @@
-<div class="flex-container">
+<div class="flex-container" #root>
   <div style="flex-grow: 0;">
     <form>
       <div class="chat-tab">
@@ -12,7 +12,7 @@
     [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text"
     (chat)="sendChat($event)" (tabSwitch)="chatTabSwitchRelative($event)" #chatInput></chat-input>
     <div style="position:absolute;margin-top:-2em;">
-      <button class="tab-setting small-font" (click)="toggleIndex()">《<i class="material-icons small-font">bookmarks</i></button>
+      <button class="tab-setting small-font" (click)="indexBtn()">＜<i class="material-icons small-font">bookmarks</i></button>
     </div>
     <div *ngIf="isEdit" class="edit-info"><i class="material-icons" style="vertical-align: bottom; size:0.8rem;">info_outline</i> チャットパレット編集中です</div>
   </div>

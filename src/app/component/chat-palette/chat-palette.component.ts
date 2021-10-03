@@ -20,6 +20,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   styleUrls: ['./chat-palette.component.css']
 })
 export class ChatPaletteComponent implements OnInit, OnDestroy {
+  @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;
   @ViewChild('chatInput', { static: true }) chatInputComponent: ChatInputComponent;
   @ViewChild('chatPalette') chatPaletteElementRef: ElementRef<HTMLSelectElement>;
   @Input() character: GameCharacter = null;
@@ -57,7 +58,6 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   constructor(
     private contextMenuService: ContextMenuService,
     private pointerDeviceService: PointerDeviceService,
-
     public chatMessageService: ChatMessageService,
     private panelService: PanelService
   ) { }
@@ -156,13 +156,26 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleIndex() {
+  makeIndexList() {
+    
+    
+    
+  }
+
+
+
+  indexBtn() {
+    let panel: HTMLElement = this.rootElementRef.nativeElement;
+    let panelBox = panel.getBoundingClientRect();
+
+    console.log("位置 LT:" + panelBox.left +" "+ panelBox.top );
 
     let position = this.pointerDeviceService.pointers[0];
-    this.isIndexOpen = this.isIndexOpen ? false : true;
+    console.log(this.panelService.left +" "+ this.panelService.top);
+    position.x = panelBox.left-8;
+    position.y = panelBox.top-8;
     
-    if (this.isIndexOpen) {
-      this.contextMenuService.open(position, [
+    this.contextMenuService.open(position, [
         { name: '00001', action: () => {  } },
         { name: '00002', action: () => {  } },
         { name: '00003', action: () => {  } },
@@ -170,12 +183,10 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         { name: '00005', action: () => {  } },
         { name: '00006', action: () => {  } },
         { name: '00007', action: () => {  } },
-        { name: '00008', action: () => {  } },
+        { name: 'AAAAAAAAAAAAAAAAAAAA00008', action: () => {  } },
         { name: '00009', action: () => {  } },
-        ],'TEST');
-    } else {
-      // 今のとこなし仮
-    }
- }
+        ],'インデックス');
+        
+  }
   
 }
