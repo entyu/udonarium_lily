@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import GameSystemClass from 'bcdice/lib/game_system';
-import { ChatPalette } from '@udonarium/chat-palette';
+import { ChatPalette , PaletteIndex} from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
@@ -28,6 +28,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   get palette(): ChatPalette { return this.character.chatPalette; }
 
   private _gameType: string = '';
+  private _paletteIndex: PaletteIndex[] = [];
+
   get gameType(): string { return this._gameType };
   set gameType(gameType: string) {
     this._gameType = gameType;
@@ -162,31 +164,30 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     
   }
 
-
-
   indexBtn() {
     let panel: HTMLElement = this.rootElementRef.nativeElement;
     let panelBox = panel.getBoundingClientRect();
-
-    console.log("位置 LT:" + panelBox.left +" "+ panelBox.top );
 
     let position = this.pointerDeviceService.pointers[0];
     console.log(this.panelService.left +" "+ this.panelService.top);
     position.x = panelBox.left-8;
     position.y = panelBox.top-8;
+   
+    this._paletteIndex = this.palette.paletteIndex;
     
-    this.contextMenuService.open(position, [
-        { name: '00001', action: () => {  } },
-        { name: '00002', action: () => {  } },
-        { name: '00003', action: () => {  } },
-        { name: '00004', action: () => {  } },
-        { name: '00005', action: () => {  } },
-        { name: '00006', action: () => {  } },
-        { name: '00007', action: () => {  } },
-        { name: 'AAAAAAAAAAAAAAAAAAAA00008', action: () => {  } },
-        { name: '00009', action: () => {  } },
-        ],'インデックス');
-        
+    let index = new Array();
+    let count = 0;
+    for(let list of this._paletteIndex){
+      index.push({ name: list.name , action: () => { console.log('インデックス:'+count) } });
+      
+      count++;
+    }
+    
+    this.contextMenuService.open(position, index ,
+        'インデックス');
+
+    
+
   }
-  
+
 }

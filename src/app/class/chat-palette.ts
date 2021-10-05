@@ -34,18 +34,22 @@ export class ChatPalette extends ObjectNode {
   }
 
   isPaletteLineIndex( line :PaletteLine ,no :number): PaletteIndex{
-    let index :PaletteIndex; 
+    let index :PaletteIndex = {
+      name: '',
+      line: 0,
+    };
 
     // コマ作成サイト(ユドナリウムのキャラコマを作るやつ)の標準的な見出し区切りの書式から見出し語を抜き出す
     let matchRes1 = line.palette.match(/^\/\/--[-]+(.+)-*$/);
     let matchRes2 = line.palette.match(/^◆(.+)-*$/);
-    
+    console.log('matchRes1'+matchRes1);
     if(matchRes1){
       index.name = matchRes1[1];
       index.line = no;
       return index;
     }
 
+    console.log('matchRes2'+matchRes2);
     if(matchRes2){
       index.name = matchRes2[1];
       index.line = no;
