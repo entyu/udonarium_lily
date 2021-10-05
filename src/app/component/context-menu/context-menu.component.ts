@@ -2,6 +2,8 @@ import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, O
 import { ContextMenuAction, ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
+import { EventSystem } from '@udonarium/core/system';
+
 @Component({
   selector: 'context-menu',
   templateUrl: './context-menu.component.html',
@@ -139,6 +141,10 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
     submenu.style.left = submenu.offsetLeft + diffLeft + 'px';
     submenu.style.top = submenu.offsetTop + diffTop + 'px';
+  }
+
+  indexAction(indexline: number,id: string) {
+    EventSystem.trigger('JUMP_INDEX', { lineNo: indexline, targetId: id });
   }
 
   doAction(action: ContextMenuAction) {

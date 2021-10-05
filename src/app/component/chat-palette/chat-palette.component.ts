@@ -29,6 +29,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
 
   private _gameType: string = '';
   private _paletteIndex: PaletteIndex[] = [];
+  private _timeId: string = '';
 
   get gameType(): string { return this._gameType };
   set gameType(gameType: string) {
@@ -68,6 +69,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     Promise.resolve().then(() => this.updatePanelTitle());
     this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
     this.gameType = this.character.chatPalette ? this.character.chatPalette.dicebot : '';
+    this._timeId = Date.now()+'_chat-palette';
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', -1000, event => {
         if (this.character && this.character.identifier === event.data.identifier) {
@@ -76,6 +78,12 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         if (this.chatTabidentifier === event.data.identifier) {
           this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
         }
+      })
+      .on('JUMP_INDEX', -1000, event => {
+        if (this._timeId != event.data.targetId) {
+          return;
+        }
+        this.japmIndex(event.data.lineNo);
       });
   }
 
@@ -158,9 +166,8 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     }
   }
 
-  makeIndexList() {
-    
-    
+  japmIndex(lineNo: number){
+    console.log('JUMP_INDEX:' + lineNo);
     
   }
 
@@ -178,7 +185,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     let index = new Array();
     let count = 0;
     for(let list of this._paletteIndex){
-      index.push({ name: list.name , action: () => { console.log('インデックス:'+count) } });
+      index.push({ name: list.name ,line: list.line , id: this._timeId  , action: () => {} });// ここでのactionはダミー、実行されない
       
       count++;
     }
