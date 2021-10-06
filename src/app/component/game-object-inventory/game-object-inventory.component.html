@@ -28,9 +28,17 @@
 <ng-template #inventoryViewSetting>
   <ng-container *ngIf="isEdit">
     <div>
-      <div style="font-size: 12px;">並び順</div>
+      <div style="font-size: 12px;">並び順第1</div>
       <input [(ngModel)]="sortTag" placeholder="タグ名" />
       <select [(ngModel)]="sortOrder">
+        <option value="ASC">昇順</option>
+        <option value="DESC">降順</option>
+      </select>
+    </div>
+    <div>
+      <div style="font-size: 12px;">並び順第2</div>
+      <input [(ngModel)]="sortTag2nd" placeholder="タグ名" />
+      <select [(ngModel)]="sortOrder2nd">
         <option value="ASC">昇順</option>
         <option value="DESC">降順</option>
       </select>
@@ -44,10 +52,17 @@
   <ng-container *ngIf="!isEdit">
     <table style="font-size: 0.8em;">
       <tr>
-        <th style=" vertical-align:middle;">並び順:</th>
+        <th style=" vertical-align:middle;">並び順 第1:</th>
         <td style=" vertical-align:middle;">
+          
           <ng-container *ngIf="0 < sortTag.length">{{sortTag}} ({{sortOrderName}})</ng-container>
           <ng-container *ngIf="sortTag.length < 1">-</ng-container>
+        </td>
+        <th style=" vertical-align:middle;"> 第2:</th>
+        <td style=" vertical-align:middle;">
+          
+          <ng-container *ngIf="0 < sortTag2nd.length">{{sortTag2nd}} ({{sortOrderName2nd}})</ng-container>
+          <ng-container *ngIf="sortTag2nd.length < 1">-</ng-container>
         </td>
         <td><button class="tab-setting small-font" (click)="toggleEdit()"><i class="material-icons small-font">settings</i>設定</button></td>
       </tr>

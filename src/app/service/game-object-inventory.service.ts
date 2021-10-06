@@ -21,6 +21,12 @@ export class GameObjectInventoryService {
   set sortTag(sortTag: string) { this.summarySetting.sortTag = sortTag; }
   get sortOrder(): SortOrder { return this.summarySetting.sortOrder; }
   set sortOrder(sortOrder: SortOrder) { this.summarySetting.sortOrder = sortOrder; }
+
+  get sortTag2nd(): string { return this.summarySetting.sortTag2nd; }
+  set sortTag2nd(sortTag: string) { this.summarySetting.sortTag2nd = sortTag; }
+  get sortOrder2nd(): SortOrder { return this.summarySetting.sortOrder2nd; }
+  set sortOrder2nd(sortOrder: SortOrder) { this.summarySetting.sortOrder2nd = sortOrder; }
+
   get dataTag(): string { return this.summarySetting.dataTag; }
   set dataTag(dataTag: string) { this.summarySetting.dataTag = dataTag; }
   get dataTags(): string[] { return this.summarySetting.dataTags; }
@@ -63,7 +69,7 @@ export class GameObjectInventoryService {
             this.tagNameMap.set(object.identifier, object.name);
             this.refreshDataElements();
           }
-          if (this.sortTag === object.name) {
+          if (this.sortTag === object.name || this.sortTag2nd === object.name) {
             this.refreshSort();
           }
           if (0 < object.children.length) {
@@ -152,6 +158,12 @@ class ObjectInventory {
   get sortOrder(): SortOrder { return this.summarySetting.sortOrder; }
   set sortOrder(sortOrder: SortOrder) { this.summarySetting.sortOrder = sortOrder; }
 
+  get sortTag2nd(): string { return this.summarySetting.sortTag2nd; }
+  set sortTag2nd(sortTag: string) { this.summarySetting.sortTag2nd = sortTag; }
+
+  get sortOrder2nd(): SortOrder { return this.summarySetting.sortOrder2nd; }
+  set sortOrder2nd(sortOrder: SortOrder) { this.summarySetting.sortOrder2nd = sortOrder; }
+
   get dataTag(): string { return this.summarySetting.dataTag; }
   set dataTag(dataTag: string) { this.summarySetting.dataTag = dataTag; }
 
@@ -224,7 +236,10 @@ class ObjectInventory {
 
   private sortTabletopObjects(objects: TabletopObject[]): TabletopObject[] {
     let sortTag = this.sortTag.length ? this.sortTag.trim() : '';
+    let sortTag2nd = this.sortTag2nd.length ? this.sortTag2nd.trim() : '';
+
     let sortOrder = this.sortOrder === 'ASC' ? -1 : 1;
+    let sortOrder2nd = this.sortOrder2nd === 'ASC' ? -1 : 1;
     if (sortTag.length < 1) return objects;
 
     objects.sort((a, b) => {
@@ -238,6 +253,18 @@ class ObjectInventory {
       let bValue = this.convertToSortableValue(bElm);
       if (aValue < bValue) return sortOrder;
       if (aValue > bValue) return sortOrder * -1;
+
+      let aElm2nd = a.rootDataElement.getFirstElementByName(sortTag2nd);
+      let bElm2nd = b.rootDataElement.getFirstElementByName(sortTag2nd);
+      if (!aElm2nd && !bElm2nd) return 0;
+      if (!bElm2nd) return -1;
+      if (!aElm2nd) return 1;
+
+      let aValue2nd = this.convertToSortableValue(aElm2nd);
+      let bValue2nd = this.convertToSortableValue(bElm2nd);
+      if (aValue2nd < bValue2nd) return sortOrder2nd;
+      if (aValue2nd > bValue2nd) return sortOrder2nd * -1;
+
       return 0;
     });
     return objects;

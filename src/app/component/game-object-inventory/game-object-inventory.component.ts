@@ -39,11 +39,19 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   set sortTag(sortTag: string) { this.inventoryService.sortTag = sortTag; }
   get sortOrder(): SortOrder { return this.inventoryService.sortOrder; }
   set sortOrder(sortOrder: SortOrder) { this.inventoryService.sortOrder = sortOrder; }
+
+  get sortTag2nd(): string { return this.inventoryService.sortTag2nd; }
+  set sortTag2nd(sortTag: string) { this.inventoryService.sortTag2nd = sortTag; }
+  get sortOrder2nd(): SortOrder { return this.inventoryService.sortOrder2nd; }
+  set sortOrder2nd(sortOrder: SortOrder) { this.inventoryService.sortOrder2nd = sortOrder; }
+
+
   get dataTag(): string { return this.inventoryService.dataTag; }
   set dataTag(dataTag: string) { this.inventoryService.dataTag = dataTag; }
   get dataTags(): string[] { return this.inventoryService.dataTags; }
 
   get sortOrderName(): string { return this.sortOrder === SortOrder.ASC ? '昇順' : '降順'; }
+  get sortOrderName2nd(): string { return this.sortOrder2nd === SortOrder.ASC ? '昇順' : '降順'; }
 
   get newLineString(): string { return this.inventoryService.newLineString; }
 
