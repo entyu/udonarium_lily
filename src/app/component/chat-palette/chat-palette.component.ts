@@ -168,7 +168,11 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
 
   japmIndex(lineNo: number){
     console.log('JUMP_INDEX:' + lineNo);
-    
+    let select = <HTMLSelectElement> document.getElementById(this._timeId + '_select');
+    if(select){
+      select.scrollTop = select.scrollHeight;
+      select.options[lineNo].selected = true;
+    }
   }
 
   indexBtn() {
