@@ -92,8 +92,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     this.disptimer = setInterval(() => {
       this.changeDetector.detectChanges();
     }, 200 );
-    //インベントリ非表示機能のために追加、操作を検知して更新する方式に変えたい
-    
+    // インベントリ非表示機能のために追加、操作を検知して更新する方式に変えたい
+
   }
 
   ngOnDestroy() {
@@ -130,12 +130,12 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   getGameObjects(inventoryType: string): TabletopObject[] {
     switch (inventoryType) {
       case 'table':
-        
+
         let tableCharacterList_dest = [] ;
         let tableCharacterList_scr = this.inventoryService.tableInventory.tabletopObjects;
         for (let character of tableCharacterList_scr) {
-          let character_ : GameCharacter = <GameCharacter>character;
-          if( !character_.hideInventory ) tableCharacterList_dest.push( <TabletopObject>character );
+          let character_: GameCharacter = <GameCharacter> character;
+          if ( !character_.hideInventory ) tableCharacterList_dest.push( <TabletopObject> character );
         }
         return tableCharacterList_dest;
 
@@ -276,7 +276,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       })
     }
 
-    this.contextMenuService.open(position, actions, "一括移動");
+    this.contextMenuService.open(position, actions, '一括移動');
   }
 
   multiMove(location: string) {
