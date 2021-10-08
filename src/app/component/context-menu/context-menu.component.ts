@@ -2,6 +2,8 @@ import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, O
 import { ContextMenuAction, ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
+import { EventSystem } from '@udonarium/core/system';
+
 @Component({
   selector: 'context-menu',
   templateUrl: './context-menu.component.html',
@@ -46,6 +48,9 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.adjustPositionSub();
     }
+    
+    this.indexMenuPosion();
+    
   }
 
   ngOnDestroy() {
@@ -63,6 +68,21 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   onContextMenu(e: Event) {
     e.stopPropagation();
     e.preventDefault();
+  }
+
+  indexMenuPosion() {
+    
+    if(this.title != 'インデックス')return;
+
+    let panel: HTMLElement = this.rootElementRef.nativeElement;
+    let panelBox = panel.getBoundingClientRect();
+
+    console.log("位置修正 lr:" + panelBox.left +" "+ panelBox.right );
+    const w = panelBox.right - panelBox.left;
+    const newLeft = panelBox.left - w;
+    
+    panel.style.left = newLeft + 'px';
+//    panel.style.right = newRight + 'px';
   }
 
   private adjustPositionRoot() {
@@ -121,6 +141,10 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
     submenu.style.left = submenu.offsetLeft + diffLeft + 'px';
     submenu.style.top = submenu.offsetTop + diffTop + 'px';
+  }
+
+  indexAction(indexline: number,id: string) {
+    EventSystem.trigger('JUMP_INDEX', { lineNo: indexline, targetId: id });
   }
 
   doAction(action: ContextMenuAction) {

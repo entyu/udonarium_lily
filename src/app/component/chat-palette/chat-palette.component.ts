@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import GameSystemClass from 'bcdice/lib/game_system';
-import { ChatPalette } from '@udonarium/chat-palette';
+import { ChatPalette , PaletteIndex} from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
@@ -11,12 +11,16 @@ import { ChatInputComponent } from 'component/chat-input/chat-input.component';
 import { ChatMessageService } from 'service/chat-message.service';
 import { PanelService } from 'service/panel.service';
 
+import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { PointerDeviceService } from 'service/pointer-device.service';
+
 @Component({
   selector: 'chat-palette',
   templateUrl: './chat-palette.component.html',
   styleUrls: ['./chat-palette.component.css']
 })
 export class ChatPaletteComponent implements OnInit, OnDestroy {
+  @ViewChild('root', { static: true }) rootElementRef: ElementRef<HTMLElement>;
   @ViewChild('chatInput', { static: true }) chatInputComponent: ChatInputComponent;
   @ViewChild('chatPalette') chatPaletteElementRef: ElementRef<HTMLSelectElement>;
   @Input() character: GameCharacter = null;
@@ -24,11 +28,14 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   get palette(): ChatPalette { return this.character.chatPalette; }
 
   private _gameType: string = '';
-  get gameType(): string { return this._gameType };
+  private _paletteIndex: PaletteIndex[] = [];
+  private _timeId: string = '';
+
+  get gameType(): string { return this._gameType; }
   set gameType(gameType: string) {
     this._gameType = gameType;
     if (this.character.chatPalette) this.character.chatPalette.dicebot = gameType;
-  };
+  }
 
   get sendFrom(): string { return this.character.identifier; }
   set sendFrom(sendFrom: string) {
@@ -40,17 +47,20 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   sendTo: string = '';
 
   isEdit: boolean = false;
+  isIndexOpen: boolean = false;
   editPalette: string = '';
 
   private doubleClickTimer: NodeJS.Timer = null;
 
-  get diceBotInfos() { return DiceBot.diceBotInfos }
+  get diceBotInfos() { return DiceBot.diceBotInfos; }
 
   get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
   constructor(
+    private contextMenuService: ContextMenuService,
+    private pointerDeviceService: PointerDeviceService,
     public chatMessageService: ChatMessageService,
     private panelService: PanelService
   ) { }
@@ -59,6 +69,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     Promise.resolve().then(() => this.updatePanelTitle());
     this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
     this.gameType = this.character.chatPalette ? this.character.chatPalette.dicebot : '';
+    this._timeId = Date.now() + '_chat-palette';
     EventSystem.register(this)
       .on('DELETE_GAME_OBJECT', -1000, event => {
         if (this.character && this.character.identifier === event.data.identifier) {
@@ -67,6 +78,12 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         if (this.chatTabidentifier === event.data.identifier) {
           this.chatTabidentifier = this.chatMessageService.chatTabs ? this.chatMessageService.chatTabs[0].identifier : '';
         }
+      })
+      .on('JUMP_INDEX', -1000, event => {
+        if (this._timeId != event.data.targetId) {
+          return;
+        }
+        this.japmIndex(event.data.lineNo);
       });
   }
 
@@ -123,11 +140,11 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       this.chatInputComponent.sendChat(null);
     } else {
       this.text = multiLine;
-      this.doubleClickTimer = setTimeout(() => { this.doubleClickTimer = null }, 400);
+      this.doubleClickTimer = setTimeout(() => { this.doubleClickTimer = null; }, 400);
     }
   }
 
-  sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number, messColor:string}) {
+  sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string , tachieNum: number, messColor: string}) {
     if (this.chatTab) {
       let text = this.palette.evaluate(value.text, this.character.rootDataElement);
       this.chatMessageService.sendMessage(this.chatTab, text, value.gameSystem, value.sendFrom, value.sendTo, value.tachieNum, value.messColor);
@@ -148,4 +165,40 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       this.palette.setPalette(this.editPalette);
     }
   }
+
+  japmIndex(lineNo: number){
+    console.log('JUMP_INDEX:' + lineNo);
+    let select = <HTMLSelectElement> document.getElementById(this._timeId + '_select');
+    if (select){
+      select.scrollTop = select.scrollHeight;
+      select.options[lineNo].selected = true;
+    }
+  }
+
+  indexBtn() {
+    let panel: HTMLElement = this.rootElementRef.nativeElement;
+    let panelBox = panel.getBoundingClientRect();
+
+    let position = this.pointerDeviceService.pointers[0];
+    console.log(this.panelService.left + ' ' + this.panelService.top);
+    position.x = panelBox.left - 8;
+    position.y = panelBox.top - 8;
+
+    this._paletteIndex = this.palette.paletteIndex;
+
+    let index = new Array();
+    let count = 0;
+    for (let list of this._paletteIndex){
+      index.push({ name: list.name , line: list.line , id: this._timeId  , action: () => {} }); // ここでのactionはダミー、実行されない
+
+      count++;
+    }
+
+    this.contextMenuService.open(position, index ,
+        'インデックス');
+
+
+
+  }
+
 }

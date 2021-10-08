@@ -1,4 +1,4 @@
-<div class="flex-container">
+<div class="flex-container" #root>
   <div style="flex-grow: 0;">
     <form>
       <div class="chat-tab">
@@ -7,14 +7,17 @@
           <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
         </label>
       </div>
-    </form>
+    </form><!---->
     <chat-input [onlyCharacters]="true" [chatTabidentifier]="chatTabidentifier"
     [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text"
     (chat)="sendChat($event)" (tabSwitch)="chatTabSwitchRelative($event)" #chatInput></chat-input>
+    <div style="position:absolute;margin-top:-2em;">
+      <button class="tab-setting small-font" (click)="indexBtn()">＜<i class="material-icons small-font">bookmarks</i></button>
+    </div>
     <div *ngIf="isEdit" class="edit-info"><i class="material-icons" style="vertical-align: bottom; size:0.8rem;">info_outline</i> チャットパレット編集中です</div>
   </div>
   <div *ngIf="!isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-    <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" (focusout)="resizeChatInput()" #chatPalette>
+    <select class="palette" id="{{_timeId}}_select"  style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" (focusout)="resizeChatInput()" #chatPalette>
       <ng-container *ngIf="palette">
         <option *ngFor="let palette of palette.getPalette()" value="{{palette}}">{{palette}}</option>
       </ng-container>

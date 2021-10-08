@@ -8,6 +8,11 @@ export interface PaletteLine {
   palette: string;
 }
 
+export interface PaletteIndex {
+  name: string;
+  line: number;
+}
+
 export interface PaletteVariable {
   name: string;
   value: string;
@@ -19,13 +24,51 @@ export class ChatPalette extends ObjectNode {
   //TODO: キャラシ項目のコピー
 
   get paletteLines(): PaletteLine[] {
-    if (!this.isAnalized) this.parse(<string>this.value);
+    if (!this.isAnalized) this.parse(<string> this.value);
     return this._paletteLines;
   }
 
   get paletteVariables(): PaletteVariable[] {
-    if (!this.isAnalized) this.parse(<string>this.value);
+    if (!this.isAnalized) this.parse(<string> this.value);
     return this._paletteVariables;
+  }
+
+  isPaletteLineIndex( line: PaletteLine , no: number): PaletteIndex{
+    let index: PaletteIndex = {
+      name: '',
+      line: 0,
+    };
+
+    // コマ作成サイト(ユドナリウムのキャラコマを作るやつ様)の標準的な見出し区切りの書式から見出し語を抜き出す
+    let matchRes1 = line.palette.match(/^\/\/--[-]+(.+)-*$/);
+    let matchRes2 = line.palette.match(/^◆(.+)-*$/);
+    if (matchRes1){
+      index.name = matchRes1[1];
+      index.line = no;
+      return index;
+    }
+
+    if (matchRes2){
+      index.name = matchRes2[1];
+      index.line = no;
+      return index;
+    }
+
+    return null;
+  }
+
+  get paletteIndex(): PaletteIndex[] {
+    let count = 0;
+    let ret;
+    let indexList: PaletteIndex[] = [];
+    for (let line of this.paletteLines ){
+      ret = this.isPaletteLineIndex(line, count);
+      if (ret){
+        indexList.push(ret);
+      }
+      count++;
+    }
+    return indexList;
   }
 
   private _palettes: string[] = [];
@@ -34,7 +77,7 @@ export class ChatPalette extends ObjectNode {
   private isAnalized: boolean = false;
 
   getPalette(): string[] {
-    if (!this.isAnalized) this.parse(<string>this.value);
+    if (!this.isAnalized) this.parse(<string> this.value);
     return this._palettes;
   }
 
