@@ -33,15 +33,15 @@ export class ChatPalette extends ObjectNode {
     return this._paletteVariables;
   }
 
-  isPaletteLineIndex( line: PaletteLine , no: number): PaletteIndex{
+  isPaletteIndex( line: string , no: number): PaletteIndex{
     let index: PaletteIndex = {
       name: '',
       line: 0,
     };
 
     // コマ作成サイト(ユドナリウムのキャラコマを作るやつ様)の標準的な見出し区切りの書式から見出し語を抜き出す
-    let matchRes1 = line.palette.match(/^\/\/--[-]+(.+)-*$/);
-    let matchRes2 = line.palette.match(/^◆(.+)-*$/);
+    let matchRes1 = line.match(/^\/\/--[-]+(.+)-*$/);
+    let matchRes2 = line.match(/^◆(.+)-*$/);
     if (matchRes1){
       index.name = matchRes1[1];
       index.line = no;
@@ -61,8 +61,11 @@ export class ChatPalette extends ObjectNode {
     let count = 0;
     let ret;
     let indexList: PaletteIndex[] = [];
-    for (let line of this.paletteLines ){
-      ret = this.isPaletteLineIndex(line, count);
+    let palettString = <string> this.value;
+    let palettes = palettString.split('\n');
+
+    for (let line of palettes ){
+      ret = this.isPaletteIndex(line, count);
       if (ret){
         indexList.push(ret);
       }
