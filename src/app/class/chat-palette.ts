@@ -40,10 +40,10 @@ export class ChatPalette extends ObjectNode {
     };
 
     // コマ作成サイト(ユドナリウムのキャラコマを作るやつ様)の標準的な見出し区切りの書式から見出し語を抜き出す
-    let matchRes1 = line.match(/^\/\/--[-]+(.+)-*$/);
-    let matchRes2 = line.match(/^◆(.+)-*$/);
+    let matchRes1 = line.match(/^\/\/--[-]+(.*)$/);
+    let matchRes2 = line.match(/^◆(.*)$/);
     if (matchRes1){
-      index.name = matchRes1[1];
+      index.name = matchRes1[1].replace(/-+$/,'');
       index.line = no;
       return index;
     }
