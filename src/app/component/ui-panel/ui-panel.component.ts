@@ -84,7 +84,7 @@ export class UIPanelComponent implements OnInit {
     setTimeout(() => {
       panel.style.transition = null;
     }, 100);
-    //if (this.isFullScreen) this.toggleFullScreen();
+ 
     if (!this.isMinimized && !this.isFullScreen) {
       const saveWidth = panel.offsetWidth;
       const saveHeight = panel.offsetHeight;
@@ -173,7 +173,6 @@ export class UIPanelComponent implements OnInit {
       panel.style.transition = null;
     }, 100);
 
-    //this.isHorizontal = !this.isHorizontal;
     const saveWidth = panel.offsetWidth;
     const saveHeight = panel.offsetHeight;
     if (this.isHorizontal) {
