@@ -15,7 +15,9 @@ interface BoxSize {
   selector: '[appResizable]'
 })
 export class ResizableDirective implements AfterViewInit, OnDestroy {
-  @Input('resizable.disable') isDisable: boolean = false;
+  @Input('resizable.disable') set isDisable(isDisable: boolean) { this._isDisable = isDisable; this.handleMap.forEach(handle => { handle.cursor(!isDisable); }); };
+  get isDisable(): boolean { return this._isDisable; }
+
   @Input('resizable.bounds') boundsSelector: string = 'body';
   @Input('resizable.minWidth') minWidth: number = 100;
   @Input('resizable.minHeight') minHeight: number = 100
@@ -40,6 +42,8 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
 
   private startPointer: PointerCoordinate = { x: 0, y: 0, z: 0 };
   private prevTrans: BoxSize = { left: 0, top: 0, width: 0, height: 0 };
+
+  private _isDisable = false;
 
   constructor(
     private ngZone: NgZone,
@@ -77,6 +81,7 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
   }
 
   private onResizeStart(e: MouseEvent | TouchEvent, handle: ResizeHandler) {
+    if (this.isDisable) return this.cancel();
     if ((e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
     this.handleMap.forEach(h => {
       if (h !== handle) h.input.cancel();

@@ -76,3 +76,18 @@
   top: -3px;
   position: relative;
 }
+
+.is-minimized {
+  height: 27px !important;
+}
+
+.is-full-screen {
+  left: 0px !important;
+  top: 0px !important;
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
+.draggable-panel.is-full-screen {
+  border: 0px none;
+}

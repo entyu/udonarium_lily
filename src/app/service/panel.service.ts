@@ -25,6 +25,7 @@ export class PanelService {
   top: number = 0;
   width: number = 100;
   height: number = 100;
+  isAbleMinimizeButton: boolean = true;
   isAbleFullScreenButton: boolean = true;
   isAbleCloseButton: boolean = true;
   isAbleRotateButton: boolean = false;

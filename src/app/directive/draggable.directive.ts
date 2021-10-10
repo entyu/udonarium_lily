@@ -64,6 +64,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
   }
 
   private onInputStart(e: MouseEvent | TouchEvent) {
+    if (this.isDisable) return this.cancel();
     if ((e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
     this.setForeground();
     this.startPosition = this.calcElementPosition(this.elementRef.nativeElement);

@@ -40,35 +40,35 @@ export class ResizeHandler {
         style.left = '0px';
         style.right = '0px';
         style.height = `${this.width}px`;
-        style.cursor = 'ns-resize';
+        //style.cursor = 'ns-resize';
         break;
       case HandleType.E:
         style.top = '0px';
         style.bottom = '0px';
         style.right = `${-this.width * 3 / 4}px`;
         style.width = `${this.width}px`;
-        style.cursor = 'ew-resize';
+        //style.cursor = 'ew-resize';
         break;
       case HandleType.W:
         style.top = '0px';
         style.bottom = '0px';
         style.left = `${-this.width * 3 / 4}px`;
         style.width = `${this.width}px`;
-        style.cursor = 'ew-resize';
+       // style.cursor = 'ew-resize';
         break;
       case HandleType.S:
         style.bottom = `${-this.width * 3 / 4}px`;
         style.left = '0px';
         style.right = '0px';
         style.height = `${this.width}px`;
-        style.cursor = 'ns-resize';
+        //style.cursor = 'ns-resize';
         break;
       case HandleType.NE:
         style.top = `${-this.width * 3 / 4}px`;
         style.right = `${-this.width * 3 / 4}px`;
         style.width = `${this.width * 3 / 2}px`;
         style.height = `${this.width * 3 / 2}px`;
-        style.cursor = 'nesw-resize';
+        //style.cursor = 'nesw-resize';
         style.zIndex = '2';
         break;
       case HandleType.NW:
@@ -76,7 +76,7 @@ export class ResizeHandler {
         style.left = `${-this.width * 3 / 4}px`;
         style.width = `${this.width * 3 / 2}px`;
         style.height = `${this.width * 3 / 2}px`;
-        style.cursor = 'nwse-resize';
+        //style.cursor = 'nwse-resize';
         style.zIndex = '2';
         break;
       case HandleType.SE:
@@ -84,7 +84,7 @@ export class ResizeHandler {
         style.right = `${-this.width * 3 / 4}px`;
         style.width = `${this.width * 3 / 2}px`;
         style.height = `${this.width * 3 / 2}px`;
-        style.cursor = 'nwse-resize';
+        //style.cursor = 'nwse-resize';
         style.zIndex = '2';
         break;
       case HandleType.SW:
@@ -92,14 +92,49 @@ export class ResizeHandler {
         style.left = `${-this.width * 3 / 4}px`;
         style.width = `${this.width * 3 / 2}px`;
         style.height = `${this.width * 3 / 2}px`;
-        style.cursor = 'nesw-resize';
+        //style.cursor = 'nesw-resize';
         style.zIndex = '2';
         break;
     }
+    this.cursor(true);
   }
 
   destroy() {
     this.handle.remove();
     this.input.destroy();
+  }
+
+  cursor(active: boolean) {
+    let style = this.handle.style;
+    if (active) {
+      switch (this.type) {
+        case HandleType.N:
+          style.cursor = 'ns-resize';
+          break;
+        case HandleType.E:
+          style.cursor = 'ew-resize';
+          break;
+        case HandleType.W:
+          style.cursor = 'ew-resize';
+          break;
+        case HandleType.S:
+          style.cursor = 'ns-resize';
+          break;
+        case HandleType.NE:
+          style.cursor = 'nesw-resize';
+          break;
+        case HandleType.NW:
+          style.cursor = 'nwse-resize';
+          break;
+        case HandleType.SE:
+          style.cursor = 'nwse-resize';
+          break;
+        case HandleType.SW:
+          style.cursor = 'nesw-resize';
+          break;
+      }
+    } else {
+      style.cursor = 'default';
+    }
   }
 }
