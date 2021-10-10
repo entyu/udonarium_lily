@@ -378,7 +378,29 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         SoundEffect.play(PresetSound.piecePut);
       }
     });
+    actions.push({
+      name: 'コピーを作る（自動採番）', action: () => {
+        const cloneObject = gameObject.clone();
+        const tmp = cloneObject.name.split('_');
+        let baseName;
+        if (tmp.length > 1 && /\d+/.test(tmp[tmp.length - 1])) {
+          baseName = tmp.slice(0, tmp.length - 1).join('_');
+        } else {
+          baseName = tmp.join('_');
+        }
+        let maxIndex = 0;
+        for (const character of ObjectStore.instance.getObjects(GameCharacter)) {
+          if(!character.name.startsWith(baseName)) continue;
+          let index = character.name.match(/_(\d+)$/) ? +RegExp.$1 : 0;
+          if (index > maxIndex) maxIndex = index;
+        }
+        cloneObject.name = baseName + '_' + (maxIndex + 1);
+        cloneObject.update();
+        SoundEffect.play(PresetSound.piecePut);
+      }
+    });
     if (gameObject.location.name === 'graveyard') {
+      actions.push(ContextMenuSeparator);
       actions.push({
         name: '削除する', action: () => {
           this.deleteGameObject(gameObject);
