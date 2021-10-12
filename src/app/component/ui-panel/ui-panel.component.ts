@@ -79,10 +79,13 @@ export class UIPanelComponent implements OnInit {
   }
 
   toggleMinimize() {
-    let panel = this.draggablePanel.nativeElement;
+    const panel = this.draggablePanel.nativeElement;
+    const cntent = this.scrollablePanel.nativeElement;
     panel.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out';
+    cntent.style.overflowY = 'hidden';
     setTimeout(() => {
       panel.style.transition = null;
+      cntent.style.overflowY = null;
     }, 100);
  
     if (!this.isMinimized && !this.isFullScreen) {
@@ -112,10 +115,13 @@ export class UIPanelComponent implements OnInit {
   }
 
   toggleFullScreen() {
-    let panel = this.draggablePanel.nativeElement;
+    const panel = this.draggablePanel.nativeElement;
+    const cntent = this.scrollablePanel.nativeElement;
     panel.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out';
+    cntent.style.overflowY = 'hidden';
     setTimeout(() => {
       panel.style.transition = null;
+      cntent.style.overflowY = null;
     }, 100);
     //this.isMinimized = false;
     if (!this.isMinimized && !this.isFullScreen) {
@@ -168,9 +174,12 @@ export class UIPanelComponent implements OnInit {
   toggleRotate() {
     //if (this.isMinimized) return;
     const panel = this.draggablePanel.nativeElement;
+    const cntent = this.scrollablePanel.nativeElement;
     panel.style.transition = 'width 0.1s ease-in-out, height 0.1s ease-in-out';
+    cntent.style.overflowY = 'hidden';
     setTimeout(() => {
       panel.style.transition = null;
+      cntent.style.overflowY = null;
     }, 100);
 
     const saveWidth = panel.offsetWidth;
