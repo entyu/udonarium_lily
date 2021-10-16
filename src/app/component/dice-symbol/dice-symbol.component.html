@@ -6,7 +6,7 @@
       <div class="pedestal-inner" [ngClass]="{'is-gray-border': hasOwner}"></div>
       <div class="pedestal-outer"></div>
       <ng-container *ngIf="!isIconHidden">
-      <div class="pedestal-grab rotate-grab">
+      <div class="pedestal-grab rotate-grab is-3d">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
           <div class="material-icons of-back">autorenew</div>
@@ -25,7 +25,7 @@
                 <div class="fornt-tag has-length-limit is-3d">{{ownerName}}</div>
                 <div class="back-tag has-length-limit is-3d">{{ownerName}}</div>
               </div>
-              <img class="image" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
+              <img class="image is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
             </div>
           </div>
         </div>
