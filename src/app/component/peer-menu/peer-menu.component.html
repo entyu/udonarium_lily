@@ -30,7 +30,7 @@
 <hr/>
 <div>
   <span><input [(ngModel)]="myPeer.timeout" type="number" min="1" max="600" /> 秒以上通信できない参加者情報をチャットに表示</span><br>
-  <span>接続情報詳細を表示<input type="checkbox" value="dispDetailFlag"  [(ngModel)]="dispDetailFlag"></span><br>
+  <span>詳細を表示<input type="checkbox" value="dispDetailFlag"  [(ngModel)]="dispDetailFlag"></span><br>
 </div>
 <div *ngFor="let context of networkService.peerContexts" style="font-size: 15px;">
   <div>
@@ -38,11 +38,11 @@
     <span>他の参加者：{{findUserId(context.peerId)}} [{{findPeerName(context.peerId)}}] </span>
     <span *ngIf="findPeerTimeReceive(context.peerId) <= 0">接続確認：[-:--:--]</span>
     <span *ngIf="findPeerTimeReceive(context.peerId) > 0">接続確認：[{{findPeerTimeReceive(context.peerId) | date:'HH:mm:ss'}}]</span><br>
-    <span *ngIf="findPeerTimeReceive(context.peerId) > 0">往復通信時間：{{findPeerTimeLatency(context.peerId)}}秒</span><br>
     <div *ngIf="dispDetailFlag">
-      <span >伝送時間+時計誤差合計　受信：{{findPeerTimeDiffDown(context.peerId)}}ms 送信：{{findPeerTimeDiffUp(context.peerId)}}ms</span><br>
+      <span *ngIf="findPeerTimeReceive(context.peerId) > 0">往復通信時間：{{findPeerTimeLatency(context.peerId)}}秒</span><br>
     </div>
-    <div *ngIf="myPeer.name=='円柱'">
+    <div *ngIf="myPeer.name=='円柱_'">
+      <span >伝送時間+時計誤差合計　受信：{{findPeerTimeDiffDown(context.peerId)}}ms 送信：{{findPeerTimeDiffUp(context.peerId)}}ms</span><br>
       <span >相手の生存信号到着割合：{{findPeerDegreeOfSuccess(context.peerId)}}</span><br>
     </div>
   </div>
