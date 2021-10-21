@@ -10,7 +10,7 @@
       <button *ngIf="isAbleCloseButton" (click)="close()"><i class="material-icons" style="font-size: 14px">close</i></button>
     </div>
   </div>
-  <div class="scrollable-panel" [ngClass]="{'horizontal': isHorizontal}" [style.display]="isMinimized && !isFullScreen ? 'none' : null" #scrollablePanel>
+  <div class="scrollable-panel" [ngClass]="{'overlay': isAbleRotateButton, 'horizontal': isHorizontal}" [style.display]="isMinimized && !isFullScreen ? 'none' : null" #scrollablePanel>
     <ng-content></ng-content>
     <div #content></div>
   </div>

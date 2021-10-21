@@ -61,7 +61,7 @@
 
 /* chrome safari opera */
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .scrollable-panel  {
+  .scrollable-panel.overlay  {
     overflow: overlay;
   }
 }
