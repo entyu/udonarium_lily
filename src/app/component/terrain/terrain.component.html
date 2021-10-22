@@ -7,7 +7,7 @@
       <div *ngIf="isDropShadow && (terreinAltitude != 0 || (isSlope && !hasWall))"
         style="opacity: 0.7; filter: brightness(0) blur(1px); transform: translateZ(0.3px) scale(0.98); backface-visibility: visible"
         class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
-      <div class="texture" style="z-index: 1" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'backface-visibility': isSlope ? 'visible' : 'hidden', 'transform': 'translateZ(' + ((height / (isSlope ? 2 : 1) + altitude) * gridSize) + 'px)' + floorModCss, filter: 'brightness(' + floorBrightness + ')'}"
+      <div class="texture" style="z-index: 1" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'backface-visibility': isSlope ? 'visible' : 'hidden', 'transform': 'translateZ(' + ((height / (isSlope ? 2 : 1) + altitude + (height == 0 ? 0.001 : 0)) * gridSize) + 'px)' + floorModCss, filter: 'brightness(' + floorBrightness + ')'}"
         [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
     </ng-container>
     <ng-container *ngIf="isWallExist">
