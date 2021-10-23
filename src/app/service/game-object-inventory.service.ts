@@ -31,6 +31,14 @@ export class GameObjectInventoryService {
   graveyardInventory: ObjectInventory = new ObjectInventory(object => { return object.location.name === 'graveyard'; });
 
   indicateAll: boolean = false;
+  
+  private _sortStop: boolean = false;
+  get sortStop(): boolean { return this.sortStop }
+  set sortStop(sortStop: boolean) { 
+    const oldState = this._sortStop;
+    this._sortStop = sortStop;
+    if (oldState && !this._sortStop) this.refresh();
+  }
 
   private locationMap: Map<ObjectIdentifier, LocationName> = new Map();
   private tagNameMap: Map<ObjectIdentifier, ElementName> = new Map();
@@ -121,6 +129,8 @@ export class GameObjectInventoryService {
   }
 
   private refreshSort() {
+    if (this._sortStop) return;
+    //console.log('refreshSort')
     this.tableInventory.refreshSort();
     this.commonInventory.refreshSort();
     this.privateInventory.refreshSort();

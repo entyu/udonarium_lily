@@ -35,6 +35,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   isEdit: boolean = false;
 
   stringUtil = StringUtil;
+  private sortStopTimerId = null;
 
   get sortTag(): string { return this.inventoryService.sortTag; }
   set sortTag(sortTag: string) { this.inventoryService.sortTag = sortTag; }
@@ -89,6 +90,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+    if (this.sortStopTimerId) clearTimeout(this.sortStopTimerId);
   }
 
   getTabTitle(inventoryType: string) {
@@ -479,5 +481,13 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     } else {
       this.modalService.open(OpenUrlComponent, { url: url, title: title, subTitle: subTitle  });
     } 
+  }
+
+  onInput() {
+    this.inventoryService.sortStop = true;
+    if (this.sortStopTimerId) clearTimeout(this.sortStopTimerId);
+    this.sortStopTimerId = setTimeout(() => {
+      this.inventoryService.sortStop = false;
+    }, 666);
   }
 }
