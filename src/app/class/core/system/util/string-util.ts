@@ -80,4 +80,31 @@ export namespace StringUtil {
       }[match]
     });
   }
+
+  export function aliasNameToClassName(aliasName: string) {
+    switch(aliasName) {
+      case 'character':
+        return 'キャラクター';
+      case 'cut-in':
+        return 'カットイン';
+      case 'dice-roll-table':
+        return 'ダイスボット表';
+      case 'terrain':
+        return '地形';
+      case 'table-mask':
+        return 'マップマスク';
+      case 'text-note':
+        return '共有メモ';
+      case 'card':
+        return 'カード';
+      case 'dice-symbol':
+        return 'ダイスシンボル';
+      case 'card-stack':
+        return '山札';
+      case 'game-table':
+        return 'テーブル';
+      default:
+       return '存在しない種類';
+    }
+  }
 }
