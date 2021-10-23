@@ -43,6 +43,10 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
 
   get abilityScore(): number { return this.gameDataElement.calcAbilityScore(); }
 
+  get isTableTopObjectName() {
+    return this.isTagLocked && (this.gameDataElement.name === 'name');
+  }
+
   get isCommonValue(): boolean {
     if (this.gameDataElement) {
       return this.isTagLocked && (this.gameDataElement.name === 'size'

@@ -95,3 +95,8 @@ label.compact {
   background-color: #555;
   color: #CCC;
 }
+
+.tab .material-icons {
+  vertical-align: top;
+  font-size: 0.8rem;
+}

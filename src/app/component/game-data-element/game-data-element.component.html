@@ -34,18 +34,18 @@
         <ng-container *ngSwitchCase="'simpleNumber'">
             <!-- size属性がないと小さくならない -->
             <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div> 
-            <input type="{{isNum(value) ? 'number' : 'text'}}" style="width:40%; min-width: 3em; max-width:8em; text-align:right" size="1" [(ngModel)]="value" placeholder="Number" />
+            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" type="{{isNum(value) ? 'number' : 'text'}}" style="width:40%; min-width: 3em; max-width:8em; text-align:right" size="1" [(ngModel)]="value" placeholder="Number" />
           </ng-container>
           <ng-container *ngSwitchCase="'numberResource'">
-            <input [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
+            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
               [(ngModel)]="currentValue" type="range" title="{{currentValue}}" min="0" max="{{!isNum(value) ? 1000 : value}}" />
             <br>
-            <input style="width: 5em; text-align: right;" size="1" type="number" [(ngModel)]="currentValue" placeholder="Value" />
+            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" style="width: 5em; text-align: right;" size="1" type="number" [(ngModel)]="currentValue" placeholder="Value" />
             /
-            <input style="width: 5em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
+            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" style="width: 5em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
           </ng-container>
           <ng-container *ngSwitchCase="'abilityScore'">
-            <input style="width:40%; max-width:5em; text-align:right" type="{{isNum(value) ? 'number' : 'text'}}" size="1" [(ngModel)]="value" placeholder="Value">
+            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" style="width:40%; max-width:5em; text-align:right" type="{{isNum(value) ? 'number' : 'text'}}" size="1" [(ngModel)]="value" placeholder="Value">
             <ng-container *ngIf="isEdit">
               <select class="modeifire-type" style="width:40%; max-width:5em" [(ngModel)]="currentValue">
                 <option value="">なし</option>
@@ -58,11 +58,11 @@
                 <option value="DnD3">D&amp;D 3e～</option>
               </select>
             </ng-container>
-            <ng-container *ngIf="!isEdit"><span style="font-size: smaller;">{{'(' + (abilityScore >=0 ? '+' : '') + abilityScore + ')'}}</span></ng-container>
+            <ng-container *ngIf="!isEdit && currentValue"><span style="font-size: smaller;">{{'(' + (abilityScore >=0 ? '+' : '') + abilityScore + ')'}}</span></ng-container>
           </ng-container>
           <ng-container *ngSwitchCase="'checkProperty'">
               <input style="width:50%; max-width:4em" type="text" size="1" [(ngModel)]="currentValue" placeholder="Option">
-              <input style="width:30%; max-width:4em" type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
+              <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" style="width:30%; max-width:4em" type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
             </ng-container>
           <ng-container *ngSwitchCase="'note'">
             <textarea style="width:100%; height:5em; min-width:50px; resize: bose; font-size: 0.8em;" [(ngModel)]="value" placeholder="Note"></textarea>
@@ -85,7 +85,8 @@
           <ng-container *ngSwitchDefault>
             <!-- size属性がないと小さくならない -->
             <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div>
-            <input style="width:100%; min-width:10px;" size="1" [(ngModel)]="value" placeholder="" />
+            <input *ngIf="!(isHideText && isTableTopObjectName)" style="width:100%; min-width:10px;" size="1" [(ngModel)]="value" placeholder="" />
+            <span *ngIf="isHideText && isTableTopObjectName" style="color: gray; font-size: 1.0em; font-family: Cambria, Georgia;">カード（裏面）</span>
           </ng-container>
         </ng-container>
       </ng-container>

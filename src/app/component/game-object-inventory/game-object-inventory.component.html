@@ -112,7 +112,7 @@
           <div style="display: inline-block;">
             <div class="tag-value-box">
               <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
-              <input class="input tag-value" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+              <input appLogging [logging.name]="name" [logging.dataElement]="dataElm" class="input tag-value" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" placeholder="" />
             </div>
           </div>
         </div>
@@ -120,11 +120,11 @@
       <ng-container *ngSwitchCase="'numberResource'">
         <div class="resource-tag">
           <div style="font-size: 0.8em; display: inline-block; margin-right: 0.5em;">{{dataElm.name}}</div>
-          <input class="input resource-value" type="number" size="1" [(ngModel)]="dataElm.currentValue" placeholder="Value" />
+          <input appLogging [logging.name]="name" [logging.dataElement]="dataElm" class="input resource-value" type="number" size="1" [(ngModel)]="dataElm.currentValue" placeholder="Value" attr.data-init-value="{{ dataElm.currentValue }}" />
         </div>
         <div class="resource-tag">
-          <input type="range" title="{{dataElm.currentValue}}" [style]="'font-size: 0.8em; min-width: 1em; width:' + (dataElm.name.length + 4.5) + 'em; --min: 0; --max: ' + dataElm.value + '; --val:' + dataElm.currentValue +';' | safe: 'style'"
-            min="0" max="{{!+dataElm.value ? 1000 : dataElm.value}}" [ngStyle]="{'background-color':'green'}" [(ngModel)]="dataElm.currentValue" />
+          <input appLogging [logging.name]="name" [logging.dataElement]="dataElm" type="range" title="{{dataElm.currentValue}}" [style]="'font-size: 0.8em; min-width: 1em; width:' + (dataElm.name.length + 4.5) + 'em; --min: 0; --max: ' + dataElm.value + '; --val:' + dataElm.currentValue +';' | safe: 'style'"
+            min="0" max="{{!+dataElm.value ? 1000 : dataElm.value}}" [ngStyle]="{'background-color':'green'}" [(ngModel)]="dataElm.currentValue" attr.data-init-value="{{ dataElm.currentValue }}" />
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'checkProperty'">
@@ -132,7 +132,7 @@
         <div style="text-align: center;">
           <div style="display: inline-block;">
             <div class="tag-value-box">
-              <input type="checkbox" [(ngModel)]="dataElm.value" checked="{{dataElm.value ? 'checked' : ''}}" (change)="dataElm.value = (dataElm.value ? dataElm.name : '')">
+              <input appLogging [logging.name]="name" [logging.dataElement]="dataElm" type="checkbox" [(ngModel)]="dataElm.value" checked="{{dataElm.value ? 'checked' : ''}}" (change)="dataElm.value = (dataElm.value ? dataElm.name : '')">
             </div>
           </div>
         </div>
@@ -143,8 +143,8 @@
           <div style="display: inline-block;">
             <div class="tag-value-box">
               <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
-              <input class="input tag-value" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" placeholder="" />
-              <span style="font-size: smaller;">({{ (dataElm.calcAbilityScore() >= 0 ? '+' : '') + dataElm.calcAbilityScore() }})</span>
+              <input appLogging [logging.name]="name" [logging.dataElement]="dataElm" class="input tag-value" type="{{(dataElm.value && dataElm.value == +dataElm.value) ? 'number' : 'text'}}" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+              <span *ngIf="dataElm.currentValue" style="font-size: smaller;">({{ (dataElm.calcAbilityScore() >= 0 ? '+' : '') + dataElm.calcAbilityScore() }})</span>
             </div>
           </div>
         </div>

@@ -31,6 +31,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopService } from 'service/tabletop.service';
 import { ModalService } from 'service/modal.service';
+import { ChatMessageService } from 'service/chat-message.service';
 
 @Component({
   selector: 'card',
@@ -128,7 +129,8 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     private tabletopService: TabletopService,
     private imageService: ImageService,
     private pointerDeviceService: PointerDeviceService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private chatMessageService: ChatMessageService
   ) { }
 
   ngOnInit() {
@@ -223,6 +225,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.hasOwner && !this.isHand) return;
       this.state = this.isVisible && !this.isHand ? CardState.BACK : CardState.FRONT;
       this.owner = '';
+      if (this.state === CardState.FRONT) this.chatMessageService.sendOperationLog(this.card.name + ' を公開');
       SoundEffect.play(PresetSound.cardDraw);
     }
   }
@@ -250,6 +253,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         ? {
           name: this.isHand ? '表向きで出す（公開する）' : this.hasOwner ? '表にする（公開する）' : '表にする', action: () => {
             this.card.faceUp();
+            this.chatMessageService.sendOperationLog(this.card.name + ' を公開');
             SoundEffect.play(PresetSound.cardDraw);
           }, default: !this.hasOwner || this.isHand
         }
@@ -310,13 +314,15 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           cloneObject.location.y += this.gridSize;
           cloneObject.toTopmost();
           SoundEffect.play(PresetSound.cardPut);
-        }
+        },
+        disabled: this.hasOwner && !this.isHand
       },
       {
         name: '削除する', action: () => {
           this.card.destroy();
           SoundEffect.play(PresetSound.sweep);
-        }
+        },
+        disabled: this.hasOwner && !this.isHand
       },
     ], this.isVisible ? this.name : 'カード');
   }
@@ -384,7 +390,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'カード設定';
-    if (gameObject.name.length) title += ' - ' + gameObject.name;
+    if (gameObject.name.length) title += ' - ' + (this.isVisible ? gameObject.name : 'カード（裏面）');
     let option: PanelOption = { title: title, left: coordinate.x - 300, top: coordinate.y - 300, width: 600, height: 600 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;

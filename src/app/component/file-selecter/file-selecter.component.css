@@ -11,8 +11,13 @@
   transition-duration: 60ms;
 }
 
+.current-images {
+  border: solid red;
+}
+
 .current-images.image:hover {
-  border-color: transparent;
+  border: solid red;
+  transform: scale(1.0);
 }
 
 .image img {

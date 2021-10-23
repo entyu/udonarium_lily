@@ -3,7 +3,7 @@
   <ng-container *ngSwitchCase="'numberResource'">
   </ng-container>
   <ng-container *ngSwitchCase="'card'">
-    <button (click)="openModal('front')" [disabled]="!tabletopObject.isFront && !tabletopObject.isHand">表面の画像を変更</button>
+    <button (click)="openModal('front')" [disabled]="!isVisible">表面の画像を変更</button>
     <button (click)="openModal('back')">裏面の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchCase="'card-stack'">
@@ -13,7 +13,7 @@
     <button (click)="openModal('wall')">壁の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchCase="'dice-symbol'">
-    <button (click)="openModal(tabletopObject['face'])" [disabled]="!tabletopObject['isVisible']">ダイス目の画像を変更</button>
+    <button (click)="openModal(tabletopObject['face'])" [disabled]="!isVisible">ダイス目の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchCase="'character'">
     <button (click)="openModalReplaceImage(tabletopObject.imageFiles.length > 1 || 0 < tabletopObject.imageFile?.url.length)">画像{{ (tabletopObject.imageFiles?.length > 1) ? '置換/削除' : '設定' }}</button>
@@ -23,8 +23,8 @@
     <button (click)="openModal('imageIdentifier', tabletopObject.imageFile && tabletopObject.imageFile.url.length > 0)">画像変更</button>
   </ng-container>
 </ng-container>
-<button (click)="clone()">コピーを作る</button>
-<button [disabled]="isSaveing" (click)="saveToXML()">
+<button (click)="clone()" [disabled]="!isVisible">コピーを作る</button>
+<button [disabled]="isSaveing || !isVisible" (click)="saveToXML()">
   <div style="position: relative;">
     <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
     <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
@@ -68,7 +68,7 @@
     <span style="display: inline-block;" class="inverser" [ngClass]="{inverse: tabletopObject.isInverse}">
       <span class="aura" [ngClass]="{black: tabletopObject.aura == 0, blue: tabletopObject.aura == 1, green: tabletopObject.aura == 2, cyan: tabletopObject.aura == 3, red: tabletopObject.aura == 4, magenta: tabletopObject.aura == 5, yellow: tabletopObject.aura == 6, white: tabletopObject.aura == 7}">
         <img #mainImage class="main-image" [src]="tabletopObject.imageFile.url | safe: 'resourceUrl'" [alt]="tabletopObject.imageFile.name" 
-          [ngClass]="{'black-paint': tabletopObject.isBlackPaint, 'hollow': tabletopObject.isHollow, small: tabletopObject.aliasName == ''}"
+          [ngClass]="{'black-paint': isBlackPaint, 'hollow': tabletopObject.isHollow, small: tabletopObject.aliasName == ''}"
           (dblclick)="openMainImageModal()" 
           (load)="onMainImageLoad()"
           [@switchImage]="tabletopObject.currntImageIndex" />

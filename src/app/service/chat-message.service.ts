@@ -102,6 +102,25 @@ export class ChatMessageService {
     return chatTab.addMessage(chatMessage);
   }
 
+  sendOperationLog(text: string, logLevel: number=1) {
+    for (const chatTab of this.chatTabs) {
+      if (chatTab.recieveOperationLogLevel < logLevel) continue;
+      let chatMessage: ChatMessageContext = {
+        from: Network.peerContext.userId,
+        //to: ChatMessageService.findId(PeerCursor.myCursor.userId),
+        //to: this.findId(sendTo),
+        name: PeerCursor.myCursor.name,
+        imageIdentifier: PeerCursor.myCursor.imageIdentifier,
+        timestamp: this.calcTimeStamp(chatTab),
+        tag: 'opelog',
+        text: StringUtil.cr(text),
+        color: PeerCursor.myCursor.color
+      };
+
+      chatTab.addMessage(chatMessage);
+    }
+  }
+
   static findId(identifier: string): string {
     let object = ObjectStore.instance.get(identifier);
     if (object instanceof GameCharacter) {

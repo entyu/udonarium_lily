@@ -7,9 +7,9 @@
 <div class="sticky-bottom">
   <form>
     <div class="chat-tab">
-      <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab">
+      <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab" class="tab">
         <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
-        <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
+        <div>{{chatTab.name}}<i *ngIf="chatTab.isUseStandImage" class="material-icons small-font">how_to_reg</i><i *ngIf="chatTab.recieveOperationLogLevel > 0" class="material-icons small-font">history_edu</i><badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
       </label>
       <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>タブ設定</button>
       <button class="tab-setting small-font" (click)="showLogOutput()"><i class="material-icons small-font">history_edu</i>ログ</button>

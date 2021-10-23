@@ -28,6 +28,9 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   get isUseStandImage(): boolean { return this.selectedTab.isUseStandImage; }
   set isUseStandImage(isUseStandImage: boolean) { if (this.isEditable) this.selectedTab.isUseStandImage = isUseStandImage; }
 
+  get recieveOperationLogLevel(): number { return this.selectedTab.recieveOperationLogLevel; }
+  set recieveOperationLogLevel(recieveOperationLogLevel: number) { if (this.isEditable) this.selectedTab.recieveOperationLogLevel = recieveOperationLogLevel; }
+
   get chatTabs(): ChatTab[] { return this.chatMessageService.chatTabs; }
   get isEmpty(): boolean { return this.chatMessageService.chatTabs.length < 1 }
   get isDeleted(): boolean { return this.selectedTab ? ObjectStore.instance.get(this.selectedTab.identifier) == null : false; }

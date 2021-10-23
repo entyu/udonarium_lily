@@ -19,6 +19,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { templateJitUrl } from '@angular/compiler';
 
 @Component({
   selector: 'game-character-sheet',
@@ -425,5 +426,18 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       card = this.tabletopObject;
     }
     return card ? card.text : '';
+  }
+
+  get isVisible(): boolean {
+    if (!this.tabletopObject) return false;
+    if (this.tabletopObject instanceof Card) return this.tabletopObject.isFront || this.tabletopObject.isHand;
+    if (this.tabletopObject instanceof DiceSymbol) return this.tabletopObject['isVisible'];
+    return true;
+  }
+
+  get isBlackPaint(): boolean {
+    if (this.tabletopObject instanceof GameCharacter) return this.tabletopObject.isBlackPaint;
+    if (this.tabletopObject instanceof DiceSymbol) return !this.isVisible;
+    return false;
   }
 }

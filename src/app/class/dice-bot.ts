@@ -238,7 +238,7 @@ export class DiceBot extends GameObject {
     EventSystem.register(this)
       .on('SEND_MESSAGE', async event => {
         const chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
-        if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) return;
+        if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem || chatMessage.isOperationLog) return;
 
         const text: string = StringUtil.toHalfWidth(chatMessage.text).replace("\u200b", ''); //ゼロ幅スペース削除
         let gameType: string = chatMessage.tag.replace('noface', '').trim();

@@ -72,6 +72,7 @@ import { ChatLogOutputComponent } from './component/chat-log-output/chat-log-out
 
 import { YouTubePlayerModule } from "@angular/youtube-player";
 import { CardListImageComponent } from './component/card-list-image/card-list-image.component';
+import { LoggingInputDirective } from './directive/logging-input.directive';
 
 @NgModule({
   declarations: [
@@ -126,7 +127,8 @@ import { CardListImageComponent } from './component/card-list-image/card-list-im
     CutInComponent,
     CutInSettingComponent,
     ChatLogOutputComponent,
-    CardListImageComponent
+    CardListImageComponent,
+    LoggingInputDirective
   ],
   imports: [
     BrowserModule,

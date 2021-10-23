@@ -64,3 +64,13 @@
   top: -4px;
   right: 0;
 }
+
+.small-font {
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.material-icons {
+  vertical-align: top;
+  font-size: 0.6rem;
+}

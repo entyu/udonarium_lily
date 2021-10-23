@@ -9,6 +9,7 @@ import { StringUtil } from './core/system/util/string-util';
 export class ChatTab extends ObjectNode implements InnerXml {
   @SyncVar() name: string = 'タブ';
   @SyncVar() isUseStandImage: boolean = true;
+  @SyncVar() recieveOperationLogLevel: number = 0;
   get chatMessages(): ChatMessage[] { return <ChatMessage[]>this.children; }
 
   private _unreadLength: number = 0;

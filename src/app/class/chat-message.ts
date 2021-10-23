@@ -95,9 +95,10 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isCalculate(): boolean { return this.isSystem && this.from.indexOf('Dice') >= 0 && this.text.indexOf(': 計算結果 →') > -1 ? true : false; }
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
   get isEmptyDice(): boolean { return !this.isDicebot || -1 < this.tags.indexOf('empty'); }
-  get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isDicebot || this.isCalculate; }
-  get isEditable(): boolean { return !this.isSystem && this.from === Network.peerContext.userId }
+  get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isOperationLog || this.isDicebot || this.isCalculate; }
+  get isEditable(): boolean { return !this.isSystem && !this.isOperationLog && this.from === Network.peerContext.userId }
   get isFaceIcon(): boolean { return !this.isSystem && (!this.characterIdentifier || this.tags.indexOf('noface') < 0); }
+  get isOperationLog(): boolean { return -1 < this.tags.indexOf('opelog') ? true : false; }
 
   get isSuccess(): boolean { return this.isDicebot && -1 < this.tags.indexOf('success'); }
   get isFailure(): boolean { return this.isDicebot && -1 < this.tags.indexOf('failure'); }
@@ -138,7 +139,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     if (this.isDirect || this.isSecret) messageClassNames.push('direct-message');
     if (this.isSystem) messageClassNames.push('system-message');
     if (this.isDicebot || this.isCalculate) messageClassNames.push('dicebot-message');
-    
+    if (this.isOperationLog) messageClassNames.push('operation-log');
+
     let messageTextClassNames = ['msg-text'];
     if (!this.isSecret || this.isSendFromSelf) {
       if (this.isSuccess) messageTextClassNames.push('is-success');
@@ -222,8 +224,13 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 .direct-message.dicebot-message .msg-text.is-failure {
   color:#F66;
 }
+.operation-log {
+  background-color: #CCC;
+}
 .dicebot-message .msg-name,
-.dicebot-message .msg-text {
+.dicebot-message .msg-text,
+.operation-log .msg-name,
+.operation-log .msg-text {
   font-style: oblique;
 }
 .tab-name {

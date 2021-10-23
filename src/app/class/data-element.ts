@@ -64,7 +64,7 @@ export class DataElement extends ObjectNode {
   }
 
   calcAbilityScore(): number {
-    if (!this.isAbilityScore || !this.currentValue) return 0;
+    if (!this.isAbilityScore || !this.value) return 0;
     let match;
     if (match = this.currentValue.toString().match(/^div(\d+)$/)) {
       return Math.floor(+this.value / +match[1]);
@@ -72,7 +72,7 @@ export class DataElement extends ObjectNode {
     } else if (match = this.currentValue.toString().match(/^DnD/)) {
       return Math.floor((+this.value - 10) / 2);
     } else {
-      return 0;
+      return +this.value;
     }
   }
 }

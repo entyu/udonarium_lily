@@ -92,6 +92,10 @@ export class ChatMessageComponent implements OnInit {
     return this.chatMessage.isEditable;
   }
 
+  get isCompact(): boolean {
+    return this.compact || this.chatMessage.isOperationLog;
+  }
+
   get htmlEscapedFrom():string  {
     return this._htmlEscapeLinking(this.chatMessage.from, true);
   } 

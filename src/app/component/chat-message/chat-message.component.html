@@ -1,37 +1,43 @@
-<div class="container" [ngClass]="{compact: compact, editing: isEditing}">
+<div class="container" [ngClass]="{compact: isCompact, editing: isEditing}">
   <div class="message"
     [style.border-left-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
     [style.border-right-color]="chatMessage.isSystem && !(chatMessage.isDicebot || chatMessage.isCalculate) ? '#444444' : chatMessage.color"
-    [ngClass]="{'is-mine': isMine, 'is-others': !isMine, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message': chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate)}"
+    [ngClass]="{'is-mine': isMine, 'is-others': !isMine, 'direct-message': (chatMessage.isDirect || chatMessage.isSecret), 'system-message': chatMessage.isSystem, 'dicebot-message': (chatMessage.isDicebot || chatMessage.isCalculate), 'operation-log': chatMessage.isOperationLog}"
     [@flyInOut]="isMine ? null : 'active'" [@flyInOutMe]="!isMine ? null : 'active'">
-    <div *ngIf="isMine && !compact" class="image" [ngClass]="{inverse: chatMessage.isInverseIcon == 1, hollow: chatMessage.isHollowIcon == 1}">
-      <span class="aura" [ngClass]="{black: chatMessage.aura == 0, blue: chatMessage.aura == 1, green: chatMessage.aura == 2, cyan: chatMessage.aura == 3, red: chatMessage.aura == 4, magenta: chatMessage.aura == 5, yellow: chatMessage.aura == 6, white: chatMessage.aura == 7}">
-        <img *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" [ngClass]="{'black-paint': chatMessage.isBlackPaint == 1, 'face-icon': chatMessage.isFaceIcon }" />
-      </span>
-    </div>
+    <ng-container *ngIf="isMine && !isCompact">
+      <ng-container *ngTemplateOutlet="image"></ng-container>
+    </ng-container>
     <div class="body">
-      <div class="title">
-        <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
-        <span class='tip msg-from' 
-          [innerHTML]="htmlEscapedFrom" (click)="onLinkClick($event)"></span>
-        <span *ngIf="!compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
-        <span *ngIf="compact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
-        <ng-container *ngIf="!(isEditable && !compact); else editor"></ng-container>
-      </div>
+      <ng-container *ngTemplateOutlet="title"></ng-container>
       <div class="text msg-text" [ngClass]="{ 'is-success': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isSuccess, 'is-failure': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isFailure, 'is-critical': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isCritical, 'is-fumble': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isFumble }">
         <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
       </div>
-      <div *ngIf="isEditable && compact">
+      <div *ngIf="isEditable && isCompact">
         <ng-container *ngTemplateOutlet="editor"></ng-container>
       </div>
     </div>
-    <div *ngIf="!isMine && !compact" class="image" [ngClass]="{inverse: chatMessage.isInverseIcon == 1, hollow: chatMessage.isHollowIcon == 1}">
-      <span class="aura" [ngClass]="{black: chatMessage.aura == 0, blue: chatMessage.aura == 1, green: chatMessage.aura == 2, cyan: chatMessage.aura == 3, red: chatMessage.aura == 4, magenta: chatMessage.aura == 5, yellow: chatMessage.aura == 6, white: chatMessage.aura == 7}">
-        <img *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" [ngClass]="{'black-paint': chatMessage.isBlackPaint == 1, 'face-icon': chatMessage.isFaceIcon }" />
-      </span>
-    </div>
+    <ng-container *ngIf="!isMine && !isCompact">
+      <ng-container *ngTemplateOutlet="image"></ng-container>
+    </ng-container>
   </div>
 </div>
+<ng-template #image>
+  <div class="image" [ngClass]="{inverse: chatMessage.isInverseIcon == 1, hollow: chatMessage.isHollowIcon == 1}">
+    <span class="aura" [ngClass]="{black: chatMessage.aura == 0, blue: chatMessage.aura == 1, green: chatMessage.aura == 2, cyan: chatMessage.aura == 3, red: chatMessage.aura == 4, magenta: chatMessage.aura == 5, yellow: chatMessage.aura == 6, white: chatMessage.aura == 7}">
+      <img *ngIf="0 < imageFile?.url?.length" [src]="imageFile?.url | safe: 'resourceUrl'" [ngClass]="{'black-paint': chatMessage.isBlackPaint == 1, 'face-icon': chatMessage.isFaceIcon }" />
+    </span>
+  </div>
+</ng-template>
+<ng-template #title>
+  <div class="title">
+    <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
+    <span class='tip msg-from' 
+      [innerHTML]="htmlEscapedFrom" (click)="onLinkClick($event)"></span>
+    <span *ngIf="!isCompact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
+    <span *ngIf="isCompact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
+    <ng-container *ngIf="!(isEditable && !isCompact); else editor"></ng-container>
+  </div>
+</ng-template>
 <ng-template #visible>
   <div *ngIf="isEditing" style="position: relative">
     <span aria-hidden="true" style="visibility: hidden; display: inline-block">{{ lastNewLineAdjust(editingText) }}</span>

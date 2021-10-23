@@ -110,7 +110,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     soundEffect.initialize();
 
     ChatTabList.instance.addChatTab('メインタブ', 'MainTab');
-    ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
+    let subTab = ChatTabList.instance.addChatTab('サブタブ', 'SubTab');
+    subTab.recieveOperationLogLevel = 1;
 
     CutInList.instance.initialize();
 

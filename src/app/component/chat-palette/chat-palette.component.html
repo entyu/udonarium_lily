@@ -4,7 +4,7 @@
       <div class="chat-tab">
         <label *ngFor="let chatTab of chatMessageService.chatTabs">
           <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
-          <div>{{chatTab.name}}<badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
+          <div>{{chatTab.name}}<i *ngIf="chatTab.isUseStandImage" class="material-icons small-font">how_to_reg</i><i *ngIf="chatTab.recieveOperationLogLevel > 0" class="material-icons small-font">history_edu</i><badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
         </label>
       </div>
     </form>
