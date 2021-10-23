@@ -34,8 +34,7 @@
     <span class='tip msg-from' 
       [innerHTML]="htmlEscapedFrom" (click)="onLinkClick($event)"></span>
     <span *ngIf="!isCompact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
-    <span *ngIf="isCompact && !chatMessage.isOperationLog" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
-    <span *ngIf="isCompact && chatMessage.isOperationLog" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm:ss'}}</span>
+    <span *ngIf="isCompact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
     <ng-container *ngIf="!(isEditable && !isCompact); else editor"></ng-container>
   </div>
 </ng-template>
