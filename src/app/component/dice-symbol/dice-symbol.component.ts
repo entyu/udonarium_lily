@@ -392,7 +392,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
       }));
 
     actions.push(ContextMenuSeparator);
-    actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.diceSymbol); },  disabled: this.hasOwner && !this.isMine });
+    actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.diceSymbol); } });
     if (this.diceSymbol.getUrls().length > 0) {
       actions.push({
         name: '参照URLを開く', action: null,
@@ -422,15 +422,13 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
         cloneObject.location.y += this.gridSize;
         cloneObject.update();
         SoundEffect.play(PresetSound.dicePut);
-      },
-      disabled: this.hasOwner && !this.isMine
+      }
     });
     actions.push({
       name: '削除する', action: () => {
         this.diceSymbol.destroy();
         SoundEffect.play(PresetSound.sweep);
-      },
-      disabled: this.hasOwner && !this.isMine
+      }
     });
     this.contextMenuService.open(position, actions, this.name);
   }

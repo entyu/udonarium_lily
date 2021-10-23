@@ -8,6 +8,7 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { ChatMessageService } from 'service/chat-message.service';
 
 import { PanelOption, PanelService } from 'service/panel.service';
 
@@ -25,6 +26,7 @@ export class CardStackListComponent implements OnInit, OnDestroy {
   constructor(
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
+    private chatMessageService: ChatMessageService
   ) { }
 
   ngOnInit() {
@@ -64,7 +66,12 @@ export class CardStackListComponent implements OnInit, OnDestroy {
     if (360 < card.rotate) card.rotate -= 360;
     card.toTopmost();
     SoundEffect.play(PresetSound.cardDraw);
-  }
+    if (card.isFront) {
+      this.chatMessageService.sendOperationLog(`${this.cardStack.name} から ${card.name} を取り出した`);
+    } else {
+      this.chatMessageService.sendOperationLog(`${this.cardStack.name} から 1枚取り出して伏せた`);
+    }
+  } 
 
   up(card: Card) {
     let parent = card.parent;

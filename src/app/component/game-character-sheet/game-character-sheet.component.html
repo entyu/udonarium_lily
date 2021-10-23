@@ -23,8 +23,8 @@
     <button (click)="openModal('imageIdentifier', tabletopObject.imageFile && tabletopObject.imageFile.url.length > 0)">画像変更</button>
   </ng-container>
 </ng-container>
-<button (click)="clone()" [disabled]="!isVisible">コピーを作る</button>
-<button [disabled]="isSaveing || !isVisible" (click)="saveToXML()">
+<button (click)="clone()">コピーを作る</button>
+<button [disabled]="isSaveing" (click)="saveToXML()">
   <div style="position: relative;">
     <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
     <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>

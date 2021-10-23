@@ -31,6 +31,7 @@ import { ImageService } from 'service/image.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { ModalService } from 'service/modal.service';
+import { ChatMessageService } from 'service/chat-message.service';
 
 @Component({
   selector: 'card-stack',
@@ -121,7 +122,8 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     private imageService: ImageService,
     private pointerDeviceService: PointerDeviceService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private chatMessageService: ChatMessageService
   ) { }
 
   ngOnInit() {
@@ -236,8 +238,19 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     let distance = (this.doubleClickPoint.x - this.input.pointer.x) ** 2 + (this.doubleClickPoint.y - this.input.pointer.y) ** 2;
     if (distance < 10 ** 2) {
       console.log('onDoubleClick !!!!');
-      if (this.drawCard() != null) {
+
+      const card = this.drawCard();
+      if (card) {
         SoundEffect.play(PresetSound.cardDraw);
+        let text: string;
+        if (card.isFront) {
+          text = `${this.cardStack.name} から ${card.name} を引いた`
+        } else {
+          text = `${this.cardStack.name} から 1枚引いて伏せた`
+        }
+        this.chatMessageService.sendOperationLog(text);
+      } else {
+        this.chatMessageService.sendOperationLog(`${this.cardStack.name} から引けなかった`);
       }
     }
   }
@@ -266,8 +279,18 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     this.contextMenuService.open(position, [
       {
         name: 'カードを１枚引く', action: () => {
-          if (this.drawCard() != null) {
+          const card = this.drawCard();
+          if (card) {
             SoundEffect.play(PresetSound.cardDraw);
+            let text: string;
+            if (card.isFront) {
+              text = `${this.cardStack.name} から ${card.name} を引いた`
+            } else {
+              text = `${this.cardStack.name} から 1枚引いて伏せた`
+            }
+            this.chatMessageService.sendOperationLog(text);
+          } else {
+            this.chatMessageService.sendOperationLog(`${this.cardStack.name} から引けなかった`);
           }
         },
         default: this.cards.length > 0,
@@ -278,13 +301,30 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         subActions: [2, 3, 4, 5, 10].map(n => {
           return {
             name: `${n}枚`,
-            action: () => { 
+            action: () => {
+              const cards: Card[] = [];
               for (let i = 0; i < n; i++) {
-                if (this.drawCard() != null) {
+                const card = this.drawCard();
+                if (card) {
+                  cards.push(card);
                   if (i == 0 || i == 3 || i == 9) SoundEffect.play(PresetSound.cardDraw);
-                } else {
-                  break;
                 }
+              }
+              if (cards.length > 0) {
+                const frontCards = cards.filter(card => card.isFront);
+                if (frontCards.length == 0) {
+                  this.chatMessageService.sendOperationLog(`${this.cardStack.name} から ${cards.length}枚引いて伏せた`);
+                } else {
+                  let text = `${this.cardStack.name} から ${cards.length}枚引き ${frontCards.map(card => card.name).join('、')}`;
+                  if (frontCards.length === cards.length) {
+                    text += ' だった'
+                  } else {
+                    text += `、${cards.length - frontCards.length}枚を伏せた`;
+                  }
+                  this.chatMessageService.sendOperationLog(text);
+                }
+              } else {
+                this.chatMessageService.sendOperationLog(`${this.cardStack.name} から引けなかった`);
               }
             }
           };
@@ -337,7 +377,10 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         }, 
         disabled: this.cards.length == 0
       },
-      { name: 'カード一覧を見る', action: () => { this.showStackList(this.cardStack); }, disabled: this.cards.length == 0 },
+      { name: 'カード一覧を見る', action: () => {
+        this.showStackList(this.cardStack);
+        this.chatMessageService.sendOperationLog(`${this.cardStack.name} のカード一覧を見た`);
+      }, disabled: this.cards.length == 0 },
       ContextMenuSeparator,
       (this.isShowTotal
         ? { name: '☑ 枚数を表示', action: () => { this.cardStack.isShowTotal = false; } }

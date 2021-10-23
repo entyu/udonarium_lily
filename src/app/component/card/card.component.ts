@@ -314,15 +314,13 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           cloneObject.location.y += this.gridSize;
           cloneObject.toTopmost();
           SoundEffect.play(PresetSound.cardPut);
-        },
-        disabled: this.hasOwner && !this.isHand
+        }
       },
       {
         name: '削除する', action: () => {
           this.card.destroy();
           SoundEffect.play(PresetSound.sweep);
-        },
-        disabled: this.hasOwner && !this.isHand
+        }
       },
     ], this.isVisible ? this.name : 'カード');
   }
