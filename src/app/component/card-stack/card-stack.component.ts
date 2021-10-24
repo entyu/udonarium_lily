@@ -519,7 +519,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private concatStack(topStack: CardStack, bottomStack: CardStack = this.cardStack) {
-    let newCardStack = CardStack.create(topStack.name);
+    let newCardStack = CardStack.create(bottomStack.name);
     newCardStack.location.name = bottomStack.location.name;
     newCardStack.location.x = bottomStack.location.x;
     newCardStack.location.y = bottomStack.location.y;
