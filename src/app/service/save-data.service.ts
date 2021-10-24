@@ -69,7 +69,7 @@ export class SaveDataService {
   }
 
   saveGameObjectAsync(gameObject: GameObject, fileName: string = 'fly_xml_data', updateCallback?: UpdateCallback): Promise<void> {
-    this.chatMessageService.sendOperationLog(`${StringUtil.aliasNameToClassName(gameObject.aliasName)} のデータ ${fileName}.zip を保存`);
+    this.chatMessageService.sendOperationLog(`${StringUtil.aliasNameToClassName(gameObject.aliasName)}のデータ ${fileName}.zip を保存`);
     return SaveDataService.queue.add((resolve, reject) => resolve(this._saveGameObjectAsync(gameObject, fileName, updateCallback)));
   }
 

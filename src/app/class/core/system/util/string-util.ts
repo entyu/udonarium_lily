@@ -103,8 +103,10 @@ export namespace StringUtil {
         return '山札';
       case 'game-table':
         return 'テーブル';
+      case 'chat-tab':
+        return 'チャットタブ';
       default:
-       return '存在しない種類';
+       return aliasName;
     }
   }
 }
