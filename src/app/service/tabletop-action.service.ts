@@ -156,7 +156,7 @@ export class TabletopActionService {
     if (suit == 'x') {
       ret += `（${(number == 1) ? '赤' : '黒' }）`;
     } else {
-      ret += ` の ${number == 1 ? 'エース' : number >= 11 ? jqk[number - 11] : number }（${(suit == 'd' || suit == 'h') ? '赤' : '黒' }）`
+      ret += `の${number == 1 ? 'エース' : number >= 11 ? jqk[number - 11] : number }`
     }
     return ret;
   }
