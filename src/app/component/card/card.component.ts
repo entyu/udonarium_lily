@@ -274,6 +274,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         : {
           name: '自分だけ見る（手札にする）', action: () => {
             SoundEffect.play(PresetSound.cardDraw);
+            this.chatMessageService.sendOperationLog(`${this.card.isFront ? this.card.name : '伏せたカード'} を自分だけ見た`);
             this.card.faceDown();
             this.owner = Network.peerContext.userId;
           }

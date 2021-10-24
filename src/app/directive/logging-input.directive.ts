@@ -31,9 +31,9 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
         if (!this.isDisable && value != oldValue) {
           let text = `${this.name} の ${this.dataElement.name} を変更`;
           if (this.showValue && (this.dataElement.isSimpleNumber || this.dataElement.isNumberResource || this.dataElement.isAbilityScore)) {
-            text += `（${oldValue} → ${value}）`;
-          } else if (this.dataElement.isCheckProperty) {
-            text += `（${value}）`
+            text += ` ${oldValue} → ${value}`;
+          } else if (this.showValue && this.dataElement.isCheckProperty) {
+            text += ` ${value}`
           }
           this.chatMessageService.sendOperationLog(text);
         }
@@ -51,9 +51,9 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
     if (!this.isDisable && value != oldValue) {
       let text = `${this.name} の ${this.dataElement.name} を変更`;
       if (this.showValue && (this.dataElement.isSimpleNumber || this.dataElement.isNumberResource || this.dataElement.isAbilityScore)) {
-        text += `（${oldValue} → ${value}）`;
+        text += ` ${oldValue} → ${value}`;
       } else if (this.dataElement.isCheckProperty) {
-        text += `（${value}）`
+        text += ` ${value}`
       }
       this.chatMessageService.sendOperationLog(text);
     }
@@ -77,10 +77,6 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
       ret = this.dataElement.value ? this.dataElement.value.toString() : '';
     }
     return ret;
-  }
-
-  logText(oldValue, newValue) {
-  
   }
 
   constructor(

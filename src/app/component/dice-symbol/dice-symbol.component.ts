@@ -335,7 +335,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
       actions.push({
         name: '自分だけ見る', action: () => {
           this.owner = Network.peerContext.userId;
-          //this.chatMessageService.sendOperationLog(`${this.diceSymbol.name} を自分だけ見た`);
+          this.chatMessageService.sendOperationLog(`${this.diceSymbol.name} を自分だけ見た`);
           SoundEffect.play(PresetSound.lock);
         }
       });

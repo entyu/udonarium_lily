@@ -249,8 +249,6 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           text = `${this.cardStack.name} から 1枚引いて伏せた`
         }
         this.chatMessageService.sendOperationLog(text);
-      } else {
-        this.chatMessageService.sendOperationLog(`${this.cardStack.name} から引けなかった`);
       }
     }
   }
@@ -289,8 +287,6 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
               text = `${this.cardStack.name} から 1枚引いて伏せた`
             }
             this.chatMessageService.sendOperationLog(text);
-          } else {
-            this.chatMessageService.sendOperationLog(`${this.cardStack.name} から引けなかった`);
           }
         },
         default: this.cards.length > 0,
@@ -315,16 +311,20 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (frontCards.length == 0) {
                   this.chatMessageService.sendOperationLog(`${this.cardStack.name} から ${cards.length}枚引いて伏せた`);
                 } else {
-                  let text = `${this.cardStack.name} から ${cards.length}枚引き ${frontCards.map(card => card.name).join('、')}`;
+                  const counter = new Map();
+                  for (const card of frontCards) {
+                    let count = counter.get(card.name) || 0;
+                    count += 1;
+                    counter.set(card.name, count);
+                  }
+                  let text = `${this.cardStack.name} から ${[...counter.keys()].sort().map(key => `${key} を ${counter.get(key)}枚`).join('、')}`;
                   if (frontCards.length === cards.length) {
-                    text += ' だった'
+                    text += '引いた'
                   } else {
-                    text += `、${cards.length - frontCards.length}枚を伏せた`;
+                    text += `引き、${cards.length - frontCards.length}枚を伏せた`;
                   }
                   this.chatMessageService.sendOperationLog(text);
                 }
-              } else {
-                this.chatMessageService.sendOperationLog(`${this.cardStack.name} から引けなかった`);
               }
             }
           };
@@ -334,6 +334,8 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       ContextMenuSeparator,
       {
         name: '一番上を表にする', action: () => {
+          if (!this.cardStack.topCard) return;
+          //if (!this.cardStack.topCard.isFront) this.chatMessageService.sendOperationLog(`${this.cardStack.name} の一番上の ${this.cardStack.topCard.name} を公開した`);
           this.cardStack.faceUp();
           SoundEffect.play(PresetSound.cardDraw);
         }, 
@@ -349,6 +351,8 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       ContextMenuSeparator,
       {
         name: 'すべて表にする', action: () => {
+          //if (!this.cardStack.topCard) return;
+          //if (!this.cardStack.topCard.isFront) this.chatMessageService.sendOperationLog(`${this.cardStack.name} をすべて表にし、一番上の ${this.cardStack.topCard.name} を公開した`);
           this.cardStack.faceUpAll();
           SoundEffect.play(PresetSound.cardDraw);
         }, 
