@@ -80,7 +80,7 @@
     <div class="flex-item">
       <div class="table">
         <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [tableTopObjectName]="tableTopObjectName" [isTagLocked]="true"
-          [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand"></div>
+          [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand" [isNoLogging]="isNoLogging"></div>
       </div>
       <div *ngIf="tabletopObject.aliasName === 'character'" style="text-align: right; margin-top: 3px;">
         <button style="font-size: 11px; color: #444;" (click)="showChatPalette()">チャットパレットを表示</button>
@@ -92,7 +92,7 @@
   <ng-container *ngIf="tabletopObject.detailDataElement">
     <div class="flex-item" *ngFor="let childElement of tabletopObject.detailDataElement.children">
       <div class="table">
-        <div class="table-row" game-data-element [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit"></div>
+        <div class="table-row" game-data-element [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit" [isNoLogging]="isNoLogging"></div>
       </div>
     </div>
   </ng-container>

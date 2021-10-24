@@ -31,21 +31,21 @@
       </ng-container>
       <ng-container *ngIf="!isCommonValue">
         <ng-container [ngSwitch]="gameDataElement.type">
-        <ng-container *ngSwitchCase="'simpleNumber'">
+          <ng-container *ngSwitchCase="'simpleNumber'">
             <!-- size属性がないと小さくならない -->
             <div class="hidden-spacer" style="font-size: 1.0em; font-family: Cambria, Georgia;">{{value}}</div> 
-            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" type="{{isNum(value) ? 'number' : 'text'}}" style="width:40%; min-width: 3em; max-width:8em; text-align:right" size="1" [(ngModel)]="value" placeholder="Number" />
+            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" [logging.disable]="isNoLogging" type="{{isNum(value) ? 'number' : 'text'}}" style="width:40%; min-width: 3em; max-width:8em; text-align:right" size="1" [(ngModel)]="value" placeholder="Number" />
           </ng-container>
           <ng-container *ngSwitchCase="'numberResource'">
-            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
+            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" [logging.disable]="isNoLogging" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'"
               [(ngModel)]="currentValue" type="range" title="{{currentValue}}" min="0" max="{{!isNum(value) ? 1000 : value}}" />
             <br>
-            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" style="width: 5em; text-align: right;" size="1" type="number" [(ngModel)]="currentValue" placeholder="Value" />
+            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" [logging.disable]="isNoLogging" style="width: 5em; text-align: right;" size="1" type="number" [(ngModel)]="currentValue" placeholder="Value" />
             /
-            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" style="width: 5em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
+            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" [logging.disable]="isNoLogging" style="width: 5em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
           </ng-container>
           <ng-container *ngSwitchCase="'abilityScore'">
-            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" style="width:40%; max-width:5em; text-align:right" type="{{isNum(value) ? 'number' : 'text'}}" size="1" [(ngModel)]="value" placeholder="Value">
+            <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" [logging.disable]="isNoLogging" style="width:40%; max-width:5em; text-align:right" type="{{isNum(value) ? 'number' : 'text'}}" size="1" [(ngModel)]="value" placeholder="Value">
             <ng-container *ngIf="isEdit">
               <select class="modeifire-type" style="width:40%; max-width:5em" [(ngModel)]="currentValue">
                 <option value="">なし</option>
@@ -62,7 +62,7 @@
           </ng-container>
           <ng-container *ngSwitchCase="'checkProperty'">
               <input style="width:50%; max-width:4em" type="text" size="1" [(ngModel)]="currentValue" placeholder="Option">
-              <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" style="width:30%; max-width:4em" type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
+              <input appLogging [logging.name]="tableTopObjectName" [logging.dataElement]="gameDataElement" [logging.disable]="isNoLogging" style="width:30%; max-width:4em" type="checkbox" [(ngModel)]="value" checked="{{value ? 'checked' : ''}}" (change)="value = (value ? name : '')">
             </ng-container>
           <ng-container *ngSwitchCase="'note'">
             <textarea style="width:100%; height:5em; min-width:50px; resize: bose; font-size: 0.8em;" [(ngModel)]="value" placeholder="Note"></textarea>
@@ -109,7 +109,7 @@
       </div>
       <div class="table" *ngIf="0 < gameDataElement.children.length">
         <div game-data-element class="table-row" *ngFor="let childElement of gameDataElement.children"
-          [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit" [isTagLocked]="isTagLocked" [isHideText]="isHideText"></div>
+          [gameDataElement]="childElement" [tableTopObjectName]="tableTopObjectName" [isEdit]="isEdit" [isTagLocked]="isTagLocked" [isHideText]="isHideText" [isNoLogging]="isNoLogging"></div>
       </div>
     </div>
   </ng-container>

@@ -26,6 +26,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   @Input() isTagLocked: boolean = false;
   @Input() isValueLocked: boolean = false;
   @Input() isHideText: boolean = false;
+  @Input() isNoLogging: boolean = false;
 
   stringUtil = StringUtil;
 

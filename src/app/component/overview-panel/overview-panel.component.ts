@@ -25,6 +25,7 @@ import { ModalService } from 'service/modal.service';
 import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
 import { element } from 'protractor';
+import { DiceSymbol } from '@udonarium/dice-symbol';
 
 @Component({
   selector: 'overview-panel',
@@ -351,5 +352,11 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       card = this.tabletopObject;
     }
     return card ? card.text : '';
+  }
+
+  get isNoLogging(): boolean {
+    if (this.tabletopObject instanceof Card) return !this.tabletopObject.isFront;
+    if (this.tabletopObject instanceof DiceSymbol) return this.tabletopObject.hasOwner;
+    return false;
   }
 }

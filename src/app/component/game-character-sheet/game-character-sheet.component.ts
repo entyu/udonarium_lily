@@ -440,4 +440,10 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     if (this.tabletopObject instanceof DiceSymbol) return !this.isVisible;
     return false;
   }
+
+  get isNoLogging(): boolean {
+    if (this.tabletopObject instanceof Card) return !this.tabletopObject.isFront;
+    if (this.tabletopObject instanceof DiceSymbol) return this.tabletopObject.hasOwner;
+    return false;
+  }
 }
