@@ -90,7 +90,7 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   }
 
   get minScrollHeight(): number {
-    return this.chatTab.chatMessages.reduce((height, chatMessage) => { height += (this.compact || chatMessage.isOperationLog ? 26 : 61); return height }, 0);
+    return this.chatTab.chatMessages.reduce((height, chatMessage) => { height += chatMessage.isDisplayable ? (this.compact || chatMessage.isOperationLog ? 26 : 61) : 0; return height }, 0);
     let length = this.chatTab ? this.chatTab.chatMessages.length : this.sampleMessages.length;
     return (length < 10000 ? length : 10000) * this.minMessageHeight;
   }

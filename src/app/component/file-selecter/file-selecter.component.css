@@ -12,11 +12,11 @@
 }
 
 .current-images {
-  border: solid red;
+  border: 2px solid red;
 }
 
 .current-images.image:hover {
-  border: solid red;
+  border: 2px solid red;
   transform: scale(1.0);
 }
 
