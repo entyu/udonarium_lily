@@ -323,7 +323,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
                     count += 1;
                     counter.set(card.name, count);
                   }
-                  let text = `${this.cardStack.name} から ${[...counter.keys()].map(key => `${key} を${counter.get(key)}枚`).join('、')}`;
+                  let text = `${this.cardStack.name} から ${[...counter.keys()].map(key => `${key} を ${counter.get(key)}枚`).join('、')}`;
                   if (frontCards.length === cards.length) {
                     text += '引いた'
                   } else {
