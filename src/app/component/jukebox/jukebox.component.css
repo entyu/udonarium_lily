@@ -54,3 +54,8 @@ button .self-only {
 button .material-icons {
   font-size: 12px;
 }
+
+.header {
+  background: linear-gradient(-30deg, rgba(240,218,189, 0.9), rgba(255, 244, 232, 0.9));
+  border-bottom: dotted 1px #888;
+}
