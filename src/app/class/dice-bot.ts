@@ -707,7 +707,7 @@ export class DiceBot extends GameObject {
       if ( splittext.length > 2){ 
         if( splittext[2] ){
           round = parseInt(splittext[2]);
-          if( isNaN(round)){
+          if( Number.isNaN(round)){
             round = 3;
           }
         }else{
