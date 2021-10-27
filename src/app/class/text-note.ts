@@ -5,6 +5,8 @@ import { moveToTopmost } from './tabletop-object-util';
 
 @SyncObject('text-note')
 export class TextNote extends TabletopObject {
+  @SyncVar() isLock: boolean = false;
+
   @SyncVar() rotate: number = 0;
   @SyncVar() zindex: number = 0;
   @SyncVar() password: string = '';
