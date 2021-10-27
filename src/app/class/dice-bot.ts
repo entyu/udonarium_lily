@@ -697,14 +697,24 @@ export class DiceBot extends GameObject {
       }
     }else{
       const splittext = command.replace(/^&/i, '').split('/');
-      let round = 3;
+      let round = null;
       let sub = '';
       let buffname = '';
       let bufftext = '';
       buffname = splittext[0];
       bufftext = splittext[0];
       if ( splittext.length > 1){ sub = splittext[1]; bufftext = bufftext + '/' + splittext[1]; }
-      if ( splittext.length > 2){ round = parseInt(splittext[2]); bufftext = bufftext + '/' + round + 'R'; }
+      if ( splittext.length > 2){ 
+        if( splittext[2] ){
+          round = parseInt(splittext[2]);
+          if( isNaN(round)){
+            round = 3;
+          }
+        }else{
+          round = 3;
+        }bufftext = bufftext + '/' + round + 'R';
+      }
+
       character.addBuffRound(buffname, sub, round);
       text += 'バフを付与 ' + bufftext;
       text += '    ';

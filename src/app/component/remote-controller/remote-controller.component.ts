@@ -391,7 +391,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     const gameCharacters = this.getTargetCharacters( true );
 
     const splittext: string[] =  value.text.split(/\s+/);
-    let round = 3;
+    let round = null;
     let sub = '';
     let buffname = '';
     let bufftext = '';
@@ -406,13 +406,23 @@ export class RemoteControllerComponent implements OnInit, OnDestroy {
     buffname = splittext[0];
     bufftext = splittext[0];
     if ( splittext.length > 1){ sub = splittext[1]; bufftext = bufftext + '/' + splittext[1]; }
-    if ( splittext.length > 2){ round = parseInt(splittext[2]); bufftext = bufftext + '/' + round + 'R'; }
+    if ( splittext.length > 2){ 
+      round = parseInt(splittext[2]); 
+      if( Number.isNaN(round)){
+        round = 3;
+      }
+    }else{
+      round = 3;
+    }
+    bufftext = bufftext + '/' + round + 'R';
 
     if ( gameCharacters.length > 0){
       for (const object of gameCharacters){
         text = text + '[' + object.name + ']';
       }
+
       this.remoteAddBuffRound(gameCharacters, buffname, sub, round);
+
       const mess = 'バフを付与 ' + bufftext + ' > ' + text;
       this.chatMessageService.sendMessage(this.chatTab, mess, this._gameSystem, this.sendFrom, '', value.tachieNum , value.messColor );
       this.errorMessageBuff = '';
