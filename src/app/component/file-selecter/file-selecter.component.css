@@ -4,7 +4,7 @@
   border: 2px solid transparent;
 }
 
-.image:hover {
+.image:not(.current-images):hover {
   border: 2px dotted red;
   transform: scale(1.08);
   z-index: 200;
@@ -13,11 +13,6 @@
 
 .current-images {
   border: 2px solid red;
-}
-
-.current-images.image:hover {
-  border: 2px solid red;
-  transform: scale(1.0);
 }
 
 .image img {
