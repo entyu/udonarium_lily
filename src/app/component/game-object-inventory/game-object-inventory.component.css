@@ -451,3 +451,12 @@ button.link {
   object-position: 50% 0%;
   border-radius: 0.2rem;
 }
+
+.self_only {
+  color: red;
+}
+
+.order-control {
+  box-sizing: border-box;
+  height: 1.6em;
+}

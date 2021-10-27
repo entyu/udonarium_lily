@@ -23,14 +23,14 @@
 <ng-template #inventoryViewSetting>
   <ng-container *ngIf="isEdit">
     <div>
-      <div style="font-size: 12px;">並び順</div>
-      <input [(ngModel)]="sortTag" placeholder="タグ名" />
-      <select [(ngModel)]="sortOrder">
+      <div style="font-size: 12px;"><b>並び順: </b></div>
+      <input [(ngModel)]="sortTag" placeholder="タグ名" class="order-control" />
+      <select [(ngModel)]="sortOrder" class="order-control">
         <option value="ASC">昇順</option>
         <option value="DESC">降順</option>
       </select>
     </div>
-    <div style="font-size: 12px; padding-top: 6px;">表示項目</div>
+    <div style="font-size: 12px; padding-top: 6px;"><b>表示項目: </b></div>
     <input style="width: 100%; box-sizing: border-box;" [(ngModel)]="dataTag" placeholder="スペース区切りでタグ名 スラッシュで改行 ex.「HP MP / メモ」" />
     <div style="padding-top: 6px;">
       <button class="tab-setting small-font" (click)="toggleEdit()"><i class="material-icons small-font">settings</i>完了</button>
@@ -39,16 +39,14 @@
   <ng-container *ngIf="!isEdit">
     <table style="font-size: 0.8em;">
       <tr>
-        <th style=" vertical-align:middle;">並び順:</th>
-        <td style=" vertical-align:middle;">
+        <th style=" vertical-align:middle;" nowrap>並び順:</th>
+        <td style=" vertical-align:middle;" nowrap>
           <ng-container *ngIf="0 < sortTag.length">{{sortTag}} ({{sortOrderName}})</ng-container>
           <ng-container *ngIf="sortTag.length < 1">-</ng-container>
         </td>
-        <td>
-          <ng-container *ngIf="selectTab === 'table'">
-            <label><input type="checkbox" [(ngModel)]="indicateAll" />すべて表示</label>
-          </ng-container>
+        <td width="100%" nowrap>
           <button class="tab-setting small-font" (click)="toggleEdit()"><i class="material-icons small-font">settings</i>設定</button>
+          <label *ngIf="selectTab === 'table'" style="float: right; font-size: smaller"><input type="checkbox" [(ngModel)]="indicateAll" /><b>すべて表示<sup class="self_only">*</sup></b></label>
         </td>
       </tr>
     </table>
