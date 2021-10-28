@@ -105,6 +105,36 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         if (this.tabletopObject && this.tabletopObject.identifier === event.data.identifier) {
           this.panelService.close();
         }
+      })
+      .on('UPDATE_GAME_OBJECT', -1000, event => {
+        if (this.tabletopObject && this.tabletopObject.identifier === event.data.identifier) {
+          switch (this.tabletopObject.aliasName) {
+            case 'terrain':
+              this.panelService.title = `地形設定 - ${this.tableTopObjectName}`;
+              break;
+            case 'card':
+              const card = this.tabletopObject;
+              if (card instanceof Card) { 
+                this.panelService.title = `カード設定 - ${card.isFront ? this.tableTopObjectName : 'カード（裏面）'}`;
+              } 
+              break;
+            case 'card-stack':
+              this.panelService.title = `山札設定 - ${this.tableTopObjectName}`;
+              break;
+            case 'table-mask':
+              this.panelService.title = `マップマスク設定 - ${this.tableTopObjectName}`;
+              break;
+            case 'text-note':
+              this.panelService.title = `共有メモ設定 - ${this.tableTopObjectName}`;
+              break;
+            case 'dice-symbol':
+              this.panelService.title = `ダイスシンボル設定 - ${this.tableTopObjectName}`;
+              break;
+            case 'character':
+              this.panelService.title = `キャラクターシート - ${this.tableTopObjectName}`;
+              break;
+          }  
+        }
       });
   }
 
