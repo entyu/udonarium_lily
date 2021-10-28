@@ -24,9 +24,9 @@
       <span *ngIf="audio != auditionPlayer?.audio || (audio == auditionPlayer?.audio && auditionPlayer?.paused)" style="padding-left: 2px"><b>【ＢＧＭ】</b></span>
       <span *ngIf="audio === auditionPlayer?.audio && !auditionPlayer?.paused" style="padding-left: 2px"><b>【試聴/BGM】</b></span>
     </ng-container>
-    <span style="font-size: smaller" style="padding-left: 2px">{{audio.name}}</span>
+    <span style="font-size: smaller" style="padding-left: 2px" [style.font-weight]="audio === jukebox?.audio ? 'bolder': 'normal'">{{audio.name}}</span>
   </div>
-  <div *ngIf="audios.length < 1"><small><b>アップロードされた音楽ファイルはここに表示されます。</b></small></div>
+  <div *ngIf="audios.length < 1" style="padding: 1em 0px; text-align: center"><small><b>アップロードされた音楽ファイルはここに表示されます。</b></small></div>
 </div>
 
 <label>
