@@ -86,7 +86,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     private pointerDeviceService: PointerDeviceService,
     private modalService: ModalService,
     private coordinateService: CoordinateService,
-    private chatMessageService: ChatMessageService
+    //private chatMessageService: ChatMessageService
   ) { }
 
   ngOnInit() {
@@ -157,7 +157,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
         ? {
           name: '☑ 固定', action: () => {
             this.isLock = false;
-            this.chatMessageService.sendOperationLog(`${this.gameTableMask.name} の固定を解除した`);
+            //this.chatMessageService.sendOperationLog(`${this.gameTableMask.name} の固定を解除した`);
             SoundEffect.play(PresetSound.unlock);
           }
         }
@@ -233,7 +233,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
       },
       {
         name: '削除する', action: () => {
-          this.chatMessageService.sendOperationLog(`${this.gameTableMask.name} を削除した`);
+          //this.chatMessageService.sendOperationLog(`${this.gameTableMask.name} を削除した`);
           this.gameTableMask.destroy();
           SoundEffect.play(PresetSound.sweep);
         }
