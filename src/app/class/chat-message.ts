@@ -225,7 +225,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   color:#F66;
 }
 .operation-log {
-  background-color: #CCCCCC88;
+  color: #666;
+  background-color: #CCCCCCAA;
 }
 .dicebot-message .msg-name,
 .dicebot-message .msg-text,

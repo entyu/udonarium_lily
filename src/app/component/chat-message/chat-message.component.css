@@ -38,7 +38,8 @@
 }
 
 .operation-log {
-  background-color: #CCCCCC88;
+  color: #666;
+  background-color: #CCCCCCAA;
 }
 
 .message .image {
