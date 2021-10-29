@@ -6,11 +6,11 @@
     [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
     <div class="is-3d" [style.font-size.px]="fontSize + 9" [style.color]="color" style="z-index: 5; pointer-events: none">{{text}}</div>
   </div>
-  <div class="border is-fit-full is-3d" [ngStyle]="{'border-width': isLock ? '0px' : '2px', 'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
+  <div class="border is-fit-full is-3d" [ngClass]="{fall: altitude == 0}" [ngStyle]="{'border-width': isLock ? '0px' : '2px', 'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
     <div class="is-fit-full is-3d"
       style="pointer-events: auto" [style.opacity]="opacity" 
       [style.background-color]="imageFile.url.length < 1 || blendType > 0 ? bgcolor : null"
-      [ngClass]="{fall: altitude == 0, image: imageFile.url.length >= 1}">
+      [ngClass]="{image: imageFile.url.length >= 1}">
       <img *ngIf="imageFile.url.length >= 1" class="is-fit-full is-3d" style="pointer-events: none" [style.mix-blend-mode]="blendType == 1 ? null : 'hard-light'" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
   </div>
