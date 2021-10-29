@@ -131,7 +131,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     this.textNote.toTopmost();
 
     // TODO:もっと良い方法考える
-    if (e.button === 2) {
+    if (e.button === 2 || this.textNote.isLocked) {
       EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
       return;
     }
