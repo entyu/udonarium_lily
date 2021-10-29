@@ -55,6 +55,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
         || this.gameDataElement.name === 'height'
         || this.gameDataElement.name === 'depth'
         || this.gameDataElement.name === 'fontsize'
+        || this.gameDataElement.name === 'opacity'
         || this.gameDataElement.name === 'altitude');
     }
     return false;
