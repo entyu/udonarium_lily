@@ -194,6 +194,7 @@ export class UIPanelComponent implements OnInit {
       clearTimeout(this.timerCheckWindowSize);
       this.timerCheckWindowSize = null;
     }
+    this.timerCheckWindowSize = null;
     if (this.panelService) this.panelService.close();
   }
   

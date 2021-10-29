@@ -6,9 +6,10 @@ import { EventSystem } from '@udonarium/core/system';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TextNote } from '@udonarium/text-note';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
-import { ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -25,6 +26,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() is3D: boolean = false;
 
   get title(): string { return this.textNote.title; }
+  get isLock(): boolean { return this.textNote.isLock; }
+  set isLock(isLock: boolean) { this.textNote.isLock = isLock; }
 
   oldText : string = '';
   oldFontSize : number = 9;
@@ -69,9 +72,12 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
 
+  private input: InputHandler = null;
+
   constructor(
     private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
+    private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService
@@ -110,7 +116,12 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     };
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() { 
+    this.ngZone.runOutsideAngular(() => {
+      this.input = new InputHandler(this.elementRef.nativeElement);
+    });
+    this.input.onStart = this.onInputStart.bind(this);
+  }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
@@ -159,6 +170,15 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     e.preventDefault();
   }
 
+  onInputStart(e: any) {
+    this.input.cancel();
+
+    // TODO:もっと良い方法考える
+    if (this.isLock) {
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+    }
+  }
+
   @HostListener('contextmenu', ['$event'])
   onContextMenu(e: Event) {
     this.removeMouseEventListeners();
@@ -169,6 +189,19 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isLock
+        ? {
+          name: '固定解除', action: () => {
+            this.isLock = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '固定する', action: () => {
+            this.isLock = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
+      ContextMenuSeparator,
       { name: 'メモを編集', action: () => { this.showDetail(this.textNote); } },
       {
         name: 'コピーを作る', action: () => {

@@ -171,6 +171,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     let select = <HTMLSelectElement> document.getElementById(this._timeId + '_select');
     if (select){
       select.scrollTop = select.scrollHeight;
+      select.options[lineNo].selected = false;
       select.options[lineNo].selected = true;
     }
   }

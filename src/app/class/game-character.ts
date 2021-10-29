@@ -391,7 +391,7 @@ export class GameCharacter extends TabletopObject {
     if(_info ){
       info = _info;
     }
-    if(_round ){
+    if(_round != null){
       round = _round;
     }
     if(this.buffDataElement.children){

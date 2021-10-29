@@ -212,11 +212,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.panelService.open(PeerMenuComponent, { width: 500, height: 450, left: 100 });
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
     }, 0);
+/*
     setInterval(() => {
       this.dispcounter = this.dispcounter + 1;
       if ( this.dispcounter > 100 )this.dispcounter = 0;
 //      PeerCursor.myCursor.time = new Date();
-    }, 200 );
+    }, 2 );
+*/
   }
 
   ngOnDestroy() {
