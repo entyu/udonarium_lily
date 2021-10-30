@@ -39,12 +39,15 @@ https://github.com/TK11235/udonarium
 ## サーバ設置
 ユーザ自身でWebサーバを用意し、そのサーバにユドナリウムリリィを設置して利用することができます。  
 以下のファイルをダウンロードして解凍し、Webサーバに配置してください。  
+v1.05.0からYouTubeカットイン機能があります。YouTubeの規約もご確認ください。
 
-最新版v1.04.0　
+最新版v1.05.0　
 
-https://github.com/entyu/udonarium_lily/releases/download/%EF%BD%961.04.0/udonarium_lily-v1.04.0.zip
+https://github.com/entyu/udonarium_lily/releases/download/v1.05.0/udonarium_lily-v1.05.0.zip
 
 旧バージョン
+
+https://github.com/entyu/udonarium_lily/releases/download/%EF%BD%961.04.0/udonarium_lily-v1.04.0.zip
 
 https://github.com/entyu/udonarium_lily/releases/download/v1.03.0/udonarium_lily-v1.03.0.zip
 
