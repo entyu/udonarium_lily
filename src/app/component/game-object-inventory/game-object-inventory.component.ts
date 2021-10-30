@@ -480,7 +480,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       window.open(url.trim(), '_blank', 'noopener');
     } else {
       this.modalService.open(OpenUrlComponent, { url: url, title: title, subTitle: subTitle  });
-    } 
+    }
+    return false;
   }
 
   onInput() {
