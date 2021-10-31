@@ -39,7 +39,7 @@
 
 .operation-log {
   color: #666;
-  background-color: #CCCCCCAA;
+  background-color: #CCCCCCCC;
 }
 
 .message .image {
@@ -235,10 +235,6 @@ textarea {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-}
-
-.container.compact .msg-from {
-  display: none;
 }
 
 .container.compact .title {

@@ -7,14 +7,19 @@
     <ng-container *ngIf="isMine && !isCompact">
       <ng-container *ngTemplateOutlet="image"></ng-container>
     </ng-container>
-    <div class="body">
-      <ng-container *ngTemplateOutlet="title"></ng-container>
-      <div class="text msg-text" [ngClass]="{ 'is-success': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isSuccess, 'is-failure': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isFailure, 'is-critical': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isCritical, 'is-fumble': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isFumble }">
+    <div class="body" [style.justify-content]="isCompact && !isMine ? 'flex-end' : 'flex-start'">
+      <ng-container *ngIf="!isCompact || isMine">
+        <ng-container *ngTemplateOutlet="title"></ng-container>
+      </ng-container>
+      <div class="text msg-text" [style.flex-grow]="isCompact && !isEditing ? 0 : 1" [ngClass]="{ 'is-success': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isSuccess, 'is-failure': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isFailure, 'is-critical': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isCritical, 'is-fumble': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isFumble }">
         <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
       </div>
       <div *ngIf="isEditable && isCompact">
         <ng-container *ngTemplateOutlet="editor"></ng-container>
       </div>
+      <ng-container *ngIf="isCompact && !isMine">
+        <ng-container *ngTemplateOutlet="title"></ng-container>
+      </ng-container>
     </div>
     <ng-container *ngIf="!isMine && !isCompact">
       <ng-container *ngTemplateOutlet="image"></ng-container>
@@ -30,12 +35,16 @@
 </ng-template>
 <ng-template #title>
   <div class="title">
+    <ng-container *ngIf="isCompact && !isMine">
+      <span class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
+    </ng-container>
     <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
-    <span class='tip msg-from' 
-      [innerHTML]="htmlEscapedFrom" (click)="onLinkClick($event)"></span>
-    <span *ngIf="!isCompact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
-    <span *ngIf="isCompact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
-    <ng-container *ngIf="!(isEditable && !isCompact); else editor"></ng-container>
+    <ng-container *ngIf="!isCompact || isMine">
+      <span *ngIf="!isCompact" class='tip msg-from' [innerHTML]="htmlEscapedFrom" (click)="onLinkClick($event)"></span>
+      <span *ngIf="!isCompact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
+      <span *ngIf="isCompact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
+      <ng-container *ngIf="!(isEditable && !isCompact); else editor"></ng-container>
+    </ng-container>
   </div>
 </ng-template>
 <ng-template #visible>

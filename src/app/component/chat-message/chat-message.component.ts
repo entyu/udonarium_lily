@@ -94,6 +94,7 @@ export class ChatMessageComponent implements OnInit {
 
   get isCompact(): boolean {
     return this.compact || this.chatMessage.isOperationLog;
+    //return this.compact || this.chatMessage.isOperationLog || this.chatMessage.isDicebot;
   }
 
   get htmlEscapedFrom():string  {
