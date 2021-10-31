@@ -156,11 +156,11 @@ export class SaveDataService {
     return fileName + `_${year}-${month}-${day}_${hours}${minutes}`;
   }
 
-  saveChatLog(logFormat: number, fileName: string, chatTab: ChatTab=null, dateFormat='HH:mm') {
+  saveChatLog(logFormat: number, fileName: string, chatTab: ChatTab=null, dateFormat='HH:mm', isWriteOerationLog=true) {
     const mimeType = (logFormat == 0 ? 'text/plain' : 'text/html');
     const ext = (logFormat == 0 ? '.txt' : '.html');
     const trueFileName = 'fly_' + this.appendTimestamp(fileName) + ext;
     this.chatMessageService.sendOperationLog(`チャットログ ${trueFileName} を保存`);
-    saveAs(new Blob([chatTab ? chatTab.log(logFormat, dateFormat) : ChatTabList.instance.log(logFormat, dateFormat)], {type: `${mimeType};charset=utf-8`}), trueFileName);
+    saveAs(new Blob([chatTab ? chatTab.log(logFormat, dateFormat, isWriteOerationLog) : ChatTabList.instance.log(logFormat, dateFormat, isWriteOerationLog)], {type: `${mimeType};charset=utf-8`}), trueFileName);
   }
 }

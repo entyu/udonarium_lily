@@ -67,9 +67,10 @@ export class ChatTab extends ObjectNode implements InnerXml {
     return super.parseInnerXml(element);
   };
 
-  log(logFormat, dateFormat): string {
+  log(logFormat, dateFormat,  isWriteOerationLog=true): string {
     const logBody = this.chatMessages
-    .filter(chatMessage => chatMessage.isDisplayable)
+    .filter(chatMessage => chatMessage.isDisplayable && (isWriteOerationLog || !chatMessage.isOperationLog))
+    .sort((a, b) => a.index - b.index)
     .map(chatMessage => chatMessage.logFragment(logFormat, null, dateFormat))
     .join("\n");
 

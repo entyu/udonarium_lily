@@ -48,10 +48,10 @@ export class ChatTabList extends ObjectNode implements InnerXml {
     this.destroy();
   }
 
-  log(logFormat, dateFormat): string {
+  log(logFormat, dateFormat, isWriteOerationLog=true): string {
     if (!this.chatTabs) return '';
     const logBody = this.chatTabs.reduce((ac, chatTab) => {
-        if (chatTab) ac.push(...chatTab.chatMessages.filter(chatMessage => chatMessage.isDisplayable)
+        if (chatTab) ac.push(...chatTab.chatMessages.filter(chatMessage => chatMessage.isDisplayable && (isWriteOerationLog || !chatMessage.isOperationLog))
           .map(chatMessage => ({ index: chatMessage.index, tabName: chatTab.name, chatMessage: chatMessage }))); 
         return ac;
       }, [])

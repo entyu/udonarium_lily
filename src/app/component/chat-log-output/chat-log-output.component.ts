@@ -17,6 +17,7 @@ export class ChatLogOutputComponent implements OnInit {
   private static isAllTabs = false;
   private static logFormat: number = 1;
   private static dateFormat: string = 'HH:mm';
+  private static isWriteOerationLog: boolean = true;
 
   selectedTab: ChatTab = null;
   panelId;
@@ -30,6 +31,9 @@ export class ChatLogOutputComponent implements OnInit {
   get dateFormat(): string { return ChatLogOutputComponent.dateFormat; }
   set dateFormat(dateFormat: string) { ChatLogOutputComponent.dateFormat = dateFormat; }
 
+  get isWriteOerationLog(): boolean { return ChatLogOutputComponent.isWriteOerationLog; }
+  set isWriteOerationLog(isWriteOerationLog: boolean) { ChatLogOutputComponent.isWriteOerationLog = isWriteOerationLog; }
+  
   get tabName(): string { return this.selectedTab.name; }
   set tabName(tabName: string) { this.selectedTab.name = tabName; }
 
@@ -75,6 +79,6 @@ export class ChatLogOutputComponent implements OnInit {
     if (this.isDiable) return;
     const fileName = this.roomName + '_chatLog_' + (this.isAllTabs ? '全てのタブ' : this.selectedTab.name);
     const tab = this.isAllTabs ? null : this.selectedTab;
-    this.saveDataService.saveChatLog(this.logFormat, fileName, tab, this.dateFormat);
+    this.saveDataService.saveChatLog(this.logFormat, fileName, tab, this.dateFormat, this.isWriteOerationLog);
   }
 }
