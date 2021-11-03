@@ -31,7 +31,8 @@ export interface ContextMenuAction {
   error?: string,
   materialIcon?: string,
   isOuterLink?: boolean,
-  selfOnly?: boolean
+  selfOnly?: boolean,
+  level?: number
 }
 
 @Injectable()

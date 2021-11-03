@@ -493,16 +493,20 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       { name: `${ isShowNameTag ? '☑' : '☐' }ネームタグ表示`, 
         action: () => {
           StandImageComponent.isShowNameTag = !isShowNameTag;
-        }
+        },
+        level: 1,
+        disabled: !StandImageComponent.isShowStand
       },
       { name: `${ isCanBeGone ? '☑' : '☐' }透明化、自動退去`, 
         action: () => {
           StandImageComponent.isCanBeGone = !isCanBeGone;
-        }
+        },
+        level: 1,
+        disabled: !StandImageComponent.isShowStand
       },
       ContextMenuSeparator,
       { name: '表示スタンド全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
-    ], 'スタンド設定');
+    ], '表示設定');
   }
 /*
   farewellStandAll() {
