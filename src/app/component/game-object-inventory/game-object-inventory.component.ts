@@ -139,16 +139,18 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     let position = this.pointerDeviceService.pointers[0];
     
     let actions: ContextMenuAction[] = [];
-    actions.push({
-      name: 'テーブルから探す',
-      action: () => {
-        if (gameObject.location.name === 'table') EventSystem.trigger('FOCUS_TABLETOP_OBJECT', { x: gameObject.location.x, y: gameObject.location.y, z: gameObject.posZ + (gameObject.altitude > 0 ? gameObject.altitude * 50 : 0) });
-      },
-      default: gameObject.location.name === 'table',
-      disabled: gameObject.location.name !== 'table',
-      selfOnly: true
-    });
-    actions.push(ContextMenuSeparator);
+    if (gameObject.location.name === 'table') {
+      actions.push({
+        name: 'テーブルから探す',
+        action: () => {
+          if (gameObject.location.name === 'table') EventSystem.trigger('FOCUS_TABLETOP_OBJECT', { x: gameObject.location.x, y: gameObject.location.y, z: gameObject.posZ + (gameObject.altitude > 0 ? gameObject.altitude * 50 : 0) });
+        },
+        default: gameObject.location.name === 'table',
+        disabled: gameObject.location.name !== 'table',
+        selfOnly: true
+      });
+      actions.push(ContextMenuSeparator);
+    }
     if (gameObject.imageFiles.length > 1) {
       actions.push({
         name: '画像切り替え',
@@ -404,8 +406,17 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     if (gameObject.location.name === 'graveyard') {
       actions.push(ContextMenuSeparator);
       actions.push({
-        name: '削除する', action: () => {
+        name: '削除する（完全に削除）', action: () => {
           this.deleteGameObject(gameObject);
+          SoundEffect.play(PresetSound.sweep);
+        }
+      });
+    } else {
+      actions.push(ContextMenuSeparator);
+      actions.push({
+        name: '削除する（墓場へ移動）', action: () => {
+          EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: gameObject.identifier });
+          gameObject.setLocation('graveyard');
           SoundEffect.play(PresetSound.sweep);
         }
       });

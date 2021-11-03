@@ -601,6 +601,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           cloneObject.update();
           SoundEffect.play(PresetSound.piecePut);
         }
+      },
+      ContextMenuSeparator,
+      {
+        name: '削除する（墓場へ移動）', action: () => {
+          EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: this.gameCharacter.identifier });
+          this.gameCharacter.setLocation('graveyard');
+          SoundEffect.play(PresetSound.sweep);
+        }
       }
     ], this.name);
   }
