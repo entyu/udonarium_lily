@@ -211,3 +211,13 @@
   text-shadow: #444 0px 0px 3px;
   backface-visibility: hidden;
 }
+
+.upright-transform {
+  -webkit-transition: -webkit-transform 132ms ease;
+  transition: transform 132ms ease;
+}
+
+.fall {
+  -webkit-transition: -webkit-transform 132ms cubic-bezier(.21,.97,.75,1.25);
+  transition: transform 132ms cubic-bezier(.21,.97,.75,1.25);
+}
