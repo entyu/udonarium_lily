@@ -66,6 +66,35 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   gridSize: number = 50;
   math = Math;
 
+  private _transitionTimeout = null;
+  private _transition: boolean = false;
+  get transition(): boolean { return this._transition; }
+  set transition(transition: boolean) {
+    this._transition = transition;
+    if (this._transitionTimeout) clearTimeout(this._transitionTimeout);
+    if (transition) {
+      this._transitionTimeout = setTimeout(() => {
+        this._transition = false;
+      }, 132);
+    } else {
+      this._transitionTimeout = null;
+    }
+  }
+  private _fallTimeout = null;
+  private _fall: boolean = false;
+  get fall(): boolean { return this._fall; }
+  set fall(fall: boolean) {
+    this._fall = fall;
+    if (this._fallTimeout) clearTimeout(this._fallTimeout);
+    if (fall) {
+      this._fallTimeout = setTimeout(() => {
+        this._fall = false;
+      }, 132);
+    } else {
+      this._fallTimeout = null;
+    }
+  }
+
   private calcFitHeightTimer: NodeJS.Timer = null;
 
   movableOption: MovableOption = {};
@@ -123,6 +152,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    if (this._transitionTimeout) clearTimeout(this._transitionTimeout);
+    if (this._fallTimeout) clearTimeout(this._fallTimeout)
     EventSystem.unregister(this);
   }
 
@@ -197,10 +228,12 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       (this.isUpright
         ? {
           name: '☑ 直立', action: () => {
+            this.transition = true;
             this.isUpright = false;
           }
         } : {
           name: '☐ 直立', action: () => {
+            this.transition = true;
             this.isUpright = true;
           }
         }),
@@ -218,6 +251,11 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       {
         name: '高度を0にする', action: () => {
           if (this.altitude != 0) {
+            if (this.isUpright) {
+              this.fall = true;
+            } else {
+              this.transition = true;
+            }
             this.altitude = 0;
             SoundEffect.play(PresetSound.sweep);
           }

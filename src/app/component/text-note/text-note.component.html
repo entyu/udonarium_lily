@@ -3,7 +3,7 @@
   <div class="is-3d" appRotable [rotable.option]="rotableOption" [rotable.disable]="isLocked" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
     <div class="component-content is-3d is-pointer-events-auto"
       [style.width.px]="width * gridSize">
-      <div class="upright-transform is-3d is-bg-color is-bg-texture" [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateY(90deg) rotateZ(' + (isUpright ? -90 : 0) + 'deg) rotateY(-90deg)'}"
+      <div class="upright-transform is-3d is-bg-color is-bg-texture" [ngClass]="{'is-transition': transition, 'fall': fall}"[ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateY(90deg) rotateZ(' + (isUpright ? -90 : 0) + 'deg) rotateY(-90deg)'}"
         [style.background-image]="'url(' + imageFile?.url + ')' | safe: 'style'" [style.width.px]="width * gridSize" [style.min-height.px]="height * gridSize">
         <div *ngIf="title.length" class="title is-black-background is-pointer-events-none">{{title}}</div>
         <textarea (input)="calcFitHeight();" class="textarea" #textArea [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'is-outline-text': !isSelected}"

@@ -213,8 +213,8 @@
 }
 
 .upright-transform {
-  -webkit-transition: -webkit-transform 132ms ease;
-  transition: transform 132ms ease;
+  -webkit-transition: transform 132ms ease-in-out;
+  transition: transform 132ms ease-in-out;
 }
 
 .fall {

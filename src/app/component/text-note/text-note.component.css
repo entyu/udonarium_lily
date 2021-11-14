@@ -16,14 +16,16 @@
 }
 
 .is-transition {
-  -webkit-transition: -webkit-transform 132ms linear;
-  transition: transform 132ms linear;
+  -webkit-transition: -webkit-transform 132ms ease-in-out;
+  transition: transform 132ms ease-in-out;
 }
 
+/*
 .upright-transform {
   -webkit-transition: -webkit-transform 132ms ease;
   transition: transform 132ms ease;
 }
+*/
 
 .is-pointer-events-none {
   pointer-events: none;
@@ -195,4 +197,9 @@
   color: blanchedalmond;
   text-shadow: #444 0px 0px 3px;
   backface-visibility: hidden;
+}
+
+.fall {
+  -webkit-transition: -webkit-transform 132ms cubic-bezier(.21,.97,.75,1.25);
+  transition: transform 132ms cubic-bezier(.21,.97,.75,1.25);
 }

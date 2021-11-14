@@ -88,7 +88,8 @@
 }
 
 .fall {
-  transition: transform 64ms ease-in;
+  -webkit-transition: transform 132ms ease-in-out;
+  transition: transform 132ms ease-in-out;
 }
 
 .text {
