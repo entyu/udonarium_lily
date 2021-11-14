@@ -119,3 +119,7 @@
   #fff 0px 0px 2px,
   #fff 0px 0px 2px;
 }
+
+.is-inverse {
+  transform: rotateZ(180deg);
+}
