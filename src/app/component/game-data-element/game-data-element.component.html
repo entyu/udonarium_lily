@@ -28,7 +28,7 @@
           <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
             [(ngModel)]="currentValue" type="range" title="{{currentValue}}" min="0" max="100" step="1" />
           <br />
-          <input style="width:40%; max-width:8em; text-align:right;" type="number" min="0" max="100" step="1" size="1" [(ngModel)]="currentValue" placeholder="currentValue" />
+          <input style="margin-left: 3.5em; width:4em; text-align:right;" type="number" min="0" max="100" step="1" size="1" [(ngModel)]="currentValue" placeholder="currentValue" /><b class="move" style="font-size: small">%</b>
         </ng-container>
         <ng-container *ngIf="name != 'opacity'">
           <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 

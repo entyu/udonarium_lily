@@ -237,3 +237,23 @@ input[type="color"]:not(:hover) {
     #fff 0px 0px 2px,
     #fff 0px 0px 2px;
 }
+
+input + .move {
+  display: inline-block;
+  transform: translateX(-1em);
+  transition: transform 18ms;
+}
+input:hover + .move,
+input:active + .move,
+input:focus + .move {
+  display: inline-block;
+  transform: translateX(0px);
+  transition: transform 18ms;
+}
+
+@supports (-moz-user-select: -moz-none) {
+  /* 汚いけどとりあえず */
+  input + .move {
+    transform: translateX(0px);
+  }
+}
