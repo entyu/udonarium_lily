@@ -66,7 +66,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
     // 記入例：|永遠力暴風雪《エターナルフォースブリザード》
     // 振られる側に《スキル名》は有効：|《約束された勝利の剣》《エクスカリバー》
     let escapeText = this.escapeHtml(text);
-    return escapeText.replace(/[\|｜]([^\|｜\s]+?)《([ぁ-んァ-ヶー―・･]+?)》/g, '<ruby>$1<rt>$2</rt></ruby>');
+    return escapeText.replace(/[\|｜]([^\|｜\s]+?)《([ぁ-んァ-ヶー―・･a-zA-Zａ-ｚa-zＡ-Ｚ\!！\?？…]+?)》/g, '<ruby>$1<rt>$2</rt></ruby>');
   }
 
   escapeHtml(text) {
