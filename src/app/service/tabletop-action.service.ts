@@ -134,7 +134,7 @@ export class TabletopActionService {
   private cardName(code: string) {
     let ret = '';
     const suit = code.slice(0, 1);
-    const number = parseInt(code.substr(1, 2));
+    const number = parseInt(code.substring(1, 3));
     const jqk = ['ジャック', 'クイーン', 'キング']
     switch(suit) {
       case 'c':

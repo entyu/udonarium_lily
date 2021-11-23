@@ -194,7 +194,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
             .then(response => { return response.json() })
             .then(infos => {
               let apiUrl = event.data.dice.url;
-              DiceBot.apiUrl = (apiUrl.substr(apiUrl.length - 1) === '/') ? apiUrl.substr(0, apiUrl.length - 1) : apiUrl;
+              DiceBot.apiUrl = apiUrl.endsWith('/') ? apiUrl.substring(0, apiUrl.length - 1) : apiUrl;
               DiceBot.apiVersion = API_VERSION;
               DiceBot.diceBotInfos = [];
               //DiceBot.diceBotInfos.push(
@@ -234,15 +234,15 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                 });
               DiceBot.diceBotInfos.push(...tempInfos.map(info => { return { script: (API_VERSION == 1 ? info.system : info.id), game: info.name } }));
               if (tempInfos.length > 0) {
-                let sentinel = tempInfos[0].normalize.substr(0, 1);
-                let group = { index: tempInfos[0].normalize.substr(0, 1), infos: [] };
+                let sentinel = tempInfos[0].normalize.substring(0, 1);
+                let group = { index: tempInfos[0].normalize.substring(0, 1), infos: [] };
                 for (let info of tempInfos) {
                   let index = info.lang == 'Other' ? 'その他' 
                     : info.lang == 'ChineseTraditional' ? '正體中文'
                     : info.lang == 'Korean' ? '한국어'
                     : info.lang == 'English' ? 'English'
                     : info.lang == 'SimplifiedChinese' ? '简体中文'
-                    : info.normalize.substr(0, 1);
+                    : info.normalize.substring(0, 1);
                   if (index !== sentinel) {
                     sentinel = index;
                     DiceBot.diceBotInfosIndexed.push(group);
