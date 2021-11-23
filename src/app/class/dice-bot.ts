@@ -510,7 +510,7 @@ export class DiceBot extends GameObject {
               throw new Error(response.statusText);
             })
             .then(json => {
-              console.log(JSON.stringify(json))
+              //console.log(JSON.stringify(json))
               return { result: (gameType) + ' ' + (DiceBot.apiVersion == 1 ? json.result : json.text) + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, 
                 isEmptyDice: DiceBot.apiVersion == 1 ? (json.dices && json.dices.length == 0) : (json.rands && json.rands.length == 0),
                 isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble };
