@@ -1,4 +1,5 @@
-import { Component, ElementRef,   ChangeDetectorRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, ChangeDetectorRef, EventEmitter, Input, NgZone,
+         OnDestroy, OnInit, AfterViewInit, AfterViewChecked, Output, ViewChild } from '@angular/core';
 
 import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
@@ -20,7 +21,7 @@ import { ChatTabList } from '@udonarium/chat-tab-list';
   templateUrl: './chat-tachie-img.component.html',
   styleUrls: ['./chat-tachie-img.component.css']
 })
-export class ChatTachieImageComponent implements OnInit, OnDestroy{
+export class ChatTachieImageComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
 
   @Input() chatTabidentifier: string = '';
   @Input() isTilteTop = false;

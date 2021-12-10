@@ -1,4 +1,5 @@
-import { Component, ElementRef,   ChangeDetectorRef, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, ChangeDetectorRef, EventEmitter, Input, NgZone,
+         OnDestroy, OnInit, AfterViewInit, AfterViewChecked, Output, ViewChild } from '@angular/core';
 
 import { ChatMessage } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
@@ -21,7 +22,7 @@ import { ChatTachieImageComponent } from 'component/chat-tachie-img/chat-tachie-
   templateUrl: './chat-tachie.component.html',
   styleUrls: ['./chat-tachie.component.css']
 })
-export class ChatTachieComponent implements OnInit, OnDestroy{
+export class ChatTachieComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
 
   @Input() chatTabidentifier: string = '';
   @ViewChild('tachieArea', { read: ElementRef }) private tachieArea: ElementRef;  

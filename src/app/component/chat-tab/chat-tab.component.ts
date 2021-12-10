@@ -130,7 +130,7 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input() chatTab: ChatTab;
   get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
 
-  @Output() onAddMessage: EventEmitter<null> = new EventEmitter();
+  @Output() addMessage: EventEmitter<null> = new EventEmitter();
 
   constructor(
     private ngZone: NgZone,
@@ -218,7 +218,7 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
     this.ngZone.runOutsideAngular(() => {
       this.addMessageEventTimer = setTimeout(() => {
         this.addMessageEventTimer = null;
-        this.ngZone.run(() => this.onAddMessage.emit());
+        this.ngZone.run(() => this.addMessage.emit());
       }, 0);
     });
   }

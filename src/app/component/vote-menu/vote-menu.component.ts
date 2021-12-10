@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
 
 import { SyncObject, SyncVar } from '@udonarium/core/synchronize-object/decorator';
 import { GameObject, ObjectContext } from '@udonarium/core/synchronize-object/game-object';
@@ -23,7 +23,7 @@ import { Vote, VoteContext } from '@udonarium/vote';
   templateUrl: './vote-menu.component.html',
   styleUrls: ['./vote-menu.component.css']
 })
-export class VoteMenuComponent implements OnInit, OnDestroy {
+export class VoteMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private initTimestamp = 0;
   networkService = Network;
