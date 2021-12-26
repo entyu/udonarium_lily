@@ -71,6 +71,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
         .on('CURSOR_MOVE', event => {
           if (event.sendFrom !== this.cursor.peerId) return;
           this.batchService.add(() => {
+//            console.log( '★★CURSOR_MOVE★★ ' + event.sendFrom + ' > ' + this.cursor.peerId );
             this.stopTransition();
             this.setAnimatedTransition();
             this.setPosition(event.data[0], event.data[1], event.data[2]);
@@ -78,28 +79,29 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
           }, this);
         })
         .on('HEART_BEAT', event => {
-//          console.log( 'HEART_BEAT\n' + event.sendFrom + ' >\n ' + this.cursor.peerId );
           if (event.sendFrom !== this.cursor.peerId) return;
 
-          this.cursor.timestampSend = event.data[0];
-          this.cursor.timestampReceive = Date.now();
-          this.cursor.timeDiffDown = this.cursor.timestampReceive - this.cursor.timestampSend + PeerCursor.myCursor.debugReceiveDelay;
+          this.batchService.add(() => {
+//            console.log( '★★HEART_BEAT★★ ' + event.sendFrom + ' > ' + this.cursor.peerId );
+            this.cursor.timestampSend = event.data[0];
+            this.cursor.timestampReceive = Date.now();
+            this.cursor.timeDiffDown = this.cursor.timestampReceive - this.cursor.timestampSend + PeerCursor.myCursor.debugReceiveDelay;
 
-          const messId = event.data[1];
-          const diffUp = event.data[2];
-          
-          this.cursor.lastTimeSignNo = event.data[3];
-          if (this.cursor.firstTimeSignNo < 0){
-            this.cursor.firstTimeSignNo = event.data[3];
-          }
-          this.cursor.totalTimeSignNum++;
-          
-          if (messId == PeerCursor.myCursor.peerId){
-            if (diffUp != null){
-              this.cursor.timeDiffUp = diffUp;
-              this.cursor.timeLatency = diffUp + this.cursor.timeDiffDown;
+            const messId = event.data[1];
+            const diffUp = event.data[2];
+            this.cursor.lastTimeSignNo = event.data[3];
+            if (this.cursor.firstTimeSignNo < 0){
+              this.cursor.firstTimeSignNo = event.data[3];
             }
-          }
+            this.cursor.totalTimeSignNum++;
+            
+            if (messId == PeerCursor.myCursor.peerId){
+              if (diffUp != null){
+                this.cursor.timeDiffUp = diffUp;
+                this.cursor.timeLatency = diffUp + this.cursor.timeDiffDown;
+              }
+            }
+          }, this);
         });
     }
   }
@@ -147,6 +149,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private secdCounter = 0;
   private indexCounter = 0;
+
   private timestampLoop(){
     if (!this.timestampIntervalEnable) return;
     if (!this.timestampInterval) {
