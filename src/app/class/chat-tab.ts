@@ -239,7 +239,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     if (typeof string !== 'string') {
       return string;
     }
-    return string.replace(/[&'`"<>]/g, function(match){
+    let escapeText = string.replace(/[&'`"<>]/g, function(match){
       return {
         '&': '&amp;',
         '\'': '&#x27;',
@@ -249,6 +249,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
         '>': '&gt;',
       }[match];
     });
+    return escapeText.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby>$1<rt>$2</rt></ruby>');
   }
 
 
