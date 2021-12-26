@@ -103,15 +103,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         },
@@ -132,6 +128,7 @@
   },
   "defaultProject": "udonarium",
   "cli": {
-    "analytics": "fedd9061-c6ec-4f58-b40d-888820605663"
+    "analytics": "fedd9061-c6ec-4f58-b40d-888820605663",
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }

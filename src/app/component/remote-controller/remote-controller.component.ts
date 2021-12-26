@@ -39,7 +39,7 @@ class RemoteControllerSelect {
   styleUrls: ['./remote-controller.component.css']
 
 })
-export class RemoteControllerComponent implements OnInit, OnDestroy {
+export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get palette(): ChatPalette { return this.character.remoteController; }
 
