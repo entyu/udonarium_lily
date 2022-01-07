@@ -134,7 +134,7 @@ export class SkyWayConnection implements Connection {
           this.sendBroadcast(container);
         }
         this.bandwidthUsage -= byteLength;
-        return resolve();
+        return Promise.resolve();
       });
     }));
   }
@@ -302,7 +302,7 @@ export class SkyWayConnection implements Connection {
           let data = container.isCompressed ? await decompressAsync(container.data) : container.data;
           this.callback.onData(conn.remoteId, MessagePack.decode(data));
           this.bandwidthUsage -= byteLength;
-          return resolve();
+          return Promise.resolve();
         });
       }));
     }
