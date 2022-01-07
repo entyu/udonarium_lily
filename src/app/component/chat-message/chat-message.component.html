@@ -39,7 +39,7 @@
   </div>
 </div>
 <ng-template #visible>
-  <span [innerHTML]="escapeHtml(chatMessage.text) | linky:{stripPrefix: false}"></span>
+  <span [innerHTML]="escapeHtmlAndRuby(chatMessage.text) | linky:{stripPrefix: false}"></span>
   <button *ngIf="chatMessage.isSecret" (click)="discloseMessage()">内容を公開</button>
 </ng-template>
 <ng-template #secret>
