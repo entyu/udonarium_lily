@@ -7,7 +7,7 @@
       [@shuffle]="animeState">
       <img class="card-image" [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
-    <ng-container *ngIf="!isIconHidden">
+    <ng-container *ngIf="!isIconHidden && !isLock">
       <div class="rotate-grab of-left-top is-3d">
         <i class="material-icons">autorenew</i>
       </div>
@@ -21,6 +21,9 @@
         <i class="material-icons">autorenew</i>
       </div>
     </ng-container>
+    <div *ngIf="isLock" class="lock-icon-mark is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateY(0%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+      <i class="material-icons" style="display: inline;">lock</i>
+    </div>
     <div *ngIf="isShowTotal" class="name-tag is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateY(-50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
       <span>{{cards.length}}枚</span>
     </div>
