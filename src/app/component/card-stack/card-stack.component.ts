@@ -222,7 +222,6 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cardStack.toTopmost();
     this.startIconHiddenTimer();
 
-    // TODO:もっと良い方法考える
     if (this.isLock) {
       EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
     }
@@ -250,6 +249,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
             SoundEffect.play(PresetSound.lock);
           }
         }),
+      ContextMenuSeparator,
       {
         name: '１枚引く', action: () => {
           if (this.drawCard() != null) {

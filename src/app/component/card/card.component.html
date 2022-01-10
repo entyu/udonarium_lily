@@ -7,7 +7,7 @@
       <span class="is-3d">{{ownerName}}</span>
     </div>
     <img *ngIf="isHand && frontImage" class="card-image thumbnail-transform is-translucent is-3d" [src]="frontImage.url | safe: 'resourceUrl'">
-    <ng-container *ngIf="!isIconHidden">
+    <ng-container *ngIf="!isIconHidden  && !isLock">
       <div class="rotate-grab of-left-top is-3d">
         <i class="material-icons">autorenew</i>
       </div>
@@ -22,5 +22,8 @@
       </div>
       <div class="border-bg is-pointer-events-none is-3d"></div>
     </ng-container>
+    <div *ngIf="isLock" class="lock-icon-mark is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateY(0%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+      <i class="material-icons" style="display: inline;">lock</i>
+    </div>
   </div>
 </div>

@@ -38,6 +38,9 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() card: Card = null;
   @Input() is3D: boolean = false;
 
+  get isLock(): boolean { return this.card.isLock; }
+  set isLock(isLock: boolean) { this.card.isLock = isLock; }
+
   get name(): string { return this.card.name; }
   get state(): CardState { return this.card.state; }
   set state(state: CardState) { this.card.state = state; }
@@ -188,6 +191,11 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.startDoubleClickTimer(e);
     this.card.toTopmost();
     this.startIconHiddenTimer();
+
+    if (this.isLock) {
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+    }
+
   }
 
   @HostListener('contextmenu', ['$event'])
@@ -197,6 +205,19 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isLock
+        ? {
+          name: '固定解除', action: () => {
+            this.isLock = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '固定する', action: () => {
+            this.isLock = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
+      ContextMenuSeparator,
       (!this.isVisible || this.isHand
         ? {
           name: '表にする', action: () => {
