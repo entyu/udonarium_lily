@@ -119,7 +119,7 @@ export class SkyWayConnection implements Connection {
 
     let byteLength = container.data.byteLength;
     this.bandwidthUsage += byteLength;
-    this.queue = this.queue.then(() => new Promise((resolve, reject) => {
+    this.queue = this.queue.then(() => new Promise<void>((resolve, reject) => {
       setZeroTimeout(async () => {
         if (1 * 1024 < container.data.byteLength) {
           let compressed = await compressAsync(container.data);
@@ -134,7 +134,7 @@ export class SkyWayConnection implements Connection {
           this.sendBroadcast(container);
         }
         this.bandwidthUsage -= byteLength;
-        return Promise.resolve();
+        return resolve();
       });
     }));
   }
@@ -297,12 +297,12 @@ export class SkyWayConnection implements Connection {
     if (this.callback.onData) {
       let byteLength = container.data.byteLength;
       this.bandwidthUsage += byteLength;
-      this.queue = this.queue.then(() => new Promise((resolve, reject) => {
+      this.queue = this.queue.then(() => new Promise<void>((resolve, reject) => {
         setZeroTimeout(async () => {
           let data = container.isCompressed ? await decompressAsync(container.data) : container.data;
           this.callback.onData(conn.remoteId, MessagePack.decode(data));
           this.bandwidthUsage -= byteLength;
-          return Promise.resolve();
+          return resolve();
         });
       }));
     }
