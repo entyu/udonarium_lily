@@ -53,6 +53,9 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() cardStack: CardStack = null;
   @Input() is3D: boolean = false;
 
+  get isLock(): boolean { return this.cardStack.isLock; }
+  set isLock(isLock: boolean) { this.cardStack.isLock = isLock; }
+
   get name(): string { return this.cardStack.name; }
   get rotate(): number { return this.cardStack.rotate; }
   set rotate(rotate: number) { this.cardStack.rotate = rotate; }
@@ -219,6 +222,10 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cardStack.toTopmost();
     this.startIconHiddenTimer();
 
+    if (this.isLock) {
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+    }
+
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: this.cardStack.identifier, className: 'GameCharacter' });
   }
 
@@ -230,6 +237,19 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isLock
+        ? {
+          name: '固定解除', action: () => {
+            this.isLock = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '固定する', action: () => {
+            this.isLock = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
+      ContextMenuSeparator,
       {
         name: '１枚引く', action: () => {
           if (this.drawCard() != null) {
