@@ -10,12 +10,17 @@
     </ng-container>
   </div>
   <div class="user_info">
+<!--
     <span *ngIf="myPeer">あなたのニックネーム：  <input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span><br>
-    <span>ID：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
+-->
+    <span>ID：</span><span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
     <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span><br>
-    <span>ブラウザ時刻：</span>
-    <span>{{myTime | date:'yy/MM/dd HH:mm:ss'}}</span>
-    </span>
+    <div>
+<!--
+      <span>ブラウザ時刻：</span>
+      <span>{{myTime | date:'yy/MM/dd HH:mm:ss'}}</span>
+-->
+    </div>
   </div>
 </div>
 <ng-container *ngIf="networkService.peerContext.isRoom">
@@ -36,6 +41,7 @@
   <div>
     <span *ngIf="!context.isOpen">[接続中]</span>
     <span>他の参加者：{{findUserId(context.peerId)}} [{{findPeerName(context.peerId)}}] </span>
+<!--
     <span *ngIf="findPeerTimeReceive(context.peerId) <= 0">接続確認：[-:--:--]</span>
     <span *ngIf="findPeerTimeReceive(context.peerId) > 0">接続確認：[{{findPeerTimeReceive(context.peerId) | date:'HH:mm:ss'}}]</span><br>
     <div *ngIf="dispDetailFlag">
@@ -45,6 +51,7 @@
       <span >伝送時間+時計誤差合計　受信：{{findPeerTimeDiffDown(context.peerId)}}ms 送信：{{findPeerTimeDiffUp(context.peerId)}}ms</span><br>
       <span >相手の生存信号到着割合：{{findPeerDegreeOfSuccess(context.peerId)}}</span><br>
     </div>
+-->
   </div>
 </div>
 <div>
