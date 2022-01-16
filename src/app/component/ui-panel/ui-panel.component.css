@@ -74,3 +74,10 @@
 .pointer-events-none {
   pointer-events: none;
 }
+
+/*2022/2/16現在、クロームバージョン: 97.0.4692.71（Official Build） （64 ビット）
+キャレットの点滅で負荷がかかることへの対策、全体をキャレット非表示、
+入力部は個別のコンポーネントでキャレットを指定*/
+.no-caret {
+  caret-color: transparent;
+}
