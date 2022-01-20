@@ -64,7 +64,7 @@
     <div class="component-background text-note-container" [ngStyle]="{'width': overViewNoteWidth + 'px','max-height': overViewNoteMaxHeight +'px'}">
       <div style="position: relative; width:100%">
         <div class="is-fill">
-          <textarea class="textarea" [(ngModel)]="note.text" spellcheck="false"></textarea>
+          <textarea class="textarea is-caret" [(ngModel)]="note.text" spellcheck="false"></textarea>
         </div>
         <div class="textarea-spacer">{{note.text}}</div>
       </div>
