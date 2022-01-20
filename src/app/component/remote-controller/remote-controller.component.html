@@ -1,7 +1,7 @@
 <div class="remote-controller-wrapper">
-<div class="sticky-top-left">
-    <div class="flex-container">
-      <div style="flex-grow: 0;">
+<div class="sticky-top-left is-caret">
+    <div class="flex-container is-caret">
+      <div class="is-caret" style="flex-grow: 0;">
         <form>
          <div class="chat-tab">
            <label *ngFor="let chatTab of chatMessageService.chatTabs">
@@ -26,7 +26,7 @@
             <select class="palette" style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" #chatPalette>
             <form>
               <ng-container *ngIf="! buffHideIsChk ">
-                <textarea class="controller-input" placeholder="Enterで送信" [(ngModel)]="text"
+                <textarea class="controller-input is-caret" placeholder="Enterで送信" [(ngModel)]="text"
                 [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)" 
                 #textArea></textarea>
                 <button type="submit" (click)="sendChat(null)">実行</button>
@@ -38,7 +38,7 @@
             </select>
           </div>
           <div *ngIf="isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-           <textarea class="palette" style="resize: none;" [(ngModel)]="editPalette" placeholder="バフパレット"></textarea>
+           <textarea class="palette is-caret" style="resize: none;" [(ngModel)]="editPalette" placeholder="バフパレット"></textarea>
           </div>
           <div style="flex-grow: 0;">
             <button type="submit" (click)="toggleEditMode()" style="width:20em">
@@ -181,9 +181,9 @@
                   <div style="padding: 2px;">&nbsp;</div><div style="padding: 2px;">/</div>
                 </div>
                 <div class="table-cell">
-                  <input class="input tag-value" [style]="'color:' + dataElm.nowValueColor +';'" size="1" [(ngModel)]="dataElm.currentValue" 
+                  <input class="input tag-value is-caret" [style]="'color:' + dataElm.nowValueColor +';'" size="1" [(ngModel)]="dataElm.currentValue" 
                   placeholder="" />
-                  <input class="input tag-value" size="1" [(ngModel)]="dataElm.value" 
+                  <input class="input tag-value is-caret" size="1" [(ngModel)]="dataElm.value" 
                   placeholder="" />
                 </div>
               </div>
@@ -200,7 +200,7 @@
           <div style="display: inline-block;">
             <div class="tag-value-box">
               <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
-              <input class="input tag-value" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+              <input class="input tag-value is-caret" size="1" [(ngModel)]="dataElm.value" placeholder="" />
             </div>
           </div>
         </div>

@@ -181,7 +181,7 @@
         <div class="value">
           <div style="display: inline-block; width: min-content;">
             <div class="hidden-spacer" style="margin-right: 2em;">{{dataElm.currentValue}}</div>
-            <input class="input" type="number" [style]="'color:' + dataElm.nowValueColor +';'" size="1" [(ngModel)]="dataElm.currentValue" />
+            <input class="input is-caret" type="number" [style]="'color:' + dataElm.nowValueColor +';'" size="1" [(ngModel)]="dataElm.currentValue" />
           </div>
           <div style="display: inline;"> / {{dataElm.value}}</div>
         </div>
@@ -195,7 +195,7 @@
         <div class="tag">{{dataElm.name}}</div>
         <div class="value">
           <div class="hidden-spacer">{{dataElm.value}}</div>
-          <input class="input" size="1" [(ngModel)]="dataElm.value" />
+          <input class="input is-caret" size="1" [(ngModel)]="dataElm.value" />
         </div>
       </ng-container>
     </ng-container>

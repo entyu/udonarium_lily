@@ -29,7 +29,7 @@
   <ng-container *ngIf="isEdit">
     <div>
       <div style="font-size: 12px;">並び順第1</div>
-      <input [(ngModel)]="sortTag" placeholder="タグ名" />
+      <input class="is-caret" [(ngModel)]="sortTag" placeholder="タグ名" />
       <select [(ngModel)]="sortOrder">
         <option value="ASC">昇順</option>
         <option value="DESC">降順</option>
@@ -37,14 +37,14 @@
     </div>
     <div>
       <div style="font-size: 12px;">並び順第2</div>
-      <input [(ngModel)]="sortTag2nd" placeholder="タグ名" />
+      <input class="is-caret" [(ngModel)]="sortTag2nd" placeholder="タグ名" />
       <select [(ngModel)]="sortOrder2nd">
         <option value="ASC">昇順</option>
         <option value="DESC">降順</option>
       </select>
     </div>
     <div style="font-size: 12px; padding-top: 6px;">表示項目</div>
-    <input style="width: 100%; box-sizing: border-box;" [(ngModel)]="dataTag" placeholder="スペース区切りでタグ名 スラッシュで改行 ex.「HP MP / メモ」" />
+    <input class="is-caret" style="width: 100%; box-sizing: border-box;" [(ngModel)]="dataTag" placeholder="スペース区切りでタグ名 スラッシュで改行 ex.「HP MP / メモ」" />
     <div style="padding-top: 6px;">
       <button class="tab-setting small-font" (click)="toggleEdit()"><i class="material-icons small-font">settings</i>完了</button>
     </div>
@@ -120,7 +120,7 @@
       <ng-container *ngSwitchCase="'numberResource'">
         <div class="resource-tag">
           <div style="font-size: 0.8em; display: inline-block; margin-right: 0.5em;">{{dataElm.name}}</div>
-          <input class="input resource-value" type="number" [style]="'color:' + dataElm.nowValueColor +';'" size="1" [(ngModel)]="dataElm.currentValue" placeholder="Value" />
+          <input class="input resource-value is-caret" type="number" [style]="'color:' + dataElm.nowValueColor +';'" size="1" [(ngModel)]="dataElm.currentValue" placeholder="Value" />
         </div>
         <div class="resource-tag">
           <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (dataElm.name.length + 4.5) + 'em; --min: 0; --max: ' + dataElm.value + '; --val:' + dataElm.currentValue +';' | safe: 'style'"
@@ -133,7 +133,7 @@
           <div style="display: inline-block;">
             <div class="tag-value-box">
               <div class="hidden-spacer" style="font-weight: bold;">{{dataElm.value}}</div>
-              <input class="input tag-value" size="1" [(ngModel)]="dataElm.value" placeholder="" />
+              <input class="input tag-value is-caret" size="1" [(ngModel)]="dataElm.value" placeholder="" />
             </div>
           </div>
         </div>

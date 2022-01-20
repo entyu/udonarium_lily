@@ -11,17 +11,17 @@
               <ng-container *ngIf="!isTagLocked"><!-- NAME -->
                 <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{name}}</div>
 
-                <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 0.9rem;" size="1"
+                <input class="is-caret" style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 0.9rem;" size="1"
                 [(ngModel)]="name" placeholder="Value" >
               </ng-container>
             </div>
             <div class="table-cell" style="width:0px;">/</div>
             <div class="table-cell" style="width:30%;">
-              <input style="width:100%;" size="1" type="string" [(ngModel)]="currentValue" placeholder="Value" />
+              <input class="is-caret" style="width:100%;" size="1" type="string" [(ngModel)]="currentValue" placeholder="Value" />
             </div>
             <div class="table-cell" style="width:0px;">/</div>
             <div class="table-cell" >
-              <input style="width: 3em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
+              <input class="is-caret" style="width: 3em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
             </div>
             <div class="table-cell" >R</div>
           </div>

@@ -27,17 +27,17 @@
         </div>
       </div>
       <div>Name :
-        <input [(ngModel)]="tableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+        <input class="is-caret" [(ngModel)]="tableName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
       </div>
       <div>
         <input [(ngModel)]="tableWidth" type="range" min="{{minSize}}" max="{{maxSize}}" name="tableWidth" [attr.disabled]="!isEditable ? '' : null"
         /> Width :
-        <input [(ngModel)]="tableWidth" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
+        <input class="is-caret" [(ngModel)]="tableWidth" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
       </div>
       <div>
         <input [(ngModel)]="tableHeight" type="range" min="{{minSize}}" max="{{maxSize}}" name="tableHeight" [attr.disabled]="!isEditable ? '' : null"
         /> Height :
-        <input [(ngModel)]="tableHeight" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
+        <input class="is-caret" [(ngModel)]="tableHeight" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [attr.disabled]="!isEditable ? '' : null">
       </div>
       <div>
         グリッド:

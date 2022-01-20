@@ -42,3 +42,9 @@
       -1px  0px 0px #ffffff,
         0px -1px 0px #ffffff; 
 }
+
+/*2022/1/16現在、クロームバージョン: 97.0.4692.71（Official Build） （64 ビット）
+キャレットの点滅で負荷がかかることへの対策不透明度指定*/
+.is-caret {
+  caret-color: rgba(0,0,0,0.95);
+}
