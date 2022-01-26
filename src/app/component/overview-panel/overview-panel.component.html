@@ -64,7 +64,7 @@
     <div class="component-background text-note-container" [ngStyle]="{'width': overViewNoteWidth + 'px','max-height': overViewNoteMaxHeight +'px'}">
       <div style="position: relative; width:100%">
         <div class="is-fill">
-          <textarea class="textarea" [(ngModel)]="note.text" spellcheck="false"></textarea>
+          <textarea class="textarea is-caret" [(ngModel)]="note.text" spellcheck="false"></textarea>
         </div>
         <div class="textarea-spacer">{{note.text}}</div>
       </div>
@@ -181,7 +181,7 @@
         <div class="value">
           <div style="display: inline-block; width: min-content;">
             <div class="hidden-spacer" style="margin-right: 2em;">{{dataElm.currentValue}}</div>
-            <input class="input" type="number" [style]="'color:' + dataElm.nowValueColor +';'" size="1" [(ngModel)]="dataElm.currentValue" />
+            <input class="input is-caret" type="number" [style]="'color:' + dataElm.nowValueColor +';'" size="1" [(ngModel)]="dataElm.currentValue" />
           </div>
           <div style="display: inline;"> / {{dataElm.value}}</div>
         </div>
@@ -195,7 +195,7 @@
         <div class="tag">{{dataElm.name}}</div>
         <div class="value">
           <div class="hidden-spacer">{{dataElm.value}}</div>
-          <input class="input" size="1" [(ngModel)]="dataElm.value" />
+          <input class="input is-caret" size="1" [(ngModel)]="dataElm.value" />
         </div>
       </ng-container>
     </ng-container>

@@ -10,12 +10,13 @@
     </ng-container>
   </div>
   <div class="user_info">
-    <span *ngIf="myPeer">あなたのニックネーム：  <input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /></span><br>
-    <span>ID：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
+    <span *ngIf="myPeer">あなたのニックネーム：</span><input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /><br>
+    <span>ID：</span><span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
     <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span><br>
-    <span>ブラウザ時刻：</span>
-    <span>{{myTime | date:'yy/MM/dd HH:mm:ss'}}</span>
-    </span>
+    <div>
+      <span>ブラウザ時刻：</span>
+      <span>{{myTime | date:'yy/MM/dd HH:mm:ss'}}</span>
+    </div>
   </div>
 </div>
 <ng-container *ngIf="networkService.peerContext.isRoom">
@@ -29,7 +30,7 @@
 </ng-container>
 <hr/>
 <div>
-  <span><input [(ngModel)]="myPeer.timeout" type="number" min="1" max="600" /> 秒以上通信できない参加者情報をチャットに表示</span><br>
+  <span><input class="is-caret" [(ngModel)]="myPeer.timeout" type="number" min="1" max="600" /> 秒以上通信できない参加者情報をチャットに表示</span><br>
   <span>詳細を表示<input type="checkbox" value="dispDetailFlag"  [(ngModel)]="dispDetailFlag"></span><br>
 </div>
 <div *ngFor="let context of networkService.peerContexts" style="font-size: 15px;">
@@ -49,7 +50,7 @@
 </div>
 <div>
   <ng-container *ngIf="!networkService.peerContext.isRoom">
-    <input [(ngModel)]="targetUserId" placeholder="接続したい相手のID" name="targetUserId" />
+    <input class="is-caret" [(ngModel)]="targetUserId" placeholder="接続したい相手のID" name="targetUserId" />
     <button (click)="connectPeer()" [disabled]="!networkService.isOpen">プライベート接続</button><br>
   </ng-container>
   <button *ngIf="networkService.peerIds.length <= 1" (click)="showLobby()" [disabled]="!networkService.isOpen">ロビー（ルーム一覧）を表示</button>

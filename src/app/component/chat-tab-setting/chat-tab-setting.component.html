@@ -16,7 +16,7 @@
   <div class="flex-item">
     <ng-container *ngIf="!isEmpty && selectedTab">
       <div>タブ名 :
-        <input [(ngModel)]="tabName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
+        <input class="is-caret" [(ngModel)]="tabName" placeholder="Name" [attr.disabled]="!isEditable ? '' : null" />
       </div>
       <hr/>
       <div>

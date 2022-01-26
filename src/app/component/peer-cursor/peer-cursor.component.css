@@ -6,6 +6,8 @@
   user-select: none;
   -moz-user-drag: none;
   -webkit-user-drag: none;
+  will-change: transform;
+  transform: translateX(0px) translateY(0px%) translateZ(0px);
 }
 
 .is-transition {

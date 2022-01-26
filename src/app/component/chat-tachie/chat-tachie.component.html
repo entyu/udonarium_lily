@@ -14,7 +14,7 @@
         <input type="checkbox">
       </ng-container>
 　　　/サイズ:
-      <input [(ngModel)]="chatTabList.tachieHeightValue" type="number" min="{{chatTabList.minTachieSize}}" max="{{chatTabList.maxTachieSize}}" name="tachieHeight" (change)="chkHeight($event.target.value)"/>
+      <input class="is-caret" [(ngModel)]="chatTabList.tachieHeightValue" type="number" min="{{chatTabList.minTachieSize}}" max="{{chatTabList.maxTachieSize}}" name="tachieHeight" (change)="chkHeight($event.target.value)"/>
       チャット簡易表示:
       <ng-container *ngIf="chatTab">
         <input type="checkbox" value="chatSimpleDispFlag"  

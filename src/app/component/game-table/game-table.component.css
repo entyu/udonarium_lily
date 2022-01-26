@@ -24,6 +24,7 @@
   transform-style: preserve-3d;
   backface-visibility: hidden;
   position: absolute;
+  will-change: transform;
 }
 
 .is-pointer-events-none {

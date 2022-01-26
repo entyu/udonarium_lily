@@ -249,9 +249,8 @@ export class ChatTab extends ObjectNode implements InnerXml {
         '>': '&gt;',
       }[match];
     });
-    return escapeText.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby>$1<rt>$2</rt></ruby>');
+    return escapeText.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby>$1<rt>$2</rt></ruby>').replace(/\\s/g,' ');
   }
-
 
   logHtml( ): string {
     

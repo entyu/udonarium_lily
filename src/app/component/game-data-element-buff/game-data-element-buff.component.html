@@ -11,17 +11,17 @@
               <ng-container *ngIf="!isTagLocked"><!-- NAME -->
                 <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{name}}</div>
 
-                <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 0.9rem;" size="1"
+                <input class="is-caret" style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 0.9rem;" size="1"
                 [(ngModel)]="name" placeholder="Value" >
               </ng-container>
             </div>
             <div class="table-cell" style="width:0px;">/</div>
             <div class="table-cell" style="width:30%;">
-              <input style="width:100%;" size="1" type="string" [(ngModel)]="currentValue" placeholder="Value" />
+              <input class="is-caret" style="width:100%;" size="1" type="string" [(ngModel)]="currentValue" placeholder="Value" />
             </div>
             <div class="table-cell" style="width:0px;">/</div>
             <div class="table-cell" >
-              <input style="width: 3em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
+              <input class="is-caret" style="width: 3em;" size="1" type="number" [(ngModel)]="value" placeholder="Value" />
             </div>
             <div class="table-cell" >R</div>
           </div>
@@ -71,36 +71,14 @@
   <ng-container *ngIf="gameDataElement.children.length < 1">
     <ng-container [ngSwitch]="gameDataElement.type">
       <ng-container *ngSwitchCase="'numberResource'">
-<span style="font-family: Cambria, Georgia; font-size: 0.4rem;">       
-{{gameDataElement.name}} / {{gameDataElement.currentValue}} / {{gameDataElement.value}}R 
-</span>
-<!--
-          <div class="table-cell-2" style="font-family: Cambria, Georgia; font-size: 0.7rem;">×</div>
-          <div class="table-cell-2" style="width:50%;">
-              <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.7rem;">{{name}}</div>
-              <input style="width:100%; min-width:10px; font-family: Cambria, Georgia; font-size: 0.7rem;" size="1"
-                [(ngModel)]="name" placeholder="Value" >
-          </div>
-          <div class="table-cell-2" style="font-family: Cambria, Georgia; font-size: 0.7rem;">/</div>
-          <div class="table-cell-2" style="width:30%;">
-              <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.7rem;">{{currentValue}}</div>
-              <input style="width:100%;min-width:10px; font-family: Cambria, Georgia; font-size: 0.7rem;" size="1" 
-               type="string" [(ngModel)]="currentValue" placeholder="Value" />
-          </div>
-          <div class="table-cell-2" style="font-family: Cambria, Georgia; font-size: 0.7rem;">/</div>
-          <div class="table-cell-2" >
-              <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.7rem;">{{value}}</div>
-              <input style="width: 3em;min-width:10px; font-family: Cambria, Georgia; font-size: 0.7rem;" size="1" 
-               type="number" [(ngModel)]="value" placeholder="Value" />
-          </div>
-          <div class="table-cell-2" >R</div>
-<!-- -->
+        <span style="font-family: Cambria, Georgia; font-size: 12px;">
+          {{gameDataElement.name}} / {{gameDataElement.currentValue}} / {{gameDataElement.value}}R 
+        </span>
       </ng-container>
     </ng-container>
   </ng-container>
 
   <ng-container *ngIf="0 < gameDataElement.children.length">
-<!--     <div >{{gameDataElement.children.length}}</div> -->
      <div game-data-element-buff class="table-row" *ngFor="let childElement of gameDataElement.children"
       [gameDataElement]="childElement" [isEdit]="isEdit" [isTagLocked]="isTagLocked" [isPieceMode]="isPieceMode"></div>
     
