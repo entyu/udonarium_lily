@@ -129,16 +129,41 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   private adjustPositionRoot() {
     let panel: HTMLElement = this.draggablePanel.nativeElement;
 
+    let alias = this.tabletopObject.aliasName;
+    let width : number = 250;
+
+    if( alias == 'card'){
+      // 現状変更なし
+    }
+
+    if( alias == 'card-stack'){
+      // 現状変更なし
+    }
+
+    if( alias == 'text-note'){
+      width = this.overViewNoteWidth;
+    }
+
+    if( alias == 'character'){
+      width = this.overViewCharacterWidth;
+    }
+
+    if( alias == 'dice-symbol'){
+      // 現状変更なし
+    }
+
     let panelBox = panel.getBoundingClientRect();
 
-    let diffLeft = 0;
-    let diffTop = 0;
+    let diffLeft : number = 0;
+    let diffTop : number = 0;
+    let panelLeft : number = Number(panelBox.left);
+    let panelRight : number =  Number(panelBox.left) + Number(width);
 
-    if (window.innerWidth < panelBox.right + diffLeft) {
-      diffLeft += window.innerWidth - (panelBox.right + diffLeft);
+    if (window.innerWidth < panelRight + diffLeft) {
+      diffLeft += window.innerWidth - (panelRight + diffLeft);
     }
-    if (panelBox.left + diffLeft < 0) {
-      diffLeft += 0 - (panelBox.left + diffLeft);
+    if (panelLeft + diffLeft < 0) {
+      diffLeft += 0 - (panelLeft + diffLeft);
     }
 
     if (window.innerHeight < panelBox.bottom + diffTop) {
