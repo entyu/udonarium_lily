@@ -10,7 +10,7 @@
     </ng-container>
   </div>
   <div class="user_info">
-    <span *ngIf="myPeer">あなたのニックネーム：</span><input [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /><br>
+    <span *ngIf="myPeer">あなたのニックネーム：</span><input class="is-caret" [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /><br>
     <span>ID：</span><span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
     <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span><br>
     <div>
