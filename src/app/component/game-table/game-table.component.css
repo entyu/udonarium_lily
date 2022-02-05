@@ -23,6 +23,15 @@
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   backface-visibility: hidden;
+  backface-visibility: visible;
+  position: absolute;
+  will-change: transform;
+}
+
+.is-3d-2 {
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
   position: absolute;
 }
 
