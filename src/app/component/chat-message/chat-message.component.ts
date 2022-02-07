@@ -102,11 +102,13 @@ export class ChatMessageComponent implements OnInit {
   } 
 
   get htmlEscapedText():string  {
-    return this._htmlEscapeLinking(this.chatMessage.text);
+    return this._htmlEscapeLinking(this.chatMessage.text, false, true);
   }
 
-  private _htmlEscapeLinking(str, shorten=false): string {
-    return Autolinker.link(StringUtil.escapeHtml(this.lastNewLineAdjust(str)), {
+  private _htmlEscapeLinking(str, shorten=false, ruby=false): string {
+    str = StringUtil.escapeHtml(str);
+    if (ruby) str = StringUtil.rubyToHtml(str);
+    return Autolinker.link(this.lastNewLineAdjust(str), {
       urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, 
       truncate: {length: 48, location: 'end'}, 
       decodePercentEncoding: shorten, 

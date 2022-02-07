@@ -67,7 +67,7 @@ export namespace StringUtil {
 
   export function escapeHtml(str) {
     if(typeof str !== 'string') {
-      return str.toString();
+      str = str.toString();
     }
     return str.replace(/[&'`"<>]/g, function(match){
       return {
@@ -79,6 +79,20 @@ export namespace StringUtil {
         '>': '&gt;',
       }[match]
     });
+  }
+
+  export function rubyToHtml(str) {
+    if(typeof str !== 'string') {
+      str = str.toString();
+    }
+    return str.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby>$1<rt>$2</rt></ruby>');
+  }
+  
+  export function rubyToText(str) {
+    if(typeof str !== 'string') {
+      str = str.toString();
+    }
+    return str.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '$1($2)');
   }
 
   export function aliasNameToClassName(aliasName: string) {

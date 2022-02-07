@@ -126,7 +126,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
       // 最終行の調整
       text += "\n";
     }
-    return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : text + lastUpdateStr }`
+    return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : StringUtil.rubyToText(text) + lastUpdateStr }`
   }
 
   logFragmentHtml(tabName: string=null, dateFormat='HH:mm', noImage=true): string {
@@ -153,7 +153,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     const colorStyle = this.isSpecialColor ? '' : ` style="color: ${ color }"`;
 
     let textAutoLinkedHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>' 
-      : Autolinker.link(StringUtil.escapeHtml(this.text), {
+      : Autolinker.link(StringUtil.rubyToHtml(StringUtil.escapeHtml(this.text)), {
         urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, 
         truncate: {length: 96, location: 'end'}, 
         decodePercentEncoding: false, 

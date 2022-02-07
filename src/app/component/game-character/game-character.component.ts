@@ -141,6 +141,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   viewRotateX = 50;
   viewRotateZ = 10;
   heightWidthRatio = 1.5;
+  isRubied = false;
 
   set dialog(dialog) {
     if (!this.gameCharacter) return;
@@ -148,31 +149,75 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     clearInterval(this.chatIntervalId);
     let text = StringUtil.cr(dialog.text);
     const isEmote = StringUtil.isEmote(text);
-    if (!isEmote) text = text.replace(/[。、]{3}/g, '…').replace(/[。、]{2}/g, '‥').replace(/(。|[\r\n]{2,})/g, "$1                            ").trimEnd(); //改行や。のあと時間を置くためのダーティハック
+    const rubys = [];
+    const re = /[\|｜]([^\|｜\s]+?)《(.+?)》/g;
+    let ary;
+    let count = 0;
+    let rubyLength = 0;
+
+    if (!isEmote) {
+      text = text.replace(/[。、]{3}/g, '…').replace(/[。、]{2}/g, '‥').replace(/(。|[\r\n]{2,})/g, "$1                            ").trimEnd(); //改行や。のあと時間を置くためのダーティハック
+      //text = StringUtil.rubyToDialog(text);
+      while ((ary = re.exec(text)) !== null) {
+        let offset = ary.index - (count * 3);
+        rubys.push({base: ary[1], ruby: ary[2], start: offset - rubyLength, end: offset + ary[1].length - rubyLength - 1});
+        count++;
+        rubyLength += ary[2].length;
+      }
+    }
+    if (rubys.length > 0) this.isRubied = true; 
+
     let speechDelay = 1000 / Array.from(text).length > 36 ? 1000 / Array.from(text).length : 36;
     if (speechDelay > 200) speechDelay = 200;
-    if (!isEmote) this.gameCharacter.text = Array.from(text)[0]; // Emoteでない場合は最初の一文字は出しておく
+    //if (!isEmote) this.gameCharacter.text = Array.from(text)[0]; // Emoteでない場合は最初の一文字は出しておく
     this.dialogTimeOutId = setTimeout(() => {
       this._dialog = null;
       this.gameCharacter.text = '';
       this.gameCharacter.isEmote = false; 
+      this.isRubied = false; 
       this.changeDetector.markForCheck();
     //}, text.length * speechDelay + 6000 > 12000 ? text.length * speechDelay + 6000 : 12000);
     }, Array.from(text).length * speechDelay + 6000);
     this._dialog = dialog;
     this.gameCharacter.isEmote = isEmote;
-    let count = 1;
+    count = 0;
+    let rubyCount = 0;
+    let tmpText = '';
+    let carrentRuby = rubys.shift();
+    let rubyText = '';
+    let isOpenRuby = false;
     if (isEmote) {
       this.gameCharacter.text = text;
       this.changeDetector.markForCheck();
     }  else {
+      const charAry = Array.from(text.replace(/[\|｜]([^\|｜\s]+?)《.+?》/g, '$1'));
       this.chatIntervalId = setInterval(() => {
-        count++;
-        this.gameCharacter.text = Array.from(text).slice(0, count).join('');
+        let c = charAry[count];
+        if (c) {
+            if (carrentRuby && count == carrentRuby.start) {
+                tmpText += '<ruby>';
+                isOpenRuby = true;
+                rubyCount = 0;
+            }
+            tmpText += StringUtil.escapeHtml(c);
+            if (isOpenRuby) {
+                rubyCount++;
+                rubyText = '';
+                let rt = carrentRuby.ruby;
+                rubyText = '<rt>' + Array.from(rt).slice(0, rt.length * (rubyCount / carrentRuby.base.length)).join('') + '</rt>'
+            }
+            if (carrentRuby && count == carrentRuby.end) {
+                tmpText += (rubyText + '</ruby>');
+                isOpenRuby = false;
+                carrentRuby = rubys.shift();
+            }
+        }
+        this.gameCharacter.text = tmpText + (isOpenRuby ? (rubyText + '</ruby>') : '');
         this.changeDetector.markForCheck();
-        if (count >= Array.from(text).length) {
+        if (count >= charAry.length) {
           clearInterval(this.chatIntervalId);
         }
+        count++;
       }, speechDelay);
     }
   }

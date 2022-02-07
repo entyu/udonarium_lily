@@ -1,8 +1,10 @@
 @supports (-moz-user-select: -moz-none) {
   /* 汚いけどとりあえず */
-  .chat-bubble p:after {
+/*  .chat-bubble p:after {
     bottom: -28px !important;
   }
+  いらなくなった？
+*/
    /*
   .chat-bubble p.is-whisper:after {
     bottom: -11px !important; 
@@ -360,6 +362,10 @@
   text-align: center;
 }
 
+.chat-bubble p.rubied {
+  padding-top: 15px;
+}
+
 .chat-bubble p.emote {
   text-align: center;
   font-size: 38px;
@@ -465,7 +471,7 @@
 }
 
 .face-icon-box {
-  display: inline-block;
+  display: block;
   position: relative;
   border: 0px none;
   width: 36px;
@@ -477,8 +483,11 @@
   top: -18px;
   margin-right: -16px;
   margin-bottom: -22px;
+  float: left;
+  backface-visibility: hidden;
   /* background: linear-gradient(-30deg, rgb(240, 218, 189), rgb(255, 244, 232)); */
 }
+
 .face-icon-box img {
   width: 100%;
   height: 100%;

@@ -64,15 +64,15 @@
           <div *ngIf="isListen" [@fadeAndScaleInOut]="isEmote" class="is-3d" style="transform-origin: center bottom;" [style.color]="!isEmote && isWhisper ? '#ccc' : dialogColor">
             <div class="is-3d">
               <p class="is-3d chat-bubble-buyo" [style.min-width.px]="dialogChatBubbleMinWidth" [style.border-color]="dialogColor" style="position: absolute; backface-visibility: hidden" 
-                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box is-3d"
+                [ngClass]="{'emote': isEmote, rubied: isRubied, 'is-whisper': isWhisper}"><span class="face-icon-box is-3d" 
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
                   <img class="face-icon is-3d" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
-                </span>{{ dialogText }}</p>
+                </span><span [innerHTML]="dialogText"></span></p>
               <p class="is-3d chat-bubble-buyo back" [style.min-width.px]="dialogChatBubbleMinWidth" [style.border-color]="dialogColor" style="backface-visibility: hidden; transform: rotateY(-180deg)"
-                [ngClass]="{'emote': isEmote, 'is-whisper': isWhisper}"><span class="face-icon-box is-3d"
+                [ngClass]="{'emote': isEmote, rubied: isRubied, 'is-whisper': isWhisper}"><span class="face-icon-box is-3d" 
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
                   <img class="face-icon is-3d" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
-                </span>{{ dialogText }}</p>
+                </span><span [innerHTML]="dialogText"></span></p>
             </div>
           </div>
         </div>
