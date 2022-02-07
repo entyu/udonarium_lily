@@ -363,7 +363,7 @@
 }
 
 .chat-bubble p.rubied {
-  padding-top: 15px;
+  padding-top: 12px;
 }
 
 .chat-bubble p.emote {
@@ -486,6 +486,10 @@
   float: left;
   backface-visibility: hidden;
   /* background: linear-gradient(-30deg, rgb(240, 218, 189), rgb(255, 244, 232)); */
+}
+
+p.rubied .face-icon-box {
+  top: -21px;
 }
 
 .face-icon-box img {
