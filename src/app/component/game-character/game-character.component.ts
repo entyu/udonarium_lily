@@ -204,7 +204,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
                 rubyCount++;
                 rubyText = '';
                 let rt = carrentRuby.ruby;
-                rubyText = '<rt>' + Array.from(rt).slice(0, rt.length * (rubyCount / carrentRuby.base.length)).join('') + '</rt>'
+                rubyText = '<rt>' + StringUtil.escapeHtml(Array.from(rt).slice(0, rt.length * (rubyCount / carrentRuby.base.length)).join('')) + '</rt>'
             }
             if (carrentRuby && count == carrentRuby.end) {
                 tmpText += (rubyText + '</ruby>');
@@ -229,7 +229,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   get dialogChatBubbleMinWidth(): number {
-    const max = (this.gameCharacter.size + 1.8) * this.gridSize;
+    const max = (this.gameCharacter.size + 2.1) * this.gridSize;
     const existIcon = this.isUseFaceIcon && this.dialogFaceIcon && this.dialogFaceIcon.url;
     const dynamic = Array.from(this.dialogText).length * 11 + 52 + (existIcon ? 32 : 0);
     return max < dynamic ? max : dynamic; 
