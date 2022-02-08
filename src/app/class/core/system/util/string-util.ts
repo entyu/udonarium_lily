@@ -85,7 +85,7 @@ export namespace StringUtil {
     if(typeof str !== 'string') {
       str = str.toString();
     }
-    return str.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby>$1<rt>$2</rt></ruby>');
+    return str.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby>$1<rp>(</rp><rt>$2</rt><rp>)</rp></ruby>');
   }
   
   export function rubyToText(str) {

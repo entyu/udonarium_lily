@@ -157,7 +157,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     if (!isEmote) {
       text = text.replace(/[。、]{3}/g, '…').replace(/[。、]{2}/g, '‥').replace(/(。|[\r\n]{2,})/g, "$1                            ").trimEnd(); //改行や。のあと時間を置くためのダーティハック
-      //text = StringUtil.rubyToDialog(text);
       while ((ary = re.exec(text)) !== null) {
         let offset = ary.index - (count * 3);
         rubys.push({base: ary[1], ruby: ary[2], start: offset - rubyLength, end: offset + ary[1].length - rubyLength - 1});
@@ -169,18 +168,18 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let speechDelay = 1000 / Array.from(text).length > 36 ? 1000 / Array.from(text).length : 36;
     if (speechDelay > 200) speechDelay = 200;
-    //if (!isEmote) this.gameCharacter.text = Array.from(text)[0]; // Emoteでない場合は最初の一文字は出しておく
     this.dialogTimeOutId = setTimeout(() => {
       this._dialog = null;
       this.gameCharacter.text = '';
       this.gameCharacter.isEmote = false; 
       this.isRubied = false; 
       this.changeDetector.markForCheck();
-    //}, text.length * speechDelay + 6000 > 12000 ? text.length * speechDelay + 6000 : 12000);
     }, Array.from(text).length * speechDelay + 6000);
+
     this._dialog = dialog;
     this.gameCharacter.isEmote = isEmote;
     count = 0;
+    let countLength = 0;
     let rubyCount = 0;
     let tmpText = '';
     let carrentRuby = rubys.shift();
@@ -193,31 +192,33 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       const charAry = Array.from(text.replace(/[\|｜]([^\|｜\s]+?)《.+?》/g, '$1'));
       this.chatIntervalId = setInterval(() => {
         let c = charAry[count];
+        let isMulti = c.length > 1;
         if (c) {
-            if (carrentRuby && count == carrentRuby.start) {
+            if (!isOpenRuby && carrentRuby && countLength >= carrentRuby.start) {
                 tmpText += '<ruby>';
                 isOpenRuby = true;
                 rubyCount = 0;
             }
             tmpText += StringUtil.escapeHtml(c);
             if (isOpenRuby) {
-                rubyCount++;
-                rubyText = '';
+                rubyCount += 1;
                 let rt = carrentRuby.ruby;
-                rubyText = '<rt>' + StringUtil.escapeHtml(Array.from(rt).slice(0, rt.length * (rubyCount / carrentRuby.base.length)).join('')) + '</rt>'
+                rubyText = '<rt>' + StringUtil.escapeHtml(Array.from(rt).slice(0, Math.ceil(Array.from(rt).length * (rubyCount / Array.from(carrentRuby.base).length))).join('')) + '</rt>'
             }
-            if (carrentRuby && count == carrentRuby.end) {
+            if (isOpenRuby && carrentRuby && countLength >= carrentRuby.end - (isMulti ? 1 : 0)) {
                 tmpText += (rubyText + '</ruby>');
                 isOpenRuby = false;
-                carrentRuby = rubys.shift();
+                carrentRuby = rubys.shift(); 
             }
+            countLength += c.length;
         }
+        count += 1;
         this.gameCharacter.text = tmpText + (isOpenRuby ? (rubyText + '</ruby>') : '');
         this.changeDetector.markForCheck();
         if (count >= charAry.length) {
           clearInterval(this.chatIntervalId);
         }
-        count++;
+        //countLength += c.length;
       }, speechDelay);
     }
   }
