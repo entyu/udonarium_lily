@@ -378,18 +378,28 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (matchMostLongText.length < cutInInfo.matchMostLongText.length) matchMostLongText = cutInInfo.matchMostLongText;
     text = text.slice(0, text.length - matchMostLongText.length);
     // 💭
-    if (this.character && StringUtil.cr(text).trim()) { 
+    if (this.character && StringUtil.cr(text).trim()) {
+      // CHOICEコマンドの引数は💭としない
+      const regArray = /^((srepeat|repeat|srep|rep|sx|x)?(\d+)?[ 　]+)?([^\n]*)?/ig.exec(text);
+      let dialogText = (regArray[4] != null) ? regArray[4].trim() : text.trim();
+      let choiceMatch;
+      if (/^(S?CHOICE\d*)[ 　]+([^ 　]*)/ig.test(dialogText)) {
+        dialogText = '';
+      } else if ((choiceMatch = /^(S?CHOICE\d*\[[^\[\]]+\])/ig.exec(dialogText)) || (choiceMatch = /^(S?CHOICE\d*\([^\(\)]+\))/ig.exec(dialogText))) {
+        dialogText = dialogText.slice(choiceMatch[1].length)
+      }
+      //console.log(dialogText)
       //💭はEvant機能使うようにする
-      const dialogRegExp = /「([\s\S]+?)」/gm;
+      const dialogRegExp = /「+([\s\S]+?)」/gm;
       // const dialogRegExp = /(?:^|[^\￥])「([\s\S]+?[^\￥])」/gm; 
       //ToDO ちゃんとパースする
       let match;
       let dialog = [];
-      while ((match = dialogRegExp.exec(text)) !== null) {
+      while ((match = dialogRegExp.exec(dialogText)) !== null) {
         dialog.push(match[1]);
       }
       if (dialog.length === 0) {
-        const emoteTest = text.split(/[\s　]/).slice(-1)[0];
+        const emoteTest = dialogText.split(/[\s　]/).slice(-1)[0];
         if (StringUtil.isEmote(emoteTest)) {
           dialog.push(emoteTest);
         }
