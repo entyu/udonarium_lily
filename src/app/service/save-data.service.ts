@@ -19,6 +19,7 @@ import { ChatTab } from '@udonarium/chat-tab';
 import { CutInList } from '@udonarium/cut-in-list';
 import { ChatMessageService } from './chat-message.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import * as saveAs from 'file-saver';
 
 type UpdateCallback = (percent: number) => void;
 
