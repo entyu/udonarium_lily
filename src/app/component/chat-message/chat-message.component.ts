@@ -102,7 +102,7 @@ export class ChatMessageComponent implements OnInit {
   } 
 
   get htmlEscapedText():string  {
-    return this._htmlEscapeLinking(this.chatMessage.text, false, true);
+    return this._htmlEscapeLinking(this.chatMessage.text, false, !this.chatMessage.isOperationLog);
   }
 
   private _htmlEscapeLinking(str, shorten=false, ruby=false): string {

@@ -153,7 +153,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     const colorStyle = this.isSpecialColor ? '' : ` style="color: ${ color }"`;
 
     let textAutoLinkedHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>' 
-      : Autolinker.link(StringUtil.rubyToHtml(StringUtil.escapeHtml(this.text)), {
+      : Autolinker.link(this.isOperationLog ? StringUtil.escapeHtml(this.text) : StringUtil.rubyToHtml(StringUtil.escapeHtml(this.text)), {
         urls: {schemeMatches: true, wwwMatches: true, tldMatches: false}, 
         truncate: {length: 96, location: 'end'}, 
         decodePercentEncoding: false, 
