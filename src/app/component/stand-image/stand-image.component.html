@@ -14,7 +14,7 @@
         [style.width.px]="imageWidth"
         [style.font-size.px]="imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16"
         [style.color]="color ? color : '#444'"
-        [style.bottom.px]="dialogBoxCssBottom + (imageWidth / 4.5 > 16 ? imageWidth / 4.5 : 16)"
+        [style.bottom.px]="emoteCssBottom"
         [ngClass]="{'emote-secret': isSecret}">{{ gameCharacter.text }}</div>
       <div [ngStyle]="{'transform-origin': standImageTransformOrigin, 'transform': isApplyRoll ? ('rotate(' + gameCharacter.roll + 'deg)') : ''}">
         <div class="inverser" [ngClass]="{inverse: isApplyImageEffect && gameCharacter.isInverse}">
@@ -44,13 +44,13 @@
     ><b>{{ gameCharacter.name }}</b></span>
   <div @fadeAndScaleInOut *ngIf="!isFarewell && isVisible && !isBackyard && gameCharacter && gameCharacter.text && !gameCharacter.isEmote" class="name-tag dialog chat-bubble-buyo"
     (click)="toGhostly(); toBackyard();"
+    #dialogElement
     style="margin-left: 12px; min-width: 5em; white-space: pre-wrap; font-size: 14px; pointer-events: none;"
     [style.visibility]="isShowStand && isApplyDialog ? 'visible' : 'hidden'"
     [style.color]="isSecret ? '#ccc' : (color ? color : '#444')"
     [style.left.px]="dialogBoxCSSLeft"
-    [style.bottom.px]="(dialogBoxCssBottom + adjustY) > 12 ? dialogBoxCssBottom : 12"
+    [style.bottom.px]="dialogBoxCssBottom > 12 ? dialogBoxCssBottom : 12"
     [style.max-width.px]="dialogBoxCSSMaxWidth"
-    [style.margin-bottom.px]="(dialogBoxCssBottom + adjustY) > 12 ? adjustY : 0"
     [ngStyle]="{left: (position <= 50 ? dialogBoxCSSLeft + 'px' : 'auto'), right: (position > 50 ? dialogBoxCSSRight + 'px' : 'auto'), 'transform-origin': position <= 50 ? '12px calc(100% + 12px)' : 'calc(100% - 12px) calc(100% + 12px)'}"
     [ngClass]="{'is-can-be-gone': isCanBeGone, 'is-ghostly': isGhostly, backyard: isBackyard, 'dialog-secret': isSecret, 'is-position-right': position <= 50, 'is-position-left': position > 50}"
     [style.border-color]="color ? color : '#444'"><p style="width: 100%" [@dialogShake]="math.floor(dialogText.length / 2)" (@dialogShake.start)="onSpeaking($event)" [innerHTML]="dialogText"></p></div>

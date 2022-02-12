@@ -131,13 +131,13 @@
   right: 17px;
   margin-right: -12px;
 }
-
+/* 不要になった？
 @supports (-moz-user-select: -moz-none) {
-  /* 汚いけどとりあえず */
   .dialog.is-position-right:after, .dialog.is-position-left:before {
     bottom: -39px !important;
   }
 }
+*/
 /* 吹き出しの横向きベロがカッコよくならないのでとりあえずコメントアウト
 .dialog:after {
   box-sizing: border-box;

@@ -56,6 +56,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   @Input() color: string;
 
   @ViewChild('standImageElement', { static: false }) standImageElement: ElementRef;
+  @ViewChild('dialogElement', { static: false }) dialogElement: ElementRef;
 
   static isShowStand = true;
   static isShowNameTag = true;
@@ -222,13 +223,16 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   get dialogBoxCssBottom(): number {
-    let ret = this.imageHeight * 0.66;
+    let ret = this.imageHeight * 0.66 + this.adjustY;
     if (ret < 48) ret = 48;
+    if (this.dialogElement) {
+      if (ret > document.documentElement.offsetHeight - this.dialogElement.nativeElement.clientHeight) ret = document.documentElement.offsetHeight - this.dialogElement.nativeElement.clientHeight;
+    }
     return ret;
   }
 
   get emoteCssBottom(): number {
-    let ret = this.imageHeight;
+    let ret = this.imageHeight * 0.66 + (this.imageWidth / 4.5 > 16 ? this.imageWidth / 4.5 : 16);
     if (ret < 0) ret = 0;
     return ret;
   }
