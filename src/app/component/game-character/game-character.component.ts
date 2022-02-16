@@ -54,6 +54,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() is3D: boolean = false;
   @ViewChild('root') rootElementRef: ElementRef<HTMLElement>;
 
+  get isLock(): boolean { return this.gameCharacter.isLock; }
+  set isLock(isLock: boolean) { this.gameCharacter.isLock = isLock; }
+
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
@@ -150,6 +153,20 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      (this.isLock
+        ? {
+          name: '固定解除', action: () => {
+            this.isLock = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '固定する', action: () => {
+            this.isLock = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
+      ContextMenuSeparator,
+
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
       { name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } },

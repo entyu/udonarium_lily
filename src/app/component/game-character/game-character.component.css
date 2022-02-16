@@ -266,6 +266,11 @@
   animation-duration: 1s;
 }
 
+.lock-icon {
+  font-size: 15px;
+  vertical-align: middle;
+}
+
 @keyframes focused {
   0% { box-shadow: none; }
   50% { box-shadow:
