@@ -85,6 +85,9 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   get ownerName(): string { return this.diceSymbol.ownerName; }
   get isVisible(): boolean { return this.diceSymbol.isVisible; }
 
+  get isLock(): boolean { return this.diceSymbol.isLock; }
+  set isLock(isLock: boolean) { this.diceSymbol.isLock = isLock; }
+
   animeState: string = 'inactive';
 
   private iconHiddenTimer: NodeJS.Timer = null;
@@ -175,6 +178,11 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   onInputStart(e: MouseEvent | TouchEvent) {
     this.startDoubleClickTimer(e);
     this.startIconHiddenTimer();
+
+    // TODO:もっと良い方法考える
+    if (this.isLock) {
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+    }
   }
 
   startDoubleClickTimer(e) {
@@ -254,6 +262,19 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
       actions.push({ name: `ダイス目を設定`, action: null, subActions: subActions });
     }
 
+    actions.push(ContextMenuSeparator);
+    actions.push(this.isLock
+        ? {
+          name: '固定解除', action: () => {
+            this.isLock = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '固定する', action: () => {
+            this.isLock = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        });
     actions.push(ContextMenuSeparator);
 
     actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.diceSymbol); } });
