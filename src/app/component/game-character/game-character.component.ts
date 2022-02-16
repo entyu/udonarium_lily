@@ -7,6 +7,7 @@ import {
   ElementRef,
   HostListener,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   ViewChild
@@ -19,6 +20,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
@@ -68,13 +70,17 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
+  private input: InputHandler = null;
+
   rotableOption: RotableOption = {};
 
   private highlightTimer: NodeJS.Timer;
   private unhighlightTimer: NodeJS.Timer;
 
   constructor(
+    private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
+    private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
@@ -131,9 +137,15 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     };
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {
+    this.ngZone.runOutsideAngular(() => {
+      this.input = new InputHandler(this.elementRef.nativeElement);
+    });
+    this.input.onStart = this.onInputStart.bind(this);
+  }
 
   ngOnDestroy() {
+    this.input.destroy();
     EventSystem.unregister(this);
   }
 
@@ -144,6 +156,17 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     e.preventDefault();
   }
 
+
+  onInputStart(e: any) {
+    this.input.cancel();
+
+    // TODO:もっと良い方法考える
+    if (this.isLock) {
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+    }
+  }
+
+
   @HostListener('contextmenu', ['$event'])
   onContextMenu(e: Event) {
     e.stopPropagation();
@@ -153,20 +176,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
-      (this.isLock
-        ? {
-          name: '固定解除', action: () => {
-            this.isLock = false;
-            SoundEffect.play(PresetSound.unlock);
-          }
-        } : {
-          name: '固定する', action: () => {
-            this.isLock = true;
-            SoundEffect.play(PresetSound.lock);
-          }
-        }),
-      ContextMenuSeparator,
-
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
       { name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } },
@@ -190,6 +199,19 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           SoundEffect.play(PresetSound.sweep);
         }
       },
+      ContextMenuSeparator,
+      (this.isLock
+        ? {
+          name: '固定解除', action: () => {
+            this.isLock = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        } : {
+          name: '固定する', action: () => {
+            this.isLock = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }),
       ContextMenuSeparator,
       {
         name: 'コピーを作る', action: () => {
