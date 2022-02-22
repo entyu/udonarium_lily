@@ -19,6 +19,8 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 
 import { GameCharacter } from '@udonarium/game-character'; //
 import { TextNote } from '@udonarium/text-note'; //
+import { Card } from '@udonarium/card'; //
+import { CardStack } from '@udonarium/card-stack'; //
 
 @Component({
   selector: 'overview-panel',
@@ -133,7 +135,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     let width : number = 250;
 
     if( alias == 'card'){
-      // 現状変更なし
+      width = this.overViewCharacterWidth;
     }
 
     if( alias == 'card-stack'){
@@ -207,7 +209,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     return maxHeight;
     
   }
-  
+
   get overViewCharacterWidth() : number {
     
     let character = <GameCharacter>this.tabletopObject;
@@ -228,8 +230,73 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     if( maxHeight > 1000 ) maxHeight = 1000;
     
     return maxHeight;
-    
   }
+
+  get overViewCardWidth() : number {
+    let card = <Card>this.tabletopObject;
+    let cardStack = <CardStack>this.tabletopObject;
+    let object = null;
+
+      console.log('overViewCardWidth');
+
+    if( ! card && ! cardStack ) return 250;
+    if( card ){
+      object = card;
+      console.log('card');
+    }else if( cardStack ){
+      console.log('cardStack');
+      object = cardStack;
+    }
+
+    let width = object.overViewWidth ;
+    if( width < 250 ) width = 250;
+    if( width > 1000 ) width = 1000;
+    return width;
+  }
+
+  get overViewCardWidthNoMargin() : number {
+    if( this.hasImage )
+      return this.overViewCardWidth - 60 - 12 -2;
+
+    return this.overViewCardWidth - 12 -2;
+  }
+
+
+  get overViewCardMaxHeight() : number {
+    let card = <Card>this.tabletopObject;
+    let cardStack = <CardStack>this.tabletopObject;
+    let object = null;
+
+    if( ! card && ! cardStack ) return 250;
+    if( card ){
+      object = card;
+    }else if( cardStack ){
+      object = cardStack;
+    }
+    let maxHeight = object.overViewMaxHeight ;
+    if( maxHeight < 250 ) maxHeight = 250;
+    if( maxHeight > 1000 ) maxHeight = 1000;
+    return maxHeight;
+  }
+/*
+  get overViewCardStackWidth() : number {
+    let cardStack = <CardStack>this.tabletopObject;
+    if( ! cardStack ) return 270;
+    let width = cardStack.overViewWidth ;
+    if( width < 270 ) width = 270;
+    if( width > 800 ) width = 800;
+    return width;
+  }
+
+  get overViewCardStackMaxHeight() : number {
+    let cardStack = <CardStack>this.tabletopObject;
+    if( ! cardStack ) return 250;
+    let maxHeight = cardStack.overViewMaxHeight ;
+    if( maxHeight < 250 ) maxHeight = 250;
+    if( maxHeight > 1000 ) maxHeight = 1000;
+    return maxHeight;
+  }
+*/
 
   escapeHtml(text) {
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")

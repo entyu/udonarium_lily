@@ -29,24 +29,27 @@
 
 <ng-template #overviewCard let-card="card">
   <div class="component-content is-small-size"
-    [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
+    [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
+    [ngStyle]="{'width': overViewCardWidth + 'px'}">
     <div *ngIf="hasImage" style="position: relative;">
       <img class="card-image" [src]="imageUrl | safe: 'resourceUrl'" />
       <button class="zoom-button" (click)="chanageImageView(true)">
         <i class="material-icons">zoom_in</i>
       </button>
-      <div *ngIf="card.hasOwner && 0 < card.ownerName.length" class="component-owner position-right-bottom"
-        [ngClass]="{'with-button-marign': hasImage}">
+      <div *ngIf="card.hasOwner && 0 < card.ownerName.length" class="component-owner position-right-bottom">
         <div class="owner-tag">{{card.ownerName}}</div>
       </div>
     </div>
     <div *ngIf="0 < card?.name?.length" class="component-title title-background"
-      [ngClass]="{'with-button-marign': hasImage}">
+      [ngClass]="{'with-button-marign': hasImage}"
+      [ngStyle]="{'width': overViewCardWidthNoMargin + 'px'}">
       <ng-container *ngIf="card.isVisible == null || card.isVisible">{{card.name}}</ng-container>
       <ng-container *ngIf="card.isVisible != null && !card.isVisible">カード</ng-container>
     </div>
-    <div class="component-background">
-      <div class="grid-container-root" *ngIf="hasDataElms && card.isVisible">
+    <div class="component-background"
+      [ngStyle]="{'width': overViewCardWidth + 'px','max-height': overViewCardMaxHeight +'px'}">
+      <div class="grid-container-root" *ngIf="hasDataElms && card.isVisible"
+       [ngStyle]="{'width': overViewCardWidth + 'px','max-height': overViewCardMaxHeight +'px'}">
         <div class="grid-container">
           <ng-container *ngFor="let dataElm of dataElms">
             <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }"></ng-container>

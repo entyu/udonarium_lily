@@ -17,7 +17,7 @@ export class CardStack extends TabletopObject {
   @SyncVar() owner: string = '';
   @SyncVar() isShowTotal: boolean = true;
 
-  @SyncVar() overViewWidth: number = 270;
+  @SyncVar() overViewWidth: number = 250;
   @SyncVar() overViewMaxHeight: number = 250;
 
   get name(): string { return this.getCommonValue('name', ''); }
