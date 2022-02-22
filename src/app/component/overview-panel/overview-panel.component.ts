@@ -135,11 +135,11 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     let width : number = 250;
 
     if( alias == 'card'){
-      width = this.overViewCharacterWidth;
+      width = this.overViewCardWidth;
     }
 
     if( alias == 'card-stack'){
-      // 現状変更なし
+      width = this.overViewCardWidth;
     }
 
     if( alias == 'text-note'){
