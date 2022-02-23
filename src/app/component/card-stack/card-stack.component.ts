@@ -20,6 +20,7 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { CardStackListComponent } from 'component/card-stack-list/card-stack-list.component';
+import { CardStackListComponentEx } from 'component/card-stack-list-ex/card-stack-list-ex.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
@@ -447,7 +448,8 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     let option: PanelOption = { left: coordinate.x - 200, top: coordinate.y - 300, width: 400, height: 600 };
 
     this.cardStack.owner = Network.peerContext.userId;
-    let component = this.panelService.open<CardStackListComponent>(CardStackListComponent, option);
+//    let component = this.panelService.open<CardStackListComponent>(CardStackListComponent, option);
+    let component = this.panelService.open<CardStackListComponentEx>(CardStackListComponentEx, option);
     component.cardStack = gameObject;
   }
 
