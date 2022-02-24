@@ -46,3 +46,4 @@ testem.log
 Thumbs.db
 src/assets/config.yaml
 package-lock.json
+.angular/cache/

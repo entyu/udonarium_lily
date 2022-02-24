@@ -35,13 +35,12 @@
               <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
               <div class="back-tag has-length-limit is-3d">{{name}}</div>
             </div>
-            <div class="is-pointer-events-none is-3d" [@switchImage]="gameCharacter.currntImageIndex">
-              <div class="inverser is-3d" [ngClass]="{inverse: isInverse}">
-                <span class="aura is-3d" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-                  <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio">
-                    <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d" [ngClass]="{'black-paint': isBlackPaint, 'hollow': isHollow}" [src]="imageFile.url | safe: 'resourceUrl'"
+            <div class="is-pointer-events-none is-3d aura" [@switchImage]="gameCharacter.currntImageIndex"
+              [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
+              <div class="inverser is-3d" [ngClass]="{inverse: isInverse, 'black-paint': isBlackPaint, 'hollow': isHollow}">
+                <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio">
+                  <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d"  [src]="imageFile.url | safe: 'resourceUrl'"
                     [style.height.px]="size * gridSize * heightWidthRatio" (load)="onImageLoad()">
-                  </span>
                 </span>
               </div>
             </div>
