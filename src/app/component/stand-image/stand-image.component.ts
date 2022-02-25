@@ -1,12 +1,10 @@
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
-import { ArrayType, ThrowStmt } from '@angular/compiler';
 import { ElementRef, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
-import { StandImageService } from 'service/stand-image.service';
 
 @Component({
   selector: 'stand-image',
