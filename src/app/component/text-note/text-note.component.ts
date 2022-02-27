@@ -61,6 +61,10 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
+  get rubiedText(): string {
+    return StringUtil.rubyToHtml(StringUtil.escapeHtml(this.text));
+  }
+  
   private callbackOnMouseUp = (e) => this.onMouseUp(e);
 
   gridSize: number = 50;
@@ -328,6 +332,11 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     if (textArea.scrollHeight > textArea.offsetHeight) {
       textArea.style.height = textArea.scrollHeight + 'px';
     }
+  }
+
+  lastNewLineAdjust(str: string): string {
+    if (str == null) return '';
+    return (!this.isSelected && str.lastIndexOf("\n") == str.length - 1) ? str + "\n" : str;
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {

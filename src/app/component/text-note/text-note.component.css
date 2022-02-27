@@ -203,3 +203,23 @@
   -webkit-transition: -webkit-transform 132ms cubic-bezier(.21,.97,.75,1.25);
   transition: transform 132ms cubic-bezier(.21,.97,.75,1.25);
 }
+
+.hide-area {
+  overflow: hidden !important;
+  font-size: 0pt !important;
+  width: 0px !important;
+  height: 0px !important;
+  margin: 0px !important;
+  padding: 0px !important;
+  border: 0px none !important;
+}
+
+.note-text {
+  font-family: Cambria, Georgia;
+  padding: 2px;
+  white-space: pre-wrap;
+  backface-visibility: hidden;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

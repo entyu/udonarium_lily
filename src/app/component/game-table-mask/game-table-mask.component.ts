@@ -67,6 +67,10 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get gameTableMaskAltitude(): number {
     return +this.altitude.toFixed(1); 
   }
+  
+  get rubiedText(): string {
+    return StringUtil.rubyToHtml(StringUtil.escapeHtml(this.text));
+  }
 
   gridSize: number = 50;
   math = Math;
