@@ -5,6 +5,8 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 
 import { EventSystem, Network } from '@udonarium/core/system';
 import { ChatTachieImageComponent } from 'component/chat-tachie-img/chat-tachie-img.component';
+import { CardStackListImageComponent } from 'component/card-stack-list-img/card-stack-list-img.component';
+
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { CutIn } from '@udonarium/cut-in';
 

@@ -10,7 +10,6 @@
 .image {
   padding: 0px;
   width: 64px;
-  height: 64px;
   display: inline-block;
   vertical-align: top;
 }
@@ -19,4 +18,11 @@
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
+}
+
+.card-image{
+  position: absolute;
+  padding: 0;
+  vertical-align: bottom;
+  z-index: 1;
 }

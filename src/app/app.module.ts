@@ -6,6 +6,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BadgeComponent } from 'component/badge/badge.component';
 import { CardStackListComponent } from 'component/card-stack-list/card-stack-list.component';
 import { CardStackListComponentEx } from 'component/card-stack-list-ex/card-stack-list-ex.component';
+import { CardStackListImageComponent } from 'component/card-stack-list-img/card-stack-list-img.component';
+
 import { CardStackComponent } from 'component/card-stack/card-stack.component';
 import { CardComponent } from 'component/card/card.component';
 import { ChatInputComponent } from 'component/chat-input/chat-input.component';
@@ -93,6 +95,7 @@ import { AppComponent } from './app.component';
     CardStackComponent,
     CardStackListComponent,
     CardStackListComponentEx,
+//    CardStackListImageComponent,
     ChatMessageComponent,
     ChatPaletteComponent,
     ChatTabComponent,
