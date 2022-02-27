@@ -352,7 +352,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     } else if (this.tabletopObject instanceof Card) {
       card = this.tabletopObject;
     }
-    return card ? card.text : '';
+    return card ? StringUtil.rubyToHtml(StringUtil.escapeHtml(card.text)) : '';
   }
 
   get isNoLogging(): boolean {

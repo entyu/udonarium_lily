@@ -4,7 +4,7 @@
     <div class="component-content is-pointer-events-auto is-3d"
       appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
       <div *ngIf="isFront || isHand" @flipOpen class="text is-3d" style="width: 100%; height: 100%" [style.opacity]="isHand ? 0.7 : 1.0">
-        <div [@inverse]="state" [style.font-size.px]="fontSize + 9" [style.color]="color" class="is-3d">{{text}}</div>
+        <div [@inverse]="state" [style.font-size.px]="fontSize + 9" [style.color]="color" class="is-3d" [innerHTML]="rubiedText"></div>
       </div>
       <img [@inverse]="state" *ngIf="imageFile" class="card-image is-3d" [src]="(isFront ? frontImage.url : backImage.url) | safe: 'resourceUrl'">
       <div *ngIf="!isFront && hasOwner && 0 < ownerName.length" class="name-tag is-nowrap has-length-limit is-black-background is-3d" [ngStyle]="{'background-color': ownerColor, 'transform': 'translateY(-75%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">

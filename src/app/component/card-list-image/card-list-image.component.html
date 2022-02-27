@@ -2,7 +2,7 @@
   <div class="text" style="z-index: 5"
     [style.width.px]="imageAreaRect.width" [style.height.px]="imageAreaRect.height" [style.left.px]="imageAreaRect.left" [style.top.px]="imageAreaRect.top"
     [ngStyle]="{transform: 'scale(' + imageAreaRect.scale + ')'}">
-    <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
+    <div [style.font-size.px]="cardFontSize" [style.color]="cardColor" [innerHTML]="rubiedText"></div>
   </div>
   <div class="image contain"><img #cardImage [src]="card?.frontImage?.url | safe: 'resourceUrl'" (load)="onCardImageLoad()"></div>
   <div class="image contain"><img [src]="card?.backImage?.url | safe: 'resourceUrl'"></div>

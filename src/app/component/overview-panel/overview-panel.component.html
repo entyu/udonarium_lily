@@ -35,7 +35,7 @@
         class="text" style="z-index: 5; top: 8px"
         [style.width.px]="imageAreaRect.width" [style.height.px]="imageAreaRect.height" [style.left.px]="imageAreaRect.left" 
         [ngStyle]="{transform: 'scale(' + imageAreaRect.scale + ')'}">
-        <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
+        <div [style.font-size.px]="cardFontSize" [style.color]="cardColor" [innerHTML]="cardText"></div>
       </div>
       <img #cardImage class="card-image" [src]="imageUrl | safe: 'resourceUrl'" (load)="onCardImageLoad()" />
       <button class="zoom-button" (click)="chanageImageView(true)" style="z-index: 10">
@@ -245,7 +245,7 @@
       class="text" style="z-index: 5"
       [style.width.px]="fullImageAreaRect.width" [style.height.px]="fullImageAreaRect.height" [style.left.px]="fullImageAreaRect.left" [style.top.px]="fullImageAreaRect.top"
       [ngStyle]="{transform: 'scale(' + fullImageAreaRect.scale + ')'}">
-      <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
+      <div [style.font-size.px]="cardFontSize" [style.color]="cardColor" [innerHTML]="cardText"></div>
     </div>
     <div class="close-button is-pointer-events-none" style="z-index: 10"><i class="material-icons">close</i></div>
     <img #fullCardImage class="contain-image" [src]="imageUrl | safe: 'resourceUrl'" />

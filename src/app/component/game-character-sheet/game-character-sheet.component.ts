@@ -19,6 +19,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 @Component({
   selector: 'game-character-sheet',
@@ -454,7 +455,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     } else if (this.tabletopObject instanceof Card) {
       card = this.tabletopObject;
     }
-    return card ? card.text : '';
+    return card ? StringUtil.rubyToHtml(StringUtil.escapeHtml(card.text)) : '';
   }
 
   get isVisible(): boolean {

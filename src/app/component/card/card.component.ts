@@ -110,6 +110,8 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   private iconHiddenTimer: NodeJS.Timer = null;
   get isIconHidden(): boolean { return this.iconHiddenTimer != null };
 
+  get rubiedText(): string { return StringUtil.rubyToHtml(StringUtil.escapeHtml(this.text)) }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};

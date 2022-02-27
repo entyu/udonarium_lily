@@ -63,7 +63,7 @@
     </div>
     <div *ngIf="(tabletopObject.aliasName == 'card' && (tabletopObject.isFront || tabletopObject.isHand)) || (tabletopObject.aliasName == 'card-stack' && tabletopObject.topCard.isFront)"
       class="text" [style.width.px]="imageAreaRreact.width" [style.height.px]="imageAreaRreact.height" [ngStyle]="{transform: 'scale(' + imageAreaRreact.scale + ')'}">
-      <div [style.font-size.px]="cardFontSize" [style.color]="cardColor">{{cardText}}</div>
+      <div [style.font-size.px]="cardFontSize" [style.color]="cardColor" [innerHTML]="cardText"></div>
     </div>
     <span style="display: inline-block;" class="inverser" [ngClass]="{inverse: tabletopObject.isInverse}">
       <span class="aura" [ngClass]="{black: tabletopObject.aura == 0, blue: tabletopObject.aura == 1, green: tabletopObject.aura == 2, cyan: tabletopObject.aura == 3, red: tabletopObject.aura == 4, magenta: tabletopObject.aura == 5, yellow: tabletopObject.aura == 6, white: tabletopObject.aura == 7}">
