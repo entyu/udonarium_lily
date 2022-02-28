@@ -68,7 +68,7 @@
     [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
     <div class="component-title title-background">{{note.title}}</div>
     <div class="component-background text-note-container">
-      <div style="position: relative" (click)="textAreaActivate()">
+      <div style="position: relative" (mousedown)="textAreaActivate()">
         <div class="is-fill">
           <textarea class="textarea" #textArea style="resize: none" [(ngModel)]="note.text" spellcheck="false" [ngClass]="{'hide-text-area': !isSelected}"></textarea>
         </div>
