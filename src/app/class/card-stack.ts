@@ -14,7 +14,8 @@ export class CardStack extends TabletopObject {
   @SyncVar() zindex: number = 0;
   @SyncVar() owner: string = '';
   @SyncVar() isShowTotal: boolean = true;
-
+  @SyncVar() isLocked: boolean = false;
+  
   get name(): string { return this.getCommonValue('name', ''); }
   get ownerName(): string {
     let object = PeerCursor.findByUserId(this.owner);

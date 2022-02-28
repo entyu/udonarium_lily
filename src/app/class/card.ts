@@ -17,6 +17,7 @@ export class Card extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() owner: string = '';
   @SyncVar() zindex: number = 0;
+  @SyncVar() isLocked: boolean = false;
 
   get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
 
