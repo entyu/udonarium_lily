@@ -37,7 +37,7 @@
         [ngStyle]="{transform: 'scale(' + imageAreaRect.scale + ')'}">
         <div [style.font-size.px]="cardFontSize" [style.color]="cardColor" [innerHTML]="cardText"></div>
       </div>
-      <img #cardImage class="card-image" [src]="imageUrl | safe: 'resourceUrl'" (load)="onCardImageLoad()" />
+      <img #cardImage class="card-image" [src]="imageUrl | safe: 'resourceUrl'" (load)="onCardImageLoad()" draggable="false" />
       <button class="zoom-button" (click)="chanageImageView(true)" style="z-index: 10">
         <i class="material-icons">zoom_in</i>
       </button>
@@ -91,13 +91,13 @@
         <div [ngStyle]="{'transform': ('rotate(' + roll + 'deg)') }">
           <div class="inverser" [ngClass]="{inverse: isInverse, hollow: isHollow}">
             <span class="aura" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
-              <img class="character-image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageUrl | safe: 'resourceUrl'">
+              <img class="character-image" [ngClass]="{'black-paint': isBlackPaint}" [src]="imageUrl | safe: 'resourceUrl'" style="pointer-events: none">
             </span>
           </div>
         </div>
       </ng-container>
       <ng-container *ngIf="isUseIcon">
-        <img class="character-image" [src]="imageUrl | safe: 'resourceUrl'" />
+        <img class="character-image" [src]="imageUrl | safe: 'resourceUrl'" style="pointer-events: none" />
       </ng-container>
       <!--<img class="character-image" [src]="imageUrl | safe: 'resourceUrl'" />-->
     </div>
@@ -140,7 +140,7 @@
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
       *ngIf="hasImage">
       <img class="character-image" [ngClass]="{'is-black-mask': !dice.isVisible, 'is-harf-black-mask': dice.isMine}"
-        [src]="imageUrl | safe: 'resourceUrl'" />
+        [src]="imageUrl | safe: 'resourceUrl'" draggable="false" />
     </div>
     <div class="void-area is-pointer-events-none"></div>
     <div class="dataElm-area component-background"
@@ -248,6 +248,6 @@
       <div [style.font-size.px]="cardFontSize" [style.color]="cardColor" [innerHTML]="cardText"></div>
     </div>
     <div class="close-button is-pointer-events-none" style="z-index: 10"><i class="material-icons">close</i></div>
-    <img #fullCardImage class="contain-image" [src]="imageUrl | safe: 'resourceUrl'" />
+    <img #fullCardImage class="contain-image" [src]="imageUrl | safe: 'resourceUrl'" draggable="false" />
   </div>
 </ng-template>
