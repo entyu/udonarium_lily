@@ -1,13 +1,13 @@
-<div class="component is-3d is-pointer-events-none" [ngClass]="{'is-empty': isEmpty}"
+<div class="component is-3d is-pointer-events-none is-3d" [ngClass]="{'is-empty': isEmpty}"
   [style.width.px]="size * gridSize"
   appMovable [movable.option]="movableOption" [movable.disable]="isLocked" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
-  <div class="component-content is-pointer-events-auto" [ngClass]="{'is-grab': !isLocked}"
+  <div class="component-content is-pointer-events-auto is-3d" [ngClass]="{'is-grab': !isLocked}"
     appRotable [rotable.option]="rotableOption" [rotable.disable]="isLocked" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-    <div *ngIf="topCard && imageFile" @bounceInOut (@shuffle.start)="animationShuffleStarted($event)" (@shuffle.done)="animationShuffleDone($event)"
+    <div *ngIf="topCard && imageFile" class="is-3d" @bounceInOut (@shuffle.start)="animationShuffleStarted($event)" (@shuffle.done)="animationShuffleDone($event)"
       [@shuffle]="animeState">
-      <div *ngIf="topCard.isFront" class="text" style="width: 100%; height: 100%"
+      <div *ngIf="topCard.isFront" class="text is-3d" style="width: 100%; height: 100%"
         [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}">
-        <div [style.font-size.px]="topCard.fontsize + 9" [style.color]="topCard.color" [innerHTML]="rubiedText"></div>
+        <div class="is-3d" [style.font-size.px]="topCard.fontsize + 9" [style.color]="topCard.color" [innerHTML]="rubiedText"></div>
       </div>
       <img class="card-image" [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
