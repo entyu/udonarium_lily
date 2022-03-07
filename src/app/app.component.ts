@@ -467,10 +467,26 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   toolBox() {
-    this.contextMenuService.open(this.pointerDeviceService.pointers[0], [
-      { name: 'カットイン', materialIcon: 'movie_creation', action: () => this.open('CutInSettingComponent') },
-      { name: 'ダイスボット表', materialIcon: 'table_rows', action: () => this.open('DiceRollTableSettingComponent') }
-    ], 'ツールボックス');
+    const menu = [];
+    menu.push({ name: 'カットイン設定', materialIcon: 'movie_creation', action: () => this.open('CutInSettingComponent') });
+    const cunIns = CutInList.instance.cutIns;
+    menu.push({ name: '　再生・停止（全員）', level: 1, disabled: cunIns.length === 0, 
+      action: null, subActions: cunIns.map(cutIn => {
+        return { 
+          name: `${cutIn.isValidAudio ? '' : '⚠️'}${cutIn.name}`, 
+          materialIcon: !cutIn.isPlayingNow ? 'play_arrow' : 'stop',
+          action: () => {
+            EventSystem.call(cutIn.isPlayingNow ? 'STOP_CUT_IN' : 'PLAY_CUT_IN', {
+              identifier: cutIn.identifier,
+              secret: false,
+              sender: PeerCursor.myCursor.peerId
+            })
+          }
+        };
+      })
+    });
+    menu.push({ name: 'ダイスボット表設定', materialIcon: 'table_rows', action: () => this.open('DiceRollTableSettingComponent') })
+    this.contextMenuService.open(this.pointerDeviceService.pointers[0], menu, 'ツールボックス');
   }
 
   resetPointOfView() {

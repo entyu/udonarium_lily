@@ -1,3 +1,4 @@
+import { CutInService } from 'service/cut-in.service';
 import { AudioStorage } from './core/file-storage/audio-storage';
 import { ImageFile } from './core/file-storage/image-file';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
@@ -97,5 +98,9 @@ export class CutIn extends ObjectNode {
     return Array.from(new Set((<string>this.value).split(/[\r\n]+/g).map(row => {
       return row != null ? row.trimRight() : '';
     }))).filter(row => row != '');
+  }
+
+  get isPlayingNow(): boolean {
+    return CutInService.nowShowingIdentifiers().includes(this.identifier);
   }
 }

@@ -129,12 +129,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.selectedCutIn) return false;
     return CutInService.nowShowingIdentifiers().includes(this.selectedCutIn.identifier);
   }
-
-  isPlayingNow(cutIn: CutIn): boolean {
-    if (!cutIn) return false;
-    return CutInService.nowShowingIdentifiers().includes(cutIn.identifier);
-  }
-
+  
   get isValidAudio(): boolean {
     if (!this.selectedCutIn) return true;
     return this.selectedCutIn.isValidAudio;
