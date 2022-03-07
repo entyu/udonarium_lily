@@ -4,7 +4,7 @@
       <button (click)="create()" style="font-size: smaller; margin-bottom: 2px">チャットタブを作る</button>
     </div>
     <select style="width: 100%; max-width: 140px" size="10" (change)="onChangeSelectTab($event.target.value)" [ngModel]="selectedTab?.identifier">
-      <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}">{{chatTab.name}}</option>
+      <option *ngFor="let chatTab of chatTabs" value="{{chatTab.identifier}}" title="{{chatTab.name}}" [style.color]="chatTab.name == '' ? 'gray' : ''">{{chatTab.name == '' ? '(無名のタブ)' : chatTab.name}}</option>
     </select>
   </div>
   <div class="flex-item">

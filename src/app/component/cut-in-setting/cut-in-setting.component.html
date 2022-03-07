@@ -4,7 +4,7 @@
       <button style="font-size: smaller; margin-bottom: 3px" (click)="add()">カットインの追加</button>
     </div>
     <select #cutInSelecter style="width: 12em;" size="15" (change)="onChangeCutIn($event.target.value)">
-      <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}" [style.font-weight]="cutIn.isPlayingNow ? 'bolder' : 'normal'" [style.color]="cutIn.isValidAudio ? '' : 'red'">{{ (cutIn.isValidAudio ? '' : '⚠️') + cutIn.name }}</option>
+      <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}" title="{{ cutIn.name }}" [style.font-weight]="cutIn.isPlayingNow ? 'bolder' : 'normal'" [style.color]="cutIn.isValidAudio ? cutIn.name == '' ? 'gray' : '' : 'red'">{{ (cutIn.isValidAudio ? '' : '⚠️') + (cutIn.name == '' ? '(無名のカットイン)' : cutIn.name) }}</option>
     </select>
   </div>
   <div class="flex-item">
@@ -101,7 +101,7 @@
             <input [(ngModel)]="cutInWidth" type="number" min="{{minSize}}" max="{{maxSize * 2}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="padding-left: 2px">%</b>
           </div>
           <div style="padding-left: 1em">
-            <b>Height (0=指定なし): </b><input [(ngModel)]="cutInHeight" type="range"　title="{{cutInHeight}}" min="{{minSize}}" max="{{maxSize}}" style="width: 180px" name="cutIHeight" [attr.disabled]="!isEditable ? '' : null" />
+            <b>Height (0=指定なし): </b><input [(ngModel)]="cutInHeight" type="range" title="{{cutInHeight}}" min="{{minSize}}" max="{{maxSize}}" style="width: 180px" name="cutIHeight" [attr.disabled]="!isEditable ? '' : null" />
             <input [(ngModel)]="cutInHeight" type="number" min="{{minSize}}" max="{{maxSize * 2}}" style="width: 3.5em" [attr.disabled]="!isEditable ? '' : null"><b style="padding-left: 2px">%</b>
           </div>
           <div style="padding-left: 1em">

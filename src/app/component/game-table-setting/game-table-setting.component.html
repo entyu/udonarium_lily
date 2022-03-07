@@ -4,7 +4,7 @@
       <button style="margin-bottom: 2px; font-size: smaller" (click)="createGameTable()">新しいテーブルを作る</button>
     </div>
     <select style="width: 100%; max-width: 155px" size="10" (change)="selectGameTable($event.target.value)" [ngModel]="selectedTable?.identifier">
-      <option *ngFor="let gameTable of getGameTables()" value="{{gameTable.identifier}}">{{gameTable.name}}</option>
+      <option *ngFor="let gameTable of getGameTables()" value="{{gameTable.identifier}}" title="{{gameTable.name}}" [style.color]="gameTable.name == '' ? 'gray' : ''">{{gameTable.name == '' ? '(無名のテーブル)' : gameTable.name}}</option>
     </select>
   </div>
   <div class="flex-item">

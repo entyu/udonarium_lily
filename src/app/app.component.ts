@@ -473,7 +473,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     menu.push({ name: '　再生・停止（全員）', level: 1, disabled: cunIns.length === 0, 
       action: null, subActions: cunIns.map(cutIn => {
         return { 
-          name: `${cutIn.isValidAudio ? '' : '⚠️'}${cutIn.name}`, 
+          name: `${cutIn.isValidAudio ? '' : '⚠️'}${cutIn.name == '' ? '(無名のカットイン)' : cutIn.name}`, 
           materialIcon: !cutIn.isPlayingNow ? 'play_arrow' : 'stop',
           action: () => {
             EventSystem.call(cutIn.isPlayingNow ? 'STOP_CUT_IN' : 'PLAY_CUT_IN', {

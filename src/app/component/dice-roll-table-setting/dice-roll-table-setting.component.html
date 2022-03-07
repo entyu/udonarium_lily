@@ -4,7 +4,7 @@
       <button style="font-size: smaller; margin-bottom: 3px" (click)="add()">ダイスボット表の追加</button>
     </div>
     <select #diceRollTableSelecter style="width: 14em;" size="15" (change)="onChangeDiceRollTable($event.target.value)">
-      <option *ngFor="let diceRollTable of diceRollTables" value="{{ diceRollTable.identifier }}">{{ diceRollTable.name }}</option>
+      <option *ngFor="let diceRollTable of diceRollTables" value="{{ diceRollTable.identifier }}" title="{{diceRollTable.name}}" [style.color]="diceRollTable.name == '' ? 'gray' : ''">{{ diceRollTable.name == '' ? '(無名のダイスボット表)' : diceRollTable.name }}</option>
     </select>
   </div>
   <div class="flex-item">
