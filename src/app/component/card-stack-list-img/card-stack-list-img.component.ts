@@ -28,7 +28,6 @@ export class CardStackListImageComponent implements OnInit, OnDestroy, AfterView
 
   @ViewChild('cardArea', { read: ElementRef }) private cardArea: ElementRef;  
   private _cardAreaWidth = 0;
-
 //  get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
 
   get tachieY_Pos():number{ 
