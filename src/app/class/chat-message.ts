@@ -288,6 +288,9 @@ a.outer-link::after {
 }
 .direct-message a[href]:visited {
   color: #99D;
+}
+ruby {
+  ruby-align: space-between;
 }`;
   }
 }
