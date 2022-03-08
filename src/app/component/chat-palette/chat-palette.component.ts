@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import GameSystemClass from 'bcdice/lib/game_system';
-import { ChatPalette , PaletteIndex} from '@udonarium/chat-palette';
+import { ChatPalette , PaletteIndex , PaletteMatch} from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
@@ -197,9 +197,11 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
 
     this.contextMenuService.open(position, index ,
         'インデックス');
+  }
 
-
-
+  autoCompleteList(): PaletteMatch[]{
+    let paletteMatch : PaletteMatch[] = this.palette.paletteMatch(this.text,2,10);
+    return paletteMatch;
   }
 
 }

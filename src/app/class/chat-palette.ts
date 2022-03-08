@@ -13,6 +13,11 @@ export interface PaletteIndex {
   line: number;
 }
 
+export interface PaletteMatch {
+  text: string;
+  line: number;
+}
+
 export interface PaletteVariable {
   name: string;
   value: string;
@@ -73,6 +78,33 @@ export class ChatPalette extends ObjectNode {
     }
     return indexList;
   }
+
+  paletteMatch(text: string,minLen: number,maxLen: number): PaletteMatch[] {
+    let count = 0;
+    let ret;
+    let matchList: PaletteMatch[] = [];
+
+    if( text.length < minLen || text.length > maxLen ){
+      return matchList;
+    }
+
+    let palettString = <string> this.value;
+    let palettes = palettString.split('\n');
+
+    for (let line of palettes ){
+      if (line.indexOf(text) >= 0){
+        let data: PaletteMatch = {
+          text: line,
+          line: count,
+        };
+        
+        matchList.push(data);
+      }
+      count++;
+    }
+    return matchList;
+  }
+
 
   private _palettes: string[] = [];
   private _paletteLines: PaletteLine[] = [];
