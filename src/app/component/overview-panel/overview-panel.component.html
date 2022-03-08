@@ -46,7 +46,7 @@
         <div class="owner-tag" [style.background-color]="card.ownerColor">{{card.ownerName}}</div>
       </div>
     </div>
-    <div *ngIf="0 < card?.name?.length" class="component-title title-background"
+    <div class="component-title title-background"
       [ngClass]="{'with-button-marign': hasImage}">
       <ng-container *ngIf="card.isVisible == null || card.isVisible">{{card.name}}</ng-container>
       <ng-container *ngIf="card.isVisible != null && !card.isVisible">カード（裏面）</ng-container>
@@ -127,9 +127,7 @@
     </div>
     <div class="title-area component-title"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
-      {{dice.name}}:
-      <ng-container *ngIf="dice.isVisible">{{dice.face}}</ng-container>
-      <ng-container *ngIf="!dice.isVisible">???</ng-container>
+      <ng-container *ngIf="0 < dice?.name?.length">{{dice.name}}:</ng-container><ng-container *ngIf="dice.isVisible">{{dice.face}}</ng-container><ng-container *ngIf="!dice.isVisible">???</ng-container>
     </div>
     <div *ngIf="dice.hasOwner && 0 < dice.ownerName.length" class="owner-name-area component-owner"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
