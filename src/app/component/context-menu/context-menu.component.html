@@ -18,6 +18,8 @@
 <ng-template #actionMenu let-action="action">
   <li [ngClass]="{'hasHighlight': !(action.disabled || action.icon || (action.altitudeHande && action.altitudeHande.altitude == 0)), 'disabled': (action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0))}"
       [style.padding-left.em]="action.icon ? 0 : (action.level ? (action.level + 1.5) : 1.5) - (altitudeHande ? 0.5 : 0)"
+      [style.color]="action.color ? action.color : ''"
+      [style.text-align]="action.center ? 'center': ''"
       (click)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : doAction(action)"
       (mouseenter)="(action.disabled || (action.altitudeHande && action.altitudeHande.altitude == 0)) ? false : showSubMenu(action)">
     <div class="menu-title" [ngClass]="{'icon-menu': action.icon, default: action.default}">

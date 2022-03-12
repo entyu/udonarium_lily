@@ -67,6 +67,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   progresPercent: number = 0;
 
   isHorizontal = false;
+  
+  get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
   constructor(
     private modalService: ModalService,
@@ -468,23 +470,47 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   toolBox() {
     const menu = [];
-    menu.push({ name: 'カットイン設定', materialIcon: 'movie_creation', action: () => this.open('CutInSettingComponent') });
     const cunIns = CutInList.instance.cutIns;
-    menu.push({ name: '　再生・停止（全員）', level: 1, disabled: cunIns.length === 0, 
+    menu.push({ name: 'カットイン再生・停止', materialIcon: 'movie_creation', disabled: cunIns.length === 0, 
       action: null, subActions: cunIns.map(cutIn => {
+        const isPlayingNow = cutIn.isPlayingNow;
         return { 
           name: `${cutIn.isValidAudio ? '' : '⚠️'}${cutIn.name == '' ? '(無名のカットイン)' : cutIn.name}`, 
-          materialIcon: !cutIn.isPlayingNow ? 'play_arrow' : 'stop',
-          action: () => {
-            EventSystem.call(cutIn.isPlayingNow ? 'STOP_CUT_IN' : 'PLAY_CUT_IN', {
-              identifier: cutIn.identifier,
-              secret: false,
-              sender: PeerCursor.myCursor.peerId
-            })
-          }
+          materialIcon: !isPlayingNow ? 'play_arrow' : 'stop',
+          subActions: [{
+              name: '全員',
+              action: () => {
+                EventSystem.call(isPlayingNow ? 'STOP_CUT_IN' : 'PLAY_CUT_IN', {
+                  identifier: cutIn.identifier,
+                  secret: false,
+                  sender: PeerCursor.myCursor.peerId
+                })
+              }
+            }, ContextMenuSeparator, ...this.otherPeers.map(peer => {
+            return {
+              name: peer.name + (peer === PeerCursor.myCursor ? ' (あなた)' : ''),
+              color: peer.color,
+              default: true,
+              action: () => {
+                if (peer !== PeerCursor.myCursor) {
+                  EventSystem.call(isPlayingNow ? 'STOP_CUT_IN' : 'PLAY_CUT_IN', {
+                    identifier: cutIn.identifier,
+                    secret: true,
+                    sender: PeerCursor.myCursor.peerId
+                  }, peer.peerId);
+                }
+                EventSystem.call(isPlayingNow ? 'STOP_CUT_IN' : 'PLAY_CUT_IN', {
+                  identifier: cutIn.identifier,
+                  secret: true,
+                  sender: PeerCursor.myCursor.peerId
+                }, PeerCursor.myCursor.peerId);
+              }
+            }
+          })]
         };
       })
     });
+    menu.push({ name: '　カットイン設定', level: 1, action: () => this.open('CutInSettingComponent') });
     menu.push({ name: 'ダイスボット表設定', materialIcon: 'table_rows', action: () => this.open('DiceRollTableSettingComponent') })
     this.contextMenuService.open(this.pointerDeviceService.pointers[0], menu, 'ツールボックス');
   }
