@@ -210,14 +210,14 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       let card: Card = e.detail;
       let distance: number = (card.location.x - this.cardStack.location.x) ** 2 + (card.location.y - this.cardStack.location.y) ** 2 + (card.posZ - this.cardStack.posZ) ** 2;
       if (distance < 50 ** 2) {
-        this.chatMessageService.sendOperationLog(`${card.isFront ? card.name : '伏せたカード'} を ${this.cardStack.name} に乗せた`);
+        this.chatMessageService.sendOperationLog(`${card.isFront ? (card.name == '' ? '(無名のカード)' : card.name) : '伏せたカード'} を ${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} に乗せた`);
         this.cardStack.putOnTop(card);
       }
     } else if (e.detail instanceof CardStack) {
       let cardStack: CardStack = e.detail;
       let distance: number = (cardStack.location.x - this.cardStack.location.x) ** 2 + (cardStack.location.y - this.cardStack.location.y) ** 2 + (cardStack.posZ - this.cardStack.posZ) ** 2;
       if (distance < 25 ** 2) {
-        this.chatMessageService.sendOperationLog(`${cardStack.name} を全て ${this.cardStack.name} に乗せた`);
+        this.chatMessageService.sendOperationLog(`${cardStack.name == '' ? '(無名の山札)' : cardStack.name} を全て ${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} に乗せた`);
         this.concatStack(cardStack);
       }
     }
@@ -255,9 +255,9 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         SoundEffect.play(PresetSound.cardDraw);
         let text: string;
         if (card.isFront) {
-          text = `${this.cardStack.name} から ${card.name} を引いた`
+          text = `${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} から ${card.name == '' ? '(無名のカード)' : card.name} を引いた`
         } else {
-          text = `${this.cardStack.name} から 1枚引いて伏せた`
+          text = `${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} から 1枚引いて伏せた`
         }
         this.chatMessageService.sendOperationLog(text);
       }
@@ -311,7 +311,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
             SoundEffect.play(PresetSound.cardDraw);
             let text: string;
             if (card.isFront) {
-              text = `${this.cardStack.name} から ${card.name} を引いた`
+              text = `${this.cardStack.name} から ${card.name == '' ? '(無名のカード)' : card.name} を引いた`
             } else {
               text = `${this.cardStack.name} から 1枚引いて伏せた`
             }
@@ -338,15 +338,15 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
               if (cards.length > 0) {
                 const frontCards = cards.filter(card => card.isFront);
                 if (frontCards.length == 0) {
-                  this.chatMessageService.sendOperationLog(`${this.cardStack.name} から ${cards.length}枚引いて伏せた`);
+                  this.chatMessageService.sendOperationLog(`${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} から ${cards.length}枚引いて伏せた`);
                 } else {
                   const counter = new Map();
                   for (const card of frontCards) {
                     let count = counter.get(card.name) || 0;
                     count += 1;
-                    counter.set(card.name, count);
+                    counter.set(card.name == '' ? '(無名のカード)' : card.name, count);
                   }
-                  let text = `${this.cardStack.name} から ${[...counter.keys()].map(key => `${key} を ${counter.get(key)}枚`).join('、')}`;
+                  let text = `${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} から ${[...counter.keys()].map(key => `${key} を ${counter.get(key)}枚`).join('、')}`;
                   if (frontCards.length === cards.length) {
                     text += '引いた'
                   } else {
@@ -364,7 +364,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       (this.cards.length == 0 || !this.cardStack.topCard.isFront ? {
         name: '一番上を表にする', action: () => {
           if (!this.cardStack.topCard) return;
-          if (!this.cardStack.topCard.isFront) this.chatMessageService.sendOperationLog(`${this.cardStack.name} の一番上の ${this.cardStack.topCard.name} を公開した`);
+          if (!this.cardStack.topCard.isFront) this.chatMessageService.sendOperationLog(`${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} の一番上の ${this.cardStack.topCard.name == '' ? '(無名のカード)' : this.cardStack.topCard.name} を公開した`);
           this.cardStack.faceUp();
           SoundEffect.play(PresetSound.cardDraw);
         }, 
@@ -411,7 +411,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       { name: 'カード一覧を見る', action: () => {
         this.showStackList(this.cardStack);
-        this.chatMessageService.sendOperationLog(`${this.cardStack.name} のカード一覧を見た`);
+        this.chatMessageService.sendOperationLog(`${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} のカード一覧を見た`);
       }, disabled: this.cards.length == 0 },
       ContextMenuSeparator,
       (this.isShowTotal

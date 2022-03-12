@@ -67,9 +67,9 @@ export class CardStackListComponent implements OnInit, OnDestroy {
     card.toTopmost();
     SoundEffect.play(PresetSound.cardDraw);
     if (card.isFront) {
-      this.chatMessageService.sendOperationLog(`${this.cardStack.name} から ${card.name} を取り出した`);
+      this.chatMessageService.sendOperationLog(`${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} から ${card.name == '' ? '(無名のカード)' : card.name} を取り出した`);
     } else {
-      this.chatMessageService.sendOperationLog(`${this.cardStack.name} から 1枚取り出して伏せた`);
+      this.chatMessageService.sendOperationLog(`${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} から 1枚取り出して伏せた`);
     }
   } 
 

@@ -1,5 +1,13 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
+import { Card } from '@udonarium/card';
+import { CardStack } from '@udonarium/card-stack';
+import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { DataElement } from '@udonarium/data-element';
+import { DiceSymbol } from '@udonarium/dice-symbol';
+import { GameCharacter } from '@udonarium/game-character';
+import { GameTableMask } from '@udonarium/game-table-mask';
+import { Terrain } from '@udonarium/terrain';
+import { TextNote } from '@udonarium/text-note';
 import { ChatMessageService } from 'service/chat-message.service';
 
 interface LoggingValue {
@@ -18,8 +26,34 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
   @Input('logging.loggingValue') showValue: boolean = true;
 
   private static LoggingValueMap = new Map<string, LoggingValue>(); 
+  type = 'オブジェクト';
 
   ngAfterViewInit() {
+    let elm = <ObjectNode>this.dataElement;
+    while (elm = elm.parent) {
+      if (elm instanceof Card) {
+        this.type = 'カード';
+      }
+      if (elm instanceof CardStack) {
+        this.type = '山札';
+      }
+      if (elm instanceof DiceSymbol) {
+        this.type = (elm.isCoin ? 'コイン' : 'ダイス');
+      }
+      if (elm instanceof GameCharacter) {
+        this.type = 'キャラクター';
+      }
+      if (elm instanceof GameTableMask) {
+        this.type = 'マップマスク';
+      }
+      if (elm instanceof Terrain) {
+        this.type = '地形';
+      }
+      if (elm instanceof TextNote) {
+        this.type = '共有メモ';
+      }
+      if (!elm.parentIsAssigned || elm.parentIsUnknown) break;
+    }
     const LoggingValueMap = LoggingInputDirective.LoggingValueMap;
     LoggingInputDirective.LoggingValueMap.set(this.dataElement.identifier, { oldValue: this.loggingValue });
     this.elementRef.nativeElement.addEventListener('change', () => {
@@ -29,7 +63,7 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
         const oldValue = LoggingValueMap.get(identifier).oldValue;
         const value = this.loggingValue;
         if (!this.isDisable && value != oldValue) {
-          let text = `${this.name} の ${this.dataElement.name} を変更`;
+          let text = `${this.name == '' ? `(無名の${this.type})` : this.name} の ${this.dataElement.name == '' ? '(無名の変数)' : this.dataElement.name} を変更`;
           if (this.showValue && (this.dataElement.isSimpleNumber || this.dataElement.isNumberResource || this.dataElement.isAbilityScore)) {
             text += ` ${oldValue} → ${value}`;
           } else if (this.showValue && this.dataElement.isCheckProperty) {
@@ -49,7 +83,7 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
     const oldValue = LoggingValueMap.get(identifier).oldValue;
     const value = this.loggingValue;
     if (!this.isDisable && value != oldValue) {
-      let text = `${this.name} の ${this.dataElement.name} を変更`;
+      let text = `${this.name == '' ? `(無名の${this.type})` : this.name} の ${this.dataElement.name == '' ? '(無名の変数)' : this.dataElement.name} を変更`;
       if (this.showValue && (this.dataElement.isSimpleNumber || this.dataElement.isNumberResource || this.dataElement.isAbilityScore)) {
         text += ` ${oldValue} → ${value}`;
       } else if (this.dataElement.isCheckProperty) {

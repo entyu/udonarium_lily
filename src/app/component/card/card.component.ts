@@ -233,7 +233,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.hasOwner && !this.isHand) return;
       this.state = this.isVisible && !this.isHand ? CardState.BACK : CardState.FRONT;
       this.owner = '';
-      if (this.state === CardState.FRONT) this.chatMessageService.sendOperationLog(this.card.name + ' を公開');
+      if (this.state === CardState.FRONT) this.chatMessageService.sendOperationLog((this.card.name == '' ? '(無名のカード)' : this.card.name)  + ' を公開');
       SoundEffect.play(PresetSound.cardDraw);
     }
   }
@@ -279,7 +279,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         ? {
           name: this.isHand ? '表向きで出す（公開する）' : this.hasOwner ? '表にする（公開する）' : '表にする', action: () => {
             this.card.faceUp();
-            this.chatMessageService.sendOperationLog(this.card.name + ' を公開');
+            this.chatMessageService.sendOperationLog((this.card.name == '' ? '(無名のカード)' : this.card.name) + ' を公開');
             SoundEffect.play(PresetSound.cardDraw);
           }, default: !this.isLocked && (!this.hasOwner || this.isHand)
         }
@@ -300,7 +300,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         : {
           name: '自分だけ見る（手札にする）', action: () => {
             SoundEffect.play(PresetSound.cardDraw);
-            this.chatMessageService.sendOperationLog(`${this.card.isFront ? this.card.name : '伏せたカード'} を自分だけ見た`);
+            this.chatMessageService.sendOperationLog(`${this.card.isFront ? (this.card.name == '' ? '(無名のカード)' : this.card.name)  : '(伏せたカード)'} を自分だけ見た`);
             this.card.faceDown();
             this.owner = Network.peerContext.userId;
           }
