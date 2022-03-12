@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "^13.2.6",
     "@angular/router": "^13.2.6",
     "@angular/service-worker": "^13.2.6",
-    "@angular/youtube-player": "^12.0.2",
+    "@angular/youtube-player": "^13.2.6",
     "ansi-regex": ">=5.0.1",
     "autolinker": "^3.14.3",
     "bcdice": "^3.5.1",
