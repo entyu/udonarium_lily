@@ -483,8 +483,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           name: `${cutIn.isValidAudio ? '' : '⚠️'}${cutIn.name == '' ? '(無名のカットイン)' : cutIn.name}`, 
           subActions: [{
               name: '全員',
-              center: true,
-              default: true,
               action: () => {
                 EventSystem.call('PLAY_CUT_IN', {
                   identifier: cutIn.identifier,
