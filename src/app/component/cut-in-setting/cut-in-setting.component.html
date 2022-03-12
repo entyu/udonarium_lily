@@ -4,7 +4,7 @@
       <button style="font-size: smaller; margin-bottom: 3px" (click)="add()">カットインの追加</button>
     </div>
     <select #cutInSelecter style="width: 12em;" size="15" (change)="onChangeCutIn($event.target.value)">
-      <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}" title="{{ cutIn.name }}" [style.font-weight]="cutIn.isPlayingNow ? 'bolder' : 'normal'" [style.color]="cutIn.isValidAudio ? cutIn.name == '' ? 'gray' : '' : 'red'">{{ (cutIn.isValidAudio ? '' : '⚠️') + (cutIn.name == '' ? '(無名のカットイン)' : cutIn.name) }}</option>
+      <option *ngFor="let cutIn of cutIns" value="{{ cutIn.identifier }}" title="{{ cutIn.name }}" [style.color]="cutIn.isValidAudio ? cutIn.name == '' ? 'gray' : '' : 'red'">{{ (cutIn.isPlayingNow ? '▶ ' : '■ ') + (cutIn.isValidAudio ? '' : '⚠️') + (cutIn.name == '' ? '(無名のカットイン)' : cutIn.name) }}</option>
     </select>
   </div>
   <div class="flex-item">

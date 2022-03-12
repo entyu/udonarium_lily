@@ -471,16 +471,22 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   toolBox() {
     const menu = [];
     const cunIns = CutInList.instance.cutIns;
-    menu.push({ name: 'カットイン再生・停止', materialIcon: 'movie_creation', disabled: cunIns.length === 0, 
-      action: null, subActions: cunIns.map(cutIn => {
-        const isPlayingNow = cutIn.isPlayingNow;
+    menu.push({ name: 'カットイン再生', materialIcon: 'play_arrow', 
+      action: null, subActions: cunIns.length === 0 ? [
+        {
+          name: '(カットインなし)',
+          disabled: true,
+          center: true
+        }
+      ] : cunIns.map(cutIn => {
         return { 
           name: `${cutIn.isValidAudio ? '' : '⚠️'}${cutIn.name == '' ? '(無名のカットイン)' : cutIn.name}`, 
-          materialIcon: !isPlayingNow ? 'play_arrow' : 'stop',
           subActions: [{
               name: '全員',
+              center: true,
+              default: true,
               action: () => {
-                EventSystem.call(isPlayingNow ? 'STOP_CUT_IN' : 'PLAY_CUT_IN', {
+                EventSystem.call('PLAY_CUT_IN', {
                   identifier: cutIn.identifier,
                   secret: false,
                   sender: PeerCursor.myCursor.peerId
@@ -493,13 +499,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
               default: true,
               action: () => {
                 if (peer !== PeerCursor.myCursor) {
-                  EventSystem.call(isPlayingNow ? 'STOP_CUT_IN' : 'PLAY_CUT_IN', {
+                  EventSystem.call('PLAY_CUT_IN', {
                     identifier: cutIn.identifier,
                     secret: true,
                     sender: PeerCursor.myCursor.peerId
                   }, peer.peerId);
                 }
-                EventSystem.call(isPlayingNow ? 'STOP_CUT_IN' : 'PLAY_CUT_IN', {
+                EventSystem.call('PLAY_CUT_IN', {
                   identifier: cutIn.identifier,
                   secret: true,
                   sender: PeerCursor.myCursor.peerId
@@ -510,7 +516,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         };
       })
     });
-    menu.push({ name: '　カットイン設定', level: 1, action: () => this.open('CutInSettingComponent') });
+    menu.push(ContextMenuSeparator);
+    menu.push({ name: 'カットイン設定', materialIcon: 'movie_creation', action: () => this.open('CutInSettingComponent') });
     menu.push({ name: 'ダイスボット表設定', materialIcon: 'table_rows', action: () => this.open('DiceRollTableSettingComponent') })
     this.contextMenuService.open(this.pointerDeviceService.pointers[0], menu, 'ツールボックス');
   }
