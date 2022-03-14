@@ -132,6 +132,14 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     this.text = multiLine;
   }
 
+  selectAutoComplete(text,selectText){
+    const selectObj = <HTMLSelectElement>document.getElementById( this._timeId + '_complete');
+    let lineNo = this.palette.paletteMatchLine(text, selectObj.selectedIndex);
+    console.log(text + ' ' + selectText + ' index:' + selectObj.selectedIndex + ' lineNo' +lineNo);
+    this.japmIndex(lineNo);
+    this.selectPalette(selectText);
+  }
+
   clickPalette(line: string) {
     let multiLine = line.replace(/\\n/g, '\n');
     if (this.doubleClickTimer && this.text === multiLine) {
@@ -195,12 +203,14 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       count++;
     }
 
-    this.contextMenuService.open(position, index ,
-        'インデックス');
+    this.contextMenuService.open(position, index ,'インデックス' );
   }
 
-  autoCompleteList(): PaletteMatch[]{
-    let paletteMatch : PaletteMatch[] = this.palette.paletteMatch(this.text,2,10);
+  autoCompleteList(): string[]{
+    let paletteMatch : string[] = new Array();
+    if( this.text.length > 1){
+      paletteMatch = this.palette.paletteMatch(this.text);
+    }
     return paletteMatch;
   }
 

@@ -62,7 +62,7 @@ export class ChatPalette extends ObjectNode {
     return null;
   }
 
-  get paletteIndex(): PaletteIndex[] {
+  get paletteIndex(): PaletteIndex[]{
     let count = 0;
     let ret;
     let indexList: PaletteIndex[] = [];
@@ -79,32 +79,39 @@ export class ChatPalette extends ObjectNode {
     return indexList;
   }
 
-  paletteMatch(text: string,minLen: number,maxLen: number): PaletteMatch[] {
+  paletteMatch(text: string): string[]{
     let count = 0;
-    let ret;
-    let matchList: PaletteMatch[] = [];
-
-    if( text.length < minLen || text.length > maxLen ){
-      return matchList;
-    }
+    let matchList: string[] = [];
 
     let palettString = <string> this.value;
     let palettes = palettString.split('\n');
 
     for (let line of palettes ){
       if (line.indexOf(text) >= 0){
-        let data: PaletteMatch = {
-          text: line,
-          line: count,
-        };
-        
-        matchList.push(data);
+        matchList.push(line);
       }
       count++;
     }
     return matchList;
   }
 
+  paletteMatchLine(text: string ,nth :number): number{
+    let matchCount = 0;
+    let lineNo = 0;
+    let palettString = <string> this.value;
+    let palettes = palettString.split('\n');
+
+    for (let line of palettes ){
+      if (line.indexOf(text) >= 0){
+        if(matchCount == nth){
+          return lineNo;
+        }
+        matchCount++;
+      }
+      lineNo++;
+    }
+    return -1;
+  }
 
   private _palettes: string[] = [];
   private _paletteLines: PaletteLine[] = [];
