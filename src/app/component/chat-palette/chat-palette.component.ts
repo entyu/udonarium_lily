@@ -127,6 +127,22 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     this.chatTabidentifier = chatTabs[nextIndex].identifier;
   }
 
+  autoCompleteSwitchRelative(direction: number){
+    console.log('selectAutoComplete :' + direction);
+    const selectObj = <HTMLSelectElement>document.getElementById( this._timeId + '_complete');
+    const optionNum = selectObj.length;
+
+    let newIndex = selectObj.selectedIndex;
+    newIndex += direction;
+    if( newIndex <= -1){
+      return;
+    }
+    if( newIndex >= optionNum){
+      newIndex = optionNum - 1;
+    }
+    selectObj.selectedIndex = newIndex;
+  }
+
   selectPalette(line: string) {
     let multiLine = line.replace(/\\n/g, '\n');
     this.text = multiLine;

@@ -9,8 +9,9 @@
       </div>
     </form><!---->
     <chat-input class="is-caret" [onlyCharacters]="true" [chatTabidentifier]="chatTabidentifier"
-    [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(text)]="text"
-    (chat)="sendChat($event)" (tabSwitch)="chatTabSwitchRelative($event)" #chatInput></chat-input>
+    [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(autoCompleteIndex)]="autoCompleteList().length" [(text)]="text"
+    (chat)="sendChat($event)" (autoCompleteSwitch)="autoCompleteSwitchRelative($event)"
+    (tabSwitch)="chatTabSwitchRelative($event)" #chatInput></chat-input>
     <div style="position:absolute;margin-top:-2em;">
       <button class="tab-setting small-font" (click)="indexBtn()">＜<i class="material-icons small-font">bookmarks</i></button>
     </div>

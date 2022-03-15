@@ -29,6 +29,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   @Input() onlyCharacters: boolean = false;
   @Input() chatTabidentifier: string = '';
+  @Input() autoCompleteIndex: number = -1;
 
   @Input('gameType') _gameType: string = '';
   @Output() gameTypeChange = new EventEmitter<string>();
@@ -53,6 +54,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   @Output() chat = new EventEmitter<{ text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
 
   @Output() tabSwitch = new EventEmitter<number>();
+
+  @Output() autoCompleteSwitch = new EventEmitter<number>();
 
   get tachieNum(): number {
     let object = ObjectStore.instance.get(this.sendFrom);
@@ -354,6 +357,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.kickCalcFitHeight();
   }
 
+  selectAutoComplete(event: KeyboardEvent, direction: number){
+    if (event) event.preventDefault();
+    this.autoCompleteSwitch.emit(direction);
+  }
+
   tabSwitchAction(event: KeyboardEvent, direction: number) {
     if (event) event.preventDefault();
     this.tabSwitch.emit(direction);
@@ -364,6 +372,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
     if (!this.text.length) return;
     if (event && event.keyCode !== 13) return;
+
+    console.log("autoCompleteIndex:" + this.autoCompleteIndex);
 
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
 
