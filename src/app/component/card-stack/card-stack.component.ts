@@ -114,6 +114,13 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
 
+  viewRotateZ = 10;
+
+  get isInverse(): boolean {
+    const rotate = Math.abs(this.viewRotateZ + this.rotate) % 360;
+    return 90 < rotate && rotate < 270
+  }
+  
   private doubleClickTimer: NodeJS.Timer = null;
   private doubleClickPoint = { x: 0, y: 0 };
 
@@ -153,6 +160,12 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           || (object instanceof PeerCursor && object.userId === this.cardStack.owner)) {
           this.changeDetector.markForCheck();
         }
+      })
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
       })
       .on('CARD_STACK_DECREASED', event => {
         if (event.data.cardStackIdentifier === this.cardStack.identifier && this.cardStack) this.changeDetector.markForCheck();
@@ -421,10 +434,26 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       { name: 'カードサイズを揃える', action: () => { if (this.cardStack.topCard) this.cardStack.unifyCardsSize(this.cardStack.topCard.size); }, disabled: this.cards.length == 0 },
       ContextMenuSeparator,
       {
-        name: '山札を人数分に分割する', action: () => {
-          this.splitStack(Network.peerIds.length);
-          SoundEffect.play(PresetSound.cardDraw);
-        }, 
+        name: '山札を分割する', 
+        subActions: [
+          {
+            name: '人数で分割',
+            action: () => {
+              this.splitStack(Network.peerIds.length);
+              SoundEffect.play(PresetSound.cardDraw);
+            }
+          },
+          ContextMenuSeparator,
+          ...[2, 3, 4, 5, 6].map(num => {
+            return {
+              name: `${num}つに分割`,
+              action: () => {
+                this.splitStack(num);
+                SoundEffect.play(PresetSound.cardDraw);
+              }
+            }
+          })
+        ],
         disabled: this.cards.length == 0
       },
       {

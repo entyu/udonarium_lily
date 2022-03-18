@@ -72,6 +72,10 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     return StringUtil.rubyToHtml(StringUtil.escapeHtml(this.text));
   }
 
+  get isInverse(): boolean {
+    return 90 < Math.abs(this.viewRotateZ) % 360 && Math.abs(this.viewRotateZ) % 360 < 270
+  }
+
   gridSize: number = 50;
   math = Math;
   viewRotateZ = 10;

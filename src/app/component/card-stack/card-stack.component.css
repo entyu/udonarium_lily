@@ -186,3 +186,7 @@
 .component:not(.is-empty):hover .number-of-cards {
   visibility: hidden;
 }
+
+.is-inverse {
+  transform: rotateZ(180deg);
+}
