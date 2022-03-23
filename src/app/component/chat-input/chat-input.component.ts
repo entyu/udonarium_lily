@@ -57,6 +57,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   @Output() autoCompleteSwitch = new EventEmitter<number>();
 
+  @Output() autoCompleteDo = new EventEmitter<number>();
+
   get tachieNum(): number {
     let object = ObjectStore.instance.get(this.sendFrom);
     if (object instanceof GameCharacter) {
@@ -373,7 +375,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     if (!this.text.length) return;
     if (event && event.keyCode !== 13) return;
 
-    console.log("autoCompleteIndex:" + this.autoCompleteIndex);
+    if( this.autoCompleteIndex >= 0){
+      console.log("オートコンプリート処理実行 INDEX:" + this.autoCompleteIndex);
+      this.autoCompleteDo.emit( this.autoCompleteIndex );
+      return;
+    }
 
     if (!this.sendFrom.length) this.sendFrom = this.myPeer.identifier;
 

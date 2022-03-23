@@ -8,9 +8,16 @@
         </label>
       </div>
     </form><!---->
-    <chat-input class="is-caret" [onlyCharacters]="true" [chatTabidentifier]="chatTabidentifier"
-    [(gameType)]="gameType" [(sendFrom)]="sendFrom" [(autoCompleteIndex)]="autoCompleteList().length" [(text)]="text"
-    (chat)="sendChat($event)" (autoCompleteSwitch)="autoCompleteSwitchRelative($event)"
+    <chat-input class="is-caret" 
+    [onlyCharacters]="true" 
+    [chatTabidentifier]="chatTabidentifier"
+    [(gameType)]="gameType"
+    [(sendFrom)]="sendFrom"
+    [autoCompleteIndex]="completeIndex()"
+    [(text)]="text"
+    (chat)="sendChat($event)" 
+    (autoCompleteSwitch)="autoCompleteSwitchRelative($event)" 
+    (autoCompleteDo)="autoCompleteDoRelative($event)"
     (tabSwitch)="chatTabSwitchRelative($event)" #chatInput></chat-input>
     <div style="position:absolute;margin-top:-2em;">
       <button class="tab-setting small-font" (click)="indexBtn()">＜<i class="material-icons small-font">bookmarks</i></button>

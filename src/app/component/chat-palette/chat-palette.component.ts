@@ -30,6 +30,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   private _gameType: string = '';
   private _paletteIndex: PaletteIndex[] = [];
   private _timeId: string = '';
+  private _autoCompleteEnable = false;
 
   get gameType(): string { return this._gameType; }
   set gameType(gameType: string) {
@@ -130,8 +131,11 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   autoCompleteSwitchRelative(direction: number){
     console.log('selectAutoComplete :' + direction);
     const selectObj = <HTMLSelectElement>document.getElementById( this._timeId + '_complete');
-    const optionNum = selectObj.length;
+    if (!selectObj ){
+      return;
+    }
 
+    const optionNum = selectObj.length;
     let newIndex = selectObj.selectedIndex;
     newIndex += direction;
     if( newIndex <= -1){
@@ -143,9 +147,19 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     selectObj.selectedIndex = newIndex;
   }
 
+  autoCompleteDoRelative(index: number){
+    const selectObj = <HTMLSelectElement>document.getElementById( this._timeId + '_complete');
+    if( index != selectObj.selectedIndex) return;
+    this.selectAutoComplete(this.text, selectObj.value);
+  }
+
   selectPalette(line: string) {
     let multiLine = line.replace(/\\n/g, '\n');
     this.text = multiLine;
+    const selectObj = <HTMLSelectElement>document.getElementById( this._timeId + '_complete');
+    if (selectObj){
+      selectObj.selectedIndex = -1;
+    }
   }
 
   selectAutoComplete(text,selectText){
@@ -154,6 +168,22 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     console.log(text + ' ' + selectText + ' index:' + selectObj.selectedIndex + ' lineNo' +lineNo);
     this.japmIndex(lineNo);
     this.selectPalette(selectText);
+  }
+
+  completeIndex(): number{
+    let select = <HTMLSelectElement> document.getElementById(this._timeId + '_complete');
+    if (select){
+      return select.selectedIndex;
+    }
+    return -1;
+  }
+
+  autoCompleteList(): string[]{
+    let paletteMatch : string[] = new Array();
+    if( this.text.length > 1){
+      paletteMatch = this.palette.paletteMatch(this.text);
+    }
+    return paletteMatch;
   }
 
   clickPalette(line: string) {
@@ -220,14 +250,6 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     }
 
     this.contextMenuService.open(position, index ,'インデックス' );
-  }
-
-  autoCompleteList(): string[]{
-    let paletteMatch : string[] = new Array();
-    if( this.text.length > 1){
-      paletteMatch = this.palette.paletteMatch(this.text);
-    }
-    return paletteMatch;
   }
 
 }
