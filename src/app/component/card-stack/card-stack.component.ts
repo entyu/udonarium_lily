@@ -448,8 +448,8 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     let option: PanelOption = { left: coordinate.x - 200, top: coordinate.y - 300, width: 400, height: 600 };
 
     this.cardStack.owner = Network.peerContext.userId;
-//    let component = this.panelService.open<CardStackListComponent>(CardStackListComponent, option);
-    let component = this.panelService.open<CardStackListComponentEx>(CardStackListComponentEx, option);
+    let component = this.panelService.open<CardStackListComponent>(CardStackListComponent, option);
+//    let component = this.panelService.open<CardStackListComponentEx>(CardStackListComponentEx, option);
     component.cardStack = gameObject;
   }
 
