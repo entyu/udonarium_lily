@@ -17,41 +17,31 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 
 @Component({
-  selector: 'chat-tachie-img',
-  templateUrl: './chat-tachie-img.component.html',
-  styleUrls: ['./chat-tachie-img.component.css']
+  selector: 'card-stack-list-img',
+  templateUrl: './card-stack-list-img.component.html',
+  styleUrls: ['./card-stack-list-img.component.css']
 })
-export class ChatTachieImageComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
+export class CardStackListImageComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
 
-  @Input() chatTabidentifier: string = '';
-  @Input() isTilteTop = false;
+  @Input() isTilteTop = true;
   @Input() dispByMouse = false;
 
-  @ViewChild('tachieArea', { read: ElementRef }) private tachieArea: ElementRef;  
-  private _tachieAreaWidth = 0;
-  
-  
-  get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
+  @ViewChild('cardArea', { read: ElementRef }) private cardArea: ElementRef;  
+  private _cardAreaWidth = 0;
+//  get chatTab(): ChatTab { return ObjectStore.instance.get<ChatTab>(this.chatTabidentifier); }
 
   get tachieY_Pos():number{ 
-    if( !this.chatTabList.isTachieInWindow ){
-      return - this.chatTabList.tachieHeightValue - 26 ;
-    }else{
-      return 0;
-    }
+    return 0 - 26 ;
   }
 
-  get tachieAreaWidth():number{ 
-    return this._tachieAreaWidth;
+  get cardAreaWidth():number{ 
+    return this._cardAreaWidth;
   }
 
-  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
-  
+//  get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
+/*  
   get dispFlag():boolean{
-    
-    if( this.isTilteTop && !this.chatTabList.isTachieInWindow ) return true;
-    if( !this.isTilteTop && this.chatTabList.isTachieInWindow ) return true;
-    return false;
+    return true;
   }
   
   get isTachieDispMode(){
@@ -72,8 +62,8 @@ export class ChatTachieImageComponent implements OnInit, OnDestroy, AfterViewIni
     }
     return 0;
   }
-  
-  //
+*/
+/*
   get tachieAreaHeight00() : number { return this.tachieAreaHeight(0); }
   get tachieAreaHeight01() : number { return this.tachieAreaHeight(1); }
   get tachieAreaHeight02() : number { return this.tachieAreaHeight(2); }
@@ -86,23 +76,24 @@ export class ChatTachieImageComponent implements OnInit, OnDestroy, AfterViewIni
   get tachieAreaHeight09() : number { return this.tachieAreaHeight(9); }
   get tachieAreaHeight10() : number { return this.tachieAreaHeight(10); }
   get tachieAreaHeight11() : number { return this.tachieAreaHeight(11); }
-  
+*/
   private timerId;
   
 //立ち絵表示幅取得
   ngAfterViewInit() {
-    this._tachieAreaWidth = this.tachieArea.nativeElement.offsetWidth;
+    this._cardAreaWidth = this.cardArea.nativeElement.offsetWidth;
     this.changeDetectionRef.detectChanges();
   }  
 
   ngAfterViewChecked() {
-    this._tachieAreaWidth = this.tachieArea.nativeElement.offsetWidth;
+    this._cardAreaWidth = this.cardArea.nativeElement.offsetWidth;
     this.changeDetectionRef.detectChanges();
   }  
 
 //z-index取得
   private _zindexOffset = 10;
 
+/*
   get zIndex_00(): number { return this.chatTab.tachieZindex(0) + this._zindexOffset; }
   get zIndex_01(): number { return this.chatTab.tachieZindex(1) + this._zindexOffset; }
   get zIndex_02(): number { return this.chatTab.tachieZindex(2) + this._zindexOffset; }
@@ -118,21 +109,22 @@ export class ChatTachieImageComponent implements OnInit, OnDestroy, AfterViewIni
 
   private _opacity = 0.66
 
-  get opacity_00(): number { if( this.chatTab.tachieZindex(0) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_01(): number { if( this.chatTab.tachieZindex(1) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_02(): number { if( this.chatTab.tachieZindex(2) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_03(): number { if( this.chatTab.tachieZindex(3) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_04(): number { if( this.chatTab.tachieZindex(4) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_05(): number { if( this.chatTab.tachieZindex(5) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_06(): number { if( this.chatTab.tachieZindex(6) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_07(): number { if( this.chatTab.tachieZindex(7) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_08(): number { if( this.chatTab.tachieZindex(8) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_09(): number { if( this.chatTab.tachieZindex(9) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_10(): number { if( this.chatTab.tachieZindex(10) == 11 ){ return 1; }else{ return this._opacity; } }
-  get opacity_11(): number { if( this.chatTab.tachieZindex(11) == 11 ){ return 1; }else{ return this._opacity; } }
-
+  get opacity_00(): number { if( this.chatTab.tachieZindex(0) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_01(): number { if( this.chatTab.tachieZindex(1) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_02(): number { if( this.chatTab.tachieZindex(2) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_03(): number { if( this.chatTab.tachieZindex(3) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_04(): number { if( this.chatTab.tachieZindex(4) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_05(): number { if( this.chatTab.tachieZindex(5) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_06(): number { if( this.chatTab.tachieZindex(6) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_07(): number { if( this.chatTab.tachieZindex(7) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_08(): number { if( this.chatTab.tachieZindex(8) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_09(): number { if( this.chatTab.tachieZindex(9) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_10(): number { if( this.chatTab.tachieZindex(10) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_11(): number { if( this.chatTab.tachieZindex(11) == 11 ){return 1;}else{ return this._opacity ;}  }
+*/
 
 //この実装は後でどうにかしたい
+/*
   get imageFileUrl_00(): string { 
      if( ! this.chatTab.imageIdentifier )return '';
      let image:ImageFile = ImageStorage.instance.get(this.chatTab.imageIdentifier[0]);
@@ -216,12 +208,13 @@ export class ChatTachieImageComponent implements OnInit, OnDestroy, AfterViewIni
      if (image) return image.url;
      return '';
   }
-
+*/
+/*
   tachieClick( pos : number ){
     console.log("tachieClick" + pos);
     this.chatTab.tachiePosHide(pos);
   }
-
+*/
   constructor(
     public chatMessageService: ChatMessageService,
     private changeDetectionRef: ChangeDetectorRef,
@@ -235,8 +228,9 @@ export class ChatTachieImageComponent implements OnInit, OnDestroy, AfterViewIni
   ngOnDestroy() {
     EventSystem.unregister(this);
   }
-
+/*
   trackByChatTab(index: number, chatTab: ChatTab) {
     return chatTab.identifier;
   }
+*/
 }

@@ -11,6 +11,8 @@ import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
+  @SyncVar() isLock: boolean = false;
+
   @SyncVar() rotate: number = 0;
   @SyncVar() roll: number = 0;
 

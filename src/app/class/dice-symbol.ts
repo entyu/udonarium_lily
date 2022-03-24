@@ -18,6 +18,8 @@ export enum DiceType {
 
 @SyncObject('dice-symbol')
 export class DiceSymbol extends TabletopObject {
+  @SyncVar() isLock: boolean = false;
+
   @SyncVar() face: string = '0';
   @SyncVar() owner: string = '';
   @SyncVar() rotate: number = 0;

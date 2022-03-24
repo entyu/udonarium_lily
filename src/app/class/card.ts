@@ -20,6 +20,9 @@ export class Card extends TabletopObject {
   @SyncVar() owner: string = '';
   @SyncVar() zindex: number = 0;
 
+  @SyncVar() overViewWidth: number = 250;
+  @SyncVar() overViewMaxHeight: number = 250;
+
   get isVisibleOnTable(): boolean { return this.location.name === 'table' && (!this.parentIsAssigned || this.parentIsDestroyed); }
 
   get name(): string { return this.getCommonValue('name', ''); }

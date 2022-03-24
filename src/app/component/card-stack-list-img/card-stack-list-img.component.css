@@ -1,0 +1,60 @@
+.message-setting {
+  background-color: transparent;
+  color: #444; 
+  border: solid 1px #555;
+  padding: 2px 4px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.message-setting:hover {
+  background-color: #888;
+  color: #eee;
+  border: solid 1px #555;
+}
+
+.small-font {
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+
+.tachie-image-box {
+}
+
+
+img{
+}
+
+.card-image {
+  position: absolute;
+  height:250px;
+  padding: 0;
+  vertical-align: bottom;
+  z-index: 1;
+}
+
+
+.card-image-box {
+}
+
+.card-image {
+}
+
+
+.component {
+/*
+  position: absolute;
+  max-height: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+  color: #444;
+  z-index: 9000;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+*/
+}
+
+
+

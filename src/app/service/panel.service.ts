@@ -1,5 +1,6 @@
 import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { ChatTab } from '@udonarium/chat-tab';
+import { CardStack } from '@udonarium/card-stack';
 
 declare var Type: FunctionConstructor;
 interface Type<T> extends Function {
@@ -32,6 +33,7 @@ export class PanelService {
   isCutIn: boolean = false ; //この方式でよいか検討のこと
   cutInIdentifier: string = '';
   chatTab: ChatTab = null;
+  cardStack: CardStack = null;
 
   scrollablePanel: HTMLDivElement = null;
 

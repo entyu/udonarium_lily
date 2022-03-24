@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import GameSystemClass from 'bcdice/lib/game_system';
-import { ChatPalette , PaletteIndex} from '@udonarium/chat-palette';
+import { ChatPalette , PaletteIndex , PaletteMatch} from '@udonarium/chat-palette';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
@@ -30,6 +30,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   private _gameType: string = '';
   private _paletteIndex: PaletteIndex[] = [];
   private _timeId: string = '';
+  private _autoCompleteEnable = false;
 
   get gameType(): string { return this._gameType; }
   set gameType(gameType: string) {
@@ -127,9 +128,62 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     this.chatTabidentifier = chatTabs[nextIndex].identifier;
   }
 
+  autoCompleteSwitchRelative(direction: number){
+    console.log('selectAutoComplete :' + direction);
+    const selectObj = <HTMLSelectElement>document.getElementById( this._timeId + '_complete');
+    if (!selectObj ){
+      return;
+    }
+
+    const optionNum = selectObj.length;
+    let newIndex = selectObj.selectedIndex;
+    newIndex += direction;
+    if( newIndex <= -1){
+      return;
+    }
+    if( newIndex >= optionNum){
+      newIndex = optionNum - 1;
+    }
+    selectObj.selectedIndex = newIndex;
+  }
+
+  autoCompleteDoRelative(index: number){
+    const selectObj = <HTMLSelectElement>document.getElementById( this._timeId + '_complete');
+    if( index != selectObj.selectedIndex) return;
+    this.selectAutoComplete(this.text, selectObj.value);
+  }
+
   selectPalette(line: string) {
     let multiLine = line.replace(/\\n/g, '\n');
     this.text = multiLine;
+    const selectObj = <HTMLSelectElement>document.getElementById( this._timeId + '_complete');
+    if (selectObj){
+      selectObj.selectedIndex = -1;
+    }
+  }
+
+  selectAutoComplete(text,selectText){
+    const selectObj = <HTMLSelectElement>document.getElementById( this._timeId + '_complete');
+    let lineNo = this.palette.paletteMatchLine(text, selectObj.selectedIndex);
+    console.log(text + ' ' + selectText + ' index:' + selectObj.selectedIndex + ' lineNo' +lineNo);
+    this.japmIndex(lineNo);
+    this.selectPalette(selectText);
+  }
+
+  completeIndex(): number{
+    let select = <HTMLSelectElement> document.getElementById(this._timeId + '_complete');
+    if (select){
+      return select.selectedIndex;
+    }
+    return -1;
+  }
+
+  autoCompleteList(): string[]{
+    let paletteMatch : string[] = new Array();
+    if( this.text.length > 1){
+      paletteMatch = this.palette.paletteMatch(this.text);
+    }
+    return paletteMatch;
   }
 
   clickPalette(line: string) {
@@ -195,11 +249,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       count++;
     }
 
-    this.contextMenuService.open(position, index ,
-        'インデックス');
-
-
-
+    this.contextMenuService.open(position, index ,'インデックス' );
   }
 
 }

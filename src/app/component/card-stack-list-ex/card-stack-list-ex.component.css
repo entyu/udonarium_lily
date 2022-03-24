@@ -1,0 +1,28 @@
+.box {
+  border-bottom:1px dotted #888;
+}
+
+.image-box {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.image {
+  padding: 0px;
+  width: 64px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.contain {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.card-image{
+  position: absolute;
+  padding: 0;
+  vertical-align: bottom;
+  z-index: 1;
+}
