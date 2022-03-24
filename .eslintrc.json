@@ -22,7 +22,13 @@
       "rules": {
         "@angular-eslint/no-empty-lifecycle-method": "off",
         "@angular-eslint/no-input-rename": "off",
-        "@angular-eslint/no-output-rename": "off"
+        "@angular-eslint/no-output-rename": "off",
+        "indent": ["error", 2,{ "SwitchCase": 1 }],
+        "comma-spacing": [2, {"before": false, "after": true}],
+        "block-spacing": ["error", "always"],
+        "space-before-function-paren": ["error", "never"],
+        "space-infix-ops": ["error", { "int32Hint": false }],
+        "space-in-parens": ["error", "never"]
       }
     },
     {
