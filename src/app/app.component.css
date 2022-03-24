@@ -1,12 +1,12 @@
 img {
-  hight: 5px;
+  height: 5px;
   width: 5px;
 }
 .dummydisp {
   position: absolute;
   color: rgba(30, 30, 30, 0.0);
   font-size: 10px;
-  max-hight: 5px;
+  max-height: 5px;
 }
 
 nav ul {
