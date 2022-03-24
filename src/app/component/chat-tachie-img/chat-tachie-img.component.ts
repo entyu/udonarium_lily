@@ -118,18 +118,18 @@ export class ChatTachieImageComponent implements OnInit, OnDestroy, AfterViewIni
 
   private _opacity = 0.66
 
-  get opacity_00(): number { if( this.chatTab.tachieZindex(0) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_01(): number { if( this.chatTab.tachieZindex(1) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_02(): number { if( this.chatTab.tachieZindex(2) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_03(): number { if( this.chatTab.tachieZindex(3) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_04(): number { if( this.chatTab.tachieZindex(4) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_05(): number { if( this.chatTab.tachieZindex(5) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_06(): number { if( this.chatTab.tachieZindex(6) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_07(): number { if( this.chatTab.tachieZindex(7) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_08(): number { if( this.chatTab.tachieZindex(8) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_09(): number { if( this.chatTab.tachieZindex(9) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_10(): number { if( this.chatTab.tachieZindex(10) == 11 ){return 1;}else{ return this._opacity ;}  }
-  get opacity_11(): number { if( this.chatTab.tachieZindex(11) == 11 ){return 1;}else{ return this._opacity ;}  }
+  get opacity_00(): number { if( this.chatTab.tachieZindex(0) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_01(): number { if( this.chatTab.tachieZindex(1) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_02(): number { if( this.chatTab.tachieZindex(2) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_03(): number { if( this.chatTab.tachieZindex(3) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_04(): number { if( this.chatTab.tachieZindex(4) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_05(): number { if( this.chatTab.tachieZindex(5) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_06(): number { if( this.chatTab.tachieZindex(6) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_07(): number { if( this.chatTab.tachieZindex(7) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_08(): number { if( this.chatTab.tachieZindex(8) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_09(): number { if( this.chatTab.tachieZindex(9) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_10(): number { if( this.chatTab.tachieZindex(10) == 11 ){ return 1; }else{ return this._opacity; } }
+  get opacity_11(): number { if( this.chatTab.tachieZindex(11) == 11 ){ return 1; }else{ return this._opacity; } }
 
 
 //この実装は後でどうにかしたい

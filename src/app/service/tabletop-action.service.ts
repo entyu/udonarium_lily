@@ -53,13 +53,13 @@ export class TabletopActionService {
   createTerrain(position: PointerCoordinate): Terrain {
     let url: string = './assets/images/tex.jpg';
     let image: ImageFile = ImageStorage.instance.get(url)
-//本家PR #92より
-//    if (!image) image = ImageStorage.instance.add(url);
+    //本家PR #92より
+    //    if (!image) image = ImageStorage.instance.add(url);
     if (!image) {
       image = ImageStorage.instance.add(url);
       ImageTag.create(image.identifier).tag = '地形';
     }
-//
+    //
     let viewTable = this.getViewTable();
     if (!viewTable) return;
 
@@ -105,15 +105,15 @@ export class TabletopActionService {
     cardStack.posZ = position.z;
 
     let back: string = './assets/images/trump/z02.gif';
-//本家PR #92より
-//    if (!ImageStorage.instance.get(back)) {
-//      ImageStorage.instance.add(back);
-//    }
+    //本家PR #92より
+    //    if (!ImageStorage.instance.get(back)) {
+    //      ImageStorage.instance.add(back);
+    //    }
     if (!ImageStorage.instance.get(back)) {
       const image = ImageStorage.instance.add(back);
       ImageTag.create(image.identifier).tag = 'トランプ';
     }
-//
+    //
     let suits: string[] = ['c', 'd', 'h', 's'];
     let trumps: string[] = [];
 
@@ -129,11 +129,11 @@ export class TabletopActionService {
     for (let trump of trumps) {
       let url: string = './assets/images/trump/' + trump + '.gif';
       if (!ImageStorage.instance.get(url)) {
-//本家PR #92より
-//          ImageStorage.instance.add(url);
+      //本家PR #92より
+      //          ImageStorage.instance.add(url);
           const image = ImageStorage.instance.add(url);
           ImageTag.create(image.identifier).tag = 'トランプ';
-//
+      //
 
       }
       let card = Card.create('カード', url, back);
@@ -152,12 +152,12 @@ export class TabletopActionService {
     let bgFileContext = ImageFile.createEmpty('testTableBackgroundImage_image').toContext();
     bgFileContext.url = './assets/images/BG10a_80.jpg';
     testBgFile = ImageStorage.instance.add(bgFileContext);
-//本家PR #92より
+    //本家PR #92より
     ImageTag.create(testBgFile.identifier).tag = '背景';    
-//
-//entyu_2 #92
+    //
+    //entyu_2 #92
     //ImageTag.create(testBgFile.identifier).tag = 'default テーブル';
-//
+    //
 
     gameTable.name = '最初のテーブル';
     gameTable.imageIdentifier = testBgFile.identifier;
@@ -169,10 +169,10 @@ export class TabletopActionService {
   }
 
   // バフ追加identifierを固定にするため初期キャラのバフはGameCharacterでやらずにここでやる
-  addBuffRound(character :GameCharacter,name:string,subcom:string,round:number){
+  addBuffRound(character: GameCharacter, name: string, subcom: string, round: number){
     if(character.buffDataElement.children){
       for (let dataElm of character.buffDataElement.children){
-        dataElm.appendChild(DataElement.create(name, round , { 'type': 'numberResource', 'currentValue': subcom }, name + '_' + character.identifier ));
+        dataElm.appendChild(DataElement.create(name, round, { 'type': 'numberResource', 'currentValue': subcom }, name + '_' + character.identifier ));
         return;
       }
     }
@@ -369,7 +369,7 @@ export class TabletopActionService {
     ImageTag.create(testFile.identifier).tag = 'モンスター';    //本家PR #92より
 
     testCharacter.createTestGameDataElement('モンスターA', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ1' , '防+1' , 3);
+    this.addBuffRound( testCharacter, 'テストバフ1', '防+1', 3);
     //-------------------------
     testCharacter = new GameCharacter('testCharacter_2');
     testCharacter.location.x = 8 * 50;
@@ -404,7 +404,7 @@ export class TabletopActionService {
     testCharacter.location.y = 11 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターA', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ2' , '攻撃+10' , 1);
+    this.addBuffRound( testCharacter, 'テストバフ2', '攻撃+10', 1);
     //-------------------------
     testCharacter = new GameCharacter('testCharacter_5');
     fileContext = ImageFile.createEmpty('testCharacter_5_image').toContext();
@@ -414,7 +414,7 @@ export class TabletopActionService {
     testCharacter.location.y = 12 * 50;
     testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターB', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ2' , '攻撃+10' , 1);
+    this.addBuffRound( testCharacter, 'テストバフ2', '攻撃+10', 1);
 
     //-------------------------
 
@@ -429,7 +429,7 @@ export class TabletopActionService {
     testCharacter.location.x = 5 * 50;
     testCharacter.location.y = 13 * 50;
     testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ3' , '' , 3);
+    this.addBuffRound( testCharacter, 'テストバフ3', '', 3);
     
   }
 

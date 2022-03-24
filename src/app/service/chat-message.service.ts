@@ -100,8 +100,8 @@ export class ChatMessageService {
       timestamp: this.calcTimeStamp(chatTab),
       tag: 'DiceBot to-pl-system-message',
       text: text,
-      imagePos: -1,//lily
-      messColor: _color,//lily
+      imagePos: -1, //lily
+      messColor: _color,  //lily
       sendFrom: null //lily
     };
     return chatTab.addMessage(chatMessage);
@@ -155,9 +155,9 @@ export class ChatMessageService {
       timestamp: this.calcTimeStamp(chatTab),
       tag: chatMessageTag,
       text: text,
-      imagePos: this.findImagePos(sendFrom),//lily
-      messColor: _color,//lily
-      sendFrom: sendFrom //lily
+      imagePos: this.findImagePos(sendFrom),  //lily
+      messColor: _color,  //lily
+      sendFrom: sendFrom  //lily
     };
     console.log(text + ' ' + sendFrom + ' ' + sendTo + ' ' + tachieNum);
     this.setLastControlInfoToPeer(sendFrom, this.findImageIdentifier(sendFrom, imgIndex), tachieNum, sendTo);
