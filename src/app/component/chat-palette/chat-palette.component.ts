@@ -29,7 +29,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
 
   private _gameType: string = '';
   private _paletteIndex: PaletteIndex[] = [];
-  private _timeId: string = '';
+  /* private */ _timeId: string = '';
   private _autoCompleteEnable = false;
 
   get gameType(): string { return this._gameType; }
@@ -214,13 +214,41 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   toggleEditMode() {
     this.isEdit = this.isEdit ? false : true;
     if (this.isEdit) {
+      const selectObj = document.getElementById(this._timeId + '_select');
+      const textObj = document.getElementById(this._timeId + '_text');
+      console.log('selectObj.clientHeight:' + selectObj.clientHeight);
+      console.log('selectObj.scrollHeight:' + selectObj.scrollHeight);
+      console.log('selectObj.scrollTop:' + selectObj.scrollTop);
+/*
+      const lineNum = this.palette.getPalette().length;
+      console.log('lineNum:' + lineNum);
+*/
       this.editPalette = this.palette.value + '';
+      const selectTop = selectObj.scrollTop;
+      const selectHeight = selectObj.scrollHeight;
+/*
+      const centerLine = lineNum > 0 ? (selectObj.clientHeight/2 + selectObj.scrollHeight) / lineNum : lineNum;
+      console.log('centerLine:' + centerLine);
+*/
+      setTimeout(() => { 
+        console.log('textObj.clientHeight:' + textObj.clientHeight);
+        console.log('textObj.scrollHeight:' + textObj.scrollHeight);
+        console.log('textObj.scrollTop:' + textObj.scrollTop);
+        textObj.scrollTop = ( selectTop * textObj.scrollHeight ) / selectHeight;
+      }, 10);
     } else {
       this.palette.setPalette(this.editPalette);
     }
   }
 
-  japmIndex(lineNo: number){
+  moveTest(){
+    const textObj = <HTMLInputElement>document.getElementById(this._timeId + '_text');
+    textObj.focus();
+    setTimeout(() => {  
+                        textObj.setSelectionRange(600,600); }, 10);
+  }
+
+  japmIndex(lineNo: number) {
     console.log('JUMP_INDEX:' + lineNo);
     let select = <HTMLSelectElement> document.getElementById(this._timeId + '_select');
     if (select){
