@@ -610,7 +610,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         //if (this.character.faceIcons.length > 1) {
           contextMenuActions.push(ContextMenuSeparator);
           contextMenuActions.push({
-            name: '顔アイコンの変更',
+            name: '顔アイコンの切り替え',
             action: null,
             subActions: this.character.faceIcons.map((faceIconImage, i) => {
               return { 
