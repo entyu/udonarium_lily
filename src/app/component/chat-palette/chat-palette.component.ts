@@ -27,7 +27,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   private _gameType: string = '';
-  get gameType(): string { return this._gameType };
+  get gameType(): string { return !this._gameType ? 'DiceBot' : this._gameType; };
   set gameType(gameType: string) {
     this._gameType = gameType;
     if (this.character.chatPalette) this.character.chatPalette.dicebot = gameType;

@@ -18,6 +18,7 @@ import { DiceBot } from '@udonarium/dice-bot';
 import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
+import { TableSelecter } from '@udonarium/table-selecter';
 
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -99,11 +100,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.appConfigService.initialize();
     this.pointerDeviceService.initialize();
 
+    TableSelecter.instance.initialize();
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();
 
     let diceBot: DiceBot = new DiceBot('DiceBot');
     diceBot.initialize();
+    DiceBot.getHelpMessage('').then(() => this.lazyNgZoneUpdate(true));
 
     let jukebox: Jukebox = new Jukebox('Jukebox');
     jukebox.initialize();
@@ -316,15 +319,22 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         PeerCursor.myCursor.peerId = Network.peerContext.peerId;
         PeerCursor.myCursor.userId = Network.peerContext.userId;
       })
-      .on('CLOSE_NETWORK', event => {
-        console.log('CLOSE_NETWORK', event.data.peerId);
+      .on('NETWORK_ERROR', event => {
+        console.log('NETWORK_ERROR', event.data.peerId);
+        let errorType: string = event.data.errorType;
+        let errorMessage: string = event.data.errorMessage;
+
         this.ngZone.run(async () => {
-          if (1 < Network.peerIds.length) {
-            await this.modalService.open(TextViewComponent, { title: 'ネットワークエラー', text: 'ネットワーク接続に何らかの異常が発生しました。\nこの表示以後、接続が不安定であれば、ページリロードと再接続を試みてください。' });
-          } else {
-            await this.modalService.open(TextViewComponent, { title: 'ネットワークエラー', text: '接続情報が破棄されました。\nこのウィンドウを閉じると再接続を試みます。' });
-            Network.open();
-          }
+          //SKyWayエラーハンドリング
+          let quietErrorTypes = ['peer-unavailable'];
+          let reconnectErrorTypes = ['disconnected', 'socket-error', 'unavailable-id', 'authentication', 'server-error'];
+
+          if (quietErrorTypes.includes(errorType)) return;
+          await this.modalService.open(TextViewComponent, { title: 'ネットワークエラー', text: errorMessage });
+
+          if (!reconnectErrorTypes.includes(errorType)) return;
+          await this.modalService.open(TextViewComponent, { title: 'ネットワークエラー', text: 'このウィンドウを閉じると再接続を試みます。' });
+          Network.open();
         });
       })
       .on('CONNECT_PEER', event => {

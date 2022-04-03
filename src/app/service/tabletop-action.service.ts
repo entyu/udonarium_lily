@@ -3,7 +3,6 @@ import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
 import { ImageContext, ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DiceSymbol, DiceType } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
@@ -201,9 +200,6 @@ export class TabletopActionService {
   }
 
   makeDefaultTable() {
-    let tableSelecter = new TableSelecter('tableSelecter');
-    tableSelecter.initialize();
-
     let gameTable = new GameTable('gameTable');
     let testBgFile: ImageFile = null;
     let bgFileContext = ImageFile.createEmpty('testTableBackgroundImage_image').toContext();
@@ -216,7 +212,7 @@ export class TabletopActionService {
     gameTable.height = 15;
     gameTable.initialize();
 
-    tableSelecter.viewTableIdentifier = gameTable.identifier;
+    TableSelecter.instance.viewTableIdentifier = gameTable.identifier;
   }
 
   makeDefaultTabletopObjects() {
@@ -274,10 +270,12 @@ export class TabletopActionService {
     fileContext = ImageFile.createEmpty('testCharacter_6_image').toContext();
     fileContext.url = './assets/images/mon_135.gif';
     testFile = ImageStorage.instance.add(fileContext);
+
     ImageTag.create(testFile.identifier).tag = '*default キャラクター';
     testCharacter.initialize();
     testCharacter.location.x = 5 * 50;
     testCharacter.location.y = 13 * 50;
+    testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
   }
 
@@ -374,7 +372,6 @@ export class TabletopActionService {
   }
 
   private getViewTable(): GameTable {
-    let tableSelecter = ObjectStore.instance.get<TableSelecter>('tableSelecter');
-    return tableSelecter ? tableSelecter.viewTable : null;
+    return TableSelecter.instance.viewTable;
   }
 }

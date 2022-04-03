@@ -1,3 +1,7 @@
+import { GameSystemInfo } from 'bcdice/lib/bcdice/game_system_list.json';
+import GameSystemClass from 'bcdice/lib/game_system';
+
+import BCDiceLoader from './bcdice/bcdice-loader';
 import { ChatMessage, ChatMessageContext } from './chat-message';
 import { ChatTab } from './chat-tab';
 import { SyncObject } from './core/synchronize-object/decorator';
@@ -13,7 +17,6 @@ import { StandConditionType } from './stand-list';
 import { DiceRollTableList } from './dice-roll-table-list';
 
 import Loader from 'bcdice/lib/loader/loader';
-import GameSystemClass from 'bcdice/lib/game_system';
 import { CutInList } from './cut-in-list';
 
 export interface DiceBotInfo {
@@ -29,6 +32,7 @@ export interface DiceBotInfosIndexed {
 }
 
 interface DiceRollResult {
+  id: string;
   result: string;
   isSecret: boolean;
   isDiceRollTable?: boolean;
@@ -255,7 +259,7 @@ export class DiceBot extends GameObject {
           rollText = rollText.replace(/Ⅾ/g, 'D');
 
           if (!rollText || repeat <= 0) return;
-          let finalResult: DiceRollResult = { result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
+          let finalResult: DiceRollResult = { id: '', result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
             isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
           
           //ダイスボット表
@@ -360,7 +364,10 @@ export class DiceBot extends GameObject {
               }
             }
           }
-          this.sendResultMessage(finalResult, chatMessage);
+
+          let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
+          if (!rollResult.result) return;
+          this.sendResultMessage(rollResult, chatMessage);
         } catch (e) {
           console.error(e);
         }
@@ -375,6 +382,7 @@ export class DiceBot extends GameObject {
   }
 
   private sendResultMessage(rollResult: DiceRollResult, originalMessage: ChatMessage) {
+    let id: string = rollResult.id.split(':')[0];
     let result: string = rollResult.result;
     const isSecret: boolean = rollResult.isSecret;
     const isEmptyDice: boolean = rollResult.isEmptyDice;
@@ -548,16 +556,16 @@ export class DiceBot extends GameObject {
               }
             }
             const result = gameSystem.eval(message);
-            if (!result) return { result: '', isSecret: false, isEmptyDice: true };
+            if (!result) return { id: '', result: '', isSecret: false, isEmptyDice: true };
             console.log('diceRoll!!!', result);
             console.log('isSecret!!!', result.secret);
             console.log('isEmptyDice!!!', !result.rands || result.rands.length == 0);
-            return { result: gameType + ' : ' + result.text, isSecret: result.secret, isEmptyDice: !result.rands || result.rands.length == 0,
+            return { id: '', result: gameType + ' : ' + result.text, isSecret: result.secret, isEmptyDice: !result.rands || result.rands.length == 0,
               isSuccess: result.success, isFailure: result.failure, isCritical: result.critical, isFumble: result.fumble };
           } catch (e) {
             console.error(e);
           }
-          return { result: '', isSecret: false, isEmptyDice: true };
+          return { id: '', result: '', isSecret: false, isEmptyDice: true };
       })());
     }
   }

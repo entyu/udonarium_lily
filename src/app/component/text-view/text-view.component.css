@@ -3,4 +3,7 @@
   font-size: 12px;
   white-space: pre-wrap;
   margin: 0px;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }

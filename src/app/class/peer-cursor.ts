@@ -37,7 +37,6 @@ export class PeerCursor extends GameObject {
       EventSystem.register(this)
         .on('DISCONNECT_PEER', -1000, event => {
           if (event.data.peerId !== this.peerId) return;
-          // 本家から先行移植
           setTimeout(() => {
             if (Network.peerIds.includes(this.peerId)) return;
             PeerCursor.userIdMap.delete(this.userId);
