@@ -13,7 +13,7 @@ export class Jukebox extends GameObject {
   @SyncVar() isPlaying: boolean = false;
 
   get audio(): AudioFile { return AudioStorage.instance.get(this.audioIdentifier); }
-  
+
   private audioPlayer: AudioPlayer = new AudioPlayer();
 
   // GameObject Lifecycle
@@ -29,10 +29,8 @@ export class Jukebox extends GameObject {
   }
 
   play(identifier: string, isLoop: boolean = false) {
-
     let audio = AudioStorage.instance.get(identifier);
     if (!audio || !audio.isReady) return;
-
     this.audioIdentifier = identifier;
     this.isPlaying = true;
     this.isLoop = isLoop;
@@ -50,20 +48,17 @@ export class Jukebox extends GameObject {
   }
 
   stop() {
-
     this.audioIdentifier = '';
     this.isPlaying = false;
     this._stop();
   }
 
   private _stop() {
-
-    this.unregisterEvent()
+    this.unregisterEvent();
     this.audioPlayer.stop();
   }
 
   private playAfterFileUpdate() {
-
     EventSystem.register(this)
       .on('UPDATE_AUDIO_RESOURE', -100, event => {
         this._play();
@@ -87,7 +82,6 @@ export class Jukebox extends GameObject {
 
   // override
   apply(context: ObjectContext) {
-
     let audioIdentifier = this.audioIdentifier;
     let isPlaying = this.isPlaying;
     super.apply(context);

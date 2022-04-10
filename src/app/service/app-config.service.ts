@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { EventSystem, Network } from '@udonarium/core/system';
-import { Database } from '@udonarium/database/database';
+import { EventSystem } from '@udonarium/core/system';
 
 import * as yaml from 'js-yaml';
 
@@ -42,52 +41,6 @@ export class AppConfigService {
 
   initialize() {
     this.initAppConfig();
-    this.initDatabase();
-  }
-
-  private async initDatabase() {
-    console.log('initDatabase...');
-    if (!window.indexedDB) {
-      console.warn('このブラウザは安定板の IndexedDB をサポートしていません。IndexedDB の機能は利用できません。');
-      return;
-    }
-
-    let db = new Database();
-
-    let history = await db.getPeerHistory();
-    history.sort((a, b) => {
-      if (a.timestamp < b.timestamp) return 1;
-      if (a.timestamp > b.timestamp) return -1;
-      return 0;
-    });
-
-    for (let i = 1; i < history.length; i++) {
-      db.deletePeerHistory(history[i].peerId);
-    }
-
-    console.log('履歴: ', history);
-
-    this.peerHistory = [];
-    if (history.length) {
-      for (let historyId of history[0].history) {
-        if (historyId !== history[0].peerId) {
-          this.peerHistory.push(historyId);
-        }
-      }
-    }
-    console.log('最終履歴: ', this.peerHistory);
-
-    EventSystem.register(this)
-      .on('CONNECT_PEER', -1000, () => {
-        console.log('AppConfigService CONNECT_PEER', Network.peerIds);
-        if (!this.isOpen) {
-          this.isOpen = true;
-        }
-        db.addPeerHistory(Network.peerId, Network.peerIds);
-      })
-      .on('DISCONNECT_PEER', -1000, () => {
-        console.log('AppConfigService DISCONNECT_PEER', Network.peerIds);
-      });
   }
 
   private async initAppConfig() {
@@ -102,45 +55,22 @@ export class AppConfigService {
     EventSystem.trigger('LOAD_CONFIG', AppConfigService.appConfig);
   }
 
-  private loadYaml(): Promise<string> {
-    return new Promise((resolve, reject) => {
-      let config = document.querySelector('script[type$="yaml"]');
-      if (!config) {
-        console.warn('loadYaml element not found.');
-        resolve('');
-        return;
-      }
+  private async loadYaml(): Promise<string> {
+    let config = document.querySelector('script[type$="yaml"]');
+    if (!config) {
+      console.warn('loadYaml element not found.');
+      return '';
+    }
 
-      let configString = config.textContent;
-      let url = config.getAttribute('src');
+    let url = config.getAttribute('src');
 
-      if (url == null) {
-        console.warn('loadYaml url undefined.');
-        resolve(configString);
-        return;
-      }
+    if (url == null) {
+      console.warn('loadYaml url undefined.');
+      return config.textContent;
+    }
 
-      let http = new XMLHttpRequest();
-      http.open('get', url, true);
-      http.onerror = (event) => {
-        console.error(event);
-        resolve(configString);
-      };
-      http.onreadystatechange = (event) => {
-        if (http.readyState !== 4) {
-          return;
-        }
-        if (http.status === 200) {
-          console.log('loadYaml success!');
-          configString = http.responseText;
-        } else {
-          console.warn('loadYaml fail...? status:' + http.status);
-        }
-        resolve(configString);
-      };
-      console.log('loadYaml start');
-      http.send(null);
-    });
+    let response = await fetch(url);
+    return response.text();
   }
 
   private static applyConfig(config: Object, root: Object = AppConfigService.appConfig): Object {

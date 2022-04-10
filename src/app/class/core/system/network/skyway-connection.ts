@@ -1,10 +1,11 @@
-import * as MessagePack from 'msgpack-lite';
-
 import { compressAsync, decompressAsync } from '../util/compress';
+import { MessagePack } from '../util/message-pack';
 import { setZeroTimeout } from '../util/zero-timeout';
 import { Connection, ConnectionCallback } from './connection';
 import { PeerContext } from './peer-context';
+import { PeerSessionGrade } from './peer-session-state';
 import { SkyWayDataConnection } from './skyway-data-connection';
+import { CandidateType } from './webrtc-stats';
 
 // @types/skywayを使用すると@types/webrtcが定義エラーになるので代替定義
 declare var Peer;
@@ -189,30 +190,40 @@ export class SkyWayConnection implements Connection {
       if (this.callback.onOpen) this.callback.onOpen(this.peerId);
     });
 
+    peer.on('close', () => {
+      console.log('Peer close');
+      if (this.peerContext && this.peerContext.isOpen) {
+        this.peerContext.isOpen = false;
+        if (this.callback.onClose) this.callback.onClose(this.peerId);
+      }
+    });
+
     peer.on('connection', conn => {
       this.openDataConnection(new SkyWayDataConnection(conn));
     });
 
     peer.on('error', err => {
       console.error('<' + this.peerId + '> ' + err.type + ' => ' + err.message);
-      let errorMessage = this.getSkyWayErrorMessage(err.type);
-      errorMessage += ': ' + err.message;
+      let errorMessage = `${this.getSkyWayErrorMessage(err.type)}\n\n${err.type}: ${err.message}`;
       switch (err.type) {
         case 'peer-unavailable':
-        case 'invalid-id':
-        case 'invalid-key':
-        case 'list-error':
-        case 'server-error':
+          let peerId = /"(.+)"/.exec(err.message)[1];
+          this.disconnect(peerId);
           break;
         case 'disconnected':
         case 'socket-error':
-        default:
+        case 'unavailable-id':
+        case 'authentication':
+        case 'server-error':
           if (this.peerContext && this.peerContext.isOpen) {
+            this.close();
             if (this.callback.onClose) this.callback.onClose(this.peerId);
           }
           break;
+        default:
+          break;
       }
-      if (this.callback.onError) this.callback.onError(this.peerId, errorMessage);
+      if (this.callback.onError) this.callback.onError(this.peerId, err.type, errorMessage, err);
     });
     this.peer = peer;
   }
@@ -238,9 +249,35 @@ export class SkyWayConnection implements Connection {
       this.closeDataConnection(conn);
       if (this.callback.onDisconnect) this.callback.onDisconnect(conn.remoteId);
     });
-    conn.on('error', err => {
+    conn.on('error', () => {
       this.closeDataConnection(conn);
-      if (this.callback.onError) this.callback.onError(conn.remoteId, err);
+    });
+    conn.on('stats', () => {
+      let deltaTime = performance.now() - conn.timestamp;
+      let healthRate = deltaTime <= 10000 ? 1 : 5000 / ((deltaTime - 10000) + 5000);
+      let ping = healthRate < 1 ? deltaTime : conn.ping;
+      let pingRate = 500 / (ping + 500);
+
+      context.session.health = healthRate;
+      context.session.ping = ping;
+      context.session.speed = pingRate * healthRate;
+
+      switch (conn.candidateType) {
+        case CandidateType.HOST:
+          context.session.grade = PeerSessionGrade.HIGH;
+          break;
+        case CandidateType.SRFLX:
+        case CandidateType.PRFLX:
+          context.session.grade = PeerSessionGrade.MIDDLE;
+          break;
+        case CandidateType.RELAY:
+          context.session.grade = PeerSessionGrade.LOW;
+          break;
+        default:
+          context.session.grade = PeerSessionGrade.UNSPECIFIED;
+          break;
+      }
+      context.session.description = conn.candidateType;
     });
   }
 
@@ -373,22 +410,25 @@ export class SkyWayConnection implements Connection {
 
   private getSkyWayErrorMessage(errType: string): string {
     switch (errType) {
-      case 'peer-unavailable':
-        return 'そのPeer IDは利用できません。'
-      case 'invalid-id':
-        return 'Peer IDが不正です。'
-      case 'invalid-key':
-        return 'SkyWay APIキーが無効です。';
-      case 'list-error':
-        return 'SkyWay APIキーのREST APIが許可されてません。';
-      case 'server-error':
-        return 'SkyWayのシグナリングサーバからPeer一覧を取得できませんでした。';
-      case 'disconnected':
-        return 'SkyWayのシグナリングサーバに接続されていません。';
-      case 'socket-error':
-        return 'SkyWayのシグナリングサーバとの接続が失われました。';
-      default:
-        return 'SkyWayに関する不明なエラーが発生しました(' + errType + ')';
+      case 'room-error': return 'SkyWay Room API に問題が発生しました。';
+      case 'permission': return '該当の SkyWay Room の利用が許可されてません。';
+      case 'list-error': return 'SkyWay listAllPeers API が Disabled です。';
+      case 'disconnected': return 'SkyWay のシグナリングサーバに接続されていません。';
+      case 'socket-error': return 'SkyWay のシグナリングサーバとの通信で問題が発生しました。';
+      case 'invalid-id': return 'Peer ID が不正です。';
+      case 'unavailable-id': return 'その Peer ID すでに使用されています。';
+      case 'peer-unavailable': return 'その Peer ID は利用できません。';
+      case 'invalid-key': return 'SkyWay API キーが無効です。';
+      case 'invalid-domain': return 'SkyWay API キーには現在のドメインは登録されていません。';
+      case 'authentication': return '認証エラーです。';
+      case 'server-error': return 'SkyWay のシグナリングサーバとの接続中に問題がありました。 少し待って、リトライしてください。';
+      case 'sfu-client-not-supported': return 'このクライアントは SFU の使用をサポートしていません。最新の Google Chrome を使用してください';
+      case 'peer-unavailable': return 'Peer へデータを送信できませんでした。Peer ID が正しいことを確認してください。';
+      case 'signaling-limited': return 'シグナリング回数が無償利用枠を超過しているため、全ての機能が利用できません。（SkyWay Community Edition のみ）';
+      case 'sfu-limited': return 'SFU サーバの利用量が無償利用枠を超過しているため、SFU の機能が利用できません。（SkyWay Community Edition のみ）';
+      case 'turn-limited': return 'TURN サーバの利用量が無償利用枠を超過しているため、TURN の機能が利用できません。（SkyWay Community Edition のみ）\nこの状態では、一部のユーザの接続に問題が発生する可能性があります。';
+      case 'peer-unavailable': return 'そのPeer IDは利用できません。';
+      default: return 'SkyWayに関する不明なエラーが発生しました。';
     }
   }
 }
