@@ -303,7 +303,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
               DiceBot.diceBotInfosIndexed.push(group);
               group = { index: sentinel, infos: [] };
             }
-            group.infos.push({ script: info.script, game: info.game });
+            group.infos.push({ script: info.id, game: info.game });
           }
           DiceBot.diceBotInfosIndexed.push(group);
         }

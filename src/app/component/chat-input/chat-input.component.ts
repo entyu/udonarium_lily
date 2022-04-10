@@ -479,7 +479,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
       let gameName: string = 'ダイスボット';
       for (let diceBotInfo of DiceBot.diceBotInfos) {
-        if (diceBotInfo.script === this.gameType) {
+        if (diceBotInfo.id === this.gameType) {
           gameName = 'ダイスボット〈' + diceBotInfo.game + '〉'
         }
       }

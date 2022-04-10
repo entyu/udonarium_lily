@@ -36,13 +36,13 @@
       </span>
       <span style="white-space: nowrap">
         <select *ngIf="diceBotInfosIndexed.length < 1" style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
-          [ngClass]="{'not-specified': gameType == ''}">
-          <option value="" class="not-specified">ダイスボット指定なし</option>
+          [ngClass]="{'not-specified': gameType == 'DiceBot' || gameType == ''}">
+          <option value="DiceBot" class="not-specified">ダイスボット指定なし</option>
           <option *ngFor="let diceBotInfo of diceBotInfos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
         </select>
         <select *ngIf="diceBotInfosIndexed.length > 0" style="width: 12em;" (change)="loadDiceBot($event.target.value)" [(ngModel)]="gameType" [ngModelOptions]="{standalone: true}"
-          [ngClass]="{'not-specified': gameType == ''}">
-          <option value="" class="not-specified">ダイスボット指定なし</option>
+          [ngClass]="{'not-specified': gameType == 'DiceBot' || gameType == ''}">
+          <option value="DiceBot" class="not-specified">ダイスボット指定なし</option>
           <optgroup *ngFor="let group of diceBotInfosIndexed" class="dice-bot-group" label="{{group.index}}">
             <option *ngFor="let diceBotInfo of group.infos" value="{{diceBotInfo.script}}">{{diceBotInfo.game}}</option>
           </optgroup>

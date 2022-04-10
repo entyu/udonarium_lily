@@ -16,11 +16,10 @@ import { PeerCursor } from './peer-cursor';
 import { StandConditionType } from './stand-list';
 import { DiceRollTableList } from './dice-roll-table-list';
 
-import Loader from 'bcdice/lib/loader/loader';
 import { CutInList } from './cut-in-list';
 
 export interface DiceBotInfo {
-  script: string;
+  id: string;
   game: string;
   lang?: string;
   sort_key?: string;
@@ -44,28 +43,21 @@ interface DiceRollResult {
   isFumble?: boolean;
 }
 
-// bcdice-js custom loader class
-class WebpackLoader extends Loader {
-  async dynamicImport(className: string): Promise<void> {
-    await import(
-      /* webpackChunkName: "[request]"  */
-      /* webpackInclude: /\.js$/ */
-      `bcdice/lib/bcdice/game_system/${className}`
-    );
-  }
-}
-
 @SyncObject('dice-bot')
 export class DiceBot extends GameObject {
-  private static readonly queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
-  public static readonly loader = new WebpackLoader();
+  //private static readonly queue: PromiseQueue = new PromiseQueue('DiceBotQueue');
+  private static queue: PromiseQueue = DiceBot.initializeDiceBotQueue();
+  //public static loader = new WebpackLoader();
+  public static loader = new BCDiceLoader();
   private static readonly loadedDiceBots: { [gameType: string]: GameSystemClass } = {};
 
   public static apiUrl: string = null;
   public static apiVersion: number = 1;
   public static adminUrl: string = null;
 
-  public static diceBotInfos: DiceBotInfo[] = DiceBot.loader.listAvailableGameSystems()
+  public static diceBotInfos: DiceBotInfo[] = [];
+  /*
+  DiceBot.loader.listAvailableGameSystems()
   .filter(gameSystemInfo => gameSystemInfo.id != 'DiceBot')
   .sort((a ,b) => {
     const aKey: string = a.sortKey;
@@ -87,12 +79,14 @@ export class DiceBot extends GameObject {
         : (lang[1] == 'English') ? 'English' : 'Other';
     }
     return {
+      id: gameSystemInfo.id,
       script: gameSystemInfo.id,
       game: gameSystemInfo.name,
       lang: langName,
       sort_key: gameSystemInfo.sortKey
     };
   });
+  */
 
   public static diceBotInfosIndexed: DiceBotInfosIndexed[] = [];
 
@@ -234,6 +228,7 @@ export class DiceBot extends GameObject {
     ['ペ', 'ヘ'],
     ['ポ', 'ホ']
   ];
+
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
@@ -259,7 +254,7 @@ export class DiceBot extends GameObject {
           rollText = rollText.replace(/Ⅾ/g, 'D');
 
           if (!rollText || repeat <= 0) return;
-          let finalResult: DiceRollResult = { id: '', result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
+          let finalResult: DiceRollResult = { id: 'DiceBot', result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
             isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
           
           //ダイスボット表
@@ -352,7 +347,7 @@ export class DiceBot extends GameObject {
               for (let i = 0; i < repeat && i < 32; i++) {
                 let rollResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);
                 if (rollResult.result.length < 1) break;
-
+                finalResult.id =  rollResult.id;
                 finalResult.result += rollResult.result;
                 finalResult.isSecret = finalResult.isSecret || rollResult.isSecret || isRepSecret;
                 finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
@@ -364,10 +359,9 @@ export class DiceBot extends GameObject {
               }
             }
           }
-
-          let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
-          if (!rollResult.result) return;
-          this.sendResultMessage(rollResult, chatMessage);
+          //let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
+          if (!finalResult.result) return;
+          this.sendResultMessage(finalResult, chatMessage);
         } catch (e) {
           console.error(e);
         }
@@ -519,13 +513,13 @@ export class DiceBot extends GameObject {
             })
             .then(json => {
               //console.log(JSON.stringify(json))
-              return { result: (gameType) + ' ' + (DiceBot.apiVersion == 1 ? json.result : json.text) + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, 
+              return { id: gameType, result: (gameType) + ' ' + (DiceBot.apiVersion == 1 ? json.result : json.text) + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, 
                 isEmptyDice: DiceBot.apiVersion == 1 ? (json.dices && json.dices.length == 0) : (json.rands && json.rands.length == 0),
                 isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble };
             })
             .catch(e => {
               //console.error(e);
-              return { result: '', isSecret: false,  isEmptyDice: true };
+              return { id: gameType, result: '', isSecret: false,  isEmptyDice: true };
             })
         );
       }
@@ -539,9 +533,9 @@ export class DiceBot extends GameObject {
             let isFailure = ac.isFailure && cv.isFailure;
             let isCritical = ac.isCritical || cv.isCritical;
             let isFumble = ac.isFumble || cv.isFumble;
-            return { result: result, isSecret: isSecret, isEmptyDice: isEmptyDice, 
+            return { id: gameType, result, isSecret: isSecret, isEmptyDice: isEmptyDice, 
               isSuccess: isSuccess, isFailure: isFailure, isCritical: isCritical, isFumble: isFumble };
-          }, { result: '', isSecret: false, isEmptyDice: true, isSuccess: false, isFailure: true, isCritical: false, isFumble: false }) })
+          }, { id: gameType, result: '', isSecret: false, isEmptyDice: true, isSuccess: false, isFailure: true, isCritical: false, isFumble: false }) })
       );
     } else {
       return DiceBot.queue.add((async () => {
@@ -556,16 +550,16 @@ export class DiceBot extends GameObject {
               }
             }
             const result = gameSystem.eval(message);
-            if (!result) return { id: '', result: '', isSecret: false, isEmptyDice: true };
+            if (!result) return { id: gameType, result: '', isSecret: false, isEmptyDice: true };
             console.log('diceRoll!!!', result);
             console.log('isSecret!!!', result.secret);
             console.log('isEmptyDice!!!', !result.rands || result.rands.length == 0);
-            return { id: '', result: gameType + ' : ' + result.text, isSecret: result.secret, isEmptyDice: !result.rands || result.rands.length == 0,
+            return { id: gameType, result: gameType + ' : ' + result.text, isSecret: result.secret, isEmptyDice: !result.rands || result.rands.length == 0,
               isSuccess: result.success, isFailure: result.failure, isCritical: result.critical, isFumble: result.fumble };
           } catch (e) {
             console.error(e);
           }
-          return { id: '', result: '', isSecret: false, isEmptyDice: true };
+          return { id: gameType, result: '', isSecret: false, isEmptyDice: true };
       })());
     }
   }
@@ -616,5 +610,54 @@ export class DiceBot extends GameObject {
         return help;
       })());
     }
+  }
+
+  static async loadGameSystemAsync(gameType: string): Promise<GameSystemClass> {
+    return await DiceBot.queue.add(() => {
+      const id = this.diceBotInfos.some((info) => info.id === gameType)
+        ? gameType
+        : 'DiceBot';
+      return DiceBot.loader.dynamicLoad(id);
+    });
+  }
+
+  private static initializeDiceBotQueue(): PromiseQueue {
+    let queue = new PromiseQueue('DiceBotQueue');
+    queue.add(async () => {
+      DiceBot.loader = new (await import(
+        /* webpackChunkName: "lib/bcdice/bcdice-loader" */
+        './bcdice/bcdice-loader')
+      ).default();
+      DiceBot.diceBotInfos = DiceBot.loader.listAvailableGameSystems()
+      .filter(gameSystemInfo => gameSystemInfo.id != 'DiceBot')
+      .sort((a ,b) => {
+        const aKey: string = a.sortKey;
+        const bKey: string = b.sortKey;
+        if (aKey < bKey) {
+          return -1;
+        }
+        if (aKey > bKey) {
+          return 1;
+        }
+        return 0
+      })
+      .map<DiceBotInfo>(gameSystemInfo => {
+        const lang = /.+\:(.+)/.exec(gameSystemInfo.id);
+        let langName;
+        if (lang && lang[1]) {
+          langName = (lang[1] == 'ChineseTraditional') ? '正體中文'
+            : (lang[1] == 'Korean') ? '한국어' 
+            : (lang[1] == 'English') ? 'English' : 'Other';
+        }
+        return {
+          id: gameSystemInfo.id,
+          script: gameSystemInfo.id,
+          game: gameSystemInfo.name,
+          lang: langName,
+          sort_key: gameSystemInfo.sortKey
+        };
+      });
+    });
+    return queue;
   }
 }
