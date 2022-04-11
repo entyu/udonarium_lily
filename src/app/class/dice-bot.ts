@@ -1,4 +1,3 @@
-import { GameSystemInfo } from 'bcdice/lib/bcdice/game_system_list.json';
 import GameSystemClass from 'bcdice/lib/game_system';
 
 import BCDiceLoader from './bcdice/bcdice-loader';
@@ -611,10 +610,41 @@ export class DiceBot extends GameObject {
   private rollResultFormat(result: string): string {
     if (result == null) return '';
     return result.split("\n").map(str => {
+      let keep_drop_infos = null;
       return str.split(' ＞ ').map((str, i, a) => {
-        if (a.length === 1 || i != 0) return str;
-        let match = str.match(/^\(([A-Z0-9\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || str.match(/^\((choice[\[\( ].+)\)$/i);
-        return match ? match[1] : str;
+        if (a.length === 1) return str;
+        if (i == 0) {
+          keep_drop_infos = str.match(/\d+D(\d+)?([KD][HL])?\d+/gi);
+          const parentheses = str.match(/^\(([\.A-Z0-9\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || str.match(/^\((choice[\[\( ].+)\)$/i);
+          return parentheses ? parentheses[1] : str;
+        } else if (i == 1 && keep_drop_infos) {
+          let result_dice = str.match(/\d+\[[\d,]+\]/gi);
+          if (result_dice) {
+            let offset = 0;
+            result_dice.forEach((dice_ary_str, j) => {
+              const keep_drop_info = keep_drop_infos[j].match(/(\d+)D\d+([KD][HL])(\d+)/i);
+              const dice_ary_info = dice_ary_str.match(/(\d+)\[([\d,]+)\]/i);
+              if (keep_drop_info && dice_ary_info) {
+                const dice_count = +keep_drop_info[1];
+                const keep_drop = keep_drop_info[2].toUpperCase();
+                const keep_drop_count = +keep_drop_info[3];
+                const keep_count = ((keep_drop.startsWith('K')) ? keep_drop_count : (dice_count - keep_drop_count) < 0 ? 0 : dice_count - keep_drop_count);
+                const total = +dice_ary_info[1];
+                const dice_ary = dice_ary_info[2].split(',');
+                dice_ary.sort((a, b) => (+a) - (+b));
+                if (keep_drop === 'KH' || keep_drop === 'DL') dice_ary.reverse();
+                const dice_ary_place = dice_ary.map((die, k) => { return (k + 1) <= keep_count ? `${die}` : `~~~${die}~~~` });
+                if (keep_drop === 'DH' || keep_drop === 'DL') dice_ary_place.reverse();
+                const place_str = total + '[' + dice_ary_place.join(',') + ']';
+                console.log(dice_ary_str, place_str)
+                let place_point = str.indexOf(dice_ary_str, offset);
+                str = str.substring(0, place_point) + place_str + str.substring(place_point + dice_ary_str.length);
+                offset = place_point + place_str.length;
+              }
+            });
+          }
+        }
+        return str;
       }).join(' → ');
     }).join("\n").trim();
   }

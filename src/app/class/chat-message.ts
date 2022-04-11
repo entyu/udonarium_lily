@@ -121,12 +121,13 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     const dateStr = (dateFormat == '') ? '' : formatDate(new Date(this.timestamp), dateFormat, this.locale) + '：';
     const lastUpdateStr = !this.isEdited ? '' : 
       (dateFormat == '') ? ' (編集済)' : ` (編集済 ${ formatDate(new Date(this.lastUpdate), dateFormat, this.locale) })`;
-    let text = this.text;
+    let text = StringUtil.rubyToText(this.text);
+    if (this.isDicebot) text = text.replace(/\~\~\~(\d+)\~\~\~/g, '~$1');
     if (text.lastIndexOf('\n') == text.length - 1 && !lastUpdateStr) {
       // 最終行の調整
       text += "\n";
     }
-    return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : StringUtil.rubyToText(text) + lastUpdateStr }`
+    return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : text + lastUpdateStr }`
   }
 
   logFragmentHtml(tabName: string=null, dateFormat='HH:mm', noImage=true): string {
@@ -166,6 +167,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
           return m.getType() == 'url' && StringUtil.validUrl(m.getAnchorHref());
         }
       });
+      if (this.isDicebot) textAutoLinkedHtml = textAutoLinkedHtml.replace(/\~\~\~(\d+)\~\~\~/g, '<s class="drop-dice">$1</s>');
 
       let lastUpdateHtml = '';
       if (this.isEdited) {
