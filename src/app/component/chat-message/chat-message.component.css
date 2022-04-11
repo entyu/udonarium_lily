@@ -104,24 +104,24 @@
 }
 
 .dicebot-message .msg-text {
-  color:#11F;
+  color: #11F;
 }
 
 .direct-message.dicebot-message .msg-text {
-  color:#CCF;
+  color: #CCF;
 }
 
 .dicebot-message .msg-text.is-success {
-  color:#17f;
+  color: #17f;
 }
 .dicebot-message .msg-text.is-failure {
-  color:#F05;
+  color: #F05;
 }
 .direct-message.dicebot-message .msg-text.is-success {
-  color:#adF;
+  color: #adF;
 }
 .direct-message.dicebot-message .msg-text.is-failure {
-  color:#F66;
+  color: #F66;
 }
 
 .dicebot-message {

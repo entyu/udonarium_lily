@@ -215,16 +215,16 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   color: #CCF;
 }
 .dicebot-message .msg-text.is-success {
-  color:#17f;
+  color: #17f;
 }
 .dicebot-message .msg-text.is-failure {
-  color:#F05;
+  color: #F05;
 }
 .direct-message.dicebot-message .msg-text.is-success {
-  color:#adF;
+  color: #adF;
 }
 .direct-message.dicebot-message .msg-text.is-failure {
-  color:#F66;
+  color: #F66;
 }
 .operation-log {
   color: #666;
@@ -293,6 +293,9 @@ a.outer-link::after {
 }
 ruby {
   ruby-align: space-between;
+}
+s.drop-dice {
+  color: #999;
 }`;
   }
 }

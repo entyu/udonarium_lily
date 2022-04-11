@@ -219,3 +219,7 @@ a.outer-link::after {
 ruby {
   ruby-align: space-between;
 }
+
+s.drop-dice {
+  color: #999;
+}

@@ -35,14 +35,14 @@
 </ng-template>
 <ng-template #title>
   <div class="title">
-    <ng-container *ngIf="isCompact && !isMine">
+    <ng-container *ngIf="isCompact && !isMine && chatMessage.timestamp">
       <span class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
     </ng-container>
     <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
     <ng-container *ngIf="!isCompact || isMine">
       <span *ngIf="!isCompact" class='tip msg-from' [innerHTML]="htmlEscapedFrom" (click)="onLinkClick($event)"></span>
-      <span *ngIf="!isCompact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
-      <span *ngIf="isCompact" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
+      <span *ngIf="!isCompact && chatMessage.timestamp" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>
+      <span *ngIf="isCompact && chatMessage.timestamp" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
       <ng-container *ngIf="!(isEditable && !isCompact); else editor"></ng-container>
     </ng-container>
   </div>
