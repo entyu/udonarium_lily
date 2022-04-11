@@ -614,8 +614,8 @@ export class DiceBot extends GameObject {
       return str.split(' ＞ ').map((str, i, a) => {
         if (a.length === 1) return str;
         if (i == 0) {
-          const parentheses = str.match(/^\(([\.A-Z0-9\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || str.match(/^\((choice[\[\( ].+)\)$/i);
-          if (parentheses && !parentheses[1].toLowerCase().startsWith('choice')) keep_drop_infos = str.match(/\d+D(\d+)?([KD][HL])?\d+/gi);
+          const parentheses = str.match(/^\(([\.A-Z0-9\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || str.match(/^\((CHOICE[\[\( ].+)\)$/i);
+          if (parentheses && !parentheses[1].toUpperCase().startsWith('CHOICE')) keep_drop_infos = str.match(/\d+D(\d+)?([KD][HL])?\d+/gi);
           return parentheses ? parentheses[1] : str;
         } else if (i == 1 && keep_drop_infos) {
           const result_dice = str.match(/\d+\[[\d,]+\]/gi);
