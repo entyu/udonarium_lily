@@ -245,7 +245,7 @@ export class DiceBot extends GameObject {
               for (let i = 0; i < repeat && i < 32; i++) {
                 let rollResult = await DiceBot.diceRollAsync(StringUtil.toHalfWidth(diceRollTable.dice), 'DiceBot', 1);
                 finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
-                if (rollResult.result) rollResult.result = this.rollResultFormat(rollResult.result.replace('DiceBot : ', '').replace('DiceBot', ''));
+                if (rollResult.result) rollResult.result = this.formatRollResult(rollResult.result);
                 let rollResultNumber = 0;
                 let match = null;
                 if (rollResult.result.length > 0 && (match = rollResult.result.match(/\s→\s(?:成功数)?(\-?\d+)$/))) {
@@ -347,7 +347,7 @@ export class DiceBot extends GameObject {
     const isFumble: boolean = rollResult.isFumble;
 
     if (result.length < 1) return;
-    if (!rollResult.isDiceRollTable) result = this.rollResultFormat(result);
+    if (!rollResult.isDiceRollTable) result = this.formatRollResult(result);
 
     let tag = 'system';
     if (isSecret) tag += ' secret';
@@ -607,7 +607,7 @@ export class DiceBot extends GameObject {
     return queue;
   }
 
-  private rollResultFormat(result: string): string {
+  private formatRollResult(result: string): string {
     if (result == null) return '';
     return result.split("\n").map(str => {
       let keep_drop_infos = null;
@@ -616,37 +616,41 @@ export class DiceBot extends GameObject {
         if (i == 0) {
           const parentheses = str.match(/^\(([\.A-Z0-9\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || str.match(/^\((choice[\[\( ].+)\)$/i);
           if (parentheses && !parentheses[1].toLowerCase().startsWith('choice')) keep_drop_infos = str.match(/\d+D(\d+)?([KD][HL])?\d+/gi);
-          console.log(parentheses[1].toLowerCase().startsWith('choice'))
           return parentheses ? parentheses[1] : str;
         } else if (i == 1 && keep_drop_infos) {
-          let result_dice = str.match(/\d+\[[\d,]+\]/gi);
+          const result_dice = str.match(/\d+\[[\d,]+\]/gi);
           if (result_dice) {
-            let offset = 0;
-            result_dice.forEach((dice_ary_str, j) => {
-              const keep_drop_info = keep_drop_infos[j].match(/(\d+)D\d+([KD][HL])(\d+)/i);
-              const dice_ary_info = dice_ary_str.match(/(\d+)\[([\d,]+)\]/i);
-              if (keep_drop_info && dice_ary_info) {
-                const dice_count = +keep_drop_info[1];
-                const keep_drop = keep_drop_info[2].toUpperCase();
-                const keep_drop_count = +keep_drop_info[3];
-                const keep_count = ((keep_drop.startsWith('K')) ? keep_drop_count : (dice_count - keep_drop_count) < 0 ? 0 : dice_count - keep_drop_count);
-                const total = +dice_ary_info[1];
-                const dice_ary = dice_ary_info[2].split(',');
-                dice_ary.sort((a, b) => (+a) - (+b));
-                if (keep_drop === 'KH' || keep_drop === 'DL') dice_ary.reverse();
-                const dice_ary_place = dice_ary.map((die, k) => { return (k + 1) <= keep_count ? `${die}` : `~~~${die}~~~` });
-                if (keep_drop === 'DH' || keep_drop === 'DL') dice_ary_place.reverse();
-                const place_str = total + '[' + dice_ary_place.join(',') + ']';
-                console.log(dice_ary_str, place_str)
-                let place_point = str.indexOf(dice_ary_str, offset);
-                str = str.substring(0, place_point) + place_str + str.substring(place_point + dice_ary_str.length);
-                offset = place_point + place_str.length;
-              }
-            });
+            try {
+              let offset = 0;
+              let str_tmp = str;
+              result_dice.forEach((dice_ary_str, j) => {
+                const keep_drop_info = keep_drop_infos[j].match(/(\d+)D\d+([KD][HL])(\d+)/i);
+                const dice_ary_info = dice_ary_str.match(/(\d+)\[([\d,]+)\]/i);
+                if (keep_drop_info && dice_ary_info) {
+                  const dice_count = +keep_drop_info[1];
+                  const keep_drop = keep_drop_info[2].toUpperCase();
+                  const keep_drop_count = +keep_drop_info[3];
+                  const keep_count = (keep_drop.startsWith('K') ? keep_drop_count : (dice_count - keep_drop_count));
+                  const total = +dice_ary_info[1];
+                  const dice_ary = dice_ary_info[2].split(',');
+                  dice_ary.sort((a, b) => (+a) - (+b));
+                  if (keep_drop === 'KH' || keep_drop === 'DL') dice_ary.reverse();
+                  const dice_ary_place = dice_ary.map((die, k) => (k + 1) <= keep_count ? `${die}` : `~~~${die}~~~`);
+                  if (keep_drop === 'DH' || keep_drop === 'DL') dice_ary_place.reverse();
+                  const place_str = total + '[' + dice_ary_place.join(',') + ']';
+                  let place_point = str.indexOf(dice_ary_str, offset);
+                  str_tmp = str_tmp.substring(0, place_point) + place_str + str_tmp.substring(place_point + dice_ary_str.length);
+                  offset = place_point + place_str.length;
+                }
+              });
+              str = str_tmp;
+            } catch(e) {
+              console.error(e);
+            } 
           }
         }
         return str;
       }).join(' → ');
-    }).join("\n").trim();
+    }).join("\n");
   }
 }
