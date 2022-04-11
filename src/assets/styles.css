@@ -220,6 +220,6 @@ ruby {
   ruby-align: space-between;
 }
 
-s.drop-dice {
+s.drop-dice .dropped {
   color: #999;
 }

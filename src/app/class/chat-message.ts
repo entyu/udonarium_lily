@@ -167,7 +167,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
           return m.getType() == 'url' && StringUtil.validUrl(m.getAnchorHref());
         }
       });
-      if (this.isDicebot) textAutoLinkedHtml = textAutoLinkedHtml.replace(/\~\~\~(\d+)\~\~\~/g, '<s class="drop-dice">$1</s>');
+      if (this.isDicebot) textAutoLinkedHtml = textAutoLinkedHtml.replace(/\~\~\~(\d+)\~\~\~/g, '<s class="drop-dice"><span class="dropped">$1</span></s>');
 
       let lastUpdateHtml = '';
       if (this.isEdited) {
@@ -294,7 +294,7 @@ a.outer-link::after {
 ruby {
   ruby-align: space-between;
 }
-s.drop-dice {
+s.drop-dice .dropped {
   color: #999;
 }`;
   }
