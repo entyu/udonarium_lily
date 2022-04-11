@@ -638,7 +638,7 @@ export class DiceBot extends GameObject {
                   const dice_ary_place = dice_ary.map((die, k) => (k + 1) <= keep_count ? `${die}` : `~~~${die}~~~`);
                   if (keep_drop === 'DH' || keep_drop === 'DL') dice_ary_place.reverse();
                   const place_str = total + '[' + dice_ary_place.join(',') + ']';
-                  let place_point = str.indexOf(dice_ary_str, offset);
+                  let place_point = str_tmp.indexOf(dice_ary_str, offset);
                   str_tmp = str_tmp.substring(0, place_point) + place_str + str_tmp.substring(place_point + dice_ary_str.length);
                   offset = place_point + place_str.length;
                 }
