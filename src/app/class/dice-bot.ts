@@ -610,43 +610,76 @@ export class DiceBot extends GameObject {
   private formatRollResult(result: string): string {
     if (result == null) return '';
     return result.split("\n").map(str => {
-      let keep_drop_infos = null;
+      let add_dice_infos = [];
+      let barabara_roll_infos = [];
       return str.split(' ＞ ').map((str, i, a) => {
         if (a.length === 1) return str;
         if (i == 0) {
-          const parentheses = str.match(/^\(([\.A-Z0-9\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || str.match(/^\((CHOICE[\[\( ].+)\)$/i);
-          if (parentheses && !parentheses[1].toUpperCase().startsWith('CHOICE')) keep_drop_infos = str.match(/\d+D(\d+)?([KD][HL])?\d+/gi);
+          const parentheses = str.match(/^\(([A-Z\d\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || str.match(/^\((CHOICE[\[\( ].+)\)$/i);
+          if (parentheses && !parentheses[1].toUpperCase().startsWith('CHOICE')) { 
+            add_dice_infos = [...str.matchAll(/(?<dice_count>\d+)D\d+(?:(?<keep_drop>[KD][HL])(?<keep_drop_count>\d+))?/gi)];
+            if (!add_dice_infos.length) barabara_roll_infos = [...str.matchAll(/\d+B\d+(?:\+\d+B\d+)*(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+)/gi)];
+          }
           return parentheses ? parentheses[1] : str;
-        } else if (i == 1 && keep_drop_infos) {
-          const result_dice = str.match(/\d+\[[\d,]+\]/gi);
-          if (result_dice) {
-            try {
-              let offset = 0;
-              let str_tmp = str;
-              result_dice.forEach((dice_ary_str, j) => {
-                const keep_drop_info = keep_drop_infos[j].match(/(\d+)D\d+([KD][HL])(\d+)/i);
-                const dice_ary_info = dice_ary_str.match(/(\d+)\[([\d,]+)\]/i);
-                if (keep_drop_info && dice_ary_info) {
-                  const dice_count = +keep_drop_info[1];
-                  const keep_drop = keep_drop_info[2].toUpperCase();
-                  const keep_drop_count = +keep_drop_info[3];
-                  const keep_count = (keep_drop.startsWith('K') ? keep_drop_count : (dice_count - keep_drop_count));
-                  const total = +dice_ary_info[1];
-                  const dice_ary = dice_ary_info[2].split(',');
-                  dice_ary.sort((a, b) => (+a) - (+b));
-                  if (keep_drop === 'KH' || keep_drop === 'DL') dice_ary.reverse();
-                  const dice_ary_place = dice_ary.map((die, k) => (k + 1) <= keep_count ? `${die}` : `~~~${die}~~~`);
-                  if (keep_drop === 'DH' || keep_drop === 'DL') dice_ary_place.reverse();
-                  const place_str = total + '[' + dice_ary_place.join(',') + ']';
-                  let place_point = str_tmp.indexOf(dice_ary_str, offset);
-                  str_tmp = str_tmp.substring(0, place_point) + place_str + str_tmp.substring(place_point + dice_ary_str.length);
-                  offset = place_point + place_str.length;
+        } else if (i == 1 && (add_dice_infos.length || barabara_roll_infos.length)) {
+          try {
+            let str_tmp = str;
+            const dice_ary_infos = [...(str.matchAll(add_dice_infos.length ? /(?<total>\d+)\[(?<dice_ary_str>\d+(?:,\d+)*)?\]/gi : /(?<dice_ary_str>\d+(?:,\d+)*)/gi))];
+            if (dice_ary_infos.length) {
+              let place_point_offset = 0;
+              let place_str;
+              dice_ary_infos.forEach((dice_ary_info, j) => {
+                place_str = dice_ary_info[0];
+                if (add_dice_infos.length) {
+                  const {dice_count, keep_drop, keep_drop_count} = add_dice_infos[j].groups;
+                  const {total, dice_ary_str} = dice_ary_info.groups;
+                  if (keep_drop) {
+                    const dice_ary = dice_ary_str != null ? dice_ary_str.split(',').sort((a, b) => (+a) - (+b)) : [];
+                    const keep_count = keep_drop.startsWith('K') ? keep_drop_count : (dice_count - keep_drop_count);
+                    if (keep_drop === 'KH' || keep_drop === 'DL') dice_ary.reverse();
+                    const dice_ary_place = dice_ary.map((die, k) => (k + 1) <= keep_count ? `${die}` : `~~~${die}~~~`);
+                    if (keep_drop === 'DH' || keep_drop === 'DL') dice_ary_place.reverse();
+                    place_str = `${total}[${ dice_ary_place.join(',') }]`;
+                  }
+                } else if (barabara_roll_infos.length) {
+                  console.log(barabara_roll_infos[0], dice_ary_info)
+                  const {sign, criteria} = barabara_roll_infos[j].groups;
+                  const {dice_ary_str} = dice_ary_info.groups;
+                  place_str = dice_ary_str.split(',').map(die => {
+                    let is_keep = true;
+                    switch (sign) {
+                      case '==':
+                      case '=':
+                        is_keep = (+die == +criteria);
+                        break;
+                      case '!=':
+                      case '<>':
+                        is_keep = (+die != +criteria);
+                        break;
+                      case '>=':
+                        is_keep = (+die >= +criteria);
+                        break;
+                      case '<=':
+                        is_keep = (+die <= +criteria);
+                        break;
+                      case '<':
+                        is_keep = (+die < +criteria);
+                        break;
+                      case '>':
+                        is_keep = (+die > +criteria);
+                        break;
+                    }
+                    return is_keep ? `${die}` : `~~~${die}~~~`;
+                  }).join(',');
                 }
+                const place_point = str_tmp.indexOf(dice_ary_info[0], place_point_offset);
+                if (place_str != dice_ary_info[0]) str_tmp = str_tmp.substring(0, place_point) + place_str + str_tmp.substring(place_point + dice_ary_info[0].length);
+                place_point_offset = place_point + place_str.length;
               });
-              str = str_tmp;
-            } catch(e) {
-              console.error(e);
-            } 
+            }
+            str = str_tmp;
+          } catch(e) {
+            console.error(e);
           }
         }
         return str;
