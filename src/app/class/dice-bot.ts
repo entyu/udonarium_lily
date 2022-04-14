@@ -214,9 +214,6 @@ export class DiceBot extends GameObject {
           const repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
           let rollText: string = (regArray[4] != null) ? regArray[4] : text;
 
-          //ローマ数字のⅮの置き換え
-          rollText = rollText.replace(/Ⅾ/g, 'D');
-
           if (!rollText || repeat <= 0) return;
           let finalResult: DiceRollResult = { id: 'DiceBot', result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
             isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
@@ -243,7 +240,7 @@ export class DiceBot extends GameObject {
               finalResult.isSecret = isSecret || isRepSecret;
               const diceRollTableRows = diceRollTable.parseText();
               for (let i = 0; i < repeat && i < 32; i++) {
-                let rollResult = await DiceBot.diceRollAsync(StringUtil.toHalfWidth(diceRollTable.dice), 'DiceBot', 1);
+                let rollResult = await DiceBot.diceRollAsync(StringUtil.toHalfWidth(diceRollTable.dice).replace(/[ⅮÐ]/g, 'D').replace(/\×/g, '*').replace(/\÷/g, '/').replace(/[―ー—‐]/g, '-'), 'DiceBot', 1);
                 finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
                 if (rollResult.result) rollResult.result = this.formatRollResult(rollResult.result);
                 let rollResultNumber = 0;
@@ -293,7 +290,7 @@ export class DiceBot extends GameObject {
               }
             } 
             if (!isChoice) {
-              rollText = rollText.trim().split(/\s+/)[0]
+              rollText = rollText.trim().split(/\s+/)[0].replace(/[ⅮÐ]/g, 'D').replace(/\×/g, '*').replace(/\÷/g, '/').replace(/[―ー—‐]/g, '-');
             }
 
             if (DiceBot.apiUrl) {
