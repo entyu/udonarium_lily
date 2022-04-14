@@ -298,4 +298,10 @@ s.drop-dice .dropped {
   color: #999;
 }`;
   }
+
+  static decorationDiceResult(diceBotMessage: string) :string {
+    return diceBotMessage
+      .replace(/\~\~\~(###\d+###|\d+)\~\~\~/g, '<s class="drop-dice"><span class="dropped">$1</span></s>')
+      .replace(/###(\~\~\~\d+\~\~\~|\d+)###/g, '<b class="special-dice">$1</b>');
+  }
 }

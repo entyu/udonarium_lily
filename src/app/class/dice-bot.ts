@@ -607,29 +607,35 @@ export class DiceBot extends GameObject {
   private formatRollResult(result: string): string {
     if (result == null) return '';
     return result.split("\n").map(str => {
-      let add_dice_infos = [];
-      let barabara_roll_infos = [];
+      let addDiceInfos = [];
+      let barabaraDiceInfos = [];
+      let rerollDiceInfos = [];
       return str.split(' ＞ ').map((str, i, a) => {
         if (a.length === 1) return str;
         if (i == 0) {
           const parentheses = str.match(/^\(([A-Z\d\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || str.match(/^\((CHOICE[\[\( ].+)\)$/i);
           if (parentheses && !parentheses[1].toUpperCase().startsWith('CHOICE')) { 
-            add_dice_infos = [...str.matchAll(/(?<dice_count>\d+)D\d+(?:(?<keep_drop>[KD][HL])(?<keep_drop_count>\d+))?/gi)];
-            if (!add_dice_infos.length) barabara_roll_infos = [...str.matchAll(/\d+B\d+(?:\+\d+B\d+)*(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+)/gi)];
+            addDiceInfos = [...str.matchAll(/(?<dice_count>\d+)D\d+(?:(?<keep_drop>[KD][HL])(?<keep_drop_count>\d+))?/gi)];
+            if (!addDiceInfos.length) {
+              barabaraDiceInfos = [...str.matchAll(/\d+B\d+(?:\+\d+B\d+)*(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+)/gi)];
+              if (!barabaraDiceInfos.length) {
+                rerollDiceInfos = [...str.matchAll(/\d+R\d+(?:\+\d+R\d+)*\[(?<reroll_sign><=|>=|<>|==|!=|<|>|=)?(?<reroll_criteria>\d+)\](?:(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+))?/gi)];
+              }
+            }
           }
           return parentheses ? parentheses[1] : str;
-        } else if (i == 1 && (add_dice_infos.length || barabara_roll_infos.length)) {
+        } else if (i == 1 && (addDiceInfos.length || barabaraDiceInfos.length || rerollDiceInfos.length)) {
           try {
             let str_tmp = str;
-            const dice_ary_infos = [...(str.matchAll(add_dice_infos.length ? /(?<total>\d+)\[(?<dice_ary_str>\d+(?:,\d+)*)?\]/gi : /(?<dice_ary_str>\d+(?:,\d+)*)/gi))];
-            if (dice_ary_infos.length) {
+            const diceArrryInfos = [...(str.matchAll(addDiceInfos.length ? /(?<total>\d+)\[(?<dice_ary_str>\d+(?:,\d+)*)?\]/gi : /(?<dice_ary_str>\d+(?:,\d+)*)/gi))];
+            if (diceArrryInfos.length) {
               let place_point_offset = 0;
               let place_str;
-              dice_ary_infos.forEach((dice_ary_info, j) => {
-                place_str = dice_ary_info[0];
-                if (add_dice_infos.length) {
-                  const {dice_count, keep_drop, keep_drop_count} = add_dice_infos[j].groups;
-                  const {total, dice_ary_str} = dice_ary_info.groups;
+              diceArrryInfos.forEach((diceArrayInfo, j) => {
+                place_str = diceArrayInfo[0];
+                if (addDiceInfos.length) {
+                  const {dice_count, keep_drop, keep_drop_count} = addDiceInfos[j].groups;
+                  const {total, dice_ary_str} = diceArrayInfo.groups;
                   if (keep_drop) {
                     const dice_ary = dice_ary_str != null ? dice_ary_str.split(',').sort((a, b) => (+a) - (+b)) : [];
                     const keep_count = keep_drop.startsWith('K') ? keep_drop_count : (dice_count - keep_drop_count);
@@ -638,39 +644,24 @@ export class DiceBot extends GameObject {
                     if (keep_drop === 'DH' || keep_drop === 'DL') dice_ary_place.reverse();
                     place_str = `${total}[${ dice_ary_place.join(',') }]`;
                   }
-                } else if (barabara_roll_infos.length) {
-                  console.log(barabara_roll_infos[0], dice_ary_info)
-                  const {sign, criteria} = barabara_roll_infos[j].groups;
-                  const {dice_ary_str} = dice_ary_info.groups;
-                  place_str = dice_ary_str.split(',').map(die => {
-                    let is_keep = true;
-                    switch (sign) {
-                      case '==':
-                      case '=':
-                        is_keep = (+die == +criteria);
-                        break;
-                      case '!=':
-                      case '<>':
-                        is_keep = (+die != +criteria);
-                        break;
-                      case '>=':
-                        is_keep = (+die >= +criteria);
-                        break;
-                      case '<=':
-                        is_keep = (+die <= +criteria);
-                        break;
-                      case '<':
-                        is_keep = (+die < +criteria);
-                        break;
-                      case '>':
-                        is_keep = (+die > +criteria);
-                        break;
-                    }
-                    return is_keep ? `${die}` : `~~~${die}~~~`;
-                  }).join(',');
+                } else if (barabaraDiceInfos.length) {
+                  const {sign, criteria} = barabaraDiceInfos[0].groups;
+                  const {dice_ary_str} = diceArrayInfo.groups;
+                  place_str = dice_ary_str.split(',').map(die => DiceBot.isPass(die, sign, criteria) ? `${die}` : `~~~${die}~~~`).join(',');
+                } else if (rerollDiceInfos.length) {
+                  let {reroll_sign, reroll_criteria, sign, criteria} = rerollDiceInfos[0].groups;
+                  if (!reroll_sign) reroll_sign = sign;
+                  if (!reroll_criteria) reroll_criteria = criteria;
+                  const {dice_ary_str} = diceArrayInfo.groups;
+                  //console.log(rerollDiceInfos[0], dice_ary_str)
+                  place_str = dice_ary_str
+                    .split(',')
+                    .map(die => DiceBot.isPass(die, reroll_sign, reroll_criteria) ? `###${die}###` : `${die}`)
+                    .map(die => DiceBot.isPass(die, sign, criteria) ? `${die}` : `~~~${die}~~~`)
+                    .join(',');
                 }
-                const place_point = str_tmp.indexOf(dice_ary_info[0], place_point_offset);
-                if (place_str != dice_ary_info[0]) str_tmp = str_tmp.substring(0, place_point) + place_str + str_tmp.substring(place_point + dice_ary_info[0].length);
+                const place_point = str_tmp.indexOf(diceArrayInfo[0], place_point_offset);
+                if (place_str != diceArrayInfo[0]) str_tmp = str_tmp.substring(0, place_point) + place_str + str_tmp.substring(place_point + diceArrayInfo[0].length);
                 place_point_offset = place_point + place_str.length;
               });
             }
@@ -682,5 +673,34 @@ export class DiceBot extends GameObject {
         return str;
       }).join(' → ');
     }).join("\n");
+  }
+
+  private static isPass(num: string|number, sign: string, criteria: string|number, _default=true): boolean {
+    let match = num.toString().match(/(\d+)/);
+    if (match) num = match[1];
+    let isPass = _default;
+    switch (sign) {
+      case '==':
+      case '=':
+        isPass = (+num == +criteria);
+        break;
+      case '!=':
+      case '<>':
+        isPass = (+num != +criteria);
+        break;
+      case '>=':
+        isPass = (+num >= +criteria);
+        break;
+      case '<=':
+        isPass = (+num <= +criteria);
+        break;
+      case '<':
+        isPass = (+num < +criteria);
+        break;
+      case '>':
+        isPass = (+num > +criteria);
+        break;
+    }
+    return isPass;
   }
 }

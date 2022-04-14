@@ -103,7 +103,7 @@ export class ChatMessageComponent implements OnInit {
 
   get htmlEscapedText():string  {
     let text = this._htmlEscapeLinking(this.chatMessage.text, false, !this.chatMessage.isOperationLog);
-    if (this.chatMessage.isDicebot) text = text.replace(/\~\~\~(\d+)\~\~\~/g, '<s class="drop-dice"><span class="dropped">$1</span></s>');
+    if (this.chatMessage.isDicebot) text = ChatMessage.decorationDiceResult(text);
     return text;
   }
 
