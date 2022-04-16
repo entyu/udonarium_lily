@@ -606,76 +606,101 @@ export class DiceBot extends GameObject {
 
   private formatRollResult(result: string): string {
     if (result == null) return '';
-    return result.split("\n").map(str => {
+    return result.split("\n").map(resultLine => {
       let addDiceInfos = [];
       let barabaraDiceInfos = [];
       let rerollDiceInfos = [];
-      return str.split(' ＞ ').map((str, i, a) => {
-        if (a.length === 1) return str;
+      let upperDiceInfos = [];
+      return resultLine.split(' ＞ ').map((resultFragment, i, a) => {
+        if (a.length === 1) return resultFragment;
         if (i == 0) {
-          const parentheses = str.match(/^\(([A-Z\d\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || str.match(/^\((CHOICE[\[\( ].+)\)$/i);
+          const parentheses = resultFragment.match(/^\(([A-Z\d\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || resultFragment.match(/^\((CHOICE[\[\( ].+)\)$/i);
           if (parentheses && !parentheses[1].toUpperCase().startsWith('CHOICE')) { 
-            addDiceInfos = [...str.matchAll(/(?<dice_count>\d+)D\d+(?:(?<keep_drop>[KD][HL])(?<keep_drop_count>\d+))?/gi)];
+            addDiceInfos = [...resultFragment.matchAll(/(?<diceCount>\d+)D\d+(?:(?<keepDrop>[KD][HL])(?<keepDropCount>\d+))?/gi)];
             if (!addDiceInfos.length) {
-              barabaraDiceInfos = [...str.matchAll(/\d+B\d+(?:\+\d+B\d+)*(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+)/gi)];
+              barabaraDiceInfos = [...resultFragment.matchAll(/\d+B\d+(?:\+\d+B\d+)*(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+)/gi)];
               if (!barabaraDiceInfos.length) {
-                rerollDiceInfos = [...str.matchAll(/\d+R\d+(?:\+\d+R\d+)*\[(?<reroll_sign><=|>=|<>|==|!=|<|>|=)?(?<reroll_criteria>\d+)\](?:(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+))?/gi)];
+                rerollDiceInfos = [...resultFragment.matchAll(/\d+R\d+(?:\+\d+R\d+)*\[(?<rerollSign><=|>=|<>|==|!=|<|>|=)?(?<rerollCriteria>\d+)\](?:(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+))?/gi)];
+                if (!rerollDiceInfos.length) {
+                  upperDiceInfos = [...resultFragment.matchAll(/\d+U\d+(?:\+\d+U\d+)*\[(?<rerollCriteria>\d+)\](?<modifier>[\-+]\d+)?(?:(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+))?/gi)];
+                }
               }
             }
           }
-          return parentheses ? parentheses[1] : str;
-        } else if (i == 1 && (addDiceInfos.length || barabaraDiceInfos.length || rerollDiceInfos.length)) {
+          return parentheses ? parentheses[1] : resultFragment;
+        } else if (i == 1 && (addDiceInfos.length || barabaraDiceInfos.length || rerollDiceInfos.length || upperDiceInfos.length)) {
           try {
-            let str_tmp = str;
-            const diceArrryInfos = [...(str.matchAll(addDiceInfos.length ? /(?<total>\d+)\[(?<dice_ary_str>\d+(?:,\d+)*)?\]/gi : /(?<dice_ary_str>\d+(?:,\d+)*)/gi))];
+            let tmpString = resultFragment;
+            const diceArrryRegExp = addDiceInfos.length ? /(?<total>\d+)\[(?<diceArrayString>\d+(?:,\d+)*)?\]/gi
+              : upperDiceInfos.length ? /(?:(?<total>\d+)\[(?<diceArrayString>\d+(?:,\d+)*)?\])|(?<modifier2>[\-+]\d+)|(?<dieString>\d+)/gi
+              : /(?<diceArrayString>\d+(?:,\d+)*)/gi;
+            const diceArrryInfos = [...resultFragment.matchAll(diceArrryRegExp)];
             if (diceArrryInfos.length) {
-              let place_point_offset = 0;
-              let place_str;
+              let placePointOffset = 0;
+              let placeString;
               diceArrryInfos.forEach((diceArrayInfo, j) => {
-                place_str = diceArrayInfo[0];
+                placeString = diceArrayInfo[0];
                 if (addDiceInfos.length) {
-                  const {dice_count, keep_drop, keep_drop_count} = addDiceInfos[j].groups;
-                  const {total, dice_ary_str} = diceArrayInfo.groups;
-                  if (keep_drop) {
-                    const dice_ary = dice_ary_str != null ? dice_ary_str.split(',').sort((a, b) => (+a) - (+b)) : [];
-                    const keep_count = keep_drop.startsWith('K') ? keep_drop_count : (dice_count - keep_drop_count);
-                    if (keep_drop === 'KH' || keep_drop === 'DL') dice_ary.reverse();
+                  const {diceCount, keepDrop, keepDropCount} = addDiceInfos[j].groups;
+                  const {total, diceArrayString} = diceArrayInfo.groups;
+                  if (keepDrop) {
+                    const dice_ary = diceArrayString != null ? diceArrayString.split(',').sort((a, b) => (+a) - (+b)) : [];
+                    const keep_count = keepDrop.startsWith('K') ? keepDropCount : (diceCount - keepDropCount);
+                    if (keepDrop === 'KH' || keepDrop === 'DL') dice_ary.reverse();
                     const dice_ary_place = dice_ary.map((die, k) => (k + 1) <= keep_count ? `${die}` : `~~~${die}~~~`);
-                    if (keep_drop === 'DH' || keep_drop === 'DL') dice_ary_place.reverse();
-                    place_str = `${total}[${ dice_ary_place.join(',') }]`;
+                    if (keepDrop === 'DH' || keepDrop === 'DL') dice_ary_place.reverse();
+                    placeString = `${total}[${ dice_ary_place.join(',') }]`;
                   }
                 } else if (barabaraDiceInfos.length) {
                   const {sign, criteria} = barabaraDiceInfos[0].groups;
-                  const {dice_ary_str} = diceArrayInfo.groups;
-                  place_str = dice_ary_str.split(',').map(die => DiceBot.isPass(die, sign, criteria) ? `${die}` : `~~~${die}~~~`).join(',');
+                  const {diceArrayString} = diceArrayInfo.groups;
+                  placeString = diceArrayString.split(',').map(die => DiceBot.isPass(die, sign, criteria) ? `${die}` : `~~~${die}~~~`).join(',');
                 } else if (rerollDiceInfos.length) {
-                  let {reroll_sign, reroll_criteria, sign, criteria} = rerollDiceInfos[0].groups;
-                  if (!reroll_sign) reroll_sign = sign;
-                  if (!reroll_criteria) reroll_criteria = criteria;
-                  const {dice_ary_str} = diceArrayInfo.groups;
+                  let {rerollSign, rerollCriteria, sign, criteria} = rerollDiceInfos[0].groups;
+                  if (!rerollSign) rerollSign = sign;
+                  if (!rerollCriteria) rerollCriteria = criteria;
+                  const {diceArrayString} = diceArrayInfo.groups;
                   //console.log(rerollDiceInfos[0], dice_ary_str)
-                  place_str = dice_ary_str
-                    .split(',')
-                    .map(die => DiceBot.isPass(die, reroll_sign, reroll_criteria) ? `###${die}###` : `${die}`)
-                    .map(die => DiceBot.isPass(die, sign, criteria) ? `${die}` : `~~~${die}~~~`)
+                  placeString = diceArrayString.split(',')
+                    .map(die => DiceBot.isPass(die, rerollSign, rerollCriteria) ? `###${die}###` : die)
+                    .map(die => DiceBot.isPass(die, sign, criteria, false) ? die : `~~~${die}~~~`)
                     .join(',');
+                } else if (upperDiceInfos.length) {
+                  const {rerollCriteria, modifier, sign, criteria} = upperDiceInfos[0].groups;
+                  const {total, diceArrayString, modifier2, dieString} = diceArrayInfo.groups;
+                  console.log(upperDiceInfos[0], diceArrayInfo)
+                  if (modifier2) {
+                    placeString = ` (${modifier2})`;
+                  } else {
+                    if (total) {
+                      placeString = total + '[' + diceArrayString.split(',')
+                      .map(die => DiceBot.isPass(die, '>=', rerollCriteria) ? `###${die}###` : die)
+                      .join(',') + ']';
+                      if (!DiceBot.isPass((+total) + (modifier ? +modifier : 0), sign, criteria)) placeString = `~~~${placeString}~~~`;
+                    } else {
+                      let tmp = placeString;
+                      placeString = DiceBot.isPass(dieString, '>=', rerollCriteria) ? `###${dieString}###` : dieString;
+                      if (!DiceBot.isPass((+tmp) + (modifier ? +modifier : 0), sign, criteria)) placeString = `~~~${placeString}~~~`;
+                    }
+                  }
                 }
-                const place_point = str_tmp.indexOf(diceArrayInfo[0], place_point_offset);
-                if (place_str != diceArrayInfo[0]) str_tmp = str_tmp.substring(0, place_point) + place_str + str_tmp.substring(place_point + diceArrayInfo[0].length);
-                place_point_offset = place_point + place_str.length;
+                const placePoint = tmpString.indexOf(diceArrayInfo[0], placePointOffset);
+                if (placeString != diceArrayInfo[0]) tmpString = tmpString.substring(0, placePoint) + placeString + tmpString.substring(placePoint + diceArrayInfo[0].length);
+                placePointOffset = placePoint + placeString.length;
               });
             }
-            str = str_tmp;
+            resultFragment = tmpString;
           } catch(e) {
             console.error(e);
           }
         }
-        return str;
+        return resultFragment;
       }).join(' → ');
     }).join("\n");
   }
 
   private static isPass(num: string|number, sign: string, criteria: string|number, _default=true): boolean {
+    if (num == null) return _default;
     let match = num.toString().match(/(\d+)/);
     if (match) num = match[1];
     let isPass = _default;

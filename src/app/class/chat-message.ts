@@ -122,7 +122,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
     const lastUpdateStr = !this.isEdited ? '' : 
       (dateFormat == '') ? ' (編集済)' : ` (編集済 ${ formatDate(new Date(this.lastUpdate), dateFormat, this.locale) })`;
     let text = StringUtil.rubyToText(this.text);
-    if (this.isDicebot) text = text.replace(/\~\~\~(\d+)\~\~\~/g, '~$1');
+    if (this.isDicebot) text = text.replace(/###(.+?)###/g, '*$1').replace(/\~\~\~(.+?)\~\~\~/g, '~$1');
     if (text.lastIndexOf('\n') == text.length - 1 && !lastUpdateStr) {
       // 最終行の調整
       text += "\n";
@@ -167,7 +167,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
           return m.getType() == 'url' && StringUtil.validUrl(m.getAnchorHref());
         }
       });
-      if (this.isDicebot) textAutoLinkedHtml = textAutoLinkedHtml.replace(/\~\~\~(\d+)\~\~\~/g, '<s class="drop-dice"><span class="dropped">$1</span></s>');
+      if (this.isDicebot) textAutoLinkedHtml = ChatMessage.decorationDiceResult(textAutoLinkedHtml);
 
       let lastUpdateHtml = '';
       if (this.isEdited) {
@@ -301,7 +301,7 @@ s.drop-dice .dropped {
 
   static decorationDiceResult(diceBotMessage: string) :string {
     return diceBotMessage
-      .replace(/\~\~\~(###\d+###|\d+)\~\~\~/g, '<s class="drop-dice"><span class="dropped">$1</span></s>')
-      .replace(/###(\~\~\~\d+\~\~\~|\d+)###/g, '<b class="special-dice">$1</b>');
+      .replace(/###(.+?)###/g, '<b class="special-dice">$1</b>')
+      .replace(/\~\~\~(.+?)\~\~\~/g, '<s class="drop-dice"><span class="dropped">$1</span></s>')
   }
 }
