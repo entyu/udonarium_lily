@@ -31,20 +31,24 @@
       </ng-container>
     </div>
   </div>
-  <div *ngIf="!isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
+  <div [hidden]="isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
     <select class="palette" id="{{_timeId}}_select"  style="overflow-y: auto;" size="5" (input)="selectPalette($event.target.value)" (click)="clickPalette($event.target.value)" (focusout)="resizeChatInput()" #chatPalette>
       <ng-container *ngIf="palette">
         <option *ngFor="let palette of palette.getPalette()" value="{{palette}}">{{palette}}</option>
       </ng-container>
     </select>
   </div>
-  <div *ngIf="isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
-    <textarea class="palette is-caret" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
+  <div [hidden]="!isEdit" style="flex-grow: 1; height: 0; min-height: 100px;">
+    <textarea class="palette is-caret" id="{{_timeId}}_text" style="resize: none;" [(ngModel)]="editPalette" placeholder="チャットパレット"></textarea>
   </div>
   <div style="flex-grow: 0;">
     <button type="submit" (click)="toggleEditMode()">
       <span *ngIf="!isEdit">チャットパレットの編集</span>
       <span *ngIf="isEdit">チャットパレットを確定</span>
     </button>
+<!--
+    <button type="submit" (click)="moveTest()">
+    </button>
+-->
   </div>
 </div>
