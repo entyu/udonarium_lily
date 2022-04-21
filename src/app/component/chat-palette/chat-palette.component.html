@@ -14,6 +14,7 @@
     [(gameType)]="gameType"
     [(sendFrom)]="sendFrom"
     [autoCompleteIndex]="completeIndex()"
+    [autoCompleteListLen]="autoCompleteList().length"
     [(text)]="text"
     (chat)="sendChat($event)" 
     (autoCompleteSwitch)="autoCompleteSwitchRelative($event)" 
