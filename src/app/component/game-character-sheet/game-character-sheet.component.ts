@@ -108,8 +108,10 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   showImportImages() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 500, height: 380 };
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 350, height: 250 };
+    option.title = (<GameCharacter>this.tabletopObject).name + 'への画像複製';
     let component = this.panelService.open<ImportCharacterImgComponent>(ImportCharacterImgComponent, option);
+    component.tabletopObject = <GameCharacter>this.tabletopObject;
   }
 
   clickLimitHeight(){
