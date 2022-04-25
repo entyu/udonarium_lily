@@ -75,6 +75,7 @@ import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-tab
 
 import { VoteMenuComponent } from 'component/vote-menu/vote-menu.component';
 import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
+import { ImportCharacterImgComponent } from 'component/import-character-img/import-character-img.component';
 
 import { AppConfigService } from 'service/app-config.service';
 import { ChatMessageService } from 'service/chat-message.service';
@@ -137,6 +138,7 @@ import { AppComponent } from './app.component';
 
     VoteMenuComponent,
     VoteWindowComponent,
+    ImportCharacterImgComponent,
 
     LobbyComponent,
     ModalComponent,

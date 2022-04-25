@@ -5,9 +5,13 @@ import { DataElement } from '@udonarium/data-element';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TabletopObject } from '@udonarium/tabletop-object';
 
+import { PointerDeviceService } from 'service/pointer-device.service';
+
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
+import { ImportCharacterImgComponent } from 'component/import-character-img/import-character-img.component';
+
 import { ModalService } from 'service/modal.service';
-import { PanelService } from 'service/panel.service';
+import { PanelOption, PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
 import { GameCharacter } from '@udonarium/game-character'; //
@@ -30,7 +34,8 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   constructor(
     private saveDataService: SaveDataService,
     private panelService: PanelService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private pointerDeviceService: PointerDeviceService
   ) { }
 
   ngOnInit() {
@@ -99,6 +104,12 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   clickNoTalk(){
     //処理なし    
+  }
+
+  showImportImages() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 500, height: 380 };
+    let component = this.panelService.open<ImportCharacterImgComponent>(ImportCharacterImgComponent, option);
   }
 
   clickLimitHeight(){

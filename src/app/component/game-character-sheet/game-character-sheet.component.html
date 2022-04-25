@@ -159,12 +159,12 @@
       <ng-container *ngSwitchDefault>
 
         <ng-container *ngIf="tabletopObject.imageDataElement">
-
-
           <div class="flex-item">
             <div class="table">
-              <div class="table-row" game-data-element [gameDataElement]="tabletopObject.imageDataElement" [isTagLocked]="true" [isEdit]="isEdit" [isImage]="true"></div>
-            </div>
+              <div class="table-row" game-data-element [gameDataElement]="tabletopObject.imageDataElement" [isTagLocked]="true" [isEdit]="isEdit" [isImage]="true"></div>            </div>
+            <ng-container *ngIf="tabletopObject.aliasName === 'character'">
+              <button style="width:300px; color: #555;" (click)="showImportImages()">画像を他のコマからインポート</button>
+            </ng-container>
           </div>
         </ng-container>
 
