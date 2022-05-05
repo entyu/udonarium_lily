@@ -12,6 +12,8 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameCharacter } from '@udonarium/game-character';
+import { DataElement } from '@udonarium/data-element';
+
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -73,22 +75,36 @@ export class ImportCharacterImgComponent implements OnInit, OnDestroy, AfterView
 
 
   importImages(){
-//    if(GameCharacter)
+    let object = ObjectStore.instance.get(this._sendFrom);
+    if (object instanceof GameCharacter) {
+      if(GameCharacter){
+        console.log( this.tabletopObject.name + 'インポート実行');
+        console.log( object.name + 'インポート実行');
+        let distImageDataElement = this.tabletopObject.imageDataElement;
+        let srcImageDataElement = object.imageDataElement;
 
-/*    
-    if( this.tabletopObject ){
-      this.tabletopObject.chatColorCode[num] = event;
+        while( distImageDataElement.children.length < srcImageDataElement.children.length){
+          console.log('イメージ追加');
+          distImageDataElement.appendChild(DataElement.create('imageIdentifier', '', { type: 'image' }, ''));
+        }
 
-      if( this.tabletopObject.syncDummyCounter < 2 ){
-        this.tabletopObject.syncDummyCounter = this.tabletopObject.syncDummyCounter + 1;
-      }else{
-        this.tabletopObject.syncDummyCounter = 0;
+        while( distImageDataElement.children.length > srcImageDataElement.children.length && distImageDataElement.children.length >= 2){
+          console.log('イメージ削除');
+          distImageDataElement.children[distImageDataElement.children.length-1].destroy();
+        }
+
+        let count;
+        for(count = 0; count < srcImageDataElement.children.length; count++){
+          let dist = <DataElement>distImageDataElement.children[count];
+          let src = <DataElement>srcImageDataElement.children[count];
+          
+          dist.currentValue = src.currentValue;
+          dist.name = src.name;
+          dist.value = src.value;
+        }
+//        this.updateKomaIconMaxValue(root);
       }
-      console.log('changeColor:count:'+this.tabletopObject.syncDummyCounter);
-    }else{
-      this.myPeer.chatColorCode[num] = event;
     }
-*/
   }
 
   cancel(){
