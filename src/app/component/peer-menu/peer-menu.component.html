@@ -12,34 +12,54 @@
   <br>※最後に使った色とニックネームをブラウザに保存、<br>　色を初期値に戻す際は白(255,255,255)を選択。</span>
 </div>
 <div>
-  <span>あなたのID：<span>
-    <ng-container *ngIf="networkService.isOpen">
-      <span style="display: inline-block;">
-        <span #idSpacer class="id-spacer">{{ networkService.peerContext.userId }}</span>
-        <input #idInput class="id-input" type="text" value="{{ networkService.peerContext.userId }}" readonly>
-      </span>
-      <button *ngIf="isAbleClipboardCopy" (click)="copyPeerId()" [disabled]="isCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
-      <span [@fadeInOut]="isCopied" class="copied" [style.color]="myPeerColor"> {{ isCopied ? 'クリップボードにコピーしました。' : '' }}</span>
-    </ng-container>
-  </span>
-  <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
-  </span>
+  <div>あなたのID：
+    <span>
+      <ng-container *ngIf="networkService.isOpen">
+        <span class="id-input-container">
+          <span class="id-spacer">{{ networkService.peerContext.userId }}</span>
+          <input class="id-input" type="text" value="{{ networkService.peerContext.userId }}" readonly>
+        </span>
+        <button *ngIf="isAbleClipboardCopy" (click)="copyPeerId()" [disabled]="isCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
+        <span [@fadeInOut]="isCopied" class="copied" [style.color]="myPeerColor"> {{ isCopied ? 'クリップボードにコピーしました。' : '' }}</span>
+      </ng-container>
+    </span>
+    <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span>
+  </div>
 </div>
 <!--<div>host ID:{{networkService.hostPeerID}}</div>-->
 <ng-container *ngIf="networkService.peerContext.isRoom">
   <hr/>
-  <div>
-    <span>ルーム名：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.roomName}}/{{networkService.peerContext.roomId}}</span></span>
+  <div>ルーム名：
+    <span>
+      <ng-container *ngIf="networkService.isOpen">
+        <span class="id-input-container">
+          <span class="id-spacer">{{ networkService.peerContext.roomName + '/' + networkService.peerContext.roomId }}</span>
+          <input class="id-input" type="text" value="{{ networkService.peerContext.roomName + '/' + networkService.peerContext.roomId }}" readonly>
+        </span>
+        <button *ngIf="isAbleClipboardCopy" (click)="copyRoomName()" [disabled]="isRoomNameCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
+        <span [@fadeInOut]="isRoomNameCopied" class="copied" [style.color]="myPeerColor"> {{ isRoomNameCopied ? 'クリップボードにコピーしました。' : '' }}</span>
+      </ng-container>
+    </span>
   </div>
-  <div>
-    <span>パスワード：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.password}}</span></span>
+  <div>パスワード：
+    <span>
+      <ng-container *ngIf="networkService.peerContext.password">
+        <span class="id-input-container">
+          <span class="id-spacer">{{ networkService.peerContext.password }}</span>
+          <input class="id-input" type="text" value="{{ networkService.peerContext.password }}" readonly>
+        </span>
+        <button *ngIf="isAbleClipboardCopy" (click)="copyPassword()" [disabled]="isPasswordCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
+        <span [@fadeInOut]="isPasswordCopied" class="copied" [style.color]="myPeerColor"> {{ isPasswordCopied ? 'クリップボードにコピーしました。' : '' }}</span>
+      </ng-container>
+    </span>
   </div>
 </ng-container>
 <hr/>
-<div *ngFor="let context of networkService.peerContexts">
+<div *ngFor="let context of networkService.peerContexts; index as i">
   <div>
     <span *ngIf="!context.isOpen">[接続中]</span>
-    <span>他の参加者：{{findUserId(context.peerId)}} [<b [style.color]="findPeerColor(context.peerId)">{{findPeerName(context.peerId)}}</b>]</span>
+    <div *ngIf="context.isOpen && i == 0" style="font-weight: bold">他の参加者と接続状態<span class="health">（良好 </span><i class="material-icons health health-blue">sentiment_very_satisfied</i><span class="health"> ＞ </span><i class="material-icons health health-green">sentiment_dissatisfied</i><span class="health"> ＞ </span><i class="material-icons health health-yellow">mood_bad</i><span class="health"> ＞ </span><i class="material-icons health health-red">sentiment_very_dissatisfied</i><span class="health"> 不良）</span>：</div>
+    <span><i class="{{'material-icons health ' + healtClass(context.session.health)}}">{{healthIcon(context.session.health)}}</i> {{findUserId(context.peerId)}} [<b [style.color]="findPeerColor(context.peerId)">{{findPeerName(context.peerId)}}</b>]</span>
   </div>
 </div>
 <div>

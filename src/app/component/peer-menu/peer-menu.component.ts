@@ -25,17 +25,18 @@ import { animate, style, transition, trigger } from '@angular/animations';
     ])
   ]
 })
-export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('idInput') idInput: ElementRef;
-  @ViewChild('idSpacer') idSpacer: ElementRef;
-
+export class PeerMenuComponent implements OnInit, OnDestroy {
   targetUserId: string = '';
   networkService = Network
   gameRoomService = ObjectStore.instance;
   help: string = '';
   isCopied = false;
+  isRoomNameCopied = false;
+  isPasswordCopied = false;
 
   private _timeOutId;
+  private _timeOutId2;
+  private _timeOutId3;
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
@@ -64,7 +65,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   constructor(
-    private ngZone: NgZone,
     private modalService: ModalService,
     private panelService: PanelService,
     public appConfigService: AppConfigService
@@ -74,17 +74,10 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     Promise.resolve().then(() => { this.panelService.title = '接続情報'; this.panelService.isAbleFullScreenButton = false });
   }
 
-  ngAfterViewInit() {
-    EventSystem.register(this)
-      .on('OPEN_NETWORK', event => {
-        this.ngZone.run(() => { });
-        if (this.idInput && this.idInput.nativeElement) this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
-      });
-    if (this.idInput && this.idInput.nativeElement) this.idInput.nativeElement.style.width = this.idSpacer.nativeElement.getBoundingClientRect().width + 'px'
-  }
-
   ngOnDestroy() {
     clearTimeout(this._timeOutId);
+    clearTimeout(this._timeOutId2);
+    clearTimeout(this._timeOutId3);
     EventSystem.unregister(this);
   }
 
@@ -138,7 +131,43 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  copyRoomName() {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(this.networkService.peerContext.roomName + '/' + this.networkService.peerContext.roomId);
+      this.isRoomNameCopied = true;
+      clearTimeout(this._timeOutId2);
+      this._timeOutId2 = setTimeout(() => {
+        this.isRoomNameCopied = false;
+      }, 1000);
+    }
+  }
+
+  copyPassword() {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(this.networkService.peerContext.password);
+      this.isPasswordCopied = true;
+      clearTimeout(this._timeOutId3);
+      this._timeOutId2 = setTimeout(() => {
+        this.isPasswordCopied = false;
+      }, 1000);
+    }
+  }
+
   isAbleClipboardCopy(): boolean {
     return navigator.clipboard ? true : false;
+  }
+
+  healthIcon(helth) {
+    if (helth >= 1.0) return 'sentiment_very_satisfied';
+    if (helth > 0.9) return 'sentiment_dissatisfied';
+    if (helth > 0.7) return 'mood_bad';
+    return 'sentiment_very_dissatisfied';
+  }
+
+  healtClass(helth) {
+    if (helth >= 1.0) return 'health-blue';
+    if (helth > 0.9) return 'health-green';
+    if (helth > 0.7) return 'health-yellow';
+    return 'health-red';
   }
 }

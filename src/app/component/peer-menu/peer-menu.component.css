@@ -21,11 +21,15 @@
   background-size: cover;
 }
 
+.id-input-container {
+  display: inline-block;
+  position: relative;
+}
+
 .id-spacer  {
-  position: absolute;
   visibility: hidden;
+  display: inline-block;
   pointer-events: none;
-  height: 0;
   padding: 0 3px;
   box-sizing: border-box;
   border-color: transparent;
@@ -38,7 +42,10 @@
 }
 
 .id-input {
+  top: 0;
+  left: -4px;
   width: 100%;
+  position: absolute;
   background: none;
   border: none;
   border-radius: 2px;
@@ -62,4 +69,29 @@
 .copied {
   font-size: smaller;
   opacity: 0;
+  white-space: nowrap;
+}
+
+.health {
+  font-size: smaller;
+  font-weight: normal;
+}
+.health-blue {
+  color: blue;
+  filter: drop-shadow(0px 0px 2px skyblue);
+}
+
+.health-green {
+  color: green;
+  filter: drop-shadow(0px 0px 1px greenyellow);
+}
+
+.health-yellow {
+  color: rgb(117, 117, 50);
+  filter: drop-shadow(0px 0px 1px yellow);
+}
+
+.health-red {
+  color: darkred;
+  filter: drop-shadow(0px 0px 2px red);
 }
