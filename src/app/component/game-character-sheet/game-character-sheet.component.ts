@@ -106,6 +106,10 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     //処理なし    
   }
 
+  clickImageFlag(){
+    //処理なし    
+  }
+
   showImportImages() {
     let coordinate = this.pointerDeviceService.pointers[0];
     let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 350, height: 250 };
@@ -120,6 +124,16 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       EventSystem.trigger('RESIZE_NOTE_OBJECT', {identifier :this.tabletopObject.identifier })
     }, 100);
   }
+
+  chkKomaSize( height ){
+    let character = <GameCharacter>this.tabletopObject;
+    if( height < 10 )
+      height = 10 ;
+    if( height > 200 )
+      height = 200 ;
+    character.komaImageHeignt = height;
+  }
+
 
   chkPopWidth( width ){
     let character = <GameCharacter>this.tabletopObject;
