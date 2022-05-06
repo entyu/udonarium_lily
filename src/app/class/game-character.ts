@@ -21,6 +21,9 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() overViewWidth: number = 270;
   @SyncVar() overViewMaxHeight: number = 250;
 
+  @SyncVar() specifyKomaImageFlag: boolean = false;
+  @SyncVar() komaImageHeignt: number = 100;
+
   @SyncVar() chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
   @SyncVar() syncDummyCounter: number = 0;
 

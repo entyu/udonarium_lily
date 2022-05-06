@@ -1,0 +1,45 @@
+.flex-item {
+  margin: 5px;
+  -webkit-flex: 1 0 auto; /* Safari */
+  flex: 1 0 auto;
+  box-sizing: border-box;
+  -webkit-flex-grow: 1; /* Safari */
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+
+.table {
+  box-sizing: border-box;
+  padding : 5px;
+  /*position : fixed;*/
+  /*bottom : 0;*/
+  display: table;
+  /*width: calc(100% - 30px);*/
+  width: 100%;
+}
+
+.table-cell {
+  display: table-cell;
+}
+
+.imagebox {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+/*  min-width: 50px;*/
+  max-width: 50px;
+  max-height: 50px;
+  vertical-align: top;
+  text-align: center;
+}
+
+.image{
+  height: 100%;
+  vertical-align: bottom;
+  object-fit: cover;
+}
+
+input{
+  width:5em;
+}

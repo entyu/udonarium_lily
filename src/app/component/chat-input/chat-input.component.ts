@@ -46,6 +46,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get sendTo(): string { return this._sendTo };
   set sendTo(sendTo: string) { this._sendTo = sendTo; this.sendToChange.emit(sendTo); }
 
+  @Input('autoCompleteListLen') _autoCompleteListLen: number = -1;
+
   @Input('text') _text: string = '';
   @Output() textChange = new EventEmitter<string>();
   get text(): string { return this._text };
@@ -360,7 +362,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   }
 
   selectAutoComplete(event: KeyboardEvent, direction: number){
-    if (event) event.preventDefault();
+    if( this._autoCompleteListLen > 1){
+      if (event) event.preventDefault();
+    }
     this.autoCompleteSwitch.emit(direction);
   }
 

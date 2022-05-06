@@ -93,7 +93,9 @@
               </div>
             </div>
 <!---->
-            <img class="image is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'">
+            <img class="image is-3d" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'">
+            <img [hidden]="" class="image is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'">
+
             <div *ngIf="!isLock" class="grab-group is-3d">
 <!--回転部キャラ下-->
               <div *ngIf="!isLock" class="rotate-grab rotate-grab-icon of-bottom is-3d"

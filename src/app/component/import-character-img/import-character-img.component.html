@@ -1,0 +1,28 @@
+<div class="table">
+  <div class="table-cell" style="width:7em;">
+    <div style="text-align:center;">
+      複製元＞
+    </div>
+  </div>
+  <div class="table-cell" >
+    <ng-select class="ud-select is-caret" style="width:12em;" [(ngModel)]="sendFrom" [clearable]="false">
+      <ng-option *ngFor="let gameCharacter of gameCharacters" [value]="gameCharacter.identifier">{{gameCharacter.name}}
+      </ng-option>
+    </ng-select>
+  </div>
+</div>
+<div class="table">
+  <div class="table-cell imagebox">
+    <img *ngIf="0 < imageFile.url.length" class="image" [src]="imageFile.url | safe: 'resourceUrl'" />
+  </div>
+  <div class="table-cell">
+    登録枚数:{{selectCharacterTachieNum}}
+  </div>
+</div>
+<!--{{gameCharacter.identifier}}
+{{gameCharacter.name}}-->
+<br>
+<div class="table">
+    <button (click)="importImages()" style ="width:9em">インポート実行</button>
+    <button (click)="cancel()" style = "width:9em;margin-left:3em;">キャンセル</button>
+</div>

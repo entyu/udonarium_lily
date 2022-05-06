@@ -69,32 +69,45 @@
     <option value="{{networkService.peerId}}">個人インベントリ</option>
     <option value="graveyard">墓地</option>
     </select>
-    <div class="extra-setting" style="width:400px;">
-      <div >
-        テーブルインベントリ非表示
-        <input type="checkbox" value="hideInventory"  [(ngModel)]="tabletopObject.hideInventory" name="hideInventory" (click)="clickHide()">
-      </div>
-      <div >
-        発言をしない
-        <input type="checkbox" value="hideInventory"  [(ngModel)]="tabletopObject.nonTalkFlag" name="nonTalkFlag" (click)="clickNoTalk()">
-      </div>
-      
-      <div >
-        ポップアップ横幅
-          <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
-          min="270" max="1000" [(ngModel)]="tabletopObject.overViewWidth" />
-          <input class="is-caret" [(ngModel)]="tabletopObject.overViewWidth" type="number" style="width:12em;"
-          min="270" max="1000" name="popWidth" (change)="chkPopWidth($event.target.value)"
-          style="color: #555;"/>
-      </div >
-      <div >
-        ポップアップ縦幅最大
-       
+    <div class="extra-setting" style="display:table;">
+      <div class="extra-setting" style="width:50%;display:table-cell;">
+        <div >
+          テーブルインベントリ非表示
+          <input type="checkbox" value="hideInventory"  [(ngModel)]="tabletopObject.hideInventory" name="hideInventory" (click)="clickHide()">
+        </div>
+        <div >
+          発言をしない
+          <input type="checkbox" value="hideInventory"  [(ngModel)]="tabletopObject.nonTalkFlag" name="nonTalkFlag" (click)="clickNoTalk()">
+        </div>
+        <div >
+          ポップアップ横幅
+            <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
+            min="270" max="1000" [(ngModel)]="tabletopObject.overViewWidth" />
+            <input class="is-caret" [(ngModel)]="tabletopObject.overViewWidth" type="number" style="width:12em;"
+            min="270" max="1000" name="popWidth" (change)="chkPopWidth($event.target.value)"
+            style="color: #555;"/>
+        </div >
+        <div >
+          ポップアップ縦幅最大
          <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 10 +';' | safe: 'style'"
           min="250" max="1000" [(ngModel)]="tabletopObject.overViewMaxHeight" />
           <input class="is-caret" [(ngModel)]="tabletopObject.overViewMaxHeight" type="number" style="width:12em;"
           min="250" max="1000" name="popHeight" (change)="chkPopMaxHeight($event.target.value)"
           style="color: #555;"/>
+        </div>
+      </div>
+      <div class="extra-setting" style="width:50%;display:table-cell;">
+        コマ画像の高さを指定
+        <input type="checkbox" value="hideInventory"  [(ngModel)]="tabletopObject.specifyKomaImageFlag" name="specifyKomaImageFlag" (click)="clickImageFlag()">
+        <div >
+          コマ画像の高さ
+            <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 1 +';' | safe: 'style'"
+            min="50" max="750" [(ngModel)]="tabletopObject.komaImageHeignt" [disabled]="!tabletopObject.specifyKomaImageFlag" />
+            <input class="is-caret" [(ngModel)]="tabletopObject.komaImageHeignt" type="number" style="width:12em;"
+            min="50" max="750" name="popWidth" (change)="chkKomaSize($event.target.value)"
+            style="color: #555;" [disabled]="!tabletopObject.specifyKomaImageFlag"/>
+        </div >
+        
       </div>
     </div>
   </ng-container>
@@ -159,12 +172,12 @@
       <ng-container *ngSwitchDefault>
 
         <ng-container *ngIf="tabletopObject.imageDataElement">
-
-
           <div class="flex-item">
             <div class="table">
-              <div class="table-row" game-data-element [gameDataElement]="tabletopObject.imageDataElement" [isTagLocked]="true" [isEdit]="isEdit" [isImage]="true"></div>
-            </div>
+              <div class="table-row" game-data-element [gameDataElement]="tabletopObject.imageDataElement" [isTagLocked]="true" [isEdit]="isEdit" [isImage]="true"></div>            </div>
+            <ng-container *ngIf="tabletopObject.aliasName === 'character'">
+              <button style="width:300px; color: #555;" (click)="showImportImages()">画像を他のコマからインポート</button>
+            </ng-container>
           </div>
         </ng-container>
 
