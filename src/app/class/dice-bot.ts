@@ -305,7 +305,7 @@ export class DiceBot extends GameObject {
               for (let i = 0; i < repeat && i < 32; i++) {
                 let rollResult = await DiceBot.diceRollAsync(rollText, gameType, repeat);
                 if (rollResult.result.length < 1) break;
-                finalResult.id =  rollResult.id;
+                finalResult.id = rollResult.id;
                 finalResult.result += rollResult.result;
                 finalResult.isSecret = finalResult.isSecret || rollResult.isSecret || isRepSecret;
                 finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
