@@ -127,10 +127,10 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   chkKomaSize( height ){
     let character = <GameCharacter>this.tabletopObject;
-    if( height < 10 )
-      height = 10 ;
-    if( height > 200 )
-      height = 200 ;
+    if( height < 50 )
+      height = 50 ;
+    if( height > 750 )
+      height = 750 ;
     character.komaImageHeignt = height;
   }
 

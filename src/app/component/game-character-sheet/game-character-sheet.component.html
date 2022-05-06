@@ -102,9 +102,9 @@
         <div >
           コマ画像の高さ
             <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 1 +';' | safe: 'style'"
-            min="10" max="200" [(ngModel)]="tabletopObject.komaImageHeignt" [disabled]="!tabletopObject.specifyKomaImageFlag" />
+            min="50" max="750" [(ngModel)]="tabletopObject.komaImageHeignt" [disabled]="!tabletopObject.specifyKomaImageFlag" />
             <input class="is-caret" [(ngModel)]="tabletopObject.komaImageHeignt" type="number" style="width:12em;"
-            min="10" max="200" name="popWidth" (change)="chkKomaSize($event.target.value)"
+            min="50" max="750" name="popWidth" (change)="chkKomaSize($event.target.value)"
             style="color: #555;" [disabled]="!tabletopObject.specifyKomaImageFlag"/>
         </div >
         
