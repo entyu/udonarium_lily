@@ -20,7 +20,7 @@ export class GridLineRender {
     return context
   }
 
-  render(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
+  render(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6', isShowNumber = true) {
     this.canvasElement.width = width * gridSize;
     this.canvasElement.height = height * gridSize;
     let context: CanvasRenderingContext2D = this.canvasElement.getContext('2d');
@@ -33,7 +33,7 @@ export class GridLineRender {
       for (let w = 0; w <= width; w++) {
         let { gx, gy } = calcGridPosition(w, h, gridSize);
         this.strokeSquare(context, gx, gy, gridSize);
-        context.fillText((w + 1).toString() + '-' + (h + 1).toString(), gx + (gridSize / 2), gy + (gridSize / 2));
+        if (isShowNumber) context.fillText((w + 1).toString() + '-' + (h + 1).toString(), gx + (gridSize / 2), gy + (gridSize / 2));
       }
     }
   }

@@ -96,7 +96,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
         if (event.data.identifier !== this.currentTable.identifier && event.data.identifier !== this.tableSelecter.identifier) return;
         console.log('UPDATE_GAME_OBJECT GameTableComponent ' + this.currentTable.identifier);
 
-        this.setGameTableGrid(this.currentTable.width, this.currentTable.height, this.currentTable.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
+        this.setGameTableGrid(this.currentTable.width, this.currentTable.height, this.currentTable.gridSize, this.currentTable.gridType, this.currentTable.gridColor, this.currentTable.isShowNumber);
       })
       .on('DRAG_LOCKED_OBJECT', event => {
         this.gameTable.nativeElement.style.transition = null;
@@ -329,12 +329,12 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.gameTable.nativeElement.style.transform = 'translateZ(' + this.viewPotisonZ + 'px) translateY(' + this.viewPotisonY + 'px) translateX(' + this.viewPotisonX + 'px) rotateY(' + this.viewRotateY + 'deg) rotateX(' + this.viewRotateX + 'deg) rotateZ(' + this.viewRotateZ + 'deg) ';
   }
 
-  private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
+  private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6', isShowNumber = true) {
     this.gameTable.nativeElement.style.width = width * gridSize + 'px';
     this.gameTable.nativeElement.style.height = height * gridSize + 'px';
 
     let render = new GridLineRender(this.gridCanvas.nativeElement);
-    render.render(width, height, gridSize, gridType, gridColor);
+    render.render(width, height, gridSize, gridType, gridColor, isShowNumber);
 
     let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
     this.gridCanvas.nativeElement.style.opacity = opacity + '';

@@ -17,7 +17,7 @@
     <ng-container *ngIf="!isEmpty || selectedTable">
       <div class="images-select">
         <div>
-          画像
+          <b>画像</b>
           <div (click)="openBgImageModal()" style="position: relative; overflow: hidden">
             <div *ngIf="getHidden(tableBackgroundImage)" style="position: absolute; text-align: right; top: 0px; right: 0px; pointer-events: none; z-index: 5">
               <i class="material-icons" [class]="isShowHideImages ? 'red-eye': 'grow'" style="margin-right: 2px; font-size: 16px; display: block">{{ isShowHideImages ? 'visibility' : 'visibility_off' }}</i>
@@ -26,7 +26,7 @@
           </div>
         </div>
         <div>
-          背景
+          <b>背景</b>
           <div *ngIf="!tableDistanceviewImage.url">
             <button (click)="openDistanceViewImageModal()" style="height: 120px;" [disabled]="!isEditable">背景画像を追加</button>
           </div>
@@ -38,40 +38,47 @@
           </div>
         </div>
       </div>
-      <div>Name :
-        <input [(ngModel)]="tableName" placeholder="Name" [disabled]="!isEditable" />
+      <div>
+        <label class="self-setting">Name：<input [(ngModel)]="tableName" placeholder="Name" [disabled]="!isEditable" /></label>
       </div>
       <div>
-        <input [(ngModel)]="tableWidth" type="range" title="{{tableWidth}}" min="{{minSize}}" max="{{maxSize}}" name="tableWidth" [disabled]="!isEditable"
-        /> Width :
+        <label class="self-setting">Width：<input [(ngModel)]="tableWidth" type="range" title="{{tableWidth}}" min="{{minSize}}" max="{{maxSize}}" name="tableWidth" [disabled]="!isEditable" /></label>
         <input [(ngModel)]="tableWidth" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [disabled]="!isEditable">
       </div>
       <div>
-        <input [(ngModel)]="tableHeight" title="{{tableHeight}}" type="range" min="{{minSize}}" max="{{maxSize}}" name="tableHeight" [disabled]="!isEditable"
-        /> Height :
+        <label class="self-setting">Height：<input [(ngModel)]="tableHeight" title="{{tableHeight}}" type="range" min="{{minSize}}" max="{{maxSize}}" name="tableHeight" [disabled]="!isEditable"/></label>
         <input [(ngModel)]="tableHeight" type="number" min="{{minSize}}" max="{{maxSize}}" style="width: 5em;" [disabled]="!isEditable">
       </div>
       <div>
-        グリッド:
-        <select [(ngModel)]="tableGridType" name="tableGridType" [disabled]="!isEditable">
-          <option value="-1">なし</option>
-          <option value="0">スクエア</option>
-          <option value="1">ヘクス（縦揃え）</option>
-          <option value="2">ヘクス（横揃え）</option>
-        </select>
-        色:
-        <select [(ngModel)]="tableGridColor" name="tableGridColor" [disabled]="!isEditable">
-          <option value="#000000e6">黒</option>
-          <option value="#dddddde6">白</option>
-        </select>
+        <label class="self-setting">グリッド：
+          <select [(ngModel)]="tableGridType" name="tableGridType" [disabled]="!isEditable">
+            <option value="-1">なし</option>
+            <option value="0">スクエア</option>
+            <option value="1">ヘクス（縦揃え）</option>
+            <option value="2">ヘクス（横揃え）</option>
+          </select>
+        </label>
+        <label class="self-setting" style="margin-left: 3px">色：
+          <select [(ngModel)]="tableGridColor" name="tableGridColor" [disabled]="!isEditable">
+            <option value="#000000e6">黒</option>
+            <option value="#dddddde6">白</option>
+          </select>
+        </label>
       </div>
       <div>
-        背景フィルタ
-        <select [(ngModel)]="tableDistanceviewFilter" name="tableDistanceviewFilter" [disabled]="!isEditable">
-          <option value="">なし</option>
-          <option value="white">ホワイト</option>
-          <option value="black">ブラック</option>
-        </select>
+        <label class="self-setting">
+          <input type="checkbox" [(ngModel)]="tableGridNumberShow" name="tableGridNumberShow" />
+          グリッドの座標番号を表示
+        </label>
+      </div>
+      <div>
+        <label class="self-setting">背景フィルタ：
+          <select [(ngModel)]="tableDistanceviewFilter" name="tableDistanceviewFilter" [disabled]="!isEditable">
+            <option value="">なし</option>
+            <option value="white">ホワイト</option>
+            <option value="black">ブラック</option>
+          </select>
+        </label>
       </div>
       <hr/>
       <div>

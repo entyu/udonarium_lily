@@ -59,6 +59,12 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   get tableGridType(): GridType { return this.selectedTable.gridType; }
   set tableGridType(gridType: GridType) { if (this.isEditable) this.selectedTable.gridType = Number(gridType); }
 
+  get tableGridNumberShow(): boolean { return this.selectedTable.isShowNumber; }
+  set tableGridNumberShow(isShowNumber: boolean) {
+    this.selectedTable.isShowNumber = isShowNumber;
+    EventSystem.trigger('UPDATE_GAME_OBJECT', this.tableSelecter.toContext()); // 自分にだけイベントを発行してグリッド更新を誘発
+  }
+
   get tableDistanceviewFilter(): FilterType { return this.selectedTable.backgroundFilterType; }
   set tableDistanceviewFilter(filterType: FilterType) { if (this.isEditable) this.selectedTable.backgroundFilterType = filterType; }
 
