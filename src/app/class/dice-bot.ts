@@ -223,18 +223,30 @@ export class DiceBot extends GameObject {
           for (const diceRollTable of DiceRollTableList.instance.diceRollTables) {
             if (diceRollTable.command == null) continue;
             let isSecret = false;
-            const commandStr = StringUtil.toHalfWidth(diceRollTable.command.trim()).toUpperCase();
-            const rollTextStr = StringUtil.toHalfWidth(rollText.trim()).toUpperCase();
-            console.log(rollTextStr)
-            if (rollTextStr.startsWith('S' + commandStr) && (!rollTextStr[('S' + commandStr).length] || /[ 　]/.test(rollTextStr.charAt(('S' + commandStr).length)))) {
+            let modifier = 0;
+            let modStr = '';
+            const commandStr = StringUtil.toHalfWidth(diceRollTable.command.replace(/[―ー—‐]/g, '-').trim()).toUpperCase();
+            const rollTextStr = StringUtil.toHalfWidth(rollText.replace(/[―ー—‐]/g, '-').trim()).toUpperCase();
+            if (rollTextStr.startsWith('S' + commandStr) && (!rollTextStr[('S' + commandStr).length] || /[ \+\-]/.test(rollTextStr.charAt(('S' + commandStr).length)))) {
               isDiceRollTableMatch = true;
               isSecret = true;
-              finalResult.isFailure = false;
-            } else if (rollTextStr.startsWith(commandStr) && (!rollTextStr[commandStr.length] || /[ 　]/.test(rollTextStr.charAt(commandStr.length)))) {
+              if (rollTextStr[('S' + commandStr).length] && rollTextStr[('S' + commandStr).length] != ' ') modStr = rollTextStr.substring(('S' + commandStr).length);
+            } else if (rollTextStr.startsWith(commandStr) && (!rollTextStr[commandStr.length] || /[ \+\-]/.test(rollTextStr.charAt(commandStr.length)))) {
               isDiceRollTableMatch = true;
-              finalResult.isFailure = false;
+              if (rollTextStr[commandStr.length] && rollTextStr[commandStr.length] != ' ') modStr = rollTextStr.substring(commandStr.length);
+            }
+            if (modStr) {
+              modStr = modStr.split(' ')[0];
+              if (/^[\+\-]\d+$/.test(modStr)) {
+                modifier = +modStr;
+                modStr = ` (修正${modStr})`;
+              } else {
+                isDiceRollTableMatch = false;
+                continue;
+              }
             }
             if (isDiceRollTableMatch) {
+              finalResult.isFailure = false;
               finalResult.isDiceRollTable = true;
               finalResult.tableName = (diceRollTable.name && diceRollTable.name.length > 0) ? diceRollTable.name : '(無名のダイスボット表)';
               finalResult.isSecret = isSecret || isRepSecret;
@@ -250,15 +262,14 @@ export class DiceBot extends GameObject {
                 }
                 let isRowMatch = false;
                 for (const diceRollTableRow of diceRollTableRows) {
-                  if ((diceRollTableRow.range.start === null || diceRollTableRow.range.start <= rollResultNumber) 
-                    && (diceRollTableRow.range.end === null || rollResultNumber <= diceRollTableRow.range.end)) {
-                    //finalResult.result += (`[${rollResultNumber}] ` + StringUtil.cr(diceRollTableRow.result));
-                    finalResult.result += ('🎲' + rollResult.result + "\n" + StringUtil.cr(diceRollTableRow.result));
+                  if ((diceRollTableRow.range.start === null || diceRollTableRow.range.start <= rollResultNumber + modifier) 
+                    && (diceRollTableRow.range.end === null || rollResultNumber + modifier <= diceRollTableRow.range.end)) {
+                    finalResult.result += ('🎲' + rollResult.result + modStr + "\n" + StringUtil.cr(diceRollTableRow.result));
                     isRowMatch = true;
                     break;
                   }
                 }
-                if (!isRowMatch) finalResult.result += ('🎲' + rollResult.result + "\n" + '(結果なし)');
+                if (!isRowMatch) finalResult.result += ('🎲' + rollResult.result + modStr + "\n" + '(結果なし)');
                 if (1 < repeat) finalResult.result += ` #${i + 1}`;
                 if (i < repeat - 1) finalResult.result += "\n";
               }
