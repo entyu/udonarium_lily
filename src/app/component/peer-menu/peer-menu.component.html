@@ -33,26 +33,32 @@
     <span>
       <ng-container *ngIf="networkService.isOpen">
         <span class="id-input-container">
-          <span class="id-spacer">{{ networkService.peerContext.roomName + '/' + networkService.peerContext.roomId }}</span>
-          <input class="id-input" type="text" value="{{ networkService.peerContext.roomName + '/' + networkService.peerContext.roomId }}" readonly>
+          <span class="id-spacer room-data">{{ networkService.peerContext.roomName + '/' + networkService.peerContext.roomId }}</span>
+          <input class="id-input room-data" type="text" value="{{ networkService.peerContext.roomName + '/' + networkService.peerContext.roomId }}" readonly>
         </span>
         <button *ngIf="isAbleClipboardCopy" (click)="copyRoomName()" [disabled]="isRoomNameCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
         <span [@fadeInOut]="isRoomNameCopied" class="copied" [style.color]="myPeerColor"> {{ isRoomNameCopied ? 'クリップボードにコピーしました。' : '' }}</span>
       </ng-container>
     </span>
   </div>
-  <div>パスワード：
-    <span>
-      <ng-container *ngIf="networkService.peerContext.password">
-        <span class="id-input-container">
-          <span class="id-spacer">{{ networkService.peerContext.password }}</span>
-          <input class="id-input" type="text" value="{{ networkService.peerContext.password }}" readonly>
+  <ng-container *ngIf="networkService.peerContext.password">
+    <div>
+      パスワード
+      <label sytle="white-space: nowrap">
+        <input name="show-hide-password" type="checkbox" value="Show Hides" checked="{{ isPasswordOpen ? 'checked' : '' }}" (click)="onPasswordOpen($event)">
+        <b class="material-icons" [ngClass]="{'red-eye': isPasswordOpen}" style="font-size: smaller">{{ isPasswordOpen ? 'visibility' : 'visibility_off' }}</b>：
+      </label>
+      <span>
+        <span *ngIf="isPasswordOpen" class="id-input-container">
+          <span class="id-spacer room-data">{{ networkService.peerContext.password }}</span>
+          <input class="id-input room-data" type="text" value="{{ networkService.peerContext.password }}" readonly>
         </span>
-        <button *ngIf="isAbleClipboardCopy" (click)="copyPassword()" [disabled]="isPasswordCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
+        <span *ngIf="!isPasswordOpen" class="masked-password">{{ maskedPassword }}</span>
+        <button *ngIf="isAbleClipboardCopy && isPasswordOpen" (click)="copyPassword()" [disabled]="isPasswordCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
         <span [@fadeInOut]="isPasswordCopied" class="copied" [style.color]="myPeerColor"> {{ isPasswordCopied ? 'クリップボードにコピーしました。' : '' }}</span>
-      </ng-container>
-    </span>
-  </div>
+      </span>
+    </div>
+  </ng-container>
 </ng-container>
 <hr/>
 <div *ngFor="let context of networkService.peerContexts; index as i">

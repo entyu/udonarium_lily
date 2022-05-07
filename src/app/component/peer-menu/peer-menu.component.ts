@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
@@ -33,6 +33,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
   isCopied = false;
   isRoomNameCopied = false;
   isPasswordCopied = false;
+  isPasswordOpen = false;
 
   private _timeOutId;
   private _timeOutId2;
@@ -63,6 +64,8 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
       localStorage.setItem(PeerCursor.CHAT_MY_COLOR_LOCAL_STORAGE_KEY, PeerCursor.myCursor.color);
     }
   }
+
+  get maskedPassword(): string { return '*'.repeat(this.networkService.peerContext.password.length) }
 
   constructor(
     private modalService: ModalService,
@@ -155,6 +158,19 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
 
   isAbleClipboardCopy(): boolean {
     return navigator.clipboard ? true : false;
+  }
+
+  onPasswordOpen($event: Event) {
+    if (this.isPasswordOpen) {
+      this.isPasswordOpen = false;
+    } else {
+      if (window.confirm("パスワードを表示します。\nよろしいですか？")) {
+        this.isPasswordOpen = true;
+      } else {
+        this.isPasswordOpen = false;
+        $event.preventDefault();
+      }
+    }
   }
 
   healthIcon(helth) {
