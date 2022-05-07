@@ -153,6 +153,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
       this._timeOutId2 = setTimeout(() => {
         this.isPasswordCopied = false;
       }, 1000);
+      this.isPasswordOpen = false;
     }
   }
 
