@@ -59,7 +59,7 @@
           </select>
         </label>
         <label class="self-setting" style="margin-left: 3px">色：
-          <select [(ngModel)]="tableGridColor" name="tableGridColor" [disabled]="!isEditable">
+          <select [(ngModel)]="tableGridColor" name="tableGridColor" [disabled]="!isEditable || tableGridType == -1">
             <option value="#000000e6">黒</option>
             <option value="#dddddde6">白</option>
           </select>
@@ -67,8 +67,8 @@
       </div>
       <div>
         <label class="self-setting">
-          <input type="checkbox" [(ngModel)]="tableGridNumberShow" name="tableGridNumberShow" />
-          グリッドの座標番号を表示
+          <input type="checkbox" [(ngModel)]="tableGridNumberShow" name="tableGridNumberShow" [disabled]="!isEditable || tableGridType == -1" />
+          <span [ngClass]="{disabled: !isEditable || tableGridType == -1}">グリッドの座標番号を表示</span>
         </label>
       </div>
       <div>

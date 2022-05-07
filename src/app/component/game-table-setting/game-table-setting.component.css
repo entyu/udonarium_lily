@@ -86,3 +86,8 @@ img {
   font-weight: bolder;
   font-size: smaller;
 }
+
+.disabled {
+  color: gray;
+  font-weight: normal;
+}
