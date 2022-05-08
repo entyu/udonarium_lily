@@ -271,7 +271,7 @@ export class DiceBot extends GameObject {
                       if (!isFixedRef) {
                         finalResult.result += ('🎲' + rollResult.result + modStr + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + StringUtil.cr(diceRollTableRow.result));
                       } else {
-                        finalResult.result += ('🎲指定：' + rollResultNumber + "\n" + StringUtil.cr(diceRollTableRow.result));
+                        finalResult.result += ('🎲指定=' + rollResultNumber + "\n" + StringUtil.cr(diceRollTableRow.result));
                       }
                       isRowMatch = true;
                       break;
@@ -284,7 +284,7 @@ export class DiceBot extends GameObject {
                   } else if (!isFixedRef) {
                     finalResult.result += ('🎲' + rollResult.result + modStr  + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + '(結果なし)');
                   } else {
-                    finalResult.result += ('🎲指定：' + rollResultNumber + "\n" + '(結果なし)');
+                    finalResult.result += ('🎲指定=' + rollResultNumber + "\n" + '(結果なし)');
                   }
                 }
                 if (1 < repeat) finalResult.result += ` #${i + 1}`;
