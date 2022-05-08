@@ -264,12 +264,12 @@ export class DiceBot extends GameObject {
                 for (const diceRollTableRow of diceRollTableRows) {
                   if ((diceRollTableRow.range.start === null || diceRollTableRow.range.start <= rollResultNumber + modifier) 
                     && (diceRollTableRow.range.end === null || rollResultNumber + modifier <= diceRollTableRow.range.end)) {
-                    finalResult.result += ('🎲' + rollResult.result + modStr + "\n" + StringUtil.cr(diceRollTableRow.result));
+                    finalResult.result += ('🎲' + rollResult.result + modStr + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + StringUtil.cr(diceRollTableRow.result));
                     isRowMatch = true;
                     break;
                   }
                 }
-                if (!isRowMatch) finalResult.result += ('🎲' + rollResult.result + modStr + "\n" + '(結果なし)');
+                if (!isRowMatch) finalResult.result += ('🎲' + rollResult.result + modStr  + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + '(結果なし)');
                 if (1 < repeat) finalResult.result += ` #${i + 1}`;
                 if (i < repeat - 1) finalResult.result += "\n";
               }
