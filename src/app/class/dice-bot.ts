@@ -640,7 +640,9 @@ export class DiceBot extends GameObject {
       return resultLine.split(' ＞ ').map((resultFragment, i, a) => {
         if (a.length === 1) return resultFragment;
         if (i == 0) {
-          const parentheses = resultFragment.match(/^\(([A-Z\d\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i) || resultFragment.match(/^\((CHOICE[\[\( ].+)\)$/i);
+          const regExp1 = DiceBot.apiVersion == 1 ? /^(?:\: )\(([A-Z\d\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i : /^\(([A-Z\d\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i;
+          const regExp2 = DiceBot.apiVersion == 1 ? /^(?:\: )\((CHOICE[\[\( ].+)\)$/i : /^\((CHOICE[\[\( ].+)\)$/i;
+          const parentheses = resultFragment.match(regExp1) || resultFragment.match(regExp2);
           if (parentheses && !parentheses[1].toUpperCase().startsWith('CHOICE')) { 
             addDiceInfos = [...resultFragment.matchAll(/(?<diceCount>\d+)D\d+(?:(?<keepDrop>[KD][HL])(?<keepDropCount>\d+))?/gi)];
             if (!addDiceInfos.length) {
