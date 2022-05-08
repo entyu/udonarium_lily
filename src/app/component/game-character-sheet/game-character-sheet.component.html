@@ -7,6 +7,7 @@
     <button (click)="openModal('back')">裏面の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchCase="'card-stack'">
+    <button (click)="openModalChangeAllCardImages()">全カードの裏面の画像を変更</button>
   </ng-container>
   <ng-container *ngSwitchCase="'terrain'">
     <button (click)="openModal('floor')">床の画像を変更</button>

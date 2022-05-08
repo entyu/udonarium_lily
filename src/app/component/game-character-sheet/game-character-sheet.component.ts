@@ -313,6 +313,20 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     });
   }
 
+  openModalChangeAllCardImages() {
+    this.modalService.open<string>(FileSelecterComponent, { isAllowedEmpty: false }).then(value => {
+      if (!this.tabletopObject || !this.tabletopObject || !(this.tabletopObject instanceof CardStack) || !value) return;
+      this.tabletopObject.cards.forEach(card => {
+        let element = card.imageDataElement.getFirstElementByName('back');
+        if (element) {
+          element.value = value;
+        } else {
+          return;
+        }
+      });
+    });
+  }
+
   //ToDO インデックスも抽象化して汎用にする
   selectImage(index: number, name='imageIdentifier') {
     if (this.tabletopObject.currntImageIndex == index) return;
