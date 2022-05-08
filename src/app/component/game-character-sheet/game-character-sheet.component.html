@@ -22,6 +22,22 @@
   </ng-container>
   <button (click)="clone()">コピーを作る</button>
   <button (click)="saveToXML()">保存</button>
+  <ng-container *ngIf="tabletopObject.aliasName === 'dice-symbol'">
+    <div class="extra-setting" style="display:table;">
+      <div class="extra-setting" style="width:50%;display:table-cell;">
+        コマ画像の高さを指定
+        <input type="checkbox" value="hideInventory"  [(ngModel)]="tabletopObject.specifyKomaImageFlag" name="specifyKomaImageFlag" (click)="clickImageFlag()">
+        <div >
+          コマ画像の高さ
+            <input type="range" [style]="'font-size: 0.8em; min-width: 1em; width:' + (10) + 'em; --min: 0; --max: ' + 0 + '; --val:' + 1 +';' | safe: 'style'"
+            min="50" max="750" [(ngModel)]="tabletopObject.komaImageHeignt" [disabled]="!tabletopObject.specifyKomaImageFlag" />
+            <input class="is-caret" [(ngModel)]="tabletopObject.komaImageHeignt" type="number" style="width:12em;"
+            min="50" max="750" name="popWidth" (change)="chkDiceKomaSize($event.target.value)"
+            style="color: #555;" [disabled]="!tabletopObject.specifyKomaImageFlag"/>
+        </div >
+      </div>
+    </div>
+  </ng-container>
   <ng-container *ngIf="tabletopObject.aliasName === 'card-stack'">
     <div class="extra-setting" style="width:400px;">
       <div>
