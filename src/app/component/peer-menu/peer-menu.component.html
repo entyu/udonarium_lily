@@ -48,15 +48,15 @@
         <input name="show-hide-password" type="checkbox" value="Show Hides" checked="{{ isPasswordOpen ? 'checked' : '' }}" (click)="onPasswordOpen($event)">
         <b class="material-icons" [ngClass]="{'red-eye': isPasswordOpen}" style="font-size: smaller">{{ isPasswordOpen ? 'visibility' : 'visibility_off' }}</b>：
       </label>
-      <span>
+      <div style="display: inline">
         <span *ngIf="isPasswordOpen" class="id-input-container">
           <span class="id-spacer room-data">{{ networkService.peerContext.password }}</span>
           <input class="id-input room-data" type="text" value="{{ networkService.peerContext.password }}" readonly>
         </span>
-        <span *ngIf="!isPasswordOpen" class="masked-password">{{ maskedPassword }}</span>
+        <div style="display: inline" *ngIf="!isPasswordOpen" class="masked-password" draggable="false">{{ maskedPassword }}</div>
         <button *ngIf="isAbleClipboardCopy && isPasswordOpen" (click)="copyPassword()" [disabled]="isPasswordCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>
         <span [@fadeInOut]="isPasswordCopied" class="copied" [style.color]="myPeerColor"> {{ isPasswordCopied ? 'クリップボードにコピーしました。' : '' }}</span>
-      </span>
+      </div>
     </div>
   </ng-container>
 </ng-container>

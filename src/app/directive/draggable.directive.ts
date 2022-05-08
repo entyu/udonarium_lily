@@ -103,6 +103,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
 
     if (0 < trans.x ** 2 + trans.y ** 2 + trans.z ** 2) {
       this.elementRef.nativeElement.style.opacity = this.opacity + '';
+      this.elementRef.nativeElement.style.cursor = 'grabbing';
     }
 
     this.elementRef.nativeElement.style.left = trans.x + this.startPosition.x + 'px';
@@ -115,6 +116,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
 
   private onInputEnd(e: MouseEvent | TouchEvent) {
     this.elementRef.nativeElement.style.opacity = null;
+    this.elementRef.nativeElement.style.cursor = null;
     if (this.input.isDragging && e.cancelable) {
       this.preventClickIfNeeded(e);
       e.preventDefault();

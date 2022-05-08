@@ -179,6 +179,10 @@ body {
   }
 }
 
+span {
+  cursor: text;
+}
+
 /* Auto-Link */
 a[target=_blank] {
   text-decoration: none;

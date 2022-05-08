@@ -70,7 +70,6 @@
   font-weight: bolder;
   color: #444;
   font-family: Cambria, Georgia;
-  pointer-events: none;
   user-select: none;
   display: inline-block;
 }
