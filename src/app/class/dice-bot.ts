@@ -225,13 +225,14 @@ export class DiceBot extends GameObject {
             let isSecret = false;
             let modifier = 0;
             let modStr = '';
+            let isFixedRef = false;
             const commandStr = StringUtil.toHalfWidth(diceRollTable.command.replace(/[―ー—‐]/g, '-').trim()).toUpperCase();
             const rollTextStr = StringUtil.toHalfWidth(rollText.replace(/[―ー—‐]/g, '-').trim()).toUpperCase();
-            if (rollTextStr.startsWith('S' + commandStr) && (!rollTextStr[('S' + commandStr).length] || /[ \+\-]/.test(rollTextStr.charAt(('S' + commandStr).length)))) {
+            if (rollTextStr.startsWith('S' + commandStr) && (!rollTextStr[('S' + commandStr).length] || /[ \=\+\-]/.test(rollTextStr.charAt(('S' + commandStr).length)))) {
               isDiceRollTableMatch = true;
               isSecret = true;
               if (rollTextStr[('S' + commandStr).length] && rollTextStr[('S' + commandStr).length] != ' ') modStr = rollTextStr.substring(('S' + commandStr).length);
-            } else if (rollTextStr.startsWith(commandStr) && (!rollTextStr[commandStr.length] || /[ \+\-]/.test(rollTextStr.charAt(commandStr.length)))) {
+            } else if (rollTextStr.startsWith(commandStr) && (!rollTextStr[commandStr.length] || /[ \=\+\-]/.test(rollTextStr.charAt(commandStr.length)))) {
               isDiceRollTableMatch = true;
               if (rollTextStr[commandStr.length] && rollTextStr[commandStr.length] != ' ') modStr = rollTextStr.substring(commandStr.length);
             }
@@ -240,6 +241,8 @@ export class DiceBot extends GameObject {
               if (/^[\+\-]\d+$/.test(modStr)) {
                 modifier = +modStr;
                 modStr = ` (修正${modStr})`;
+              } else if (/^\=\-?\d+$/.test(modStr)) {
+                isFixedRef = true;
               } else {
                 isDiceRollTableMatch = false;
                 continue;
@@ -252,24 +255,38 @@ export class DiceBot extends GameObject {
               finalResult.isSecret = isSecret || isRepSecret;
               const diceRollTableRows = diceRollTable.parseText();
               for (let i = 0; i < repeat && i < 32; i++) {
-                let rollResult = await DiceBot.diceRollAsync(StringUtil.toHalfWidth(diceRollTable.dice).replace(/[ⅮÐ]/g, 'D').replace(/\×/g, '*').replace(/\÷/g, '/').replace(/[―ー—‐]/g, '-'), 'DiceBot', 1);
+                let rollResultNumber = null;
+                let rollResult = await DiceBot.diceRollAsync(isFixedRef ? `C(${modStr.substring(1)})` : StringUtil.toHalfWidth(diceRollTable.dice).replace(/[ⅮÐ]/g, 'D').replace(/\×/g, '*').replace(/\÷/g, '/').replace(/[―ー—‐]/g, '-'), 'DiceBot', 1);
                 finalResult.isEmptyDice = finalResult.isEmptyDice && rollResult.isEmptyDice;
                 if (rollResult.result) rollResult.result = this.formatRollResult(rollResult.result);
-                let rollResultNumber = 0;
                 let match = null;
-                if (rollResult.result.length > 0 && (match = rollResult.result.match(/\s→\s(?:成功数)?(\-?\d+)$/))) {
+                if (rollResult.result.length > 0 && (match = rollResult.result.match(/\s→\s(?:成功数|計算結果)?(\-?\d+)$/))) {
                   rollResultNumber = +match[1];
                 }
                 let isRowMatch = false;
-                for (const diceRollTableRow of diceRollTableRows) {
-                  if ((diceRollTableRow.range.start === null || diceRollTableRow.range.start <= rollResultNumber + modifier) 
-                    && (diceRollTableRow.range.end === null || rollResultNumber + modifier <= diceRollTableRow.range.end)) {
-                    finalResult.result += ('🎲' + rollResult.result + modStr + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + StringUtil.cr(diceRollTableRow.result));
-                    isRowMatch = true;
-                    break;
+                if (rollResultNumber != null) {
+                  for (const diceRollTableRow of diceRollTableRows) {
+                    if ((diceRollTableRow.range.start === null || diceRollTableRow.range.start <= rollResultNumber + modifier) 
+                      && (diceRollTableRow.range.end === null || rollResultNumber + modifier <= diceRollTableRow.range.end)) {
+                      if (!isFixedRef) {
+                        finalResult.result += ('🎲' + rollResult.result + modStr + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + StringUtil.cr(diceRollTableRow.result));
+                      } else {
+                        finalResult.result += ('🎲指定：' + rollResultNumber + "\n" + StringUtil.cr(diceRollTableRow.result));
+                      }
+                      isRowMatch = true;
+                      break;
+                    }
                   }
                 }
-                if (!isRowMatch) finalResult.result += ('🎲' + rollResult.result + modStr  + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + '(結果なし)');
+                if (!isRowMatch) {
+                  if (rollResultNumber == null) {
+                    finalResult.result += ('🎲（エラー：ダイスロールから数字が取得できません）' + "\n" + '(結果なし)');
+                  } else if (!isFixedRef) {
+                    finalResult.result += ('🎲' + rollResult.result + modStr  + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + '(結果なし)');
+                  } else {
+                    finalResult.result += ('🎲指定：' + rollResultNumber + "\n" + '(結果なし)');
+                  }
+                }
                 if (1 < repeat) finalResult.result += ` #${i + 1}`;
                 if (i < repeat - 1) finalResult.result += "\n";
               }
@@ -303,7 +320,6 @@ export class DiceBot extends GameObject {
             if (!isChoice) {
               rollText = rollText.trim().split(/\s+/)[0].replace(/[ⅮÐ]/g, 'D').replace(/\×/g, '*').replace(/\÷/g, '/').replace(/[―ー—‐]/g, '-');
             }
-
             if (DiceBot.apiUrl) {
               // すべてBCDiceに投げずに回数が1回未満かchoice[]が含まれるか英数記号以外は門前払い
               //ToDO APIのバージョン調べて新しければCOMMAND_PATTERN使う？（いつ読み込もう？）
@@ -328,7 +344,6 @@ export class DiceBot extends GameObject {
               }
             }
           }
-          //let rollResult = await DiceBot.diceRollAsync(rollText, gameType);
           if (!finalResult.result) return;
           this.sendResultMessage(finalResult, chatMessage);
         } catch (e) {
