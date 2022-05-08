@@ -80,6 +80,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
       this.cancel();
       return;
     }
+    this.elementRef.nativeElement.style.cursor = 'grabbing';
     e.stopPropagation();
   }
 
@@ -103,11 +104,11 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
 
     if (0 < trans.x ** 2 + trans.y ** 2 + trans.z ** 2) {
       this.elementRef.nativeElement.style.opacity = this.opacity + '';
-      this.elementRef.nativeElement.style.cursor = 'grabbing';
     }
 
     this.elementRef.nativeElement.style.left = trans.x + this.startPosition.x + 'px';
     this.elementRef.nativeElement.style.top = trans.y + this.startPosition.y + 'px';
+    this.elementRef.nativeElement.style.cursor = 'grabbing';
 
     this.prevTrans = trans;
     if (e.cancelable) e.preventDefault();

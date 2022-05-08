@@ -8,6 +8,7 @@
   z-index: 9000;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  cursor: grab;
 }
 
 .component-content {
