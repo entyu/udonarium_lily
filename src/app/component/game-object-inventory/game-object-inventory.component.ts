@@ -139,9 +139,9 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
     let position = this.pointerDeviceService.pointers[0];
     
     let actions: ContextMenuAction[] = [];
-    if (gameObject.location.name === 'table') {
+    if (gameObject.location.name === 'table' && gameObject.isVisible) {
       actions.push({
-        name: 'テーブルから探す',
+        name: 'テーブル上から探す',
         action: () => {
           if (gameObject.location.name === 'table') EventSystem.trigger('FOCUS_TABLETOP_OBJECT', { x: gameObject.location.x, y: gameObject.location.y, z: gameObject.posZ + (gameObject.altitude > 0 ? gameObject.altitude * 50 : 0) });
         },
@@ -149,8 +149,25 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         disabled: gameObject.location.name !== 'table',
         selfOnly: true
       });
-      actions.push(ContextMenuSeparator);
     }
+    if (gameObject.isHideIn) {
+      actions.push({ 
+        name: '位置を公開する',
+        action: () => {
+          gameObject.owner = '';
+        }
+      });
+    }
+    if (!gameObject.isHideIn || !gameObject.isVisible) {
+      actions.push({ 
+        name: '位置を自分だけ見る',
+        action: () => {
+          if (gameObject.location.name === 'table') alert('位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、あなたのカーソル位置は他者に伝わりません');
+          gameObject.owner = Network.peerContext.userId;
+        }
+      });
+    }
+    actions.push(ContextMenuSeparator);
     if (gameObject.imageFiles.length > 1) {
       actions.push({
         name: '画像切り替え',
@@ -209,7 +226,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       })
     );
     actions.push({ name: '画像効果', action: null,  
-    subActions: [
+      subActions: [
       (gameObject.isInverse
         ? {
           name: '☑ 反転', action: () => {
@@ -260,7 +277,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
           },
           disabled: !gameObject.isInverse && !gameObject.isHollow && !gameObject.isBlackPaint && gameObject.aura == -1
         }
-    ]});
+      ]
+    });
     actions.push(ContextMenuSeparator);
     actions.push((!gameObject.isNotRide
       ? {
@@ -355,6 +373,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
             action: () => { 
               EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: gameObject.identifier });
               gameObject.setLocation(location.name);
+              if (location.name === 'table' && gameObject.isHideIn && gameObject.isVisible) alert('位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、あなたのカーソル位置は他者に伝わりません');
               if (location.name == 'graveyard') {
                 SoundEffect.play(PresetSound.sweep);
               } else {
@@ -362,7 +381,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
               }
             }
           } 
-        })
+        }),
+      disabled: !gameObject.isVisible
     });
     /*
     for (let location of locations) {
@@ -380,7 +400,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       name: 'コピーを作る', action: () => {
         this.cloneGameObject(gameObject);
         SoundEffect.play(PresetSound.piecePut);
-      }
+      },
+      disabled: !gameObject.isVisible
     });
     actions.push({
       name: 'コピーを作る（自動採番）', action: () => {
@@ -401,7 +422,8 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         cloneObject.name = baseName + '_' + (maxIndex + 1);
         cloneObject.update();
         SoundEffect.play(PresetSound.piecePut);
-      }
+      },
+      disabled: !gameObject.isVisible
     });
     if (gameObject.location.name === 'graveyard') {
       actions.push(ContextMenuSeparator);
@@ -466,7 +488,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
   focusGameObject(gameObject: GameCharacter, e: Event, ) {
     if (!(e.target instanceof HTMLElement)) return;
     if (new Set(['input', 'button']).has(e.target.tagName.toLowerCase())) return;
-    if (gameObject.location.name !== 'table') return;
+    if (gameObject.location.name !== 'table' || !gameObject.isVisible) return;
     EventSystem.trigger('FOCUS_TABLETOP_OBJECT', { x: gameObject.location.x, y: gameObject.location.y, z: gameObject.posZ + (gameObject.altitude > 0 ? gameObject.altitude * 50 : 0) });
   }
 

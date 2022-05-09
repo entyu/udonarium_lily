@@ -5,6 +5,7 @@ import { TabletopObject } from './tabletop-object';
 import { UUID } from '@udonarium/core/system/util/uuid';
 
 import { StandList } from './stand-list';
+import { Network } from './core/system';
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
@@ -17,7 +18,8 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() roll: number = 0;
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isShowChatBubble: boolean = true;
-
+  @SyncVar() owner: string = '';
+  
   text = '';
   isEmote = false;
 
@@ -51,6 +53,9 @@ export class GameCharacter extends TabletopObject {
 
     return gameCharacter;
   }
+
+  get isHideIn(): boolean { return !!this.owner; }
+  get isVisible(): boolean { return !this.owner || Network.peerContext.userId === this.owner; }
 
   createTestGameDataElement(name: string, size: number, imageIdentifier: string) {
     this.createDataElements();

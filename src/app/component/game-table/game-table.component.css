@@ -133,3 +133,7 @@
   background-color: hsl(0, 0%, 10%);
   filter: opacity(0.3);
 }
+
+.is-hide-in {
+  filter: invert(70%);
+}

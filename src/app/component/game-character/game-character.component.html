@@ -4,7 +4,7 @@
   <div class="component-content is-3d" [@bounceInOut]="'in'">
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
       (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-inner is-3d" [ngClass]="{'selected': selected, 'not-inventory': !gameCharacter.isInventoryIndicate }"></div>
+      <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-inner is-3d" [ngClass]="{'selected': selected, 'not-inventory': !gameCharacter.isInventoryIndicate, 'is-hide-in-pedestal': isHideIn}"></div>
       <div [@switchImagePedestal]="gameCharacter.currntImageIndex" class="pedestal-outer is-3d"></div>
       <div class="pedestal-grab rotate-grab">
         <div class="pedestal-grab-border">
@@ -20,7 +20,7 @@
               [ngStyle]="{'transform': 'scaleX(' + (isInverse ? '-1' : '1') + ')'}">  
                 <img *ngIf="isDropShadow && (0 < imageFile.url.length || 0 < shadowImageFile.url.length)" [style.height.px]="size * gridSize * heightWidthRatio" class="image drop-shadow is-3d" style="pointer-events: none;" [src]="((0 < shadowImageFile.url.length) ? shadowImageFile.url : imageFile.url) | safe: 'resourceUrl'" 
                   style="filter: brightness(0) blur(1px);"
-                  [ngStyle]="{'opacity': isHollow ? 0.4 : 0.7}" [@switchImageShadow]="gameCharacter.currntImageIndex">
+                  [ngStyle]="{'opacity': (isHollow ? 0.5 : 0.7) * (isHideIn ? 0.85 : 1)}" [@switchImageShadow]="gameCharacter.currntImageIndex">
             </div>
           </div>
         </div>
@@ -39,7 +39,7 @@
               [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
               <div class="inverser is-3d" [ngClass]="{inverse: isInverse, 'black-paint': isBlackPaint, 'hollow': isHollow}">
                 <span class="image-box is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize * heightWidthRatio">
-                  <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d"  [src]="imageFile.url | safe: 'resourceUrl'"
+                  <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d"  [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-hide-in': isHideIn}"
                     [style.height.px]="size * gridSize * heightWidthRatio" (load)="onImageLoad()">
                 </span>
               </div>

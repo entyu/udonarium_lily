@@ -121,6 +121,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set isNotRide(isNotRide: boolean) { this.gameCharacter.isNotRide = isNotRide; }
   get isUseIconToOverviewImage(): boolean { return this.gameCharacter.isUseIconToOverviewImage; }
   set isUseIconToOverviewImage(isUseIconToOverviewImage: boolean) { this.gameCharacter.isUseIconToOverviewImage = isUseIconToOverviewImage; }
+  get isHideIn(): boolean { return !!this.gameCharacter.owner; }
+  get isVisible(): boolean { return this.gameCharacter.isVisible; }
 
   get faceIcon(): ImageFile { return this.gameCharacter.faceIcon; }
   
@@ -303,7 +305,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   get isEmote(): boolean {
     return this.gameCharacter.isEmote;
-    return this.dialog && StringUtil.isEmote(this.dialog.text);
+    //return this.dialog && StringUtil.isEmote(this.dialog.text);
   }
 
   get isUseFaceIcon(): ImageFile {
@@ -419,6 +421,18 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      { 
+        name: this.isHideIn ? '位置を公開する' : '位置を自分だけ見る',
+        action: () => {
+          if (this.isHideIn) {
+            this.gameCharacter.owner = '';
+          } else {
+            alert('位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、あなたのカーソル位置は他者に伝わりません');
+            this.gameCharacter.owner = Network.peerContext.userId;
+          }
+        },
+      },
+      ContextMenuSeparator,
       (this.gameCharacter.imageFiles.length <= 1 ? null : {
         name: '画像切り替え',
         action: null,
@@ -429,7 +443,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
             default: this.gameCharacter.currntImageIndex == i,
             icon: image
           };
-        }),
+        })
       }),
       (this.gameCharacter.imageFiles.length <= 1 ? null : ContextMenuSeparator),
       (this.isUseIconToOverviewImage
@@ -519,7 +533,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
             },
             disabled: !this.isInverse && !this.isHollow && !this.isBlackPaint && this.aura == -1
           }
-      ]},
+        ]
+      },
       ContextMenuSeparator,
       (!this.isNotRide
         ? {
@@ -702,7 +717,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let component = this.panelService.open<StandSettingComponent>(StandSettingComponent, option);
     component.character = gameObject;
   }
-
 
   changeImage(index: number) {
     if (this.gameCharacter.currntImageIndex != index) {

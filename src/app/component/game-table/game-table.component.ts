@@ -356,4 +356,11 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   trackByGameObject(index: number, gameObject: GameObject) {
     return gameObject.identifier;
   }
+
+  isCursorHidIn(cursor: PeerCursor): boolean {
+    for (let character of this.characters) {
+      if (character.isHideIn && character.location.name === 'table' && character.owner === cursor.userId) return true;
+    }
+    return false;
+  }
 }
