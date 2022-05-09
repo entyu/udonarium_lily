@@ -150,7 +150,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
 
   helpDiceRollTable() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 460 };
+    let option: PanelOption = { left: coordinate.x, top: coordinate.y, width: 600, height: 788 };
     let textView = this.panelService.open(TextViewComponent, option);
     textView.title = 'ダイスボット表ヘルプ';
     textView.text = 
@@ -159,9 +159,9 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
 　表は1行ごとに数字と結果を:（コロン）で区切り「数字:結果」の形で記述します（よって、ダイスは最後に一つの数字を返すものである必要があります、バラバラダイス nBm、個数振り足しダイス nRm、上方無限ロール nUm の成功数にも対応しています）。
 　
 　-（ハイフン）または～で区切って数字の範囲を指定することもできます。
-　表に「\\n」と書くと、そこで改行します（\\nは表示されません）。
+　表に \\n と書くと、そこで改行します（\\nは表示されません）。
 
-例）
+ダイスボット表の例）
 　name: 遭遇艦種　
 　command: ShipType　　dice: 1d6
 
@@ -172,6 +172,17 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
 　　5-6:駆逐艦
 
 　表を参照する際は先にあるものが優先されます、上記の例では最後の行を「1-6:駆逐艦」などとしても同じ結果になります（が、分かりやすい記述をお勧めします）。
-　デフォルトの D66 はソートされませんので、必要な場合（サイコロ・フィクションの名前表など）は、 D66S としてソートした数字を得てください。`;
+　デフォルトの D66 はソートされませんので、必要な場合（サイコロ・フィクションの名前表など）は、 D66S としてソートした数字を得てください。
+　数字の記述の際*（アスタリスク）をワイルドカード（任意の数字）として使用可能です、例えば *-1 とすれば1以下の任意の数字、6-* とすれば6以上です（ * 単独はすべての数字となり、先にあるものから参照されますので、ダイスボット表の途中の行に書いた場合それより先の行が参照されなくなります）。後述の修正により表からはみ出しても結果を得られるようにすることができます。
+
+　チャットからのコマンドの際、全角半角、アルファベットの大文字小文字は無視されます。またダイスに修正を足し引きする、あるいは任意の数字で参照することが可能です。コマンドの後に +修正値 または -修正値 を記述することで振られたダイスの数字を修正します。また =指定値 と記載することで、その数字でコマンドに対応するダイスボット表を参照します。修正値、指定値は任意の整数です。
+
+コマンドの例１）
+　ShipType+2
+　前述のダイスボット表の例「遭遇艦種」を1d6の結果に+2した数字で参照します。「遭遇艦種」には7以降の記載がありませんので、その場合「（結果なし）」となるでしょう。
+
+コマンドの例２）
+　ShipType=3
+　前述のダイスボット表の例「遭遇艦種」を数字3指定で参照します、結果「重巡洋艦」が表示されるでしょう。`;
   }
 }
