@@ -162,8 +162,9 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
       actions.push({ 
         name: '位置を自分だけ見る',
         action: () => {
-          if (gameObject.location.name === 'table') alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません');
+          if (gameObject.location.name === 'table') alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。');
           gameObject.owner = Network.peerContext.userId;
+          EventSystem.trigger('UPDATE_INVENTORY', null);
         }
       });
     }
@@ -373,7 +374,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
             action: () => { 
               EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: gameObject.identifier });
               gameObject.setLocation(location.name);
-              if (location.name === 'table' && gameObject.isHideIn && gameObject.isVisible) alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません');
+              if (location.name === 'table' && gameObject.isHideIn && gameObject.isVisible) alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。');
               if (location.name == 'graveyard') {
                 SoundEffect.play(PresetSound.sweep);
               } else {

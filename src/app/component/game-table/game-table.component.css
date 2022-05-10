@@ -134,6 +134,23 @@
   filter: opacity(0.3);
 }
 
-.is-hide-in {
-  filter: invert(70%);
+.background-image.is-filter.is-hide-in.white::after {
+  background-color: hsl(0, 0%, 10%);
+  filter: opacity(0.3);
+}
+
+.background-image.is-filter.is-hide-in.black::after {
+  background-color: hsl(0, 0%, 97%);
+  filter: opacity(0.2);
+}
+
+.background-image.is-filter.is-hide-in {
+  filter: invert(85%) blur(5px);
+  backdrop-filter: invert(85%);
+}
+
+.background-image.is-hide-in {
+  filter: invert(85%);
+  backdrop-filter: invert(85%);
+  background-color: #FFCC80;
 }

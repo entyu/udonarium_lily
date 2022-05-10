@@ -427,9 +427,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           if (this.isHideIn) {
             this.gameCharacter.owner = '';
           } else {
-            alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません');
+            alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。');
             this.gameCharacter.owner = Network.peerContext.userId;
           }
+          EventSystem.trigger('UPDATE_INVENTORY', null);
         },
       },
       ContextMenuSeparator,

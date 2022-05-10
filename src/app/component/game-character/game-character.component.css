@@ -239,6 +239,11 @@
   background-color: rgba(30, 30, 30, 0.8);
 }
 
+.is-black-background.is-hide-in-tag {
+  color: rgb(30, 30, 30);
+  background-color: rgba(233, 233, 233, 0.8);
+}
+
 .fornt-tag {
  backface-visibility: hidden;
 }
@@ -515,5 +520,5 @@ p.is-wisper .face-icon {
 }
 
 .is-hide-in {
-  filter: invert(70%) opacity(85%);
+  filter: invert(85%) opacity(85%);
 }

@@ -15,7 +15,11 @@
 .selected {
   padding: 2px;
   border: 2px dotted #666;
-  border-left: 6px solid #444;
+  border-left: 6px solid #EFBC70;
+}
+
+.selected.is-inventory-no-indicate {
+  border-left-color: #80CCEE;
 }
 
 .hidden-spacer {
@@ -459,4 +463,39 @@ button.link {
 .order-control {
   box-sizing: border-box;
   height: 1.6em;
+}
+
+.object-container.is-hide-in {
+  background-color: rgba(52, 84, 153, 0.4);
+}
+
+.object-tags-box.is-hide-in {
+  color: #eee;
+  filter: invert(85%);
+}
+.object-tags-box.is-hide-in input {
+  color: #eee;
+}
+
+.object-container {
+  position: relative;
+}
+
+.owner-tag {
+  position: absolute;
+  font-size: 8px;
+  width: min-content;
+  max-width: 100%;
+  overflow: hidden;
+  color: whitesmoke;
+  background-color: rgb(30, 30, 30);
+  box-sizing: border-box;
+  padding: 2px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0.9;
+  top: 1px;
+  right: 1px;
+  pointer-events: none;
 }

@@ -6,6 +6,7 @@ import { UUID } from '@udonarium/core/system/util/uuid';
 
 import { StandList } from './stand-list';
 import { Network } from './core/system';
+import { PeerCursor } from './peer-cursor';
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
@@ -35,6 +36,16 @@ export class GameCharacter extends TabletopObject {
     return null;
   }
 
+  get ownerName(): string {
+    let object = PeerCursor.findByUserId(this.owner);
+    return object ? object.name : '';
+  }
+
+  get ownerColor(): string {
+    let object = PeerCursor.findByUserId(this.owner);
+    return object ? object.color : '#444444';
+  }
+  
   get standList(): StandList {
     for (let child of this.children) {
       if (child instanceof StandList) return child;

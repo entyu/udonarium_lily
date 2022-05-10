@@ -19,7 +19,7 @@
             <div class="is-3d" style="pointer-events: none; transition: transform 132ms 0s ease;"
               [ngStyle]="{'transform': 'scaleX(' + (isInverse ? '-1' : '1') + ')'}">  
                 <img *ngIf="isDropShadow && (0 < imageFile.url.length || 0 < shadowImageFile.url.length)" [style.height.px]="size * gridSize * heightWidthRatio" class="image drop-shadow is-3d" style="pointer-events: none;" [src]="((0 < shadowImageFile.url.length) ? shadowImageFile.url : imageFile.url) | safe: 'resourceUrl'" 
-                  style="filter: brightness(0) blur(1px);"
+                  [style.filter]="'brightness(0) blur(1px)' + (isHideIn ? ' invert(85%)' : '')"
                   [ngStyle]="{'opacity': (isHollow ? 0.5 : 0.7) * (isHideIn ? 0.85 : 1)}" [@switchImageShadow]="gameCharacter.currntImageIndex">
             </div>
           </div>
@@ -30,7 +30,7 @@
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d">
-            <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
+            <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d" [ngClass]="{'is-hide-in-tag': isHideIn}"
               [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + nameplateOffset + 'px) rotateX(' + nameTagRotate + 'deg)'}">
               <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
               <div class="back-tag has-length-limit is-3d">{{name}}</div>
