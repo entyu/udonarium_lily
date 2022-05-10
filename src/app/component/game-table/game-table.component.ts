@@ -78,12 +78,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get diceSymbols(): DiceSymbol[] { return this.tabletopService.diceSymbols; }
   get peerCursors(): PeerCursor[] { return this.tabletopService.peerCursors; }
 
-  get isHideIn(): boolean {
-    for (let character of this.characters) {
-      if (character.isHideIn && character.isVisible && character.location.name === 'table') return true; 
-    }
-    return false;
-  }
+  get isHideIn(): boolean { return this.tabletopService.isHideIn; }
 
   constructor(
     private ngZone: NgZone,

@@ -38,7 +38,7 @@ export class GameCharacter extends TabletopObject {
 
   get ownerName(): string {
     let object = PeerCursor.findByUserId(this.owner);
-    return object ? object.name : '';
+    return object ? object.name : null;
   }
 
   get ownerColor(): string {

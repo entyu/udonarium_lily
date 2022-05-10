@@ -26,7 +26,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   styleUrls: ['./game-object-inventory.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDestroy {
+export class GameObjectInventoryComponent implements OnInit, OnDestroy {
   inventoryTypes: string[] = ['table', 'common', 'graveyard'];
 
   selectTab: string = 'table';
@@ -83,9 +83,6 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         }
       });
     this.inventoryTypes = ['table', 'common', Network.peerId, 'graveyard'];
-  }
-
-  ngAfterViewInit() {
   }
 
   ngOnDestroy() {
@@ -155,6 +152,7 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
         name: '位置を公開する',
         action: () => {
           gameObject.owner = '';
+          EventSystem.trigger('UPDATE_INVENTORY', null);
         }
       });
     }
@@ -374,7 +372,10 @@ export class GameObjectInventoryComponent implements OnInit, AfterViewInit, OnDe
             action: () => { 
               EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: gameObject.identifier });
               gameObject.setLocation(location.name);
-              if (location.name === 'table' && gameObject.isHideIn && gameObject.isVisible) alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。');
+              if (location.name === 'table' && gameObject.isHideIn && gameObject.isVisible) {
+                alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。');
+                EventSystem.call('UPDATE_INVENTORY', null);
+              }
               if (location.name == 'graveyard') {
                 SoundEffect.play(PresetSound.sweep);
               } else {

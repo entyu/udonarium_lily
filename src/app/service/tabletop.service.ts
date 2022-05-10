@@ -61,6 +61,13 @@ export class TabletopService {
   get diceSymbols(): DiceSymbol[] { return this.diceSymbolCache.objects; }
   get peerCursors(): PeerCursor[] { return ObjectStore.instance.getObjects<PeerCursor>(PeerCursor); }
 
+  get isHideIn(): boolean {
+    for (let character of this.characters) {
+      if (character.isHideIn && character.isVisible && character.location.name === 'table') return true; 
+    }
+    return false;
+  }
+
   constructor(
     private coordinateService: CoordinateService
   ) {

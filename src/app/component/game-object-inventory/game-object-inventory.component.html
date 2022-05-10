@@ -4,7 +4,7 @@
   <div *ngIf="getGameObjects(selectTab).length < 1">{{getTabTitle(selectTab)}}インベントリは空です</div>
   <div (contextmenu)="onContextMenu($event, gameObject)" *ngFor="let gameObject of getGameObjects(selectTab); trackBy: trackByGameObject" class="object-container"
     (click)="selectGameObject(gameObject)" (dblclick)="focusGameObject(gameObject, $event)" [ngClass]="{'box': true, 'selected': (selectedIdentifier === gameObject.identifier), 'is-hide-in': gameObject.isHideIn, 'is-inventory-no-indicate': !gameObject.isInventoryIndicate}">
-    <div *ngIf="gameObject.isHideIn" class="owner-tag" [style.background-color]="gameObject.ownerColor">{{gameObject.ownerName}}</div>
+    <div *ngIf="gameObject.isHideIn && gameObject.ownerName != null" class="owner-tag" [style.background-color]="gameObject.ownerColor">{{gameObject.ownerName ? gameObject.ownerName : '（無名のプレイヤー）'}}</div>
     <ng-container *ngTemplateOutlet="gameObjectTags; context:{ gameObject: gameObject}"></ng-container>
   </div>
   <div *ngIf="selectTab === 'graveyard'" style="padding-top: 6px;">
