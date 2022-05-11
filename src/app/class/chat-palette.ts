@@ -79,8 +79,8 @@ export class ChatPalette extends ObjectNode {
       loop++;
       isContinue = false;
       evaluate = evaluate.replace(/[{｛]\s*([^{}｛｝]+)\s*[}｝]/g, (match, name) => {
-        name = StringUtil.toHalfWidth(name);
-        console.log(name);
+        //name = StringUtil.toHalfWidth(name);
+        //console.log(name);
         isContinue = true;
         //name = StringUtil.toHalfWidth(name).toLocaleLowerCase();
         let ret: number|string = '';
