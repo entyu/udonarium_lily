@@ -1,6 +1,7 @@
 import { Attributes } from './core/synchronize-object/attributes';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
+import { StringUtil } from './core/system/util/string-util';
 
 @SyncObject('data')
 export class DataElement extends ObjectNode {
@@ -57,6 +58,17 @@ export class DataElement extends ObjectNode {
       if (child instanceof DataElement) {
         if (child.getAttribute('name') === name) return child;
         let match = child.getFirstElementByName(name);
+        if (match) return match;
+      }
+    }
+    return null;
+  }
+
+  getFirstElementByNameUnsensitive(name: string): DataElement {
+    for (let child of this.children) {
+      if (child instanceof DataElement) {
+        if (StringUtil.toHalfWidth(child.getAttribute('name').replace(/[―ー—‐]/g, '-')).toLowerCase() === StringUtil.toHalfWidth(name.replace(/[―ー—‐]/g, '-')).toLowerCase()) return child;
+        let match = child.getFirstElementByNameUnsensitive(name);
         if (match) return match;
       }
     }
