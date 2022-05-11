@@ -471,13 +471,22 @@ button.link {
 .object-container.is-hide-in {
   background-color: rgba(52, 84, 153, 0.4);
 }
+.object-container.is-hide-in .game-object-name {
+  color: #ddd;
+  filter: invert(85%);
+}
 
 .object-tags-box.is-hide-in {
-  color: #eee;
+  color: #ddd;
   filter: invert(85%);
 }
 .object-tags-box.is-hide-in input {
-  color: #eee;
+  color: #ddd;
+}
+.object-tags-box.is-hide-in input:hover,
+.object-tags-box.is-hide-in input:active,
+.object-tags-box.is-hide-in input:focus {
+  color: #222;
 }
 
 .object-container {
