@@ -422,15 +422,15 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
       { 
-        name: this.isHideIn ? '位置を公開する' : '位置を自分だけ見る',
+        name: this.isHideIn ? '位置を公開する' : '位置を自分だけ見る（ステルス）',
         action: () => {
           if (this.isHideIn) {
             this.gameCharacter.owner = '';
           } else {
-            alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。');
+            alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
             this.gameCharacter.owner = Network.peerContext.userId;
           }
-          EventSystem.trigger('UPDATE_INVENTORY', null);
+          EventSystem.call('UPDATE_INVENTORY', true);
         },
       },
       ContextMenuSeparator,

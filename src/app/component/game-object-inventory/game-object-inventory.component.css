@@ -360,6 +360,9 @@ input[type='range']::-ms-tooltip {
 .black-paint {
   filter: brightness(0);
 }
+.black-paint.is-hide-in {
+  filter: brightness(0) invert(100%); /* 汚いけどとりあえず */
+}
 
 .aura {
   transition: filter 0.3s ease-in-out;

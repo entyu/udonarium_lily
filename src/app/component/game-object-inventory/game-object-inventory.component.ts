@@ -74,7 +74,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
         if (event.isSendFromSelf) this.changeDetector.markForCheck();
       })
       .on('UPDATE_INVENTORY', event => {
-        if (event.isSendFromSelf) this.changeDetector.markForCheck();
+        if (event.isSendFromSelf || event.data) this.changeDetector.markForCheck();
       })
       .on('OPEN_NETWORK', event => {
         this.inventoryTypes = ['table', 'common', Network.peerId, 'graveyard'];
@@ -158,11 +158,11 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
     }
     if (!gameObject.isHideIn || !gameObject.isVisible) {
       actions.push({ 
-        name: '位置を自分だけ見る',
+        name: '位置を自分だけ見る（ステルス）',
         action: () => {
-          if (gameObject.location.name === 'table') alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。');
+          if (gameObject.location.name === 'table') alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
           gameObject.owner = Network.peerContext.userId;
-          EventSystem.trigger('UPDATE_INVENTORY', null);
+          EventSystem.call('UPDATE_INVENTORY', true);
         }
       });
     }
@@ -373,8 +373,8 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
               EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: gameObject.identifier });
               gameObject.setLocation(location.name);
               if (location.name === 'table' && gameObject.isHideIn && gameObject.isVisible) {
-                alert('あなたが位置を自分だけ見ているキャラクターが、1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。');
-                EventSystem.call('UPDATE_INVENTORY', null);
+                alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
+                EventSystem.call('UPDATE_INVENTORY', true);
               }
               if (location.name == 'graveyard') {
                 SoundEffect.play(PresetSound.sweep);
