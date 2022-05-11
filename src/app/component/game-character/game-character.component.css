@@ -519,6 +519,10 @@ p.is-wisper .face-icon {
   filter: grayscale(70%);
 }
 
+.is-hide-in-pedestal.selected {
+  filter: grayscale(70%) drop-shadow(0px 0px 8px yellow) drop-shadow(0px 0px 4px yellow);
+}
+
 .is-hide-in {
   filter: invert(85%) opacity(85%);
 }
