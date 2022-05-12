@@ -123,6 +123,11 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
     return peerCursor ? peerCursor.color : '';
   }
 
+  findPeerImageUrl(peerId: string) {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.image.url : '';
+  }
+
   copyPeerId() {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(this.networkService.peerContext.userId);

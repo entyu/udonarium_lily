@@ -278,6 +278,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       return {
         name: (peer ? peer.name : ''),
         color: (peer ? peer.color : PeerCursor.CHAT_TRANSPARENT_COLOR),
+        imageUrl: (peer ? peer.image.url : ''),
       };
     });
   }

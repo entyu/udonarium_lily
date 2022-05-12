@@ -68,7 +68,7 @@
   <div *ngIf="i == 0" style="font-weight: bold">他の参加者と接続状態<span class="health">（良好 </span><i class="material-icons health health-blue">sentiment_very_satisfied</i><span class="health"> ＞ </span><i class="material-icons health health-green">sentiment_dissatisfied</i><span class="health"> ＞ </span><i class="material-icons health health-yellow">mood_bad</i><span class="health"> ＞ </span><i class="material-icons health health-red">sentiment_very_dissatisfied</i><span class="health"> 不良）</span>：</div>
   <div>
     <span *ngIf="!context.isOpen">[接続中]</span>
-    <span><i class="{{'material-icons health ' + healtClass(context.session.health)}}">{{healthIcon(context.session.health)}}</i> {{findUserId(context.peerId)}} [<b [style.color]="findPeerColor(context.peerId)">{{findPeerName(context.peerId)}}</b>]</span>
+    <span><i class="{{'material-icons health ' + healtClass(context.session.health)}}" style="margin-right: 2px">{{healthIcon(context.session.health)}}</i>{{findUserId(context.peerId)}} [<div *ngIf="findPeerImageUrl(context.peerId)" class="cover mini-icon" [style.background-image]="'url(' + findPeerImageUrl(context.peerId) + ')' | safe: 'style' "></div><b [style.color]="findPeerColor(context.peerId)">{{findPeerName(context.peerId)}}</b>]</span>
   </div>
 </div>
 <div>
