@@ -59,3 +59,8 @@ label+label {
   width: 100%;
   min-height: 1.6em;
 }
+
+select:disabled option {
+  color: HighlightText;
+  background-color: Highlight;
+}
