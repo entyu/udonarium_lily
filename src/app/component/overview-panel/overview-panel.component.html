@@ -52,7 +52,7 @@
       <ng-container *ngIf="card.isVisible != null && !card.isVisible && !card.isGMMode">カード（裏面）</ng-container>
     </div>
     <div class="component-background">
-      <div class="grid-container-root" *ngIf="hasDataElms && card.isVisible">
+      <div class="grid-container-root" *ngIf="hasDataElms && (card.isVisible || card.isGMMode)">
         <div class="grid-container">
           <ng-container *ngFor="let dataElm of dataElms">
             <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm, name: card.name }"></ng-container>
