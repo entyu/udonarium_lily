@@ -89,13 +89,10 @@
 .icon-image-box:hover img {
   border: 2px dotted rgba(255, 0, 0, 40);
 }
-.icon-image-box.current-icon {
-  z-index: 500;
-}
 .icon-image-box.current-icon img {
   border: 2px solid red;
 }
-.icon-image-box:not(.current-icon) {
+.icon-image-box {
   z-index: 400;
 }
 

@@ -82,7 +82,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   isEdit: boolean = false;
 
   networkService = Network;
-  MAX_IMAGE_ICON_COUNT = 5;
+  MAX_IMAGE_ICON_COUNT = 8;
 
   isSaveing: boolean = false;
   progresPercent: number = 0;
@@ -359,6 +359,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       if (this.tabletopObject.currntImageIndex >= elements.length - 1) this.tabletopObject.currntImageIndex =  elements.length - 2;
       if (this.tabletopObject.currntImageIndex < 0) this.tabletopObject.currntImageIndex = 0;
     }
+    EventSystem.trigger('UPDATE_GAME_OBJECT', this.tabletopObject);
   }
 
   deleteIcon(index: number=0, imageIdentifier='') {
@@ -499,5 +500,17 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     if (this.tabletopObject instanceof Card) return !this.tabletopObject.isFront;
     if (this.tabletopObject instanceof DiceSymbol) return this.tabletopObject.hasOwner;
     return false;
+  }
+
+  showCaseOffset(index: number): number {
+    let len = this.tabletopObject.imageFiles.length;
+    if (len <= 5) return 0; 
+    return (50 - (160 / (len - 2))) * (this.tabletopObject.currntImageIndex <= index ? index-1 : index);
+  }
+
+  showIconOffset(index): number {
+    let len = this.tabletopObject.faceIcons.length;
+    if (len <= 5) return 0;
+    return (50 - (200 / (len - 1))) * index;
   }
 }
