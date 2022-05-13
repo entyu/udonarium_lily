@@ -25,7 +25,6 @@ import { StandSettingComponent } from 'component/stand-setting/stand-setting.com
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { ChatTab } from '@udonarium/chat-tab';
 import { CutInList } from '@udonarium/cut-in-list';
-import { element } from 'protractor';
 
 interface StandGroup {
   name: string,
@@ -433,7 +432,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       }
     }
 
-    if (PeerCursor.isGMHold && !PeerCursor.myCursor.isGMMode && /GMにな(?:ります|る)/i.test(StringUtil.toHalfWidth(text))) {
+    if (PeerCursor.isGMHold && !this.sendTo && !PeerCursor.myCursor.isGMMode && /GMにな(?:ります|る)/i.test(StringUtil.toHalfWidth(text))) {
       PeerCursor.myCursor.isGMMode = true;
       this.chatMessageService.sendOperationLog('GMモードになった');
       EventSystem.trigger('CHANGE_GM_MODE', null);

@@ -22,7 +22,6 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ObjectFactory } from '@udonarium/core/synchronize-object/object-factory';
 
 @Component({
   selector: 'game-character-sheet',

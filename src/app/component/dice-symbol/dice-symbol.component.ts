@@ -448,15 +448,17 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
   diceRoll(): string {
     EventSystem.call('ROLL_DICE_SYNBOL', { identifier: this.diceSymbol.identifier });
-    if (this.owner === '') {
+    //if (this.owner === '') {
       if (this.isCoin) {
         SoundEffect.play(PresetSound.coinToss);
       } else {
         SoundEffect.play(PresetSound.diceRoll1);
       }
-    }
+    //}
     let face = this.diceSymbol.diceRoll();
-    if (this.owner === '') this.chatMessageService.sendOperationLog(`${this.diceSymbol.name == '' ? '(無名の' + (this.isCoin ? 'コイン' : 'ダイス') + ')' : this.diceSymbol.name} を${this.isCoin ? 'トスした' : '振った'} → ${face}`);
+    let message = `${this.diceSymbol.name == '' ? '(無名の' + (this.isCoin ? 'コイン' : 'ダイス') + ')' : this.diceSymbol.name} を${this.isCoin ? 'トスした' : '振った'}`;
+    if (this.owner === '') message += ` → ${face}`;
+    this.chatMessageService.sendOperationLog(message);
     return face;
   }
 
