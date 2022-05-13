@@ -7,6 +7,7 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
 import { SortOrder } from '@udonarium/data-summary-setting';
 import { GameCharacter } from '@udonarium/game-character';
+import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TabletopObject } from '@udonarium/tabletop-object';
 
@@ -51,6 +52,8 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
   get sortOrderName(): string { return this.sortOrder === SortOrder.ASC ? '昇順' : '降順'; }
 
   get newLineString(): string { return this.inventoryService.newLineString; }
+
+  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
 
   constructor(
     private changeDetector: ChangeDetectorRef,
@@ -136,7 +139,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
     let position = this.pointerDeviceService.pointers[0];
     
     let actions: ContextMenuAction[] = [];
-    if (gameObject.location.name === 'table' && gameObject.isVisible) {
+    if (gameObject.location.name === 'table' && (this.isGMMode || gameObject.isVisible)) {
       actions.push({
         name: 'テーブル上から探す',
         action: () => {
@@ -384,7 +387,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
             }
           } 
         }),
-      disabled: !gameObject.isVisible
+      disabled: !gameObject.isVisible && !this.isGMMode
     });
     /*
     for (let location of locations) {
@@ -403,7 +406,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
         this.cloneGameObject(gameObject);
         SoundEffect.play(PresetSound.piecePut);
       },
-      disabled: !gameObject.isVisible
+      disabled: !gameObject.isVisible && !this.isGMMode
     });
     actions.push({
       name: 'コピーを作る（自動採番）', action: () => {
@@ -425,7 +428,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
         cloneObject.update();
         SoundEffect.play(PresetSound.piecePut);
       },
-      disabled: !gameObject.isVisible
+      disabled: !gameObject.isVisible && !this.isGMMode
     });
     if (gameObject.location.name === 'graveyard') {
       actions.push(ContextMenuSeparator);

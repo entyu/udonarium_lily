@@ -121,8 +121,12 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set isNotRide(isNotRide: boolean) { this.gameCharacter.isNotRide = isNotRide; }
   get isUseIconToOverviewImage(): boolean { return this.gameCharacter.isUseIconToOverviewImage; }
   set isUseIconToOverviewImage(isUseIconToOverviewImage: boolean) { this.gameCharacter.isUseIconToOverviewImage = isUseIconToOverviewImage; }
+
+  get ownerName(): string { return this.gameCharacter.ownerName; }
+  get ownerColor(): string { return this.gameCharacter.ownerColor; }
   get isHideIn(): boolean { return !!this.gameCharacter.owner; }
   get isVisible(): boolean { return this.gameCharacter.isVisible; }
+  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
 
   get faceIcon(): ImageFile { return this.gameCharacter.faceIcon; }
   
@@ -360,6 +364,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
           }
           this.changeDetector.markForCheck();
         });
+      })
+      .on('CHANGE_GM_MODE', event => {
+        this.changeDetector.markForCheck();
       })
       .on('POPUP_CHAT_BALLOON', -1000, event => {
         if (this.gameCharacter && this.gameCharacter.identifier == event.data.characterIdentifier) {
