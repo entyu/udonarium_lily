@@ -48,8 +48,8 @@
     </div>
     <div class="component-title title-background"
       [ngClass]="{'with-button-marign': hasImage}">
-      <ng-container *ngIf="card.isVisible == null || card.isVisible">{{card.name}}</ng-container>
-      <ng-container *ngIf="card.isVisible != null && !card.isVisible">カード（裏面）</ng-container>
+      <ng-container *ngIf="card.isVisible == null || card.isVisible || card.isGMMode">{{card.name}}</ng-container><ng-container *ngIf="card.aliasName == 'card-stack'"> のトップ</ng-container>
+      <ng-container *ngIf="card.isVisible != null && !card.isVisible && !card.isGMMode">カード（裏面）</ng-container>
     </div>
     <div class="component-background">
       <div class="grid-container-root" *ngIf="hasDataElms && card.isVisible">
@@ -137,7 +137,7 @@
     <div class="image-area character-image-box"
       [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }"
       *ngIf="hasImage">
-      <img class="character-image" [ngClass]="{'is-black-mask': !dice.isVisible, 'is-harf-black-mask': dice.isMine}"
+      <img class="character-image" [ngClass]="{'is-black-mask': !dice.isVisible, 'is-harf-black-mask': dice.isMine  || (dice.isGMMode && dice.hasOwner)}"
         [src]="imageUrl | safe: 'resourceUrl'" draggable="false" />
     </div>
     <div class="void-area is-pointer-events-none"></div>

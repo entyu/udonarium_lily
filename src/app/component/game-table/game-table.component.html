@@ -1,4 +1,4 @@
-<div class="background-image is-pointer-events-none" [ngClass]="[(backgroundFilterType ? 'is-filter' : ''), (isHideIn ? 'is-hide-in' : ''), backgroundFilterType]" 
+<div class="background-image is-pointer-events-none" [ngClass]="[(backgroundFilterType ? 'is-filter' : ''), (isHideIn && !isGMMode ? 'is-hide-in' : ''), backgroundFilterType]" 
 [style.background-image]="'url(' + backgroundImage.url + ')' | safe: 'style'"></div>
 <div class="component is-fill is-perspective" [ngClass]="{'is-grabbing': isPointerDragging}" #root>
   <div class="component-content is-fill is-3d-2" #gameTable>
@@ -11,7 +11,7 @@
       <card-stack class="is-3d" *ngFor="let cardStack of cardStacks; trackBy: trackByGameObject" [cardStack]="cardStack" [appTooltip]="cardStack" [ngStyle]="{'z-index' : cardStack.zindex, 'transform': 'translateZ(' + (cardStack.zindex * 0.001) +'px)'}"></card-stack>
       <card class="is-3d" *ngFor="let card of cards; trackBy: trackByGameObject" [card]="card" [appTooltip]="card" [ngStyle]="{'z-index' : card.zindex, 'transform': 'translateZ(' + (card.zindex * 0.001) +'px)'}"></card>
       <dice-symbol class="is-3d" *ngFor="let diceSymbol of diceSymbols; trackBy: trackByGameObject" [diceSymbol]="diceSymbol" [appTooltip]="diceSymbol"></dice-symbol>
-      <ng-container *ngFor="let character of characters; trackBy: trackByGameObject"><ng-container *ngIf="character.isVisible"><game-character class="is-3d" [gameCharacter]="character" [appTooltip]="character"></game-character></ng-container></ng-container>
+      <ng-container *ngFor="let character of characters; trackBy: trackByGameObject"><ng-container *ngIf="character.isVisible || isGMMode"><game-character class="is-3d" [gameCharacter]="character" [appTooltip]="character"></game-character></ng-container></ng-container>
       <peer-cursor *ngFor="let cursor of peerCursors; trackBy: trackByGameObject" class="is-3d" [cursor]="cursor" [style.display]="isCursorHidIn(cursor) ? 'none' : ''"></peer-cursor>
     </div>
   </div>

@@ -11,6 +11,7 @@ import { AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { ChatMessageService } from 'service/chat-message.service';
 
 @Component({
   selector: 'peer-menu',
@@ -65,11 +66,18 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
     }
   }
 
+  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
+  set isGMMode(isGMMode: boolean) { if (PeerCursor.myCursor) PeerCursor.myCursor.isGMMode = isGMMode; }
+
+  get isGMHold(): boolean { return PeerCursor.isGMHold; }
+  get isDisableConnect(): boolean { return this.isGMHold || this.isGMMode; }
+
   get maskedPassword(): string { return '*'.repeat(this.networkService.peerContext.password.length) }
 
   constructor(
     private modalService: ModalService,
     private panelService: PanelService,
+    private chatMessageService: ChatMessageService,
     public appConfigService: AppConfigService
   ) { }
 
@@ -102,9 +110,27 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
     if (context.isRoom) return;
     ObjectStore.instance.clearDeleteHistory();
     Network.connect(context.peerId);
+    if (PeerCursor.isGMHold || this.isGMMode) {
+      PeerCursor.isGMHold = false;
+      this.isGMMode = false;
+      alert('GMモードは解除されます。');
+      if (this.isGMMode) {
+        this.chatMessageService.sendOperationLog('GMモードを解除');
+        EventSystem.trigger('CHANGE_GM_MODE', null);
+      }
+    }
   }
 
   showLobby() {
+    if (PeerCursor.isGMHold || this.isGMMode) {
+      PeerCursor.isGMHold = false;
+      this.isGMMode = false;
+      alert('GMモードは解除されます。');
+      if (this.isGMMode) {
+        this.chatMessageService.sendOperationLog('GMモードを解除');
+        EventSystem.trigger('CHANGE_GM_MODE', null);
+      }
+    }
     this.modalService.open(LobbyComponent, { width: 700, height: 400, left: 0, top: 400 });
   }
 
@@ -126,6 +152,11 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
   findPeerImageUrl(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);
     return peerCursor ? peerCursor.image.url : '';
+  }
+
+  findPeerIsGMMode(peerId: string): boolean {
+    const peerCursor = PeerCursor.findByPeerId(peerId);
+    return peerCursor ? peerCursor.isGMMode : false;
   }
 
   copyPeerId() {
@@ -174,6 +205,29 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
         this.isPasswordOpen = true;
       } else {
         this.isPasswordOpen = false;
+        $event.preventDefault();
+      }
+    }
+  }
+
+  onGMMode($event: Event) {
+    if (PeerCursor.isGMHold || this.isGMMode) {
+      if (this.isGMMode) {
+        if (!window.confirm("GMモードを解除しますか？")) {
+          $event.preventDefault();
+          return;
+        }
+        this.chatMessageService.sendOperationLog('GMモードを解除');
+        EventSystem.trigger('CHANGE_GM_MODE', null);
+      }
+      PeerCursor.isGMHold = false;
+      this.isGMMode = false;
+    } else {
+      if (window.confirm("GMモードでは、裏向きのカード、公開されていないダイスシンボル、キャラクター位置をすべて見ることができ、カーソル位置は他の参加者に伝わらなくなります。\nまた、GMモード中（保留中含む）はあなたからの他者やルームへの接続は行えません。\nWith great power comes great responsibility.\n\nok?")) {
+        PeerCursor.isGMHold = true;
+        alert("まだGMモードではありません、GMになるには、チャットから「GMになる」または「GMになります」を含む文章を送信します。")
+      } else {
+        PeerCursor.isGMHold = false;
         $event.preventDefault();
       }
     }

@@ -124,3 +124,22 @@
   border-radius: 0.2rem;
   margin-right: 2px;
 }
+
+.is-gm-mode::after {
+  content: '【GM】';
+  color: red;
+}
+
+.i-am-gm {
+  color: red;
+  text-shadow    : 
+  1px  1px 0px #eee,
+-1px  1px 0px #eee,
+  1px -1px 0px #eee,
+-1px -1px 0px #eee,
+  1px  0px 0px #eee,
+  0px  1px 0px #eee,
+-1px  0px 0px #eee,
+  0px -1px 0px #eee,
+  0px 0px 2px crimson; 
+}

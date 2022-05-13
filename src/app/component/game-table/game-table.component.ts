@@ -79,6 +79,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get peerCursors(): PeerCursor[] { return this.tabletopService.peerCursors; }
 
   get isHideIn(): boolean { return this.tabletopService.isHideIn; }
+  get isGMMode(): boolean { return PeerCursor.myCursor.isGMMode; }
 
   constructor(
     private ngZone: NgZone,
@@ -360,6 +361,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   isCursorHidIn(cursor: PeerCursor): boolean {
+    if (cursor.isGMMode) return true;
     for (let character of this.characters) {
       if (character.isHideIn && character.location.name === 'table' && character.owner === cursor.userId) return true;
     }

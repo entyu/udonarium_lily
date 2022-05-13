@@ -57,8 +57,10 @@ export class DiceSymbol extends TabletopObject {
   
   get hasOwner(): boolean { return 0 < this.owner.length; }
   get isMine(): boolean { return Network.peerContext.userId === this.owner; }
-  get isVisible(): boolean { return !this.hasOwner || this.isMine; }
+  get isVisible(): boolean { return !this.hasOwner || this.isMine || this.isGMMode; }
   get isCoin(): boolean { return this.faces.length === 2; }
+  
+  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
 
   diceRoll(): string {
     let faces = this.faces;

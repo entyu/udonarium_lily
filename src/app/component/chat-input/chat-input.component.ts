@@ -433,6 +433,12 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       }
     }
 
+    if (PeerCursor.isGMHold && !PeerCursor.myCursor.isGMMode && /GMにな(?:ります|る)/i.test(StringUtil.toHalfWidth(text))) {
+      PeerCursor.myCursor.isGMMode = true;
+      this.chatMessageService.sendOperationLog('GMモードになった');
+      EventSystem.trigger('CHANGE_GM_MODE', null);
+    }
+
     if (StringUtil.cr(text).trim()) {
       this.chat.emit({
         text: text,

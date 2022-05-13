@@ -1,4 +1,4 @@
-<div [@flyInOut]="'in'" [ngClass]="{'pointer-events-none': isPointerDragging, 'is-full-screen': isFullScreen, 'is-minimized': isMinimized && !isFullScreen}" class="draggable-panel"
+<div [@flyInOut]="'in'" [ngClass]="{'pointer-events-none': isPointerDragging, 'is-full-screen': isFullScreen, 'is-minimized': isMinimized && !isFullScreen, 'i-am-gm': isGMMode}" class="draggable-panel"
   [style.left.px]="left" [style.top.px]="top" [style.width.px]="width" [style.height.px]="height"
   [resizable.disable]="isMinimized || isFullScreen" [resizable.align]="!isAbleRotateButton ? 'normal' : isHorizontal ? 'horizontal' : 'vertical'" [draggable.disable]="isFullScreen" [draggable.stack]="'.draggable-panel'" appDraggable appResizable #draggablePanel>
   <div class="title" #titleBar>

@@ -103,6 +103,8 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   get ownerName(): string { return this.card.ownerName; }
   get ownerColor(): string { return this.card.ownerColor; }
 
+  get isGMMode(): boolean { return this.card.isGMMode; }
+
   get imageFile(): ImageFile { return this.imageService.getSkeletonOr(this.card.imageFile); }
   get frontImage(): ImageFile { return this.imageService.getSkeletonOr(this.card.frontImage); }
   get backImage(): ImageFile { return this.imageService.getSkeletonOr(this.card.backImage); }
@@ -153,6 +155,9 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on('CHANGE_GM_MODE', event => {
         this.changeDetector.markForCheck();
       })
       .on('DISCONNECT_PEER', event => {

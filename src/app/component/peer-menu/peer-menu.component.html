@@ -5,6 +5,7 @@
       <!--<img *ngIf="myPeer.image" [src]="myPeer.image.url | safe: 'resourceUrl'" />-->
     </div>
     <div>
+      <label style="display: inline-block; margin-bottom: 2px" [ngClass]="{'i-am-gm': isGMMode}"><b style="font-size: smaller"><input type="checkbox" name="i-am-gamemaster" value="Show Hides" checked="{{ isGMMode || isGMHold ? 'checked' : '' }}" (click)="onGMMode($event)">{{ isGMMode ? '現在GMモードです' : (isGMHold ? 'GMモード保留中' : 'GMモードになる') }}</b></label><br />
       <button (click)="changeIcon()">プレイヤーアイコン変更</button>
     </div>
   </div>
@@ -67,16 +68,16 @@
 <div *ngFor="let context of networkService.peerContexts; index as i">
   <div *ngIf="i == 0" style="font-weight: bold">他の参加者と接続状態<span class="health">（良好 </span><i class="material-icons health health-blue">sentiment_very_satisfied</i><span class="health"> ＞ </span><i class="material-icons health health-green">sentiment_dissatisfied</i><span class="health"> ＞ </span><i class="material-icons health health-yellow">mood_bad</i><span class="health"> ＞ </span><i class="material-icons health health-red">sentiment_very_dissatisfied</i><span class="health"> 不良）</span>：</div>
   <div>
-    <span *ngIf="!context.isOpen">[接続中]</span>
-    <span><i class="{{'material-icons health ' + healtClass(context.session.health)}}" style="margin-right: 2px">{{healthIcon(context.session.health)}}</i>{{findUserId(context.peerId)}} [<div *ngIf="findPeerImageUrl(context.peerId)" class="cover mini-icon" [style.background-image]="'url(' + findPeerImageUrl(context.peerId) + ')' | safe: 'style' "></div><b [style.color]="findPeerColor(context.peerId)">{{findPeerName(context.peerId)}}</b>]</span>
+    <div *ngIf="!context.isOpen">[接続中]</div>
+    <div [ngClass]="{'is-gm-mode': findPeerIsGMMode(context.peerId)}"><i class="{{'material-icons health ' + healtClass(context.session.health)}}" style="margin-right: 2px">{{ healthIcon(context.session.health) }}</i><span style="margin-right: 3px">{{ findUserId(context.peerId) }}</span>[<div *ngIf="findPeerImageUrl(context.peerId)" class="cover mini-icon" [style.background-image]="'url(' + findPeerImageUrl(context.peerId) + ')' | safe: 'style' "></div><span><b [style.color]="findPeerColor(context.peerId)">{{ findPeerName(context.peerId) }}</b></span>]</div>
   </div>
 </div>
 <div>
   <ng-container *ngIf="!networkService.peerContext.isRoom">
-    <input [(ngModel)]="targetUserId" placeholder="接続したい相手のID" name="targetUserId" />
-    <button (click)="connectPeer()" [disabled]="!networkService.isOpen || targetUserId == null || targetUserId == ''">プライベート接続</button><br>
+    <input [(ngModel)]="targetUserId" placeholder="接続したい相手のID" name="targetUserId" [disabled]="isDisableConnect" />
+    <button (click)="connectPeer()" [disabled]="!networkService.isOpen || targetUserId == null || targetUserId == '' || isDisableConnect">プライベート接続</button><br>
   </ng-container>
-  <button *ngIf="networkService.peerIds.length <= 1" (click)="showLobby()" [disabled]="!networkService.isOpen">ロビー（ルーム一覧）を表示</button>
+  <button *ngIf="networkService.peerIds.length <= 1" (click)="showLobby()" [disabled]="!networkService.isOpen || isDisableConnect">ロビー（ルーム一覧）を表示</button>
 </div>
 <div><span style="font-size: 12px;">{{help}}</span></div>
 <ng-container *ngIf="!networkService.peerContext.isRoom">

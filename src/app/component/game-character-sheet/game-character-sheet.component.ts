@@ -20,6 +20,9 @@ import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.compon
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { PeerCursor } from '@udonarium/peer-cursor';
+import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { ObjectFactory } from '@udonarium/core/synchronize-object/object-factory';
 
 @Component({
   selector: 'game-character-sheet',
@@ -192,6 +195,13 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   get tableTopObjectName(): string {
     let element = this.tabletopObject.commonDataElement.getFirstElementByName('name') || this.tabletopObject.commonDataElement.getFirstElementByName('title');
     return element ? <string>element.value : '';
+  }
+
+  get imageFile(): ImageFile {
+    const tabletopObject = this.tabletopObject;
+    if (!tabletopObject) return ImageFile.Empty;
+    if (tabletopObject instanceof Card && this.isVisible) return tabletopObject.frontImage;
+    return tabletopObject.imageFile;
   }
 
   async saveToXML() {
@@ -474,6 +484,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   get isVisible(): boolean {
     if (!this.tabletopObject) return false;
+    if (PeerCursor.myCursor && PeerCursor.myCursor.isGMMode) return true;
     if (this.tabletopObject instanceof Card) return this.tabletopObject.isFront || this.tabletopObject.isHand;
     if (this.tabletopObject instanceof DiceSymbol) return this.tabletopObject['isVisible'];
     return true;

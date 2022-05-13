@@ -134,6 +134,8 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.imageService.getEmptyOr(this.diceSymbol.backFaceImageFile);
   }
 
+  get isGMMode(): boolean { return this.diceSymbol.isGMMode; }
+
   get isMine(): boolean { return this.diceSymbol.isMine; }
   get hasOwner(): boolean { return this.diceSymbol.hasOwner; }
   get ownerName(): string { return this.diceSymbol.ownerName; }
@@ -229,6 +231,9 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on('CHANGE_GM_MODE', event => {
         this.changeDetector.markForCheck();
       })
       .on('DISCONNECT_PEER', event => {

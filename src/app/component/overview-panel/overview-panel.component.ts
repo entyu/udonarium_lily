@@ -88,6 +88,9 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       }
       return this._imageFile.url;
     }
+    if (this.tabletopObject instanceof Card && this.tabletopObject.isGMMode) {
+      return this.tabletopObject.frontImage ? this.tabletopObject.frontImage.url : '';
+    }
     return this.tabletopObject.imageFile ? this.tabletopObject.imageFile.url : '';
   }
   get hasImage(): boolean { return 0 < this.imageUrl.length; }

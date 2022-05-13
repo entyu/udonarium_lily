@@ -1,5 +1,6 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
+import { PeerCursor } from '@udonarium/peer-cursor';
 import { PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
@@ -52,6 +53,8 @@ export class UIPanelComponent implements OnInit {
   get isAbleCloseButton() { return this.panelService.isAbleCloseButton; }
   get isAbleRotateButton() { return this.panelService.isAbleRotateButton; }
   
+  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
+
   private preLeft: number = 0;
   private preTop: number = 0;
   private preWidth: number = 100;

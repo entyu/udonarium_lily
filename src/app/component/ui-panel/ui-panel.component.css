@@ -93,3 +93,8 @@
 .draggable-panel.is-full-screen {
   border: 0px none;
 }
+
+.draggable-panel.i-am-gm {
+  background: linear-gradient(-30deg, rgba(219, 180, 180, 0.9), rgba(255, 223, 223, 0.9));
+  /*background: linear-gradient(-30deg, rgba(240,218,189, 0.9), rgba(255, 244, 232, 0.9));*/
+}

@@ -16,6 +16,9 @@ export class PeerCursor extends GameObject {
   @SyncVar() name: string = '';
   @SyncVar() imageIdentifier: string = '';
   @SyncVar() color: string = PeerCursor.CHAT_DEFAULT_COLOR;
+  @SyncVar() isGMMode: boolean = false;
+
+  static isGMHold: boolean = false;
 
   static readonly CHAT_MY_NAME_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-name-local-storage';
   static readonly CHAT_MY_COLOR_LOCAL_STORAGE_KEY = 'udonanaumu-chat-my-color-local-storage';
