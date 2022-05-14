@@ -13,7 +13,7 @@ import { ChatMessageService } from 'service/chat-message.service';
 interface LoggingValue {
   timerId?: NodeJS.Timeout;
   oldValue: string;
-  isEditing: boolean;
+  //isEditing: boolean;
 };
 
 @Directive({
@@ -58,19 +58,27 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
     const LoggingValueMap = LoggingInputDirective.LoggingValueMap;
     const identifier = this.dataElement.identifier;
     const loggingNativeElement = this.elementRef.nativeElement;
+    LoggingValueMap.set(identifier, { oldValue: this.loggingValue });
+    // input 試してダメだったらイベントで制御考える
+    /*
     LoggingValueMap.set(identifier, { oldValue: this.loggingValue, isEditing: false });
-    loggingNativeElement.addEventListener('focus', () => { 
-      LoggingValueMap.get(identifier).isEditing = true;
+    const startFunc = () => { LoggingValueMap.get(identifier).isEditing = true; };
+    const endFunc = () => { LoggingValueMap.get(identifier).isEditing = false; };
+    ['focus', 'click', 'mousedown', 'pointerdown', 'touchstart', 'keydown'].forEach((eventName) => {
+      loggingNativeElement.addEventListener(eventName, startFunc);
     });
-    loggingNativeElement.addEventListener('click', () => { 
-      LoggingValueMap.get(identifier).isEditing = true;
+    ['blur', 'mouseleave', 'pointerleave'].forEach((eventName) => {
+      loggingNativeElement.addEventListener(eventName, endFunc);
     });
-    loggingNativeElement.addEventListener('mousedown', () => { 
-      LoggingValueMap.get(identifier).isEditing = true;
+    */
+    loggingNativeElement.addEventListener('input', () => { 
+      //if (!LoggingValueMap.get(identifier).isEditing) return;
+      if (LoggingValueMap.get(identifier).timerId) clearTimeout(LoggingValueMap.get(identifier).timerId);
+      LoggingValueMap.get(identifier).timerId = setTimeout(() => {
+        this.doLogging();
+      }, this.timeout);
     });
-    loggingNativeElement.addEventListener('touchstart', () => { 
-      LoggingValueMap.get(identifier).isEditing = true;
-    });
+    /*
     loggingNativeElement.addEventListener('change', () => {
       if (!LoggingValueMap.get(identifier).isEditing) return;
       if (LoggingValueMap.get(identifier).timerId) clearTimeout(LoggingValueMap.get(identifier).timerId);
@@ -78,28 +86,33 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
         this.doLogging();
       }, this.timeout);
     });
+    */
   }
 
   ngOnDestroy() {
     const LoggingValueMap = LoggingInputDirective.LoggingValueMap;
     const identifier = this.dataElement.identifier;
-    if (LoggingValueMap.get(identifier).timerId) clearTimeout(LoggingValueMap.get(identifier).timerId);
-    if (!LoggingValueMap.get(identifier).isEditing) return;
-    this.doLogging();
+    if (LoggingValueMap.get(identifier).timerId) {
+      this.doLogging();
+    }
   }
 
   doLogging() {
     const LoggingValueMap = LoggingInputDirective.LoggingValueMap;
     const identifier = this.dataElement.identifier;
-    LoggingValueMap.get(identifier).isEditing = false;
-    if (LoggingValueMap.get(identifier).timerId) clearTimeout(LoggingValueMap.get(identifier).timerId);
+    //LoggingValueMap.get(identifier).isEditing = false;
+    if (LoggingValueMap.get(identifier).timerId) {
+      clearTimeout(LoggingValueMap.get(identifier).timerId);
+      LoggingValueMap.get(identifier).timerId = null;
+    }
     const oldValue = LoggingValueMap.get(identifier).oldValue;
     const value = this.loggingValue;
+    const dataElement = this.dataElement;
     if (!this.isDisable && value != oldValue) {
-      let text = `${this.name == '' ? `(無名の${this.type})` : this.name} の ${this.dataElement.name == '' ? '(無名の変数)' : this.dataElement.name} を変更`;
-      if (this.showValue && (this.dataElement.isSimpleNumber || this.dataElement.isNumberResource || this.dataElement.isAbilityScore)) {
+      let text = `${this.name == '' ? `(無名の${this.type})` : this.name} の ${dataElement.name == '' ? '(無名の変数)' : dataElement.name} を変更`;
+      if (this.showValue && (dataElement.isSimpleNumber || dataElement.isNumberResource || dataElement.isAbilityScore)) {
         text += ` ${oldValue} → ${value}`;
-      } else if (this.dataElement.isCheckProperty) {
+      } else if (dataElement.isCheckProperty) {
         text += ` ${value}`
       }
       this.chatMessageService.sendOperationLog(text);
@@ -108,20 +121,21 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
   }
 
   get loggingValue(): string {
-    if (!this.dataElement) return;
+    const dataElement = this.dataElement;
+    if (!dataElement) return;
     let ret: string;
-    if (this.dataElement.isSimpleNumber) {
-      ret = `${this.dataElement.value}`;
-    } else if (this.dataElement.isNumberResource) {
-      ret = `${this.dataElement.currentValue}/${this.dataElement.value ? this.dataElement.value : '???'}`;
-    } else if (this.dataElement.isCheckProperty) {
-      ret = `${this.dataElement.value ? ' → ✔ON' : ' → OFF'}`;
-    } else if (this.dataElement.isAbilityScore) {
-      let modifire = this.dataElement.calcAbilityScore();
-      ret = `${this.dataElement.value}`;
-      if (this.dataElement.currentValue) ret += `(${modifire >= 0 ? '+' : ''}${modifire})`;
+    if (dataElement.isSimpleNumber) {
+      ret = `${dataElement.value}`;
+    } else if (dataElement.isNumberResource) {
+      ret = `${dataElement.currentValue}/${dataElement.value ? dataElement.value : '???'}`;
+    } else if (dataElement.isCheckProperty) {
+      ret = `${dataElement.value ? ' → ✔ON' : ' → OFF'}`;
+    } else if (dataElement.isAbilityScore) {
+      const modifire = dataElement.calcAbilityScore();
+      ret = `${dataElement.value}`;
+      if (dataElement.currentValue) ret += `(${modifire >= 0 ? '+' : ''}${modifire})`;
     } else {
-      ret = this.dataElement.value ? this.dataElement.value.toString() : '';
+      ret = dataElement.value ? dataElement.value.toString() : '';
     }
     return ret;
   }
