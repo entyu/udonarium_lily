@@ -8,6 +8,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { Jukebox } from '@udonarium/Jukebox';
 
+import { Config } from '@udonarium/config';
 import { ModalService } from 'service/modal.service';
 
 import { CutInListComponent } from 'component/cut-in-list/cut-in-list.component';
@@ -22,6 +23,17 @@ import { CutInLauncher } from '@udonarium/cut-in-launcher';
   styleUrls: ['./jukebox.component.css']
 })
 export class JukeboxComponent implements OnInit, OnDestroy {
+
+  get roomVolume(): number { 
+    let conf = ObjectStore.instance.get<Config>('Config');
+    console.log("roomVolume()" + conf +" "+ conf.roomVolume);
+    return conf? conf.roomVolume : null ;
+  }
+
+  set roomVolume(volume: number){
+    let conf = ObjectStore.instance.get<Config>('Config');
+    if(conf) conf.roomVolume = volume;
+  }
 
   get volume(): number { return AudioPlayer.volume; }
   set volume(volume: number) { AudioPlayer.volume = volume; EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); }

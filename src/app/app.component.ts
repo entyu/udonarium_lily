@@ -2,6 +2,8 @@ import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRe
 import { NgSelectConfig } from '@ng-select/ng-select';
 
 import { ChatTabList } from '@udonarium/chat-tab-list';
+import { Config } from '@udonarium/config';
+
 import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
 import { AudioSharingSystem } from '@udonarium/core/file-storage/audio-sharing-system';
 import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
@@ -95,6 +97,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     TableSelecter.instance.initialize();
     ChatTabList.instance.initialize();
+
+    Config.instance.initialize();
+
     DataSummarySetting.instance.initialize();
 
     let diceBot: DiceBot = new DiceBot('DiceBot');
