@@ -60,7 +60,7 @@
       <button *ngIf="tabletopObject.aliasName == 'character' && tabletopObject.imageFiles.length < MAX_IMAGE_ICON_COUNT && (tabletopObject.imageFiles.length > 1 || 0 < tabletopObject.imageFile?.url.length)"
         (click)="openModalAddImage()"
         style="position: relative; bottom: 30px; z-index: 700;" 
-        [style.left.px]="tabletopObject.imageFiles.length < 0 ? -5 : (tabletopObject.imageFiles.length - 1) * 50 - 5 - showCaseOffset(tabletopObject.imageFiles.length)">{{ tabletopObject.imageFiles.length < 2 ? '切り替え画像設定' : '＋' }}</button>
+        [style.left.px]="tabletopObject.imageFiles.length < 0 ? -5 : (tabletopObject.imageFiles.length - 1) * 45 - 5 - showCaseOffset(tabletopObject.imageFiles.length-2)">{{ tabletopObject.imageFiles.length < 2 ? '切り替え画像設定' : '＋' }}</button>
     </div>
     <div *ngIf="(tabletopObject.aliasName == 'card' && (tabletopObject.isFront || tabletopObject.isHand || isVisible)) || (tabletopObject.aliasName == 'card-stack' && tabletopObject.topCard.isFront)"
       class="text" [style.width.px]="imageAreaRreact.width" [style.height.px]="imageAreaRreact.height" [ngStyle]="{transform: 'scale(' + imageAreaRreact.scale + ')'}">

@@ -575,7 +575,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       },
       ContextMenuSeparator,
       { name: '表示スタンド全消去', action: () => EventSystem.trigger('DESTORY_STAND_IMAGE_ALL', null) }
-    ], '表示設定');
+    ], '個人設定');
   }
 /*
   farewellStandAll() {
