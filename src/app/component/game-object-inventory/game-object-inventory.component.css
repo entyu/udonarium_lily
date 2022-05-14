@@ -357,11 +357,15 @@ input[type='range']::-ms-tooltip {
 .hollow {
   opacity: 0.5;
 }
-.black-paint {
+
+.inverser.black-paint {
   filter: brightness(0);
 }
-.black-paint.is-hide-in {
-  filter: brightness(0) invert(100%); /* 汚いけどとりあえず */
+.inverser.is-hide-in {
+  filter: invert(100%);
+}
+.inverser.black-paint.is-hide-in {
+  filter: brightness(0); /* 汚いけどとりあえず */
 }
 
 .aura {
@@ -480,6 +484,11 @@ button.link {
   color: #ddd;
   filter: invert(85%);
 }
+
+.image-box.is-hide-in {
+  filter: invert(100%);
+}
+
 .object-tags-box.is-hide-in input {
   color: #ddd;
 }

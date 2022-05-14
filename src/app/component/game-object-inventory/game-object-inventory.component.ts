@@ -493,7 +493,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
   focusGameObject(gameObject: GameCharacter, e: Event, ) {
     if (!(e.target instanceof HTMLElement)) return;
     if (new Set(['input', 'button']).has(e.target.tagName.toLowerCase())) return;
-    if (gameObject.location.name !== 'table' || !gameObject.isVisible) return;
+    if (gameObject.location.name !== 'table' || (!gameObject.isVisible && !this.isGMMode)) return;
     EventSystem.trigger('FOCUS_TABLETOP_OBJECT', { x: gameObject.location.x, y: gameObject.location.y, z: gameObject.posZ + (gameObject.altitude > 0 ? gameObject.altitude * 50 : 0) });
   }
 
