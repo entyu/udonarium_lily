@@ -12,7 +12,7 @@
       <card class="is-3d" *ngFor="let card of cards; trackBy: trackByGameObject" [card]="card" [appTooltip]="card" [ngStyle]="{'z-index' : card.zindex, 'transform': 'translateZ(' + (card.zindex * 0.001) +'px)'}"></card>
       <dice-symbol class="is-3d" *ngFor="let diceSymbol of diceSymbols; trackBy: trackByGameObject" [diceSymbol]="diceSymbol" [appTooltip]="diceSymbol"></dice-symbol>
       <ng-container *ngFor="let character of characters; trackBy: trackByGameObject"><ng-container *ngIf="character.isVisible || isGMMode"><game-character class="is-3d" [gameCharacter]="character" [appTooltip]="character"></game-character></ng-container></ng-container>
-      <peer-cursor *ngFor="let cursor of peerCursors; trackBy: trackByGameObject" class="is-3d" [cursor]="cursor" [style.display]="isCursorHidIn(cursor) ? 'none' : ''"></peer-cursor>
+      <peer-cursor *ngFor="let cursor of peerCursors; trackBy: trackByGameObject" class="is-3d" [cursor]="cursor" [style.display]="isCursorHidIn(cursor) && !isGMMode ? 'none' : ''"></peer-cursor>
     </div>
   </div>
 </div>
