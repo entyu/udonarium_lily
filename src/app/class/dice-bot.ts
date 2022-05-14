@@ -646,7 +646,7 @@ export class DiceBot extends GameObject {
           if (parentheses && !parentheses[1].toUpperCase().startsWith('CHOICE')) { 
             addDiceInfos = [...resultFragment.matchAll(/(?<diceCount>\d+)D\d+(?:(?<keepDrop>[KD][HL])(?<keepDropCount>\d+))?/gi)];
             if (!addDiceInfos.length) {
-              barabaraDiceInfos = [...resultFragment.matchAll(/\d+B\d+(?:\+\d+B\d+)*(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+)/gi)];
+              barabaraDiceInfos = [...resultFragment.matchAll(/\d+B\d+(?:\+\d+B\d+)*(?:\[6\]Limit\[\d+\])?(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+)/gi)];
               if (!barabaraDiceInfos.length) {
                 rerollDiceInfos = [...resultFragment.matchAll(/\d+R\d+(?:\+\d+R\d+)*\[(?<rerollSign><=|>=|<>|==|!=|<|>|=)?(?<rerollCriteria>\d+)\](?:(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+))?/gi)];
                 if (!rerollDiceInfos.length) {
@@ -656,17 +656,19 @@ export class DiceBot extends GameObject {
             }
           }
           return parentheses ? parentheses[1] : resultFragment;
+        } else if (i == (a.length - 1)) {
+          return resultFragment;
         } else if (i == 1 && (addDiceInfos.length || barabaraDiceInfos.length || rerollDiceInfos.length || upperDiceInfos.length)) {
           try {
             let tmpString = resultFragment;
-            const diceArrryRegExp = addDiceInfos.length ? /(?<total>\d+)\[(?<diceArrayString>\d+(?:,\d+)*)?\]/gi
+            const diceArrayRegExp = addDiceInfos.length ? /(?<total>\d+)\[(?<diceArrayString>\d+(?:,\d+)*)?\]/gi
               : upperDiceInfos.length ? /(?:(?<total>\d+)\[(?<diceArrayString>\d+(?:,\d+)*)?\])|(?<modifier2>[\-+]\d+)|(?<dieString>\d+)/gi
               : /(?<diceArrayString>\d+(?:,\d+)*)/gi;
-            const diceArrryInfos = [...resultFragment.matchAll(diceArrryRegExp)];
-            if (diceArrryInfos.length) {
+            const diceArrayInfos = [...resultFragment.matchAll(diceArrayRegExp)];
+            if (diceArrayInfos.length) {
               let placePointOffset = 0;
               let placeString;
-              diceArrryInfos.forEach((diceArrayInfo, j) => {
+              diceArrayInfos.forEach((diceArrayInfo, j) => {
                 placeString = diceArrayInfo[0];
                 if (addDiceInfos.length) {
                   const {diceCount, keepDrop, keepDropCount} = addDiceInfos[j].groups;
