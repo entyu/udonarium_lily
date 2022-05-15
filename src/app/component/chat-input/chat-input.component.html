@@ -67,8 +67,9 @@
     <div>
       <form>
         <input *ngIf="onlyCharacters" type="color" style="width:1em; margin-left: 3px" [(ngModel)]="paletteColor" [ngModelOptions]="{standalone: true}">
-        <textarea class="chat-input" [placeholder]="!onlyCharacters ? 'Enterで送信　Shift+Enterで改行　チャットパレットの色を優先' : 'Enterで送信　Shift+Enterで改行　白(255,255,255)の場合あなたの色'" [(ngModel)]="text"
+        <textarea class="chat-input" [placeholder]="!onlyCharacters ? 'Ctrl+↑↓で履歴　&#x23CE;で送信　Shift+&#x23CE;で改行　チャットパレットの色を優先' : '&#x23CE;で送信　Shift+&#x23CE;で改行　白(255,255,255)の場合あなたの色'" [(ngModel)]="text"
           [ngModelOptions]="{standalone: true}" (input)="onInput()" (keydown.enter)="sendChat($event)"
+          (keydown.control.arrowup)="moveHistory($event, 1)" (keydown.control.arrowdown)="moveHistory($event, -1)"
           #textArea></textarea>
         <button type="submit" (click)="sendChat(null)"><b>SEND</b></button>
       </form>

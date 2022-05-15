@@ -85,6 +85,11 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   isUseFaceIcon: boolean = true;
   isUseStandImage: boolean = true;
   
+  static history: string[] = new Array();
+  private currentHistoryIndex: number = -1;
+  private static MAX_HISTORY_NUM = 1000;
+  private tmpText;
+
   get character(): GameCharacter {
     let object = ObjectStore.instance.get(this.sendFrom);
     if (object instanceof GameCharacter) {
@@ -308,6 +313,34 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.calcFitHeight();
   }
 
+  moveHistory(event: KeyboardEvent, direction: number) {
+    if (event) event.preventDefault();
+    if (this.currentHistoryIndex < 0) this.tmpText = this.text;
+
+    if (direction < 0 && this.currentHistoryIndex < 0) {
+      this.currentHistoryIndex = -1;
+    } else if (direction > 0 && this.currentHistoryIndex >= ChatInputComponent.history.length - 1) {
+      this.currentHistoryIndex = ChatInputComponent.history.length - 1;
+      return;
+    } else {
+      this.currentHistoryIndex = this.currentHistoryIndex + direction;
+    }
+
+    let histText: string;
+    if (this.currentHistoryIndex < 0) {
+      this.currentHistoryIndex = -1;
+      histText = (this.tmpText && this.tmpText.length) ? this.tmpText : '';
+    } else {
+      histText = ChatInputComponent.history[this.currentHistoryIndex];
+    }
+
+    this.text = histText;
+    this.previousWritingLength = this.text.length;
+    let textArea: HTMLTextAreaElement = this.textAreaElementRef.nativeElement;
+    textArea.value = histText;
+    this.calcFitHeight();
+  }
+
   sendChat(event: KeyboardEvent) {
     if (event) event.preventDefault();
     //if (!this.text.length) return;
@@ -439,6 +472,13 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     }
 
     if (StringUtil.cr(text).trim()) {
+      ChatInputComponent.history = ChatInputComponent.history.filter(string => string !== this.text);
+      ChatInputComponent.history.unshift(this.text);
+      if (ChatInputComponent.history.length >= ChatInputComponent.MAX_HISTORY_NUM) {
+        ChatInputComponent.history.pop();
+      }
+      this.currentHistoryIndex = -1;
+      this.tmpText = null;
       this.chat.emit({
         text: text,
         gameType: this.gameType,
