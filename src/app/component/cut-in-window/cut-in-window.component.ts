@@ -16,6 +16,9 @@ import { EventSystem, Network } from '@udonarium/core/system';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
 
+import { Jukebox } from '@udonarium/Jukebox';
+import { Config } from '@udonarium/config';
+
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
@@ -56,6 +59,8 @@ export class CutInWindowComponent implements AfterViewInit, OnInit, OnDestroy {
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get cutInLauncher(): CutInLauncher { return ObjectStore.instance.get<CutInLauncher>('CutInLauncher'); }
+  get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
+  get config(): Config { return ObjectStore.instance.get<Config>('Config'); }
 
   getCutIns(): CutIn[] {
     return ObjectStore.instance.getObjects(CutIn);
@@ -177,7 +182,8 @@ export class CutInWindowComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   get videoVolume(): number {
-    return (this.isTest ? AudioPlayer.auditionVolume : AudioPlayer.volume) * 100;
+    return (this.isTest ? this.jukebox.auditionVolume : this.jukebox.volume) * this.config.roomVolume * 100;
+
   }
 
   get cutInAreaId(): string {

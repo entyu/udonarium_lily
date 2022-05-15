@@ -20,12 +20,6 @@ import { PanelOption, PanelService } from 'service/panel.service';
 })
 export class CutInBgmComponent implements OnInit, OnDestroy {
 
-  get volume(): number { return AudioPlayer.volume; }
-  set volume(volume: number) { AudioPlayer.volume = volume; }
-
-  get auditionVolume(): number { return AudioPlayer.auditionVolume; }
-  set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; }
-
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
 

@@ -7,7 +7,6 @@ import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { Jukebox } from '@udonarium/Jukebox';
-
 import { Config } from '@udonarium/config';
 import { ModalService } from 'service/modal.service';
 
@@ -26,20 +25,29 @@ export class JukeboxComponent implements OnInit, OnDestroy {
 
   get roomVolume(): number { 
     let conf = ObjectStore.instance.get<Config>('Config');
-    console.log("roomVolume()" + conf +" "+ conf.roomVolume);
-    return conf? conf.roomVolume : null ;
+//    console.log("roomVolume()" + conf +" "+ conf.roomVolume);
+    return conf? conf.roomVolume : 1 ;
   }
 
   set roomVolume(volume: number){
     let conf = ObjectStore.instance.get<Config>('Config');
     if(conf) conf.roomVolume = volume;
+    this.jukebox.setNewVolume();
   }
 
-  get volume(): number { return AudioPlayer.volume; }
-  set volume(volume: number) { AudioPlayer.volume = volume; EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); }
+  get volume(): number { return this.jukebox.volume; }
+  set volume(volume: number) { 
+    this.jukebox.volume = volume;
+    AudioPlayer.volume = volume * this.roomVolume;
+    EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null);
+  }
 
-  get auditionVolume(): number { return AudioPlayer.auditionVolume; }
-  set auditionVolume(auditionVolume: number) { AudioPlayer.auditionVolume = auditionVolume; EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); }
+  get auditionVolume(): number { return this.jukebox.auditionVolume; }
+  set auditionVolume(auditionVolume: number) { 
+    this.jukebox.auditionVolume = auditionVolume;
+    AudioPlayer.auditionVolume = auditionVolume * this.roomVolume;
+    EventSystem.trigger('CHANGE_JUKEBOX_VOLUME', null); 
+  }
 
   get audios(): AudioFile[] { return AudioStorage.instance.audios.filter(audio => !audio.isHidden); }
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }

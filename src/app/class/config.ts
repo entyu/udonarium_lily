@@ -1,6 +1,11 @@
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml } from './core/synchronize-object/object-serializer';
+import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { AudioPlayer } from './core/file-storage/audio-player';
+import { Jukebox } from '@udonarium/Jukebox';
+
 
 @SyncObject('config')
 export class Config extends ObjectNode implements InnerXml {
@@ -10,6 +15,9 @@ export class Config extends ObjectNode implements InnerXml {
 
   get roomVolume(): number { return this._roomVolume; }
   set roomVolume(volume: number){ this._roomVolume = volume; }
+  // ジュークボックスの個人用設定はjukebox側
+  // 共通設定保存の都合でのため全体ボリュームはこちらにある
+  get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
 
   private static _instance: Config;
   static get instance(): Config {
@@ -35,6 +43,16 @@ export class Config extends ObjectNode implements InnerXml {
     this.destroy();
   }
 
+    // override
+  apply(context: ObjectContext) {
+    let _roomVolume = this._roomVolume;
+    let _defaultDiceBot = this._defaultDiceBot;
+    super.apply(context);
+    if (_roomVolume !==  this._roomVolume) {
+      this.jukebox.setNewVolume();
+      console.log("全体ボリューム変更");
+    }
+  }
 
 
 }
