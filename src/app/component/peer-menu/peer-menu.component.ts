@@ -223,7 +223,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
       PeerCursor.isGMHold = false;
       this.isGMMode = false;
     } else {
-      if (window.confirm("GMモードでは、裏向きのカード、公開されていないダイスシンボル、キャラクター位置をすべて見ることができ、カーソル位置は他の参加者に伝わらなくなります。\nまた、GMモード中（保留中含む）はあなたから他者やルームへの接続は行えません。\nWith great power comes great responsibility.\n\nok?")) {
+      if (window.confirm("GMモードでは、裏向きのカード、公開されていないダイスシンボル、キャラクター位置、カーソル位置をすべて見ることができ、カーソル位置は他の参加者に伝わらなくなります。\nまた、GMモード中（保留中含む）はあなたから他者やルームへの接続は行えません。\nWith great power comes great responsibility.\n\nok?")) {
         PeerCursor.isGMHold = true;
         alert("まだGMモードではありません、GMになるには、GMモード保留中にチャットから「GMになる」または「GMになります」を含む文章を送信します。")
       } else {
