@@ -53,7 +53,7 @@
         </div>
       </div>
     </div>
-    <div class="image-showcase" style="position: absolute; height: 50px; top: 300px">
+    <div class="image-showcase" style="position: absolute; height: 50px; top: 320px">
       <span *ngFor="let imageFile of tabletopObject.imageFiles; index as i" class="image-thumbnail" [ngClass]="{'hide': tabletopObject.currntImageIndex == i}" style="position: absolute;" [style.left.px]="(tabletopObject.currntImageIndex <= i ? i-1 : i) * 50 - showCaseOffset(i)">
         <img @bounceInOut [src]="imageFile.url | safe: 'resourceUrl'" [alt]="imageFile.name" (click)="selectImage(i)">
       </span>
@@ -83,7 +83,7 @@
         <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [tableTopObjectName]="tableTopObjectName" [isTagLocked]="true"
           [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand && !tabletopObject.isGMMode" [isNoLogging]="isNoLogging"></div>
       </div>
-      <div *ngIf="tabletopObject.aliasName === 'character'" style="text-align: right; margin-top: 3px;">
+      <div *ngIf="tabletopObject.aliasName === 'character'" style="margin-top: 3px; text-align: right">
         <button style="font-size: 11px; color: #444;" (click)="showChatPalette()">チャットパレットを表示</button>
         <button style="font-size: 11px; color: #444;" (click)="showStandSetting()">スタンド設定</button>
       </div>

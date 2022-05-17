@@ -279,6 +279,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
   }
 
   calcStandImageTransformOrigin(): string {
+    return 'center 66%';
     if (!this.standImageElement) return 'center';
     let ratio = 1 - this.naturalWidth / (this.naturalHeight * 2);
     if (ratio > 0.66) ratio = 0.66;

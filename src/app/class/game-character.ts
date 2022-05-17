@@ -26,8 +26,20 @@ export class GameCharacter extends TabletopObject {
 
   get name(): string { return this.getCommonValue('name', ''); }
   set name(name) { this.setCommonValue('name', name); }
-
   get size(): number { return this.getCommonValue('size', 1); }
+
+  get height(): number {
+    let element = this.getElement('height', this.commonDataElement);
+    if (!element && this.commonDataElement) {
+      this.commonDataElement.insertBefore(DataElement.create('height', 0, {}, 'height_' + this.identifier), this.getElement('altitude', this.commonDataElement));
+    }
+    let num = element ? +element.value : 0;
+    return Number.isNaN(num) ? 0 : num;
+  }
+  set height(height: number) {
+    let element = this.getElement('height', this.commonDataElement);
+    if (element) element.value = height;
+  }
 
   get chatPalette(): ChatPalette {
     for (let child of this.children) {
@@ -73,6 +85,7 @@ export class GameCharacter extends TabletopObject {
 
     let nameElement: DataElement = DataElement.create('name', name, {}, 'name_' + this.identifier);
     let sizeElement: DataElement = DataElement.create('size', size, {}, 'size_' + this.identifier);
+    let heightElement: DataElement = DataElement.create('height', 0, {}, 'height_' + this.identifier);
     let altitudeElement: DataElement = DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier);
 
     if (this.imageDataElement.getFirstElementByName('imageIdentifier')) {
@@ -85,6 +98,7 @@ export class GameCharacter extends TabletopObject {
 
     this.commonDataElement.appendChild(nameElement);
     this.commonDataElement.appendChild(sizeElement);
+    this.commonDataElement.appendChild(heightElement);
     this.commonDataElement.appendChild(altitudeElement);
 
     this.detailDataElement.appendChild(resourceElement);

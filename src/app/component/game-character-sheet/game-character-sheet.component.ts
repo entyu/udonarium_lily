@@ -511,6 +511,6 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   showIconOffset(index): number {
     let len = this.tabletopObject.faceIcons.length;
     if (len <= 5) return 0;
-    return (50 - (200 / (len - 1))) * index + 2;
+    return (50 - (218 / (len - 1))) * index + 2;
   }
 }

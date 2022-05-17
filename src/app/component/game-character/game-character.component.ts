@@ -99,6 +99,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
   get altitude(): number { return this.gameCharacter.altitude; }
   set altitude(altitude: number) { this.gameCharacter.altitude = altitude; }
+  get height(): number { return this.adjustMinBounds(this.gameCharacter.height); }
+
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
@@ -236,7 +238,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   get dialogChatBubbleMinWidth(): number {
-    const max = (this.gameCharacter.size + 2.1) * this.gridSize;
+    const max = this.characterImageWidth + 2.1 * this.gridSize;
     const existIcon = this.isUseFaceIcon && this.dialogFaceIcon && this.dialogFaceIcon.url;
     const dynamic = Array.from(this.dialogText).length * 11 + 52 + (existIcon ? 32 : 0);
     return max < dynamic ? max : dynamic; 
@@ -265,13 +267,51 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   @ViewChild('characterImage') characterImage: ElementRef;
+  //@ViewChild('characterShadowImage') characterShadowImage: ElementRef;
   @ViewChild('chatBubble') chatBubble: ElementRef;
-  
+
+  //height = 0;
+
   get characterImageHeight(): number {
     if (!this.characterImage) return 0;
+    if (this.height > 0) return this.gridSize * this.height;
     let ratio = this.characterImage.nativeElement.naturalHeight / this.characterImage.nativeElement.naturalWidth;
     if (ratio > this.heightWidthRatio) ratio = this.heightWidthRatio;
     return ratio * this.gridSize * this.size;
+  }
+
+  get characterImageWidth(): number {
+    if (!this.characterImage) return 0;
+    if (this.height <= 0) return this.gridSize * this.size;
+    let ratio = this.characterImage.nativeElement.naturalHeight / this.characterImage.nativeElement.naturalWidth;
+    if (ratio > this.heightWidthRatio) ratio = this.heightWidthRatio;
+    return this.gridSize * this.height / ratio;
+  }
+
+  get characterShadowImageHeight(): number {
+    return this.characterImageHeight;
+    /* ペンディング
+    if (!this.characterShadowImage) return 0;
+    if (this.height > 0) return this.gridSize * this.height;
+    let ratio = this.characterShadowImage.nativeElement.naturalHeight / this.characterShadowImage.nativeElement.naturalWidth;
+    if (ratio > this.heightWidthRatio) ratio = this.heightWidthRatio;
+    return ratio * this.gridSize * this.size;
+    */
+  }
+
+  get characterShadowImageWidth(): number {
+    return this.characterImageWidth;
+    /* ペンディング
+    if (!this.characterShadowImage) return 0;
+    if (this.height <= 0) return this.gridSize * this.size;
+    let ratio = this.characterShadowImage.nativeElement.naturalHeight / this.characterShadowImage.nativeElement.naturalWidth;
+    if (ratio > this.heightWidthRatio) ratio = this.heightWidthRatio;
+    return this.gridSize * this.height / ratio;
+    */
+  }
+
+  get characterShadowOffset(): number  {
+    return (this.gridSize * this.size / 2) - (this.characterShadowImageHeight * 0.99);
   }
 
   get chatBubbleAltitude(): number {
@@ -280,12 +320,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     if (cos < 0.5) cos = 0.5;
     if (sin < 0.5) sin = 0.5;
     const altitude1 = (this.characterImageHeight + (this.name ? 36 : 0)) * cos + 4;
-    const altitude2 = (this.gridSize * this.size / 2) * sin + 4 + this.gridSize * this.size / 2;
+    const altitude2 = (this.characterImageWidth / 2) * sin + 4 + this.characterImageWidth / 2;
     return altitude1 > altitude2 ? altitude1 : altitude2;
   }
 
   // 元の高さからマイナスする値
   get nameplateOffset(): number {
+    return 0;
     if (!this.characterImage) return this.gridSize * this.size * this.heightWidthRatio;
     return this.gridSize * this.size * this.heightWidthRatio - this.characterImageHeight;
   }
