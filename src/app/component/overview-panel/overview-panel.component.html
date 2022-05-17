@@ -48,7 +48,7 @@
     </div>
     <div class="component-title title-background"
       [ngClass]="{'with-button-marign': hasImage}">
-      <ng-container *ngIf="card.isVisible == null || card.isVisible || card.isGMMode">{{card.name}}</ng-container><ng-container *ngIf="card.aliasName == 'card-stack'"> のトップ</ng-container>
+      <ng-container *ngIf="card.isVisible == null || card.isVisible || card.isGMMode">{{card.name}}</ng-container><ng-container *ngIf="card.aliasName == 'card-stack' && !card.isEmpty"> のトップ</ng-container>
       <ng-container *ngIf="card.isVisible != null && !card.isVisible && !card.isGMMode">カード（裏面）</ng-container>
     </div>
     <div class="component-background">
