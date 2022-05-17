@@ -269,9 +269,9 @@ export class DiceBot extends GameObject {
                     if ((diceRollTableRow.range.start === null || diceRollTableRow.range.start <= rollResultNumber + modifier) 
                       && (diceRollTableRow.range.end === null || rollResultNumber + modifier <= diceRollTableRow.range.end)) {
                       if (!isFixedRef) {
-                        finalResult.result += ('🎲' + rollResult.result + modStr + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + StringUtil.cr(diceRollTableRow.result));
+                        finalResult.result += (rollResult.result + modStr + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + StringUtil.cr(diceRollTableRow.result));
                       } else {
-                        finalResult.result += ('🎲指定=' + rollResultNumber + "\n" + StringUtil.cr(diceRollTableRow.result));
+                        finalResult.result += ('指定=' + rollResultNumber + "\n" + StringUtil.cr(diceRollTableRow.result));
                       }
                       isRowMatch = true;
                       break;
@@ -280,11 +280,11 @@ export class DiceBot extends GameObject {
                 }
                 if (!isRowMatch) {
                   if (rollResultNumber == null) {
-                    finalResult.result += ('🎲（エラー：ダイスロールから数字が取得できません）' + "\n" + '(結果なし)');
+                    finalResult.result += ('（エラー：ダイスロールから数字が取得できません）' + "\n" + '(結果なし)');
                   } else if (!isFixedRef) {
-                    finalResult.result += ('🎲' + rollResult.result + modStr  + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + '(結果なし)');
+                    finalResult.result += (rollResult.result + modStr  + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + '(結果なし)');
                   } else {
-                    finalResult.result += ('🎲指定=' + rollResultNumber + "\n" + '(結果なし)');
+                    finalResult.result += ('指定=' + rollResultNumber + "\n" + '(結果なし)');
                   }
                 }
                 if (1 < repeat) finalResult.result += ` #${i + 1}`;
@@ -655,7 +655,7 @@ export class DiceBot extends GameObject {
               }
             }
           }
-          return parentheses ? parentheses[1] : resultFragment;
+          return parentheses ? '🎲' + parentheses[1] : resultFragment;
         } else if (i == (a.length - 1)) {
           return resultFragment;
         } else if (i == 1 && (addDiceInfos.length || barabaraDiceInfos.length || rerollDiceInfos.length || upperDiceInfos.length)) {
