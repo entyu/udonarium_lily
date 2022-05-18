@@ -425,7 +425,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = 'カード設定';
     if (gameObject.name.length) title += ' - ' + (this.isVisible ? gameObject.name : 'カード（裏面）');
-    let option: PanelOption = { title: title, left: coordinate.x - 300, top: coordinate.y - 300, width: 600, height: 600 };
+    let option: PanelOption = { title: title, left: coordinate.x - 300, top: coordinate.y - 300, width: 600, height: 490 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }

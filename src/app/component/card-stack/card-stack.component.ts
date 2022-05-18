@@ -611,7 +611,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = '山札設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
-    let option: PanelOption = { title: title, left: coordinate.x - 300, top: coordinate.y - 300, width: 600, height: 600 };
+    let option: PanelOption = { title: title, left: coordinate.x - 300, top: coordinate.y - 300, width: 600, height: 490 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }

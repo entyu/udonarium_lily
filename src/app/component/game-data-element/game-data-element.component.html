@@ -108,8 +108,8 @@
     </div>
     <div class="table-cell table-cell_inner-table" style="padding:0; width:0;"></div>
     <div class="table-cell_inner-table">
-      <div class="table-cell_inner-table-title">
-        <ng-container *ngIf="isTagLocked">
+      <div class="table-cell_inner-table-title" [style.border-color]="isTagLocked && name === 'common' ? 'transparent' : ''">
+        <ng-container *ngIf="isTagLocked && name != 'common'">
           <div style="padding: 2px; font-family: Cambria, Georgia; font-size: 1.0rem; font-weight: bold;">{{name}}</div>
         </ng-container>
         <ng-container *ngIf="!isTagLocked">

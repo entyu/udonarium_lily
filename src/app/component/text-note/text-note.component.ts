@@ -356,7 +356,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = '共有メモ設定';
     if (gameObject.title.length) title += ' - ' + gameObject.title;
-    let option: PanelOption = { title: title, left: coordinate.x - 350, top: coordinate.y - 200, width: 700, height: 400 };
+    let option: PanelOption = { title: title, left: coordinate.x - 350, top: coordinate.y - 200, width: 700, height: 450 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }
