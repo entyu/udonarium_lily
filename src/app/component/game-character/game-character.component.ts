@@ -1,6 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -91,7 +90,7 @@ import { StandSettingComponent } from 'component/stand-setting/stand-setting.com
     ])
   ]
 })
-export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GameCharacterComponent implements OnInit, OnDestroy {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
 
@@ -271,19 +270,22 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   @ViewChild('chatBubble') chatBubble: ElementRef;
 
   //height = 0;
+  naturalImageWidth = 0;
+  naturalImageHeight = 0
+  naturaHeightWidthRatio = 1;
 
   get characterImageHeight(): number {
-    if (!this.characterImage) return 0;
+    if (!this.characterImage || !this.naturalImageHeight) return 0;
     if (this.height > 0) return this.gridSize * this.height;
-    let ratio = this.characterImage.nativeElement.naturalHeight / this.characterImage.nativeElement.naturalWidth;
+    let ratio = this.naturaHeightWidthRatio;
     if (ratio > this.heightWidthRatio) ratio = this.heightWidthRatio;
     return ratio * this.gridSize * this.size;
   }
 
   get characterImageWidth(): number {
-    if (!this.characterImage) return 0;
+    if (!this.characterImage || !this.naturalImageWidth) return 0;
     if (this.height <= 0) return this.gridSize * this.size;
-    let ratio = this.characterImage.nativeElement.naturalHeight / this.characterImage.nativeElement.naturalWidth;
+    let ratio = this.naturaHeightWidthRatio;
     if (ratio > this.heightWidthRatio) ratio = this.heightWidthRatio;
     return this.gridSize * this.height / ratio;
   }
@@ -311,7 +313,15 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   get characterShadowOffset(): number  {
-    return (this.gridSize * this.size / 2) - (this.characterShadowImageHeight * 0.99);
+    let offset = 0; 
+    if (0.2 < this.height && this.height <= 0.3) {
+      offset = 0.09;
+    } else if (0.1 < this.height && this.height <= 0.2) {
+      offset = 0.19;
+    } else if (0 < this.height && this.height <= 0.1) {
+      offset = 0.29;
+    } 
+    return (this.gridSize * this.size / 2) - (this.characterShadowImageHeight * 0.99) - (this.gridSize * offset);
   }
 
   get chatBubbleAltitude(): number {
@@ -323,14 +333,14 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     const altitude2 = (this.characterImageWidth / 2) * sin + 4 + this.characterImageWidth / 2;
     return altitude1 > altitude2 ? altitude1 : altitude2;
   }
-
+  /*
   // 元の高さからマイナスする値
   get nameplateOffset(): number {
     return 0;
     if (!this.characterImage) return this.gridSize * this.size * this.heightWidthRatio;
     return this.gridSize * this.size * this.heightWidthRatio - this.characterImageHeight;
   }
-
+  */
   get nameTagRotate(): number {
     let x = (this.viewRotateX % 360) - 90;
     let z = (this.viewRotateZ + this.rotate) % 360;
@@ -379,6 +389,11 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.gameCharacter || !object) return;
         if (this.gameCharacter === object || (object instanceof ObjectNode && this.gameCharacter.contains(object))) {
+          if (this.gameCharacter.imageFiles.length <= 0) {
+            this.naturalImageHeight = 0;
+            this.naturalImageWidth = 0;
+            this.naturaHeightWidthRatio = 1;
+          }
           this.changeDetector.markForCheck();
         }
       })
@@ -441,7 +456,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     };
   }
 
-  ngAfterViewInit() { }
+  //ngAfterViewInit() { }
 
   ngOnDestroy() {
     clearTimeout(this.dialogTimeOutId);
@@ -737,6 +752,9 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   onImageLoad() {
+    this.naturalImageWidth = this.characterImage.nativeElement.naturalWidth;
+    this.naturalImageHeight = this.characterImage.nativeElement.naturalHeight;
+    this.naturaHeightWidthRatio =  (this.naturalImageWidth && this.naturalImageHeight) ? (this.naturalImageHeight / this.naturalImageWidth) : 1;
     EventSystem.trigger('UPDATE_GAME_OBJECT', this.gameCharacter);
   }
 

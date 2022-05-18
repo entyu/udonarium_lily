@@ -32,12 +32,12 @@
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d" [style.transform]="'translateZ(' + (-size * gridSize / 2) + 'px)'">
             <div *ngIf="isGMMode && isHideIn && 0 < ownerName.length" class="owner-tag is-nowrap is-black-background is-3d"
-              [ngStyle]="{'background-color': ownerColor + 'dd', 'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + (nameplateOffset + 6) + 'px) rotateX(' + nameTagRotate + 'deg)'}">
+              [ngStyle]="{'background-color': ownerColor + 'dd', 'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(6px) rotateX(' + nameTagRotate + 'deg)'}">
               <div class="fornt-tag is-3d" style="color: whitesmoke"><b>{{ownerName}}</b></div>
               <div class="back-tag is-3d" style="color: whitesmoke"><b>{{ownerName}}</b></div>
             </div>
             <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d" [ngClass]="{'is-hide-in-tag': isHideIn}"
-              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + nameplateOffset + 'px) rotateX(' + nameTagRotate + 'deg)'}">
+              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}">
               <div class="fornt-tag has-length-limit is-3d">{{name}}</div>
               <div class="back-tag has-length-limit is-3d">{{name}}</div>
             </div>
@@ -52,7 +52,7 @@
             </div>
             <div class="grab-group is-3d">
               <div class="rotate-grab rotate-grab-icon of-top is-3d"
-                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + (nameplateOffset - 10 - characterImageHeight - (isGMMode && isHideIn ? 20 : 0)) + 'px)'}">
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(' + (-10 - characterImageHeight - (isGMMode && isHideIn ? 20 : 0)) + 'px)'}">
                 <i class="material-icons">autorenew</i>
               </div>
               <div class="rotate-grab rotate-grab-icon of-bottom is-3d"
