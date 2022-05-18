@@ -81,7 +81,7 @@
     <div class="flex-item">
       <div class="table">
         <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [tableTopObjectName]="tableTopObjectName" [isTagLocked]="true"
-          [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand && !tabletopObject.isGMMode" [isNoLogging]="isNoLogging"></div>
+          [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand && !tabletopObject.isGMMode" [isNoLogging]="isNoLogging" [descriptionType]="tabletopObject.aliasName"></div>
       </div>
       <div *ngIf="tabletopObject.aliasName === 'character'" style="margin-top: 3px; text-align: right">
         <button style="font-size: 11px; color: #444;" (click)="showChatPalette()">チャットパレットを表示</button>
