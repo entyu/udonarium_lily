@@ -54,7 +54,9 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value; }
   set text(text: string) { this.value = (text == null) ? '' : text; }
-  
+
+  isAnimated = false;
+
   get timestamp(): number {
     let timestamp = this.getAttribute('timestamp');
     let num = timestamp ? +timestamp : 0;
@@ -86,8 +88,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
 
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
   get index(): number { return this.minorIndex + this.timestamp; }
-  get isDirect(): boolean { return 0 < this.sendTo.length ? true : false; }
-  get isSendFromSelf(): boolean { return this.from === Network.peerContext.userId || this.originFrom === Network.peerContext.userId; }
+  get isDirect(): boolean { return 0 < this.sendTo.length || -1 < this.tags.indexOf('direct') ? true : false; }
+  get isSendFromSelf(): boolean { return this.from === Network.peerContext.userId || this.originFrom === Network.peerContext.userId || -1 < this.tags.indexOf('mine'); }
   get isRelatedToMe(): boolean { return (-1 < this.sendTo.indexOf(Network.peerContext.userId)) || this.isSendFromSelf ? true : false; }
   get isDisplayable(): boolean { return this.isDirect ? this.isRelatedToMe : true; }
   get isSystem(): boolean { return -1 < this.tags.indexOf('system') ? true : false; }
