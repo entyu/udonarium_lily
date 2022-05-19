@@ -489,9 +489,11 @@ export class GameCharacterComponent implements OnInit, OnDestroy {
         action: () => {
           if (this.isHideIn) {
             this.gameCharacter.owner = '';
+            SoundEffect.play(PresetSound.piecePut);
           } else {
             alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
             this.gameCharacter.owner = Network.peerContext.userId;
+            SoundEffect.play(PresetSound.sweep);
           }
           EventSystem.call('UPDATE_INVENTORY', true);
         },
@@ -739,7 +741,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy {
   }
 
   onMove() {
-    SoundEffect.play(PresetSound.piecePick);
+    if (!this.isHideIn) SoundEffect.play(PresetSound.piecePick);
   }
 
   onMoved() {
@@ -747,7 +749,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy {
     if (this.gameCharacter && this.gameCharacter.text) {
       EventSystem.call('FAREWELL_CHAT_BALLOON', { characterIdentifier: this.gameCharacter.identifier });
     }
-    SoundEffect.play(PresetSound.piecePut);
+    if (!this.isHideIn) SoundEffect.play(PresetSound.piecePut);
     this.selected = false;
   }
 
