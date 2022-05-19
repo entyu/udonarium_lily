@@ -4,6 +4,7 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { ObjectStore } from './core/synchronize-object/object-store';
 import { DataElement } from './data-element';
+import { PeerCursor } from './peer-cursor';
 
 export interface TabletopLocation {
   name: string;
@@ -133,6 +134,8 @@ export class TabletopObject extends ObjectNode {
 
   @SyncVar() isNotRide: boolean = true;
   @SyncVar() isInventoryIndicate: boolean = true;
+
+  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
 
   protected createDataElements() {
     this.initialize();

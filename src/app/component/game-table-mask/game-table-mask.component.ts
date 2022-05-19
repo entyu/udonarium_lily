@@ -76,6 +76,8 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     return 90 < Math.abs(this.viewRotateZ) % 360 && Math.abs(this.viewRotateZ) % 360 < 270
   }
 
+  get isGMMode(): boolean { return this.gameTableMask.isGMMode; }
+
   gridSize: number = 50;
   math = Math;
   viewRotateZ = 10;
@@ -105,6 +107,9 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
         if (this.gameTableMask === object || (object instanceof ObjectNode && this.gameTableMask.contains(object))) {
           this.changeDetector.markForCheck();
         }
+      })
+      .on('CHANGE_GM_MODE', event => {
+        this.changeDetector.markForCheck();
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -161,6 +166,21 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     let menuPosition = this.pointerDeviceService.pointers[0];
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     this.contextMenuService.open(menuPosition, [
+      (this.isGMMode ?
+        this.gameTableMask.isTransparentOnGMMode ? {
+          name: '☑ GMモード時透過', action: () => {
+            this.gameTableMask.isTransparentOnGMMode = false;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }
+        : {
+          name: '☐ GMモード時透過', action: () => {
+            this.gameTableMask.isTransparentOnGMMode = true;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        }
+      : null),
+      (this.isGMMode ? ContextMenuSeparator : null),
       (this.isLock
         ? {
           name: '☑ 固定', action: () => {
