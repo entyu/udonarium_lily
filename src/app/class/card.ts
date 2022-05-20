@@ -67,8 +67,6 @@ export class Card extends TabletopObject {
   get isFront(): boolean { return this.state === CardState.FRONT; }
   get isVisible(): boolean { return this.isHand || this.isFront; }
 
-  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
-
   faceUp() {
     this.state = CardState.FRONT;
     this.owner = '';
