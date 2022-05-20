@@ -35,7 +35,7 @@
             [(ngModel)]="value" type="range" title="{{value}}" min="{{name === 'altitude' ? -12 : name === 'fontsize' ? 1 : 0}}" max="{{name === 'fontsize' ? 128 : 12}}" step="{{name === 'fontsize' ? 1 : 0.5}}" />
           <br />
           <input style="width:35%; max-width:4em; text-align:right;" type="number" min="{{name === 'altitude' ? -24 : name === 'fontsize' ? 1 : 0}}" step="{{name === 'fontsize' ? 1 : 0.1}}" size="1" [(ngModel)]="value" placeholder="Value" />
-          <dev *ngIf="descriptionType === 'character' && name === 'height'" style="color: #444; font-size: 8pt; display: inline-block; margin-left: 3px"><sup>※0ならsize依存</sup></dev>
+          <dev *ngIf="descriptionType === 'character' && name === 'height'" style="color: #444; font-size: 8pt; display: inline-block; margin-left: 3px"><sup>(0=sizeに依存)</sup></dev>
         </ng-container>
       </ng-container>
       <ng-container *ngIf="!isCommonValue">

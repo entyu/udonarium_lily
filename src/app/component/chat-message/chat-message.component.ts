@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import { ChatMessage } from '@udonarium/chat-message';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -65,7 +65,8 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
 
   constructor(
     private chatMessageService: ChatMessageService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private changeDetector: ChangeDetectorRef,
   ) { }
 
   stringUtil = StringUtil;
@@ -76,6 +77,9 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
       if (event.isSendFromSelf && (!event.data || event.data.messageIdentifier !== this.chatMessage.identifier)) {
         this.editCancel();
       }
+    })
+    .on('CHANGE_GM_MODE', event => {
+      this.changeDetector.markForCheck();
     });
 
     let file: ImageFile = this.chatMessage.image;

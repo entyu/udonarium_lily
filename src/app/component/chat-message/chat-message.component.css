@@ -268,3 +268,15 @@ textarea {
 .container.compact textarea {
   margin: -3px -3px -3px -3px;
 }
+
+.grow {
+  text-shadow    : 
+        1px  1px 1px #ffffff,
+      -1px  1px 1px #ffffff,
+        1px -1px 1px #ffffff,
+      -1px -1px 1px #ffffff,
+        1px  0px 1px #ffffff,
+        0px  1px 1px #ffffff,
+      -1px  0px 1px #ffffff,
+        0px -1px 1px #ffffff; 
+}

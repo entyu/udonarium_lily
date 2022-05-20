@@ -1,11 +1,11 @@
 <div class="log" [style.minHeight.px]="minScrollHeight" #logContainer>
   <div class="virtual-scroll-container" [style.marginBottom.px]="bottomSpace" #messageContainer>
-    <ng-container *ngIf="0 < chatMessages.length">
+    <ng-container *ngIf="!isEmpty">
       <ng-container *ngFor="let chatMessage of chatMessages; trackBy: trackByChatMessage">
         <chat-message *ngIf="chatMessage.isDisplayable" [chatMessage]="chatMessage" [compact]="compact" [@.disabled]="compact || chatMessage.isAnimated"></chat-message>
       </ng-container>
     </ng-container>
-    <ng-container *ngIf="chatMessages.length <= 0">
+    <ng-container *ngIf="isEmpty">
       <chat-message *ngFor="let chatMessage of sampleMessages" [chatMessage]="chatMessage" [compact]="compact" [@.disabled]="compact || chatMessage.isAnimated"></chat-message>
     </ng-container>
   </div>

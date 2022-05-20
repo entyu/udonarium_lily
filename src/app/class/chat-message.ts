@@ -15,12 +15,14 @@ export interface ChatMessageContext {
   from?: string;
   to?: string;
   name?: string;
+  toName?: string;
   text?: string;
   timestamp?: number;
   tag?: string;
   dicebot?: string;
   imageIdentifier?: string;
   color?: string;
+  toColor?: string;
   isInverseIcon?: number;
   isHollowIcon?: number;
   isBlackPaint?: number;
@@ -37,10 +39,12 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() from: string;
   @SyncVar() to: string;
   @SyncVar() name: string;
+  @SyncVar() toName: string = '';
   @SyncVar() tag: string; 
   @SyncVar() dicebot: string;
   @SyncVar() imageIdentifier: string;
   @SyncVar() color: string;
+  @SyncVar() toColor: string = '';
   @SyncVar() isInverseIcon: number;
   @SyncVar() isHollowIcon: number;
   @SyncVar() isBlackPaint: number;
@@ -90,11 +94,11 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get index(): number { return this.minorIndex + this.timestamp; }
   get isDirect(): boolean { return 0 < this.sendTo.length || -1 < this.tags.indexOf('direct') ? true : false; }
   get isSendFromSelf(): boolean { return this.from === Network.peerContext.userId || this.originFrom === Network.peerContext.userId || -1 < this.tags.indexOf('mine'); }
-  get isRelatedToMe(): boolean { return (-1 < this.sendTo.indexOf(Network.peerContext.userId)) || this.isSendFromSelf ? true : false; }
+  get isRelatedToMe(): boolean { return (-1 < this.sendTo.indexOf(Network.peerContext.userId)) || this.isSendFromSelf || this.isGMMode; }
   get isDisplayable(): boolean { return this.isDirect ? this.isRelatedToMe : true; }
   get isSystem(): boolean { return -1 < this.tags.indexOf('system') ? true : false; }
-  get isDicebot(): boolean { return this.isSystem && this.from.indexOf('Dice') >= 0 && this.text.indexOf(': 計算結果 →') < 0 ? true : false; }
-  get isCalculate(): boolean { return this.isSystem && this.from.indexOf('Dice') >= 0 && this.text.indexOf(': 計算結果 →') > -1 ? true : false; }
+  get isDicebot(): boolean { return this.isSystem && this.from.indexOf('Dice') >= 0 && !/^C\(.+\) →/i.test(this.text); }
+  get isCalculate(): boolean { return this.isSystem && this.from.indexOf('Dice') >= 0 && /^C\(.+\) →/i.test(this.text); }
   get isSecret(): boolean { return -1 < this.tags.indexOf('secret') ? true : false; }
   get isEmptyDice(): boolean { return !this.isDicebot || -1 < this.tags.indexOf('empty'); }
   get isSpecialColor(): boolean { return this.isDirect || this.isSecret || this.isSystem || this.isOperationLog || this.isDicebot || this.isCalculate; }
@@ -106,6 +110,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get isFailure(): boolean { return this.isDicebot && -1 < this.tags.indexOf('failure'); }
   get isCritical(): boolean { return this.isDicebot && -1 < this.tags.indexOf('critical'); }
   get isFumble(): boolean { return this.isDicebot && -1 < this.tags.indexOf('fumble'); }
+
+  get isGMMode(): boolean{ return PeerCursor.myCursor ? PeerCursor.myCursor.isGMMode : false; }
 
   //とりあえず
   private locale = 'en-US';
@@ -129,14 +135,23 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
       // 最終行の調整
       text += "\n";
     }
-    return `${ tabName }${ dateStr }${ this.name }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : text + lastUpdateStr }`
+    return `${ tabName }${ dateStr }${ this.name }${ this.toColor ? (' ➡ ' + this.toName) : '' }：${ (this.isSecret && !this.isSendFromSelf) ? '（シークレットダイス）' : text + lastUpdateStr }`
   }
 
   logFragmentHtml(tabName: string=null, dateFormat='HH:mm', noImage=true): string {
+    const color = StringUtil.escapeHtml(this.color ? this.color : PeerCursor.CHAT_DEFAULT_COLOR);
+    const colorStyle = ` style="color: ${ color }"`;
+
+    const toColor = this.toColor ? StringUtil.escapeHtml(this.toColor) : '';
+    const toColorStyle = this.toColor ? ` style="color: ${ toColor }"`: '';
+
+    const growClass = (this.isDirect || this.isSecret) ? ' class="grow"' : '';
+
     const tabNameHtml = (!tabName || tabName.trim() == '') ? '' : `<span class="tab-name">${ StringUtil.escapeHtml(tabName) }</span> `;
     const date = new Date(this.timestamp);
     const dateHtml = (dateFormat == '') ? '' : `<time datetime="${ date.toISOString() }">${ StringUtil.escapeHtml(formatDate(date, dateFormat, this.locale)) }</time>：`;
-    const nameHtml = StringUtil.escapeHtml(this.name);
+    const nameHtml = `<span${growClass}${colorStyle}>${StringUtil.escapeHtml(this.name)}</span>` 
+      + (this.toColor ? ` ➡ <span${growClass}${toColorStyle}>${StringUtil.escapeHtml(this.toName)}</span>` : '');
 
     let messageClassNames = ['message'];
     if (this.isDirect || this.isSecret) messageClassNames.push('direct-message');
@@ -151,9 +166,6 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
       if (this.isCritical) messageTextClassNames.push('is-critical');
       if (this.isFumble) messageTextClassNames.push('is-fumble');
     }
-
-    const color = StringUtil.escapeHtml(this.color ? this.color : PeerCursor.CHAT_DEFAULT_COLOR);
-    const colorStyle = this.isSpecialColor ? '' : ` style="color: ${ color }"`;
 
     let textAutoLinkedHtml = (this.isSecret && !this.isSendFromSelf) ? '<s>（シークレットダイス）</s>' 
       : Autolinker.link(this.isOperationLog ? StringUtil.escapeHtml(this.text) : StringUtil.rubyToHtml(StringUtil.escapeHtml(this.text)), {
@@ -187,8 +199,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
       }
 
     return `<div class="${ messageClassNames.join(' ') }" style="border-left-color: ${ color }">
-  <div class="msg-header">${ tabNameHtml }${ dateHtml }<span class="msg-name"${ colorStyle }>${ nameHtml }</span>：</div>
-  <div class="${ messageTextClassNames.join(' ') }"><span${ colorStyle }>${ textAutoLinkedHtml }</span>${ lastUpdateHtml }</div>
+  <div class="msg-header">${ tabNameHtml }${ dateHtml }<span class="msg-name">${ nameHtml }</span>：</div>
+  <div class="${ messageTextClassNames.join(' ') }"><span${ this.isSpecialColor ? '' : colorStyle }>${ textAutoLinkedHtml }</span>${ lastUpdateHtml }</div>
 </div>`;
   }
 
@@ -298,6 +310,17 @@ ruby {
 }
 s.drop-dice .dropped {
   color: #999;
+}
+.grow {
+  text-shadow: 
+       1px  1px 1px #ffffff,
+      -1px  1px 1px #ffffff,
+       1px -1px 1px #ffffff,
+      -1px -1px 1px #ffffff,
+       1px  0px 1px #ffffff,
+       0px  1px 1px #ffffff,
+      -1px  0px 1px #ffffff,
+       0px -1px 1px #ffffff; 
 }`;
   }
 

@@ -39,12 +39,12 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
   @Input() compact: boolean = false;
   
   sampleMessages: ChatMessageContext[] = [
-    { from: 'System', timestamp: 0, imageIdentifier: '', tag: 'mine', name: 'チュートリアル', text: 'サーバーを使用しないTRPGオンセツールです。参加者同士で接続し、コマや画像ファイルなどを同期します。' },
-    { from: 'System', timestamp: 0, imageIdentifier: '', tag: 'mine', name: 'チュートリアル', text: '全てのデータが各参加者のブラウザ内にあるため、ルームの状態を次回に持ち越したい場合は、必ず「保存」を実行してセーブデータ（zip）を生成してください。保存したzipの読み込みはブラウザ画面へのファイルドロップで行えます。' },
-    { from: 'System', timestamp: 0, imageIdentifier: '', tag: 'mine direct', name: 'チュートリアル ➡ プレイヤー', text: 'ダイレクトメッセージ（秘密会話）はセーブデータに記録されません。' },
-    { from: 'System', timestamp: 0, imageIdentifier: '', tag: 'mine direct', name: 'チュートリアル ➡ プレイヤー', text: 'また、過去のダイレクトメッセージはあなたのIDが更新されると同じルーム内であっても見えなくなります。注意してください。' },
-    { from: 'System', timestamp: 0, imageIdentifier: '', tag: 'mine', name: 'チュートリアル', text: '動作推奨環境はデスクトップChromeです。今のところ、スマホからだと上手く操作できません。' },
-    { from: 'System', timestamp: 0, imageIdentifier: '', tag: 'mine', name: 'チュートリアル', text: 'チュートリアルは以上です。このチュートリアルは最初のチャットを入力すると非表示になります。' },
+    { from: 'System', timestamp: 0, imageIdentifier: '', color: '#444444', tag: 'mine', name: 'チュートリアル', text: 'サーバーを使用しないTRPGオンセツールです。参加者同士で接続し、コマや画像ファイルなどを同期します。' },
+    { from: 'System', timestamp: 0, imageIdentifier: '', color: '#444444', tag: 'mine', name: 'チュートリアル', text: '全てのデータが各参加者のブラウザ内にあるため、ルームの状態を次回に持ち越したい場合は、必ず「保存」を実行してセーブデータ（zip）を生成してください。保存したzipの読み込みはブラウザ画面へのファイルドロップで行えます。' },
+    { from: 'System', timestamp: 0, imageIdentifier: '', color: '#444444', toColor: '#444444', tag: 'mine direct', name: 'チュートリアル ➡ プレイヤー', text: 'ダイレクトメッセージ（秘密会話）はセーブデータに記録されません。' },
+    { from: 'System', timestamp: 0, imageIdentifier: '', color: '#444444', toColor: '#444444', tag: 'mine direct', name: 'チュートリアル ➡ プレイヤー', text: 'また、過去のダイレクトメッセージはあなたのIDが更新されると同じルーム内であっても見えなくなります。注意してください。' },
+    { from: 'System', timestamp: 0, imageIdentifier: '', color: '#444444', tag: 'mine', name: 'チュートリアル', text: '動作推奨環境はデスクトップChromeです。今のところ、スマホからだと上手く操作できません。' },
+    { from: 'System', timestamp: 0, imageIdentifier: '', color: '#444444', tag: 'mine', name: 'チュートリアル', text: 'チュートリアルは以上です。このチュートリアルは最初のチャットを入力すると非表示になります。' },
   ];
 
   private topTimestamp = 0;
@@ -102,6 +102,8 @@ export class ChatTabComponent implements OnInit, AfterViewInit, OnDestroy, OnCha
       ? (this.chatTab.chatMessages.length - this.bottomIndex - 1) * this.minMessageHeight
       : 0;
   }
+
+  get isEmpty(): boolean { return this.chatTab.chatMessages.every(chatMessage => !chatMessage.isDisplayable); }
 
   private scrollEventShortTimer: ResettableTimeout = null;
   private scrollEventLongTimer: ResettableTimeout = null;

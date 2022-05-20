@@ -12,7 +12,7 @@
         <ng-container *ngTemplateOutlet="title"></ng-container>
       </ng-container>
       <div class="text msg-text" [style.flex-grow]="isCompact && !isEditing ? 0 : 1" [ngClass]="{ 'is-success': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isSuccess, 'is-failure': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isFailure, 'is-critical': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isCritical, 'is-fumble': (!chatMessage.isSecret || chatMessage.isSendFromSelf) && chatMessage.isFumble }">
-        <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
+        <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf || chatMessage.isGMMode; then visible; else secret"></ng-container>
       </div>
       <div *ngIf="isEditable && isCompact">
         <ng-container *ngTemplateOutlet="editor"></ng-container>
@@ -38,7 +38,17 @@
     <ng-container *ngIf="isCompact && !isMine && chatMessage.timestamp">
       <span class='tip msg-timestamp'>{{chatMessage.timestamp | date:'H:mm'}}</span>
     </ng-container>
-    <span class="msg-name" [style.color]="!chatMessage.isSpecialColor && chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
+    <span class="msg-name">
+      <ng-container *ngIf="!isMine && chatMessage.toColor"> 
+        <span [ngClass]="{grow: (chatMessage.isDirect || chatMessage.isSecret)}" [style.color]="chatMessage.toColor && chatMessage.toColor != '#ffffff' ? chatMessage.toColor : ''">{{chatMessage.toName}}</span>
+         ⬅ 
+      </ng-container>
+      <span [ngClass]="{grow: (chatMessage.isDirect || chatMessage.isSecret)}" [style.color]="chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
+      <ng-container *ngIf="isMine && chatMessage.toColor">
+         ➡ 
+        <span [ngClass]="{grow: (chatMessage.isDirect || chatMessage.isSecret)}" [style.color]="chatMessage.toColor && chatMessage.toColor != '#ffffff' ? chatMessage.toColor : ''">{{chatMessage.toName}}</span>
+      </ng-container>
+    </span>
     <ng-container *ngIf="!isCompact || isMine">
       <span *ngIf="!isCompact" class='tip msg-from' [innerHTML]="htmlEscapedFrom" (click)="onLinkClick($event)"></span>
       <span *ngIf="!isCompact && chatMessage.timestamp" class='tip msg-timestamp'>{{chatMessage.timestamp | date:'y/M/d H:mm'}}</span>

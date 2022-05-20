@@ -82,12 +82,15 @@ export class ChatMessageService {
       from: Network.peerContext.userId,
       to: ChatMessageService.findId(sendTo),
       //to: this.findId(sendTo),
-      name: this.makeMessageName(sendFrom, sendTo),
+      //name: this.makeMessageName(sendFrom, sendTo),
+      name: this.findObjectName(sendFrom),
+      toName: sendTo ? this.findObjectName(sendTo) : '',
       imageIdentifier: this.findImageIdentifier(sendFrom, isUseFaceIcon),
       timestamp: this.calcTimeStamp(chatTab),
       tag: effective ? `${gameType} noface` : gameType,
       text: StringUtil.cr(text),
       color: color,
+      toColor: sendTo ? this.findObjectColor(sendTo) : '',
       isInverseIcon: effective && isInverseIcon ? 1 : 0,
       isHollowIcon: effective && isHollowIcon ? 1 : 0,
       isBlackPaint: effective && isBlackPaint ? 1 : 0,
@@ -133,11 +136,21 @@ export class ChatMessageService {
   private findObjectName(identifier: string): string {
     let object = ObjectStore.instance.get(identifier);
     if (object instanceof GameCharacter) {
-      return object.name;
+      return object.name && object.name.length ? object.name : '（無名のキャラクター）';
     } else if (object instanceof PeerCursor) {
-      return object.name;
+      return object.name && object.name.length ? object.name : '（無名のプレイヤー）';
     }
     return identifier;
+  }
+
+  private findObjectColor(identifier: string): string {
+    let object = ObjectStore.instance.get(identifier);
+    if (object instanceof GameCharacter) {
+      return object.chatPalette.color;
+    } else if (object instanceof PeerCursor) {
+      return object.color;
+    }
+    return null;
   }
 
   private makeMessageName(sendFrom: string, sendTo?: string): string {
