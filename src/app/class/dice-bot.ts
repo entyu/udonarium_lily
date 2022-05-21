@@ -345,6 +345,7 @@ export class DiceBot extends GameObject {
             }
           }
           if (!finalResult.result) return;
+          finalResult.result = finalResult.result.trimRight();
           this.sendResultMessage(finalResult, chatMessage);
         } catch (e) {
           console.error(e);
