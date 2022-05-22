@@ -27,10 +27,8 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
 
   @Input('gameType') _gameType: string = '';
   @Output() gameTypeChange = new EventEmitter<string>();
-//  get gameType(): string { return this._gameType };
   get gameType(): string { return this.config.defaultDiceBot };
   set gameType(gameType: string) { this.config.defaultDiceBot = gameType; }
-// this.gameTypeChange.emit(gameType);
   loadDiceBot(gameType: string) {
     console.log('changeDiceBot ready');
     DiceBot.getHelpMessage(gameType).then(help => {
@@ -39,7 +37,6 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   get config(): Config { return ObjectStore.instance.get<Config>('Config')};
-
 
   minSize: number = 1;
   maxSize: number = 100;

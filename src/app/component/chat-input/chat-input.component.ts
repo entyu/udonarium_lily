@@ -18,6 +18,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { Config } from '@udonarium/config';
 
 @Component({
   selector: 'chat-input',
@@ -33,8 +34,21 @@ export class ChatInputComponent implements OnInit, OnDestroy {
 
   @Input('gameType') _gameType: string = '';
   @Output() gameTypeChange = new EventEmitter<string>();
-  get gameType(): string { return this._gameType };
-  set gameType(gameType: string) { this._gameType = gameType; this.gameTypeChange.emit(gameType); }
+
+  private _isGameTypeByUser = 0;
+  get gameType(): string { 
+    if (this._gameType == 'DiceBot' && this._isGameTypeByUser == 0){
+      return this.config.defaultDiceBot;
+    }else{
+      return this._gameType;
+    }
+  };
+
+  set gameType(gameType: string) {
+    this._isGameTypeByUser = 1;
+    this._gameType = gameType;
+    this.gameTypeChange.emit(gameType);
+  }
 
   @Input('sendFrom') _sendFrom: string = this.myPeer ? this.myPeer.identifier : '';
   @Output() sendFromChange = new EventEmitter<string>();
@@ -60,6 +74,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   @Output() autoCompleteSwitch = new EventEmitter<number>();
 
   @Output() autoCompleteDo = new EventEmitter<number>();
+
+  get config(): Config { return ObjectStore.instance.get<Config>('Config')};
 
   get tachieNum(): number {
     let object = ObjectStore.instance.get(this.sendFrom);

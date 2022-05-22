@@ -13,7 +13,12 @@ export class Config extends ObjectNode implements InnerXml {
   @SyncVar() _defaultDiceBot: string = 'DiceBot';
   @SyncVar() _roomVolume: number = 1.00;
 
-  get defaultDiceBot(): string {return this._defaultDiceBot;}
+  get defaultDiceBot(): string {
+    if(this._defaultDiceBot == ''){
+      return 'DiceBot';
+    }
+    return this._defaultDiceBot;
+  }
   set defaultDiceBot(dice: string) { this._defaultDiceBot = dice;}
 
   get roomVolume(): number { return this._roomVolume; }
@@ -52,10 +57,15 @@ export class Config extends ObjectNode implements InnerXml {
     let _roomVolume = this._roomVolume;
     let _defaultDiceBot = this._defaultDiceBot;
     super.apply(context);
+    if (_defaultDiceBot !== this._defaultDiceBot) {
+      console.log("this._defaultDiceBot変更");
+    }
+
     if (_roomVolume !==  this._roomVolume) {
       this.jukebox.setNewVolume();
       console.log("全体ボリューム変更");
     }
+
   }
 
 
