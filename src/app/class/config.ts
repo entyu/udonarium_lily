@@ -13,11 +13,15 @@ export class Config extends ObjectNode implements InnerXml {
   @SyncVar() _defaultDiceBot: string = 'DiceBot';
   @SyncVar() _roomVolume: number = 1.00;
 
+  get defaultDiceBot(): string {return this._defaultDiceBot;}
+  set defaultDiceBot(dice: string) { this._defaultDiceBot = dice;}
+
   get roomVolume(): number { return this._roomVolume; }
-  set roomVolume(volume: number){ this._roomVolume = volume; }
+  set roomVolume(volume: number) { this._roomVolume = volume; }
   // ジュークボックスの個人用設定はjukebox側
   // 共通設定保存の都合でのため全体ボリュームはこちらにある
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
+
 
   private static _instance: Config;
   static get instance(): Config {
