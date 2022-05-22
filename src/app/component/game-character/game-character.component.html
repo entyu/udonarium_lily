@@ -27,8 +27,7 @@
       </div>
       <div class="upright-transform is-fit-width is-3d" [ngClass]="{fall: altitude == 0}" (dblclick)="nextImage()"
         [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
-        <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="characterImageHeight" 
-          style="position: absolute; transform-origin: center 66%"
+        <div class="rotate-frame is-3d" style="position: absolute" [style.transform-origin]="'center ' + (-characterImageHeight * 0.333) + 'px'"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d" [style.transform]="'translateZ(' + (-size * gridSize / 2) + 'px)'">
             <div *ngIf="isGMMode && isHideIn && 0 < ownerName.length" class="owner-tag is-nowrap is-black-background is-3d"
