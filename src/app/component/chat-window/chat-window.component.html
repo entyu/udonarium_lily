@@ -9,7 +9,7 @@
     <div class="chat-tab">
       <label *ngFor="let chatTab of chatMessageService.chatTabs; trackBy: trackByChatTab" class="tab">
         <input name="chat-tab" type="radio" value="{{chatTab.identifier}}" ng-control="options" [(ngModel)]="chatTabidentifier">
-        <div><span [style.color]="chatTab.name == '' && chatTabidentifier != chatTab.identifier ? 'gray' : ''">{{chatTab.name == '' ? '(無名のタブ)' : chatTab.name}}</span><i *ngIf="chatTab.isUseStandImage" class="material-icons small-font">how_to_reg</i><i *ngIf="chatTab.recieveOperationLogLevel > 0" class="material-icons small-font">history_edu</i><badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
+        <div><span [style.cursor]="chatTabidentifier != chatTab.identifier ? 'pointer' : ''" [style.color]="chatTab.name == '' && chatTabidentifier != chatTab.identifier ? 'gray' : ''">{{chatTab.name == '' ? '(無名のタブ)' : chatTab.name}}</span><i *ngIf="chatTab.isUseStandImage" class="material-icons small-font">how_to_reg</i><i *ngIf="chatTab.recieveOperationLogLevel > 0" class="material-icons small-font">history_edu</i><badge *ngIf="chatTab.hasUnread" class="badge" [count]="chatTab.unreadLength"></badge></div>
       </label>
       <button class="tab-setting small-font" (click)="showTabSetting()"><i class="material-icons small-font">settings</i>タブ設定</button>
       <button class="tab-setting small-font" (click)="showLogOutput()"><i class="material-icons small-font">history_edu</i>ログ</button>

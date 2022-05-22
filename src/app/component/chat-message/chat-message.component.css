@@ -48,6 +48,7 @@
   height: 50px;
   flex-shrink: 0;
   vertical-align: top;
+  pointer-events: none;
 }
 .message .image img {
   width: 100%;
