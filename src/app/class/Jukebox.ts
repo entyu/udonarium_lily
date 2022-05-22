@@ -3,7 +3,9 @@ import { AudioPlayer } from './core/file-storage/audio-player';
 import { AudioStorage } from './core/file-storage/audio-storage';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { GameObject, ObjectContext } from './core/synchronize-object/game-object';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from './core/system';
+import { Config } from '@udonarium/config';
 
 @SyncObject('jukebox')
 export class Jukebox extends GameObject {
@@ -16,6 +18,16 @@ export class Jukebox extends GameObject {
 
   private audioPlayer: AudioPlayer = new AudioPlayer();
 
+  get config(): Config { return ObjectStore.instance.get<Config>('Config'); }
+
+  private _volume = 0.5;
+  get volume(): number { return this._volume; }
+  set volume(volume: number) { this._volume = volume; }
+
+  private _auditionVolume = 0.5;
+  get auditionVolume(){ return this._auditionVolume;}
+  set auditionVolume(_auditionVolume: number){ this._auditionVolume = _auditionVolume; }
+
   // GameObject Lifecycle
   onStoreAdded() {
     super.onStoreAdded();
@@ -26,6 +38,11 @@ export class Jukebox extends GameObject {
   onStoreRemoved() {
     super.onStoreRemoved();
     this._stop();
+  }
+
+  setNewVolume(){
+    AudioPlayer.volume = this.volume * this.config.roomVolume;
+    AudioPlayer.auditionVolume = this.auditionVolume * this.config.roomVolume;
   }
 
   play(identifier: string, isLoop: boolean = false) {

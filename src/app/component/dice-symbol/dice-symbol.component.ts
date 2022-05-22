@@ -75,6 +75,9 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   set name(name: string) { this.diceSymbol.name = name; }
   get size(): number { return this.adjustMinBounds(this.diceSymbol.size); }
 
+  get imageHeignt(): number { return this.diceSymbol.komaImageHeignt; }
+  get specifyImageFlag(): boolean { return this.diceSymbol.specifyKomaImageFlag; }
+
   get faces(): string[] { return this.diceSymbol.faces; }
   get imageFile(): ImageFile {
     return this.imageService.getEmptyOr(this.diceSymbol.imageFile);

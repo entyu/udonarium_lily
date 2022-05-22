@@ -24,6 +24,9 @@ export class DiceSymbol extends TabletopObject {
   @SyncVar() owner: string = '';
   @SyncVar() rotate: number = 0;
 
+  @SyncVar() specifyKomaImageFlag: boolean = false;
+  @SyncVar() komaImageHeignt: number = 100;
+
   get name(): string { return this.getCommonValue('name', ''); }
   set name(name: string) { this.setCommonValue('name', name); }
   get size(): number { return this.getCommonValue('size', 1); }

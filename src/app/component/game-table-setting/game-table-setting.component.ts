@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
+import GameSystemClass from 'bcdice/lib/game_system';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
@@ -12,6 +13,10 @@ import { ImageService } from 'service/image.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
+import { BatchService } from 'service/batch.service';
+
+import { DiceBot } from '@udonarium/dice-bot';
+import { Config } from '@udonarium/config';
 
 @Component({
   selector: 'game-table-setting',
@@ -19,8 +24,25 @@ import { SaveDataService } from 'service/save-data.service';
   styleUrls: ['./game-table-setting.component.css']
 })
 export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  @Input('gameType') _gameType: string = '';
+  @Output() gameTypeChange = new EventEmitter<string>();
+  get gameType(): string { return this.config.defaultDiceBot };
+  set gameType(gameType: string) { this.config.defaultDiceBot = gameType; }
+  loadDiceBot(gameType: string) {
+    console.log('changeDiceBot ready');
+    DiceBot.getHelpMessage(gameType).then(help => {
+     console.log('onChangeGameType done\n' + help);
+    });
+  }
+
+  get config(): Config { return ObjectStore.instance.get<Config>('Config')};
+
   minSize: number = 1;
   maxSize: number = 100;
+
+  get diceBotInfos() { return DiceBot.diceBotInfos }
+
   get tableBackgroundImage(): ImageFile {
     return this.imageService.getEmptyOr(this.selectedTable ? this.selectedTable.imageIdentifier : null);
   }

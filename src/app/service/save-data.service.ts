@@ -2,6 +2,9 @@ import { Injectable, NgZone } from '@angular/core';
 
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
+
+import { Config } from '@udonarium/config';
+
 import { FileArchiver } from '@udonarium/core/file-storage/file-archiver';
 import { ImageFile, ImageState } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
@@ -38,9 +41,13 @@ export class SaveDataService {
     let files: File[] = [];
     let roomXml = this.convertToXml(new Room());
     let chatXml = this.convertToXml(ChatTabList.instance);
+    let configXml = this.convertToXml(Config.instance);
     let summarySetting = this.convertToXml(DataSummarySetting.instance);
     files.push(new File([roomXml], 'data.xml', { type: 'text/plain' }));
     files.push(new File([chatXml], 'chat.xml', { type: 'text/plain' }));
+
+    files.push(new File([configXml], 'config.xml', { type: 'text/plain' }));
+
     files.push(new File([summarySetting], 'summary.xml', { type: 'text/plain' }));
 //本家PR #92より
 //    files = files.concat(this.searchImageFiles(roomXml));

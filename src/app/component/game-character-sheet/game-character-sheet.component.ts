@@ -15,6 +15,7 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
 import { GameCharacter } from '@udonarium/game-character'; //
+import { DiceSymbol } from '@udonarium/dice-symbol'; //
 
 @Component({
   selector: 'game-character-sheet',
@@ -127,6 +128,15 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   chkKomaSize( height ){
     let character = <GameCharacter>this.tabletopObject;
+    if( height < 50 )
+      height = 50 ;
+    if( height > 750 )
+      height = 750 ;
+    character.komaImageHeignt = height;
+  }
+
+  chkDiceKomaSize( height ){
+    let character = <DiceSymbol>this.tabletopObject;
     if( height < 50 )
       height = 50 ;
     if( height > 750 )
