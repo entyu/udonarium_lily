@@ -15,6 +15,7 @@
     <div class="table-cell table-cell_solid">
       <ng-container *ngIf="isTagLocked">
         <span style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{name}}</span>
+        <ng-container *ngIf="descriptionType === 'character' && name === 'height'"><br><span style="font-size: 0.4rem">0=画像依存</span></ng-container>
       </ng-container>
       <ng-container *ngIf="!isTagLocked">
         <div class="hidden-spacer" style="font-family: Cambria, Georgia; font-size: 0.9rem;">{{name}}</div>
@@ -28,14 +29,14 @@
           <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
             [(ngModel)]="currentValue" type="range" title="{{currentValue}}" min="0" max="100" step="1" />
           <br />
-          <input style="margin-left: 3.5em; width:4em; text-align:right;" type="number" min="0" max="100" step="1" size="1" [(ngModel)]="currentValue" placeholder="currentValue" /><b class="move" style="font-size: small">%</b>
+          <input style="margin-left: 3.5em; width:4em; text-align:right;" type="number" min="0" max="100" step="1" size="1" [(ngModel)]="currentValue" placeholder="Opacity" /><b class="move" style="font-size: small">%</b>
         </ng-container>
         <ng-container *ngIf="name != 'opacity'">
           <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
             [(ngModel)]="value" type="range" title="{{value}}" min="{{name === 'altitude' ? -12 : name === 'fontsize' ? 1 : 0}}" max="{{name === 'fontsize' ? 128 : 12}}" step="{{name === 'fontsize' ? 1 : 0.5}}" />
           <br />
           <input style="width:35%; max-width:4em; text-align:right;" type="number" min="{{name === 'altitude' ? -24 : name === 'fontsize' ? 1 : 0}}" step="{{name === 'fontsize' ? 1 : 0.1}}" size="1" [(ngModel)]="value" placeholder="Value" />
-          <dev *ngIf="descriptionType === 'character' && name === 'height'" style="color: #444; font-size: 8pt; display: inline-block; margin-left: 3px"><sup>(0=sizeに依存)</sup></dev>
+          <dev *ngIf="descriptionType === 'character' && name === 'height'" style="color: #444; font-family: Cambria, Georgia; font-size: 0.9rem; display: inline-block; margin-left: 3px"><label><input type="checkbox" [(ngModel)]="currentValue" checked="{{currentValue ? 'checked' : ''}}" (change)="currentValue = (currentValue ? name : '')">× size</label></dev>
         </ng-container>
       </ng-container>
       <ng-container *ngIf="!isCommonValue">
