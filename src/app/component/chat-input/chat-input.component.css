@@ -130,12 +130,30 @@ option {
   background-size: cover;
 }
 
+.direct-message .writing-info {
+  color: #eee;
+}
+
 .mini-icon {
   display: inline-block;
   padding: 0px;
-  width: 12px;
-  height: 12px;
+  width: 0.9rem;
+  height: 0.9rem;
   vertical-align: middle;
   border-radius: 0.2rem;
   margin-right: 1px;
+  object-fit: cover;
+}
+
+.direct-message .mini-icon {
+  filter: drop-shadow(1px 1px 1px #ffffff)
+          drop-shadow(-1px -1px 1px #ffffff);
+}
+
+.direct-message .peer-name {
+  text-shadow    : 
+        1px  0px 1px #ffffff,
+        0px  1px 1px #ffffff,
+      -1px  0px 1px #ffffff,
+        0px -1px 1px #ffffff; 
 }

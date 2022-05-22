@@ -40,13 +40,15 @@
     </ng-container>
     <span class="msg-name">
       <ng-container *ngIf="!isMine && chatMessage.toColor"> 
-        <span [ngClass]="{grow: (chatMessage.isDirect || chatMessage.isSecret)}" [style.color]="chatMessage.toColor && chatMessage.toColor != '#ffffff' ? chatMessage.toColor : ''">{{chatMessage.toName}}</span>
-         ⬅ 
+        <img draggable="false" class="mini-icon" *ngIf="0 < toImageFile?.url?.length" [src]="toImageFile?.url | safe: 'resourceUrl'" 
+        /><span [ngClass]="{grow: (chatMessage.isDirect || chatMessage.isSecret)}" [style.color]="chatMessage.toColor && chatMessage.toColor != '#ffffff' ? chatMessage.toColor : ''">{{chatMessage.toName}}</span>
+        <span style="display: inline-block; margin: 0px 6px; user-select: none; transform: rotateY(180deg)">➡</span>
       </ng-container>
       <span [ngClass]="{grow: (chatMessage.isDirect || chatMessage.isSecret)}" [style.color]="chatMessage.color && chatMessage.color != '#ffffff' ? chatMessage.color : ''">{{chatMessage.name}}</span>
       <ng-container *ngIf="isMine && chatMessage.toColor">
-         ➡ 
-        <span [ngClass]="{grow: (chatMessage.isDirect || chatMessage.isSecret)}" [style.color]="chatMessage.toColor && chatMessage.toColor != '#ffffff' ? chatMessage.toColor : ''">{{chatMessage.toName}}</span>
+        <span style="display: inline-block; margin: 0px 6px; user-select: none">➡</span>
+        <img draggable="false" class="mini-icon" *ngIf="0 < toImageFile?.url?.length" [src]="toImageFile?.url | safe: 'resourceUrl'" 
+        /><span [ngClass]="{grow: (chatMessage.isDirect || chatMessage.isSecret)}" [style.color]="chatMessage.toColor && chatMessage.toColor != '#ffffff' ? chatMessage.toColor : ''">{{chatMessage.toName}}</span>
       </ng-container>
     </span>
     <ng-container *ngIf="!isCompact || isMine">

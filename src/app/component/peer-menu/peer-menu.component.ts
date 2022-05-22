@@ -234,16 +234,16 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
   }
 
   healthIcon(helth) {
-    if (helth >= 1.0) return 'sentiment_very_satisfied';
-    if (helth > 0.9) return 'sentiment_dissatisfied';
-    if (helth > 0.7) return 'mood_bad';
+    if (helth >= 0.99) return 'sentiment_very_satisfied';
+    if (helth > 0.97) return 'sentiment_dissatisfied';
+    if (helth > 0.95) return 'mood_bad';
     return 'sentiment_very_dissatisfied';
   }
 
   healtClass(helth) {
-    if (helth >= 1.0) return 'health-blue';
-    if (helth > 0.9) return 'health-green';
-    if (helth > 0.7) return 'health-yellow';
+    if (helth >= 0.99) return 'health-blue';
+    if (helth > 0.97) return 'health-green';
+    if (helth > 0.95) return 'health-yellow';
     return 'health-red';
   }
 }

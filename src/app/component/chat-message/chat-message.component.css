@@ -272,12 +272,22 @@ textarea {
 
 .grow {
   text-shadow    : 
-        1px  1px 1px #ffffff,
-      -1px  1px 1px #ffffff,
-        1px -1px 1px #ffffff,
-      -1px -1px 1px #ffffff,
         1px  0px 1px #ffffff,
         0px  1px 1px #ffffff,
       -1px  0px 1px #ffffff,
         0px -1px 1px #ffffff; 
+}
+
+.mini-icon {
+  display: inline-block;
+  padding: 0px;
+  width: 1.0rem;
+  height: 1.0rem;
+  vertical-align: middle;
+  border-radius: 0.2rem;
+  object-fit: cover;
+  margin-right: 2px;
+
+  filter: drop-shadow(1px 1px 1px #ffffff)
+          drop-shadow(-1px -1px 1px #ffffff);
 }

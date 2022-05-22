@@ -21,6 +21,7 @@ export interface ChatMessageContext {
   tag?: string;
   dicebot?: string;
   imageIdentifier?: string;
+  toImageIdentifier?: string;
   color?: string;
   toColor?: string;
   isInverseIcon?: number;
@@ -43,6 +44,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() tag: string; 
   @SyncVar() dicebot: string;
   @SyncVar() imageIdentifier: string;
+  @SyncVar() toImageIdentifier: string = '';
   @SyncVar() color: string;
   @SyncVar() toColor: string = '';
   @SyncVar() isInverseIcon: number;
@@ -91,6 +93,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   }
 
   get image(): ImageFile { return ImageStorage.instance.get(this.imageIdentifier); }
+  get toImage(): ImageFile { return ImageStorage.instance.get(this.toImageIdentifier); }
+
   get index(): number { return this.minorIndex + this.timestamp; }
   get isDirect(): boolean { return 0 < this.sendTo.length || -1 < this.tags.indexOf('direct') ? true : false; }
   get isSendFromSelf(): boolean { return this.from === Network.peerContext.userId || this.originFrom === Network.peerContext.userId || -1 < this.tags.indexOf('mine'); }
@@ -313,10 +317,6 @@ s.drop-dice .dropped {
 }
 .grow {
   text-shadow: 
-       1px  1px 1px #ffffff,
-      -1px  1px 1px #ffffff,
-       1px -1px 1px #ffffff,
-      -1px -1px 1px #ffffff,
        1px  0px 1px #ffffff,
        0px  1px 1px #ffffff,
       -1px  0px 1px #ffffff,

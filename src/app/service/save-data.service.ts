@@ -125,11 +125,14 @@ export class SaveDataService {
       if (shadowIdentifier) images[shadowIdentifier] = ImageStorage.instance.get(shadowIdentifier);
     }
 
-    imageElements = xmlElement.ownerDocument.querySelectorAll('*[imageIdentifier], *[backgroundImageIdentifier]');
+    imageElements = xmlElement.ownerDocument.querySelectorAll('*[imageIdentifier], *[toImageIdentifier], *[backgroundImageIdentifier]');
 
     for (let i = 0; i < imageElements.length; i++) {
       let identifier = imageElements[i].getAttribute('imageIdentifier');
       if (identifier) images[identifier] = ImageStorage.instance.get(identifier);
+
+      let toIdentifier = imageElements[i].getAttribute('toImageIdentifier');
+      if (toIdentifier) images[identifier] = ImageStorage.instance.get(toIdentifier);
 
       let backgroundImageIdentifier = imageElements[i].getAttribute('backgroundImageIdentifier');
       if (backgroundImageIdentifier) images[backgroundImageIdentifier] = ImageStorage.instance.get(backgroundImageIdentifier);

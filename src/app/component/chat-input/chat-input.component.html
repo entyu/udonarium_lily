@@ -78,7 +78,7 @@
       <ng-container *ngIf="0 < writingPeerNameAndColors.length">
         <div *ngFor="let peerNameAndColor of writingPeerNameAndColors; index as i" style="display: inline; white-space: pre">
           <div *ngIf="peerNameAndColor.imageUrl" class="cover mini-icon" [style.background-image]="'url(' + peerNameAndColor.imageUrl + ')' | safe: 'style' "></div>
-          <div style="font-weight: bold; display: inline" [style.color]="peerNameAndColor.color | safe: 'style'">{{peerNameAndColor.name}}<ng-container *ngIf="writingPeerNameAndColors.length !== (i + 1)">, </ng-container></div>
+          <div style="font-weight: bold; display: inline" [style.color]="peerNameAndColor.color | safe: 'style'"><span class="peer-name">{{peerNameAndColor.name}}</span><span style="user-select: none" *ngIf="writingPeerNameAndColors.length !== (i + 1)">, </span></div>
         </div>
          が入力中...
       </ng-container>

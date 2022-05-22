@@ -59,6 +59,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   @ViewChild('edit', { static: false }) editElm: ElementRef<HTMLTextAreaElement>;
 
   imageFile: ImageFile = ImageFile.Empty;
+  toImageFile: ImageFile;
   animeState: string = 'inactive';
   isEditing = false;
   editingText = '';
@@ -84,6 +85,8 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
 
     let file: ImageFile = this.chatMessage.image;
     if (file) this.imageFile = file;
+    file = this.chatMessage.toImage;
+    if (file) this.toImageFile = file;
     let time = this.chatMessageService.getTime();
     if (time - 10 * 1000 < this.chatMessage.timestamp) this.animeState = 'active';
   }

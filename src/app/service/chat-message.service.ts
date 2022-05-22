@@ -86,6 +86,7 @@ export class ChatMessageService {
       name: this.findObjectName(sendFrom),
       toName: sendTo ? this.findObjectName(sendTo) : '',
       imageIdentifier: this.findImageIdentifier(sendFrom, isUseFaceIcon),
+      toImageIdentifier: sendTo ? this.findImageIdentifier(sendTo) : '',
       timestamp: this.calcTimeStamp(chatTab),
       tag: effective ? `${gameType} noface` : gameType,
       text: StringUtil.cr(text),
