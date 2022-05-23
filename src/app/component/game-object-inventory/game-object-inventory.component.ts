@@ -12,6 +12,7 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TabletopObject } from '@udonarium/tabletop-object';
 
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
+import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
@@ -460,11 +461,20 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
   cleanInventory() {
     let tabTitle = this.getTabTitle(this.selectTab);
     let gameObjects = this.getGameObjects(this.selectTab);
-    if (!confirm(`${tabTitle}に存在する${gameObjects.length}個の要素を完全に削除しますか？`)) return;
-    for (const gameObject of gameObjects) {
-      this.deleteGameObject(gameObject);
-    }
-    SoundEffect.play(PresetSound.sweep);
+    //if (!confirm(`${tabTitle}に存在する${gameObjects.length}個の要素を完全に削除しますか？`)) return;
+    this.modalService.open(ConfirmationComponent, {
+      title: '墓場を空にする', 
+      text: `${tabTitle}に存在する ${gameObjects.length} 体のキャラクターを完全に削除します。`,
+      help: 'よろしいですか？',
+      type: ConfirmationType.OK_CANCEL,
+      materialIcon: 'warning',
+      action: () => {
+        for (const gameObject of gameObjects) {
+          this.deleteGameObject(gameObject);
+        }
+        SoundEffect.play(PresetSound.sweep);
+      }
+    });
   }
 
   private cloneGameObject(gameObject: TabletopObject) {

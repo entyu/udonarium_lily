@@ -1,0 +1,5 @@
+<div class="text"><i *ngIf="materialIcon" class="material-icons icon">{{ materialIcon }}</i>{{text}}</div>
+<hr />
+<div class="help" *ngIf="help">{{help}}</div>
+<button type="submit" (click)="ok()">ＯＫ</button>
+<button type="button" (click)="cancel()">キャンセル</button>

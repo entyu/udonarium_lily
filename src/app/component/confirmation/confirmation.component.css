@@ -1,0 +1,14 @@
+.text {
+    font-weight: bolder;
+}
+
+.icon {
+    display: inline-block;
+    height: 2rem;
+    vertical-align: middle;
+    margin-right: 3px;
+}
+
+.help {
+    font-size: smaller;
+}
