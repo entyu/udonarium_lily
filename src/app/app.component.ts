@@ -52,6 +52,7 @@ import { ImageTag } from '@udonarium/image-tag';
 import { CutInService } from 'service/cut-in.service';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInList } from '@udonarium/cut-in-list';
+import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-root',
@@ -592,9 +593,23 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 */
   diceAllOpne() {
+    /*
     if (confirm('「一斉公開しない」設定ではないダイス、コインをすべて公開します。\nよろしいですか？')) {
       EventSystem.trigger('DICE_ALL_OPEN', null);
-    }
+    }*/
+    this.modalService.open(ConfirmationComponent, {
+      title: 'ダイス一斉公開', 
+      text: '「一斉公開しない」設定ではないダイス、コインをすべて公開します。',
+      help: 'よろしいですか？',
+      type: ConfirmationType.OK_CANCEL,
+      materialIcon: 'warning',
+      action: () => {
+        EventSystem.trigger('DICE_ALL_OPEN', null);
+      }
+    });
+  }
+  deleteGameObject(gameObject: any) {
+    throw new Error('Method not implemented.');
   }
 
   rotateChange(isHorizontal) {
@@ -606,3 +621,4 @@ PanelService.UIPanelComponentClass = UIPanelComponent;
 //ContextMenuService.UIPanelComponentClass = ContextMenuComponent;
 ContextMenuService.ContextMenuComponentClass = ContextMenuComponent;
 ModalService.ModalComponentClass = ModalComponent;
+

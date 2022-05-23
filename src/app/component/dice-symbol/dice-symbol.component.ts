@@ -350,12 +350,14 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
         name: '☑ 一斉公開しない', action: () => {
           this.isLock = false;
           SoundEffect.play(PresetSound.unlock);
-        }
+        },
+        disabled: this.hasOwner && !this.isVisible
       } : {
         name: '☐ 一斉公開しない', action: () => {
           this.isLock = true;
           SoundEffect.play(PresetSound.lock);
-        }
+        },
+        disabled: this.hasOwner && !this.isVisible
       }));
     if (this.isVisible) {
       let subActions: ContextMenuAction[] = [];
