@@ -68,6 +68,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   progresPercent: number = 0;
 
   isHorizontal = false;
+  isLoggedin = false;
   
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
@@ -318,6 +319,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         console.log('OPEN_NETWORK', event.data.peerId);
         PeerCursor.myCursor.peerId = Network.peerContext.peerId;
         PeerCursor.myCursor.userId = Network.peerContext.userId;
+        this.isLoggedin = false;
       })
       .on('NETWORK_ERROR', event => {
         console.log('NETWORK_ERROR', event.data.peerId);
@@ -338,11 +340,18 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         });
       })
       .on('CONNECT_PEER', event => {
-        if (event.isSendFromSelf) this.chatMessageService.calibrateTimeOffset();
+        if (event.isSendFromSelf) { 
+          this.chatMessageService.calibrateTimeOffset();
+          if (!this.isLoggedin) {
+            this.isLoggedin = true;
+            chatMessageService.sendOperationLog((Network.peerContext.isRoom ? Network.peerContext.roomName + ' に': '他者と') + '接続した');
+          }
+        }
         this.lazyNgZoneUpdate(event.isSendFromSelf);
       })
       .on('DISCONNECT_PEER', event => {
         this.lazyNgZoneUpdate(event.isSendFromSelf);
+        if (event.isSendFromSelf) this.isLoggedin = false;
       })
       .on('PLAY_CUT_IN', -1000, event => {
         let cutIn = ObjectStore.instance.get<CutIn>(event.data.identifier);
