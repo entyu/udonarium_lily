@@ -155,6 +155,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
         name: '位置を公開する',
         action: () => {
           gameObject.owner = '';
+          SoundEffect.play(PresetSound.piecePut);
           EventSystem.trigger('UPDATE_INVENTORY', null);
         }
       });
@@ -165,6 +166,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
         action: () => {
           if (gameObject.location.name === 'table') alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
           gameObject.owner = Network.peerContext.userId;
+          SoundEffect.play(PresetSound.sweep);
           EventSystem.call('UPDATE_INVENTORY', true);
         }
       });
