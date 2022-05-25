@@ -1,5 +1,7 @@
 .text {
     font-weight: bolder;
+    white-space: pre-wrap;
+    word-break: break-all;
 }
 
 .icon {
@@ -11,4 +13,6 @@
 
 .help {
     font-size: smaller;
+    white-space: pre-wrap;
+    word-break: break-all;
 }

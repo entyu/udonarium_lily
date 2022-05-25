@@ -52,7 +52,6 @@ export class ConfirmationComponent implements OnInit, OnDestroy {
   ok() {
     this.modalService.resolve(true);
     if (this.action) this.action();
-    
   }
 
   cancel() {
