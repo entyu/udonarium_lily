@@ -30,7 +30,7 @@ export class CutInService {
           cutInComponentRef.destroy();
         } else {
           const tmp = cutInComponent.cutIn;
-          if (cutIn.identifier === tmp.identifier || (!!cutIn.videoId && !!tmp.videoId) ||　(cutIn.tag != null && cutIn.tag.trim() != '' && tmp.tag != null && tmp.tag.trim() != '' && StringUtil.toHalfWidth(cutIn.tag).toUpperCase().trim() == StringUtil.toHalfWidth(tmp.tag).toUpperCase().trim())) {
+          if (cutIn.identifier === tmp.identifier || (!!cutIn.videoId && !!tmp.videoId) || (cutIn.tag != null && cutIn.tag.trim() != '' && tmp.tag != null && tmp.tag.trim() != '' && StringUtil.toHalfWidth(cutIn.tag).toUpperCase().trim() == StringUtil.toHalfWidth(tmp.tag).toUpperCase().trim())) {
             cutInComponent.stop();
           }
         }
