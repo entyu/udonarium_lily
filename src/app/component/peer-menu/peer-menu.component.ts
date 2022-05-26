@@ -240,7 +240,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
     return 'sentiment_very_dissatisfied';
   }
 
-  healtClass(helth) {
+  healthClass(helth) {
     if (helth >= 0.99) return 'health-blue';
     if (helth > 0.97) return 'health-green';
     if (helth > 0.95) return 'health-yellow';
