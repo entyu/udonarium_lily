@@ -16,6 +16,7 @@ import { ImageTag } from '@udonarium/image-tag';
 import { ImageTagList } from '@udonarium/image-tag-list';
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
 import { FileStorageComponent } from 'component/file-storage/file-storage.component';
+import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
 
 @Component({
   selector: 'file-selector',
@@ -203,12 +204,22 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isShowHideImages) {
       this.isShowHideImages = false;
     } else {
-      if (window.confirm("非表示設定の画像を表示します（ネタバレなどにご注意ください）。\nよろしいですか？")) {
-        this.isShowHideImages = true;
-      } else {
-        this.isShowHideImages = false;
-        $event.preventDefault();
-      }
+      $event.preventDefault();
+      this.modalService.open(ConfirmationComponent, {
+        title: '非表示設定の画像を表示', 
+        text: '非表示設定の画像を表示します（ネタバレなどにご注意ください）。',
+        help: 'よろしいですか？',
+        type: ConfirmationType.OK_CANCEL,
+        materialIcon: 'warning',
+        action: () => {
+          this.isShowHideImages = true;
+          (<HTMLInputElement>$event.target).checked = true;
+          this.changeDetector.markForCheck();
+        },
+        cancelAction: () => {
+          this.isShowHideImages = false;
+        } 
+      });
     }
   }
 

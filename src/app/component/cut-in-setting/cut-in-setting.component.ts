@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CutInList } from '@udonarium/cut-in-list';
 import { CutIn } from '@udonarium/cut-in';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -20,6 +20,7 @@ import { AudioStorage } from '@udonarium/core/file-storage/audio-storage';
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { CutInComponent } from 'component/cut-in/cut-in.component';
+import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
 
 
 @Component({
@@ -162,6 +163,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   progresPercent: number = 0;
 
   constructor(
+    private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
     private modalService: ModalService,
     private panelService: PanelService,
@@ -288,12 +290,22 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isShowHideImages) {
       this.isShowHideImages = false;
     } else {
-      if (window.confirm("非表示設定の画像を表示します（ネタバレなどにご注意ください）。\nよろしいですか？")) {
-        this.isShowHideImages = true;
-      } else {
-        this.isShowHideImages = false;
-        $event.preventDefault();
-      }
+      $event.preventDefault();
+      this.modalService.open(ConfirmationComponent, {
+        title: '非表示設定の画像を表示', 
+        text: '非表示設定の画像を表示します（ネタバレなどにご注意ください）。',
+        help: 'よろしいですか？',
+        type: ConfirmationType.OK_CANCEL,
+        materialIcon: 'warning',
+        action: () => {
+          this.isShowHideImages = true;
+          (<HTMLInputElement>$event.target).checked = true;
+          this.changeDetector.markForCheck();
+        },
+        cancelAction: () => {
+          this.isShowHideImages = false;
+        } 
+      });
     }
   }
 
