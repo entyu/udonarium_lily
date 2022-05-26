@@ -53,6 +53,7 @@ import { CutInService } from 'service/cut-in.service';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInList } from '@udonarium/cut-in-list';
 import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
+import { SwUpdate } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',
@@ -74,6 +75,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
   constructor(
+    private swUpdate: SwUpdate,
     private modalService: ModalService,
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
@@ -383,6 +385,34 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.panelService.open(PeerMenuComponent, { width: 520, height: 450, left: 100 });
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
     }, 0);
+
+    this.swUpdate.versionUpdates.subscribe(evt => {
+      switch (evt.type) {
+        case 'VERSION_DETECTED':
+          console.log(`Downloading new app version: ${evt.version.hash}`);
+          break;
+        case 'VERSION_READY':
+          console.log(`Current app version: ${evt.currentVersion.hash}`);
+          console.log(`New app version ready for use: ${evt.latestVersion.hash}`);
+          break;
+        case 'VERSION_INSTALLATION_FAILED':
+          console.log(`Failed to install app version '${evt.version.hash}': ${evt.error}`);
+          break;
+      }
+    });
+
+    this.swUpdate.versionUpdates.subscribe(evt => {
+      this.modalService.open(ConfirmationComponent, {
+        title: 'アプリケーションの更新', 
+        text: '新しいバージョンが公開されています。',
+        help: '更新を行いますか？（更新を行う場合、タブを再読み込みします）',
+        type: ConfirmationType.OK_CANCEL,
+        materialIcon: 'warning',
+        action: () => {
+          this.swUpdate.activateUpdate().then(() => document.location.reload());
+        },
+      });
+    });
   }
 
   ngOnDestroy() {
