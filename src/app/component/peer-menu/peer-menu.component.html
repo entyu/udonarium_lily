@@ -4,7 +4,7 @@
       (click)="changeIcon()" style="cursor: pointer">
     </div>
     <div>
-      <label style="display: inline-block; margin-bottom: 2px" [ngClass]="{'i-am-gm': isGMMode}"><b style="font-size: smaller"><input type="checkbox" name="i-am-gamemaster" value="I'm Gamemaster" checked="{{ isGMMode || isGMHold ? 'checked' : '' }}" (click)="onGMMode($event)">{{ isGMMode ? '現在GMモードです' : (isGMHold ? 'GMモード保留中' : 'GMモードになる') }}</b></label><br />
+      <label style="display: inline-block; margin-bottom: 2px" [ngClass]="{'i-am-gm': isGMMode || isGMHold}"><b style="font-size: smaller"><input type="checkbox" name="i-am-gamemaster" value="I'm Gamemaster" checked="{{ isGMMode || isGMHold ? 'checked' : '' }}" (click)="onGMMode($event)">{{ isGMMode ? '現在GMモードです' : (isGMHold ? 'GMモード保留中' : 'GMモードになる') }}</b></label><br />
       <button (click)="changeIcon()">プレイヤーアイコン変更</button>
     </div>
   </div>

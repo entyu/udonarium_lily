@@ -255,18 +255,11 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isShowHideImages) {
       this.isShowHideImages = false;
     } else {
-      /*
-      if (window.confirm("非表示設定の画像を表示します（ネタバレなどにご注意ください）。\nよろしいですか？")) {
-        this.isShowHideImages = true;
-      } else {
-        this.isShowHideImages = false;
-        $event.preventDefault();
-      }*/
       $event.preventDefault();
       this.modalService.open(ConfirmationComponent, {
         title: '非表示設定の画像を表示', 
-        text: '非表示設定の画像を表示します（ネタバレなどにご注意ください）。',
-        help: 'よろしいですか？',
+        text: '非表示設定の画像を表示します。',
+        help: 'ネタバレなどにご注意ください。',
         type: ConfirmationType.OK_CANCEL,
         materialIcon: 'warning',
         action: () => {
@@ -282,7 +275,6 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setectedImagesToHidden(toHidden: boolean) {
-    //if (!window.confirm(`選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します${ toHidden ? "（これは「ファイル一覧を開いた際に意図せずネタバレを見てしまう」ことなどを防ぐものです、他者から完全に隠すものではありません）" : ''}。\nよろしいですか？`)) return;
     this.modalService.open(ConfirmationComponent, {
       title: toHidden ? '非表示に設定' : '非表示設定を解除', 
       text: `選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します。`,
@@ -302,7 +294,6 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   addTagWord() {
     if (this.addingTagWord == null || this.addingTagWord.trim() == '') return;
     const words = this.addingTagWord.trim().split(/\s+/);
-    //if (!window.confirm("選択した画像に " + words.map(word => `🏷️${word} `).join(' ') + "を追加します。\nよろしいですか？")) return;
     this.modalService.open(ConfirmationComponent, {
       title: '画像にタグを追加', 
       text: `選択した画像にタグを追加します。`,
@@ -330,7 +321,6 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   removeTagWord(word: string) {
-    //if (!window.confirm("選択した画像から 🏷️" + word + " を削除します。\nよろしいですか？")) return;
     this.modalService.open(ConfirmationComponent, {
       title: '画像からタグを削除', 
       text: `選択した画像からタグを削除します。`,

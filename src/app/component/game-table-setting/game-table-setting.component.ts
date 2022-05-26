@@ -194,8 +194,8 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
       $event.preventDefault();
       this.modalService.open(ConfirmationComponent, {
         title: '非表示設定の画像を表示', 
-        text: '非表示設定の画像を表示します（ネタバレなどにご注意ください）。',
-        help: 'よろしいですか？',
+        text: '非表示設定の画像を表示します。',
+        help: 'ネタバレなどにご注意ください。',
         type: ConfirmationType.OK_CANCEL,
         materialIcon: 'warning',
         action: () => {

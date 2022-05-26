@@ -12,6 +12,7 @@ import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ChatMessageService } from 'service/chat-message.service';
+import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
 
 @Component({
   selector: 'peer-menu',
@@ -201,12 +202,22 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
     if (this.isPasswordOpen) {
       this.isPasswordOpen = false;
     } else {
-      if (window.confirm("パスワードを表示します。\nよろしいですか？")) {
-        this.isPasswordOpen = true;
-      } else {
-        this.isPasswordOpen = false;
-        $event.preventDefault();
-      }
+      $event.preventDefault();
+      this.modalService.open(ConfirmationComponent, {
+        title: 'パスワードの表示', 
+        text: 'パスワードを表示します。',
+        help: 'よろしいですか？',
+        type: ConfirmationType.OK_CANCEL,
+        materialIcon: 'warning',
+        action: () => {
+          this.isPasswordOpen = true;
+          (<HTMLInputElement>$event.target).checked = true;
+          //this.changeDetector.markForCheck();
+        },
+        cancelAction: () => {
+          this.isPasswordOpen = false;
+        } 
+      });
     }
   }
 
@@ -223,9 +234,9 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
       PeerCursor.isGMHold = false;
       this.isGMMode = false;
     } else {
-      if (window.confirm("GMモードでは、裏向きのカード、公開されていないダイスシンボル、キャラクター位置、カーソル位置をすべて見ることができ、カーソル位置は他の参加者に伝わらなくなります。\nまた、GMモード中（保留中含む）はあなたからプライベート接続、ルームへの接続は行えません。\nWith great power comes great responsibility.\n\nok?")) {
+      if (window.confirm("GMモードでは、秘話、裏向きのカード、公開されていないダイスシンボル、キャラクター位置、カーソル位置をすべて見ることができ、カーソル位置は他の参加者に伝わらなくなります。\nまた、GMモード中（保留中含む）はあなたからプライベート接続、ルームへの接続は行えません。\nWith great power comes great responsibility.\n\nok?")) {
         PeerCursor.isGMHold = true;
-        alert("まだGMモードではありません、GMになるには、GMモード保留中にチャットから「GMになる」または「GMになります」を含む文章を送信します。")
+        alert("まだGMモードではありません、GMになるには、保留中にチャットから「GMになる」または「GMになります」を含む文章を送信します。")
       } else {
         PeerCursor.isGMHold = false;
         $event.preventDefault();
