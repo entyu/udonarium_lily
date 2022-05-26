@@ -22,6 +22,7 @@
   font-size: 0;
   display: inline-block;
   border: 2px solid transparent;
+  margin-right: -2px;
 }
 
 .image:hover {
