@@ -10,6 +10,8 @@ import { ImageTagList } from '@udonarium/image-tag-list';
 import { ImageTag } from '@udonarium/image-tag';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { UUID } from '@udonarium/core/system/util/uuid';
+import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
+import { ModalService } from 'service/modal.service';
 
 @Component({
   selector: 'file-storage',
@@ -106,7 +108,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private panelService: PanelService
+    private panelService: PanelService,
+    private modalService: ModalService
   ) { }
   
   ngOnInit() {
@@ -252,57 +255,101 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.isShowHideImages) {
       this.isShowHideImages = false;
     } else {
+      /*
       if (window.confirm("非表示設定の画像を表示します（ネタバレなどにご注意ください）。\nよろしいですか？")) {
         this.isShowHideImages = true;
       } else {
         this.isShowHideImages = false;
         $event.preventDefault();
-      }
+      }*/
+      $event.preventDefault();
+      this.modalService.open(ConfirmationComponent, {
+        title: '非表示設定の画像を表示', 
+        text: '非表示設定の画像を表示します（ネタバレなどにご注意ください）。',
+        help: 'よろしいですか？',
+        type: ConfirmationType.OK_CANCEL,
+        materialIcon: 'warning',
+        action: () => {
+          this.isShowHideImages = true;
+          (<HTMLInputElement>$event.target).checked = true;
+          this.changeDetector.markForCheck();
+        },
+        cancelAction: () => {
+          this.isShowHideImages = false;
+        } 
+      });
     }
   }
 
   setectedImagesToHidden(toHidden: boolean) {
-    if (!window.confirm(`選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します${ toHidden ? "（これは「ファイル一覧を開いた際に意図せずネタバレを見てしまう」ことなどを防ぐものです、他者から完全に隠すものではありません）" : ''}。\nよろしいですか？`)) return;
-    for (const image of this.selectedImageFiles) {
-      const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
-      imageTag.hide = toHidden;
-      EventSystem.call('OPERATE_IMAGE_TAGS', imageTag.identifier);
-    }
+    //if (!window.confirm(`選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します${ toHidden ? "（これは「ファイル一覧を開いた際に意図せずネタバレを見てしまう」ことなどを防ぐものです、他者から完全に隠すものではありません）" : ''}。\nよろしいですか？`)) return;
+    this.modalService.open(ConfirmationComponent, {
+      title: toHidden ? '非表示に設定' : '非表示設定を解除', 
+      text: `選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します。`,
+      help: toHidden ? 'これは「意図せずネタバレを見てしまう」ことなどを防ぐものです、他者から完全に隠すものではありません。' : 'よろしいですか？',
+      type: ConfirmationType.OK_CANCEL,
+      materialIcon: 'warning',
+      action: () => {
+        for (const image of this.selectedImageFiles) {
+          const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
+          imageTag.hide = toHidden;
+          EventSystem.call('OPERATE_IMAGE_TAGS', imageTag.identifier);
+        }
+      }
+    });
   }
 
   addTagWord() {
     if (this.addingTagWord == null || this.addingTagWord.trim() == '') return;
     const words = this.addingTagWord.trim().split(/\s+/);
-    let addedWords = null;
-    if (!window.confirm("選択した画像に " + words.map(word => `🏷️${word} `).join(' ') + "を追加します。\nよろしいですか？")) return;
-    for (const image of this.selectedImageFiles) {
-      const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
-      //imageTag.addWords(words);
-      //TODO いまのところ全部帰ってくるが実際に追加したタグだけを返して追加したい
-      addedWords = imageTag.addWords(words);
-    }
-    if (addedWords) {
-      if (this.serchCondIsOr) this.searchWords.push(...addedWords);
-      FileStorageComponent.sortOrder.unshift(...addedWords);
-    }
-    if (this.serchCondIsOr) this.searchWords = Array.from(new Set(this.searchWords)).sort();
-    FileStorageComponent.sortOrder = Array.from(new Set(FileStorageComponent.sortOrder));
-    EventSystem.trigger('CHANGE_SORT_ORDER', addedWords);
-    this.addingTagWord = '';
+    //if (!window.confirm("選択した画像に " + words.map(word => `🏷️${word} `).join(' ') + "を追加します。\nよろしいですか？")) return;
+    this.modalService.open(ConfirmationComponent, {
+      title: '画像にタグを追加', 
+      text: `選択した画像にタグを追加します。`,
+      help: words.map(word => `🏷️${word}`).join(' '),
+      type: ConfirmationType.OK_CANCEL,
+      materialIcon: 'warning',
+      action: () => {
+        let addedWords = null;
+        for (const image of this.selectedImageFiles) {
+          const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
+          //imageTag.addWords(words);
+          //TODO いまのところ全部帰ってくるが実際に追加したタグだけを返して追加したい
+          addedWords = imageTag.addWords(words);
+        }
+        if (addedWords) {
+          if (this.serchCondIsOr) this.searchWords.push(...addedWords);
+          FileStorageComponent.sortOrder.unshift(...addedWords);
+        }
+        if (this.serchCondIsOr) this.searchWords = Array.from(new Set(this.searchWords)).sort();
+        FileStorageComponent.sortOrder = Array.from(new Set(FileStorageComponent.sortOrder));
+        EventSystem.trigger('CHANGE_SORT_ORDER', addedWords);
+        this.addingTagWord = '';
+      }
+    });
   }
 
   removeTagWord(word: string) {
-    if (!window.confirm("選択した画像から 🏷️" + word + " を削除します。\nよろしいですか？")) return;
-    if (word == null || word.trim() == '') return;
-    for (const image of this.selectedImageFiles) {
-      let imageTag = ImageTag.get(image.identifier);
-      if (imageTag) imageTag.removeWords(word);
-    }
-    const allImagesOwnWords = this.allImagesOwnWords;
-    this.searchWords = this.searchWords.filter(word => allImagesOwnWords.includes(word));
-    this.deletedWords.push(word);
-    this.deletedWords = Array.from(new Set(this.deletedWords));
-    EventSystem.trigger('CHANGE_SORT_ORDER', this.deletedWords);
+    //if (!window.confirm("選択した画像から 🏷️" + word + " を削除します。\nよろしいですか？")) return;
+    this.modalService.open(ConfirmationComponent, {
+      title: '画像からタグを削除', 
+      text: `選択した画像からタグを削除します。`,
+      help: `🏷️${word}`,
+      type: ConfirmationType.OK_CANCEL,
+      materialIcon: 'warning',
+      action: () => {
+        if (word == null || word.trim() == '') return;
+        for (const image of this.selectedImageFiles) {
+          let imageTag = ImageTag.get(image.identifier);
+          if (imageTag) imageTag.removeWords(word);
+        }
+        const allImagesOwnWords = this.allImagesOwnWords;
+        this.searchWords = this.searchWords.filter(word => allImagesOwnWords.includes(word));
+        this.deletedWords.push(word);
+        this.deletedWords = Array.from(new Set(this.deletedWords));
+        EventSystem.trigger('CHANGE_SORT_ORDER', this.deletedWords);
+      }
+    });
   }
 
   identify(index, image){
