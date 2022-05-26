@@ -148,7 +148,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy {
   viewRotateX = 50;
   viewRotateZ = 10;
   heightWidthRatio = 1.5;
-  isRubied = false;
+  //isRubied = false;
 
   set dialog(dialog) {
     if (!this.gameCharacter) return;
@@ -171,7 +171,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy {
         rubyLength += ary[2].length;
       }
     }
-    if (rubys.length > 0) this.isRubied = true; 
+    //if (rubys.length > 0) this.isRubied = true; 
 
     let speechDelay = 1000 / Array.from(text).length > 36 ? 1000 / Array.from(text).length : 36;
     if (speechDelay > 200) speechDelay = 200;
@@ -179,7 +179,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy {
       this._dialog = null;
       this.gameCharacter.text = '';
       this.gameCharacter.isEmote = false; 
-      this.isRubied = false; 
+      //this.isRubied = false; 
       this.changeDetector.markForCheck();
     }, Array.from(text).length * speechDelay + 6000);
 
@@ -234,6 +234,11 @@ export class GameCharacterComponent implements OnInit, OnDestroy {
     if (!this.gameCharacter || !this.gameCharacter.text) return '';
     const ary = this.gameCharacter.text.replace(/。/g, "。\n\n").split(/[\r\n]{2,}/g).filter(str => str.trim());
     return ary.length > 0 ? ary.reverse()[0].trim() : '';
+  }
+  
+  get isRubied(): boolean {
+    if (!this.gameCharacter || !this.gameCharacter.text) return false;
+    return -1 < this.dialogText.indexOf('<ruby>');
   }
 
   get dialogChatBubbleMinWidth(): number {

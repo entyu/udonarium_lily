@@ -72,7 +72,6 @@ export class StandImageComponent implements OnInit, OnDestroy {
   isBackyard = false;
   isVisible = false;
   isSecret = false;
-  isRubied = false;
   standImageTransformOrigin = 'center';
 
   private naturalWidth = 0;
@@ -139,7 +138,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
         rubyLength += ary[2].length;
       }
     }
-    if (rubys.length > 0) this.isRubied = true; 
+    //if (rubys.length > 0) this.isRubied = true; 
 
     let speechDelay = 1000 / Array.from(text).length > 36 ? 1000 / Array.from(text).length : 36;
     if (speechDelay > 200) speechDelay = 200;
@@ -147,7 +146,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
       //this.dialog = null;
       this.gameCharacter.text = '';
       this.gameCharacter.isEmote = false; 
-      this.isRubied = false; 
+      //this.isRubied = false; 
       //this.changeDetector.markForCheck();
     }, Array.from(text).length * speechDelay + 6000);
 
@@ -385,10 +384,12 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   calcStandImageTransformOrigin(): string {
     return 'center 66%';
+    /*
     if (!this.standImageElement) return 'center';
     let ratio = 1 - this.naturalWidth / (this.naturalHeight * 2);
     if (ratio > 0.66) ratio = 0.66;
     return 'center ' + (ratio * 100) + '%';
+    */
   } 
 
   toGhostly() {
