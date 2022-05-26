@@ -108,6 +108,21 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
     }, 500);
   }
 
+  async saveAll() {
+    if (this.isSaveing) return;
+    this.isSaveing = true;
+    this.progresPercent = 0;
+
+    await this.saveDataService.saveGameObjectAsync(DiceRollTableList.instance, 'fly_rollTable_All', percent => {
+      this.progresPercent = percent;
+    });
+
+    setTimeout(() => {
+      this.isSaveing = false;
+      this.progresPercent = 0;
+    }, 500);
+  }
+
   delete() {
     if (!this.isEmpty && this.selectedDiceRollTable) {
       this.selectedDiceRollTableXml = this.selectedDiceRollTable.toXml();

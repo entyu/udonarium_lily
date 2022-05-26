@@ -35,6 +35,14 @@
           <button (click)="upTabIndex()">↑</button>
           <button (click)="downTabIndex()">↓</button>
           <div style="float: right">
+            <!--
+            <button [disabled]="isSaveing || !diceRollTables.length" (click)="saveAll()">
+              <div style="position: relative;">
+                <div [ngClass]="{'is-hidden': isSaveing}">すべて保存</div>
+                <div *ngIf="isSaveing" class="progress">{{progresPercent}}%</div>
+              </div>
+            </button>
+            -->
             <button [disabled]="isSaveing" (click)="save()">
               <div style="position: relative;">
                 <div [ngClass]="{'is-hidden': isSaveing}">保存</div>
