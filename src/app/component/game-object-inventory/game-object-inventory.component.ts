@@ -467,7 +467,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
       text: `${tabTitle}に存在する ${gameObjects.length} 体のキャラクターを完全に削除します。`,
       help: 'よろしいですか？',
       type: ConfirmationType.OK_CANCEL,
-      materialIcon: 'warning',
+      materialIcon: 'delete_forever',
       action: () => {
         for (const gameObject of gameObjects) {
           this.deleteGameObject(gameObject);

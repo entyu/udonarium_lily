@@ -197,7 +197,7 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
         text: '非表示設定の画像を表示します。',
         help: 'ネタバレなどにご注意ください。',
         type: ConfirmationType.OK_CANCEL,
-        materialIcon: 'warning',
+        materialIcon: 'visibility',
         action: () => {
           this.isShowHideImages = true;
           (<HTMLInputElement>$event.target).checked = true;

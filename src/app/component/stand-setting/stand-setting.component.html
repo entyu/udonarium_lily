@@ -34,6 +34,4 @@
   </div>
 </div>
 <button (click)="add()">スタンド設定の追加</button>
-<ng-container *ngIf="standSettingXML">
-  <button (click)="restore()">直前に削除したスタンドを戻す</button>
-</ng-container>
+<button *ngIf="standSettingXML" (click)="restore()">直前に削除したスタンド設定を戻す</button>

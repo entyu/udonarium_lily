@@ -261,7 +261,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
         text: '非表示設定の画像を表示します。',
         help: 'ネタバレなどにご注意ください。',
         type: ConfirmationType.OK_CANCEL,
-        materialIcon: 'warning',
+        materialIcon: 'visibility',
         action: () => {
           this.isShowHideImages = true;
           (<HTMLInputElement>$event.target).checked = true;
@@ -280,7 +280,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       text: `選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します。`,
       help: toHidden ? 'これは「意図せずネタバレを見てしまう」ことなどを防ぐものです、他者から完全に隠すものではありません。' : 'よろしいですか？',
       type: ConfirmationType.OK_CANCEL,
-      materialIcon: 'warning',
+      materialIcon: toHidden ? 'visibility_off' : 'visibility',
       action: () => {
         for (const image of this.selectedImageFiles) {
           const imageTag = ImageTag.get(image.identifier) || ImageTag.create(image.identifier);
@@ -299,7 +299,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       text: `選択した画像にタグを追加します。`,
       help: words.map(word => `🏷️${word}`).join(' '),
       type: ConfirmationType.OK_CANCEL,
-      materialIcon: 'warning',
+      materialIcon: 'sell',
       action: () => {
         let addedWords = null;
         for (const image of this.selectedImageFiles) {
@@ -326,7 +326,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       text: `選択した画像からタグを削除します。`,
       help: `🏷️${word}`,
       type: ConfirmationType.OK_CANCEL,
-      materialIcon: 'warning',
+      materialIcon: 'sell',
       action: () => {
         if (word == null || word.trim() == '') return;
         for (const image of this.selectedImageFiles) {

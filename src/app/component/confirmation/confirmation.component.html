@@ -2,4 +2,4 @@
 <hr />
 <div class="help" *ngIf="help">{{help}}</div>
 <button type="submit" (click)="ok()">ＯＫ</button>
-<button type="button" (click)="cancel()">キャンセル</button>
+<button *ngIf="type > 1" type="button" (click)="cancel()">キャンセル</button>

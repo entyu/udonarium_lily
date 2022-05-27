@@ -208,7 +208,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
         text: 'パスワードを表示します。',
         help: 'よろしいですか？',
         type: ConfirmationType.OK_CANCEL,
-        materialIcon: 'warning',
+        materialIcon: 'visibility',
         action: () => {
           this.isPasswordOpen = true;
           (<HTMLInputElement>$event.target).checked = true;
@@ -224,23 +224,48 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
   onGMMode($event: Event) {
     if (PeerCursor.isGMHold || this.isGMMode) {
       if (this.isGMMode) {
-        if (!window.confirm("GMモードを解除しますか？")) {
-          $event.preventDefault();
-          return;
-        }
-        this.chatMessageService.sendOperationLog('GMモードを解除');
-        EventSystem.trigger('CHANGE_GM_MODE', null);
-      }
-      PeerCursor.isGMHold = false;
-      this.isGMMode = false;
-    } else {
-      if (window.confirm("GMモードでは、秘話、裏向きのカード、公開されていないダイスシンボル、キャラクター位置、カーソル位置をすべて見ることができ、カーソル位置は他の参加者に伝わらなくなります。\nまた、GMモード中（保留中含む）はあなたからプライベート接続、ルームへの接続は行えません。\nWith great power comes great responsibility.\n\nok?")) {
-        PeerCursor.isGMHold = true;
-        alert("まだGMモードではありません、GMになるには、保留中にチャットから「GMになる」または「GMになります」を含む文章を送信します。")
+        $event.preventDefault();
+        this.modalService.open(ConfirmationComponent, {
+          title: 'GMモード解除', 
+          text: 'GMモードを解除します。',
+          help: 'よろしいですか？',
+          type: ConfirmationType.OK_CANCEL,
+          materialIcon: 'person_remove',
+          action: () => {
+            PeerCursor.isGMHold = false;
+            this.isGMMode = false;
+            (<HTMLInputElement>$event.target).checked = false;
+            this.chatMessageService.sendOperationLog('GMモードを解除');
+            EventSystem.trigger('CHANGE_GM_MODE', null);
+            //this.changeDetector.markForCheck();
+          }
+        });
       } else {
         PeerCursor.isGMHold = false;
-        $event.preventDefault();
+        this.isGMMode = false;
       }
+    } else {
+      $event.preventDefault();
+      this.modalService.open(ConfirmationComponent, {
+        title: 'GMモードになる', 
+        text: 'GMモードになりますか？\nGMモード中（保留中含む）はあなたからプライベート接続、ルームへの接続は行えません。',
+        help: 'GMモードでは、秘話、裏向きのカード、公開されていないダイスシンボル、キャラクター位置、カーソル位置をすべて見ることができ、あなたのカーソル位置は他の参加者に伝わらなくなります。\n\nWith great power comes great responsibility.',
+        type: ConfirmationType.OK_CANCEL,
+        materialIcon: 'person_add',
+        action: () => {
+          PeerCursor.isGMHold = true;
+          this.isGMMode = false;
+          (<HTMLInputElement>$event.target).checked = true;
+          //this.changeDetector.markForCheck();
+          this.modalService.open(ConfirmationComponent, {
+            title: 'GMモードになる', 
+            text: 'まだGMモードではありません。',
+            help: 'GMモードになるには、チャットから「GMになる」または「GMになります」を含む文を送信します。',
+            type: ConfirmationType.OK,
+            materialIcon: 'person_add'
+          });
+        }
+      });
     }
   }
 

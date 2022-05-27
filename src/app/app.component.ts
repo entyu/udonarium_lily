@@ -635,7 +635,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       text: 'テーブル上のダイス、コインを公開します。',
       help: '「一斉公開しない」設定のものは公開されません。',
       type: ConfirmationType.OK_CANCEL,
-      materialIcon: 'warning',
+      materialIcon: 'all_out',
       action: () => {
         EventSystem.trigger('DICE_ALL_OPEN', null);
       }

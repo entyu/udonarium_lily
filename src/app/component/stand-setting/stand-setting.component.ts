@@ -10,6 +10,8 @@ import { UUID } from '@udonarium/core/system/util/uuid';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TextViewComponent } from 'component/text-view/text-view.component';
 import { ObjectSerializer } from '@udonarium/core/synchronize-object/object-serializer';
+import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
+import { ModalService } from 'service/modal.service';
 
 @Component({
   selector: 'app-stand-setting',
@@ -29,6 +31,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService,
+    private modalService: ModalService
   ) { }
 
   get standElements(): DataElement[] {
@@ -121,16 +124,25 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       characterIdentifier: this.character.identifier,
       identifier: standElement.identifier
     });
-    if (!this.character || !this.character.standList || !window.confirm('スタンド設定を削除しますか？')) return;
-    this.standSettingXML = standElement.toXml();
-    let elm = this.character.standList.removeChild(standElement);
-    if (elm) {
-      if (this.character.standList.overviewIndex == index) {
-        this.character.standList.overviewIndex = -1;
-      } else if (this.character.standList.overviewIndex > index) {
-        this.character.standList.overviewIndex -= 1;
+    if (!this.character || !this.character.standList) return;
+    this.modalService.open(ConfirmationComponent, {
+      title: 'スタンド設定の削除', 
+      text: 'スタンド設定を削除します。',
+      help: 'よろしいですか？',
+      type: ConfirmationType.OK_CANCEL,
+      materialIcon: 'person_off',
+      action: () => {
+        this.standSettingXML = standElement.toXml();
+        let elm = this.character.standList.removeChild(standElement);
+        if (elm) {
+          if (this.character.standList.overviewIndex == index) {
+            this.character.standList.overviewIndex = -1;
+          } else if (this.character.standList.overviewIndex > index) {
+            this.character.standList.overviewIndex -= 1;
+          }
+        }
       }
-    }
+    });
   }
   
   restore() {

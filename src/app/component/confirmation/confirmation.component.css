@@ -6,13 +6,16 @@
 
 .icon {
     display: inline-block;
-    height: 2rem;
+    font-size: 2.5rem;
     vertical-align: middle;
-    margin-right: 3px;
+    margin-right: 4px;
+    padding: 2px;
+    text-shadow: 2px 2px 2px #555;
 }
 
 .help {
     font-size: smaller;
     white-space: pre-wrap;
     word-break: break-all;
+    margin-bottom: 3px;
 }
