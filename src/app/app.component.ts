@@ -71,6 +71,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   isHorizontal = false;
   isLoggedin = false;
+  isUpdateCanceled = false;
   
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
@@ -394,24 +395,26 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         case 'VERSION_READY':
           console.log(`Current app version: ${evt.currentVersion.hash}`);
           console.log(`New app version ready for use: ${evt.latestVersion.hash}`);
+          if (!this.isUpdateCanceled) {
+            this.modalService.open(ConfirmationComponent, {
+              title: 'アプリケーションの更新', 
+              text: '新しいバージョンが公開されています。更新を行いますか？',
+              help: 'タブを再読み込みします、後で手動で再読み込みを行うことでも更新可能です。',
+              type: ConfirmationType.OK_CANCEL,
+              materialIcon: 'browser_updated',
+              action: () => {
+                this.swUpdate.activateUpdate().then(() => document.location.reload());
+              },
+              cancelAction: () => {
+                this.isUpdateCanceled = true;
+              }
+            });
+          }
           break;
         case 'VERSION_INSTALLATION_FAILED':
           console.log(`Failed to install app version '${evt.version.hash}': ${evt.error}`);
           break;
       }
-    });
-
-    this.swUpdate.versionUpdates.subscribe(evt => {
-      this.modalService.open(ConfirmationComponent, {
-        title: 'アプリケーションの更新', 
-        text: '新しいバージョンが公開されています。',
-        help: '更新を行いますか？（更新を行う場合、タブを再読み込みします）',
-        type: ConfirmationType.OK_CANCEL,
-        materialIcon: 'warning',
-        action: () => {
-          this.swUpdate.activateUpdate().then(() => document.location.reload());
-        },
-      });
     });
   }
 
@@ -629,8 +632,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }*/
     this.modalService.open(ConfirmationComponent, {
       title: 'ダイス一斉公開', 
-      text: '「一斉公開しない」設定ではないダイス、コインをすべて公開します。',
-      help: 'よろしいですか？',
+      text: 'テーブル上のダイス、コインを公開します。',
+      help: '「一斉公開しない」設定のものは公開されません。',
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'warning',
       action: () => {
