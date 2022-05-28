@@ -30,9 +30,9 @@
     </label>
   </span>
 </div>
-<div id="file-list" style="min-height: 250px; margin-left: 1px; margin-top: 2px">
-  <span *ngIf="isAllowedEmpty" class="empty" style="display: inline-block; position: relative; top: -2px">
-    <button (click)="onSelectedFile(empty)" style="min-width: 100px; height: 120px; margin-left: -1px; margin-right: 2px">画像なし<br>/設定解除</button>
+<div id="file-list" style="min-height: 250px; margin-left: 1px; padding-top: 3px">
+  <span *ngIf="isAllowedEmpty" class="empty" style="display: inline-block;">
+    <button (click)="onSelectedFile(empty)" style="min-width: 100px; margin-left: -1px; margin-right: 3px">画像なし<br>/設定解除</button>
   </span>
   <div *ngFor="let file of images; trackBy: identify" @scaleInOut class="image" style="text-align: center; min-width: 100px; height: 120px; position: relative" [ngClass]="{'current-images': getCurrent(file)}">
     <div style="position: absolute; font-size: xx-small; text-align: left; bottom: 0px; width: 100%; height: 100%; overflow: hidden; pointer-events: none">

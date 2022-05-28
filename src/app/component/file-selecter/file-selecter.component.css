@@ -31,11 +31,14 @@
 
 .empty {
   line-height: 120px;
-  vertical-align: bottom;
+  vertical-align: top;
 }
 
 .empty button {
-  height: 100px;
+  height: 120px;
+  margin: 1px;
+  box-sizing: border-box;
+  vertical-align: top;
 }
 
 /* Image Tag */

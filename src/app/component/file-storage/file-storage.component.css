@@ -29,7 +29,7 @@
 .image:hover {
   border: 2px dotted red;
   transform: scale(1.08);
-  z-index: 200;
+  z-index: 150;
   transition-duration: 60ms;
 }
 
@@ -70,7 +70,7 @@
   bottom: 0;
   background-color: rgba(240, 218, 189, 0.9);
   border-top: 1px dotted #666;
-  z-index: 100;
+  z-index: 200;
 }
 
 .word-tag {

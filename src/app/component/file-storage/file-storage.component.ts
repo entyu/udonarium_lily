@@ -294,10 +294,10 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     const words = this.addingTagWord.trim().split(/\s+/);
     this.modalService.open(ConfirmationComponent, {
       title: '画像にタグを追加', 
-      text: `選択した画像にタグを追加しますか？`,
-      helpHtml: words.map(word => `<b class="word-tag">${ StringUtil.escapeHtml(word) }</b>`).join(' ') + ' を追加します。',
+      text: `画像にタグを追加しますか？`,
+      helpHtml: '選択した画像に ' + words.map(word => `<b class="word-tag">${ StringUtil.escapeHtml(word) }</b>`).join(' ') + ' を追加します。',
       type: ConfirmationType.OK_CANCEL,
-      materialIcon: 'loyalty',
+      materialIcon: 'sell',
       action: () => {
         let addedWords = null;
         for (const image of this.selectedImageFiles) {
@@ -321,8 +321,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   removeTagWord(word: string) {
     this.modalService.open(ConfirmationComponent, {
       title: '画像からタグを削除', 
-      text: `選択した画像からタグを削除しますか？`,
-      helpHtml: `<b class="word-tag">${ StringUtil.escapeHtml(word) }</b> を削除します。`,
+      text: `画像からタグを削除しますか？`,
+      helpHtml: `選択した画像に <b class="word-tag">${ StringUtil.escapeHtml(word) }</b> を削除します。`,
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'sell',
       action: () => {

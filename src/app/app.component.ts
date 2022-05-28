@@ -410,7 +410,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             this.modalService.open(ConfirmationComponent, {
               title: 'Udonarium with Fly の更新', 
               text: 'Udonarium with Fly の新しいバージョンが公開されています。更新を行いますか？',
-              help: 'タブを再読み込みします。今更新しない場合、後で手動で再読み込みを行うことでも更新可能です。',
+              help: '更新の際にページを再読み込みします。キャンセルした場合、手動で再読み込みを行うことでも更新可能です。',
               type: ConfirmationType.OK_CANCEL,
               materialIcon: 'browser_updated',
               action: () => {
