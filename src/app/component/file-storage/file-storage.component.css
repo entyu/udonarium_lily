@@ -23,6 +23,7 @@
   display: inline-block;
   border: 2px solid transparent;
   margin-right: -2px;
+  cursor: pointer;
 }
 
 .image:hover {
@@ -78,9 +79,6 @@
   display: inline-block;
   color: black;
   font-weight: bolder;
-}
-.word-tag::before {
-  content: '🏷️';
 }
 .word-tag:hover {
   color: red;

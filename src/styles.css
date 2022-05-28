@@ -183,6 +183,15 @@ span {
   cursor: text;
 }
 
+.word-tag::before {
+  display: inline-block;
+  font-family: 'Material Icons';
+  content: '\f05b';
+  font-size: 1.1;
+  margin-right: 1px;
+  margin-left: 1px;
+}
+
 /* Auto-Link */
 a[target=_blank] {
   text-decoration: none;

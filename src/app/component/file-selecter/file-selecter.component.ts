@@ -215,10 +215,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
           this.isShowHideImages = true;
           (<HTMLInputElement>$event.target).checked = true;
           this.changeDetector.markForCheck();
-        },
-        cancelAction: () => {
-          this.isShowHideImages = false;
-        } 
+        }
       });
     }
   }
@@ -251,6 +248,10 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     FileStorageComponent.sortOrder = Array.from(new Set(FileStorageComponent.sortOrder));
     EventSystem.trigger('CHANGE_SORT_ORDER', searchWord);
+  }
+
+  cancel() {
+    this.modalService.resolve(false);
   }
 
   identify(index, image){

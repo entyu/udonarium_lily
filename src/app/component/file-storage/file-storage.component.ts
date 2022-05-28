@@ -12,6 +12,7 @@ import { animate, keyframes, style, transition, trigger } from '@angular/animati
 import { UUID } from '@udonarium/core/system/util/uuid';
 import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
 import { ModalService } from 'service/modal.service';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
 
 @Component({
   selector: 'file-storage',
@@ -266,10 +267,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.isShowHideImages = true;
           (<HTMLInputElement>$event.target).checked = true;
           this.changeDetector.markForCheck();
-        },
-        cancelAction: () => {
-          this.isShowHideImages = false;
-        } 
+        }
       });
     }
   }
@@ -297,9 +295,9 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService.open(ConfirmationComponent, {
       title: '画像にタグを追加', 
       text: `選択した画像にタグを追加します。`,
-      help: words.map(word => `🏷️${word}`).join(' '),
+      helpHtml: words.map(word => `<span class="word-tag">${ StringUtil.escapeHtml(word) }</span>`).join(' '),
       type: ConfirmationType.OK_CANCEL,
-      materialIcon: 'sell',
+      materialIcon: 'loyalty',
       action: () => {
         let addedWords = null;
         for (const image of this.selectedImageFiles) {
@@ -324,7 +322,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService.open(ConfirmationComponent, {
       title: '画像からタグを削除', 
       text: `選択した画像からタグを削除します。`,
-      help: `🏷️${word}`,
+      helpHtml: `<span class="word-tag">${ StringUtil.escapeHtml(word) }</span>`,
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'sell',
       action: () => {

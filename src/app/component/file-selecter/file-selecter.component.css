@@ -5,6 +5,9 @@
   margin-left: -2px;
 }
 
+.image:not(.current-images) {
+  cursor: pointer;
+}
 .image:not(.current-images):hover {
   border: 2px dotted red;
   transform: scale(1.08);
@@ -57,9 +60,6 @@
   display: inline-block;
   color: black;
   font-weight: bolder;
-}
-.word-tag::before {
-  content: '🏷️';
 }
 .word-tag:hover {
   color: red;
