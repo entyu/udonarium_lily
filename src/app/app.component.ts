@@ -626,10 +626,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 */
   diceAllOpne() {
-    /*
-    if (confirm('「一斉公開しない」設定ではないダイス、コインをすべて公開します。\nよろしいですか？')) {
-      EventSystem.trigger('DICE_ALL_OPEN', null);
-    }*/
     this.modalService.open(ConfirmationComponent, {
       title: 'ダイス一斉公開', 
       text: 'テーブル上のダイス、コインを公開しますか？',

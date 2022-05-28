@@ -29,6 +29,7 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { StandSettingComponent } from 'component/stand-setting/stand-setting.component';
+import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
 
 @Component({
   selector: 'game-character',
@@ -497,7 +498,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy {
             SoundEffect.play(PresetSound.piecePut);
           } else {
             if (!GameCharacter.isStealthMode && !PeerCursor.myCursor.isGMMode) {
-              alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
+              this.modalService.open(ConfirmationComponent, {
+                title: 'ステルスモード', 
+                text: 'ステルスモードになります。',
+                help: '位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。',
+                type: ConfirmationType.OK,
+                materialIcon: 'disabled_visible'
+              });
             }
             this.gameCharacter.owner = Network.peerContext.userId;
             SoundEffect.play(PresetSound.sweep);

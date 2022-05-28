@@ -233,7 +233,13 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
             EventSystem.trigger('CHANGE_GM_MODE', null);
             //this.changeDetector.markForCheck();
             if (GameCharacter.isStealthMode) {
-              alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
+              this.modalService.open(ConfirmationComponent, {
+                title: 'ステルスモード', 
+                text: 'ステルスモードになります。',
+                help: '位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、あなたのカーソル位置は他の参加者に伝わりません。',
+                type: ConfirmationType.OK,
+                materialIcon: 'disabled_visible'
+              });
             }
           }
         });
