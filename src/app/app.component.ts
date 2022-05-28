@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { AudioPlayer } from '@udonarium/core/file-storage/audio-player';
@@ -60,7 +60,7 @@ import { SwUpdate } from '@angular/service-worker';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewInit, OnDestroy {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
   private immediateUpdateTimer: NodeJS.Timer = null;
@@ -379,6 +379,17 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.standImageService.destroyAll();
       });
   }
+  
+  private static readonly beforeUnloadProc = (evt) => {
+    // Cancel the event as stated by the standard.
+    evt.preventDefault();
+    // Chrome requires returnValue to be set.
+    evt.returnValue = '';
+  };
+
+  ngOnInit() {
+    window.addEventListener('beforeunload', AppComponent.beforeUnloadProc);
+  }
 
   ngAfterViewInit() {
     PanelService.defaultParentViewContainerRef = ModalService.defaultParentViewContainerRef = ContextMenuService.defaultParentViewContainerRef = StandImageService.defaultParentViewContainerRef = CutInService.defaultParentViewContainerRef = this.modalLayerViewContainerRef;
@@ -397,13 +408,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
           console.log(`New app version ready for use: ${evt.latestVersion.hash}`);
           if (!this.isUpdateCanceled) {
             this.modalService.open(ConfirmationComponent, {
-              title: 'アプリケーションの更新', 
-              text: '新しいバージョンが公開されています。更新を行いますか？',
-              help: 'タブを再読み込みします、後で手動で再読み込みを行うことでも更新可能です。',
+              title: 'Udonarium with Fly の更新', 
+              text: 'Udonarium with Fly の新しいバージョンが公開されています。更新を行いますか？',
+              help: 'タブを再読み込みします。今更新しない場合、後で手動で再読み込みを行うことでも更新可能です。',
               type: ConfirmationType.OK_CANCEL,
               materialIcon: 'browser_updated',
               action: () => {
-                this.swUpdate.activateUpdate().then(() => document.location.reload());
+                this.swUpdate.activateUpdate().then(() => {
+                  window.removeEventListener('beforeunload', AppComponent.beforeUnloadProc);
+                  document.location.reload();
+                });
               },
               cancelAction: () => {
                 this.isUpdateCanceled = true;
