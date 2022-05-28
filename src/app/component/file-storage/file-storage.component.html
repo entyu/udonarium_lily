@@ -77,7 +77,7 @@
     <button style="font-size: x-small; margin-right: 2em" (click)="onUnselect()">選択解除 ({{ selectedImageFiles.length }} 選択中)</button>
     <input attr.list="{{panelId}}_suggest" type="text" [(ngModel)]="addingTagWord" style="width: 14em" placeholder="スペース 区切りで 複数可能"><button style="font-size: x-small" [disabled]="addingTagWord == null || addingTagWord.trim() === ''" (click)="addTagWord()">タグ追加 ➡</button>
     <ng-container *ngIf="selectedImagesOwnWords().length > 0">
-      <label *ngFor="let word of selectedImagesOwnWords()" class="word-tag" (click)="removeTagWord(word)">{{ word }}<sup style="font-size: xx-small; color: red">×</sup></label>
+      <label *ngFor="let word of selectedImagesOwnWords()" class="word-tag" (click)="removeTagWord(word)" style="cursor: pointer">{{ word }}<sup style="font-size: xx-small; color: red">×</sup></label>
     </ng-container>
     <ng-container *ngIf="selectedImagesOwnWords().length == 0">
       <span style="font-size: smaller; font-weight: bolder; margin-left: 3px; color: gray"><s>No Tag</s></span>

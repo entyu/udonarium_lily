@@ -295,7 +295,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService.open(ConfirmationComponent, {
       title: '画像にタグを追加', 
       text: `選択した画像にタグを追加します。`,
-      helpHtml: words.map(word => `<span class="word-tag">${ StringUtil.escapeHtml(word) }</span>`).join(' '),
+      helpHtml: words.map(word => `<b class="word-tag">${ StringUtil.escapeHtml(word) }</b>`).join(' '),
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'loyalty',
       action: () => {
@@ -322,7 +322,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService.open(ConfirmationComponent, {
       title: '画像からタグを削除', 
       text: `選択した画像からタグを削除します。`,
-      helpHtml: `<span class="word-tag">${ StringUtil.escapeHtml(word) }</span>`,
+      helpHtml: `<s><b class="word-tag">${ StringUtil.escapeHtml(word) }</b></s>`,
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'sell',
       action: () => {
