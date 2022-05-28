@@ -259,7 +259,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
       $event.preventDefault();
       this.modalService.open(ConfirmationComponent, {
         title: '非表示設定の画像を表示', 
-        text: '非表示設定の画像を表示します。',
+        text: '非表示設定の画像を表示しますか？',
         help: 'ネタバレなどにご注意ください。',
         type: ConfirmationType.OK_CANCEL,
         materialIcon: 'visibility',
@@ -275,8 +275,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   setectedImagesToHidden(toHidden: boolean) {
     this.modalService.open(ConfirmationComponent, {
       title: toHidden ? '非表示に設定' : '非表示設定を解除', 
-      text: `選択した画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}します。`,
-      help: toHidden ? 'これは「意図せずネタバレを見てしまう」ことなどを防ぐものです、他者から完全に隠すものではありません。' : 'よろしいですか？',
+      text: `画像${ toHidden ? 'を非表示に設定' : 'の非表示設定を解除'}しますか？`,
+      help: toHidden ? '選択した画像を非表示に設定します。\nこれは「意図せずにネタバレを見てしまう」ことなどを防ぐものであり、他者から完全に隠すものではありません。' : '選択した画像の非表示設定を解除します。',
       type: ConfirmationType.OK_CANCEL,
       materialIcon: toHidden ? 'visibility_off' : 'visibility',
       action: () => {
@@ -294,8 +294,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     const words = this.addingTagWord.trim().split(/\s+/);
     this.modalService.open(ConfirmationComponent, {
       title: '画像にタグを追加', 
-      text: `選択した画像にタグを追加します。`,
-      helpHtml: words.map(word => `<b class="word-tag">${ StringUtil.escapeHtml(word) }</b>`).join(' '),
+      text: `選択した画像にタグを追加しますか？`,
+      helpHtml: words.map(word => `<b class="word-tag">${ StringUtil.escapeHtml(word) }</b>`).join(' ') + ' を追加します。',
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'loyalty',
       action: () => {
@@ -321,8 +321,8 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
   removeTagWord(word: string) {
     this.modalService.open(ConfirmationComponent, {
       title: '画像からタグを削除', 
-      text: `選択した画像からタグを削除します。`,
-      helpHtml: `<s><b class="word-tag">${ StringUtil.escapeHtml(word) }</b></s>`,
+      text: `選択した画像からタグを削除しますか？`,
+      helpHtml: `<b class="word-tag">${ StringUtil.escapeHtml(word) }</b> を削除します。`,
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'sell',
       action: () => {

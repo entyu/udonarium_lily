@@ -204,8 +204,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
       $event.preventDefault();
       this.modalService.open(ConfirmationComponent, {
         title: 'パスワードの表示', 
-        text: 'パスワードを表示します。',
-        help: 'よろしいですか？',
+        text: 'パスワードを表示しますか？',
         type: ConfirmationType.OK_CANCEL,
         materialIcon: 'visibility',
         action: () => {
@@ -223,8 +222,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
         $event.preventDefault();
         this.modalService.open(ConfirmationComponent, {
           title: 'GMモード解除', 
-          text: 'GMモードを解除します。',
-          help: 'よろしいですか？',
+          text: 'GMモードを解除しますか？',
           type: ConfirmationType.OK_CANCEL,
           materialIcon: 'person_remove',
           action: () => {

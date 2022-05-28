@@ -632,7 +632,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }*/
     this.modalService.open(ConfirmationComponent, {
       title: 'ダイス一斉公開', 
-      text: 'テーブル上のダイス、コインを公開します。',
+      text: 'テーブル上のダイス、コインを公開しますか？',
       help: '「一斉公開しない」設定のものは公開されません。',
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'all_out',

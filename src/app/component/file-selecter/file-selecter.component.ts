@@ -207,7 +207,7 @@ export class FileSelecterComponent implements OnInit, OnDestroy, AfterViewInit {
       $event.preventDefault();
       this.modalService.open(ConfirmationComponent, {
         title: '非表示設定の画像を表示', 
-        text: '非表示設定の画像を表示します。',
+        text: '非表示設定の画像を表示しますか？',
         help: 'ネタバレなどにご注意ください。',
         type: ConfirmationType.OK_CANCEL,
         materialIcon: 'visibility',

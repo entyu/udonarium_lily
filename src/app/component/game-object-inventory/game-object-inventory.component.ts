@@ -465,8 +465,8 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
     //if (!confirm(`${tabTitle}に存在する${gameObjects.length}個の要素を完全に削除しますか？`)) return;
     this.modalService.open(ConfirmationComponent, {
       title: '墓場を空にする', 
-      text: `${tabTitle}に存在する ${gameObjects.length} 体のキャラクターを完全に削除します。`,
-      help: 'よろしいですか？',
+      text: 'キャラクターを完全に削除しますか？',
+      helpHtml: `<b>${ StringUtil.escapeHtml(tabTitle) }</b>に存在する <b>${ gameObjects.length }</b> 体のキャラクターを完全に削除します。`,
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'delete_forever',
       action: () => {

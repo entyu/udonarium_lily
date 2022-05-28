@@ -127,8 +127,7 @@ export class StandSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.character || !this.character.standList) return;
     this.modalService.open(ConfirmationComponent, {
       title: 'スタンド設定の削除', 
-      text: 'スタンド設定を削除します。',
-      help: 'よろしいですか？',
+      text: 'スタンド設定を削除しますか？',
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'person_off',
       action: () => {
