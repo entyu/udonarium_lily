@@ -202,9 +202,6 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
           this.isShowHideImages = true;
           (<HTMLInputElement>$event.target).checked = true;
           this.changeDetector.markForCheck();
-        },
-        cancelAction: () => {
-          this.isShowHideImages = false;
         } 
       });
     }

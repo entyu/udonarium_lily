@@ -301,10 +301,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
           this.isShowHideImages = true;
           (<HTMLInputElement>$event.target).checked = true;
           this.changeDetector.markForCheck();
-        },
-        cancelAction: () => {
-          this.isShowHideImages = false;
-        } 
+        }
       });
     }
   }
