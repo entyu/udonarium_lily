@@ -31,7 +31,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
   targetUserId: string = '';
   networkService = Network
   gameRoomService = ObjectStore.instance;
-  help: string = '';
+
   isCopied = false;
   isRoomNameCopied = false;
   isPasswordCopied = false;
@@ -106,7 +106,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
     let targetUserId = this.targetUserId;
     this.targetUserId = '';
     if (targetUserId.length < 1) return;
-    this.help = '';
+
     let context = PeerContext.create(targetUserId);
     if (context.isRoom) return;
     ObjectStore.instance.clearDeleteHistory();
@@ -114,7 +114,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
     if (PeerCursor.isGMHold || this.isGMMode) {
       PeerCursor.isGMHold = false;
       this.isGMMode = false;
-      alert('GMモードは解除されます。');
       if (this.isGMMode) {
         this.chatMessageService.sendOperationLog('GMモードを解除');
         EventSystem.trigger('CHANGE_GM_MODE', null);
@@ -126,7 +125,6 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
     if (PeerCursor.isGMHold || this.isGMMode) {
       PeerCursor.isGMHold = false;
       this.isGMMode = false;
-      alert('GMモードは解除されます。');
       if (this.isGMMode) {
         this.chatMessageService.sendOperationLog('GMモードを解除');
         EventSystem.trigger('CHANGE_GM_MODE', null);
@@ -213,10 +211,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
           this.isPasswordOpen = true;
           (<HTMLInputElement>$event.target).checked = true;
           //this.changeDetector.markForCheck();
-        },
-        cancelAction: () => {
-          this.isPasswordOpen = false;
-        } 
+        }
       });
     }
   }
@@ -249,7 +244,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
       this.modalService.open(ConfirmationComponent, {
         title: 'GMモードになる', 
         text: 'GMモードになりますか？\nGMモード中（保留中含む）はあなたからプライベート接続、ルームへの接続は行えません。',
-        help: 'GMモードでは、秘話、裏向きのカード、公開されていないダイスシンボル、キャラクター位置、カーソル位置をすべて見ることができ、あなたのカーソル位置は他の参加者に伝わらなくなります。\n\nWith great power comes great responsibility.',
+        helpHtml: 'GMモードでは、<b>秘話</b>、裏向きの<b>カード</b>、公開されていない<b>ダイスシンボル</b>、<b>キャラクター</b>位置、<b>カーソル</b>位置をすべて見ることができ、あなたのカーソル位置は他の参加者に伝わらなくなります。\n\n<b><big>—With great power comes great responsibility.</big></b>',
         type: ConfirmationType.OK_CANCEL,
         materialIcon: 'person_add',
         action: () => {
@@ -260,7 +255,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
           this.modalService.open(ConfirmationComponent, {
             title: 'GMモードになる', 
             text: 'まだGMモードではありません。',
-            help: 'GMモードになるには、チャットから「GMになる」または「GMになります」を含む文を送信します。',
+            helpHtml: 'GMモードになるには、チャットから <b>GMになる</b> または <b>GMになります</b> を含む文を送信します。',
             type: ConfirmationType.OK,
             materialIcon: 'person_add'
           });

@@ -70,18 +70,20 @@
     <div [ngClass]="{'is-gm-mode': findPeerIsGMMode(context.peerId)}"><i class="{{'material-icons health ' + healthClass(context.session.health)}}" style="margin-right: 2px">{{ healthIcon(context.session.health) }}</i><span style="margin-right: 3px">{{ findUserId(context.peerId) }}</span>[<div *ngIf="findPeerImageUrl(context.peerId)" class="cover mini-icon" [style.background-image]="'url(' + findPeerImageUrl(context.peerId) + ')' | safe: 'style' "></div><span><b [style.color]="findPeerColor(context.peerId)">{{ findPeerName(context.peerId) }}</b></span>]</div>
   </div>
 </div>
-<div>
+<div *ngIf="!isGMMode && !isGMHold">
   <ng-container *ngIf="!networkService.peerContext.isRoom">
     <input [(ngModel)]="targetUserId" placeholder="接続したい相手のID" name="targetUserId" [disabled]="isDisableConnect" />
     <button (click)="connectPeer()" [disabled]="!networkService.isOpen || targetUserId == null || targetUserId == '' || isDisableConnect">プライベート接続</button><br>
   </ng-container>
   <button *ngIf="networkService.peerIds.length <= 1" (click)="showLobby()" [disabled]="!networkService.isOpen || isDisableConnect">ロビー（ルーム一覧）を表示</button>
 </div>
-<div><span style="font-size: 12px;">{{help}}</span></div>
-<ng-container *ngIf="!networkService.peerContext.isRoom">
-  <div style="font-size: 12px;" *ngIf="networkService.peerContexts.length < 1">※プライベート接続を使用する場合は、お互いのIDをユドナリウム外で共有してください。</div>
-  <div style="font-size: 12px;" *ngIf="networkService.peerContexts.length < 1">※一人で動作確認を行いたい場合はブラウザを2つ開くと良いと思います。</div>
+<ng-container *ngIf="!isGMMode && !isGMHold">
+  <ng-container *ngIf="!networkService.peerContext.isRoom">
+    <div style="font-size: 12px" *ngIf="networkService.peerContexts.length < 1">※プライベート接続を使用する場合は、お互いのIDをユドナリウム外で共有してください。</div>
+    <div style="font-size: 12px" *ngIf="networkService.peerContexts.length < 1">※一人で動作確認を行いたい場合はブラウザを2つ開くと良いと思います。</div>
+  </ng-container>
+  <ng-container *ngIf="networkService.peerContext.isRoom">
+    <div style="font-size: 12px">※ルーム機能を利用している時はプライベート接続を利用できません。</div>
+  </ng-container>
 </ng-container>
-<ng-container *ngIf="networkService.peerContext.isRoom">
-  <div style="font-size: 12px;">※ルーム機能を利用している時はプライベート接続を利用できません。</div>
-</ng-container>
+<ng-container *ngIf="isGMMode || isGMHold"><div style="font-size: 12px">※GMモード中（保留中含む）は自分から接続を行えません。</div></ng-container>
