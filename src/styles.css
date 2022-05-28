@@ -194,8 +194,9 @@ select[size] {
   display: inline-block;
   font-family: 'Material Icons';
   content: '\f05b';
-  font-size: 1.1;
+  font-size: 110%;
   margin-left: 1px;
+  vertical-align: text-bottom;
 }
 
 /* Auto-Link */
