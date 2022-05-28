@@ -183,6 +183,13 @@ span {
   cursor: text;
 }
 
+label, input[type=checkbox], option, select {
+  cursor: pointer;
+}
+select[size] {
+  cursor: default;
+}
+
 .word-tag::before {
   display: inline-block;
   font-family: 'Material Icons';
