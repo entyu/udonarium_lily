@@ -13,6 +13,7 @@ export class ConfirmationComponent implements OnInit, OnDestroy {
   subTitle: string = '';
   text: string = '';
   help: string = '';
+  helpHtml: string = '';
   materialIcon: string = '';
   type: ConfirmationType = ConfirmationType.OK;
   action: Function = null;
@@ -26,6 +27,7 @@ export class ConfirmationComponent implements OnInit, OnDestroy {
     this.subTitle = modalService.option.subTitle ? modalService.option.subTitle : '';
     this.text = modalService.option.text ? modalService.option.text : '';
     this.help = modalService.option.help ? modalService.option.help : '';
+    this.helpHtml = modalService.option.helpHtml ? modalService.option.helpHtml : '';
     this.materialIcon = modalService.option.materialIcon ? modalService.option.materialIcon : '';
     this.type = modalService.option.type ? modalService.option.type : ConfirmationType.OK;
     this.action = modalService.option.action ? modalService.option.action : null;

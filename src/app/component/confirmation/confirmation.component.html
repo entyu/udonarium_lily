@@ -1,5 +1,6 @@
 <div class="text"><i *ngIf="materialIcon" class="material-icons icon">{{ materialIcon }}</i>{{text}}</div>
 <hr />
-<div class="help" *ngIf="help">{{help}}</div>
+<div class="help" *ngIf="help && !helpHtml">{{help}}</div>
+<div class="help" *ngIf="helpHtml" [innerHTML]="helpHtml | safe: 'html'"></div>
 <button type="submit" (click)="ok()">ＯＫ</button>
 <button *ngIf="type > 1" type="button" (click)="cancel()">キャンセル</button>
