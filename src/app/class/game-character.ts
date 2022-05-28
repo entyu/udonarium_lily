@@ -7,6 +7,7 @@ import { UUID } from '@udonarium/core/system/util/uuid';
 import { StandList } from './stand-list';
 import { Network } from './core/system';
 import { PeerCursor } from './peer-cursor';
+import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
@@ -75,6 +76,13 @@ export class GameCharacter extends TabletopObject {
 
   get isHideIn(): boolean { return !!this.owner; }
   get isVisible(): boolean { return !this.owner || Network.peerContext.userId === this.owner; }
+
+  static get isStealthMode(): boolean {
+    for (const character of ObjectStore.instance.getObjects(GameCharacter)) {
+      if (character.isHideIn && character.isVisible && character.location.name === 'table') return true;
+    }
+    return false;
+  }
 
   createTestGameDataElement(name: string, size: number, imageIdentifier: string) {
     this.createDataElements();

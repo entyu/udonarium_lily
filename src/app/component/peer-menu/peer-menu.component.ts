@@ -13,6 +13,7 @@ import { PanelService } from 'service/panel.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ChatMessageService } from 'service/chat-message.service';
 import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
+import { GameCharacter } from '@udonarium/game-character';
 
 @Component({
   selector: 'peer-menu',
@@ -233,6 +234,9 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
             this.chatMessageService.sendOperationLog('GMモードを解除');
             EventSystem.trigger('CHANGE_GM_MODE', null);
             //this.changeDetector.markForCheck();
+            if (GameCharacter.isStealthMode) {
+              alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
+            }
           }
         });
       } else {

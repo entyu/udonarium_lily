@@ -78,7 +78,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get diceSymbols(): DiceSymbol[] { return this.tabletopService.diceSymbols; }
   get peerCursors(): PeerCursor[] { return this.tabletopService.peerCursors; }
 
-  get isHideIn(): boolean { return this.tabletopService.isHideIn; }
+  get isStealthMode(): boolean { return GameCharacter.isStealthMode; }
   get isGMMode(): boolean { return PeerCursor.myCursor.isGMMode; }
 
   constructor(

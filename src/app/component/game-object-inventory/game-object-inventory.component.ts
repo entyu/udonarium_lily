@@ -165,7 +165,7 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
       actions.push({ 
         name: '位置を自分だけ見る（ステルス）',
         action: () => {
-          if (gameObject.location.name === 'table') alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
+          if (gameObject.location.name === 'table' && !GameCharacter.isStealthMode && !PeerCursor.myCursor.isGMMode) alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
           gameObject.owner = Network.peerContext.userId;
           SoundEffect.play(PresetSound.sweep);
           EventSystem.call('UPDATE_INVENTORY', true);
@@ -375,10 +375,11 @@ export class GameObjectInventoryComponent implements OnInit, OnDestroy {
         .map((location) => { 
           return {
             name: `${location.alias}`, 
-            action: () => { 
+            action: () => {
+              let isStealthMode = GameCharacter.isStealthMode;
               EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: gameObject.identifier });
               gameObject.setLocation(location.name);
-              if (location.name === 'table' && gameObject.isHideIn && gameObject.isVisible) {
+              if (location.name === 'table' && gameObject.isHideIn && gameObject.isVisible && !isStealthMode && !PeerCursor.myCursor.isGMMode) {
                 alert('あなたが位置を自分だけ見ているキャラクターが1つ以上テーブル上にある間、ステルスモードとなり、あなたのカーソル位置は他の参加者に伝わりません。');
                 EventSystem.call('UPDATE_INVENTORY', true);
               }
