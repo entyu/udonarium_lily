@@ -119,7 +119,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     this.input.cancel();
     this.grabbingElement = null;
     this.setAnimatedTransition(true);
-    this.tabletopService.tableSelecter.viewTable.gridHeight = 0;
+    if (this.tabletopService.tableSelecter.viewTable) this.tabletopService.tableSelecter.viewTable.gridHeight = 0;
   }
 
   onInputStart(e: MouseEvent | TouchEvent) {

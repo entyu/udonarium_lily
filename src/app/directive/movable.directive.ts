@@ -123,7 +123,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.setPointerEvents(true);
     this.setAnimatedTransition(true);
     this.setCollidableLayer(false);
-    this.tabletopService.tableSelecter.viewTable.gridHeight = 0;
+    if (this.tabletopService.tableSelecter.viewTable) this.tabletopService.tableSelecter.viewTable.gridHeight = 0;
   }
 
   onInputStart(e: MouseEvent | TouchEvent) {
