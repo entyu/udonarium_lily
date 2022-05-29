@@ -79,7 +79,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get peerCursors(): PeerCursor[] { return this.tabletopService.peerCursors; }
 
   get isStealthMode(): boolean { return GameCharacter.isStealthMode; }
-  get isGMMode(): boolean { return PeerCursor.myCursor.isGMMode; }
+  get isGMMode(): boolean { return PeerCursor.myCursor && PeerCursor.myCursor.isGMMode; }
 
   constructor(
     private ngZone: NgZone,

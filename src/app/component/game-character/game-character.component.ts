@@ -8,7 +8,7 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
-  ViewChild, ElementRef
+  ViewChild, ElementRef, AfterViewInit
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
@@ -91,7 +91,7 @@ import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/
     ])
   ]
 })
-export class GameCharacterComponent implements OnInit, OnDestroy {
+export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
 
@@ -257,6 +257,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy {
   private _dialog = null;
   private dialogTimeOutId = null;
   private chatIntervalId = null;
+  private loadedTimeOutId = null;
 
   get chatBubbleXDeg():number {
     //console.log(this.viewRotateX)
@@ -462,11 +463,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy {
     };
   }
 
-  //ngAfterViewInit() { }
+  ngAfterViewInit() {
+    this.loadedTimeOutId = setTimeout(() => {
+      this.gameCharacter.isLoaded = true;
+    });
+  }
 
   ngOnDestroy() {
     clearTimeout(this.dialogTimeOutId);
     clearInterval(this.chatIntervalId);
+    clearTimeout(this.loadedTimeOutId);
     if (this.gameCharacter) {
       this.gameCharacter.text = '';
       this.gameCharacter.isEmote = false;
