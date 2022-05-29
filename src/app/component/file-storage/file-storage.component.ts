@@ -322,7 +322,7 @@ export class FileStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService.open(ConfirmationComponent, {
       title: '画像からタグを削除', 
       text: `画像からタグを削除しますか？`,
-      helpHtml: `選択した画像に <b class="word-tag">${ StringUtil.escapeHtml(word) }</b> を削除します。`,
+      helpHtml: `選択した画像から <b class="word-tag">${ StringUtil.escapeHtml(word) }</b> を削除します。`,
       type: ConfirmationType.OK_CANCEL,
       materialIcon: 'sell',
       action: () => {

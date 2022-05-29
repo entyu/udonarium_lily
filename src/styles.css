@@ -190,6 +190,11 @@ select[size] {
   cursor: default;
 }
 
+.word-tag {
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
 .word-tag::before {
   display: inline-block;
   font-family: 'Material Icons';
