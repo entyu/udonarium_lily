@@ -514,6 +514,7 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
             }
             this.gameCharacter.owner = Network.peerContext.userId;
             SoundEffect.play(PresetSound.sweep);
+            EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: this.gameCharacter.identifier });
           }
           EventSystem.call('UPDATE_INVENTORY', true);
         },
@@ -650,7 +651,7 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
         name: '高度を0にする', action: () => {
           if (this.altitude != 0) {
             this.altitude = 0;
-            SoundEffect.play(PresetSound.sweep);
+            if (!this.isHideIn) SoundEffect.play(PresetSound.sweep);
           }
         },
         altitudeHande: this.gameCharacter
@@ -810,7 +811,7 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
   changeImage(index: number) {
     if (this.gameCharacter.currntImageIndex != index) {
       this.gameCharacter.currntImageIndex = index;
-      SoundEffect.play(PresetSound.surprise);
+      if (!this.isHideIn) SoundEffect.play(PresetSound.surprise);
       EventSystem.call('FAREWELL_STAND_IMAGE', { characterIdentifier: this.gameCharacter.identifier });
       EventSystem.trigger('UPDATE_INVENTORY', null);
     }
