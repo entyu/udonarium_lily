@@ -152,7 +152,7 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
   //isRubied = false;
 
   set dialog(dialog) {
-    if (!this.gameCharacter) return;
+    if (!this.gameCharacter || this.gameCharacter.isHideIn) return;
     clearTimeout(this.dialogTimeOutId);
     clearInterval(this.chatIntervalId);
     let text = StringUtil.cr(dialog.text);

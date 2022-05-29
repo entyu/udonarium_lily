@@ -119,7 +119,7 @@ export class StandImageComponent implements OnInit, OnDestroy {
 
   //ToDO 共通化、とりあえず2回まではコピペOKのルール
   set dialog(dialog) {
-    if (!this.gameCharacter || this.gameCharacter.location.name === 'table' || this.gameCharacter.location.name === 'graveyard') return;
+    if (!this.gameCharacter || (this.gameCharacter.location.name === 'table' && !this.gameCharacter.isHideIn) || this.gameCharacter.location.name === 'graveyard') return;
     clearTimeout(this._dialogTimeoutId);
     let text = StringUtil.cr(dialog.text);
     const isEmote = StringUtil.isEmote(text);
