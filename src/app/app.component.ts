@@ -341,6 +341,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!reconnectErrorTypes.includes(errorType)) return;
           await this.modalService.open(TextViewComponent, { title: 'ネットワークエラー', text: 'このウィンドウを閉じると再接続を試みます。' });
           Network.open();
+          this.isLoggedin = false;
         });
       })
       .on('CONNECT_PEER', event => {
@@ -410,7 +411,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             this.modalService.open(ConfirmationComponent, {
               title: 'Udonarium with Fly の更新', 
               text: 'Udonarium with Fly の新しいバージョンが公開されています。更新を行いますか？',
-              help: '更新の際にページを再読み込みします。キャンセルした場合、手動で再読み込みを行うことでも更新可能です。',
+              help: '更新の際にページを再読み込みします。手動で再読み込みを行うことでも更新可能です。',
               type: ConfirmationType.OK_CANCEL,
               materialIcon: 'browser_updated',
               action: () => {
