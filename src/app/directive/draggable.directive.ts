@@ -145,7 +145,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
     };
 
     this.elementRef.nativeElement.addEventListener('click', callback, true);
-    setTimeout(() => this.elementRef.nativeElement.removeEventListener('click', callback, true));
+    queueMicrotask(() => this.elementRef.nativeElement.removeEventListener('click', callback, true));
   }
 
   private adjustPosition() {

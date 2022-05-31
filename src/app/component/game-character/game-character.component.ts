@@ -257,7 +257,6 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
   private _dialog = null;
   private dialogTimeOutId = null;
   private chatIntervalId = null;
-  private loadedTimeOutId = null;
 
   get chatBubbleXDeg():number {
     //console.log(this.viewRotateX)
@@ -464,7 +463,7 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit() {
-    this.loadedTimeOutId = setTimeout(() => {
+    queueMicrotask(() => {
       this.gameCharacter.isLoaded = true;
     });
   }
@@ -472,7 +471,6 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy() {
     clearTimeout(this.dialogTimeOutId);
     clearInterval(this.chatIntervalId);
-    clearTimeout(this.loadedTimeOutId);
     if (this.gameCharacter) {
       this.gameCharacter.text = '';
       this.gameCharacter.isEmote = false;

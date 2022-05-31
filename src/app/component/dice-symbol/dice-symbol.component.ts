@@ -200,7 +200,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
           this.ngZone.run(() => {
             this.animeState = 'inactive';
             this.changeDetector.markForCheck();
-            setTimeout(() => { this.animeState = 'active'; this.changeDetector.markForCheck(); });
+            queueMicrotask(() => { this.animeState = 'active'; this.changeDetector.markForCheck(); });
           });
         }
       })

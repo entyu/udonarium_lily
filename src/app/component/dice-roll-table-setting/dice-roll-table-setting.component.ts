@@ -63,7 +63,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
   ngAfterViewInit() {
     //const diceRollTables = DiceRollTableList.instance.diceRollTables;
     if (this.diceRollTables.length > 0) {
-      setTimeout(() => {
+      queueMicrotask(() => {
         this.onChangeDiceRollTable(this.diceRollTables[0].identifier);
         this.diceRollTableSelecter.nativeElement.selectedIndex = 0;
       });
@@ -85,7 +85,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
 
   add() {
     const diceRollTable = this.create();
-    setTimeout(() => {
+    queueMicrotask(() => {
       this.onChangeDiceRollTable(diceRollTable.identifier);
       this.diceRollTableSelecter.nativeElement.value = diceRollTable.identifier;
     })
@@ -135,7 +135,7 @@ export class DiceRollTableSettingComponent implements OnInit, OnDestroy, AfterVi
       let restoreTable = <DiceRollTable>ObjectSerializer.instance.parseXml(this.selectedDiceRollTableXml);
       DiceRollTableList.instance.addDiceRollTable(restoreTable);
       this.selectedDiceRollTableXml = '';
-      setTimeout(() => {
+      queueMicrotask(() => {
         const diceRollTables = this.diceRollTables;
         this.onChangeDiceRollTable(diceRollTables[diceRollTables.length - 1].identifier);
         this.diceRollTableSelecter.nativeElement.selectedIndex = diceRollTables.length - 1;

@@ -26,7 +26,7 @@ export class BadgeComponent implements OnChanges {
 
   ngOnChanges() {
     this.animeState = 'inactive';
-    setTimeout(() => { this.animeState = 'active'; });
+    queueMicrotask(() => { this.animeState = 'active'; });
   }
 
   animationShuffleDone(event: any) {

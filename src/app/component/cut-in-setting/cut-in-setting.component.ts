@@ -181,7 +181,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     if (this.cutIns.length > 0) {
-      setTimeout(() => {
+      queueMicrotask(() => {
         this.onChangeCutIn(this.cutIns[0].identifier);
         this.cutInSelecter.nativeElement.selectedIndex = 0;
       });
@@ -204,7 +204,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   add() {
     const cutIn = this.create();
     cutIn.imageIdentifier = 'stand_no_image';
-    setTimeout(() => {
+    queueMicrotask(() => {
       this.onChangeCutIn(cutIn.identifier);
       this.cutInSelecter.nativeElement.value = cutIn.identifier;
     })
@@ -243,7 +243,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       let restoreCutIn = <CutIn>ObjectSerializer.instance.parseXml(this.selectedCutInXml);
       CutInList.instance.addCutIn(restoreCutIn);
       this.selectedCutInXml = '';
-      setTimeout(() => {
+      queueMicrotask(() => {
         const cutIns = this.cutIns;
         this.onChangeCutIn(cutIns[cutIns.length - 1].identifier);
         this.cutInSelecter.nativeElement.selectedIndex = cutIns.length - 1;
@@ -344,7 +344,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   testCutIn() {
     if (!this.selectedCutIn) return;
-    setTimeout(() => {
+    queueMicrotask(() => {
       EventSystem.trigger('PLAY_CUT_IN', { 
         identifier: this.selectedCutIn.identifier, 
         test: true
