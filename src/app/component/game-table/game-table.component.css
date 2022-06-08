@@ -24,7 +24,6 @@
   transform-style: preserve-3d;
   backface-visibility: visible;
   position: absolute;
-  will-change: transform;
 }
 
 .is-3d-2 {
