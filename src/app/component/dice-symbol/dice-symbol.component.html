@@ -6,7 +6,7 @@
       <div class="pedestal-inner" [ngClass]="{'is-gray-border': hasOwner}"></div>
       <div class="pedestal-outer"></div>
       <ng-container *ngIf="!isIconHidden">
-      <div *ngIf="!isLock" class="pedestal-grab rotate-grab is-3d">
+      <div *ngIf="!isLock" class="pedestal-grab rotate-grab is-3d will-change">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
           <div class="material-icons of-back">autorenew</div>
@@ -17,7 +17,7 @@
         <div class="upright-transform is-fit-width is-3d">
           <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
             <div class="rotate-inner is-3d">
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
                 <div class="fornt-tag is-3d">{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span>
                   <ng-container *ngIf="isLock">
                     <i class="material-icons lock-icon" style="display: inline;">lock</i>
@@ -29,13 +29,13 @@
                   </ng-container>
                 </div>
               </div>
-              <div *ngIf="hasOwner && 0 < ownerName.length" class="owner-tag is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+              <div *ngIf="hasOwner && 0 < ownerName.length" class="owner-tag is-nowrap is-black-background is-3d will-change" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
                 <div class="fornt-tag has-length-limit is-3d">{{ownerName}}</div>
                 <div class="back-tag has-length-limit is-3d">{{ownerName}}</div>
               </div>
-              <img class="image is-3d" [ngStyle]="{'height':+ imageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" 
+              <img class="image is-3d will-change" [ngStyle]="{'height':+ imageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" 
               *ngIf="(0 < imageFile.url.length) && specifyImageFlag" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
-              <img class="image is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !specifyImageFlag" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
+              <img class="image is-3d will-change" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !specifyImageFlag" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
             </div>
           </div>
         </div>

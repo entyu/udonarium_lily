@@ -20,6 +20,10 @@
   transform-style: preserve-3d;
 }
 
+.will-change {
+  will-change: opacity;
+}
+
 .is-pointer-events-none {
   pointer-events: none;
 }
