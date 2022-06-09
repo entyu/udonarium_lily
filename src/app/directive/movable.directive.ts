@@ -44,13 +44,32 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   private _posX: number = 0;
   private _posY: number = 0;
   private _posZ: number = 0;
-
+/*
   get posX(): number { return this._posX; }
   set posX(posX: number) { this._posX = posX; this.setUpdateTimer(); }
   get posY(): number { return this._posY; }
   set posY(posY: number) { this._posY = posY; this.setUpdateTimer(); }
   get posZ(): number { return this._posZ; }
   set posZ(posZ: number) { this._posZ = posZ; this.setUpdateTimer(); }
+*/
+
+  private mathFloor: boolean = false;
+/*
+  get posX(): number { return this._posX; }
+  set posX(posX: number) { this._posX = Math.floor(posX); this.setUpdateTimer(); }
+  get posY(): number { return this._posY; }
+  set posY(posY: number) { this._posY = Math.floor(posY); this.setUpdateTimer(); }
+  get posZ(): number { return this._posZ; }
+  set posZ(posZ: number) { this._posZ = Math.floor(posZ); this.setUpdateTimer(); }
+*/
+
+  get posX(): number { return this._posX; }
+  set posX(posX: number) { this._posX = this.mathFloor? Math.floor(posX):posX; this.setUpdateTimer(); }
+  get posY(): number { return this._posY; }
+  set posY(posY: number) { this._posY = this.mathFloor? Math.floor(posY):posY; this.setUpdateTimer(); }
+  get posZ(): number { return this._posZ; }
+  set posZ(posZ: number) { this._posZ = this.mathFloor? Math.floor(posZ):posZ; this.setUpdateTimer(); }
+
 
   private pointerOffset2d: PointerCoordinate = { x: 0, y: 0, z: 0 };
   private pointerStart3d: PointerCoordinate = { x: 0, y: 0, z: 0 };
@@ -241,9 +260,20 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   }
 
   private setPosition(object: TabletopObject) {
+/*
     this._posX = object.location.x;
     this._posY = object.location.y;
     this._posZ = object.posZ;
+
+
+    this._posX = Math.floor(object.location.x);
+    this._posY = Math.floor(object.location.y);
+    this._posZ = Math.floor(object.posZ);
+*/
+    this._posX = this.mathFloor? Math.floor(object.location.x):object.location.x;
+    this._posY = this.mathFloor? Math.floor(object.location.y):object.location.y;
+    this._posZ = this.mathFloor? Math.floor(object.posZ):object.posZ;
+
     this.updateTransformCss();
   }
 
@@ -305,7 +335,13 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   }
 
   private updateTransformCss() {
-    let css = this.transformCssOffset + ' translateX(' + this.posX + 'px) translateY(' + this.posY + 'px) translateZ(' + this.posZ + 'px)';
+//    let css = this.transformCssOffset + ' translateX(' + this.posX + 'px) translateY(' + this.posY + 'px) translateZ(' + this.posZ + 'px)';
+//    let css = 'translateX(' + this.posX + 'px) translateY(' + this.posY + 'px) translateZ(' + this.posZ + 'px)';
+    let css = 'translate3d(' + this.posX + 'px,' + this.posY + 'px,' + this.posZ + 'px) ' + this.transformCssOffset;
+//    let css = 'translate3d(' + this.posX + 'px,' + this.posY + 'px,' + this.posZ + 'px) ' + ' translate3d(0px,0px,1px) translate3d(0px,0px,1px)  translate3d(0px,0px,1px) translate3d(0px,0px,1px) translate3d(0px,0px,1px)';
+
+//    let css = 'translate3d(' + this.posX + 'px,' + this.posY + 'px,' + (this.posZ +100 )+ 'px) ';
+    console.log(css);
     this.nativeElement.style.transform = css;
   }
 
