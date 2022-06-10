@@ -17,13 +17,18 @@
         <div class="upright-transform is-fit-width is-3d">
           <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
             <div class="rotate-inner is-3d">
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-                <div class="fornt-tag is-3d">{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span>
+<!-- クロームver102の描画問題に対処するため構成を修正している -->
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
+              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+                <div class="is-3d">{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span>
                   <ng-container *ngIf="isLock">
                     <i class="material-icons lock-icon" style="display: inline;">lock</i>
                   </ng-container>
                 </div>
-                <div class="back-tag is-3d">{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span>
+              </div>
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
+              [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(180deg)'}">
+                <div class="is-3d">{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span>
                   <ng-container *ngIf="isLock">
                     <i class="material-icons lock-icon" style="display: inline;">lock</i>
                   </ng-container>

@@ -190,6 +190,10 @@
   transform: rotateY(-180deg);
 }
 
+.backface-off {
+ backface-visibility: hidden;
+}
+
 .has-length-limit {
   overflow: hidden;
   white-space: nowrap;

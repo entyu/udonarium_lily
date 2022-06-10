@@ -19,18 +19,22 @@
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d">
 <!-- バフ表示 -->
+<!-- クロームver102の描画問題に対処するため構成を修正している -->
             <div class="is-3d" *ngIf="this.gameCharacter.buffDataElement" >
               <ng-container *ngIf="this.gameCharacter.buffDataElement.children.length == 1">
                 <ng-container *ngFor="let child of this.gameCharacter.buffDataElement.children">
                   <ng-container *ngIf="child.children.length > 0">
-                    <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change" 
+                    <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off" 
                      [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
-                      <div class="table fornt-tag is-3d">
+                      <div class="table is-3d">
                         <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
                           <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
                         </div>
                       </div>
-                      <div class="table back-tag is-3d">
+                    </div>
+                    <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off" 
+                     [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%) rotateY(180deg)'}">
+                      <div class="table is-3d">
                         <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
                           <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
                         </div>
@@ -40,17 +44,22 @@
                 </ng-container>
               </ng-container>
             </div>
-<!--名前表示-->
+<!-- 名前表示 -->
+<!-- クロームver102の描画問題に対処するため構成を修正している -->
             <ng-container *ngIf="this.gameCharacter.nonTalkFlag">
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change"
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'
-                ,'background-color': 'rgba(255,255,255, 0.6)' , 'color' : '#333' ,  'border': 'solid 1px #555' }">
-                <div class="fornt-tag has-length-limit is-3d" >{{name}}
+                , 'background-color': 'rgba(255,255,255, 0.6)' , 'color' : '#333' ,  'border': 'solid 1px #555' }">
+                <div class="has-length-limit is-3d" >{{name}}
                   <ng-container *ngIf="isLock">
                     <i class="material-icons lock-icon" style="display: inline;">lock</i>
                   </ng-container>
                 </div>
-                <div class="back-tag has-length-limit is-3d" >{{name}}
+              </div>
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(180deg)'
+                , 'background-color': 'rgba(255,255,255, 0.6)' , 'color' : '#333' ,  'border': 'solid 1px #555' }">
+                <div class="has-length-limit is-3d" >{{name}}
                   <ng-container *ngIf="isLock">
                     <i class="material-icons lock-icon" style="display: inline;">lock</i>
                   </ng-container>
@@ -58,14 +67,17 @@
               </div>
             </ng-container>
             <ng-container *ngIf="!this.gameCharacter.nonTalkFlag">
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change"
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
-                <div class="fornt-tag has-length-limit is-3d" >{{name}}
+                <div class="has-length-limit is-3d">{{name}}
                   <ng-container *ngIf="isLock">
                     <i class="material-icons lock-icon" style="display: inline;">lock</i>
                   </ng-container>
                 </div>
-                <div class="back-tag has-length-limit is-3d" >{{name}}
+              </div>
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(180deg)'}">
+                <div class="has-length-limit is-3d">{{name}}
                   <ng-container *ngIf="isLock">
                     <i class="material-icons lock-icon" style="display: inline;">lock</i>
                   </ng-container>
