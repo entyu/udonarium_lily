@@ -1,3 +1,6 @@
+<!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
+<div class="dummy-will-change" appMovable [movable.option]="movableOption">
+</div>
 <div class="component is-3d is-pointer-events-none"
   [style.width.px]="width * gridSize" [style.height.px]="depth * gridSize"
   appMovable [movable.option]="movableOption" [movable.disable]="isLocked" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
