@@ -98,7 +98,7 @@ export class Vote extends GameObject {
           text_ += ' 棄権：' + this.votedNumByIndex(-2);
         }
       }else{
-        text_ = '投票終了';
+        text_ = '投票終了(' + this.voteTitle + ') ';
         for (let cho of this.choices){
           text_ += ' ' + cho + '：' + this.votedNumByChoice(cho);
         }

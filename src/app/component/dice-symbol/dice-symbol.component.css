@@ -15,6 +15,10 @@
   transform-style: preserve-3d;
 }
 
+.will-change {
+  will-change: opacity;
+}
+
 .is-transition {
   -webkit-transition: -webkit-transform 132ms linear;
   transition: transform 132ms linear;

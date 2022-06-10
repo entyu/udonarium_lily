@@ -4,56 +4,45 @@
   <div class="component-content is-3d" [@bounceInOut]="'in'">
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
       (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-      
       <div *ngIf="!this.gameCharacter.hideInventory" class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #FFCC80'}"></div> 
       <div *ngIf="this.gameCharacter.hideInventory" class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #A0E0FF'}"></div>
       <div class="pedestal-outer"></div>
-      <div *ngIf="!isLock" class="pedestal-grab rotate-grab">
 <!--床回転アイコン-->
+      <div *ngIf="!isLock" class="pedestal-grab rotate-grab will-change">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
       <div class="upright-transform is-fit-width is-3d">
-<!---->
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-
-
           <div class="rotate-inner is-3d">
-<!-- バフ表示-->
-
-
-        <div class="is-3d" *ngIf="this.gameCharacter.buffDataElement" >
-          <ng-container *ngIf="this.gameCharacter.buffDataElement.children.length == 1">
-            <ng-container *ngFor="let child of this.gameCharacter.buffDataElement.children">
-              <ng-container *ngIf="child.children.length > 0">
-               
-                <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d" 
-                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
-                
-                  <div class="table fornt-tag is-3d">
-                    <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
-                      <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
-                    </div>
-                  </div>
-                  <div class="table back-tag is-3d">
-                    <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
-                      <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
-                    </div>
-                  </div>
-                 </div>
+<!-- バフ表示 -->
+            <div class="is-3d" *ngIf="this.gameCharacter.buffDataElement" >
+              <ng-container *ngIf="this.gameCharacter.buffDataElement.children.length == 1">
+                <ng-container *ngFor="let child of this.gameCharacter.buffDataElement.children">
+                  <ng-container *ngIf="child.children.length > 0">
+                    <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change" 
+                     [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
+                      <div class="table fornt-tag is-3d">
+                        <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
+                          <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                        </div>
+                      </div>
+                      <div class="table back-tag is-3d">
+                        <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
+                          <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                        </div>
+                      </div>
+                     </div>
+                  </ng-container>
+                </ng-container>
               </ng-container>
-            </ng-container>
-          </ng-container>
-        </div>
-           
-
+            </div>
 <!--名前表示-->
- 
             <ng-container *ngIf="this.gameCharacter.nonTalkFlag">
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'
                 ,'background-color': 'rgba(255,255,255, 0.6)' , 'color' : '#333' ,  'border': 'solid 1px #555' }">
                 <div class="fornt-tag has-length-limit is-3d" >{{name}}
@@ -68,9 +57,8 @@
                 </div>
               </div>
             </ng-container>
-
             <ng-container *ngIf="!this.gameCharacter.nonTalkFlag">
-              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d"
+              <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
                 <div class="fornt-tag has-length-limit is-3d" >{{name}}
                   <ng-container *ngIf="isLock">
@@ -84,27 +72,28 @@
                 </div>
               </div>
             </ng-container>
-
 <!--回転部キャラ上-->
             <div *ngIf="!isLock" class="grab-group is-3d">
-              <div class="rotate-grab rotate-grab-icon of-top is-3d"
+              <div class="rotate-grab rotate-grab-icon of-top is-3d will-change"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY( -0px)'}">
-                <i class="material-icons">autorenew</i>
+                <i class="material-icons will-change">autorenew</i>
               </div>
             </div>
-<!---->
-            <img class="image is-3d" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'">
-            <img [hidden]="" class="image is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'">
+
+<!--画像-->
+            <img class="image is-3d will-change" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'">
+            <img class="image is-3d will-change" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'">
+<!--回転部キャラ下-->
 
             <div *ngIf="!isLock" class="grab-group is-3d">
-<!--回転部キャラ下-->
-              <div *ngIf="!isLock" class="rotate-grab rotate-grab-icon of-bottom is-3d"
+              <div *ngIf="!isLock" class="rotate-grab rotate-grab-icon of-bottom is-3d will-change"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px'}">
                 <ng-container *ngIf="!isLock">
-                  <i class="material-icons">autorenew</i>
+                  <i class="material-icons will-change">autorenew</i>
                 </ng-container>
               </div>
             </div>
+
           </div>
         </div>
       </div>

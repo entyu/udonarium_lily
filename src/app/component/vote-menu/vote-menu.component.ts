@@ -104,7 +104,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       voteTitle = '点呼';
     }else{
       choicesInput = choicesInput.length == 0 ? '賛成 反対' : choicesInput;
-      startMessage = '投票開始！';
+      startMessage = '投票開始！(' + this.voteTitle + ')';
       voteTitle = this.voteTitle;
     }
     let choices = choicesInput.split(/\s+/i);

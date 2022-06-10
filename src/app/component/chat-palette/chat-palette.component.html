@@ -26,7 +26,7 @@
     <div *ngIf="isEdit" class="edit-info"><i class="material-icons" style="vertical-align: bottom; size:0.8rem;">info_outline</i> チャットパレット編集中です</div>
     <div class="complete-box">
       <ng-container *ngIf="(autoCompleteList().length == 1 && autoCompleteList()[0] != text) || autoCompleteList().length > 1">
-        <select class="complete" id="{{_timeId}}_complete"  style="overflow-y: auto;" size="5" (input)="selectAutoComplete(text,$event.target.value)">
+        <select class="complete" id="{{_timeId}}_complete"  style="overflow-y: auto;" size="5" (input)="selectAutoComplete(text,$event.target.value)" (click)="selectAutoComplete(text,$event.target.value)">
           <option *ngFor="let palette of autoCompleteList()" value="{{palette}}">{{palette}}</option>
         </select>
       </ng-container>
