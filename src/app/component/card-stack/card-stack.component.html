@@ -1,3 +1,6 @@
+<!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
+<div class="dummy-will-change" appMovable [movable.option]="movableOption">
+</div>
 <div class="component is-3d is-pointer-events-none" [ngClass]="{'is-empty': isEmpty}"
   [style.width.px]="size * gridSize"
   appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
@@ -5,7 +8,7 @@
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
     <div *ngIf="topCard && imageFile" (@shuffle.start)="animationShuffleStarted($event)" (@shuffle.done)="animationShuffleDone($event)"
       [@shuffle]="animeState">
-      <img class="card-image will-change" [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
+      <img class="card-image" [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
     <ng-container *ngIf="!isIconHidden && !isLock">
       <div class="rotate-grab of-left-top is-3d will-change">

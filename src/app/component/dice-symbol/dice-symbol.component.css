@@ -44,6 +44,13 @@
   -webkit-user-drag: none;
 }
 
+.dummy-will-change {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  will-change: opacity;
+}
+
 .component-content {
   width: 100%;
   height: 100%;
@@ -188,6 +195,10 @@
   top: 3px;
   backface-visibility: hidden;
   transform: rotateY(-180deg);
+}
+
+.backface-off {
+ backface-visibility: hidden;
 }
 
 .has-length-limit {
