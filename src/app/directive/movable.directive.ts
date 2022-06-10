@@ -53,7 +53,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   set posZ(posZ: number) { this._posZ = posZ; this.setUpdateTimer(); }
 */
 
-  private mathFloor: boolean = false;
+  private mathFloor: boolean = true;
 /*
   get posX(): number { return this._posX; }
   set posX(posX: number) { this._posX = Math.floor(posX); this.setUpdateTimer(); }
@@ -68,7 +68,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   get posY(): number { return this._posY; }
   set posY(posY: number) { this._posY = this.mathFloor? Math.floor(posY):posY; this.setUpdateTimer(); }
   get posZ(): number { return this._posZ; }
-  set posZ(posZ: number) { this._posZ = this.mathFloor? Math.floor(posZ):posZ; this.setUpdateTimer(); }
+  set posZ(posZ: number) { this._posZ = this.mathFloor? Math.floor(posZ*100)/100:posZ; this.setUpdateTimer(); }
 
 
   private pointerOffset2d: PointerCoordinate = { x: 0, y: 0, z: 0 };
@@ -272,7 +272,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
 */
     this._posX = this.mathFloor? Math.floor(object.location.x):object.location.x;
     this._posY = this.mathFloor? Math.floor(object.location.y):object.location.y;
-    this._posZ = this.mathFloor? Math.floor(object.posZ):object.posZ;
+    this._posZ = this.mathFloor? Math.floor(object.posZ*100)/100:object.posZ;
 
     this.updateTransformCss();
   }
