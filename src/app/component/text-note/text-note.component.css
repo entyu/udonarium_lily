@@ -42,6 +42,13 @@
   height:0;
 }
 
+.dummy-will-change {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  will-change: opacity;
+}
+
 .component-content {
   height: 100%;
   width: 100%;
