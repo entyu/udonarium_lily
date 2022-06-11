@@ -258,7 +258,7 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
   private dialogTimeOutId = null;
   private chatIntervalId = null;
 
-  get chatBubbleXDeg():number {
+  get chatBubbleXDeg(): number {
     //console.log(this.viewRotateX)
     let ret = 90 - this.viewRotateX;
     if (ret < 0) ret = 360 + ret;
