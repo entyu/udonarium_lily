@@ -1,8 +1,8 @@
 <div class="background-image is-pointer-events-none" [ngClass]="[(backgroundFilterType ? 'is-filter' : ''), (isStealthMode && !isGMMode ? 'is-hide-in' : ''), backgroundFilterType]" 
 [style.background-image]="'url(' + backgroundImage.url + ')' | safe: 'style'"></div>
 <div class="component is-fill is-perspective" [ngClass]="{'is-grabbing': isPointerDragging}" #root>
-  <div class="component-content is-fill is-3d-2" #gameTable>
-    <div id="app-game-table" class="game-table table-image is-3d-2" [style.background-image]="'url(' + tableImage.url + ')' | safe: 'style'" #gameObjects>
+  <div class="component-content is-fill is-3d" #gameTable>
+    <div id="app-game-table" class="game-table table-image is-3d" [style.background-image]="'url(' + tableImage.url + ')' | safe: 'style'" #gameObjects>
       <canvas class="grid-canvas is-fill is-pointer-events-none" #gridCanvas 
         [ngStyle]="{'transform': 'translateZ(' + (gridHeight + 0.1) + 'px)'}"></canvas>
       <terrain class="is-3d" *ngFor="let terrain of terrains; trackBy: trackByGameObject" [style.z-index]="terrain.height > 0 ? 0 : 1" [terrain]="terrain"></terrain>

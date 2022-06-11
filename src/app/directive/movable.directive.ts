@@ -48,11 +48,11 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   private _posZ: number = 0;
 
   get posX(): number { return this._posX; }
-  set posX(posX: number) { this._posX = posX; this.setUpdateTimer(); }
+  set posX(posX: number) { this._posX = Math.floor(posX); this.setUpdateTimer(); }
   get posY(): number { return this._posY; }
-  set posY(posY: number) { this._posY = posY; this.setUpdateTimer(); }
+  set posY(posY: number) { this._posY = Math.floor(posY); this.setUpdateTimer(); }
   get posZ(): number { return this._posZ; }
-  set posZ(posZ: number) { this._posZ = posZ; this.setUpdateTimer(); }
+  set posZ(posZ: number) { this._posZ = Math.floor(posZ); this.setUpdateTimer(); }
 
   private pointerOffset2d: PointerCoordinate = { x: 0, y: 0, z: 0 };
   private pointerStart3d: PointerCoordinate = { x: 0, y: 0, z: 0 };
@@ -256,9 +256,9 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   }
 
   private setPosition(object: TabletopObject) {
-    this._posX = object.location.x;
-    this._posY = object.location.y;
-    this._posZ = object.posZ;
+    this._posX = Math.floor(object.location.x);
+    this._posY = Math.floor(object.location.y);
+    this._posZ = Math.floor(object.posZ);
     this.updateTransformCss();
   }
 
