@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { DataElement } from '@udonarium/data-element';
 import { GameCharacter } from '@udonarium/game-character';
 import { StandImageComponent } from 'component/stand-image/stand-image.component';
@@ -12,7 +12,7 @@ export class StandImageService {
   static currentStandImageShowing = new Map<string, ComponentRef<StandImageComponent>>();
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver
+    //private componentFactoryResolver: ComponentFactoryResolver
   ) { }
   
   show(gameCharacter: GameCharacter, standElement: DataElement, color: string=null, isSecret=false) {
@@ -37,7 +37,8 @@ export class StandImageService {
       }
     }
     if (isNewbee && gameCharacter.location.name != 'graveyard') {
-      const standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(StandImageComponent));
+      //const standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(StandImageComponent));
+      const standImageComponentRef = StandImageService.defaultParentViewContainerRef.createComponent(StandImageComponent);
       standImageComponentRef.instance.gameCharacter = gameCharacter;
       standImageComponentRef.instance.standElement = standElement;
       standImageComponentRef.instance.color = color ? color : gameCharacter.chatPalette.color;

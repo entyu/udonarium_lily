@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInComponent } from 'component/cut-in/cut-in.component';
@@ -12,7 +12,7 @@ export class CutInService {
   static cutInComponentRefQueue: ComponentRef<CutInComponent>[] = [];
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver
+    //private componentFactoryResolver: ComponentFactoryResolver
   ) { }
   
   static nowShowingIdentifiers(): string[] {
@@ -37,7 +37,8 @@ export class CutInService {
       }
     }
     CutInService.cutInComponentRefQueue = CutInService.cutInComponentRefQueue.filter(cutInComponentRef => cutInComponentRef && cutInComponentRef.instance);
-    const nowCutInComponentRef = CutInService.defaultParentViewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(CutInComponent));
+    //const nowCutInComponentRef = CutInService.defaultParentViewContainerRef.createComponent(this.componentFactoryResolver.resolveComponentFactory(CutInComponent));
+    const nowCutInComponentRef = CutInService.defaultParentViewContainerRef.createComponent(CutInComponent);
     nowCutInComponentRef.instance.cutIn = cutIn;
     nowCutInComponentRef.instance.animationType = cutIn.animationType;
     nowCutInComponentRef.instance.videoId = cutIn.videoId;

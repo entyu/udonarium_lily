@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -52,7 +52,7 @@ export class ContextMenuService {
   titleBold: boolean = false;
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver
+    //private componentFactoryResolver: ComponentFactoryResolver
   ) { }
 
   get isShow(): boolean {
@@ -67,10 +67,11 @@ export class ContextMenuService {
     }
     let panelComponentRef: ComponentRef<any>;
 
-    const injector = parentViewContainerRef.injector;
-    const panelComponentFactory = this.componentFactoryResolver.resolveComponentFactory(ContextMenuService.ContextMenuComponentClass);
+    //const injector = parentViewContainerRef.injector;
+    //const panelComponentFactory = this.componentFactoryResolver.resolveComponentFactory(ContextMenuService.ContextMenuComponentClass);
 
-    panelComponentRef = parentViewContainerRef.createComponent(panelComponentFactory, parentViewContainerRef.length, injector);
+    //panelComponentRef = parentViewContainerRef.createComponent(panelComponentFactory, parentViewContainerRef.length, injector);
+    panelComponentRef = parentViewContainerRef.createComponent(ContextMenuService.ContextMenuComponentClass, {index: parentViewContainerRef.length, injector: parentViewContainerRef.injector});
 
     const childPanelService: ContextMenuService = panelComponentRef.injector.get(ContextMenuService);
 

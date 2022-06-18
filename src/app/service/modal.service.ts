@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, Injector, ViewContainerRef } from '@angular/core';
+import { ComponentRef, Injectable, Injector, ViewContainerRef } from '@angular/core';
 
 /*
 thanks
@@ -35,7 +35,7 @@ export class ModalService {
   static ModalComponentClass: { new(...args: any[]): any } = null;
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver
+    //private componentFactoryResolver: ComponentFactoryResolver
   ) { }
 
   get option(): any {
@@ -69,16 +69,17 @@ export class ModalService {
         }
       };
 
-      const childModalService: ModalService = new ModalService(this.componentFactoryResolver);
-      childModalService.modalContext = new ModalContext(_resolve, _reject, option);
+      //const childModalService: ModalService = new ModalService();
+      //childModalService.modalContext = new ModalContext(_resolve, _reject, option);
 
-      const parentInjector = parentViewContainerRef.injector;//parentViewContainerRef.parentInjector;
-      const injector = Injector.create([{ provide: ModalService, useValue: childModalService }], parentInjector);
+      //const parentInjector = parentViewContainerRef.injector;//parentViewContainerRef.parentInjector;
+      //const injector = Injector.create([{ provide: ModalService, useValue: childModalService }], parentInjector);
+      const injector = Injector.create({providers: [{ provide: ModalService, useValue: new ModalContext(_resolve, _reject, option) }], parent: parentViewContainerRef.injector});
 
-      const panelComponentFactory = this.componentFactoryResolver.resolveComponentFactory(ModalService.ModalComponentClass);
-      const bodyComponentFactory = this.componentFactoryResolver.resolveComponentFactory(childComponent);
-      panelComponentRef = parentViewContainerRef.createComponent(panelComponentFactory, parentViewContainerRef.length, injector);
-      panelComponentRef.instance.content.createComponent(bodyComponentFactory);
+      //const panelComponentFactory = this.componentFactoryResolver.resolveComponentFactory(ModalService.ModalComponentClass);
+      //const bodyComponentFactory = this.componentFactoryResolver.resolveComponentFactory(childComponent);
+      panelComponentRef = parentViewContainerRef.createComponent(ModalService.ModalComponentClass, {index: parentViewContainerRef.length, injector: injector});
+      panelComponentRef.instance.content.createComponent(childComponent);
 
       panelComponentRef.onDestroy(() => {
         this.count--;

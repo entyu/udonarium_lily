@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 
 declare var Type: FunctionConstructor;
 interface Type<T> extends Function {
@@ -33,7 +33,7 @@ export class PanelService {
   scrollablePanel: HTMLDivElement = null;
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver
+    //private componentFactoryResolver: ComponentFactoryResolver
   ) { }
 
   get isShow(): boolean {
@@ -46,13 +46,14 @@ export class PanelService {
     }
     let panelComponentRef: ComponentRef<any>;
 
-    const injector = parentViewContainerRef.injector;
+    //const injector = parentViewContainerRef.injector;
 
-    const panelComponentFactory = this.componentFactoryResolver.resolveComponentFactory(PanelService.UIPanelComponentClass);
-    const bodyComponentFactory = this.componentFactoryResolver.resolveComponentFactory(childComponent);
+    //const panelComponentFactory = this.componentFactoryResolver.resolveComponentFactory(PanelService.UIPanelComponentClass);
+    //const bodyComponentFactory = this.componentFactoryResolver.resolveComponentFactory(childComponent);
 
-    panelComponentRef = parentViewContainerRef.createComponent(panelComponentFactory, parentViewContainerRef.length, injector);
-    let bodyComponentRef: ComponentRef<any> = panelComponentRef.instance.content.createComponent(bodyComponentFactory);
+    //panelComponentRef = parentViewContainerRef.createComponent(panelComponentFactory, parentViewContainerRef.length, injector);
+    panelComponentRef = parentViewContainerRef.createComponent(PanelService.UIPanelComponentClass, {index: parentViewContainerRef.length, injector: parentViewContainerRef.injector});
+    let bodyComponentRef: ComponentRef<any> = panelComponentRef.instance.content.createComponent(childComponent);
 
     const childPanelService: PanelService = panelComponentRef.injector.get(PanelService);
 
