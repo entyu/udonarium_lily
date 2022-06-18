@@ -43,9 +43,11 @@ v1.05.0からYouTubeカットイン機能があります。YouTubeの規約も�
 
 最新版v1.06.0　
 
-https://github.com/entyu/udonarium_lily/releases/download/v1.06.0/udonarium_lily-v1.06.0.zip
+https://github.com/entyu/udonarium_lily/releases/download/v1.07.0/udonarium_lily-v1.07.0.zip
 
 旧バージョン
+
+https://github.com/entyu/udonarium_lily/releases/download/v1.06.0/udonarium_lily-v1.06.0.zip
 
 https://github.com/entyu/udonarium_lily/releases/download/v1.05.0/udonarium_lily-v1.05.0.zip
 
