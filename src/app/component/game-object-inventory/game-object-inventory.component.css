@@ -520,3 +520,7 @@ button.link {
   right: 1px;
   pointer-events: none;
 }
+
+.url-link {
+  cursor: pointer !important;
+}

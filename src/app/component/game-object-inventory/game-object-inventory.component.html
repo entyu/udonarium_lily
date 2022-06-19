@@ -150,7 +150,7 @@
       </ng-container>
       <ng-container *ngSwitchCase="'url'">
         <div class="tag-name"><a [attr.title]="dataElm.value" [ngClass]="{'outer-link': !stringUtil.sameOrigin(dataElm.value)}" target="_blank" [attr.href]="(stringUtil.validUrl(dataElm.value) ? dataElm.value : '') | safe: 'url'" [attr.disabled]="!stringUtil.validUrl(dataElm.value) ? '' : null"
-          (click)="stringUtil.validUrl(dataElm.value) ? openUrl(dataElm.value, name, dataElm.name) : false"><span>{{dataElm.name}}</span></a></div>
+          (click)="stringUtil.validUrl(dataElm.value) ? openUrl(dataElm.value, name, dataElm.name) : false"><span class="url-link">{{dataElm.name}}</span></a></div>
       </ng-container>
       <ng-container *ngSwitchCase="'colors'"></ng-container>
       <ng-container *ngSwitchCase="'color'"></ng-container>
