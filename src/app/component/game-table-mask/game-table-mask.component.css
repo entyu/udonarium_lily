@@ -30,6 +30,7 @@
 
 .image {
   display: block;
+  box-sizing: border-box;
 }
 
 .lock-icon {

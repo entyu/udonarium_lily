@@ -156,6 +156,9 @@
   object-position: 50% 100%;
   margin-bottom: 0px;
   margin-top: auto;
+
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .inverse {
