@@ -1,6 +1,6 @@
 {
   "name": "udonarium",
-  "version": "1.14.1",
+  "version": "1.14.2",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -18,7 +18,7 @@
     "@angular/forms": "^13.3.1",
     "@angular/platform-browser": "^13.3.1",
     "@angular/platform-browser-dynamic": "^13.3.1",
-    "@angular/router": "^13.2.1",
+    "@angular/router": "^13.3.1",
     "@angular/service-worker": "^13.3.1",
     "@angular/youtube-player": "^13.3.1",
     "ansi-regex": ">=5.0.1",

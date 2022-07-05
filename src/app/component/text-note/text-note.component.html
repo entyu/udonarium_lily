@@ -1,3 +1,4 @@
+<div class="chrome-3d-transform-trick"></div>
 <div class="component is-3d is-pointer-events-none"
   appMovable [movable.option]="movableOption" [movable.disable]="isSelected || isLocked" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div class="is-3d" appRotable [rotable.option]="rotableOption" [rotable.disable]="isLocked" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
@@ -12,8 +13,8 @@
           [style.font-size.px]="fontSize + 9" [innerHTML]="lastNewLineAdjust(rubiedText) | safe: 'html'"></div>
       </div>
       <div *ngIf="!isLocked" [ngClass]="{'is-grab': !isLocked}" class="grand-grabing-area" style="position: absolute"
-        [ngStyle]="{'transform': 'translateX(' + gridSize / 2 + 'px) translateY(' + (-gridSize / 4) + 'px)'}" 
-        [style.width.px]="(width - 1) * gridSize" 
+        [ngStyle]="{'transform': 'translateX(' + gridSize / 2 + 'px) translateY(' + (-gridSize / 4) + 'px)'}"
+        [style.width.px]="(width - 1) * gridSize"
         [style.min-height.px]="gridSize / 2"></div>
       <div [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
         <div class="rotate-grab of-left-top">

@@ -1,4 +1,4 @@
-<div class="dummy-will-change" appMovable [movable.option]="movableOption"></div>
+<div class="chrome-3d-transform-trick"></div>
 <div class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
   appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div class="component-content is-3d" [@bounceInOut]="'in'">
@@ -28,18 +28,18 @@
                 <div class="fornt-tag is-3d" style="color: whitesmoke"><b>{{ownerName}}</b></div>
                 <div class="back-tag is-3d" style="color: whitesmoke"><b>{{ownerName}}</b></div>
               </div>
-              <div class="component-content is-3d" 
-                [@changeFace]="!isCoin && isVisible ? face : null" [@changeFaceCoin]="isCoin && isVisible ? (face == '裏' ? 0 : 1) : null" 
+              <div class="component-content is-3d"
+                [@changeFace]="!isCoin && isVisible ? face : null" [@changeFaceCoin]="isCoin && isVisible ? (face == '裏' ? 0 : 1) : null"
                 [@diceRoll]="!isCoin && animeState" [@coinFlip]="isCoin && animeState"
                 (@diceRoll.done)="animationShuffleDone($event)" (@coinFlip.done)="animationShuffleDone($event)" [style.transform]="isCoin ? 'rotateX(30deg)' : ''">
-                  <img class="image front-face is-3d" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine || (isGMMode && hasOwner) }">
-                  <img class="image back-face is-3d" *ngIf="0 < backFaceImageFile.url.length" [src]="backFaceImageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine || (isGMMode && hasOwner) || (isVisible && isCoin)}" style="transform: rotateY(-180deg)">
+                  <img class="image front-face is-3d chrome-smooth-image-trick" *ngIf="0 < imageFile.url.length" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine || (isGMMode && hasOwner) }">
+                  <img class="image back-face is-3d chrome-smooth-image-trick" *ngIf="0 < backFaceImageFile.url.length" [src]="backFaceImageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine || (isGMMode && hasOwner) || (isVisible && isCoin)}" style="transform: rotateY(-180deg)">
               </div>
             </div>
           </div>
         </div>
-        <div class="is-3d" style="position: relative; top: -20%;" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize" 
-          [@changeFace]="!isCoin && isVisible ? face : null" [@changeFaceCoin]="isCoin && isVisible ? (face == '表' ? 1 : 2) : null" 
+        <div class="is-3d" style="position: relative; top: -20%;" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
+          [@changeFace]="!isCoin && isVisible ? face : null" [@changeFaceCoin]="isCoin && isVisible ? (face == '表' ? 1 : 2) : null"
           [@diceRoll]="animeState"
           (@diceRoll.done)="animationShuffleDone($event)">
           <img *ngIf="!isFlip && isDropShadow && 0 < imageFile.url.length" class="image shadow is-3d" [src]="imageFile.url | safe: 'resourceUrl'" style="opacity: 0.7; filter: brightness(0) blur(1px)">

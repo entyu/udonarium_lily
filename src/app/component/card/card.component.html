@@ -1,4 +1,4 @@
-<div class="dummy-will-change" appMovable [movable.option]="movableOption"></div>
+<div class="chrome-3d-transform-trick"></div>
 <div class="component is-3d is-pointer-events-none" [ngClass]="{'is-grab': !isLocked}" [style.width.px]="size * gridSize"
   appMovable [movable.option]="movableOption" [movable.disable]="isLocked" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div @slidInOut class="is-pointer-events-none is-3d">
@@ -7,11 +7,11 @@
       <div *ngIf="isFront || isHand || isGMMode" @flipOpen class="text is-3d" style="width: 100%; height: 100%" [style.opacity]="!isFront ? 0.8 : 1.0" [style.transform]="!isFront ? 'scale(0.9)' : ''">
         <div [@inverse]="state" [style.font-size.px]="fontSize + 9" [style.color]="color" class="is-3d" [innerHTML]="rubiedText | safe: 'html'"></div>
       </div>
-      <img [@inverse]="state" *ngIf="imageFile" class="card-image is-3d" [src]="(isFront ? frontImage.url : backImage.url) | safe: 'resourceUrl'">
+      <img [@inverse]="state" *ngIf="imageFile" class="card-image is-3d chrome-smooth-image-trick" [src]="(isFront ? frontImage.url : backImage.url) | safe: 'resourceUrl'">
       <div *ngIf="!isFront && hasOwner && 0 < ownerName.length" class="name-tag is-nowrap has-length-limit is-black-background is-3d" [ngStyle]="{'background-color': ownerColor, 'transform': 'translateY(-75%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
         <span class="is-3d"><b>{{ownerName}}</b></span>
       </div>
-      <img *ngIf="!isFront && (isHand || isGMMode) && frontImage" class="card-image thumbnail-transform is-translucent is-3d" [src]="frontImage.url | safe: 'resourceUrl'">
+      <img *ngIf="!isFront && (isHand || isGMMode) && frontImage" class="card-image thumbnail-transform is-translucent is-3d chrome-smooth-image-trick" [src]="frontImage.url | safe: 'resourceUrl'">
       <ng-container *ngIf="!isIconHidden">
         <div class="rotate-grab of-left-top is-3d">
           <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>

@@ -1,4 +1,4 @@
-<div class="dummy-will-change" appMovable [movable.option]="movableOption"></div>
+<div class="chrome-3d-transform-trick"></div>
 <div class="component is-3d is-pointer-events-none is-3d" [ngClass]="{'is-empty': isEmpty}"
   [style.width.px]="size * gridSize"
   appMovable [movable.option]="movableOption" [movable.disable]="isLocked" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
@@ -10,7 +10,7 @@
         [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}">
         <div class="is-3d" [style.font-size.px]="topCard.fontsize + 9" [style.color]="topCard.color" [innerHTML]="rubiedText | safe: 'html'"></div>
       </div>
-      <img class="card-image" [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
+      <img class="card-image chrome-smooth-image-trick" [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
     <ng-container *ngIf="!isIconHidden">
       <div class="rotate-grab of-left-top is-3d">

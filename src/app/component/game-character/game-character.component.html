@@ -1,4 +1,4 @@
-<div class="dummy-will-change" appMovable [movable.option]="movableOption"></div>
+<div class="chrome-3d-transform-trick"></div>
 <div class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
   [style.height.px]="size * gridSize" appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()"
   (movable.ondragend)="onMoved()">
@@ -18,8 +18,8 @@
           style="transform-origin: center 66%" [style.transform]="'rotateZ(' + roll + 'deg)'">
           <div class="aura is-3d" style="pointer-events: none;" [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
             <div class="is-3d" style="pointer-events: none; transition: transform 132ms 0s ease;"
-              [ngStyle]="{'transform': 'scaleX(' + (isInverse ? '-1' : '1') + ')'}">  
-                <img *ngIf="isDropShadow && (0 < imageFile.url.length || 0 < shadowImageFile.url.length)" [style.height.px]="characterShadowImageHeight" class="image drop-shadow is-3d" style="pointer-events: none" [src]="((0 < shadowImageFile.url.length) ? shadowImageFile.url : imageFile.url) | safe: 'resourceUrl'" 
+              [ngStyle]="{'transform': 'scaleX(' + (isInverse ? '-1' : '1') + ')'}">
+                <img *ngIf="isDropShadow && (0 < imageFile.url.length || 0 < shadowImageFile.url.length)" [style.height.px]="characterShadowImageHeight" class="image drop-shadow is-3d  chrome-smooth-image-trick" style="pointer-events: none" [src]="((0 < shadowImageFile.url.length) ? shadowImageFile.url : imageFile.url) | safe: 'resourceUrl'"
                   [style.filter]="'brightness(0) blur(1px)' + (isHideIn ? ' invert(85%)' : '')"
                   [ngStyle]="{'opacity': (isHollow ? 0.5 : 0.7) * (isHideIn ? 0.85 : 1)}" [@switchImageShadow]="gameCharacter.currntImageIndex">
             </div>
@@ -45,7 +45,7 @@
               [ngClass]="{black: aura == 0, blue: aura == 1, green: aura == 2, cyan: aura == 3, red: aura == 4, magenta: aura == 5, yellow: aura == 6, white: aura == 7}">
               <div class="inverser is-3d" [ngClass]="{inverse: isInverse, 'black-paint': isBlackPaint, 'hollow': isHollow}">
                 <span class="image-box is-3d" [style.width.px]="characterImageWidth" [style.height.px]="characterImageHeight" [style.transform]="'translateX(' + ((size * gridSize - characterImageWidth) / 2) + 'px)'">
-                  <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d"  [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-hide-in': isHideIn}"
+                  <img #characterImage *ngIf="0 < imageFile.url.length" class="image is-3d chrome-smooth-image-trick"  [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-hide-in': isHideIn}"
                     [style.height.px]="characterImageHeight" (load)="onImageLoad()">
                 </span>
               </div>
@@ -62,19 +62,19 @@
             </div>
           </div>
         </div>
-        <div #chatBubble class="chat-bubble is-3d" 
+        <div #chatBubble class="chat-bubble is-3d"
           [ngStyle]="{'bottom': (chatBubbleAltitude - (isEmote ? gridSize / 2 : 0) - 4) + 'px',
             'transform': 'translateZ(' + (-size * gridSize / 2) + 'px) translateX(-50%) translateX(' + (size * gridSize / 2) +'px) rotateY(' + (rotate + viewRotateZ) + 'deg) rotateX(' + (chatBubbleXDeg) + 'deg)',
             'visibility': gameCharacter.isShowChatBubble ? 'visible' : 'hidden'}">
           <div *ngIf="isListen" [@fadeAndScaleInOut]="isEmote" class="is-3d" style="transform-origin: center bottom;" [style.color]="!isEmote && isWhisper ? '#ccc' : dialogColor">
             <div class="is-3d">
-              <p class="is-3d chat-bubble-buyo" [style.min-width.px]="dialogChatBubbleMinWidth" [style.border-color]="dialogColor" style="position: absolute; backface-visibility: hidden" 
-                [ngClass]="{'emote': isEmote, rubied: isRubied, 'is-whisper': isWhisper}"><span class="face-icon-box is-3d" 
+              <p class="is-3d chat-bubble-buyo" [style.min-width.px]="dialogChatBubbleMinWidth" [style.border-color]="dialogColor" style="position: absolute; backface-visibility: hidden"
+                [ngClass]="{'emote': isEmote, rubied: isRubied, 'is-whisper': isWhisper}"><span class="face-icon-box is-3d"
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
                   <img class="face-icon is-3d" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
                 </span><span [innerHTML]="dialogText | safe: 'html'"></span></p>
               <p class="is-3d chat-bubble-buyo back" [style.min-width.px]="dialogChatBubbleMinWidth" [style.border-color]="dialogColor" style="backface-visibility: hidden; transform: rotateY(-180deg)"
-                [ngClass]="{'emote': isEmote, rubied: isRubied, 'is-whisper': isWhisper}"><span class="face-icon-box is-3d" 
+                [ngClass]="{'emote': isEmote, rubied: isRubied, 'is-whisper': isWhisper}"><span class="face-icon-box is-3d"
                   *ngIf="!isEmote && isUseFaceIcon && 0 < dialogFaceIcon?.url.length">
                   <img class="face-icon is-3d" [style.border-color]="dialogColor" [src]="dialogFaceIcon.url | safe: 'resourceUrl'">
                 </span><span [innerHTML]="dialogText | safe: 'html'"></span></p>
