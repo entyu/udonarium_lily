@@ -69,12 +69,12 @@ export class ModalService {
         }
       };
 
-      //const childModalService: ModalService = new ModalService();
-      //childModalService.modalContext = new ModalContext(_resolve, _reject, option);
+      const childModalService: ModalService = new ModalService();
+      childModalService.modalContext = new ModalContext(_resolve, _reject, option);
 
       //const parentInjector = parentViewContainerRef.injector;//parentViewContainerRef.parentInjector;
       //const injector = Injector.create([{ provide: ModalService, useValue: childModalService }], parentInjector);
-      const injector = Injector.create({providers: [{ provide: ModalService, useValue: new ModalContext(_resolve, _reject, option) }], parent: parentViewContainerRef.injector});
+      const injector = Injector.create({providers: [{ provide: ModalService, useValue: childModalService }], parent: parentViewContainerRef.injector});
 
       //const panelComponentFactory = this.componentFactoryResolver.resolveComponentFactory(ModalService.ModalComponentClass);
       //const bodyComponentFactory = this.componentFactoryResolver.resolveComponentFactory(childComponent);
