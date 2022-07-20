@@ -156,6 +156,17 @@ export class DiceBot extends GameObject {
     return ObjectStore.instance.getObjects(DiceTable);
   }
 
+  // リソース操作コマンドでs付きがあるか判定
+  checkSecretEditCommand(chatText: string): boolean {
+    const text: string = ' ' + StringUtil.toHalfWidth(chatText).toLowerCase();
+    const replaceText = text.replace('：', ':');
+    console.log('checkSecretEditCommand:' + chatText);
+    let m = replaceText.match(/\sS:/i);
+    console.log(m);
+    if( m ) return true;
+    return false;
+  }
+
   // 繰り返しコマンドを除去し、sより後ろがCOMMAND_PATTERNにマッチするか確認
   checkSecretDiceCommand(gameSystem: GameSystemClass, chatText: string): boolean {
     const text: string = StringUtil.toHalfWidth(chatText).toLowerCase();
@@ -479,7 +490,14 @@ export class DiceBot extends GameObject {
 
 
   private checkResourceEditCommand( originalMessage: ChatMessage ){
-    const splitText = originalMessage.text.split(/\s/);
+
+    let text = ' ' + originalMessage.text;
+    let isMatch = text.match(/(\s[sSｓＳ][:：&＆])/i);
+    let isSecret = isMatch ? true : false;
+    
+    let text2 = text.replace(/(\s[sSｓＳ][:：])/i, ' :');
+
+    const splitText = text2.split(/\s/);
     let resourceCommand: string[] = [];
     let buffCommand: string[] = [];
     const allEditList: ResourceEdit[] = null;
@@ -499,7 +517,7 @@ export class DiceBot extends GameObject {
     }
 
     console.log( 'checkResourceEditCommand' + resourceCommand);
-    this.resourceEditProcess( resourceCommand , buffCommand, originalMessage );
+    this.resourceEditProcess( resourceCommand , buffCommand, originalMessage , isSecret);
   }
 
   resourceEditParseOption( text: string): ResourceEditOption{
@@ -533,7 +551,9 @@ export class DiceBot extends GameObject {
 
   private resourceCommandToEdit(oneResourceEdit: ResourceEdit, text: string, object: GameCharacter): boolean{
 
-    const replaceText = text.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=').replace('＞', '>');
+    let isSecret = this.checkSecretEditCommand(text);
+    const replaceText = ' ' + text.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=').replace('＞', '>');
+
     console.log('リソース変更：' + replaceText);
     const resourceEditRegExp = /[:]([^-+=>]+)([-+=>])(.+)/;
     const resourceEditResult = replaceText.match(resourceEditRegExp);
@@ -578,7 +598,7 @@ export class DiceBot extends GameObject {
     return true;
   }
 
-  async resourceEditProcess(resourceCommand: string[], buffCommand: string[], originalMessage: ChatMessage){
+  async resourceEditProcess(resourceCommand: string[], buffCommand: string[], originalMessage: ChatMessage, isSecret: Boolean){
 
     const object = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
     if (object instanceof GameCharacter) {
@@ -627,7 +647,7 @@ export class DiceBot extends GameObject {
       repBuffCommandList.push(replaceText);
     }
 
-    this.resourceBuffEdit( allEditList , repBuffCommandList, originalMessage, object);
+    this.resourceBuffEdit( allEditList , repBuffCommandList, originalMessage, object, isSecret);
     return;
   }
 
@@ -722,7 +742,7 @@ export class DiceBot extends GameObject {
     return text;
   }
 
-  private resourceBuffEdit( allEditList: ResourceEdit[] , buffList: string[], originalMessage: ChatMessage , character: GameCharacter){
+  private resourceBuffEdit( allEditList: ResourceEdit[] , buffList: string[], originalMessage: ChatMessage , character: GameCharacter ,isSecret: Boolean){
     let text = '';
 // リソース処理
     let isDiceRoll = false;
@@ -757,7 +777,7 @@ export class DiceBot extends GameObject {
       from: fromText,
       timestamp: originalMessage.timestamp + 2,
       imageIdentifier: PeerCursor.myCursor.diceImageIdentifier ,
-      tag: 'system',
+      tag: isSecret ? 'system secret': 'system',
       name: nameText,
       text,
       messColor: originalMessage.messColor

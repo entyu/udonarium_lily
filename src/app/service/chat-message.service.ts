@@ -142,6 +142,8 @@ export class ChatMessageService {
       chatMessageTag = '';
     } else if (dicebot.checkSecretDiceCommand(gameSystem, text)) {
       chatMessageTag = `${gameSystem.ID} secret`;
+    } else if (dicebot.checkSecretEditCommand(text)) {
+      chatMessageTag = `${gameSystem.ID} secret`;
     } else {
       chatMessageTag = gameSystem.ID;
     }
