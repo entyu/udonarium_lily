@@ -216,7 +216,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
   get selectCharacterTachieNum(){
     let object = ObjectStore.instance.get(this.sendFrom);
     if (object instanceof GameCharacter) {
-      return  object.imageDataElement.children.length;
+       return  object.imageDataElement.children.length;
     } else if (object instanceof PeerCursor) {
       return 0;
     }
