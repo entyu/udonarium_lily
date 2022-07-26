@@ -127,7 +127,7 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
     if (dataElement.isSimpleNumber) {
       ret = `${dataElement.value}`;
     } else if (dataElement.isNumberResource) {
-      ret = `${dataElement.currentValue}/${dataElement.value ? dataElement.value : '???'}`;
+      ret = `${dataElement.currentValue}/${dataElement.value && dataElement.value != 0 ? dataElement.value : '???'}`;
     } else if (dataElement.isCheckProperty) {
       ret = `${dataElement.value ? ' → ✔ON' : ' → OFF'}`;
     } else if (dataElement.isAbilityScore) {
