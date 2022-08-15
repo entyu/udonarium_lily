@@ -16,6 +16,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 
 import { VoteMenuComponent } from 'component/vote-menu/vote-menu.component';
+import { AlarmMenuComponent } from 'component/alarm-menu/alarm-menu.component';
 
 
 @Component({
@@ -159,6 +160,12 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     let coordinate = this.pointerDeviceService.pointers[0];
     let option: PanelOption = { left: coordinate.x + 50, top: coordinate.y - 450, width: 650, height: 400 };
     let component = this.panelService.open<VoteMenuComponent>(VoteMenuComponent, option);
+  }
+
+  showAlarmMenu() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x + 50, top: coordinate.y - 450, width: 650, height: 400 };
+    let component = this.panelService.open<AlarmMenuComponent>(AlarmMenuComponent, option);
   }
 
   sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number , messColor:string }) {
