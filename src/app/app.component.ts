@@ -26,6 +26,7 @@ import { TableSelecter } from '@udonarium/table-selecter';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
 import { Vote, VoteContext } from '@udonarium/vote';
+import { Alarm, AlarmContext } from '@udonarium/alarm';
 
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -115,6 +116,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let vote = new Vote('Vote');
     vote.initialize();
 
+    let alarm = new Alarm('Alarm');
+    alarm.initialize();
+
     let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
     soundEffect.initialize();
 
@@ -163,6 +167,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PeerCursor.myCursor.imageIdentifier = noneIconImage.identifier;
 
     EventSystem.register(this)
+      .on('ALARM_TIMEUP', event => {
+        this.alarmTimeUP( event.data.text );
+      })
       .on('START_VOTE', event => {
         this.startVote();
       })
@@ -238,6 +245,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+  }
+
+  alarmTimeUP(text: string){
+    let alarm = ObjectStore.instance.get<Alarm>('Alarm');
+    this.chatMessageService.sendSystemMessageLastSendCharactor(text);
   }
 
   startVote(){

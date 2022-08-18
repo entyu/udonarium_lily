@@ -16,7 +16,9 @@ import { SaveDataService } from 'service/save-data.service';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PeerContext, IPeerContext } from '@udonarium/core/system/network/peer-context';
 
+import { Alarm, AlarmContext } from '@udonarium/alarm';
 import { Vote, VoteContext } from '@udonarium/vote';
+
 
 @Component({
   selector: 'app-alarm-menu',
@@ -28,13 +30,15 @@ export class AlarmMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   private initTimestamp = 0;
   networkService = Network;
   voteContentsText = '';
-  voteTitle = '投票';
+  alarmTitle = 'タイマ';
+  alarmTime = 60;
   isRollCall = true;
-  includSelf = false;
+  includSelf = true;
 
   get peerList() { return this.networkService.peerContexts; }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
-  get vote(): Vote { return ObjectStore.instance.get<Vote>('Vote'); }
+  get alarm(): Alarm { return ObjectStore.instance.get<Alarm>('Alarm'); }
+//  get alarm(): Vote { return ObjectStore.instance.get<Vote>('Vote'); }
 
   constructor(
     private modalService: ModalService,
@@ -46,7 +50,7 @@ export class AlarmMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    Promise.resolve().then(() => this.modalService.title = this.panelService.title = '点呼/投票設定');
+    Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'アラームタイマ');
     this.setDefaultCheck();
   }
 
@@ -93,27 +97,24 @@ export class AlarmMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   send(){
-    let vote = this.vote;
-    let voteTitle: string;
-    let choicesInput: string = this.voteContentsText.replace(/\s*$/i, '').replace(/^\s*/i, '');
+    this.changeAlarmTime();
+
+    let alarm = this.alarm;
+    let alarmTitle = this.alarmTitle;
     let startMessage: string;
 
-    if (this.isRollCall ){
-      choicesInput = '準備完了';
-      startMessage = '点呼開始！';
-      voteTitle = '点呼';
-    }else{
-      choicesInput = choicesInput.length == 0 ? '賛成 反対' : choicesInput;
-      startMessage = '投票開始！(' + this.voteTitle + ')';
-      voteTitle = this.voteTitle;
-    }
-    let choices = choicesInput.split(/\s+/i);
-    let peerList = this.selectedList();
+    startMessage = 'アラームセット ' + this.alarmTime + '秒';
 
-    vote.makeVote(PeerCursor.myCursor.peerId , voteTitle , peerList , choices , this.isRollCall);
-    vote.startVote();
+    let peerList = this.selectedList();
+    alarm.makeAlarm(this.alarmTime, alarmTitle, peerList);
     this.chatMessageService.sendSystemMessageLastSendCharactor(startMessage);
+    alarm.startAlarm();
     this.panelService.close();
+  }
+
+  changeAlarmTime(){
+    if(this.alarmTime<=0) this.alarmTime=0;
+    if(this.alarmTime>=3600) this.alarmTime=3600;
   }
 
   changeIncludSelf(){
