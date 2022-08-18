@@ -38,7 +38,6 @@ export class AlarmMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   get peerList() { return this.networkService.peerContexts; }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get alarm(): Alarm { return ObjectStore.instance.get<Alarm>('Alarm'); }
-//  get alarm(): Vote { return ObjectStore.instance.get<Vote>('Vote'); }
 
   constructor(
     private modalService: ModalService,

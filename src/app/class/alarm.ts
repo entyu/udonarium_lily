@@ -32,8 +32,6 @@ export class Alarm extends GameObject {
     this.alarmId ++;
     this.targetPeerId = targetPeerId;
     this.initTimeStamp = Date.now();
-
-    this.startAlarm();
   }
 
   chkToMe(): boolean{
@@ -46,8 +44,6 @@ export class Alarm extends GameObject {
   startAlarm(){
     if(!this.chkToMe()) return;
     let text_ = 'アラーム(' + this.alarmTime + '秒)経過 ' + this.alarmTitle;
-    console.log( 'this.alarmTime ' + text_);
-
     setTimeout(() => {
       EventSystem.trigger('ALARM_TIMEUP', { text : text_ });
     }, this.alarmTime * 1000);
@@ -67,12 +63,12 @@ export class Alarm extends GameObject {
   apply(context: ObjectContext) {
 
     console.log('Alarm timer apply() CALL');
-
     const initTimeStamp = this.initTimeStamp;
     super.apply(context);
 
-//    if ( initTimeStamp !== this.initTimeStamp ){
-//      this.startAlarm();
-//    }
+    if ( initTimeStamp !== this.initTimeStamp ){
+      this.startAlarm();
+    }
+
   }
 }

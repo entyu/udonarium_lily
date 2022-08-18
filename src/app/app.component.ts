@@ -248,6 +248,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   alarmTimeUP(text: string){
+    console.log('alarmTimeUP');
     let alarm = ObjectStore.instance.get<Alarm>('Alarm');
     this.chatMessageService.sendSystemMessageLastSendCharactor(text);
   }
