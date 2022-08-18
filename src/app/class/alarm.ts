@@ -12,6 +12,8 @@ import { ModalService } from 'service/modal.service';
 
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PeerContext, IPeerContext } from '@udonarium/core/system/network/peer-context';
+import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
+
 
 export interface AlarmContext {
   peerId: string;
@@ -26,6 +28,10 @@ export class Alarm extends GameObject {
   @SyncVar() alarmTime = 0;
   @SyncVar() alarmId = 0;
   @SyncVar() alarmPeerId = '';
+
+  @SyncVar() isSound = false;
+  @SyncVar() isPopUp = false;
+
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
@@ -55,7 +61,9 @@ export class Alarm extends GameObject {
 
     if(this.chkToMe()){
       setTimeout(() => {
-        EventSystem.trigger('ALARM_TIMEUP_TARGET', { text : 'AAA' });
+//        EventSystem.trigger('ALARM_TIMEUP_TARGET', { isSound: this.isSound , isPopUp: this.isPopUp  });
+        SoundEffect.play(PresetSound.alarm);
+
       }, this.alarmTime * 1000);
     }
   }
