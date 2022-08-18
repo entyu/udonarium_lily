@@ -25,11 +25,15 @@ export class Alarm extends GameObject {
   @SyncVar() targetPeerId: string[] = [];
   @SyncVar() alarmTime = 0;
   @SyncVar() alarmId = 0;
+  @SyncVar() alarmPeerId = '';
 
-  makeAlarm(alarmTime: number, alarmTitle: string, targetPeerId: string[] ){
+  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+
+  makeAlarm(alarmTime: number, alarmTitle: string, targetPeerId: string[], alarmPeerId: string){
     this.alarmTitle = alarmTitle;
     this.alarmTime = alarmTime;
     this.alarmId ++;
+    this.alarmPeerId = alarmPeerId;
     this.targetPeerId = targetPeerId;
     this.initTimeStamp = Date.now();
   }
@@ -42,11 +46,18 @@ export class Alarm extends GameObject {
   }
 
   startAlarm(){
-    if(!this.chkToMe()) return;
-    let text_ = 'アラーム(' + this.alarmTime + '秒)経過 ' + this.alarmTitle;
-    setTimeout(() => {
-      EventSystem.trigger('ALARM_TIMEUP', { text : text_ });
-    }, this.alarmTime * 1000);
+    if(this.alarmPeerId == this.myPeer.peerId){
+      let text_ = 'アラーム(' + this.alarmTime + '秒)経過 ' + this.alarmTitle;
+      setTimeout(() => {
+        EventSystem.trigger('ALARM_TIMEUP_ORIGIN', { text : text_ });
+      }, this.alarmTime * 1000);
+    }
+
+    if(this.chkToMe()){
+      setTimeout(() => {
+        EventSystem.trigger('ALARM_TIMEUP_TARGET', { text : 'AAA' });
+      }, this.alarmTime * 1000);
+    }
   }
 
   // GameObject Lifecycle

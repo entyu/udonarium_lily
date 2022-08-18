@@ -105,7 +105,7 @@ export class AlarmMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     startMessage = 'アラームセット ' + this.alarmTime + '秒';
 
     let peerList = this.selectedList();
-    alarm.makeAlarm(this.alarmTime, alarmTitle, peerList);
+    alarm.makeAlarm(this.alarmTime, alarmTitle, peerList, this.myPeer.peerId);
     this.chatMessageService.sendSystemMessageLastSendCharactor(startMessage);
     alarm.startAlarm();
     this.panelService.close();

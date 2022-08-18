@@ -167,8 +167,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PeerCursor.myCursor.imageIdentifier = noneIconImage.identifier;
 
     EventSystem.register(this)
-      .on('ALARM_TIMEUP', event => {
-        this.alarmTimeUP( event.data.text );
+      .on('ALARM_TIMEUP_ORIGIN', event => {
+        this.alarmTimeUpOrigin( event.data.text );
+      })
+      .on('ALARM_TIMEUP_TARGET', event => {
+        this.alarmTimeUpTarget( event.data.text );
       })
       .on('START_VOTE', event => {
         this.startVote();
@@ -247,8 +250,12 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     EventSystem.unregister(this);
   }
 
-  alarmTimeUP(text: string){
-    console.log('alarmTimeUP');
+  alarmTimeUpOrigin(text: string){
+    let alarm = ObjectStore.instance.get<Alarm>('Alarm');
+    this.chatMessageService.sendSystemMessageLastSendCharactor(text);
+  }
+
+  alarmTimeUpTarget(text: string){
     let alarm = ObjectStore.instance.get<Alarm>('Alarm');
     this.chatMessageService.sendSystemMessageLastSendCharactor(text);
   }
