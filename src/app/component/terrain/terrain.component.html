@@ -1,4 +1,4 @@
-<div class="chrome-3d-transform-trick"></div>
+<div class="chrome-3d-transform-trick is-pointer-events-none"></div>
 <div class="component is-3d is-pointer-events-none"
   [style.width.px]="width * gridSize" [style.height.px]="depth * gridSize"
   appMovable [movable.option]="movableOption" [movable.disable]="isLocked" [movable.interact]="isInteract" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
@@ -7,33 +7,33 @@
     <ng-container *ngIf="hasFloor && isVisibleFloor && 0 < floorImage?.url.length">
       <div *ngIf="isDropShadow && (terreinAltitude != 0 || (isSlope && !hasWall))"
         style="opacity: 0.7; filter: brightness(0) blur(1px); transform: translateZ(0.3px) scale(0.98); backface-visibility: visible"
-        class="texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
+        class="is-3d texture" [ngClass]="{'blinking-animation': !isLocked}" [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
     </ng-container>
     <div class="is-3d texture" style="z-index: 1" [ngClass]="{'upright-transform': (height < 0.5 && altitude == 0), 'fall': (height >= 0.5 && altitude == 0)}" [ngStyle]="{transform: 'translateZ(' + (altitude * gridSize) + 'px)'}">
       <ng-container *ngIf="hasFloor && isVisibleFloor && 0 < floorImage?.url.length">
-        <div class="texture" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'backface-visibility': isSlope ? 'visible' : 'hidden', 'transform': 'translateZ(' + ((height / (isSlope ? 2 : 1)) * gridSize) + 'px)' + floorModCss, filter: 'brightness(' + floorBrightness + ')'}"
+        <div class="is-3d texture" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'backface-visibility': isSlope ? 'visible' : 'hidden', 'transform': 'translateZ(' + ((height / (isSlope ? 2 : 1)) * gridSize) + 'px)' + floorModCss, filter: 'brightness(' + floorBrightness + ')'}"
           [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
       </ng-container>
       <ng-container *ngIf="isWallExist">
         <ng-container *ngIf="slopeDirection != slopeDirectionState.TOP">
-          <div *ngIf="isVisibleWallTopBottom" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.LEFT, 'is-inverse-slope': slopeDirection == slopeDirectionState.RIGHT}" class="texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+          <div *ngIf="isVisibleWallTopBottom" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.LEFT, 'is-inverse-slope': slopeDirection == slopeDirectionState.RIGHT}" class="is-3d texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
             [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
-            [ngStyle]="{'transform': 'translateY(-100%) rotateX(90deg) rotateZ(180deg) scaleX(-1.0)'}"></div>
+            style="transform: translateY(-100%) rotateX(90deg) rotateZ(180deg) scaleX(-1.0)"></div>
         </ng-container>
         <ng-container *ngIf="slopeDirection != slopeDirectionState.BOTTOM">
-          <div *ngIf="isVisibleWallTopBottom" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.LEFT, 'is-inverse-slope': slopeDirection == slopeDirectionState.RIGHT}" class="texture of-wall-bottom" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+          <div *ngIf="isVisibleWallTopBottom" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.LEFT, 'is-inverse-slope': slopeDirection == slopeDirectionState.RIGHT}" class="is-3d texture of-wall-bottom" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
             [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
-            [ngStyle]="{'transform': 'rotateX(-90deg)'}"></div>
+            style="transform: rotateX(-90deg)"></div>
         </ng-container>
         <ng-container *ngIf="slopeDirection != slopeDirectionState.LEFT">
-          <div *ngIf="isVisibleWallLeftRight" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.BOTTOM, 'is-inverse-slope': slopeDirection == slopeDirectionState.TOP}" class="texture of-wall-left" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+          <div *ngIf="isVisibleWallLeftRight" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.BOTTOM, 'is-inverse-slope': slopeDirection == slopeDirectionState.TOP}" class="is-3d texture of-wall-left" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
             [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize" 
-            [ngStyle]="{'transform': 'rotateZ(90deg) rotateX(-90deg) scaleX(-1.0) translateX(-100%) translateY(-100%)'}"></div>
+            style="transform: rotateZ(90deg) rotateX(-90deg) scaleX(-1.0) translateX(-100%) translateY(-100%)"></div>
         </ng-container>
         <ng-container *ngIf="slopeDirection != slopeDirectionState.RIGHT">
-          <div *ngIf="isVisibleWallLeftRight" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.BOTTOM, 'is-inverse-slope': slopeDirection == slopeDirectionState.TOP}" class="texture of-wall-right" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
+          <div *ngIf="isVisibleWallLeftRight" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.BOTTOM, 'is-inverse-slope': slopeDirection == slopeDirectionState.TOP}" class="is-3d texture of-wall-right" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
             [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize"
-            [ngStyle]="{'transform': 'rotateZ(-90deg) rotateX(-90deg) translateY(-100%)'}"></div>
+            style="transform: rotateZ(-90deg) rotateX(-90deg) translateY(-100%)"></div>
         </ng-container>
       </ng-container>
     </div>
