@@ -259,9 +259,9 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   }
 
   private setPosition(object: TabletopObject) {
-    this._posX = Math.floor(object.location.x);
-    this._posY = Math.floor(object.location.y);
-    this._posZ = Math.floor(object.posZ);
+    this._posX = object.location.x;
+    this._posY = object.location.y;
+    this._posZ = object.posZ;
     this.updateTransformCss();
   }
 
