@@ -2,7 +2,7 @@
   <ng-container *ngTemplateOutlet="alarmTop"></ng-container>
   <div *ngIf="peerList.length < 1">自分しか部屋にいません</div>
   <div *ngFor="let peer of peerList" style="font-size: 15px;" [ngClass]="{'box': true}">
-    <ng-container *ngTemplateOutlet="voteTargets; context:{ peer : peer }"></ng-container>
+    <ng-container *ngTemplateOutlet="alarmTargets; context:{ peer : peer }"></ng-container>
   </div>
 </div>
 
@@ -30,7 +30,7 @@
   </form>
 </ng-template>
 
-<ng-template #voteTargets let-peer="peer">
+<ng-template #alarmTargets let-peer="peer">
   <div class="inventory-object" (click)="voteBlockClick(peer.peerId)">
     <div class="object-tags-box">
       <div class="table-cell">

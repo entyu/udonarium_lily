@@ -28,6 +28,7 @@ export class Alarm extends GameObject {
   @SyncVar() alarmTime = 0;
   @SyncVar() alarmId = 0;
   @SyncVar() alarmPeerId = '';
+  @SyncVar() targetText = ''
 
   @SyncVar() isSound = false;
   @SyncVar() isPopUp = false;
@@ -35,12 +36,13 @@ export class Alarm extends GameObject {
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
-  makeAlarm(alarmTime: number, alarmTitle: string, targetPeerId: string[], alarmPeerId: string){
+  makeAlarm(alarmTime: number, alarmTitle: string, targetPeerId: string[], alarmPeerId: string, targetText: string){
     this.alarmTitle = alarmTitle;
     this.alarmTime = alarmTime;
     this.alarmId ++;
     this.alarmPeerId = alarmPeerId;
     this.targetPeerId = targetPeerId;
+    this.targetText = targetText;
     this.initTimeStamp = Date.now();
   }
 
@@ -53,7 +55,7 @@ export class Alarm extends GameObject {
 
   startAlarm(){
     if(this.alarmPeerId == this.myPeer.peerId){
-      let text_ = 'アラーム(' + this.alarmTime + '秒)経過 ' + this.alarmTitle;
+      let text_ = 'アラーム(' + this.alarmTime + '秒)経過' + this.targetText + this.alarmTitle;
       setTimeout(() => {
         EventSystem.trigger('ALARM_TIMEUP_ORIGIN', { text : text_ });
       }, this.alarmTime * 1000);
@@ -61,9 +63,8 @@ export class Alarm extends GameObject {
 
     if(this.chkToMe()){
       setTimeout(() => {
-//        EventSystem.trigger('ALARM_TIMEUP_TARGET', { isSound: this.isSound , isPopUp: this.isPopUp  });
+        console.log('アラーム音再生');
         SoundEffect.play(PresetSound.alarm);
-
       }, this.alarmTime * 1000);
     }
   }
