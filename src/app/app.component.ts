@@ -51,6 +51,7 @@ import { SaveDataService } from 'service/save-data.service';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
+import { AlarmWindowComponent } from 'component/alarm-window/alarm-window.component';
 
 @Component({
   selector: 'app-root',
@@ -172,8 +173,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       .on('ALARM_TIMEUP_ORIGIN', event => {
         this.alarmTimeUpOrigin( event.data.text );
       })
-      .on('ALARM_TIMEUP_TARGET', event => {
-        this.alarmTimeUpTarget( event.data.text );
+      .on('ALARM_POP', event => {
+        this.alarmPop( event.data.title , event.data.time );
       })
       .on('START_VOTE', event => {
         this.startVote();
@@ -282,6 +283,33 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   finishVote(text: string){
     console.log( '投票集計完了' );
     this.chatMessageService.sendSystemMessageLastSendCharactor(text);
+  }
+
+  alarmPop(title: string, time: string){
+    console.log( 'ポップアップ_スタート' + title );
+    let winH = 100;
+    let winW = 200;
+    let option: PanelOption = { width: winW, height: winH, left: 300 , top: 100};
+    option.title = 'アラーム ' + title;
+
+    console.log( 'POP画面領域 w:' + window.innerWidth + ' h:' + window.innerHeight );
+    console.log( 'POPサイズ w:' + winW + ' h:' + winH );
+
+    let margin_w = window.innerWidth - winW ;
+    let margin_h = window.innerHeight - winH - 25 ;
+
+    if ( margin_w < 0 )margin_w = 0 ;
+    if ( margin_h < 0 )margin_h = 0 ;
+
+    let margin_x = margin_w * 0.5;
+    let margin_y = margin_h * 0.5;
+
+    option.width = winW ;
+    option.height = winH + 25 ;
+    option.left = margin_x ;
+    option.top = margin_y;
+
+    let component = this.panelService.open(AlarmWindowComponent, option);
   }
 
   startCutIn( cutIn: CutIn ){

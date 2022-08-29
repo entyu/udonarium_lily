@@ -25,6 +25,10 @@
           <button (click)="send()" [attr.disabled]="selectedNum()==0 ? '' : null">送信</button><br>
           <span style = "display:inline-block;margin-left:0.5em;">人数:{{selectedNum()}}</span>
         </div>
+        <div style = "display:table-cell;align:left">
+          <input type="checkbox" value="isSound"  [(ngModel)]="isSound" name="isSound" id = isSound_{{initTimestamp}} (click)="changeIsSound()" ><span>音</span>
+          <input type="checkbox" value="isPopUp"  [(ngModel)]="isPopUp" name="isPopUp" id = isPopUp_{{initTimestamp}} (click)="changeIsPopUp()" ><span>ポップアップ</span>
+        </div>
       </div>
     </div>
   </form>

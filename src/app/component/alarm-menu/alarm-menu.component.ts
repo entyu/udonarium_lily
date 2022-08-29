@@ -34,6 +34,8 @@ export class AlarmMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   alarmTime = 60;
   isRollCall = true;
   includSelf = true;
+  isSound = true;
+  isPopUp = true;
 
   get peerList() { return this.networkService.peerContexts; }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
@@ -116,7 +118,7 @@ export class AlarmMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     startMessage += target;
 
-    alarm.makeAlarm(this.alarmTime, alarmTitle, peerIdList, this.myPeer.peerId, target);
+    alarm.makeAlarm(this.alarmTime, alarmTitle, peerIdList, this.myPeer.peerId, target, this.isSound, this.isPopUp);
     this.chatMessageService.sendSystemMessageLastSendCharactor(startMessage);
     alarm.startAlarm();
     this.panelService.close();
@@ -128,6 +130,14 @@ export class AlarmMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   changeIncludSelf(){
+    // 処理なし
+  }
+
+  changeIsSound(){
+    // 処理なし
+  }
+
+  changeIsPopUp(){
     // 処理なし
   }
 

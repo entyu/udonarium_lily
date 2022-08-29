@@ -77,6 +77,7 @@ import { VoteMenuComponent } from 'component/vote-menu/vote-menu.component';
 import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
 
 import { AlarmMenuComponent } from 'component/alarm-menu/alarm-menu.component';
+import { AlarmWindowComponent } from 'component/alarm-window/alarm-window.component';
 
 import { ImportCharacterImgComponent } from 'component/import-character-img/import-character-img.component';
 
@@ -143,6 +144,7 @@ import { AppComponent } from './app.component';
     VoteWindowComponent,
 
     AlarmMenuComponent,
+    AlarmWindowComponent,
 
     ImportCharacterImgComponent,
 

@@ -14,6 +14,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { PeerContext, IPeerContext } from '@udonarium/core/system/network/peer-context';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 
+import { PanelOption, PanelService } from 'service/panel.service';
 
 export interface AlarmContext {
   peerId: string;
@@ -36,7 +37,7 @@ export class Alarm extends GameObject {
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
-  makeAlarm(alarmTime: number, alarmTitle: string, targetPeerId: string[], alarmPeerId: string, targetText: string){
+  makeAlarm(alarmTime: number, alarmTitle: string, targetPeerId: string[], alarmPeerId: string, targetText: string, isSound: boolean, isPopUp: boolean){
     this.alarmTitle = alarmTitle;
     this.alarmTime = alarmTime;
     this.alarmId ++;
@@ -44,6 +45,8 @@ export class Alarm extends GameObject {
     this.targetPeerId = targetPeerId;
     this.targetText = targetText;
     this.initTimeStamp = Date.now();
+    this.isSound = isSound;
+    this.isPopUp = isPopUp;
   }
 
   chkToMe(): boolean{
@@ -63,8 +66,14 @@ export class Alarm extends GameObject {
 
     if(this.chkToMe()){
       setTimeout(() => {
-        console.log('アラーム音再生');
-        SoundEffect.play(PresetSound.alarm);
+        if(this.isSound ){
+          console.log('アラーム音再生');
+          SoundEffect.play(PresetSound.alarm);
+        }
+        if(this.isPopUp ){
+          console.log('アラーム ポップアップ再生');
+          EventSystem.trigger('ALARM_POP', { title : this.alarmTitle  , time : this.alarmTime });
+        }
       }, this.alarmTime * 1000);
     }
   }
