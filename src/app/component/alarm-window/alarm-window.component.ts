@@ -34,35 +34,13 @@ export class AlarmWindowComponent implements AfterViewInit, OnInit, OnDestroy {
     this.timestamp = this.alarm.initTimeStamp;
   }
 
+  time : string;
+  title : string;
+
   ngOnInit() {
   }
 
   ngAfterViewInit() {
-  }
-
-  findUserId(peerId: string) {
-    const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.userId : '';
-  }
-
-  findPeerName(peerId: string) {
-    const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.name : '';
-  }
-
-  findPeerLastControlName(peerId: string) {
-    const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.lastControlCharacterName : '';
-  }
-
-  findPeerImage(peerId: string) {
-    const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.image : null;
-  }
-
-  findPeerLastControlImage(peerId: string) {
-    const peerCursor = PeerCursor.findByPeerId(peerId);
-    return peerCursor ? peerCursor.lastControlImage : null;
   }
 
   ngOnDestroy() {

@@ -72,7 +72,7 @@ export class Alarm extends GameObject {
         }
         if(this.isPopUp ){
           console.log('アラーム ポップアップ再生');
-          EventSystem.trigger('ALARM_POP', { title : this.alarmTitle  , time : this.alarmTime });
+          EventSystem.trigger('ALARM_POP', { title : this.alarmTitle , time : this.alarmTime });
         }
       }, this.alarmTime * 1000);
     }

@@ -310,6 +310,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     option.top = margin_y;
 
     let component = this.panelService.open(AlarmWindowComponent, option);
+    component.title = title;
+    component.time = time;
+
   }
 
   startCutIn( cutIn: CutIn ){
