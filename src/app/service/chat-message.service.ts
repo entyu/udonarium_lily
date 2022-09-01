@@ -142,6 +142,8 @@ export class ChatMessageService {
       chatMessageTag = '';
     } else if (dicebot.checkSecretDiceCommand(gameSystem, text)) {
       chatMessageTag = `${gameSystem.ID} secret`;
+    } else if (dicebot.checkSecretEditCommand(text)) {
+      chatMessageTag = `${gameSystem.ID} secret`;
     } else {
       chatMessageTag = gameSystem.ID;
     }
@@ -179,6 +181,10 @@ export class ChatMessageService {
         if ( newIdentifier ){
           chatMessage.imageIdentifier = newIdentifier;
           chatMessage.text = text.replace(/([@＠]\S+\s*)$/i, '');
+          let obj = ObjectStore.instance.get(sendFrom);
+          if (obj instanceof GameCharacter) {
+            obj.selectedTachieNum = parseInt( matchNum[1] );
+          }
         }
       }else{
         const tachieName = matchesArray[1];
@@ -186,6 +192,10 @@ export class ChatMessageService {
         if ( newIdentifier ){
           chatMessage.imageIdentifier = newIdentifier;
           chatMessage.text = text.replace(/([@＠]\S+\s*)$/i, '');
+          let obj = ObjectStore.instance.get(sendFrom);
+          if (obj instanceof GameCharacter) {
+            obj.selectedTachieNum = this._ImageIndex;
+          }
         }
       }
     }
@@ -241,9 +251,11 @@ export class ChatMessageService {
     }
   }
 
+  private _ImageIndex = 0;
   private findImageIdentifierName(sendFrom, name: string): string {
 // 完全一致
     let object = ObjectStore.instance.get(sendFrom);
+    this._ImageIndex = 0;
     if (object instanceof GameCharacter) {
       let data: DataElement = object.imageDataElement;
       for (let child of data.children) {
@@ -256,9 +268,11 @@ export class ChatMessageService {
             }
           }
         }
+        this._ImageIndex ++;
       }
 // 部分前方一致
       for (let child of data.children) {
+      this._ImageIndex = 0;
         if (child instanceof DataElement) {
           console.log( 'child' + child.getAttribute('currentValue') );
           if ( child.getAttribute('currentValue').indexOf( name ) == 0 ){
@@ -269,6 +283,7 @@ export class ChatMessageService {
             }
           }
         }
+        this._ImageIndex ++;
       }
     }
     return '';

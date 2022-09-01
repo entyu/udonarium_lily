@@ -75,6 +75,10 @@ import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-tab
 
 import { VoteMenuComponent } from 'component/vote-menu/vote-menu.component';
 import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
+
+import { AlarmMenuComponent } from 'component/alarm-menu/alarm-menu.component';
+import { AlarmWindowComponent } from 'component/alarm-window/alarm-window.component';
+
 import { ImportCharacterImgComponent } from 'component/import-character-img/import-character-img.component';
 
 import { AppConfigService } from 'service/app-config.service';
@@ -138,6 +142,10 @@ import { AppComponent } from './app.component';
 
     VoteMenuComponent,
     VoteWindowComponent,
+
+    AlarmMenuComponent,
+    AlarmWindowComponent,
+
     ImportCharacterImgComponent,
 
     LobbyComponent,

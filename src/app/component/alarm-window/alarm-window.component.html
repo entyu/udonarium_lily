@@ -1,0 +1,16 @@
+<div class="component">
+  <ng-container *ngTemplateOutlet="alarmTop"></ng-container>
+</div>
+
+<ng-template #alarmTop>
+  <form class="is-sticky-top">
+    <div class="tab">
+      <div>
+        {{title}}
+      </div>
+      <div>
+        {{time}}秒経過しました
+      </div>
+    </div>
+  </form>
+</ng-template>

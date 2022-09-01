@@ -26,6 +26,7 @@ import { TableSelecter } from '@udonarium/table-selecter';
 import { CutIn } from '@udonarium/cut-in';
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
 import { Vote, VoteContext } from '@udonarium/vote';
+import { Alarm, AlarmContext } from '@udonarium/alarm';
 
 import { ChatWindowComponent } from 'component/chat-window/chat-window.component';
 import { ContextMenuComponent } from 'component/context-menu/context-menu.component';
@@ -50,6 +51,7 @@ import { SaveDataService } from 'service/save-data.service';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
+import { AlarmWindowComponent } from 'component/alarm-window/alarm-window.component';
 
 @Component({
   selector: 'app-root',
@@ -115,6 +117,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let vote = new Vote('Vote');
     vote.initialize();
 
+    let alarm = new Alarm('Alarm');
+    alarm.initialize();
+
     let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
     soundEffect.initialize();
 
@@ -141,6 +146,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     PresetSound.lock = AudioStorage.instance.add('./assets/sounds/tm2/tm2_switch001.wav').identifier;
     PresetSound.unlock = AudioStorage.instance.add('./assets/sounds/tm2/tm2_switch001.wav').identifier;
     PresetSound.sweep = AudioStorage.instance.add('./assets/sounds/tm2/tm2_swing003.wav').identifier;
+    PresetSound.alarm = AudioStorage.instance.add('./assets/sounds/alarm/alarm.mp3').identifier;
 
     AudioStorage.instance.get(PresetSound.dicePick).isHidden = true;
     AudioStorage.instance.get(PresetSound.dicePut).isHidden = true;
@@ -157,12 +163,19 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     AudioStorage.instance.get(PresetSound.lock).isHidden = true;
     AudioStorage.instance.get(PresetSound.unlock).isHidden = true;
     AudioStorage.instance.get(PresetSound.sweep).isHidden = true;
+    AudioStorage.instance.get(PresetSound.alarm).isHidden = true;
 
     PeerCursor.createMyCursor();
     PeerCursor.myCursor.name = 'プレイヤー';
     PeerCursor.myCursor.imageIdentifier = noneIconImage.identifier;
 
     EventSystem.register(this)
+      .on('ALARM_TIMEUP_ORIGIN', event => {
+        this.alarmTimeUpOrigin( event.data.text );
+      })
+      .on('ALARM_POP', event => {
+        this.alarmPop( event.data.title , event.data.time );
+      })
       .on('START_VOTE', event => {
         this.startVote();
       })
@@ -240,6 +253,16 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     EventSystem.unregister(this);
   }
 
+  alarmTimeUpOrigin(text: string){
+    let alarm = ObjectStore.instance.get<Alarm>('Alarm');
+    this.chatMessageService.sendSystemMessageLastSendCharactor(text);
+  }
+
+  alarmTimeUpTarget(text: string){
+    let alarm = ObjectStore.instance.get<Alarm>('Alarm');
+    this.chatMessageService.sendSystemMessageLastSendCharactor(text);
+  }
+
   startVote(){
     console.log( '点呼/投票イベント_スタート' );
     let vote = ObjectStore.instance.get<Vote>('Vote');
@@ -260,6 +283,36 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   finishVote(text: string){
     console.log( '投票集計完了' );
     this.chatMessageService.sendSystemMessageLastSendCharactor(text);
+  }
+
+  alarmPop(title: string, time: string){
+    console.log( 'ポップアップ_スタート' + title );
+    let winH = 100;
+    let winW = 200;
+    let option: PanelOption = { width: winW, height: winH, left: 300 , top: 100};
+    option.title = 'アラーム ' + title;
+
+    console.log( 'POP画面領域 w:' + window.innerWidth + ' h:' + window.innerHeight );
+    console.log( 'POPサイズ w:' + winW + ' h:' + winH );
+
+    let margin_w = window.innerWidth - winW ;
+    let margin_h = window.innerHeight - winH - 25 ;
+
+    if ( margin_w < 0 )margin_w = 0 ;
+    if ( margin_h < 0 )margin_h = 0 ;
+
+    let margin_x = margin_w * 0.5;
+    let margin_y = margin_h * 0.5;
+
+    option.width = winW ;
+    option.height = winH + 25 ;
+    option.left = margin_x ;
+    option.top = margin_y;
+
+    let component = this.panelService.open(AlarmWindowComponent, option);
+    component.title = title;
+    component.time = time;
+
   }
 
   startCutIn( cutIn: CutIn ){

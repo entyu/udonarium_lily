@@ -1,0 +1,76 @@
+<div class="component">
+  <ng-container *ngTemplateOutlet="alarmTop"></ng-container>
+  <div *ngIf="peerList.length < 1">自分しか部屋にいません</div>
+  <div *ngFor="let peer of peerList" style="font-size: 15px;" [ngClass]="{'box': true}">
+    <ng-container *ngTemplateOutlet="alarmTargets; context:{ peer : peer }"></ng-container>
+  </div>
+</div>
+
+<ng-template #alarmTop>
+  <form class="is-sticky-top">
+    <div class="tab">
+      <div style = "display:table;">
+        <div style = "display:table-cell;">
+          <input type="checkbox" value="includSelf"  [(ngModel)]="includSelf" name="includSelf" id = includSelf_{{initTimestamp}} (click)="changeIncludSelf()" ><span>自分を含める</span>
+        </div>
+        <div style = "display:table-cell;align:left">
+          <div style = "text-align:left;">
+          <span style = "display:inline-block;width:5em;margin-left:0.5em;">タイトル:</span><input class="is-caret" [(ngModel)]="alarmTitle" placeholder="アラーム" 
+          name="alarmTitle"  style="width:15em;"/><br>
+          <span style = "display:inline-block;width:5em;margin-left:0.5em;">時間:</span><input class="is-caret" type="number" [(ngModel)]="alarmTime" placeholder="" (change)="changeAlarmTime()" 
+          name="alarmTime" style="width:5em;"/>秒
+          </div>
+        </div>
+        <div style = "display:table-cell;">
+          <button (click)="send()" [attr.disabled]="selectedNum()==0 ? '' : null">送信</button><br>
+          <span style = "display:inline-block;margin-left:0.5em;">人数:{{selectedNum()}}</span>
+        </div>
+        <div style = "display:table-cell;align:left">
+          <input type="checkbox" value="isSound"  [(ngModel)]="isSound" name="isSound" id = isSound_{{initTimestamp}} (click)="changeIsSound()" ><span>音</span>
+          <input type="checkbox" value="isPopUp"  [(ngModel)]="isPopUp" name="isPopUp" id = isPopUp_{{initTimestamp}} (click)="changeIsPopUp()" ><span>ポップアップ</span>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #alarmTargets let-peer="peer">
+  <div class="inventory-object" (click)="voteBlockClick(peer.peerId)">
+    <div class="object-tags-box">
+      <div class="table-cell">
+        <div class="object-name" style="width:6em;">
+          送信対象
+        </div>
+        <div style="height:64px;" class="message">
+          <div>
+            <input type="checkbox" 
+            id = {{peer.peerId}}_{{initTimestamp}} (change) ="onChange(peer.peerId)" name="vote_chk"/>
+          </div>
+        </div>
+      </div>
+      <div class="table-cell">
+        <div class="object-name">
+          {{findPeerName(peer.peerId)}}
+        </div>
+        <div class="image-box">
+          <div *ngIf="findPeerImage(peer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerImage(peer.peerId).url + ')' | safe: 'style' "></div>
+        </div>
+      </div>
+      <div class="table-cell">
+        <div class="object-name">
+          <ng-container *ngIf="findPeerLastControlName(peer.peerId)">{{findPeerLastControlName(peer.peerId)}}</ng-container>
+          <ng-container *ngIf="!findPeerLastControlName(peer.peerId)">操作キャラなし</ng-container>
+        </div>
+        <div class="image-box">
+          <div *ngIf="findPeerLastControlImage(peer.peerId)" class="image cover" [style.background-image]="'url(' + findPeerLastControlImage(peer.peerId).url + ')' | safe: 'style' "></div>
+          <div *ngIf="!findPeerLastControlImage(peer.peerId)" class="image cover" [style.background-image]=""></div>
+        </div>
+      </div>
+      <div class="table-cell message">
+        <div [hidden] ="!isPeerIsDisConnect(peer.peerId)">
+          現在接続が切れていると考えられる相手です
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
