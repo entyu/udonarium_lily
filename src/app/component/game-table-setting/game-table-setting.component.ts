@@ -36,6 +36,8 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     });
   }
 
+//  @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
+
   get config(): Config { return ObjectStore.instance.get<Config>('Config')};
 
   minSize: number = 1;

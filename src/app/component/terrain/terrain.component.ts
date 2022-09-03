@@ -9,7 +9,9 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  ViewChild
 } from '@angular/core';
+
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -27,15 +29,26 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 
+import { TabletopService } from 'service/tabletop.service';
+import { GridLineRender } from 'component/game-table/grid-line-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
+import { TableSelecter } from '@udonarium/table-selecter';
+import { FilterType, GameTable, GridType } from '@udonarium/game-table';
+
 @Component({
   selector: 'terrain',
   templateUrl: './terrain.component.html',
   styleUrls: ['./terrain.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
+
+export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
+  
   @Input() terrain: Terrain = null;
   @Input() is3D: boolean = false;
+  @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
+
+  get tableSelecter(): TableSelecter { return this.tabletopService.tableSelecter; }
+  get currentTable(): GameTable { return this.tabletopService.currentTable; }
 
   get name(): string { return this.terrain.name; }
   get mode(): TerrainViewState { return this.terrain.mode; }
@@ -74,6 +87,8 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
     private coordinateService: CoordinateService,
+
+    private tabletopService: TabletopService,
   ) { }
 
   ngOnInit() {
@@ -84,6 +99,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.terrain === object || (object instanceof ObjectNode && this.terrain.contains(object))) {
           this.changeDetector.markForCheck();
         }
+        this.setGameTableGrid(this.width, this.depth, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -208,4 +224,19 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }
+
+  private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
+
+/*
+    this.gameTable.nativeElement.style.width = width * gridSize + 'px';
+    this.gameTable.nativeElement.style.height = height * gridSize + 'px';
+*/
+    let render = new GridLineRender(this.gridCanvas.nativeElement);
+    render.render(width, height, gridSize, gridType, gridColor);
+
+//    let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+      let opacity: number = 1.0;
+    this.gridCanvas.nativeElement.style.opacity = opacity + '';
+  }
+
 }

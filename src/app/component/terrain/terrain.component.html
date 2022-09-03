@@ -8,8 +8,9 @@
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLocked">
     <ng-container *ngIf="hasFloor && isVisibleFloor && 0 < floorImage?.url.length">
       <div class="texture will-change" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'transform': 'translateZ(' + height * gridSize +'px)'}"
-        [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
+      [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
     </ng-container>
+    <canvas class="grid-canvas is-fill is-pointer-events-none" [ngStyle]="{'transform': 'translateZ(' + height * gridSize +'px)'}" #gridCanvas></canvas>
     <ng-container *ngIf="hasWall && 0 < wallImage?.url.length">
       <div *ngIf="isVisibleWallTopBottom will-change" [ngClass]="{'blinking-animation': !isLocked}"
         class="texture of-wall-top" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
