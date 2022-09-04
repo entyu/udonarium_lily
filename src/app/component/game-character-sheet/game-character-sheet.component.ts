@@ -104,12 +104,25 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
   }
 
   clickNoTalk(){
-    //処理なし    
+    //処理なし
   }
 
   clickImageFlag(){
-    //処理なし    
+    //処理なし
   }
+
+  clickGrid(){
+    //処理なし
+  }
+
+  clickGridAlwaysOn(){
+    //処理なし
+  }
+
+  clickGridAlwaysOff(){
+    //処理なし
+  }
+
 
   showImportImages() {
     let coordinate = this.pointerDeviceService.pointers[0];

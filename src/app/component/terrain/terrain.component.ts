@@ -220,17 +220,13 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = '地形設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
-    let option: PanelOption = { title: title, left: coordinate.x - 250, top: coordinate.y - 150, width: 500, height: 300 };
+    let option: PanelOption = { title: title, left: coordinate.x - 250, top: coordinate.y - 150, width: 600, height: 300 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }
 
   private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
 
-/*
-    this.gameTable.nativeElement.style.width = width * gridSize + 'px';
-    this.gameTable.nativeElement.style.height = height * gridSize + 'px';
-*/
     let render = new GridLineRender(this.gridCanvas.nativeElement);
     render.render(width, height, gridSize, gridType, gridColor);
 
