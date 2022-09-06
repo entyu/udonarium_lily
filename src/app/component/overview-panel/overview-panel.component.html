@@ -204,7 +204,7 @@
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'checkProperty'">
-        <div class="tag" [attr.title]="dataElm.name"><span [style.textDecoration]="dataElm.value ? 'none' : 'line-through'">{{dataElm.name}}</span> {{ dataElm.currentValue.split(checkRegExp)[ dataElm.value ? 0 : 1 ] }}</div>
+        <div class="tag" [attr.title]="dataElm.name"><span [style.textDecoration]="dataElm.value ? 'none' : 'line-through'">{{dataElm.name}}</span> {{ dataElm.currentValue.toString().split(checkRegExp)[ dataElm.value ? 0 : 1 ] }}</div>
         <div class="value">
           <input appLogging [logging.name]="name" [logging.dataElement]="dataElm" [logging.disable]="isNoLogging" type="checkbox" style="width: 2em; margin-right:1em" [(ngModel)]="dataElm.value" checked="{{dataElm.value ? 'checked' : ''}}" (change)="dataElm.value = (dataElm.value ? dataElm.name : '')">
         </div>

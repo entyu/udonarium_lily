@@ -92,7 +92,7 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
   ngOnDestroy() {
     const LoggingValueMap = LoggingInputDirective.LoggingValueMap;
     const identifier = this.dataElement.identifier;
-    if (LoggingValueMap.get(identifier).timerId) {
+    if (LoggingValueMap.get(identifier) && LoggingValueMap.get(identifier).timerId) {
       this.doLogging();
     }
   }
