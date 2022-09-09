@@ -71,6 +71,12 @@
         <label>スナップ:
           <input type="checkbox" [(ngModel)]="tableGridSnap" name="tableGridSnap" />
         </label>
+        <hr/>
+        <label>全員のグリッドを常時強制ON:
+          <input type="checkbox" [(ngModel)]="roomGridDispAlways" name="roomGridDispAlways" /><br>
+          ※テーブル毎の設定ではなく部屋全体の設定です。
+        </label>
+        <hr/>
         <ng-container *ngIf="!isDeleted">
           <button [disabled]="isSaveing" (click)="save()">
             <div style="position: relative;">

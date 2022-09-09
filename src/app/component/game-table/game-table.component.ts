@@ -27,6 +27,9 @@ import { GridLineRender } from './grid-line-render';
 import { TableMouseGesture } from './table-mouse-gesture';
 import { TableTouchGesture } from './table-touch-gesture';
 
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { Config } from '@udonarium/config';
+
 @Component({
   selector: 'game-table',
   templateUrl: './game-table.component.html',
@@ -51,6 +54,16 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get backgroundFilterType(): FilterType {
     return this.currentTable.backgroundFilterType;
+  }
+
+  get roomGridDispAlways(): boolean { 
+    let conf = ObjectStore.instance.get<Config>('Config');
+    return conf? conf.roomGridDispAlways : false ;
+  }
+
+  set roomGridDispAlways(disp: boolean){
+    let conf = ObjectStore.instance.get<Config>('Config');
+    if(conf) conf.roomGridDispAlways = disp;
   }
 
   private isTransformMode: boolean = false;
@@ -99,6 +112,9 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
         this.isTransformMode = true;
         this.pointerDeviceService.isDragging = false;
         let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+        if(this.roomGridDispAlways){
+          opacity = 1.0;
+        }
         this.gridCanvas.nativeElement.style.opacity = opacity + '';
       })
       .on('FOCUS_TO_TABLETOP_COORDINATE', event => {
@@ -239,6 +255,9 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isTransformMode = true;
     this.pointerDeviceService.isDragging = false;
     let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+    if(this.roomGridDispAlways){
+      opacity = 1.0;
+    }
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
   }
 
@@ -283,6 +302,9 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     render.render(width, height, gridSize, gridType, gridColor);
 
     let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+    if(this.roomGridDispAlways){
+      opacity = 1.0;
+    }
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
     console.log('グリッド描画');
   }

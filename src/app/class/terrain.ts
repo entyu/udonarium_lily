@@ -53,4 +53,5 @@ export class Terrain extends TabletopObject {
 
     return object;
   }
+
 }

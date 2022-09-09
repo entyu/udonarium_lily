@@ -34,6 +34,8 @@ import { GridLineRender } from 'component/game-table/grid-line-render'; // 注�
 import { TableSelecter } from '@udonarium/table-selecter';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 
+import { Config } from '@udonarium/config';
+
 @Component({
   selector: 'terrain',
   templateUrl: './terrain.component.html',
@@ -70,6 +72,16 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
   get isVisibleWallTopBottom(): boolean { return 0 < this.width * this.height; }
   get isVisibleWallLeftRight(): boolean { return 0 < this.depth * this.height; }
 
+  get roomGridDispAlways(): boolean { 
+    let conf = ObjectStore.instance.get<Config>('Config');
+    return conf? conf.roomGridDispAlways : false ;
+  }
+
+  set roomGridDispAlways(disp: boolean){
+    let conf = ObjectStore.instance.get<Config>('Config');
+    if(conf) conf.roomGridDispAlways = disp;
+  }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -99,18 +111,30 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
         if (this.terrain === object || (object instanceof ObjectNode && this.terrain.contains(object))) {
           this.changeDetector.markForCheck();
         }
-        if (event.data.identifier !== this.currentTable.identifier && event.data.identifier !== this.tableSelecter.identifier) return;
+        if (event.data.identifier !== this.currentTable.identifier 
+         && event.data.identifier !== this.tableSelecter.identifier
+         && event.data.identifier !== this.terrain.identifier) return;
         this.setGameTableGrid(this.width, this.depth, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
       })
       .on('DISP_TERRAIN_GRID', event => {
-        let opacity: number = this.terrain.isGrid ? 1.0 : 0.0;
-        if (this.tableSelecter.gridShow){
+        let opacity: number = 0.0;
+        if (this.terrain.isGrid){
           opacity = 1.0;
         }
+        console.log('グリッド DISP_TERRAIN_GRID' + opacity);
         this.gridCanvas.nativeElement.style.opacity = opacity + '';
       })
       .on('DISP_TERRAIN_GRID_END', event => {
-        let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+        let opacity: number = 0.0;
+        if (this.terrain.isGrid){
+          if (this.roomGridDispAlways){
+            opacity = 1.0;
+          }
+          if (this.tableSelecter.gridShow){
+            opacity = 1.0;
+          }
+        }
+        console.log('グリッド DISP_TERRAIN_GRID_END ' + opacity);
         this.gridCanvas.nativeElement.style.opacity = opacity + '';
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
@@ -242,9 +266,14 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
 
     let render = new GridLineRender(this.gridCanvas.nativeElement);
     render.render(width, height, gridSize, gridType, gridColor);
-    let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
-    if (!this.terrain.isGrid){
-      opacity = 0.0;
+    let opacity: number = 0.0;
+    if (this.terrain.isGrid){
+      if (this.roomGridDispAlways){
+        opacity = 1.0;
+      }
+      if (this.tableSelecter.gridShow){
+        opacity = 1.0;
+      }
     }
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
   }

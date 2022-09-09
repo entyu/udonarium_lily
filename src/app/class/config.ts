@@ -12,6 +12,7 @@ export class Config extends ObjectNode implements InnerXml {
 
   @SyncVar() _defaultDiceBot: string = 'DiceBot';
   @SyncVar() _roomVolume: number = 1.00;
+  @SyncVar() _roomGridDispAlways: boolean = false;
 
   get defaultDiceBot(): string {
     if(this._defaultDiceBot == ''){
@@ -27,6 +28,8 @@ export class Config extends ObjectNode implements InnerXml {
   // 共通設定保存の都合でのため全体ボリュームはこちらにある
   get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
 
+  get roomGridDispAlways(): boolean { return this._roomGridDispAlways; }
+  set roomGridDispAlways(roomGridDispAlways: boolean) { this._roomGridDispAlways = roomGridDispAlways; }
 
   private static _instance: Config;
   static get instance(): Config {
