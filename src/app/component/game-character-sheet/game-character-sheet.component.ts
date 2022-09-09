@@ -115,15 +115,6 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     //処理なし
   }
 
-  clickGridAlwaysOn(){
-    //処理なし
-  }
-
-  clickGridAlwaysOff(){
-    //処理なし
-  }
-
-
   showImportImages() {
     let coordinate = this.pointerDeviceService.pointers[0];
     let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 350, height: 250 };

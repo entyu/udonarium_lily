@@ -99,7 +99,19 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
         if (this.terrain === object || (object instanceof ObjectNode && this.terrain.contains(object))) {
           this.changeDetector.markForCheck();
         }
+        if (event.data.identifier !== this.currentTable.identifier && event.data.identifier !== this.tableSelecter.identifier) return;
         this.setGameTableGrid(this.width, this.depth, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
+      })
+      .on('DISP_TERRAIN_GRID', event => {
+        let opacity: number = this.terrain.isGrid ? 1.0 : 0.0;
+        if (this.tableSelecter.gridShow){
+          opacity = 1.0;
+        }
+        this.gridCanvas.nativeElement.style.opacity = opacity + '';
+      })
+      .on('DISP_TERRAIN_GRID_END', event => {
+        let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+        this.gridCanvas.nativeElement.style.opacity = opacity + '';
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -121,6 +133,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
       this.input = new InputHandler(this.elementRef.nativeElement);
     });
     this.input.onStart = this.onInputStart.bind(this);
+    this.setGameTableGrid(this.width, this.depth, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
   }
 
   ngOnDestroy() {
@@ -229,9 +242,10 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
 
     let render = new GridLineRender(this.gridCanvas.nativeElement);
     render.render(width, height, gridSize, gridType, gridColor);
-
-//    let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
-      let opacity: number = 1.0;
+    let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+    if (!this.terrain.isGrid){
+      opacity = 0.0;
+    }
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
   }
 

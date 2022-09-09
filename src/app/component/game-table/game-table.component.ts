@@ -93,7 +93,6 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if (event.data.identifier !== this.currentTable.identifier && event.data.identifier !== this.tableSelecter.identifier) return;
         console.log('UPDATE_GAME_OBJECT GameTableComponent ' + this.currentTable.identifier);
-
         this.setGameTableGrid(this.currentTable.width, this.currentTable.height, this.currentTable.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
       })
       .on('DRAG_LOCKED_OBJECT', event => {
@@ -205,8 +204,8 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isTransformMode = false;
       this.pointerDeviceService.isDragging = true;
       this.gridCanvas.nativeElement.style.opacity = 1.0 + '';
+      EventSystem.trigger('DISP_TERRAIN_GRID', {});
     }
-
     if (!document.activeElement.contains(e.target)) {
       this.removeSelectionRanges();
       this.removeFocus();
@@ -215,6 +214,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onTableMouseEnd(e: any) {
     this.cancelInput();
+    EventSystem.trigger('DISP_TERRAIN_GRID_END', {});
   }
 
   onTableMouseTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number, event: string, srcEvent: TouchEvent | MouseEvent | PointerEvent) {
@@ -284,6 +284,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
     let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
+    console.log('グリッド描画');
   }
 
   private removeSelectionRanges() {
