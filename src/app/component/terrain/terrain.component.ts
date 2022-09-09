@@ -267,15 +267,17 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
     let render = new GridLineRender(this.gridCanvas.nativeElement);
     render.render(width, height, gridSize, gridType, gridColor);
     let opacity: number = 0.0;
-    if (this.terrain.isGrid){
-      if (this.roomGridDispAlways){
-        opacity = 1.0;
+    setTimeout(() => { // 他PL操作で表示条件変更時、情報更新されてからUpdate処理をするため
+      if (this.terrain.isGrid){
+        if (this.roomGridDispAlways){
+          opacity = 1.0;
+        }
+        if (this.tableSelecter.gridShow){
+          opacity = 1.0;
+        }
       }
-      if (this.tableSelecter.gridShow){
-        opacity = 1.0;
-      }
-    }
-    this.gridCanvas.nativeElement.style.opacity = opacity + '';
+      this.gridCanvas.nativeElement.style.opacity = opacity + '';
+    },0);
   }
 
 }

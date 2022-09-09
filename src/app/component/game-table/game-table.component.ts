@@ -295,18 +295,21 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
+    
     this.gameTable.nativeElement.style.width = width * gridSize + 'px';
     this.gameTable.nativeElement.style.height = height * gridSize + 'px';
 
     let render = new GridLineRender(this.gridCanvas.nativeElement);
     render.render(width, height, gridSize, gridType, gridColor);
 
-    let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
-    if(this.roomGridDispAlways){
-      opacity = 1.0;
-    }
-    this.gridCanvas.nativeElement.style.opacity = opacity + '';
-    console.log('グリッド描画');
+    setTimeout(() => { // 他PL操作で表示条件変更時、情報更新されてからUpdate処理をするため
+      let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+      if(this.roomGridDispAlways){
+        opacity = 1.0;
+      }
+      this.gridCanvas.nativeElement.style.opacity = opacity + '';
+      console.log('グリッド描画');
+    },0);
   }
 
   private removeSelectionRanges() {
