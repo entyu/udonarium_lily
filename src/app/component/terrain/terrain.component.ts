@@ -121,7 +121,6 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
         if (this.terrain.isGrid){
           opacity = 1.0;
         }
-        console.log('グリッド DISP_TERRAIN_GRID' + opacity);
         this.gridCanvas.nativeElement.style.opacity = opacity + '';
       })
       .on('DISP_TERRAIN_GRID_END', event => {
@@ -134,7 +133,6 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
             opacity = 1.0;
           }
         }
-        console.log('グリッド DISP_TERRAIN_GRID_END ' + opacity);
         this.gridCanvas.nativeElement.style.opacity = opacity + '';
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
