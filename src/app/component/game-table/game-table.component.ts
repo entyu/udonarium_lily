@@ -27,6 +27,9 @@ import { GridLineRender } from './grid-line-render';
 import { TableMouseGesture } from './table-mouse-gesture';
 import { TableTouchGesture } from './table-touch-gesture';
 
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { Config } from '@udonarium/config';
+
 @Component({
   selector: 'game-table',
   templateUrl: './game-table.component.html',
@@ -51,6 +54,16 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get backgroundFilterType(): FilterType {
     return this.currentTable.backgroundFilterType;
+  }
+
+  get roomGridDispAlways(): boolean { 
+    let conf = ObjectStore.instance.get<Config>('Config');
+    return conf? conf.roomGridDispAlways : false ;
+  }
+
+  set roomGridDispAlways(disp: boolean){
+    let conf = ObjectStore.instance.get<Config>('Config');
+    if(conf) conf.roomGridDispAlways = disp;
   }
 
   private isTransformMode: boolean = false;
@@ -93,13 +106,15 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         if (event.data.identifier !== this.currentTable.identifier && event.data.identifier !== this.tableSelecter.identifier) return;
         console.log('UPDATE_GAME_OBJECT GameTableComponent ' + this.currentTable.identifier);
-
         this.setGameTableGrid(this.currentTable.width, this.currentTable.height, this.currentTable.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
       })
       .on('DRAG_LOCKED_OBJECT', event => {
         this.isTransformMode = true;
         this.pointerDeviceService.isDragging = false;
         let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+        if(this.roomGridDispAlways){
+          opacity = 1.0;
+        }
         this.gridCanvas.nativeElement.style.opacity = opacity + '';
       })
       .on('FOCUS_TO_TABLETOP_COORDINATE', event => {
@@ -205,8 +220,8 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isTransformMode = false;
       this.pointerDeviceService.isDragging = true;
       this.gridCanvas.nativeElement.style.opacity = 1.0 + '';
+      EventSystem.trigger('DISP_TERRAIN_GRID', {});
     }
-
     if (!document.activeElement.contains(e.target)) {
       this.removeSelectionRanges();
       this.removeFocus();
@@ -215,6 +230,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onTableMouseEnd(e: any) {
     this.cancelInput();
+    EventSystem.trigger('DISP_TERRAIN_GRID_END', {});
   }
 
   onTableMouseTransform(transformX: number, transformY: number, transformZ: number, rotateX: number, rotateY: number, rotateZ: number, event: string, srcEvent: TouchEvent | MouseEvent | PointerEvent) {
@@ -239,6 +255,9 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isTransformMode = true;
     this.pointerDeviceService.isDragging = false;
     let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+    if(this.roomGridDispAlways){
+      opacity = 1.0;
+    }
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
   }
 
@@ -276,14 +295,21 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
+    
     this.gameTable.nativeElement.style.width = width * gridSize + 'px';
     this.gameTable.nativeElement.style.height = height * gridSize + 'px';
 
     let render = new GridLineRender(this.gridCanvas.nativeElement);
     render.render(width, height, gridSize, gridType, gridColor);
 
-    let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
-    this.gridCanvas.nativeElement.style.opacity = opacity + '';
+    setTimeout(() => { // 他PL操作で表示条件変更時、情報更新されてからUpdate処理をするため
+      let opacity: number = this.tableSelecter.gridShow ? 1.0 : 0.0;
+      if(this.roomGridDispAlways){
+        opacity = 1.0;
+      }
+      this.gridCanvas.nativeElement.style.opacity = opacity + '';
+      console.log('グリッド描画');
+    },0);
   }
 
   private removeSelectionRanges() {

@@ -36,6 +36,17 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
     });
   }
 
+  get roomGridDispAlways(): boolean { 
+    let conf = ObjectStore.instance.get<Config>('Config');
+    return conf? conf.roomGridDispAlways : false ;
+  }
+
+  set roomGridDispAlways(disp: boolean){
+    let conf = ObjectStore.instance.get<Config>('Config');
+    this.tableGridDummy = !this.tableGridDummy;
+    if(conf) conf.roomGridDispAlways = disp;
+  }
+
   get config(): Config { return ObjectStore.instance.get<Config>('Config')};
 
   minSize: number = 1;
@@ -50,6 +61,10 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
   get tableDistanceviewImage(): ImageFile {
     return this.imageService.getEmptyOr(this.selectedTable ? this.selectedTable.backgroundImageIdentifier : null);
   }
+
+  // 全体強制ONしたときのグリッド表示信号発行のためのダミー
+  get tableGridDummy(): boolean { return this.tableSelecter.tableGridDummy; }
+  set tableGridDummy(dummy: boolean) { this.tableSelecter.tableGridDummy = dummy; }
 
   get tableName(): string { return this.selectedTable.name; }
   set tableName(tableName: string) { if (this.isEditable) this.selectedTable.name = tableName; }

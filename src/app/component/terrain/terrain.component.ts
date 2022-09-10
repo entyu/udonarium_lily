@@ -9,7 +9,9 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  ViewChild
 } from '@angular/core';
+
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -27,15 +29,28 @@ import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 
+import { TabletopService } from 'service/tabletop.service';
+import { GridLineRender } from 'component/game-table/grid-line-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
+import { TableSelecter } from '@udonarium/table-selecter';
+import { FilterType, GameTable, GridType } from '@udonarium/game-table';
+
+import { Config } from '@udonarium/config';
+
 @Component({
   selector: 'terrain',
   templateUrl: './terrain.component.html',
   styleUrls: ['./terrain.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
+
+export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
+  
   @Input() terrain: Terrain = null;
   @Input() is3D: boolean = false;
+  @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
+
+  get tableSelecter(): TableSelecter { return this.tabletopService.tableSelecter; }
+  get currentTable(): GameTable { return this.tabletopService.currentTable; }
 
   get name(): string { return this.terrain.name; }
   get mode(): TerrainViewState { return this.terrain.mode; }
@@ -57,6 +72,16 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
   get isVisibleWallTopBottom(): boolean { return 0 < this.width * this.height; }
   get isVisibleWallLeftRight(): boolean { return 0 < this.depth * this.height; }
 
+  get roomGridDispAlways(): boolean { 
+    let conf = ObjectStore.instance.get<Config>('Config');
+    return conf? conf.roomGridDispAlways : false ;
+  }
+
+  set roomGridDispAlways(disp: boolean){
+    let conf = ObjectStore.instance.get<Config>('Config');
+    if(conf) conf.roomGridDispAlways = disp;
+  }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -74,6 +99,8 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService,
     private coordinateService: CoordinateService,
+
+    private tabletopService: TabletopService,
   ) { }
 
   ngOnInit() {
@@ -84,6 +111,29 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.terrain === object || (object instanceof ObjectNode && this.terrain.contains(object))) {
           this.changeDetector.markForCheck();
         }
+        if (event.data.identifier !== this.currentTable.identifier 
+         && event.data.identifier !== this.tableSelecter.identifier
+         && event.data.identifier !== this.terrain.identifier) return;
+        this.setGameTableGrid(this.width, this.depth, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
+      })
+      .on('DISP_TERRAIN_GRID', event => {
+        let opacity: number = 0.0;
+        if (this.terrain.isGrid){
+          opacity = 1.0;
+        }
+        this.gridCanvas.nativeElement.style.opacity = opacity + '';
+      })
+      .on('DISP_TERRAIN_GRID_END', event => {
+        let opacity: number = 0.0;
+        if (this.terrain.isGrid){
+          if (this.roomGridDispAlways){
+            opacity = 1.0;
+          }
+          if (this.tableSelecter.gridShow){
+            opacity = 1.0;
+          }
+        }
+        this.gridCanvas.nativeElement.style.opacity = opacity + '';
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -105,6 +155,7 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
       this.input = new InputHandler(this.elementRef.nativeElement);
     });
     this.input.onStart = this.onInputStart.bind(this);
+    this.setGameTableGrid(this.width, this.depth, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
   }
 
   ngOnDestroy() {
@@ -204,8 +255,27 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit {
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = '地形設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
-    let option: PanelOption = { title: title, left: coordinate.x - 250, top: coordinate.y - 150, width: 500, height: 300 };
+    let option: PanelOption = { title: title, left: coordinate.x - 250, top: coordinate.y - 150, width: 600, height: 300 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }
+
+  private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
+
+    let render = new GridLineRender(this.gridCanvas.nativeElement);
+    render.render(width, height, gridSize, gridType, gridColor);
+    let opacity: number = 0.0;
+    setTimeout(() => { // 他PL操作で表示条件変更時、情報更新されてからUpdate処理をするため
+      if (this.terrain.isGrid){
+        if (this.roomGridDispAlways){
+          opacity = 1.0;
+        }
+        if (this.tableSelecter.gridShow){
+          opacity = 1.0;
+        }
+      }
+      this.gridCanvas.nativeElement.style.opacity = opacity + '';
+    },0);
+  }
+
 }

@@ -192,3 +192,27 @@
   0% { opacity:0.9; }
   100% { opacity:0.5; }
 }
+
+.grid-canvas {
+  opacity: 0.0;
+  transform: translateZ(0.15px);
+  -webkit-transition: 0.3s ease-out;
+  -moz-transition: 0.3s ease-out;
+  -o-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
+  backface-visibility: hidden;
+}
+
+.is-fill {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+
+.is-pointer-events-none {
+  pointer-events: none;
+}

@@ -78,6 +78,16 @@
       </div>
     </div>
   </ng-container>
+  <ng-container *ngIf="tabletopObject.aliasName === 'terrain'">
+    <div class="extra-setting" style="display:table;">
+      <div class="extra-setting" style="width:30%;display:table-cell;align:right">
+      </div>
+      <div class="extra-setting" style="width:70%;display:table-cell;align:right">
+        床にグリッドを表示
+        <input type="checkbox" value="isGrid"  [(ngModel)]="tabletopObject.isGrid" name="isGrid" (click)="clickGrid()"><br>
+      </div>
+    </div>
+  </ng-container>
   <ng-container *ngIf="tabletopObject.aliasName === 'character'">
     <select *ngIf="tabletopObject" (change)="setLocation($event.target.value)" [ngModel]="tabletopObject.location.name">
     <option value="table">テーブル</option>
