@@ -8,10 +8,7 @@
         <div class="dummy"></div>
         <terrain class="is-3d will-change-transform" *ngFor="let terrain of terrains; trackBy: trackByGameObject" [terrain]="terrain"></terrain>
       </div>
-      <div *ngIf="tableMasks.length > 0" class="layer">
-        <div class="dummy"></div>
-        <game-table-mask class="is-3d will-change-transform" *ngFor="let mask of tableMasks; trackBy: trackByGameObject" [gameTableMask]="mask"></game-table-mask>
-      </div>
+      <game-table-mask class="is-3d will-change-transform" *ngFor="let mask of tableMasks; trackBy: trackByGameObject" [gameTableMask]="mask"></game-table-mask>
       <div *ngIf="textNotes.length > 0" class="layer">
         <div class="dummy"></div>
         <text-note class="is-3d will-change-transform" *ngFor="let textNote of textNotes; trackBy: trackByGameObject" [textNote]="textNote" [appTooltip]="textNote" [ngStyle]="{'z-index' : textNote.zindex}"></text-note>
