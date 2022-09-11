@@ -1,0 +1,14 @@
+<!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
+<div class="dummy-will-change" appMovable [movable.option]="movableOption">
+</div>
+<div class="component" [ngClass]="{'is-grab': !isLock}"
+  [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
+  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
+  <div blackMask></div>
+  <ng-template #blackMask>
+    <div class="border is-fit-full" [style.background-color]="'rgba(10, 10, 10,' + opacity +')'"></div>
+  </ng-template>
+  <div *ngIf="isLock" class="lock-icon is-center">
+    <i class="material-icons">lock</i>
+  </div>
+</div>
