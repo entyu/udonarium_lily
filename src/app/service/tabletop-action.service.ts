@@ -11,6 +11,7 @@ import { GameTable } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
+import { Range } from '@udonarium/range';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 
@@ -97,6 +98,14 @@ export class TabletopActionService {
     return diceSymbol;
   }
 
+
+  createRange(position: PointerCoordinate): Range {
+    let range = Range.create('射程範囲', 5, 5, 100);
+    range.location.x = position.x;
+    range.location.y = position.y;
+    range.posZ = position.z;
+    return range;
+  }
 
   createTrump(position: PointerCoordinate): CardStack {
     let cardStack = CardStack.create('トランプ山札');
@@ -441,6 +450,7 @@ export class TabletopActionService {
       this.getCreateTextNoteMenu(position),
       this.getCreateTrumpMenu(position),
       this.getCreateDiceSymbolMenu(position),
+      this.getCreateRangeMenu(position),
     ];
   }
 
@@ -511,6 +521,16 @@ export class TabletopActionService {
       });
     });
     return { name: 'ダイスを作成', action: null, subActions: subMenus };
+  }
+
+  private getCreateRangeMenu(position: PointerCoordinate): ContextMenuAction {
+    return {
+      name: '射程範囲を作成', action: () => {
+        let range = this.createRange(position);
+//        EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: character.identifier, className: character.aliasName });
+        SoundEffect.play(PresetSound.piecePut);
+      }
+    }
   }
 
   private getViewTable(): GameTable {

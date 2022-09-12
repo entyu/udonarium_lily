@@ -11,6 +11,7 @@ import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { TableSelecter } from '@udonarium/table-selecter';
+import { Range } from '@udonarium/range';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 
@@ -85,6 +86,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get tableMasks(): GameTableMask[] { return this.tabletopService.tableMasks; }
   get cards(): Card[] { return this.tabletopService.cards; }
   get cardStacks(): CardStack[] { return this.tabletopService.cardStacks; }
+  get ranges(): Range[] { return this.tabletopService.ranges; }
   get terrains(): Terrain[] { return this.tabletopService.terrains; }
   get textNotes(): TextNote[] { return this.tabletopService.textNotes; }
   get diceSymbols(): DiceSymbol[] { return this.tabletopService.diceSymbols; }
