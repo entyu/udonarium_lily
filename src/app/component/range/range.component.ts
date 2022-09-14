@@ -45,7 +45,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('rangeCanvas', { static: true }) rangeCanvas: ElementRef<HTMLCanvasElement>;
-  @ViewChild('rotate') rotate: HTMLElement;
+  @ViewChild('rotate') rotate: ElementRef<HTMLElement>;
   
   get tableSelecter(): TableSelecter { return this.tabletopService.tableSelecter; }
   get currentTable(): GameTable { return this.tabletopService.currentTable; }
@@ -63,9 +63,15 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   get rotateDeg(): number { 
-//    let ele = this.rotate<HTMLDivElement>('#ele');
-    let data = this.rotate.style.transform;
-    let data2 = data.replace(/[^0-9\.\-]/g, '')
+    let data2 = '0.0';
+    if(!this.rotate){ return 0;}
+    if(!this.rotate.nativeElement){ return 0;}
+    if(!this.rotate.nativeElement.style){ return 0;}
+    if(!this.rotate.nativeElement.style.transform){ return 0;}
+
+    let data = this.rotate.nativeElement.style.transform;
+    console.log(data);
+    data2 = data.replace(/[^0-9\.\-]/g, '');
     if(!data2) data2 = '0.0';
     return parseFloat(data2);
   }

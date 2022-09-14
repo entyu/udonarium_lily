@@ -5,22 +5,20 @@
 <div class="component" [ngClass]="{'is-grab': !isLock}"
   [style.width.px]="0" [style.height.px]="0"
   appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
+  <div style="position:absolute;" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
+    <canvas class="is-fill is-pointer-events-none" #gridCanvas></canvas><!---->
+  </div>
   <div class="component-content is-3d is-pointer-events-auto" 
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLock" 
     style="transform:rotateZ(0deg);"  #rotate>
-      <!--[ngStyle]="{'transform': 'translateZ(' + height * gridSize * 2 +'px)'}" hidden-->
-    <div style="position:relative;background-color:#55FF00;overflow:;" [style.width.px]="width * gridSize" [style.height.px]="height * gridSize">
-      <div style="position:absolute;" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize" [ngStyle]="{'transform': 'rotateX(' + 180 +'deg)'}">
-        <canvas class="is-fill is-pointer-events-none" appRotable [rotable.option]="rotableOption" #gridCanvas></canvas><!---->
-      </div>
-    </div >
-    <canvas class="is-fill is-pointer-events-none" #rangeCanvas></canvas>
+    <canvas style="position:absolute;" class="is-fill is-pointer-events-none" #rangeCanvas></canvas>
     <div *ngIf="isLock" class="lock-icon is-center">
       <i class="material-icons">lock</i>
     </div>
 <!--*ngIf="!isLock"-->
     <ng-container > 
       AAAAA　　　{{rotate.style.transform}}
+      {{rotateDeg}}
       <div style="position:absolute;width:28px;">
         <div class="pedestal-grab-corn rotate-grab is-3d will-change"></div>
         <div class="rotate-grab of-corn-top rotate-grab-icon is-3d will-change">
