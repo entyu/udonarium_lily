@@ -62,6 +62,8 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
   private grabbingElement: HTMLElement = null;
   private input: InputHandler = null;
 
+  test = 100;
+
   constructor(
     private elementRef: ElementRef,
     private batchService: BatchService,

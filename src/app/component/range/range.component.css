@@ -65,3 +65,122 @@
   height: 100%;
   width: 100%;
 }
+
+
+.pedestal-grab-corn {
+  z-index: -1;
+  position: absolute;
+  top: -14px;
+  left: -14px;
+  right: 14px;
+  bottom: -14px;
+  cursor: default;
+
+  box-sizing: border-box;
+  border-top: solid 7px #CCC;
+  border-left: solid 7px #CCC;
+  border-right: solid 7px #CCC;
+  border-bottom: solid 7px #CCC;
+  border-radius: 14px;
+}
+
+.pedestal-grab {
+  z-index: -1;
+  position: absolute;
+  top: -14px;
+  left: -14px;
+  right: -14px;
+  bottom: -14px;
+  cursor: default;
+
+  box-sizing: border-box;
+  border-top: solid 7px #CCC;
+  border-left: solid 7px #CCC;
+  border-right: solid 7px #CCC;
+  border-bottom: solid 7px #CCC;
+  border-radius: 14px;
+}
+
+.component:hover .rotate-grab{
+  opacity: 1;
+}
+
+.rotate-grab {
+  opacity: 0;
+  z-index: -1;
+}
+
+.rotate-grab-icon {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+  border: solid 2px #CCCCCC;
+  cursor: -moz-default;
+  cursor: -webkit-default;
+  cursor: default;
+  z-index: 1;
+  padding: 0;
+  background-color: #CCCCCC;
+  border-radius: 100%;
+  color: #444;
+  font-size: 8px;
+
+  transform-style: preserve-3d;
+  transform: translateZ(0.1px);
+}
+
+.is-3d {
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.will-change {
+  will-change: opacity;
+}
+
+.of-corn-top {
+  top: -20px;
+  left: -14px;
+  border-radius: 14px 7px 14px 7px;
+}
+
+.of-corn-bottom {
+  bottom: -20px;
+  left: -14px;
+  border-radius: 7px 14px 7px 14px;
+}
+
+.of-left-top {
+  top: -14px;
+  left: -14px;
+  border-radius: 14px 7px 14px 7px;
+}
+
+.of-left-bottom {
+  bottom: -14px;
+  left: -14px;
+  border-radius: 7px 14px 7px 14px;
+}
+
+.of-right-bottom {
+  bottom: -14px;
+  right: -14px;
+  border-radius: 14px 7px 14px 7px;
+}
+
+.of-right-top {
+  top: -14px;
+  right: -14px;
+  border-radius: 7px 14px 7px 14px;
+}
+
+.is-fill {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}

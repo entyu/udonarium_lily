@@ -20,6 +20,7 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
+import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { CoordinateService } from 'service/coordinate.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -40,9 +41,12 @@ import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() range: Range = null;
   @Input() is3D: boolean = false;
+//  @Input() rotateDeg : string = ''
+
   @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('rangeCanvas', { static: true }) rangeCanvas: ElementRef<HTMLCanvasElement>;
-
+  @ViewChild('rotate') rotate: HTMLElement;
+  
   get tableSelecter(): TableSelecter { return this.tabletopService.tableSelecter; }
   get currentTable(): GameTable { return this.tabletopService.currentTable; }
 
@@ -54,9 +58,22 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   get isLock(): boolean { return this.range.isLock; }
   set isLock(isLock: boolean) { this.range.isLock = isLock; }
 
+  get areaQuadrantSize(): number { 
+    return Math.ceil( Math.sqrt(this.range.width * this.range.width + this.range.height * this.range.height) ) +1 ; 
+  }
+
+  get rotateDeg(): number { 
+//    let ele = this.rotate<HTMLDivElement>('#ele');
+    let data = this.rotate.style.transform;
+    let data2 = data.replace(/[^0-9\.\-]/g, '')
+    if(!data2) data2 = '0.0';
+    return parseFloat(data2);
+  }
+
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
+  rotableOption: RotableOption = {};
 
   private input: InputHandler = null;
 
@@ -96,6 +113,10 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       transformCssOffset: 'translateZ(0.25px)',
       colideLayers: ['terrain']
     };
+    this.rotableOption = {
+      tabletopObject: this.range
+    };
+    
   }
 
   ngAfterViewInit() {
@@ -196,7 +217,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setRange(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
     let render = new RangeRender(this.gridCanvas.nativeElement,this.rangeCanvas.nativeElement);
-    render.render(width+1, height+1, gridSize, gridType, gridColor);
+    render.render(this.areaQuadrantSize * 2, this.areaQuadrantSize * 2, gridSize, gridType, gridColor);
     let opacity: number = 1.0;
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
 

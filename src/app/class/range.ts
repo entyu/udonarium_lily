@@ -5,6 +5,7 @@ import { TabletopObject } from './tabletop-object';
 @SyncObject('range')
 export class Range extends TabletopObject {
   @SyncVar() isLock: boolean = false;
+  @SyncVar() rotate: number = 0;
 
   get name(): string { return this.getCommonValue('name', ''); }
   get width(): number { return this.getCommonValue('width', 1); }
