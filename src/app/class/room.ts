@@ -8,7 +8,7 @@ import { DiceSymbol } from './dice-symbol';
 import { GameCharacter } from './game-character';
 import { GameTable } from './game-table';
 import { GameTableMask } from './game-table-mask';
-import { Range } from './range';
+import { RangeArea } from './range';
 import { Terrain } from './terrain';
 import { TextNote } from './text-note';
 
@@ -28,7 +28,7 @@ export class Room extends GameObject implements InnerXml {
     let objects: GameObject[] = [];
     objects = objects.concat(ObjectStore.instance.getObjects(GameTable));
     objects = objects.concat(ObjectStore.instance.getObjects(GameCharacter));
-    objects = objects.concat(ObjectStore.instance.getObjects(Range));
+    objects = objects.concat(ObjectStore.instance.getObjects(RangeArea));
     objects = objects.concat(ObjectStore.instance.getObjects(TextNote));
     objects = objects.concat(ObjectStore.instance.getObjects(CardStack));
     objects = objects.concat(ObjectStore.instance.getObjects(Card).filter((obj) => { return obj.parent === null }));
@@ -50,7 +50,7 @@ export class Room extends GameObject implements InnerXml {
     objects = objects.concat(ObjectStore.instance.getObjects(GameTableMask));
     objects = objects.concat(ObjectStore.instance.getObjects(Terrain));
     objects = objects.concat(ObjectStore.instance.getObjects(GameCharacter));
-    objects = objects.concat(ObjectStore.instance.getObjects(Range));
+    objects = objects.concat(ObjectStore.instance.getObjects(RangeArea));
     objects = objects.concat(ObjectStore.instance.getObjects(TextNote));
     objects = objects.concat(ObjectStore.instance.getObjects(CardStack));
     objects = objects.concat(ObjectStore.instance.getObjects(Card));

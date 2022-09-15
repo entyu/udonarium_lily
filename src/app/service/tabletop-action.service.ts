@@ -11,7 +11,7 @@ import { GameTable } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
-import { Range } from '@udonarium/range';
+import { RangeArea } from '@udonarium/range';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 
@@ -99,8 +99,8 @@ export class TabletopActionService {
   }
 
 
-  createRange(position: PointerCoordinate): Range {
-    let range = Range.create('射程範囲', 5, 5, 100);
+  createRangeArea(position: PointerCoordinate): RangeArea {
+    let range = RangeArea.create('射程範囲', 5, 5, 75);
     range.location.x = position.x;
     range.location.y = position.y;
     range.posZ = position.z;
@@ -526,7 +526,7 @@ export class TabletopActionService {
   private getCreateRangeMenu(position: PointerCoordinate): ContextMenuAction {
     return {
       name: '射程範囲を作成', action: () => {
-        let range = this.createRange(position);
+        let range = this.createRangeArea(position);
 //        EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: character.identifier, className: character.aliasName });
         SoundEffect.play(PresetSound.piecePut);
       }

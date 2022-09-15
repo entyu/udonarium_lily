@@ -15,7 +15,7 @@ import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
-import { Range } from '@udonarium/range';
+import { RangeArea } from '@udonarium/range';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { InputHandler } from 'directive/input-handler';
@@ -28,7 +28,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 
 import { TabletopService } from 'service/tabletop.service';
-import { RangeRender, RangeRenderSetting } from './range-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
+import { RangeRender, RangeRenderSetting, ClipAreaCorn} from './range-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
 import { TableSelecter } from '@udonarium/table-selecter';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 
@@ -39,20 +39,41 @@ import { FilterType, GameTable, GridType } from '@udonarium/game-table';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() range: Range = null;
+  @Input() range: RangeArea = null;
   @Input() is3D: boolean = false;
 //  @Input() rotateDeg : string = ''
 
   @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('rangeCanvas', { static: true }) rangeCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('rotate') rotate: ElementRef<HTMLElement>;
-  
+
+  private clipAreaCorn: ClipAreaCorn = {
+    clip01x: 0, // 根本始点
+    clip01y: 0,
+    clip02x: 0,
+    clip02y: 0,
+    clip03x: 0,
+    clip03y: 0,
+    clip04x: 0,
+    clip04y: 0,
+    clip05x: 0, // 先端部
+    clip05y: 0,
+    clip06x: 0, // 折り返し
+    clip06y: 0,
+    clip07x: 0,
+    clip07y: 0,
+    clip08x: 0,
+    clip08y: 0,
+    clip09x: 0,
+    clip09y: 0,
+  }
+
   get tableSelecter(): TableSelecter { return this.tabletopService.tableSelecter; }
   get currentTable(): GameTable { return this.tabletopService.currentTable; }
 
   get name(): string { return this.range.name; }
   get width(): number { return this.adjustMinBounds(this.range.width); }
-  get length(): number { return this.adjustMinBounds(this.range.range); }
+  get length(): number { return this.adjustMinBounds(this.range.length); }
   get opacity(): number { return this.range.opacity; }
   get imageFile(): ImageFile { return this.range.imageFile; }
   get isLock(): boolean { return this.range.isLock; }
@@ -212,7 +233,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     return value < min ? min : value;
   }
 
-  private showDetail(gameObject: Range) {
+  private showDetail(gameObject: RangeArea) {
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = '射程範囲設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
@@ -235,14 +256,14 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       centerY: this.range.location.y,
       gridSize: this.gridSize,
       type: 'CORN',
-      gridColor: '#000000e6',
+      gridColor: '#FFFF00e6',
       rangeColor: '#FF0000e6',
       fanDegree: 0.0,
       degree: this.rotateDeg,
     };
 
-    render.renderCorn(setting);
-    let opacity: number = 1.0;
+    this.clipAreaCorn = render.renderCorn(setting);
+    let opacity: number = 0.75;
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
 
 /*

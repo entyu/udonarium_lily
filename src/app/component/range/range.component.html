@@ -5,14 +5,15 @@
 <!-- [ngStyle]="{'clip-path': 'circle(' + 200  + 'px)'}" -->
 <div class="component" [ngClass]="{'is-grab': !isLock}"
   [style.width.px]="0" [style.height.px]="0" 
-  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
+  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()"
+  [ngStyle]="{'clip-path': 'circle(' + 200  + 'px)'}">
   <div style="position:absolute;" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
     <canvas class="is-fill is-pointer-events-none" #gridCanvas></canvas><!---->
+    <canvas class="is-fill is-pointer-events-none" #rangeCanvas></canvas>
   </div>
   <div class="component-content is-3d is-pointer-events-auto" 
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLock" 
     style="transform:rotateZ(0deg);"  #rotate>
-    <canvas style="position:absolute;" class="is-fill is-pointer-events-none" #rangeCanvas></canvas>
     <div *ngIf="isLock" class="lock-icon is-center">
       <i class="material-icons">lock</i>
     </div>
@@ -29,7 +30,7 @@
       </div>
     </ng-container>
   </div>
-  <div style="position:absolute;">
+  <div style="position:absolute;top:50px;">
       AAAAA<br>
       {{rotate.style.transform}}<br>
       {{rotateDeg}}<br>
