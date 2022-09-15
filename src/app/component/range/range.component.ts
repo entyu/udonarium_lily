@@ -28,7 +28,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 
 import { TabletopService } from 'service/tabletop.service';
-import { RangeRender } from './range-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
+import { RangeRender, RangeRenderSetting } from './range-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
 import { TableSelecter } from '@udonarium/table-selecter';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 
@@ -52,14 +52,14 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get name(): string { return this.range.name; }
   get width(): number { return this.adjustMinBounds(this.range.width); }
-  get height(): number { return this.adjustMinBounds(this.range.height); }
+  get length(): number { return this.adjustMinBounds(this.range.range); }
   get opacity(): number { return this.range.opacity; }
   get imageFile(): ImageFile { return this.range.imageFile; }
   get isLock(): boolean { return this.range.isLock; }
   set isLock(isLock: boolean) { this.range.isLock = isLock; }
 
   get areaQuadrantSize(): number { 
-    return Math.ceil( Math.sqrt(this.range.width * this.range.width + this.range.height * this.range.height) ) +1 ; 
+    return Math.ceil( Math.sqrt(this.width * this.width + this.length * this.length) ) +1 ; 
   }
 
   get rotateDeg(): number { 
@@ -101,7 +101,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
 
-        this.setRange(this.width, this.height, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
+        this.setRange();
 
         if (!this.range || !object) return;
         if (this.range === object || (object instanceof ObjectNode && this.range.contains(object))) {
@@ -130,7 +130,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.input = new InputHandler(this.elementRef.nativeElement);
     });
     this.input.onStart = this.onInputStart.bind(this);
-    this.setRange(this.width, this.height, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
+    this.setRange();
   }
 
   ngOnDestroy() {
@@ -214,23 +214,42 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private showDetail(gameObject: Range) {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let title = 'マップマスク設定';
+    let title = '射程範囲設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
     let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 300 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }
 
-  private setRange(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
+  private setRange() {
     let render = new RangeRender(this.gridCanvas.nativeElement,this.rangeCanvas.nativeElement);
-    render.render(this.areaQuadrantSize * 2, this.areaQuadrantSize * 2, gridSize, gridType, gridColor);
+
+//    this.width, this.length, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor
+
+    let setting: RangeRenderSetting = {
+      areaWidth: this.areaQuadrantSize * 2,
+      areaHeight: this.areaQuadrantSize * 2,
+      range: this.length,
+      width: this.width,
+      centerX: this.range.location.x,
+      centerY: this.range.location.y,
+      gridSize: this.gridSize,
+      type: 'CORN',
+      gridColor: '#000000e6',
+      rangeColor: '#FF0000e6',
+      fanDegree: 0.0,
+      degree: this.rotateDeg,
+    };
+
+    render.renderCorn(setting);
     let opacity: number = 1.0;
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
 
+/*
     render.renderCorn(width, height, gridSize, gridType);
     let opacity2: number = 1.0;
     this.rangeCanvas.nativeElement.style.opacity = opacity2 + '';
-
+*/
   }
 
 }

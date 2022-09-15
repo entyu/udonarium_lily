@@ -8,8 +8,8 @@ export class Range extends TabletopObject {
   @SyncVar() rotate: number = 0;
 
   get name(): string { return this.getCommonValue('name', ''); }
+  get range(): number { return this.getCommonValue('range', 1); }
   get width(): number { return this.getCommonValue('width', 1); }
-  get height(): number { return this.getCommonValue('height', 1); }
   get opacity(): number {
     let element = this.getElement('opacity', this.commonDataElement);
     let num = element ? <number>element.currentValue / <number>element.value : 1;
@@ -27,8 +27,8 @@ export class Range extends TabletopObject {
     object.createDataElements();
 
     object.commonDataElement.appendChild(DataElement.create('name', name, {}, 'name_' + object.identifier));
+    object.commonDataElement.appendChild(DataElement.create('range', height, {}, 'range_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('width', width, {}, 'width_' + object.identifier));
-    object.commonDataElement.appendChild(DataElement.create('height', height, {}, 'height_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('opacity', opacity, { type: 'numberResource', currentValue: opacity }, 'opacity_' + object.identifier));
     object.initialize();
 

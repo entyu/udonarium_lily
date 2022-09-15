@@ -3,6 +3,21 @@ import { GridType } from '@udonarium/game-table';
 type StrokeGridFunc = (w: number, h: number, gridSize: number) => GridPosition;
 type GridPosition = { gx: number, gy: number };
 
+export interface RangeRenderSetting {
+  areaWidth: number;
+  areaHeight: number;
+  range: number;
+  width: number;
+  centerX: number;
+  centerY: number;
+  gridSize: number;
+  type: string;
+  gridColor: string;
+  rangeColor: string;
+  fanDegree: number;
+  degree: number;
+}
+
 export class RangeRender {
   constructor(
     readonly canvasElement: HTMLCanvasElement,
@@ -22,6 +37,7 @@ export class RangeRender {
     return context
   }
 
+/*
   renderCorn(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#FF0000e6') {
     this.canvasElementRange.width = width * gridSize;
     this.canvasElementRange.height = height * gridSize;
@@ -45,9 +61,69 @@ export class RangeRender {
     context.stroke();
     
   }
+*/
 
+  renderCorn(setting: RangeRenderSetting) {
+    let gridSize = setting.gridSize;
+    let offSetX_px = setting.areaWidth * gridSize / 2;
+    let offSetY_px = setting.areaHeight * gridSize / 2;
+    let rad = Math.PI / 180 * setting.degree;
 
-  render(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
+    let gridOffX = - (setting.centerX % gridSize);
+    let gridOffY = - (setting.centerY % gridSize);
+    if(gridOffX > 0) gridOffX -= gridSize;
+    if(gridOffY > 0) gridOffY -= gridSize;
+
+    this.canvasElement.width = setting.areaWidth * gridSize;
+    this.canvasElement.height = setting.areaHeight * gridSize;
+    let context: CanvasRenderingContext2D = this.canvasElement.getContext('2d');
+    
+    let cx_ = 0.0;
+    let cy_ = 0.0;
+    let p1x_ = setting.range * gridSize;
+    let p1y_ = -0.5 * setting.width * gridSize;
+    let p2x_ = setting.range * gridSize;
+    let p2y_ = 0.5 * setting.width * gridSize;
+
+    let cx = cx_;
+    let cy = cy_;
+    let p1x = p1x_ * Math.cos(rad) - p1y_ * Math.sin(rad);
+    let p1y = p1x_ * Math.sin(rad) + p1y_ * Math.cos(rad);
+    let p2x = p2x_ * Math.cos(rad) - p2y_ * Math.sin(rad);
+    let p2y = p2x_ * Math.sin(rad) + p2y_ * Math.cos(rad);
+
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
+    this.makeBrush(context, gridSize, setting.gridColor);
+    for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
+      for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
+        let { gx, gy } = calcGridPosition(w, h, gridSize);
+        this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+        context.fillText((w + 1).toString() + '-' + (h + 1).toString(), gx + gridOffX + (gridSize / 2), gy + gridOffY + (gridSize / 2));
+      }
+    }
+    
+    this.makeBrush(context, gridSize, setting.rangeColor);
+    context.beginPath();
+    
+    context.moveTo(cx + offSetX_px, cy + offSetY_px);
+    context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
+    context.stroke();
+
+    context.moveTo(p1x + offSetX_px, p1y + offSetY_px);
+    context.lineTo(p2x + offSetX_px, p2y + offSetY_px);
+    context.stroke();
+
+    context.moveTo(p2x + offSetX_px, p2y + offSetY_px);
+    context.lineTo(cx + offSetX_px, cy + offSetY_px);
+    context.stroke();
+
+//    context.moveTo(setting.range * gridSize + offSetX_px, -0.5 * setting.width * gridSize + offSetY_px);
+//    context.lineTo(setting.range * gridSize + offSetX_px, 0.5 * setting.width * gridSize + offSetY_px);
+//    context.stroke();
+    
+  }
+/*
+  renderCorn(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
     this.canvasElement.width = width * gridSize;
     this.canvasElement.height = height * gridSize;
     let context: CanvasRenderingContext2D = this.canvasElement.getContext('2d');
@@ -64,9 +140,12 @@ export class RangeRender {
       }
     }
   }
-
+*/
   private generateCalcGridPositionFunc(gridType: GridType): StrokeGridFunc {
     switch (gridType) {
+
+// 将来用 現状はスクエアのみ対応
+/*
       case GridType.HEX_VERTICAL: // ヘクス縦揃え
         return (w, h, gridSize) => {
           if ((w % 2) === 1) {
@@ -84,7 +163,7 @@ export class RangeRender {
             return { gx: w * gridSize + (gridSize / 2), gy: h * gridSize };
           }
         }
-
+*/
       default: // スクエア(default)
         return (w, h, gridSize) => {
           return { gx: w * gridSize, gy: h * gridSize };

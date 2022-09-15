@@ -112,8 +112,8 @@
 
 .rotate-grab-icon {
   position: absolute;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   box-sizing: border-box;
   border: solid 2px #CCCCCC;
   cursor: -moz-default;
@@ -124,8 +124,7 @@
   background-color: #CCCCCC;
   border-radius: 100%;
   color: #444;
-  font-size: 8px;
-
+  font-size: 24px;
   transform-style: preserve-3d;
   transform: translateZ(0.1px);
 }
@@ -140,15 +139,15 @@
 }
 
 .of-corn-top {
-  top: -20px;
-  left: -14px;
-  border-radius: 14px 7px 14px 7px;
+  top: -30px;
+  left: -15px;
+  border-radius: 15px 15px 0px 0px;
 }
 
 .of-corn-bottom {
-  bottom: -20px;
-  left: -14px;
-  border-radius: 7px 14px 7px 14px;
+  bottom: -30px;
+  left: -15px;
+  border-radius: 0px 0px 15px 15px;
 }
 
 .of-left-top {
