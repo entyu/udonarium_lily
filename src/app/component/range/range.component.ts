@@ -47,11 +47,6 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('rangeCanvas', { static: true }) rangeCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('rotate') rotate: ElementRef<HTMLElement>;
 
-//  private _polygon = 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)';
-//  private _polygon = 'polygon(50px 0px, 100px 38px, 82px 100px, 18px 100px, 0px 38px)';
-//  private _polygon = 'circle( 50px)';
-
-
   public get clipCorn() {
     let clipCorn = 'polygon(' + this.clipAreaCorn.clip01x + 'px ' + this.clipAreaCorn.clip01y + 'px, ';
     clipCorn += this.clipAreaCorn.clip02x + 'px ' + this.clipAreaCorn.clip02y + 'px, ';
@@ -62,8 +57,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     clipCorn += this.clipAreaCorn.clip07x + 'px ' + this.clipAreaCorn.clip07y + 'px, ';
     clipCorn += this.clipAreaCorn.clip08x + 'px ' + this.clipAreaCorn.clip08y + 'px, ';
     clipCorn += this.clipAreaCorn.clip09x + 'px ' + this.clipAreaCorn.clip09y + 'px)';
-    //return this.sanitizer.bypassSecurityTrustStyle(this._polygon);
-    console.log( 'clipCorn:' + clipCorn);
+    // return this.sanitizer.bypassSecurityTrustStyle(this._polygon);
+    // console.log( 'clipCorn:' + clipCorn);
     return clipCorn;
   }
 
@@ -111,7 +106,6 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     if(!this.rotate.nativeElement.style.transform){ return 0;}
 
     let data = this.rotate.nativeElement.style.transform;
-    console.log(data);
     data2 = data.replace(/[^0-9\.\-]/g, '');
     if(!data2) data2 = '0.0';
     return parseFloat(data2);

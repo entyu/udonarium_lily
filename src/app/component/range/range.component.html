@@ -16,8 +16,8 @@
     </div>
     <ng-container *ngIf="!isLock"> 
       <div style="position:absolute;width:28px;">
-<!--        <div class="pedestal-grab-corn rotate-grab is-3d will-change"></div>-->
-        <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style = "position:absolute;" [style.left.px]="( 1 * this.range.length) * gridSize">
+        <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style = "position:absolute;" 
+          [style.left.px]="( 1 * this.range.length) * gridSize">
           <i class="material-icons">autorenew</i>
         </div>
         <div class="rotate-grab of-corn-bottom rotate-grab-icon is-3d will-change">
@@ -29,6 +29,7 @@
       </div>
     </ng-container>
   </div>
+</div>
 <!--
   <div style="position:absolute;top:50px;">
       AAAAA<br>
@@ -38,4 +39,3 @@
       {{range.location.y}}
   </div>
 -->
-</div>
