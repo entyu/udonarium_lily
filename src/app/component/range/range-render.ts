@@ -85,6 +85,82 @@ export class RangeRender {
     return calc >= -0.01 ? true : false; // 丸め誤差対策で少し許容範囲を広くする
   }
 
+  chkInCircle(radius: number, pchkx: number,pchky: number ): boolean{
+    if(radius * radius >= (pchkx * pchkx + pchky * pchky)){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  renderCircle(setting: RangeRenderSetting){
+    let gridSize = setting.gridSize;
+    let offSetX_px = setting.areaWidth * gridSize / 2;
+    let offSetY_px = setting.areaHeight * gridSize / 2;
+    let rad = Math.PI / 180 * setting.degree;
+
+    let gridOffX = - (setting.centerX % gridSize);
+    let gridOffY = - (setting.centerY % gridSize);
+    if(gridOffX > 0) gridOffX -= gridSize;
+    if(gridOffY > 0) gridOffY -= gridSize;
+
+    if(setting.offSetX){
+      if( gridOffX < -0.5){
+        gridOffX += gridSize / 2;
+      }else{
+        gridOffX -= gridSize / 2;
+      }
+    }
+
+    if(setting.offSetY){
+      if( gridOffY < -0.5){
+        gridOffY += gridSize / 2;
+      }else{
+        gridOffY -= gridSize / 2;
+      }
+    }
+
+    this.canvasElement.width = setting.areaWidth * gridSize;
+    this.canvasElement.height = setting.areaHeight * gridSize;
+    let context: CanvasRenderingContext2D = this.canvasElement.getContext('2d');
+
+    let gcx = 0.0;
+    let gcy = 0.0;
+
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
+    this.makeBrush(context, gridSize, setting.gridColor);
+    for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
+      for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
+        let { gx, gy } = calcGridPosition(w, h, gridSize);
+
+        gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
+        gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
+        // console.log('hw' + h + ',' + w);
+
+        // trueで内側にある
+        if(this.chkInCircle(setting.range * gridSize, gcx, gcy)){
+          this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+        }else{
+          // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+        }
+      }
+    }
+
+    this.canvasElementRange.width = setting.areaWidth * gridSize;
+    this.canvasElementRange.height = setting.areaHeight * gridSize;
+    context = this.canvasElementRange.getContext('2d');
+
+    this.makeBrush(context, gridSize, setting.rangeColor);
+    context.beginPath();
+    context.lineWidth = 2;
+    context.arc(offSetX_px, offSetX_px, setting.range * gridSize, 0, 2 * Math.PI, true);
+    context.stroke();
+
+    context.beginPath();
+    context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+    context.fill();
+  }
+
   renderLine(setting: RangeRenderSetting): ClipAreaLine{
     let gridSize = setting.gridSize;
     let offSetX_px = setting.areaWidth * gridSize / 2;
@@ -148,7 +224,7 @@ export class RangeRender {
     let p4y = p4x_ * Math.sin(rad) + p4y_ * Math.cos(rad);
 
     let clip: ClipAreaLine = {
-      clip01x: clip01x_ * Math.cos(rad) - clip01y_ * Math.sin(rad), // 根本支店
+      clip01x: clip01x_ * Math.cos(rad) - clip01y_ * Math.sin(rad), // 根本始点
       clip01y: clip01x_ * Math.sin(rad) + clip01y_ * Math.cos(rad),
       clip02x: clip02x_ * Math.cos(rad) - clip02y_ * Math.sin(rad),
       clip02y: clip02x_ * Math.sin(rad) + clip02y_ * Math.cos(rad),
@@ -207,6 +283,10 @@ export class RangeRender {
     context.moveTo(p4x + offSetX_px, p4y + offSetY_px);
     context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
     context.stroke();
+
+    context.beginPath();
+    context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+    context.fill();
 
     return clip;
   }
@@ -346,6 +426,10 @@ export class RangeRender {
     context.moveTo(p2x + offSetX_px, p2y + offSetY_px);
     context.lineTo(cx + offSetX_px, cy + offSetY_px);
     context.stroke();
+
+    context.beginPath();
+    context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+    context.fill();
 
     return clip;
   }

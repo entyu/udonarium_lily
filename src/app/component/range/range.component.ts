@@ -54,7 +54,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         text = this.clipLine;
         break;
       case 'CIRCLE':
-        text = this.clipCorn;
+        text = this.clipCircle;
         break;
       case 'CORN':
         text = this.clipCorn;
@@ -65,7 +65,13 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     return text;
   }
-  
+
+  public get clipCircle() {
+    let clipSize = ( this.range.length + 1.5 ) * this.gridSize;
+    let circle = 'circle(' + clipSize + 'px)';
+    return circle;
+  }
+
   public get clipCorn() {
     let clipCorn = 'polygon(' + this.clipAreaCorn.clip01x + 'px ' + this.clipAreaCorn.clip01y + 'px, ';
     clipCorn += this.clipAreaCorn.clip02x + 'px ' + this.clipAreaCorn.clip02y + 'px, ';
@@ -322,6 +328,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.clipAreaLine = render.renderLine(setting);
         break;
       case 'CIRCLE':
+        render.renderCircle(setting);
         break;
       case 'CORN':
         this.clipAreaCorn = render.renderCorn(setting);
