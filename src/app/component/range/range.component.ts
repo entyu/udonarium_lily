@@ -28,7 +28,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 
 import { TabletopService } from 'service/tabletop.service';
-import { RangeRender, RangeRenderSetting, ClipAreaCorn} from './range-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
+import { RangeRender, RangeRenderSetting, ClipAreaCorn, ClipAreaLine} from './range-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
 import { TableSelecter } from '@udonarium/table-selecter';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 
@@ -46,7 +46,26 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('rangeCanvas', { static: true }) rangeCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('rotate') rotate: ElementRef<HTMLElement>;
-
+  
+  public get clipPathText() {
+    let text = '';
+    switch (this.range.type) {
+      case 'LINE':
+        text = this.clipLine;
+        break;
+      case 'CIRCLE':
+        text = this.clipCorn;
+        break;
+      case 'CORN':
+        text = this.clipCorn;
+        break;
+      default:
+        text = '';
+        break;
+    }
+    return text;
+  }
+  
   public get clipCorn() {
     let clipCorn = 'polygon(' + this.clipAreaCorn.clip01x + 'px ' + this.clipAreaCorn.clip01y + 'px, ';
     clipCorn += this.clipAreaCorn.clip02x + 'px ' + this.clipAreaCorn.clip02y + 'px, ';
@@ -61,6 +80,15 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     // console.log( 'clipCorn:' + clipCorn);
     return clipCorn;
   }
+
+  public get clipLine() {
+    let clipLine = 'polygon(' + this.clipAreaLine.clip01x + 'px ' + this.clipAreaLine.clip01y + 'px, ';
+    clipLine += this.clipAreaLine.clip02x + 'px ' + this.clipAreaLine.clip02y + 'px, ';
+    clipLine += this.clipAreaLine.clip03x + 'px ' + this.clipAreaLine.clip03y + 'px, ';
+    clipLine += this.clipAreaLine.clip04x + 'px ' + this.clipAreaLine.clip04y + 'px)';
+    return clipLine;
+  }
+
 
   private clipAreaCorn: ClipAreaCorn = {
     clip01x: 0, // 根本始点
@@ -81,6 +109,17 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     clip08y: 0,
     clip09x: 0,
     clip09y: 0,
+  }
+
+  private clipAreaLine: ClipAreaLine = {
+    clip01x: 0, // 左下
+    clip01y: 0,
+    clip02x: 0, // 左上
+    clip02y: -50,
+    clip03x: 100, // 右上
+    clip03y: -50,
+    clip04x: 100, // 右下
+    clip04y: 0,
   }
 
   get tableSelecter(): TableSelecter { return this.tabletopService.tableSelecter; }
@@ -269,22 +308,31 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       centerX: this.range.location.x,
       centerY: this.range.location.y,
       gridSize: this.gridSize,
-      type: 'CORN',
-      gridColor: '#FFFF00e6',
-      rangeColor: '#FF0000e6',
+      type: this.range.type,
+      gridColor: this.range.gridColor,
+      rangeColor: this.range.rangeColor,
       fanDegree: 0.0,
       degree: this.rotateDeg,
+      offSetX: this.range.offSetX,
+      offSetY: this.range.offSetY,
     };
-
-    this.clipAreaCorn = render.renderCorn(setting);
-    let opacity: number = 0.75;
+    
+    switch (this.range.type) {
+      case 'LINE':
+        this.clipAreaLine = render.renderLine(setting);
+        break;
+      case 'CIRCLE':
+        break;
+      case 'CORN':
+        this.clipAreaCorn = render.renderCorn(setting);
+        break;
+      default:
+        break;
+    }
+    
+    let opacity: number = this.range.opacity;
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
 
-/*
-    render.renderCorn(width, height, gridSize, gridType);
-    let opacity2: number = 1.0;
-    this.rangeCanvas.nativeElement.style.opacity = opacity2 + '';
-*/
   }
 
 }

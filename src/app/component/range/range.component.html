@@ -1,8 +1,8 @@
 <!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
 <div class="dummy-will-change" appMovable [movable.option]="movableOption">
 </div>
-<div class="component" [ngClass]="{'is-grab': !isLock}"
-  [style.width.px]="0" [style.height.px]="0" [style.clip-path]="clipCorn"
+<div class="component" [ngClass]="{'is-grab': !isLock}" 
+  [style.width.px]="0" [style.height.px]="0" [style.clip-path]="clipPathText"
   appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div style="position:absolute;" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
     <canvas class="is-fill is-pointer-events-none" #gridCanvas></canvas>
@@ -14,10 +14,10 @@
     <div *ngIf="isLock" class="lock-icon is-center">
       <i class="material-icons">lock</i>
     </div>
-    <ng-container *ngIf="!isLock"> 
+    <ng-container *ngIf="!isLock && range.type != 'CIRCLE'"> 
       <div style="position:absolute;width:28px;">
         <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style = "position:absolute;" 
-          [style.left.px]="( 1 * this.range.length) * gridSize">
+          [style.left.px]="( 1 * range.length) * gridSize">
           <i class="material-icons">autorenew</i>
         </div>
         <div class="rotate-grab of-corn-bottom rotate-grab-icon is-3d will-change">
@@ -30,12 +30,4 @@
     </ng-container>
   </div>
 </div>
-<!--
-  <div style="position:absolute;top:50px;">
-      AAAAA<br>
-      {{rotate.style.transform}}<br>
-      {{rotateDeg}}<br>
-      {{range.location.x}}
-      {{range.location.y}}
-  </div>
--->
+<!--*ngIf="range.type == 'CORN'"-->

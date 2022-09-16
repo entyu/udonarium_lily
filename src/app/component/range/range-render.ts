@@ -16,6 +16,19 @@ export interface RangeRenderSetting {
   rangeColor: string;
   fanDegree: number;
   degree: number;
+  offSetX: boolean;
+  offSetY: boolean;
+}
+
+export interface ClipAreaLine {
+  clip01x: number;
+  clip01y: number;
+  clip02x: number;
+  clip02y: number;
+  clip03x: number;
+  clip03y: number;
+  clip04x: number;
+  clip04y: number;
 }
 
 export interface ClipAreaCorn {
@@ -58,32 +71,6 @@ export class RangeRender {
     return context
   }
 
-/*
-  renderCorn(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#FF0000e6') {
-    this.canvasElementRange.width = width * gridSize;
-    this.canvasElementRange.height = height * gridSize;
-    let context: CanvasRenderingContext2D = this.canvasElementRange.getContext('2d');
-    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(gridType);
-    this.makeBrush(context, gridSize, gridColor);
-    if (gridType < 0) return;
-
-    context.beginPath();
-
-    context.moveTo(0 , height * gridSize / 2);
-    context.lineTo(width * gridSize, 0 * gridSize);
-    context.stroke();
-
-    context.moveTo(0 , height * gridSize / 2);
-    context.lineTo(width * gridSize, height * gridSize);
-    context.stroke();
-
-    context.moveTo(width * gridSize , 0 * gridSize);
-    context.lineTo(width * gridSize , height * gridSize);
-    context.stroke();
-    
-  }
-*/
-
   //多角形の構成ベクトルをを盤面見下ろしで右回転にとる
   //ベクトルP1P2 x Px1Pchk の外積が+ならば図形の内側にある
   chkOuterProduct(p1x: number,p1y: number, p2x: number,p2y: number, pchkx: number,pchky: number ): boolean{
@@ -95,7 +82,133 @@ export class RangeRender {
     // console.log('p1:' + p1x + ',' + p1y +' p2:' + p2x + ',' + p2y + ' pchk:' + pchkx + ',' + pchky);
     // console.log('a:' + ax + ',' + ay +' b:' + bx + ',' + by + ' calc:' + calc);
     
-    return calc >= 0 ? true : false;
+    return calc >= -0.01 ? true : false; // 丸め誤差対策で少し許容範囲を広くする
+  }
+
+  renderLine(setting: RangeRenderSetting): ClipAreaLine{
+    let gridSize = setting.gridSize;
+    let offSetX_px = setting.areaWidth * gridSize / 2;
+    let offSetY_px = setting.areaHeight * gridSize / 2;
+    let rad = Math.PI / 180 * setting.degree;
+
+    let gridOffX = - (setting.centerX % gridSize);
+    let gridOffY = - (setting.centerY % gridSize);
+    if(gridOffX > 0) gridOffX -= gridSize;
+    if(gridOffY > 0) gridOffY -= gridSize;
+
+    if(setting.offSetX){
+      if( gridOffX < -0.5){
+        gridOffX += gridSize / 2;
+      }else{
+        gridOffX -= gridSize / 2;
+      }
+    }
+
+    if(setting.offSetY){
+      if( gridOffY < -0.5){
+        gridOffY += gridSize / 2;
+      }else{
+        gridOffY -= gridSize / 2;
+      }
+    }
+
+    this.canvasElement.width = setting.areaWidth * gridSize;
+    this.canvasElement.height = setting.areaHeight * gridSize;
+    let context: CanvasRenderingContext2D = this.canvasElement.getContext('2d');
+
+    // 範囲座標
+    let p1x_ = 0;
+    let p1y_ = 0.5 * setting.width * gridSize;
+    let p2x_ = 0;
+    let p2y_ = -0.5 * setting.width * gridSize;
+    let p3x_ = setting.range * gridSize;
+    let p3y_ = -0.5 * setting.width * gridSize;
+    let p4x_ = setting.range * gridSize;
+    let p4y_ = 0.5 * setting.width * gridSize;
+
+    // クリッピング座標
+    // コーンの根本から時計回りにクリップ範囲を定義
+    let clip01x_ = p1x_ - gridSize * 1.0;
+    let clip01y_ = p1y_ + gridSize * 1.0;
+    let clip02x_ = p2x_ - gridSize * 1.0;
+    let clip02y_ = p2y_ - gridSize * 1.0;
+    let clip03x_ = p3x_ + gridSize * 1.0;
+    let clip03y_ = p3y_ - gridSize * 1.0;
+    let clip04x_ = p4x_ + gridSize * 1.0;
+    let clip04y_ = p4y_ + gridSize * 1.0;
+
+    // 座標変換回転
+    let p1x = p1x_ * Math.cos(rad) - p1y_ * Math.sin(rad);
+    let p1y = p1x_ * Math.sin(rad) + p1y_ * Math.cos(rad);
+    let p2x = p2x_ * Math.cos(rad) - p2y_ * Math.sin(rad);
+    let p2y = p2x_ * Math.sin(rad) + p2y_ * Math.cos(rad);
+    let p3x = p3x_ * Math.cos(rad) - p3y_ * Math.sin(rad);
+    let p3y = p3x_ * Math.sin(rad) + p3y_ * Math.cos(rad);
+    let p4x = p4x_ * Math.cos(rad) - p4y_ * Math.sin(rad);
+    let p4y = p4x_ * Math.sin(rad) + p4y_ * Math.cos(rad);
+
+    let clip: ClipAreaLine = {
+      clip01x: clip01x_ * Math.cos(rad) - clip01y_ * Math.sin(rad), // 根本支店
+      clip01y: clip01x_ * Math.sin(rad) + clip01y_ * Math.cos(rad),
+      clip02x: clip02x_ * Math.cos(rad) - clip02y_ * Math.sin(rad),
+      clip02y: clip02x_ * Math.sin(rad) + clip02y_ * Math.cos(rad),
+      clip03x: clip03x_ * Math.cos(rad) - clip03y_ * Math.sin(rad),
+      clip03y: clip03x_ * Math.sin(rad) + clip03y_ * Math.cos(rad),
+      clip04x: clip04x_ * Math.cos(rad) - clip04y_ * Math.sin(rad),
+      clip04y: clip04x_ * Math.sin(rad) + clip04y_ * Math.cos(rad),
+    }
+    let gcx = 0.0;
+    let gcy = 0.0;
+
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
+    this.makeBrush(context, gridSize, setting.gridColor);
+    for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
+      for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
+        let { gx, gy } = calcGridPosition(w, h, gridSize);
+
+        gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
+        gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
+        // console.log('hw' + h + ',' + w);
+
+        // 全部trueで内側にある
+        if(  this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
+          && this.chkOuterProduct(p2x, p2y, p3x, p3y, gcx, gcy)
+          && this.chkOuterProduct(p3x, p3y, p4x, p4y, gcx, gcy)
+          && this.chkOuterProduct(p4x, p4y, p1x, p1y, gcx, gcy)
+          ){
+          this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+        }else{
+          // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+        }
+      }
+    }
+
+    this.canvasElementRange.width = setting.areaWidth * gridSize;
+    this.canvasElementRange.height = setting.areaHeight * gridSize;
+    context = this.canvasElementRange.getContext('2d');
+
+    this.makeBrush(context, gridSize, setting.rangeColor);
+    context.beginPath();
+
+    context.lineWidth = 2;
+
+    context.moveTo(p1x + offSetX_px, p1y + offSetY_px);
+    context.lineTo(p2x + offSetX_px, p2y + offSetY_px);
+    context.stroke();
+
+    context.moveTo(p2x + offSetX_px, p2y + offSetY_px);
+    context.lineTo(p3x + offSetX_px, p3y + offSetY_px);
+    context.stroke();
+
+    context.moveTo(p3x + offSetX_px, p3y + offSetY_px);
+    context.lineTo(p4x + offSetX_px, p4y + offSetY_px);
+    context.stroke();
+
+    context.moveTo(p4x + offSetX_px, p4y + offSetY_px);
+    context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
+    context.stroke();
+
+    return clip;
   }
 
   renderCorn(setting: RangeRenderSetting): ClipAreaCorn{
@@ -108,6 +221,22 @@ export class RangeRender {
     let gridOffY = - (setting.centerY % gridSize);
     if(gridOffX > 0) gridOffX -= gridSize;
     if(gridOffY > 0) gridOffY -= gridSize;
+
+    if(setting.offSetX){
+      if( gridOffX < -0.5){
+        gridOffX += gridSize / 2;
+      }else{
+        gridOffX -= gridSize / 2;
+      }
+    }
+
+    if(setting.offSetY){
+      if( gridOffY < -0.5){
+        gridOffY += gridSize / 2;
+      }else{
+        gridOffY -= gridSize / 2;
+      }
+    }
 
     this.canvasElement.width = setting.areaWidth * gridSize;
     this.canvasElement.height = setting.areaHeight * gridSize;
@@ -189,14 +318,11 @@ export class RangeRender {
         if(  this.chkOuterProduct(cx, cy, p1x, p1y, gcx, gcy)
           && this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
           && this.chkOuterProduct(p2x, p2y, cx,cy , gcx, gcy)){
-
           this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
-
         }else{
-          this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+          // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
         }
 //        context.fillText((w + 1).toString() + '-' + (h + 1).toString(), gx + gridOffX + (gridSize / 2), gy + gridOffY + (gridSize / 2));
-
       }
     }
 
@@ -206,7 +332,9 @@ export class RangeRender {
 
     this.makeBrush(context, gridSize, setting.rangeColor);
     context.beginPath();
-    
+
+    context.lineWidth = 2;
+
     context.moveTo(cx + offSetX_px, cy + offSetY_px);
     context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
     context.stroke();

@@ -99,11 +99,30 @@ export class TabletopActionService {
   }
 
 
-  createRangeArea(position: PointerCoordinate): RangeArea {
-    let range = RangeArea.create('射程範囲', 5, 5, 75);
+  createRangeArea(position: PointerCoordinate, typeName: string): RangeArea {
+    let range;
+    switch (typeName) {
+      case 'LINE':
+        range = RangeArea.create('射程範囲', 1, 10, 100);
+        break;
+      case 'CIRCLE':
+        range = RangeArea.create('射程範囲', 6, 6, 100);
+        break;
+      case 'CORN':
+        range = RangeArea.create('射程範囲', 5, 5, 100);
+        break;
+      default:
+        range = RangeArea.create('射程範囲', 5, 5, 100);
+        break;
+    }
+
     range.location.x = position.x;
     range.location.y = position.y;
     range.posZ = position.z;
+    range.type = typeName;
+    let data = range.commonDataElement.getFirstElementByName('opacity');
+    console.log( '射程範囲TEST' + data);
+    data.currentValue = 60;
     return range;
   }
 
@@ -524,13 +543,22 @@ export class TabletopActionService {
   }
 
   private getCreateRangeMenu(position: PointerCoordinate): ContextMenuAction {
-    return {
-      name: '射程範囲を作成', action: () => {
-        let range = this.createRangeArea(position);
-//        EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: character.identifier, className: character.aliasName });
-        SoundEffect.play(PresetSound.piecePut);
-      }
-    }
+    let dices: { menuName: string, typeName: string }[] = [
+      { menuName: 'コーン', typeName: 'CORN'},
+      { menuName: '直線', typeName: 'LINE'},
+      { menuName: '円', typeName: 'CIRCLE'},
+    ];
+    let subMenus: ContextMenuAction[] = [];
+
+    dices.forEach(item => {
+      subMenus.push({
+        name: item.menuName, action: () => {
+          this.createRangeArea(position, item.typeName);
+          SoundEffect.play(PresetSound.dicePut);
+        }
+      });
+    });
+    return { name: '射程範囲を作成', action: null, subActions: subMenus };
   }
 
   private getViewTable(): GameTable {
