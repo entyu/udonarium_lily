@@ -1,6 +1,7 @@
 import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { TabletopObject } from '@udonarium/tabletop-object';
+import { RangeArea } from '@udonarium/range';
 import { BatchService } from 'service/batch.service';
 import { CoordinateService } from 'service/coordinate.service';
 import { PointerCoordinate, PointerDeviceService } from 'service/pointer-device.service';
@@ -173,6 +174,10 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
 
   snapToPolygonal(polygonal: number = 24) {
     if (polygonal <= 1) return;
+    if (this.tabletopObject.aliasName == 'range'){
+      let range = <RangeArea>this.tabletopObject;
+      if (range.subDivisionSnapPolygonal) polygonal = 240;
+    }
     this.rotate = this.rotate < 0 ? this.rotate - (180 / polygonal) : this.rotate + (180 / polygonal);
     this.rotate -= (this.rotate) % (360 / polygonal);
   }

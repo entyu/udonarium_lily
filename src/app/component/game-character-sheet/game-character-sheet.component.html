@@ -209,13 +209,16 @@
         <option value="#FF66FF">
       </datalist>
     </div>
+    <div *ngIf="tabletopObject.type != 'CIRCLE'">
+      回転角度のスナップを細かくする:<input type="checkbox" value="noSnapPolygonal"
+      [(ngModel)]="tabletopObject.subDivisionSnapPolygonal" name="subDivisionSnapPolygonal" (click)="subDivisionSnapPolygonal()">
+    </div>
     <div>
       塗りつぶしを半マスずらず 横:<input type="checkbox" value="offSetX"  [(ngModel)]="tabletopObject.offSetX" name="offSetX" (click)="clickRangeOffSetX()">
       &nbsp;&nbsp; 縦:<input type="checkbox" value="offSetY"  [(ngModel)]="tabletopObject.offSetY" name="offSetY" (click)="clickRangeOffSetY()">
     </div>
   </ng-container>
 </div>
-
 
   <div *ngIf="tabletopObject" class="flex-container">
     <div *ngIf="0 < tabletopObject.imageFile?.url.length" class="box main-image-box">

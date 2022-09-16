@@ -9,11 +9,10 @@ export class RangeArea extends TabletopObject {
 
   @SyncVar() offSetX: boolean = false;
   @SyncVar() offSetY: boolean = false;
-
   @SyncVar() gridColor: string = "#FFFF00";
   @SyncVar() rangeColor: string = "#000000";
-
   @SyncVar() type: string = 'CORN';
+  @SyncVar() subDivisionSnapPolygonal: boolean = true;
 
   get name(): string { return this.getCommonValue('name', ''); }
   get length(): number { return this.getCommonValue('length', 1); }

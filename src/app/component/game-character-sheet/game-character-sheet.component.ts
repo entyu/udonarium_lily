@@ -133,6 +133,10 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     // 処理なし
   }
 
+  subDivisionSnapPolygonal(){
+    // 処理なし
+  }
+
   clickLimitHeight(){
     //高さが更新されない場合があるので雑だがこの方法で処理する
     setTimeout(() => { 
