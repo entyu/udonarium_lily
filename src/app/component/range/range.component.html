@@ -1,14 +1,11 @@
 <!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
 <div class="dummy-will-change" appMovable [movable.option]="movableOption">
 </div>
-<!--  [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"-->
-<!-- [ngStyle]="{'clip-path': 'circle(' + 200  + 'px)'}" -->
 <div class="component" [ngClass]="{'is-grab': !isLock}"
-  [style.width.px]="0" [style.height.px]="0" 
-  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()"
-  [ngStyle]="{'clip-path': 'circle(' + 200  + 'px)'}">
+  [style.width.px]="0" [style.height.px]="0" [style.clip-path]="clipCorn"
+  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div style="position:absolute;" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
-    <canvas class="is-fill is-pointer-events-none" #gridCanvas></canvas><!---->
+    <canvas class="is-fill is-pointer-events-none" #gridCanvas></canvas>
     <canvas class="is-fill is-pointer-events-none" #rangeCanvas></canvas>
   </div>
   <div class="component-content is-3d is-pointer-events-auto" 
@@ -17,19 +14,22 @@
     <div *ngIf="isLock" class="lock-icon is-center">
       <i class="material-icons">lock</i>
     </div>
-<!--*ngIf="!isLock"-->
-    <ng-container > 
+    <ng-container *ngIf="!isLock"> 
       <div style="position:absolute;width:28px;">
 <!--        <div class="pedestal-grab-corn rotate-grab is-3d will-change"></div>-->
-        <div class="rotate-grab of-corn-top rotate-grab-icon is-3d will-change">
+        <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style = "position:absolute;" [style.left.px]="( 1 * this.range.length) * gridSize">
           <i class="material-icons">autorenew</i>
         </div>
         <div class="rotate-grab of-corn-bottom rotate-grab-icon is-3d will-change">
           <i class="material-icons">autorenew</i>
         </div>
+        <div class="rotate-grab of-corn-top rotate-grab-icon is-3d will-change">
+          <i class="material-icons">autorenew</i>
+        </div>
       </div>
     </ng-container>
   </div>
+<!--
   <div style="position:absolute;top:50px;">
       AAAAA<br>
       {{rotate.style.transform}}<br>
@@ -37,4 +37,5 @@
       {{range.location.x}}
       {{range.location.y}}
   </div>
+-->
 </div>

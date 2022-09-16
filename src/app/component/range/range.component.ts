@@ -47,15 +47,35 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('rangeCanvas', { static: true }) rangeCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('rotate') rotate: ElementRef<HTMLElement>;
 
+//  private _polygon = 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)';
+//  private _polygon = 'polygon(50px 0px, 100px 38px, 82px 100px, 18px 100px, 0px 38px)';
+//  private _polygon = 'circle( 50px)';
+
+
+  public get clipCorn() {
+    let clipCorn = 'polygon(' + this.clipAreaCorn.clip01x + 'px ' + this.clipAreaCorn.clip01y + 'px, ';
+    clipCorn += this.clipAreaCorn.clip02x + 'px ' + this.clipAreaCorn.clip02y + 'px, ';
+    clipCorn += this.clipAreaCorn.clip03x + 'px ' + this.clipAreaCorn.clip03y + 'px, ';
+    clipCorn += this.clipAreaCorn.clip04x + 'px ' + this.clipAreaCorn.clip04y + 'px, ';
+    clipCorn += this.clipAreaCorn.clip05x + 'px ' + this.clipAreaCorn.clip05y + 'px, ';
+    clipCorn += this.clipAreaCorn.clip06x + 'px ' + this.clipAreaCorn.clip06y + 'px, ';
+    clipCorn += this.clipAreaCorn.clip07x + 'px ' + this.clipAreaCorn.clip07y + 'px, ';
+    clipCorn += this.clipAreaCorn.clip08x + 'px ' + this.clipAreaCorn.clip08y + 'px, ';
+    clipCorn += this.clipAreaCorn.clip09x + 'px ' + this.clipAreaCorn.clip09y + 'px)';
+    //return this.sanitizer.bypassSecurityTrustStyle(this._polygon);
+    console.log( 'clipCorn:' + clipCorn);
+    return clipCorn;
+  }
+
   private clipAreaCorn: ClipAreaCorn = {
     clip01x: 0, // 根本始点
     clip01y: 0,
-    clip02x: 0,
+    clip02x: 100,
     clip02y: 0,
-    clip03x: 0,
-    clip03y: 0,
+    clip03x: 100,
+    clip03y: 100,
     clip04x: 0,
-    clip04y: 0,
+    clip04y: 100,
     clip05x: 0, // 先端部
     clip05y: 0,
     clip06x: 0, // 折り返し
@@ -143,7 +163,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.rotableOption = {
       tabletopObject: this.range
     };
-    
+    this.setRange();
   }
 
   ngAfterViewInit() {

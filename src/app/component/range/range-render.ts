@@ -165,7 +165,7 @@ export class RangeRender {
       clip06x: clip06x_ * Math.cos(rad) - clip06y_ * Math.sin(rad), // 折り返し
       clip06y: clip06x_ * Math.sin(rad) + clip06y_ * Math.cos(rad),
       clip07x: clip07x_ * Math.cos(rad) - clip07y_ * Math.sin(rad),
-      clip07y: clip07x_ * Math.sin(rad) + clip04y_ * Math.cos(rad),
+      clip07y: clip07x_ * Math.sin(rad) + clip07y_ * Math.cos(rad),
       clip08x: clip08x_ * Math.cos(rad) - clip08y_ * Math.sin(rad),
       clip08y: clip08x_ * Math.sin(rad) + clip08y_ * Math.cos(rad),
       clip09x: clip09x_ * Math.cos(rad) - clip09y_ * Math.sin(rad),

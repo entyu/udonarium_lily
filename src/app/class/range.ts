@@ -7,6 +7,9 @@ export class RangeArea extends TabletopObject {
   @SyncVar() isLock: boolean = false;
   @SyncVar() rotate: number = 0;
 
+  @SyncVar() grigColor: string = "#FFFF00";
+  @SyncVar() rangeColor: string = "#000000";
+
   get name(): string { return this.getCommonValue('name', ''); }
   get length(): number { return this.getCommonValue('length', 1); }
   get width(): number { return this.getCommonValue('width', 1); }

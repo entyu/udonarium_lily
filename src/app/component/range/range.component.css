@@ -101,7 +101,7 @@
   border-radius: 14px;
 }
 
-.component:hover .rotate-grab{
+.component:hover .rotate-grab, .component:active .rotate-grab {
   opacity: 1;
 }
 
@@ -148,6 +148,12 @@
   bottom: -30px;
   left: -15px;
   border-radius: 0px 0px 15px 15px;
+}
+
+.of-corn-tip {
+  top: -15px;
+  left: -15px;
+  border-radius: 15px 15px 15px 15px;
 }
 
 .of-left-top {
