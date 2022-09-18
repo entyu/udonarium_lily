@@ -14,6 +14,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
 import { TabletopObject } from '@udonarium/tabletop-object';
+import { RangeArea } from '@udonarium/range';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 
@@ -45,6 +46,7 @@ export class TabletopService {
     let viewTable = this.tableSelecter.viewTable;
     return viewTable ? viewTable.masks : [];
   });
+  private rangeCache = new TabletopCache<RangeArea>(() => ObjectStore.instance.getObjects(RangeArea).filter(obj => obj.isVisibleOnTable));
   private terrainCache = new TabletopCache<Terrain>(() => {
     let viewTable = this.tableSelecter.viewTable;
     return viewTable ? viewTable.terrains : [];
@@ -56,6 +58,7 @@ export class TabletopService {
   get cards(): Card[] { return this.cardCache.objects; }
   get cardStacks(): CardStack[] { return this.cardStackCache.objects; }
   get tableMasks(): GameTableMask[] { return this.tableMaskCache.objects; }
+  get ranges(): RangeArea[] { return this.rangeCache.objects; }
   get terrains(): Terrain[] { return this.terrainCache.objects; }
   get textNotes(): TextNote[] { return this.textNoteCache.objects; }
   get diceSymbols(): DiceSymbol[] { return this.diceSymbolCache.objects; }
@@ -140,6 +143,8 @@ export class TabletopService {
         return this.cardStackCache;
       case GameTableMask.aliasName:
         return this.tableMaskCache;
+      case RangeArea.aliasName:
+        return this.rangeCache;
       case Terrain.aliasName:
         return this.terrainCache;
       case TextNote.aliasName:
@@ -161,6 +166,7 @@ export class TabletopService {
     this.cardCache.refresh();
     this.cardStackCache.refresh();
     this.tableMaskCache.refresh();
+    this.rangeCache.refresh();
     this.terrainCache.refresh();
     this.textNoteCache.refresh();
     this.diceSymbolCache.refresh();

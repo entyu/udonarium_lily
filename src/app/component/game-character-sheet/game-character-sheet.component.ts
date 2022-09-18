@@ -17,6 +17,8 @@ import { SaveDataService } from 'service/save-data.service';
 import { GameCharacter } from '@udonarium/game-character'; //
 import { DiceSymbol } from '@udonarium/dice-symbol'; //
 
+import { RangeArea } from '@udonarium/range';
+
 @Component({
   selector: 'game-character-sheet',
   templateUrl: './game-character-sheet.component.html',
@@ -123,6 +125,18 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     component.tabletopObject = <GameCharacter>this.tabletopObject;
   }
 
+  clickRangeOffSetX(){
+    // 処理なし
+  }
+
+  clickRangeOffSetY(){
+    // 処理なし
+  }
+
+  subDivisionSnapPolygonal(){
+    // 処理なし
+  }
+
   clickLimitHeight(){
     //高さが更新されない場合があるので雑だがこの方法で処理する
     setTimeout(() => { 
@@ -147,7 +161,6 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       height = 750 ;
     character.komaImageHeignt = height;
   }
-
 
   chkPopWidth( width ){
     let character = <GameCharacter>this.tabletopObject;
@@ -194,4 +207,19 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       element.value = value;
     });
   }
+
+  changeGridColor( event ){
+    if( this.tabletopObject ){
+      let range: RangeArea = <RangeArea>this.tabletopObject;
+      range.gridColor = event;
+    }
+  }
+
+  changeRangeColor( event ){
+    if( this.tabletopObject ){
+      let range: RangeArea = <RangeArea>this.tabletopObject;
+      range.rangeColor = event;
+    }
+  }
+
 }

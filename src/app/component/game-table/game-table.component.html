@@ -21,6 +21,11 @@
         <div class="dummy"></div>
         <card class="is-3d will-change-transform" *ngFor="let card of cards; trackBy: trackByGameObject" [card]="card" [appTooltip]="card" [ngStyle]="{'z-index' : card.zindex, 'transform': 'translateZ(' + (card.zindex * 0.001) +'px)'}"></card>
       </div>
+      <div class="range">
+        <div class="dummy"></div>
+        <peer-cursor class="is-3d will-change-transform" *ngFor="let cursor of peerCursors; trackBy: trackByGameObject" [cursor]="cursor"></peer-cursor>
+      </div>
+      <range class="is-3d will-change-transform" *ngFor="let range of ranges; trackBy: trackByGameObject" [range]="range"></range>
       <div *ngIf="diceSymbols.length > 0" class="layer">
         <div class="dummy"></div>
         <dice-symbol class="is-3d will-change-transform" *ngFor="let diceSymbol of diceSymbols; trackBy: trackByGameObject" [diceSymbol]="diceSymbol" [appTooltip]="diceSymbol"></dice-symbol>

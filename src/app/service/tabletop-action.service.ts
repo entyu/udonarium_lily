@@ -11,6 +11,7 @@ import { GameTable } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
+import { RangeArea } from '@udonarium/range';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 
@@ -97,6 +98,31 @@ export class TabletopActionService {
     return diceSymbol;
   }
 
+
+  createRangeArea(position: PointerCoordinate, typeName: string): RangeArea {
+    let range;
+    switch (typeName) {
+      case 'LINE':
+        range = RangeArea.create('射程範囲', 1, 10, 100);
+        break;
+      case 'CIRCLE':
+        range = RangeArea.create('射程範囲', 6, 6, 100);
+        break;
+      case 'CORN':
+      default:
+        range = RangeArea.create('射程範囲', 5, 5, 100);
+        break;
+    }
+
+    range.location.x = position.x;
+    range.location.y = position.y;
+    range.posZ = position.z;
+    range.type = typeName;
+    let data = range.commonDataElement.getFirstElementByName('opacity');
+    console.log( '射程範囲TEST' + data);
+    data.currentValue = 60;
+    return range;
+  }
 
   createTrump(position: PointerCoordinate): CardStack {
     let cardStack = CardStack.create('トランプ山札');
@@ -441,6 +467,7 @@ export class TabletopActionService {
       this.getCreateTextNoteMenu(position),
       this.getCreateTrumpMenu(position),
       this.getCreateDiceSymbolMenu(position),
+      this.getCreateRangeMenu(position),
     ];
   }
 
@@ -511,6 +538,25 @@ export class TabletopActionService {
       });
     });
     return { name: 'ダイスを作成', action: null, subActions: subMenus };
+  }
+
+  private getCreateRangeMenu(position: PointerCoordinate): ContextMenuAction {
+    let dices: { menuName: string, typeName: string }[] = [
+      { menuName: 'コーン', typeName: 'CORN'},
+      { menuName: '直線', typeName: 'LINE'},
+      { menuName: '円', typeName: 'CIRCLE'},
+    ];
+    let subMenus: ContextMenuAction[] = [];
+
+    dices.forEach(item => {
+      subMenus.push({
+        name: item.menuName, action: () => {
+          this.createRangeArea(position, item.typeName);
+          SoundEffect.play(PresetSound.dicePut);
+        }
+      });
+    });
+    return { name: '射程範囲を作成', action: null, subActions: subMenus };
   }
 
   private getViewTable(): GameTable {
