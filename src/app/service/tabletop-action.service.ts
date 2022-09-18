@@ -109,8 +109,6 @@ export class TabletopActionService {
         range = RangeArea.create('射程範囲', 6, 6, 100);
         break;
       case 'CORN':
-        range = RangeArea.create('射程範囲', 5, 5, 100);
-        break;
       default:
         range = RangeArea.create('射程範囲', 5, 5, 100);
         break;

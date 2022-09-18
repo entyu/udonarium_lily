@@ -57,10 +57,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         text = this.clipCircle;
         break;
       case 'CORN':
-        text = this.clipCorn;
-        break;
       default:
-        text = '';
+        text = this.clipCorn;
         break;
     }
     return text;
@@ -331,9 +329,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         render.renderCircle(setting);
         break;
       case 'CORN':
-        this.clipAreaCorn = render.renderCorn(setting);
-        break;
       default:
+        this.clipAreaCorn = render.renderCorn(setting);
         break;
     }
     
