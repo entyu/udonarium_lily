@@ -133,6 +133,10 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     // 処理なし
   }
 
+  fillOutLine(){
+    // 処理なし
+  }
+
   subDivisionSnapPolygonal(){
     // 処理なし
   }
