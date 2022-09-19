@@ -138,7 +138,9 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   set isLock(isLock: boolean) { this.range.isLock = isLock; }
 
   get areaQuadrantSize(): number { 
-    return Math.ceil( Math.sqrt(this.width * this.width + this.length * this.length) ) +1 ; 
+    let w = this.width < 1 ? 1 : this.width;
+    let l = this.length < 1 ? 1 : this.length;
+    return Math.ceil( Math.sqrt(w * w + l * l) ) +1 ; 
   }
 
   get rotateDeg(): number { 
@@ -307,8 +309,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     let setting: RangeRenderSetting = {
       areaWidth: this.areaQuadrantSize * 2,
       areaHeight: this.areaQuadrantSize * 2,
-      range: this.length,
-      width: this.width,
+      range: this.length < 1 ? 1 : this.length,
+      width: this.width < 0.1 ? 0.1 : this.width,
       centerX: this.range.location.x,
       centerY: this.range.location.y,
       gridSize: this.gridSize,
@@ -319,6 +321,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       degree: this.rotateDeg,
       offSetX: this.range.offSetX,
       offSetY: this.range.offSetY,
+      fillOutLine: this.range.fillOutLine,
     };
     
     switch (this.range.type) {

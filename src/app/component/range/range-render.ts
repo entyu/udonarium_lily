@@ -18,6 +18,7 @@ export interface RangeRenderSetting {
   degree: number;
   offSetX: boolean;
   offSetY: boolean;
+  fillOutLine: boolean;
 }
 
 export interface ClipAreaLine {
@@ -128,20 +129,27 @@ export class RangeRender {
     let gcy = 0.0;
 
     let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
-    this.makeBrush(context, gridSize, setting.gridColor);
-    for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
-      for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
-        let { gx, gy } = calcGridPosition(w, h, gridSize);
+    if(setting.fillOutLine){
+      this.makeBrush(context, gridSize, setting.gridColor);
+      context.beginPath();
+      context.arc(offSetX_px, offSetX_px, setting.range * gridSize, 0, 2 * Math.PI, true);
+      context.fill();
+    }else{
+      this.makeBrush(context, gridSize, setting.gridColor);
+      for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
+        for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
+          let { gx, gy } = calcGridPosition(w, h, gridSize);
 
-        gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
-        gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
-        // console.log('hw' + h + ',' + w);
+          gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
+          gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
+          // console.log('hw' + h + ',' + w);
 
-        // trueで内側にある
-        if(this.chkInCircle(setting.range * gridSize, gcx, gcy)){
-          this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
-        }else{
-          // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+          // trueで内側にある
+          if(this.chkInCircle(setting.range * gridSize, gcx, gcy)){
+            this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+          }else{
+            // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+          }
         }
       }
     }
@@ -238,27 +246,41 @@ export class RangeRender {
 
     let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
     this.makeBrush(context, gridSize, setting.gridColor);
-    for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
-      for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
-        let { gx, gy } = calcGridPosition(w, h, gridSize);
 
-        gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
-        gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
-        // console.log('hw' + h + ',' + w);
+    if(setting.fillOutLine){
+      this.makeBrush(context, gridSize, setting.gridColor);
+      context.beginPath();
 
-        // 全部trueで内側にある
-        if(  this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
-          && this.chkOuterProduct(p2x, p2y, p3x, p3y, gcx, gcy)
-          && this.chkOuterProduct(p3x, p3y, p4x, p4y, gcx, gcy)
-          && this.chkOuterProduct(p4x, p4y, p1x, p1y, gcx, gcy)
-          ){
-          this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
-        }else{
-          // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+      context.moveTo(p1x + offSetX_px, p1y + offSetY_px);
+      context.lineTo(p2x + offSetX_px, p2y + offSetY_px);
+      context.lineTo(p3x + offSetX_px, p3y + offSetY_px);
+      context.lineTo(p4x + offSetX_px, p4y + offSetY_px);
+      context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
+      context.fill();
+
+    }else{
+      this.makeBrush(context, gridSize, setting.gridColor);
+      for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
+        for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
+          let { gx, gy } = calcGridPosition(w, h, gridSize);
+
+          gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
+          gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
+          // console.log('hw' + h + ',' + w);
+
+          // 全部trueで内側にある
+          if(  this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
+            && this.chkOuterProduct(p2x, p2y, p3x, p3y, gcx, gcy)
+            && this.chkOuterProduct(p3x, p3y, p4x, p4y, gcx, gcy)
+            && this.chkOuterProduct(p4x, p4y, p1x, p1y, gcx, gcy)
+            ){
+            this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+          }else{
+            // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+          }
         }
       }
     }
-
     this.canvasElementRange.width = setting.areaWidth * gridSize;
     this.canvasElementRange.height = setting.areaHeight * gridSize;
     context = this.canvasElementRange.getContext('2d');
@@ -270,17 +292,8 @@ export class RangeRender {
 
     context.moveTo(p1x + offSetX_px, p1y + offSetY_px);
     context.lineTo(p2x + offSetX_px, p2y + offSetY_px);
-    context.stroke();
-
-    context.moveTo(p2x + offSetX_px, p2y + offSetY_px);
     context.lineTo(p3x + offSetX_px, p3y + offSetY_px);
-    context.stroke();
-
-    context.moveTo(p3x + offSetX_px, p3y + offSetY_px);
     context.lineTo(p4x + offSetX_px, p4y + offSetY_px);
-    context.stroke();
-
-    context.moveTo(p4x + offSetX_px, p4y + offSetY_px);
     context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
     context.stroke();
 
@@ -385,24 +398,36 @@ export class RangeRender {
     let gcy = 0.0;
 
     let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
-    this.makeBrush(context, gridSize, setting.gridColor);
-    for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
-      for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
-        let { gx, gy } = calcGridPosition(w, h, gridSize);
 
-        gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
-        gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
-        // console.log('hw' + h + ',' + w);
+    if(setting.fillOutLine){
+      this.makeBrush(context, gridSize, setting.gridColor);
+      context.beginPath();
 
-        // 全部trueで内側にある
-        if(  this.chkOuterProduct(cx, cy, p1x, p1y, gcx, gcy)
-          && this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
-          && this.chkOuterProduct(p2x, p2y, cx,cy , gcx, gcy)){
-          this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
-        }else{
-          // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+      context.moveTo(cx + offSetX_px, cy + offSetY_px);
+      context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
+      context.lineTo(p2x + offSetX_px, p2y + offSetY_px);
+      context.lineTo(cx + offSetX_px, cy + offSetY_px);
+      context.fill();
+    }else{
+      this.makeBrush(context, gridSize, setting.gridColor);
+      for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
+        for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
+          let { gx, gy } = calcGridPosition(w, h, gridSize);
+
+          gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
+          gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
+          // console.log('hw' + h + ',' + w);
+
+          // 全部trueで内側にある
+          if(  this.chkOuterProduct(cx, cy, p1x, p1y, gcx, gcy)
+            && this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
+            && this.chkOuterProduct(p2x, p2y, cx,cy , gcx, gcy)){
+            this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+          }else{
+            // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+          }
+  //        context.fillText((w + 1).toString() + '-' + (h + 1).toString(), gx + gridOffX + (gridSize / 2), gy + gridOffY + (gridSize / 2));
         }
-//        context.fillText((w + 1).toString() + '-' + (h + 1).toString(), gx + gridOffX + (gridSize / 2), gy + gridOffY + (gridSize / 2));
       }
     }
 
@@ -417,13 +442,7 @@ export class RangeRender {
 
     context.moveTo(cx + offSetX_px, cy + offSetY_px);
     context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
-    context.stroke();
-
-    context.moveTo(p1x + offSetX_px, p1y + offSetY_px);
     context.lineTo(p2x + offSetX_px, p2y + offSetY_px);
-    context.stroke();
-
-    context.moveTo(p2x + offSetX_px, p2y + offSetY_px);
     context.lineTo(cx + offSetX_px, cy + offSetY_px);
     context.stroke();
 
