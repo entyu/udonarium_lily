@@ -17,6 +17,9 @@
     <ng-container *ngSwitchCase="'dice-symbol'">
       <ng-container *ngTemplateOutlet="overviewDiceSymbol; context: { dice: tabletopObject }"></ng-container>
     </ng-container>
+    <ng-container *ngSwitchCase="'range'">
+      <ng-container *ngTemplateOutlet="overviewRange; context: { range: tabletopObject }"></ng-container>
+    </ng-container>
     <ng-container *ngSwitchDefault>
       <ng-container *ngTemplateOutlet="overviewCharacter; context: { character: tabletopObject }"></ng-container>
     </ng-container>
@@ -138,6 +141,32 @@
             </ng-container>
           </ng-container>
         </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #overviewRange let-range="range">
+  <div class="component-content character-grid-container is-middle-size" >
+    <div class="title-bg-area title-background"
+      [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
+    </div>
+    <div class="title-area component-title" [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging,
+    'pointer-events-none': this.isPointerDragging }">{{range.name}}</div>
+    <div class="void-area is-pointer-events-none"></div>
+    <div class="dataElm-area component-background"
+      [ngClass]="{ 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }">
+      <div class="grid-container-root" *ngIf="hasRangeElms"   
+      [ngStyle]="{'width': overViewCharacterWidth + 'px','max-height': overViewCharacterMaxHeight +'px'}">
+        <ng-container *ngFor="let dataElm of rangeElms">
+          <ng-container *ngIf="dataElm && dataElm.name !== 'name'">
+            <ng-container *ngIf="range.type !== 'CIRCLE' || dataElm.name !== 'width'">
+              <div class="grid-container">
+                <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }"></ng-container>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
   </div>

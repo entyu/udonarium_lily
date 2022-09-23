@@ -1,12 +1,14 @@
 <!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
 <div class="dummy-will-change" appMovable [movable.option]="movableOption">
 </div>
-<div class="component" [ngClass]="{'is-grab': !isLock}" 
+<div class="component is-pointer-events-auto" [ngClass]="{'is-grab': !isLock}" 
   [style.width.px]="0" [style.height.px]="0" [style.clip-path]="clipPathText"
   appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div style="position:absolute;" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
-    <canvas class="is-fill is-pointer-events-none" #gridCanvas></canvas>
-    <canvas class="is-fill is-pointer-events-none" #rangeCanvas></canvas>
+    <div class="image-box" [appTooltip]="range">
+      <canvas class="is-fill" #gridCanvas></canvas>
+      <canvas class="is-fill" #rangeCanvas></canvas>
+    </div>
   </div>
   <div class="component-content is-3d is-pointer-events-auto" 
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLock" 

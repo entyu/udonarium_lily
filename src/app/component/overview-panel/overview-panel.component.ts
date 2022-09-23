@@ -58,6 +58,9 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   get dataElms(): DataElement[] { return this.tabletopObject && this.tabletopObject.detailDataElement ? this.tabletopObject.detailDataElement.children as DataElement[] : []; }
   get hasDataElms(): boolean { return 0 < this.dataElms.length; }
 
+  get rangeElms(): DataElement[] { return this.tabletopObject && this.tabletopObject.commonDataElement ? this.tabletopObject.commonDataElement.children as DataElement[] : []; }
+  get hasRangeElms(): boolean { return 0 < this.rangeElms.length; }
+
   get newLineString(): string { return this.inventoryService.newLineString; }
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
 
@@ -151,6 +154,10 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     }
 
     if( alias == 'dice-symbol'){
+      // 現状変更なし
+    }
+
+    if( alias == 'range'){
       // 現状変更なし
     }
 
