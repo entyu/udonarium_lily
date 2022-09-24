@@ -15,14 +15,6 @@
   transition: transform 132ms linear;
 }
 
-.is-pointer-events-none {
-  pointer-events: none;
-}
-
-.is-pointer-events-auto {
-  pointer-events: auto;
-}
-
 .component {
   position: absolute;
   height: 50px;
