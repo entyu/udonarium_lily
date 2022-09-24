@@ -26,4 +26,5 @@
 .ng-dropdown-panel.ud-select  {
   width: auto !important;
   max-width: 550px;
+  z-index: 2000000;
 }
