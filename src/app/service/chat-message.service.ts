@@ -271,8 +271,8 @@ export class ChatMessageService {
         this._ImageIndex ++;
       }
 // 部分前方一致
-      for (let child of data.children) {
       this._ImageIndex = 0;
+      for (let child of data.children) {
         if (child instanceof DataElement) {
           console.log( 'child' + child.getAttribute('currentValue') );
           if ( child.getAttribute('currentValue').indexOf( name ) == 0 ){
