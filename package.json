@@ -1,6 +1,6 @@
 {
   "name": "udonarium_lily",
-  "version": "1.08.0",
+  "version": "1.08.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
