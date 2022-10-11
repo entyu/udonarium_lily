@@ -322,6 +322,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       offSetX: this.range.offSetX,
       offSetY: this.range.offSetY,
       fillOutLine: this.range.fillOutLine,
+      gridType: this.currentTable.gridType,
     };
     
     switch (this.range.type) {

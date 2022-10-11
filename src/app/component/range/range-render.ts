@@ -19,6 +19,7 @@ export interface RangeRenderSetting {
   offSetX: boolean;
   offSetY: boolean;
   fillOutLine: boolean;
+  gridType: number,
 }
 
 export interface ClipAreaLine {
@@ -128,7 +129,7 @@ export class RangeRender {
     let gcx = 0.0;
     let gcy = 0.0;
 
-    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType);
     if(setting.fillOutLine){
       this.makeBrush(context, gridSize, setting.gridColor);
       context.beginPath();
@@ -244,7 +245,7 @@ export class RangeRender {
     let gcx = 0.0;
     let gcy = 0.0;
 
-    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType);
     this.makeBrush(context, gridSize, setting.gridColor);
 
     if(setting.fillOutLine){
@@ -397,7 +398,7 @@ export class RangeRender {
     let gcx = 0.0;
     let gcy = 0.0;
 
-    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType);
 
     if(setting.fillOutLine){
       this.makeBrush(context, gridSize, setting.gridColor);
@@ -457,7 +458,7 @@ export class RangeRender {
     switch (gridType) {
 
 // 将来用 現状はスクエアのみ対応
-/*
+//
       case GridType.HEX_VERTICAL: // ヘクス縦揃え
         return (w, h, gridSize) => {
           if ((w % 2) === 1) {
@@ -475,7 +476,7 @@ export class RangeRender {
             return { gx: w * gridSize + (gridSize / 2), gy: h * gridSize };
           }
         }
-*/
+//
       default: // スクエア(default)
         return (w, h, gridSize) => {
           return { gx: w * gridSize, gy: h * gridSize };
