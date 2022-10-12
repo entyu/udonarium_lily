@@ -18,7 +18,7 @@
           <div class="is-3d is-pointer-events-none" style="visibility: hidden">
             <div *ngIf="title.length" class="title is-3d is-black-background is-pointer-events-none">{{title}}</div>
             <textarea class="textarea is-3d hide-area is-pointer-events-none"
-              [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false"></textarea>
+              [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false" readonly></textarea>
             <div class="is-3d is-outline-text note-text is-pointer-events-none" style="margin-top:-18px"
               [style.font-size.px]="fontSize + 9" [innerHTML]="lastNewLineAdjust(rubiedText) | safe: 'html'"></div>
           </div>

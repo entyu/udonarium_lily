@@ -211,6 +211,7 @@
   border-radius: 12px;
   position: absolute;
   top: -26px;
+  transform-origin: center bottom;
 }
 
 .owner-tag {
@@ -220,6 +221,7 @@
   border-radius: 6px;
   position: absolute;
   top: -55px;
+  transform-origin: center bottom;
 }
 
 .rotate-frame {

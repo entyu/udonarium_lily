@@ -18,10 +18,10 @@
         <div class="upright-transform is-fit-width is-3d">
           <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize">
             <div class="rotate-inner is-3d">
-              <div class="is-3d" [@changeFaceNameTag]="isVisible ? face : null" [@diceRollNameTag]="animeState" (@diceRollNameTag.done)="animationShuffleDone($event)" style="transform-origin: center bottom;">
-                <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}">
-                  <div class="fornt-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
-                  <div class="back-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}:<span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
+              <div class="is-3d" [ngStyle]="{'transform': 'translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}">
+                <div class="name-tag is-nowrap is-black-background is-3d" style="transform: translateX(-50%)" [@changeFaceNameTag]="isVisible ? face : null" [@diceRollNameTag]="animeState" (@diceRollNameTag.done)="animationShuffleDone($event)">
+                  <div class="fornt-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}<span *ngIf="0 < name.length">：</span><span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
+                  <div class="back-tag is-3d"><i *ngIf="isLock && hasOwner" class="material-icons lock-icon">lock</i>{{name}}<span *ngIf="0 < name.length">：</span><span *ngIf="isVisible">{{face}}</span><span *ngIf="!isVisible">???</span></div>
                 </div>
               </div>
               <div *ngIf="hasOwner && 0 < ownerName.length" class="owner-tag is-nowrap is-black-background is-3d" [ngStyle]="{'background-color': ownerColor + 'dd', 'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateX(' + nameTagRotate + 'deg)'}">
