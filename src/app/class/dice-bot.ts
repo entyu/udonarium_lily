@@ -52,20 +52,22 @@ export class DiceBot extends GameObject {
 
   static diceBotInfos: GameSystemInfo[] = [];
 
-  static getCustomGameSystemInfo(ststem: GameSystemClass): GameSystemInfo{
+  static getCustomGameSystemInfo(ststem: GameSystemClass, locale: string): GameSystemInfo{
     const gameSystemInfo: GameSystemInfo = {
       id: ststem.ID,
       name: ststem.NAME,
       className: ststem.ID,
-      sortKey: ststem.SORT_KEY
+      sortKey: ststem.SORT_KEY,
+      locale: locale,
+      superClassName: "Base",
     };
     return gameSystemInfo;
   }
 
   private static listAvailableGameSystems(): GameSystemInfo[]{
     const diceBotInfos: GameSystemInfo[] = DiceBot.loader.listAvailableGameSystems();
-    diceBotInfos.push( this.getCustomGameSystemInfo( KariDice as GameSystemClass ));
-    diceBotInfos.push( this.getCustomGameSystemInfo( IdoDice as GameSystemClass ));
+    diceBotInfos.push( this.getCustomGameSystemInfo( KariDice as GameSystemClass, "ja_jp" ));
+    diceBotInfos.push( this.getCustomGameSystemInfo( IdoDice as GameSystemClass, "ja_jp" ));
     // 追加カスタムダイスは下記追記
     // diceBotInfos.push( getCustomGameSystemInfo( *** ));
     return diceBotInfos;
