@@ -129,7 +129,7 @@ export class RangeRender {
     let gcx = 0.0;
     let gcy = 0.0;
 
-    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType);
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
     if(setting.fillOutLine){
       this.makeBrush(context, gridSize, setting.gridColor);
       context.beginPath();
@@ -245,7 +245,8 @@ export class RangeRender {
     let gcx = 0.0;
     let gcy = 0.0;
 
-    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType);
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
+    console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
     this.makeBrush(context, gridSize, setting.gridColor);
 
     if(setting.fillOutLine){
@@ -313,6 +314,7 @@ export class RangeRender {
 
     let gridOffX = - (setting.centerX % gridSize);
     let gridOffY = - (setting.centerY % gridSize);
+
     if(gridOffX > 0) gridOffX -= gridSize;
     if(gridOffY > 0) gridOffY -= gridSize;
 
@@ -398,7 +400,7 @@ export class RangeRender {
     let gcx = 0.0;
     let gcy = 0.0;
 
-    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType);
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
 
     if(setting.fillOutLine){
       this.makeBrush(context, gridSize, setting.gridColor);
@@ -454,29 +456,29 @@ export class RangeRender {
     return clip;
   }
 
-  private generateCalcGridPositionFunc(gridType: GridType): StrokeGridFunc {
+  private generateCalcGridPositionFunc(gridType: GridType,centerX: number,centerY: number,areaWidth: number,areaHeight: number): StrokeGridFunc {
+//  console.log('areaWidth:'+areaWidth + ' areaHeight:'+areaHeight);
     switch (gridType) {
-
-// 将来用 現状はスクエアのみ対応
-//
       case GridType.HEX_VERTICAL: // ヘクス縦揃え
         return (w, h, gridSize) => {
-          if ((w % 2) === 1) {
+          let isHalfSlideXLine = centerX % (gridSize * 2) < gridSize ? 1:0;
+          let idAreaWidthMulti4 = areaWidth % 4 == 0 ? 1:0;
+          if (((w + isHalfSlideXLine + idAreaWidthMulti4) % 2) === 1) {
             return { gx: w * gridSize, gy: h * gridSize };
           } else {
             return { gx: w * gridSize, gy: h * gridSize + (gridSize / 2) };
           }
         }
-
       case GridType.HEX_HORIZONTAL: // ヘクス横揃え(どどんとふ互換)
         return (w, h, gridSize) => {
-          if ((h % 2) === 1) {
+          let isHalfSlideYLine = centerY % (gridSize * 2) < gridSize ? 1:0;
+          let idAreaHeightMulti4 = areaHeight % 4 == 0 ? 1:0;
+          if (((h + isHalfSlideYLine + idAreaHeightMulti4) % 2) === 1) {
             return { gx: w * gridSize, gy: h * gridSize };
           } else {
             return { gx: w * gridSize + (gridSize / 2), gy: h * gridSize };
           }
         }
-//
       default: // スクエア(default)
         return (w, h, gridSize) => {
           return { gx: w * gridSize, gy: h * gridSize };
