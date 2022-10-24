@@ -28,7 +28,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 
 import { TabletopService } from 'service/tabletop.service';
-import { RangeRender, RangeRenderSetting, ClipAreaCorn, ClipAreaLine} from './range-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
+import { RangeRender, RangeRenderSetting, ClipAreaCorn, ClipAreaLine, ClipAreaSquare, ClipAreaDiamond} from './range-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
 import { TableSelecter } from '@udonarium/table-selecter';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 
@@ -55,6 +55,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'CIRCLE':
         text = this.clipCircle;
+        break;
+      case 'SQUARE':
+        text = this.clipSquare;
+        break;
+      case 'DIAMOND':
+        text = this.clipDiamond;
         break;
       case 'CORN':
       default:
@@ -93,6 +99,22 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     return clipLine;
   }
 
+  public get clipSquare() {
+    let clipSquare = 'polygon(' + this.clipAreaSquare.clip01x + 'px ' + this.clipAreaSquare.clip01y + 'px, ';
+    clipSquare += this.clipAreaSquare.clip02x + 'px ' + this.clipAreaSquare.clip02y + 'px, ';
+    clipSquare += this.clipAreaSquare.clip03x + 'px ' + this.clipAreaSquare.clip03y + 'px, ';
+    clipSquare += this.clipAreaSquare.clip04x + 'px ' + this.clipAreaSquare.clip04y + 'px)';
+    return clipSquare;
+  }
+
+  public get clipDiamond() {
+    let clipDiamond = 'polygon(' + this.clipAreaDiamond.clip01x + 'px ' + this.clipAreaDiamond.clip01y + 'px, ';
+    clipDiamond += this.clipAreaDiamond.clip02x + 'px ' + this.clipAreaDiamond.clip02y + 'px, ';
+    clipDiamond += this.clipAreaDiamond.clip03x + 'px ' + this.clipAreaDiamond.clip03y + 'px, ';
+    clipDiamond += this.clipAreaDiamond.clip04x + 'px ' + this.clipAreaDiamond.clip04y + 'px)';
+    return clipDiamond;
+  }
+
 
   private clipAreaCorn: ClipAreaCorn = {
     clip01x: 0, // 根本始点
@@ -125,6 +147,29 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     clip04x: 100, // 右下
     clip04y: 0,
   }
+
+  private clipAreaSquare: ClipAreaSquare = {
+    clip01x: 0, // 左下
+    clip01y: 0,
+    clip02x: 0, // 左上
+    clip02y: -50,
+    clip03x: 100, // 右上
+    clip03y: -50,
+    clip04x: 100, // 右下
+    clip04y: 0,
+  }
+
+  private clipAreaDiamond: ClipAreaDiamond = {
+    clip01x: 0, // 左下
+    clip01y: 0,
+    clip02x: 0, // 左上
+    clip02y: -50,
+    clip03x: 100, // 右上
+    clip03y: -50,
+    clip04x: 100, // 右下
+    clip04y: 0,
+  }
+
 
   get tableSelecter(): TableSelecter { return this.tabletopService.tableSelecter; }
   get currentTable(): GameTable { return this.tabletopService.currentTable; }
@@ -331,6 +376,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'CIRCLE':
         render.renderCircle(setting);
+        break;
+      case 'SQUARE':
+        this.clipAreaSquare = render.renderSquare(setting);
+        break;
+      case 'DIAMOND':
+        this.clipAreaDiamond = render.renderDiamond(setting);
         break;
       case 'CORN':
       default:
