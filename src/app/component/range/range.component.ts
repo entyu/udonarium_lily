@@ -18,6 +18,8 @@ import { EventSystem } from '@udonarium/core/system';
 import { RangeArea } from '@udonarium/range';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
+import { RangeDockingCharacterComponent } from 'component/range-docking-character/range-docking-character.component';
+
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
@@ -225,12 +227,16 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
-
         this.setRange();
 
         if (!this.range || !object) return;
         if (this.range === object || (object instanceof ObjectNode && this.range.contains(object))) {
           this.changeDetector.markForCheck();
+        }
+        if( object == this.range.followingCharctor){
+          console.log('追従動作');
+          this.range.following();
+          this.setRange();
         }
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
@@ -286,8 +292,10 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let menuPosition = this.pointerDeviceService.pointers[0];
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
-    this.contextMenuService.open(menuPosition, [
-      (this.isLock
+
+    let menuArray = [];
+    menuArray.push(
+      this.isLock
         ? {
           name: '固定解除', action: () => {
             this.isLock = false;
@@ -300,9 +308,30 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
             SoundEffect.play(PresetSound.lock);
           }
         }
-      ),
-      ContextMenuSeparator,
-      { name: '射程範囲を編集', action: () => { this.showDetail(this.range); } },
+    )
+    if(this.range.type == 'CIRCLE' || this.range.type == 'SQUARE' || this.range.type == 'DIAMOND'){
+      menuArray.push(
+        this.isLock
+        ? {
+          name: '追従を解除', action: () => {
+//            this.isLock = false;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        }
+        : {
+          name: 'キャラクターに追従', action: () => {
+//            this.isLock = true;
+            SoundEffect.play(PresetSound.lock);
+            this.dockingWindowOpen();
+          }
+        }
+      );
+    }
+    menuArray.push( ContextMenuSeparator);
+    menuArray.push(
+      { name: '射程範囲を編集', action: () => { this.showDetail(this.range); } }
+    );
+    menuArray.push(
       {
         name: 'コピーを作る', action: () => {
           let cloneObject = this.range.clone();
@@ -313,17 +342,33 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
           if (this.range.parent) this.range.parent.appendChild(cloneObject);
           SoundEffect.play(PresetSound.cardPut);
         }
-      },
+      }
+    );
+    menuArray.push(
       {
         name: '削除する', action: () => {
           this.range.destroy();
           SoundEffect.play(PresetSound.sweep);
         }
-      },
-      ContextMenuSeparator,
+      }
+    );
+    menuArray.push( ContextMenuSeparator );
+    menuArray.push(
       { name: 'オブジェクト作成', action: null, subActions: this.tabletopActionService.makeDefaultContextMenuActions(objectPosition) }
-    ], this.name);
+    );
+
+    this.contextMenuService.open(menuPosition, menuArray, this.name);
   }
+
+
+  dockingWindowOpen() {
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 350, height: 250 };
+    option.title = 'キャラクターに追従';
+    let component = this.panelService.open<RangeDockingCharacterComponent>(RangeDockingCharacterComponent, option);
+    component.tabletopObject = <RangeArea>this.range;
+  }
+
 
   onMove() {
     SoundEffect.play(PresetSound.cardPick);
@@ -369,6 +414,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       fillOutLine: this.range.fillOutLine,
       gridType: this.currentTable.gridType,
     };
+    console.log('this.range.location.x-y:' + this.range.location.x + ' ' + this.range.location.y);
     
     switch (this.range.type) {
       case 'LINE':
