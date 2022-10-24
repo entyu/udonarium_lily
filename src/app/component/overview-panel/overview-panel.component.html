@@ -160,7 +160,7 @@
       [ngStyle]="{'width': overViewCharacterWidth + 'px','max-height': overViewCharacterMaxHeight +'px'}">
         <ng-container *ngFor="let dataElm of rangeElms">
           <ng-container *ngIf="dataElm && dataElm.name !== 'name'">
-            <ng-container *ngIf="range.type !== 'CIRCLE' || dataElm.name !== 'width'">
+            <ng-container *ngIf="range.type !== 'CIRCLE' && range.type !== 'SQUARE' && range.type !== 'DIAMOND' || dataElm.name !== 'width'">
               <div class="grid-container">
                 <ng-container *ngTemplateOutlet="dataElement; context: { dataElm: dataElm }"></ng-container>
               </div>
