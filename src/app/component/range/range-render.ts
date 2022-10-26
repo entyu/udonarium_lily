@@ -20,6 +20,7 @@ export interface RangeRenderSetting {
   offSetY: boolean;
   fillOutLine: boolean;
   gridType: number,
+  isDocking: boolean,
 }
 
 export interface ClipAreaLine {
@@ -155,7 +156,7 @@ export class RangeRender {
     if(setting.fillOutLine){
       this.makeBrush(context, gridSize, setting.gridColor);
       context.beginPath();
-      context.arc(offSetX_px, offSetX_px, setting.range * gridSize, 0, 2 * Math.PI, true);
+      context.arc(offSetX_px, offSetY_px, setting.range * gridSize, 0, 2 * Math.PI, true);
       context.fill();
     }else{
       this.makeBrush(context, gridSize, setting.gridColor);
@@ -184,12 +185,17 @@ export class RangeRender {
     this.makeBrush(context, gridSize, setting.rangeColor);
     context.beginPath();
     context.lineWidth = 2;
-    context.arc(offSetX_px, offSetX_px, setting.range * gridSize, 0, 2 * Math.PI, true);
+    context.arc(offSetX_px, offSetY_px, setting.range * gridSize, 0, 2 * Math.PI, true);
     context.stroke();
-
-    context.beginPath();
-    context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
-    context.fill();
+    
+    if(setting.isDocking){
+      context.beginPath();
+      context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
+    }else{
+      context.beginPath();
+      context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+      context.fill();
+    }
   }
 
   renderLine(setting: RangeRenderSetting): ClipAreaLine{
@@ -447,9 +453,14 @@ export class RangeRender {
     context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
     context.stroke();
 
-    context.beginPath();
-    context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
-    context.fill();
+    if(setting.isDocking){
+      context.beginPath();
+      context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
+    }else{
+      context.beginPath();
+      context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+      context.fill();
+    }
 
     return clip;
   }
@@ -573,9 +584,14 @@ export class RangeRender {
     context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
     context.stroke();
 
-    context.beginPath();
-    context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
-    context.fill();
+    if(setting.isDocking){
+      context.beginPath();
+      context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
+    }else{
+      context.beginPath();
+      context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+      context.fill();
+    }
 
     return clip;
   }

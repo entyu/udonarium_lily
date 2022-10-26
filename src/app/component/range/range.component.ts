@@ -311,17 +311,15 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     )
     if(this.range.type == 'CIRCLE' || this.range.type == 'SQUARE' || this.range.type == 'DIAMOND'){
       menuArray.push(
-        this.isLock
+        this.range.followingCharctor
         ? {
           name: '追従を解除', action: () => {
-//            this.isLock = false;
             SoundEffect.play(PresetSound.unlock);
+            this.range.followingCharctor = null;
           }
         }
         : {
           name: 'キャラクターに追従', action: () => {
-//            this.isLock = true;
-            SoundEffect.play(PresetSound.lock);
             this.dockingWindowOpen();
           }
         }
@@ -413,9 +411,10 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       offSetY: this.range.offSetY,
       fillOutLine: this.range.fillOutLine,
       gridType: this.currentTable.gridType,
+      isDocking: this.range.followingCharctor ? true : false,
     };
     console.log('this.range.location.x-y:' + this.range.location.x + ' ' + this.range.location.y);
-    
+
     switch (this.range.type) {
       case 'LINE':
         this.clipAreaLine = render.renderLine(setting);
@@ -434,7 +433,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.clipAreaCorn = render.renderCorn(setting);
         break;
     }
-    
+
     let opacity: number = this.range.opacity;
     this.gridCanvas.nativeElement.style.opacity = opacity + '';
 

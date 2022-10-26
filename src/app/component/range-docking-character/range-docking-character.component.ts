@@ -15,6 +15,7 @@ import { GameCharacter } from '@udonarium/game-character';
 import { RangeArea } from '@udonarium/range';
 import { DataElement } from '@udonarium/data-element';
 
+import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -79,8 +80,7 @@ export class RangeDockingCharacterComponent implements OnInit, OnDestroy, AfterV
     let object = ObjectStore.instance.get(this._sendFrom);
     if (object instanceof GameCharacter) {
       if(GameCharacter){
-        console.log( this.tabletopObject.name + '追従実行');
-        console.log( object.name + '追従実行');
+        SoundEffect.play(PresetSound.lock);
         this.tabletopObject.followingCharctor = object;
         this.tabletopObject.following();
       }
