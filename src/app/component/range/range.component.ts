@@ -361,7 +361,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   dockingWindowOpen() {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 350, height: 250 };
+    let option: PanelOption = { left: coordinate.x - 250, top: coordinate.y - 175, width: 350, height: 200 };
     option.title = 'キャラクターに追従';
     let component = this.panelService.open<RangeDockingCharacterComponent>(RangeDockingCharacterComponent, option);
     component.tabletopObject = <RangeArea>this.range;
