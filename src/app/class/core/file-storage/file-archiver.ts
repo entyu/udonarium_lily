@@ -8,6 +8,9 @@ import { FileReaderUtil } from './file-reader-util';
 import { ImageStorage } from './image-storage';
 import { MimeType } from './mime-type';
 
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { ReloadCheck } from '@udonarium/reload-check';
+
 type MetaData = { percent: number, currentFile: string };
 type UpdateCallback = (metadata: MetaData) => void;
 
@@ -19,6 +22,8 @@ export class FileArchiver {
     if (!FileArchiver._instance) FileArchiver._instance = new FileArchiver();
     return FileArchiver._instance;
   }
+
+  get reloadCheck(): ReloadCheck { return ObjectStore.instance.get<ReloadCheck>('ReloadCheck'); }
 
   private maxImageSize = 2 * MEGA_BYTE;
   private maxAudioeSize = 10 * MEGA_BYTE;
@@ -70,6 +75,8 @@ export class FileArchiver {
   private onDrop(event: DragEvent) {
     event.preventDefault();
 
+    this.reloadCheck.reloadCheckStart(true);
+
     console.log('onDrop', event.dataTransfer);
     let files = event.dataTransfer.files
     this.load(files);
@@ -82,7 +89,11 @@ export class FileArchiver {
     let loadFiles: File[] = files instanceof FileList ? toArrayOfFileList(files) : files;
 
     for (let file of loadFiles) {
-      await this.handleImage(file);
+      let reLoadOk = true;
+//      reLoadOk = this.reloadCheck.answerCheck(); //余分なイメージをブロックするとイメージを含むものすべてにブロックが発生してしまう保留
+//      if(reLoadOk){
+        await this.handleImage(file);
+//      }
       await this.handleAudio(file);
       await this.handleText(file);
       await this.handleZip(file);

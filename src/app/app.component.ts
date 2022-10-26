@@ -21,6 +21,7 @@ import { DiceBot } from '@udonarium/dice-bot';
 import { Jukebox } from '@udonarium/Jukebox';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
+import { ReloadCheck } from '@udonarium/reload-check';
 import { TableSelecter } from '@udonarium/table-selecter';
 
 import { CutIn } from '@udonarium/cut-in';
@@ -119,6 +120,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     let alarm = new Alarm('Alarm');
     alarm.initialize();
+
+    let reloadCheck = new ReloadCheck('ReloadCheck');
+    reloadCheck.initialize();
 
     let soundEffect: SoundEffect = new SoundEffect('SoundEffect');
     soundEffect.initialize();

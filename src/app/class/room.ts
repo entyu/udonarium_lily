@@ -15,6 +15,9 @@ import { TextNote } from './text-note';
 import { CutIn } from './cut-in';
 import { DiceTable } from './dice-table';
 
+import { ReloadCheck } from '@udonarium/reload-check';
+
+
 @SyncObject('room')
 export class Room extends GameObject implements InnerXml {
   // GameObject Lifecycle
@@ -22,6 +25,8 @@ export class Room extends GameObject implements InnerXml {
     super.onStoreAdded();
     ObjectStore.instance.remove(this); // ObjectStoreには登録しない
   }
+
+  get reloadCheck(): ReloadCheck { return ObjectStore.instance.get<ReloadCheck>('ReloadCheck'); }
 
   innerXml(): string {
     let xml = '';
@@ -59,11 +64,16 @@ export class Room extends GameObject implements InnerXml {
     objects = objects.concat(ObjectStore.instance.getObjects(CutIn));
     objects = objects.concat(ObjectStore.instance.getObjects(DiceTable));
 
-    for (let object of objects) {
-      object.destroy();
-    }
-    for (let i = 0; i < element.children.length; i++) {
-      ObjectSerializer.instance.parseXml(element.children[i]);
+    let reLoadOk = true;
+    reLoadOk = this.reloadCheck.answerCheck();
+
+    if(reLoadOk){
+      for (let object of objects) {
+        object.destroy();
+      }
+      for (let i = 0; i < element.children.length; i++) {
+        ObjectSerializer.instance.parseXml(element.children[i]);
+      }
     }
   }
 }
