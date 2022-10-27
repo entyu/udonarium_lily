@@ -88,12 +88,13 @@ export class FileArchiver {
     if (!files) return;
     let loadFiles: File[] = files instanceof FileList ? toArrayOfFileList(files) : files;
 
+    console.log('filename');
     for (let file of loadFiles) {
-      let reLoadOk = true;
-//      reLoadOk = this.reloadCheck.answerCheck(); //余分なイメージをブロックするとイメージを含むものすべてにブロックが発生してしまう保留
-//      if(reLoadOk){
-        await this.handleImage(file);
-//      }
+      console.log(file.name);
+    }
+
+    for (let file of loadFiles) {
+      await this.handleImage(file);
       await this.handleAudio(file);
       await this.handleText(file);
       await this.handleZip(file);
@@ -103,6 +104,7 @@ export class FileArchiver {
 
   private async handleImage(file: File) {
     if (file.type.indexOf('image/') < 0) return;
+    if (!this.reloadCheck.isLoadOk() ) return;
     if (this.maxImageSize < file.size) {
       console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
       return;
@@ -123,12 +125,21 @@ export class FileArchiver {
 
   private async handleText(file: File): Promise<void> {
     if (file.type.indexOf('text/') < 0) return;
-    console.log(file.name + ' type:' + file.type);
-    try {
-      let xmlElement: Element = XmlUtil.xml2element(await FileReaderUtil.readAsTextAsync(file));
-      if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
-    } catch (reason) {
-      console.warn(reason);
+
+    let isLoadOk = true;
+    // data.xmlはここでは通過させ後段で中身が部屋データ更新だった場合更新確認をする
+    if(file.name == 'config.xml' || file.name == 'imagetag.xml' || file.name == 'summary.xml'){
+      isLoadOk = this.reloadCheck.isLoadOk();
+    }
+
+    if(isLoadOk){
+      console.log(file.name + ' type:' + file.type);
+      try {
+        let xmlElement: Element = XmlUtil.xml2element(await FileReaderUtil.readAsTextAsync(file));
+        if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
+      } catch (reason) {
+        console.warn(reason);
+      }
     }
   }
 

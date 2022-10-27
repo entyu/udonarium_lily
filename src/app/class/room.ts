@@ -66,7 +66,6 @@ export class Room extends GameObject implements InnerXml {
 
     let reLoadOk = true;
     reLoadOk = this.reloadCheck.answerCheck();
-
     if(reLoadOk){
       for (let object of objects) {
         object.destroy();
