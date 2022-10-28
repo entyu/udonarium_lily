@@ -1,7 +1,7 @@
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip/dist/jszip.min.js';
 
-import { EventSystem } from '../system';
+import { EventSystem, Network } from '../system';
 import { XmlUtil } from '../system/util/xml-util';
 import { AudioStorage } from './audio-storage';
 import { FileReaderUtil } from './file-reader-util';
@@ -22,6 +22,8 @@ export class FileArchiver {
     if (!FileArchiver._instance) FileArchiver._instance = new FileArchiver();
     return FileArchiver._instance;
   }
+
+  networkService = Network;
 
   get reloadCheck(): ReloadCheck { return ObjectStore.instance.get<ReloadCheck>('ReloadCheck'); }
 
@@ -75,7 +77,7 @@ export class FileArchiver {
   private onDrop(event: DragEvent) {
     event.preventDefault();
 
-    this.reloadCheck.reloadCheckStart(true);
+    this.reloadCheck.reloadCheckStart(this.networkService.peerContext.roomName != '');
 
     console.log('onDrop', event.dataTransfer);
     let files = event.dataTransfer.files
@@ -87,11 +89,6 @@ export class FileArchiver {
   async load(files: any): Promise<void> {
     if (!files) return;
     let loadFiles: File[] = files instanceof FileList ? toArrayOfFileList(files) : files;
-
-    console.log('filename');
-    for (let file of loadFiles) {
-      console.log(file.name);
-    }
 
     for (let file of loadFiles) {
       await this.handleImage(file);
