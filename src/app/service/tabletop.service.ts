@@ -128,7 +128,7 @@ export class TabletopService {
             let gameCharacter:GameCharacter =  gameObject;
             gameCharacter.addExtendData();
           }
-        }        
+        }
 
       });
   }

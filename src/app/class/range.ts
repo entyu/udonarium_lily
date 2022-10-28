@@ -1,4 +1,6 @@
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
 
@@ -6,6 +8,8 @@ import { TabletopObject } from './tabletop-object';
 export class RangeArea extends TabletopObject {
   @SyncVar() isLock: boolean = false;
   @SyncVar() rotate: number = 0;
+  @SyncVar() followingCharctor: GameCharacter = null;
+  @SyncVar() followingCounterDummy: number = 0; // 追従時再描画用ダミー
 
   @SyncVar() offSetX: boolean = false;
   @SyncVar() offSetY: boolean = false;
@@ -22,6 +26,28 @@ export class RangeArea extends TabletopObject {
     let element = this.getElement('opacity', this.commonDataElement);
     let num = element ? <number>element.currentValue / <number>element.value : 1;
     return Number.isNaN(num) ? 1 : num;
+  }
+
+  gridSize: number = 50;
+
+  followingCounterDummyCount(){
+    this.followingCounterDummy ++;
+    if(this.followingCounterDummy >= 50) this.followingCounterDummy = 0;
+    console.log(this.followingCounterDummy);
+  }
+
+  following(){
+    let object = <TabletopObject>ObjectStore.instance.get(this.followingCharctor.identifier);
+    if(!object ){
+      console.log('追従対象見失い');
+      this.followingCharctor = null;
+      return ;
+    }
+    console.log('following x:'+ object.location.x + ' y:' + object.location.y);
+
+    this.location.x = object.location.x + (this.gridSize * this.followingCharctor.size) / 2;
+    this.location.y = object.location.y + (this.gridSize * this.followingCharctor.size) / 2;
+    this.followingCounterDummyCount();
   }
 
   static create(name: string, width: number, length: number, opacity: number, identifier?: string): RangeArea {

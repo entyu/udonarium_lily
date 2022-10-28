@@ -19,9 +19,33 @@ export interface RangeRenderSetting {
   offSetX: boolean;
   offSetY: boolean;
   fillOutLine: boolean;
+  gridType: number,
+  isDocking: boolean,
 }
 
 export interface ClipAreaLine {
+  clip01x: number;
+  clip01y: number;
+  clip02x: number;
+  clip02y: number;
+  clip03x: number;
+  clip03y: number;
+  clip04x: number;
+  clip04y: number;
+}
+
+export interface ClipAreaSquare {
+  clip01x: number;
+  clip01y: number;
+  clip02x: number;
+  clip02y: number;
+  clip03x: number;
+  clip03y: number;
+  clip04x: number;
+  clip04y: number;
+}
+
+export interface ClipAreaDiamond {
   clip01x: number;
   clip01y: number;
   clip02x: number;
@@ -128,11 +152,11 @@ export class RangeRender {
     let gcx = 0.0;
     let gcy = 0.0;
 
-    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
     if(setting.fillOutLine){
       this.makeBrush(context, gridSize, setting.gridColor);
       context.beginPath();
-      context.arc(offSetX_px, offSetX_px, setting.range * gridSize, 0, 2 * Math.PI, true);
+      context.arc(offSetX_px, offSetY_px, setting.range * gridSize, 0, 2 * Math.PI, true);
       context.fill();
     }else{
       this.makeBrush(context, gridSize, setting.gridColor);
@@ -161,12 +185,17 @@ export class RangeRender {
     this.makeBrush(context, gridSize, setting.rangeColor);
     context.beginPath();
     context.lineWidth = 2;
-    context.arc(offSetX_px, offSetX_px, setting.range * gridSize, 0, 2 * Math.PI, true);
+    context.arc(offSetX_px, offSetY_px, setting.range * gridSize, 0, 2 * Math.PI, true);
     context.stroke();
-
-    context.beginPath();
-    context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
-    context.fill();
+    
+    if(setting.isDocking){
+      context.beginPath();
+      context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
+    }else{
+      context.beginPath();
+      context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+      context.fill();
+    }
   }
 
   renderLine(setting: RangeRenderSetting): ClipAreaLine{
@@ -244,7 +273,8 @@ export class RangeRender {
     let gcx = 0.0;
     let gcy = 0.0;
 
-    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
+    console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
     this.makeBrush(context, gridSize, setting.gridColor);
 
     if(setting.fillOutLine){
@@ -304,6 +334,268 @@ export class RangeRender {
     return clip;
   }
 
+  renderSquare(setting: RangeRenderSetting): ClipAreaSquare{
+    let gridSize = setting.gridSize;
+    let offSetX_px = setting.areaWidth * gridSize / 2;
+    let offSetY_px = setting.areaHeight * gridSize / 2;
+    let rad = Math.PI / 180 * setting.degree;
+
+    let gridOffX = - (setting.centerX % gridSize);
+    let gridOffY = - (setting.centerY % gridSize);
+    if(gridOffX > 0) gridOffX -= gridSize;
+    if(gridOffY > 0) gridOffY -= gridSize;
+
+    if(setting.offSetX){
+      if( gridOffX < -0.5){
+        gridOffX += gridSize / 2;
+      }else{
+        gridOffX -= gridSize / 2;
+      }
+    }
+
+    if(setting.offSetY){
+      if( gridOffY < -0.5){
+        gridOffY += gridSize / 2;
+      }else{
+        gridOffY -= gridSize / 2;
+      }
+    }
+
+    this.canvasElement.width = setting.areaWidth * gridSize;
+    this.canvasElement.height = setting.areaHeight * gridSize;
+    let context: CanvasRenderingContext2D = this.canvasElement.getContext('2d');
+
+    // 範囲座標
+    let p1x = -setting.range * gridSize; // 左下
+    let p1y = setting.range * gridSize;
+    let p2x = -setting.range * gridSize; // 左上
+    let p2y = -setting.range * gridSize;
+    let p3x = setting.range * gridSize; // 右上
+    let p3y = -setting.range * gridSize;
+    let p4x = setting.range * gridSize; // 右下
+    let p4y = setting.range * gridSize;
+
+    // クリッピング座標
+    // 根本から時計回りにクリップ範囲を定義
+    let clip01x = p1x - (gridSize * 1.0);
+    let clip01y = p1y + (gridSize * 1.0);
+    let clip02x = p2x - (gridSize * 1.0);
+    let clip02y = p2y - (gridSize * 1.0);
+    let clip03x = p3x + (gridSize * 1.0);
+    let clip03y = p3y - (gridSize * 1.0);
+    let clip04x = p4x + (gridSize * 1.0);
+    let clip04y = p4y + (gridSize * 1.0);
+
+    let clip: ClipAreaSquare = {
+      clip01x: clip01x, // 根本始点
+      clip01y: clip01y,
+      clip02x: clip02x,
+      clip02y: clip02y,
+      clip03x: clip03x,
+      clip03y: clip03y,
+      clip04x: clip04x,
+      clip04y: clip04y,
+    }
+    let gcx = 0.0;
+    let gcy = 0.0;
+
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
+    console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
+    this.makeBrush(context, gridSize, setting.gridColor);
+
+    if(setting.fillOutLine){
+      this.makeBrush(context, gridSize, setting.gridColor);
+      context.beginPath();
+
+      context.moveTo(p1x + offSetX_px, p1y + offSetY_px);
+      context.lineTo(p2x + offSetX_px, p2y + offSetY_px);
+      context.lineTo(p3x + offSetX_px, p3y + offSetY_px);
+      context.lineTo(p4x + offSetX_px, p4y + offSetY_px);
+      context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
+      context.fill();
+
+    }else{
+      this.makeBrush(context, gridSize, setting.gridColor);
+      for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
+        for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
+          let { gx, gy } = calcGridPosition(w, h, gridSize);
+
+          gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
+          gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
+          // console.log('hw' + h + ',' + w);
+
+          // 全部trueで内側にある
+          if(  this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
+            && this.chkOuterProduct(p2x, p2y, p3x, p3y, gcx, gcy)
+            && this.chkOuterProduct(p3x, p3y, p4x, p4y, gcx, gcy)
+            && this.chkOuterProduct(p4x, p4y, p1x, p1y, gcx, gcy)
+            ){
+            this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+          }else{
+            // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+          }
+        }
+      }
+    }
+    this.canvasElementRange.width = setting.areaWidth * gridSize;
+    this.canvasElementRange.height = setting.areaHeight * gridSize;
+    context = this.canvasElementRange.getContext('2d');
+
+    this.makeBrush(context, gridSize, setting.rangeColor);
+    context.beginPath();
+
+    context.lineWidth = 2;
+
+    context.moveTo(p1x + offSetX_px, p1y + offSetY_px);
+    context.lineTo(p2x + offSetX_px, p2y + offSetY_px);
+    context.lineTo(p3x + offSetX_px, p3y + offSetY_px);
+    context.lineTo(p4x + offSetX_px, p4y + offSetY_px);
+    context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
+    context.stroke();
+
+    if(setting.isDocking){
+      context.beginPath();
+      context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
+    }else{
+      context.beginPath();
+      context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+      context.fill();
+    }
+
+    return clip;
+  }
+
+  renderDiamond(setting: RangeRenderSetting): ClipAreaDiamond{
+    let gridSize = setting.gridSize;
+    let offSetX_px = setting.areaWidth * gridSize / 2;
+    let offSetY_px = setting.areaHeight * gridSize / 2;
+    let rad = Math.PI / 180 * setting.degree;
+
+    let gridOffX = - (setting.centerX % gridSize);
+    let gridOffY = - (setting.centerY % gridSize);
+    if(gridOffX > 0) gridOffX -= gridSize;
+    if(gridOffY > 0) gridOffY -= gridSize;
+
+    if(setting.offSetX){
+      if( gridOffX < -0.5){
+        gridOffX += gridSize / 2;
+      }else{
+        gridOffX -= gridSize / 2;
+      }
+    }
+
+    if(setting.offSetY){
+      if( gridOffY < -0.5){
+        gridOffY += gridSize / 2;
+      }else{
+        gridOffY -= gridSize / 2;
+      }
+    }
+
+    this.canvasElement.width = setting.areaWidth * gridSize;
+    this.canvasElement.height = setting.areaHeight * gridSize;
+    let context: CanvasRenderingContext2D = this.canvasElement.getContext('2d');
+
+    // 範囲座標
+    let p1x = -setting.range * gridSize; // 左
+    let p1y = 0;
+    let p2x = 0; // 上
+    let p2y = -setting.range * gridSize;
+    let p3x = setting.range * gridSize; // 右
+    let p3y = 0;
+    let p4x = 0; // 下
+    let p4y = setting.range * gridSize;
+
+    // クリッピング座標
+    // 根本から時計回りにクリップ範囲を定義
+    let clip01x = p1x - (gridSize * 1.2);
+    let clip01y = 0;
+    let clip02x = 0;
+    let clip02y = p2y - (gridSize * 1.2);
+    let clip03x = p3x + (gridSize * 1.2);
+    let clip03y = 0;
+    let clip04x = 0;
+    let clip04y = p4y + (gridSize * 1.2);
+
+    let clip: ClipAreaSquare = {
+      clip01x: clip01x, // 根本始点
+      clip01y: clip01y,
+      clip02x: clip02x,
+      clip02y: clip02y,
+      clip03x: clip03x,
+      clip03y: clip03y,
+      clip04x: clip04x,
+      clip04y: clip04y,
+    }
+    let gcx = 0.0;
+    let gcy = 0.0;
+
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
+    console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
+    this.makeBrush(context, gridSize, setting.gridColor);
+
+    if(setting.fillOutLine){
+      this.makeBrush(context, gridSize, setting.gridColor);
+      context.beginPath();
+
+      context.moveTo(p1x + offSetX_px, p1y + offSetY_px);
+      context.lineTo(p2x + offSetX_px, p2y + offSetY_px);
+      context.lineTo(p3x + offSetX_px, p3y + offSetY_px);
+      context.lineTo(p4x + offSetX_px, p4y + offSetY_px);
+      context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
+      context.fill();
+
+    }else{
+      this.makeBrush(context, gridSize, setting.gridColor);
+      for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
+        for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
+          let { gx, gy } = calcGridPosition(w, h, gridSize);
+
+          gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
+          gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
+          // console.log('hw' + h + ',' + w);
+
+          // 全部trueで内側にある
+          if(  this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
+            && this.chkOuterProduct(p2x, p2y, p3x, p3y, gcx, gcy)
+            && this.chkOuterProduct(p3x, p3y, p4x, p4y, gcx, gcy)
+            && this.chkOuterProduct(p4x, p4y, p1x, p1y, gcx, gcy)
+            ){
+            this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+          }else{
+            // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+          }
+        }
+      }
+    }
+    this.canvasElementRange.width = setting.areaWidth * gridSize;
+    this.canvasElementRange.height = setting.areaHeight * gridSize;
+    context = this.canvasElementRange.getContext('2d');
+
+    this.makeBrush(context, gridSize, setting.rangeColor);
+    context.beginPath();
+
+    context.lineWidth = 2;
+
+    context.moveTo(p1x + offSetX_px, p1y + offSetY_px);
+    context.lineTo(p2x + offSetX_px, p2y + offSetY_px);
+    context.lineTo(p3x + offSetX_px, p3y + offSetY_px);
+    context.lineTo(p4x + offSetX_px, p4y + offSetY_px);
+    context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
+    context.stroke();
+
+    if(setting.isDocking){
+      context.beginPath();
+      context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
+    }else{
+      context.beginPath();
+      context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+      context.fill();
+    }
+
+    return clip;
+  }
+
   renderCorn(setting: RangeRenderSetting): ClipAreaCorn{
     let gridSize = setting.gridSize;
     let offSetX_px = setting.areaWidth * gridSize / 2;
@@ -312,6 +604,7 @@ export class RangeRender {
 
     let gridOffX = - (setting.centerX % gridSize);
     let gridOffY = - (setting.centerY % gridSize);
+
     if(gridOffX > 0) gridOffX -= gridSize;
     if(gridOffY > 0) gridOffY -= gridSize;
 
@@ -397,7 +690,7 @@ export class RangeRender {
     let gcx = 0.0;
     let gcy = 0.0;
 
-    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(0);
+    let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
 
     if(setting.fillOutLine){
       this.makeBrush(context, gridSize, setting.gridColor);
@@ -453,29 +746,29 @@ export class RangeRender {
     return clip;
   }
 
-  private generateCalcGridPositionFunc(gridType: GridType): StrokeGridFunc {
+  private generateCalcGridPositionFunc(gridType: GridType,centerX: number,centerY: number,areaWidth: number,areaHeight: number): StrokeGridFunc {
+//  console.log('areaWidth:'+areaWidth + ' areaHeight:'+areaHeight);
     switch (gridType) {
-
-// 将来用 現状はスクエアのみ対応
-/*
       case GridType.HEX_VERTICAL: // ヘクス縦揃え
         return (w, h, gridSize) => {
-          if ((w % 2) === 1) {
+          let isHalfSlideXLine = centerX % (gridSize * 2) < gridSize ? 1:0;
+          let idAreaWidthMulti4 = areaWidth % 4 == 0 ? 1:0;
+          if (((w + isHalfSlideXLine + idAreaWidthMulti4) % 2) === 1) {
             return { gx: w * gridSize, gy: h * gridSize };
           } else {
             return { gx: w * gridSize, gy: h * gridSize + (gridSize / 2) };
           }
         }
-
       case GridType.HEX_HORIZONTAL: // ヘクス横揃え(どどんとふ互換)
         return (w, h, gridSize) => {
-          if ((h % 2) === 1) {
+          let isHalfSlideYLine = centerY % (gridSize * 2) < gridSize ? 1:0;
+          let idAreaHeightMulti4 = areaHeight % 4 == 0 ? 1:0;
+          if (((h + isHalfSlideYLine + idAreaHeightMulti4) % 2) === 1) {
             return { gx: w * gridSize, gy: h * gridSize };
           } else {
             return { gx: w * gridSize + (gridSize / 2), gy: h * gridSize };
           }
         }
-*/
       default: // スクエア(default)
         return (w, h, gridSize) => {
           return { gx: w * gridSize, gy: h * gridSize };

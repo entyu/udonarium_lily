@@ -50,6 +50,7 @@ import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
 import { RoomSettingComponent } from 'component/room-setting/room-setting.component';
 
 import { RangeComponent } from 'component/range/range.component';
+import { RangeDockingCharacterComponent } from 'component/range-docking-character/range-docking-character.component';
 
 import { TerrainComponent } from 'component/terrain/terrain.component';
 import { TextNoteComponent } from 'component/text-note/text-note.component';
@@ -162,6 +163,7 @@ import { AppComponent } from './app.component';
     ChatPaletteComponent,
     TextViewComponent,
     RangeComponent,
+    RangeDockingCharacterComponent,
     TerrainComponent,
     PeerCursorComponent,
     TextNoteComponent,

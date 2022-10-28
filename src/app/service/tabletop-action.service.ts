@@ -108,6 +108,12 @@ export class TabletopActionService {
       case 'CIRCLE':
         range = RangeArea.create('射程範囲', 6, 6, 100);
         break;
+      case 'SQUARE':
+        range = RangeArea.create('射程範囲', 6, 6, 100);
+        break;
+      case 'DIAMOND':
+        range = RangeArea.create('射程範囲', 6, 6, 100);
+        break;
       case 'CORN':
       default:
         range = RangeArea.create('射程範囲', 5, 5, 100);
@@ -545,6 +551,8 @@ export class TabletopActionService {
       { menuName: 'コーン', typeName: 'CORN'},
       { menuName: '直線', typeName: 'LINE'},
       { menuName: '円', typeName: 'CIRCLE'},
+      { menuName: '正方形', typeName: 'SQUARE'},
+      { menuName: 'ダイヤ', typeName: 'DIAMOND'},
     ];
     let subMenus: ContextMenuAction[] = [];
 

@@ -218,7 +218,7 @@
       [(ngModel)]="tabletopObject.fillOutLine" name="fillOutLine" (click)="fillOutLine()"><br>
       スクエアの塗りを半マスずらず 横:<input type="checkbox" value="offSetX"  [(ngModel)]="tabletopObject.offSetX" name="offSetX" (click)="clickRangeOffSetX()">
       &nbsp;縦:<input type="checkbox" value="offSetY"  [(ngModel)]="tabletopObject.offSetY" name="offSetY" (click)="clickRangeOffSetY()"><br>
-      <div *ngIf="tabletopObject.type == 'CIRCLE'">
+      <div *ngIf="tabletopObject.type == 'CIRCLE' || tabletopObject.type == 'SQUARE' || tabletopObject.type == 'DIAMOND'">
         <br>
         ※この形状はwidth項目は不使用
       </div>

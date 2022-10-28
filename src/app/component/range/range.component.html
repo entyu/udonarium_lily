@@ -16,7 +16,7 @@
     <div *ngIf="isLock" class="lock-icon is-center">
       <i class="material-icons">lock</i>
     </div>
-    <ng-container *ngIf="!isLock && range.type != 'CIRCLE'"> 
+    <ng-container *ngIf="!isLock && (range.type != 'CIRCLE') && (range.type != 'SQUARE') && (range.type != 'DIAMOND')"> 
       <div style="position:absolute;width:28px;">
         <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style = "position:absolute;" 
           [style.left.px]="( 1 * range.length) * gridSize">

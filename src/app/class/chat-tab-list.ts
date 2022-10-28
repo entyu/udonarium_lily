@@ -7,6 +7,9 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { Network } from '@udonarium/core/system';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
 
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { ReloadCheck } from '@udonarium/reload-check';
+
 @SyncObject('chat-tab-list')
 export class ChatTabList extends ObjectNode implements InnerXml {
 
@@ -33,6 +36,7 @@ export class ChatTabList extends ObjectNode implements InnerXml {
     return this.chatTabs.length > this.systemMessageTabIndex ? this.chatTabs[this.systemMessageTabIndex] : null;
   }
 
+  get reloadCheck(): ReloadCheck { return ObjectStore.instance.get<ReloadCheck>('ReloadCheck'); }
 
   public tachieHeightValue = 200;
   public minTachieSize = 100;
@@ -86,18 +90,23 @@ export class ChatTabList extends ObjectNode implements InnerXml {
   }
 
   parseInnerXml(element: Element) {
-    // XMLからの新規作成を許可せず、既存のオブジェクトを更新する
-    for (let child of ChatTabList.instance.children) {
-      child.destroy();
+    let reLoadOk = true;
+    reLoadOk = this.reloadCheck.answerCheck();
+
+    if(reLoadOk){
+      // XMLからの新規作成を許可せず、既存のオブジェクトを更新する
+      for (let child of ChatTabList.instance.children) {
+        child.destroy();
+      }
+
+      let context = ChatTabList.instance.toContext();
+      context.syncData = this.toContext().syncData;
+      ChatTabList.instance.apply(context);
+      ChatTabList.instance.update();
+
+      super.parseInnerXml.apply(ChatTabList.instance, [element]);
+      this.destroy();
     }
-
-    let context = ChatTabList.instance.toContext();
-    context.syncData = this.toContext().syncData;
-    ChatTabList.instance.apply(context);
-    ChatTabList.instance.update();
-
-    super.parseInnerXml.apply(ChatTabList.instance, [element]);
-    this.destroy();
   }
 
   logHtml( ): string {

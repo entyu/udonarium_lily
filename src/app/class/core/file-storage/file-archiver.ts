@@ -1,12 +1,15 @@
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip/dist/jszip.min.js';
 
-import { EventSystem } from '../system';
+import { EventSystem, Network } from '../system';
 import { XmlUtil } from '../system/util/xml-util';
 import { AudioStorage } from './audio-storage';
 import { FileReaderUtil } from './file-reader-util';
 import { ImageStorage } from './image-storage';
 import { MimeType } from './mime-type';
+
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { ReloadCheck } from '@udonarium/reload-check';
 
 type MetaData = { percent: number, currentFile: string };
 type UpdateCallback = (metadata: MetaData) => void;
@@ -19,6 +22,10 @@ export class FileArchiver {
     if (!FileArchiver._instance) FileArchiver._instance = new FileArchiver();
     return FileArchiver._instance;
   }
+
+  networkService = Network;
+
+  get reloadCheck(): ReloadCheck { return ObjectStore.instance.get<ReloadCheck>('ReloadCheck'); }
 
   private maxImageSize = 2 * MEGA_BYTE;
   private maxAudioeSize = 10 * MEGA_BYTE;
@@ -70,6 +77,8 @@ export class FileArchiver {
   private onDrop(event: DragEvent) {
     event.preventDefault();
 
+    this.reloadCheck.reloadCheckStart(this.networkService.peerContext.roomName != '');
+
     console.log('onDrop', event.dataTransfer);
     let files = event.dataTransfer.files
     this.load(files);
@@ -92,6 +101,7 @@ export class FileArchiver {
 
   private async handleImage(file: File) {
     if (file.type.indexOf('image/') < 0) return;
+    if (!this.reloadCheck.isLoadOk() ) return;
     if (this.maxImageSize < file.size) {
       console.warn(`File size limit exceeded. -> ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
       return;
@@ -112,12 +122,21 @@ export class FileArchiver {
 
   private async handleText(file: File): Promise<void> {
     if (file.type.indexOf('text/') < 0) return;
-    console.log(file.name + ' type:' + file.type);
-    try {
-      let xmlElement: Element = XmlUtil.xml2element(await FileReaderUtil.readAsTextAsync(file));
-      if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
-    } catch (reason) {
-      console.warn(reason);
+
+    let isLoadOk = true;
+    // data.xmlはここでは通過させ後段で中身が部屋データ更新だった場合更新確認をする
+    if(file.name == 'config.xml' || file.name == 'imagetag.xml' || file.name == 'summary.xml'){
+      isLoadOk = this.reloadCheck.isLoadOk();
+    }
+
+    if(isLoadOk){
+      console.log(file.name + ' type:' + file.type);
+      try {
+        let xmlElement: Element = XmlUtil.xml2element(await FileReaderUtil.readAsTextAsync(file));
+        if (xmlElement) EventSystem.trigger('XML_LOADED', { xmlElement: xmlElement });
+      } catch (reason) {
+        console.warn(reason);
+      }
     }
   }
 
