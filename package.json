@@ -1,6 +1,6 @@
 {
   "name": "udonarium_lily",
-  "version": "1.09.0b0",
+  "version": "1.09.0b1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -25,7 +25,7 @@
     "@angular/youtube-player": "^13.3.0",
     "@ng-select/ng-select": "^8.1.1",
     "autolinker": "^3.15.0",
-    "bcdice": "^4.0.0",
+    "bcdice": "^4.0.3",
     "crypto-js": "^4.1.1",
     "file-saver": "^2.0.5",
     "hammerjs": "^2.0.8",
@@ -63,6 +63,7 @@
     "@types/vkbeautify": "^0.99.2",
     "@typescript-eslint/eslint-plugin": "5.16.0",
     "@typescript-eslint/parser": "5.16.0",
+    "cypress": "latest",
     "eslint": "^8.11.0",
     "jasmine-core": "^4.0.1",
     "jasmine-spec-reporter": "~7.0.0",
@@ -71,7 +72,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~4.0.1",
     "karma-jasmine-html-reporter": "^1.7.0",
-    "typescript": "~4.6.2",
-    "cypress": "latest"
+    "typescript": "~4.6.2"
   }
 }
