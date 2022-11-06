@@ -82,7 +82,7 @@ export class DiceBot extends GameObject {
           console.log('isSecret!!!', result.secret);
           return {
             id: gameSystem.ID,
-            result: `${gameSystem.ID} : ${result.text}`,
+            result: `${gameSystem.ID} : ${result.text}`.replace(/\n?(#\d+)\n/ig, '$1 '), // 繰り返しダイスロールは改行表示を短縮する
             isSecret: result.secret,
           };
         }
@@ -118,10 +118,12 @@ export class DiceBot extends GameObject {
       if ( system ) {
         return system;
       }
-      const id = this.diceBotInfos.some((info) => info.id === gameType)
-        ? gameType
-        : 'DiceBot';
-      return DiceBot.loader.dynamicLoad(id);
+      const id = this.diceBotInfos.some((info) => info.id === gameType) ? gameType : 'DiceBot';
+      try {
+        return DiceBot.loader.getGameSystemClass(id);
+      } catch {
+        return DiceBot.loader.dynamicLoad(id);
+      }
     });
   }
 
@@ -201,8 +203,6 @@ export class DiceBot extends GameObject {
           const rollResult = await DiceBot.diceRollAsync(rollText, gameSystem);
           if (!rollResult.result) { return; }
 
-          rollResult.result = rollResult.result.replace(/\n?(#\d+)\n/ig, '$1 '); // 繰り返しロールを詰める
-
           this.sendResultMessage(rollResult, chatMessage);
         } catch (e) {
           console.error(e);
@@ -215,7 +215,7 @@ export class DiceBot extends GameObject {
         const chatMessage = ObjectStore.instance.get<ChatMessage>(event.data.messageIdentifier);
         if (!chatMessage || !chatMessage.isSendFromSelf || chatMessage.isSystem) { return; }
 
-        const text: string = StringUtil.toHalfWidth(chatMessage.text);
+        const text: string = StringUtil.toHalfWidth(chatMessage.text).trim();
         const splitText = text.split(/\s/);
 
         const diceTable = this.getDiceTables() ;
@@ -234,7 +234,7 @@ export class DiceBot extends GameObject {
         if ( !rollTable ) { return; }
 
         try {
-          const regArray = /^((\d+)?\s+)?([^\s]*)?/ig.exec(rollTable.dice);
+          const regArray = /^((\d+)?\s+)?(.*)?/ig.exec(rollTable.dice);
           const repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
           const rollText: string = (regArray[3] != null) ? regArray[3] : text;
           const finalResult: DiceRollResult = { result: '', isSecret: false };
