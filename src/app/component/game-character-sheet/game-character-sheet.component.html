@@ -167,6 +167,7 @@
     <div>
       境界線
       <input type="color" name="color01" list="color-list_01" (change)="changeRangeColor($event.target.value)" value="{{tabletopObject.rangeColor}}">
+<!-- クローム側の更新都合による現象でリスト設定の値が正常に入らなくなったため一時的にリスト設定を辞める
       <datalist id="color-list_01">
         <option value="#000000">
         <option value="#FF0000">
@@ -186,9 +187,10 @@
         <option value="#663366">
         <option value="#FF66FF">
       </datalist>
-      
+-->
       塗りつぶし
       <input type="color" name="color02" list="color-list_02" (change)="changeGridColor($event.target.value)" value="{{tabletopObject.gridColor}}">
+<!-- クローム側の更新都合による現象でリスト設定の値が正常に入らなくなったため一時的にリスト設定を辞める
       <datalist id="color-list_02">
         <option value="#000000">
         <option value="#FF0000">
@@ -208,6 +210,7 @@
         <option value="#663366">
         <option value="#FF66FF">
       </datalist>
+-->
     </div>
     <div *ngIf="tabletopObject.type != 'CIRCLE'">
       回転角度のスナップを細かくする:<input type="checkbox" value="noSnapPolygonal"

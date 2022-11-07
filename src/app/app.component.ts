@@ -62,6 +62,10 @@ import { AlarmWindowComponent } from 'component/alarm-window/alarm-window.compon
 export class AppComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('modalLayer', { read: ViewContainerRef, static: true }) modalLayerViewContainerRef: ViewContainerRef;
+
+  get reloadCheck(): ReloadCheck { return ObjectStore.instance.get<ReloadCheck>('ReloadCheck'); }
+  networkService = Network;
+
   private immediateUpdateTimer: NodeJS.Timer = null;
   private lazyUpdateTimer: NodeJS.Timer = null;
   private openPanelCount = 0;
@@ -416,6 +420,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   handleFileSelect(event: Event) {
     let input = <HTMLInputElement> event.target;
     let files = input.files;
+
+    this.reloadCheck.reloadCheckStart(this.networkService.peerContext.roomName != '');
+
     if (files.length) FileArchiver.instance.load(files);
     input.value = '';
   }

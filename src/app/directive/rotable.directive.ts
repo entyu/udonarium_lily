@@ -174,7 +174,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
 
   snapToPolygonal(polygonal: number = 24) {
     if (polygonal <= 1) return;
-    if (this.tabletopObject.aliasName == 'range'){
+    if ( this.tabletopObject instanceof RangeArea) {
       let range = <RangeArea>this.tabletopObject;
       if (range.subDivisionSnapPolygonal) polygonal = 240;
     }

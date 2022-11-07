@@ -50,10 +50,12 @@
         グリッド色:
         <input type="color" [(ngModel)]="tableGridColor" name="tableGridColor"
                list="table-grid-color-list" [attr.disabled]="!isEditable ? '' : null">
+<!-- クローム側の更新都合による現象でリスト設定の値が正常に入らなくなったため一時的にリスト設定を辞める
         <datalist id="table-grid-color-list">
           <option value="#000000">
           <option value="#dddddd">
         </datalist>
+-->
       </div>
       <div>
         背景フィルタ
