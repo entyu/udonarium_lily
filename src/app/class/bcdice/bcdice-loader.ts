@@ -6,8 +6,8 @@ export default class BCDiceLoader extends Loader {
     return (await import(
       /* webpackChunkName: "lib/bcdice/i18n/[request]" */
       /* webpackInclude: /\.json$/ */
-      `bcdice/lib/bcdice/i18n/${baseClassName}.${locale}.json`
-    )).default as I18nJsonObject;
+      /* webpackExclude: /i18n.json$/ */
+      `bcdice/lib/bcdice/i18n/${baseClassName}.${locale}.json`)).default as I18nJsonObject;
   }
 
   async dynamicImport(className: string): Promise<void> {
