@@ -38,7 +38,7 @@ export class ObjectSynchronizer {
         let catalog: CatalogItem[] = event.data;
         for (let item of catalog) {
           if (ObjectStore.instance.isDeleted(item.identifier)) {
-            EventSystem.call('DELETE_GAME_OBJECT', { identifier: item.identifier }, event.sendFrom);
+            EventSystem.call('DELETE_GAME_OBJECT', { aliasName: '', identifier: item.identifier }, event.sendFrom);
           } else {
             this.addRequestMap(item, event.sendFrom);
           }
@@ -48,26 +48,26 @@ export class ObjectSynchronizer {
       .on('REQUEST_GAME_OBJECT', event => {
         if (event.isSendFromSelf) return;
         if (ObjectStore.instance.isDeleted(event.data)) {
-          EventSystem.call('DELETE_GAME_OBJECT', { identifier: event.data }, event.sendFrom);
+          EventSystem.call('DELETE_GAME_OBJECT', { aliasName: '', identifier: event.data }, event.sendFrom);
         } else {
           let object: GameObject = ObjectStore.instance.get(event.data);
           if (object) EventSystem.call('UPDATE_GAME_OBJECT', object.toContext(), event.sendFrom);
         }
       })
-      .on('UPDATE_GAME_OBJECT', event => {
+      .on('UPDATE_GAME_OBJECT', 1000, event => {
         let context: ObjectContext = event.data;
         let object: GameObject = ObjectStore.instance.get(context.identifier);
         if (object) {
           if (!event.isSendFromSelf) this.updateObject(object, context);
         } else if (ObjectStore.instance.isDeleted(context.identifier)) {
-          EventSystem.call('DELETE_GAME_OBJECT', { identifier: context.identifier }, event.sendFrom);
+          EventSystem.call('DELETE_GAME_OBJECT', { aliasName: context.aliasName, identifier: context.identifier }, event.sendFrom);
         } else {
           this.createObject(context);
         }
       })
-      .on('DELETE_GAME_OBJECT', event => {
-        let context: ObjectContext = event.data;
-        ObjectStore.instance.delete(context.identifier, false);
+      .on('DELETE_GAME_OBJECT', 1000, event => {
+        let identifier: ObjectIdentifier = event.data.identifier;
+        ObjectStore.instance.delete(identifier, false);
       });
   }
 

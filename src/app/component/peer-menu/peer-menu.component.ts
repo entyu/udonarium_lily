@@ -38,6 +38,9 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
   isPasswordCopied = false;
   isPasswordOpen = false;
 
+  help: string = '';
+  //isPasswordVisible = false;
+
   private _timeOutId;
   private _timeOutId2;
   private _timeOutId3;
@@ -133,7 +136,11 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
     }
     this.modalService.open(LobbyComponent, { width: 700, height: 400, left: 0, top: 400 });
   }
-
+/*
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+*/
   findUserId(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);
     return peerCursor ? peerCursor.userId : '';

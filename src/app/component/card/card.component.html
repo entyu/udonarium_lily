@@ -1,4 +1,3 @@
-<div class="chrome-3d-transform-trick"></div>
 <div class="component is-3d is-pointer-events-none" [ngClass]="{'is-grab': !isLocked}" [style.width.px]="size * gridSize"
   appMovable [movable.option]="movableOption" [movable.disable]="isLocked" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div @slidInOut class="is-pointer-events-none is-3d">

@@ -391,7 +391,7 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
   
   ngOnInit() {
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
+      .on('UPDATE_GAME_OBJECT', event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.gameCharacter || !object) return;
         if (this.gameCharacter === object || (object instanceof ObjectNode && this.gameCharacter.contains(object))) {
@@ -406,7 +406,7 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
       })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
       })
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
@@ -776,7 +776,7 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
     this.naturalImageWidth = this.characterImage.nativeElement.naturalWidth;
     this.naturalImageHeight = this.characterImage.nativeElement.naturalHeight;
     this.naturaHeightWidthRatio =  (this.naturalImageWidth && this.naturalImageHeight) ? (this.naturalImageHeight / this.naturalImageWidth) : 1;
-    EventSystem.trigger('UPDATE_GAME_OBJECT', this.gameCharacter);
+    //EventSystem.trigger('UPDATE_GAME_OBJECT', this.gameCharacter);
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {

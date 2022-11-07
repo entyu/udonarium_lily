@@ -43,6 +43,8 @@ export class UIPanelComponent implements OnInit {
 
   @Output() rotateEvent = new EventEmitter<boolean>();
 
+  @Input() showTitleButtons: boolean = true;
+
   get title(): string { return this.panelService.title; }
   get left() { return this.panelService.left; }
   get top() { return this.panelService.top; }

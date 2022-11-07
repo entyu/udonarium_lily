@@ -120,7 +120,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     const rotate = Math.abs(this.viewRotateZ + this.rotate) % 360;
     return 90 < rotate && rotate < 270
   }
-  
+
   private doubleClickTimer: NodeJS.Timer = null;
   private doubleClickPoint = { x: 0, y: 0 };
 
@@ -140,19 +140,19 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     EventSystem.register(this)
-      .on('SHUFFLE_CARD_STACK', -1000, event => {
+      .on('SHUFFLE_CARD_STACK', event => {
         if (event.data.identifier === this.cardStack.identifier) {
           this.animeState = 'active';
           this.changeDetector.markForCheck();
         }
       })
-      .on('INVERSE_CARD_STACK', -1000, event => {
+      .on('INVERSE_CARD_STACK', event => {
         if (event.data.identifier === this.cardStack.identifier) {
           this.animeState = 'inverse';
           this.changeDetector.markForCheck();
         }
       })
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
+      .on('UPDATE_GAME_OBJECT', event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.cardStack || !object) return;
         if ((this.cardStack === object)
@@ -173,7 +173,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
       })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
       })
       .on('DISCONNECT_PEER', event => {
@@ -380,13 +380,13 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!this.cardStack.topCard.isFront) this.chatMessageService.sendOperationLog(`${this.cardStack.name == '' ? '(無名の山札)' : this.cardStack.name} の一番上の ${this.cardStack.topCard.name == '' ? '(無名のカード)' : this.cardStack.topCard.name} を公開した`);
           this.cardStack.faceUp();
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
-        disabled: this.cards.length == 0        
+        },
+        disabled: this.cards.length == 0
       } : {
         name: '一番上を裏にする', action: () => {
           this.cardStack.faceDown();
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
+        },
         disabled: this.cards.length == 0
       }),
       ContextMenuSeparator,
@@ -396,21 +396,21 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           //if (!this.cardStack.topCard.isFront) this.chatMessageService.sendOperationLog(`${this.cardStack.name} をすべて表にし、一番上の ${this.cardStack.topCard.name} を公開した`);
           this.cardStack.faceUpAll();
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       {
         name: 'すべて裏にする', action: () => {
           this.cardStack.faceDownAll();
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       {
         name: 'すべて正位置にする', action: () => {
           this.cardStack.uprightAll();
           SoundEffect.play(PresetSound.cardDraw);
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       ContextMenuSeparator,
@@ -419,7 +419,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           this.cardStack.shuffle();
           SoundEffect.play(PresetSound.cardShuffle);
           EventSystem.call('SHUFFLE_CARD_STACK', { identifier: this.cardStack.identifier });
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       { name: 'カード一覧を見る', action: () => {
@@ -434,7 +434,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       { name: 'カードサイズを揃える', action: () => { if (this.cardStack.topCard) this.cardStack.unifyCardsSize(this.cardStack.topCard.size); }, disabled: this.cards.length == 0 },
       ContextMenuSeparator,
       {
-        name: '山札を分割する', 
+        name: '山札を分割する',
         subActions: [
           {
             name: '人数で分割',
@@ -460,7 +460,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
         name: '山札を崩す', action: () => {
           this.breakStack();
           SoundEffect.play(PresetSound.cardShuffle);
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       {
@@ -469,7 +469,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
           SoundEffect.play(PresetSound.cardDraw);
           SoundEffect.play(PresetSound.cardDraw);
           EventSystem.call('INVERSE_CARD_STACK', { identifier: this.cardStack.identifier });
-        }, 
+        },
         disabled: this.cards.length == 0
       },
       ContextMenuSeparator,
@@ -485,7 +485,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.cardStack.name, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,

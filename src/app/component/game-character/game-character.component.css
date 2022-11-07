@@ -1,15 +1,5 @@
-@supports (-moz-user-select: -moz-none) {
-  /* 汚いけどとりあえず */
-/*  .chat-bubble p:after {
-    bottom: -28px !important;
-  }
-  いらなくなった？
-*/
-   /*
-  .chat-bubble p.is-whisper:after {
-    bottom: -11px !important;
-  }
-  */
+:host {
+  display: block;
 }
 
 .is-grab {

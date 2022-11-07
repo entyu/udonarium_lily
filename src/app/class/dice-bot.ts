@@ -166,7 +166,7 @@ export class DiceBot extends GameObject {
     ['ャ', 'ヤ'],
     ['ュ', 'ユ'],
     ['ョ', 'ヨ'],
-    ['ッ', 'ツ'],  
+    ['ッ', 'ツ'],
     ['ヲ', 'オ'],
     ['ガ', 'カ'],
     ['ギ', 'キ'],
@@ -214,10 +214,11 @@ export class DiceBot extends GameObject {
           const repeat: number = (regArray[3] != null) ? Number(regArray[3]) : 1;
           let rollText: string = (regArray[4] != null) ? regArray[4] : text;
 
+
           if (!rollText || repeat <= 0) return;
           let finalResult: DiceRollResult = { id: 'DiceBot', result: '', isSecret: false, isDiceRollTable: false, isEmptyDice: true,
             isSuccess: false, isFailure: true, isCritical: false, isFumble: false };
-          
+
           //ダイスボット表
           let isDiceRollTableMatch = false;
           for (const diceRollTable of DiceRollTableList.instance.diceRollTables) {
@@ -266,7 +267,7 @@ export class DiceBot extends GameObject {
                 let isRowMatch = false;
                 if (rollResultNumber != null) {
                   for (const diceRollTableRow of diceRollTableRows) {
-                    if ((diceRollTableRow.range.start === null || diceRollTableRow.range.start <= rollResultNumber + modifier) 
+                    if ((diceRollTableRow.range.start === null || diceRollTableRow.range.start <= rollResultNumber + modifier)
                       && (diceRollTableRow.range.end === null || rollResultNumber + modifier <= diceRollTableRow.range.end)) {
                       if (!isFixedRef) {
                         finalResult.result += (rollResult.result + modStr + (modStr ? ` → ${rollResultNumber + modifier}`: '') + "\n" + StringUtil.cr(diceRollTableRow.result));
@@ -316,7 +317,7 @@ export class DiceBot extends GameObject {
                   isChoice = true;
                 }
               }
-            } 
+            }
             if (!isChoice) {
               rollText = rollText.trim().split(/\s+/)[0].replace(/[ⅮÐ]/g, 'D').replace(/\×/g, '*').replace(/\÷/g, '/').replace(/[―ー—‐]/g, '-');
             }
@@ -389,7 +390,7 @@ export class DiceBot extends GameObject {
       timestamp: originalMessage.timestamp + 1,
       imageIdentifier: '',
       tag: tag,
-      //name: rollResult.isDiceRollTable ? 
+      //name: rollResult.isDiceRollTable ?
       //  isSecret ? '<' + rollResult.tableName + ' (Secret)：' + originalMessage.name + '>' : '<' + rollResult.tableName + '：' + originalMessage.name + '>' :
       //  isSecret ? '<Secret-BCDice：' + originalMessage.name + '>' : '<BCDice：' + originalMessage.name + '>' ,
       name: `${rollResult.isDiceRollTable ? rollResult.tableName : id} : ${originalMessage.name}${isSecret ? ' (Secret)' : ''}`,
@@ -423,11 +424,11 @@ export class DiceBot extends GameObject {
             const conditionType = +diceBotMatch.getFirstElementByName('conditionType').value;
             if (conditionType == StandConditionType.Postfix || conditionType == StandConditionType.PostfixOrImage || conditionType == StandConditionType.PostfixAndImage) {
               const sendObj = {
-                characterIdentifier: gameCharacter.identifier, 
-                standIdentifier: standInfo.standElementIdentifier, 
+                characterIdentifier: gameCharacter.identifier,
+                standIdentifier: standInfo.standElementIdentifier,
                 color: originalMessage.color,
                 secret: originalMessage.to ? true : false
-              };              
+              };
               if (sendObj.secret) {
                 const targetPeer = PeerCursor.findByUserId(originalMessage.to);
                 if (targetPeer) {
@@ -443,14 +444,14 @@ export class DiceBot extends GameObject {
       }
       matchMostLongText = standInfo.matchMostLongText;
     }
-    
+
     const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
     // ダイスによるカットイン発生
     const cutInInfo = CutInList.instance.matchCutInInfo(result);
     if (!isSecret && chatTab.isUseStandImage) {
       for (const identifier of cutInInfo.identifiers) {
         const sendObj = {
-          identifier: identifier, 
+          identifier: identifier,
           secret: originalMessage.to ? true : false,
           sender: PeerCursor.myCursor.peerId
         };
@@ -484,7 +485,7 @@ export class DiceBot extends GameObject {
   static async diceRollAsync(message: string, gameType: string, repeat: number = 1): Promise<DiceRollResult> {
     gameType = gameType ? gameType : 'DiceBot';
     if (DiceBot.apiUrl) {
-      const request = DiceBot.apiVersion == 1 
+      const request = DiceBot.apiVersion == 1
         ? DiceBot.apiUrl + '/v1/diceroll?system=' + (gameType ? encodeURIComponent(gameType) : 'DiceBot') + '&command=' + encodeURIComponent(message)
         : `${DiceBot.apiUrl}/v2/game_system/${(gameType ? encodeURIComponent(gameType) : 'DiceBot')}/roll?command=${encodeURIComponent(message)}`;
       const promisise = [];
@@ -499,7 +500,7 @@ export class DiceBot extends GameObject {
             })
             .then(json => {
               //console.log(JSON.stringify(json))
-              return { id: gameType, result: (DiceBot.apiVersion == 1 ? json.result : json.text) + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret, 
+              return { id: gameType, result: (DiceBot.apiVersion == 1 ? json.result : json.text) + (repeat > 1 ? ` #${i}\n` : ''), isSecret: json.secret,
                 isEmptyDice: DiceBot.apiVersion == 1 ? (json.dices && json.dices.length == 0) : (json.rands && json.rands.length == 0),
                 isSuccess: json.success, isFailure: json.failure, isCritical: json.critical, isFumble: json.fumble };
             })
@@ -518,7 +519,7 @@ export class DiceBot extends GameObject {
           let isFailure = ac.isFailure && cv.isFailure;
           let isCritical = ac.isCritical || cv.isCritical;
           let isFumble = ac.isFumble || cv.isFumble;
-          return { id: gameType, result, isSecret: isSecret, isEmptyDice: isEmptyDice, 
+          return { id: gameType, result, isSecret: isSecret, isEmptyDice: isEmptyDice,
             isSuccess: isSuccess, isFailure: isFailure, isCritical: isCritical, isFumble: isFumble };
         }, { id: gameType, result: '', isSecret: false, isEmptyDice: true, isSuccess: false, isFailure: true, isCritical: false, isFumble: false }) });
     } else {
@@ -552,7 +553,7 @@ export class DiceBot extends GameObject {
         );
       }
       return Promise.all(promisise)
-        .then(jsons => { 
+        .then(jsons => {
           return jsons.map(json => {
             if (DiceBot.apiVersion == 1 && json.systeminfo && json.systeminfo.info) {
               return json.systeminfo.info.replace('部屋のシステム名', 'チャットパレットなどのシステム名');
@@ -560,8 +561,8 @@ export class DiceBot extends GameObject {
               return json.help_message.replace('部屋のシステム名', 'チャットパレットなどのシステム名');
             } else {
               return 'ダイスボット情報がありません。';
-            }                
-          }) 
+            }
+          })
         });
     } else {
       let help = [''];
@@ -583,13 +584,14 @@ export class DiceBot extends GameObject {
   }
 
   static async loadGameSystemAsync(gameType: string): Promise<GameSystemClass> {
-    const gameSystem = await DiceBot.queue.add(() => {
-      const id = this.diceBotInfos.some((info) => info.id === gameType)
-        ? gameType
-        : 'DiceBot';
-      return DiceBot.loader.dynamicLoad(id);
+    return await DiceBot.queue.add(() => {
+      const id = this.diceBotInfos.some(info => info.id === gameType) ? gameType : 'DiceBot';
+      try {
+        return DiceBot.loader.getGameSystemClass(id);
+      } catch {
+        return DiceBot.loader.dynamicLoad(id);
+      }
     });
-    return gameSystem;
   }
 
   private static initializeDiceBotQueue(): PromiseQueue {
@@ -617,7 +619,7 @@ export class DiceBot extends GameObject {
         let langName;
         if (lang && lang[1]) {
           langName = (lang[1] == 'ChineseTraditional') ? '正體中文'
-            : (lang[1] == 'Korean') ? '한국어' 
+            : (lang[1] == 'Korean') ? '한국어'
             : (lang[1] == 'English') ? 'English' : 'Other';
         }
         return {
@@ -644,7 +646,7 @@ export class DiceBot extends GameObject {
           const regExp1 = (DiceBot.apiUrl && DiceBot.apiVersion == 1) ? /^(?:\: )\(([A-Z\d\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i : /^\(([A-Z\d\+\-\*\/=\(\),\[\]\<\>@]+)\)$/i;
           const regExp2 = (DiceBot.apiUrl && DiceBot.apiVersion == 1) ? /^(?:\: )\((CHOICE(?:\d+)?[\[\( ].+)\)$/i : /^\((CHOICE(?:\d+)?[\[\( ].+)\)$/i;
           const parentheses = resultFragment.match(regExp1) || resultFragment.match(regExp2);
-          if (parentheses && !parentheses[1].toUpperCase().startsWith('CHOICE')) { 
+          if (parentheses && !parentheses[1].toUpperCase().startsWith('CHOICE')) {
             addDiceInfos = [...resultFragment.matchAll(/(?<diceCount>\d+)D\d+(?:(?<keepDrop>[KD][HL])(?<keepDropCount>\d+))?/gi)];
             if (!addDiceInfos.length) {
               barabaraDiceInfos = [...resultFragment.matchAll(/\d+B\d+(?:\+\d+B\d+)*(?:\[6\]Limit\[\d+\])?(?<sign><=|>=|<>|==|!=|<|>|=)(?<criteria>\d+)/gi)];

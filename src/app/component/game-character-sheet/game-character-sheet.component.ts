@@ -103,7 +103,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
 
   ngOnInit() {
     EventSystem.register(this)
-      .on('DELETE_GAME_OBJECT', -1000, event => {
+      .on('DELETE_GAME_OBJECT', event => {
         if (this.tabletopObject && this.tabletopObject.identifier === event.data.identifier) {
           this.panelService.close();
         }
@@ -275,7 +275,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
         }
       }
     });
-    EventSystem.trigger('UPDATE_GAME_OBJECT', this.tabletopObject);
+    //EventSystem.trigger('UPDATE_GAME_OBJECT', this.tabletopObject);
   }
 
   openModalAddImage() {
@@ -359,7 +359,7 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       if (this.tabletopObject.currntImageIndex >= elements.length - 1) this.tabletopObject.currntImageIndex =  elements.length - 2;
       if (this.tabletopObject.currntImageIndex < 0) this.tabletopObject.currntImageIndex = 0;
     }
-    EventSystem.trigger('UPDATE_GAME_OBJECT', this.tabletopObject);
+    //EventSystem.trigger('UPDATE_GAME_OBJECT', this.tabletopObject);
   }
 
   deleteIcon(index: number=0, imageIdentifier='') {

@@ -35,7 +35,7 @@
     <span>
       <ng-container *ngIf="networkService.isOpen">
         <span class="id-input-container">
-          <span class="id-spacer room-data">{{ networkService.peerContext.roomName + '/' + networkService.peerContext.roomId }}</span>
+          <span class="id-spacer room-data">{{ networkService.peerContext.roomName }}/{{ networkService.peerContext.roomId }}</span>
           <input class="id-input room-data" type="text" value="{{ networkService.peerContext.roomName + '/' + networkService.peerContext.roomId }}" readonly>
         </span>
         <button *ngIf="isAbleClipboardCopy" (click)="copyRoomName()" [disabled]="isRoomNameCopied"><b class="material-icons" style="font-size: 1em; vertical-align: bottom">content_copy</b></button>

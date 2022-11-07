@@ -195,7 +195,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     EventSystem.register(this)
-      .on('ROLL_DICE_SYNBOL', -1000, event => {
+      .on('ROLL_DICE_SYMBOL', event => {
         if (event.data.identifier === this.diceSymbol.identifier) {
           this.ngZone.run(() => {
             this.animeState = 'inactive';
@@ -204,7 +204,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         }
       })
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
+      .on('UPDATE_GAME_OBJECT', event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.diceSymbol || !object) return;
         if ((this.diceSymbol === object)
@@ -230,7 +230,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
       })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
       })
       .on('CHANGE_GM_MODE', event => {
@@ -412,7 +412,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
                 window.open(url.trim(), '_blank', 'noopener');
               } else {
                 this.modalService.open(OpenUrlComponent, { url: url, title: this.diceSymbol.name, subTitle: urlElement.name });
-              } 
+              }
             },
             disabled: !StringUtil.validUrl(url),
             error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
