@@ -5,7 +5,7 @@ import { TabletopObject } from './tabletop-object';
 @SyncObject('reload-check')
 export class ReloadCheck extends TabletopObject {
 
-  private reloadOK : boolean = false;
+  private reloadOK : boolean = true;
   private isAnswer : boolean = false;
 
   reloadCheckStart(isOnline: boolean){
@@ -27,6 +27,7 @@ export class ReloadCheck extends TabletopObject {
   }
 
   isLoadOk(): boolean{
+    console.log('isLoadOk :' + this.reloadOK);
     return this.reloadOK;
   }
 
