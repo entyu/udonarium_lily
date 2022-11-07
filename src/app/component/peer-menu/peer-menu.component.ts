@@ -77,7 +77,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy {
   get isGMHold(): boolean { return PeerCursor.isGMHold; }
   get isDisableConnect(): boolean { return this.isGMHold || this.isGMMode; }
 
-  get maskedPassword(): string { return '*'.repeat(this.networkService.peerContext.password.length) }
+  get maskedPassword(): string { return '●●●●●●●●' }
 
   constructor(
     private modalService: ModalService,
