@@ -82,6 +82,7 @@ import { VoteWindowComponent } from 'component/vote-window/vote-window.component
 
 import { AlarmMenuComponent } from 'component/alarm-menu/alarm-menu.component';
 import { AlarmWindowComponent } from 'component/alarm-window/alarm-window.component';
+import { ChatMessageFixComponent } from 'component/chat-message-fix/chat-message-fix.component';
 
 import { ImportCharacterImgComponent } from 'component/import-character-img/import-character-img.component';
 
@@ -149,6 +150,8 @@ import { AppComponent } from './app.component';
 
     AlarmMenuComponent,
     AlarmWindowComponent,
+
+    ChatMessageFixComponent,
 
     ImportCharacterImgComponent,
 

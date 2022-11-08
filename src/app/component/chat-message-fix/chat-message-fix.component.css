@@ -1,0 +1,52 @@
+.small-font {
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.material-icons {
+  vertical-align: middle;
+  font-size: 1.0rem;
+}
+
+.table {
+  box-sizing: border-box;
+  padding : 5px;
+  display: table;
+  width: 100%;
+}
+
+.table-cell {
+  display: table-cell;
+}
+
+.chat-input {
+  font-family: inherit;
+  font-size: 13px;
+
+  width: calc(100% - 180px);
+  height: calc(1em + 4px);
+  min-height: calc(1em + 7px);
+  max-height: calc(6em + 7px);
+  resize: none;
+  overflow: auto;
+
+  padding: 1px;
+  margin: 5px;
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  vertical-align: bottom;
+}
+
+.writing-info {
+  font-size: 8px;
+  height: 1.3em;
+}
+
+/*2022/1/16現在、クロームバージョン: 97.0.4692.71（Official Build） （64 ビット）
+キャレットの点滅で負荷がかかることへの対策不透明度指定*/
+.is-caret {
+  caret-color: rgba(0,0,0,0.95);
+}

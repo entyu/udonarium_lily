@@ -38,9 +38,12 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() imagePos: number;
   @SyncVar() messColor: string;
   @SyncVar() sendFrom: string;
+  @SyncVar() fixd: boolean = false;
 
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value }
+  set text(text: string) { this.value = text }
+
   get timestamp(): number {
     let timestamp = this.getAttribute('timestamp');
     let num = timestamp ? +timestamp : 0;
