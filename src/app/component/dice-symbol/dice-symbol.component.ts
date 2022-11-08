@@ -213,14 +213,14 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
           this.changeDetector.markForCheck();
         }
       })
-      .on('DICE_ALL_OPEN', -1000, event => {
+      .on('DICE_ALL_OPEN', event => {
         if (this.owner && !this.isLock) {
           this.owner = '';
           SoundEffect.play(PresetSound.unlock);
           this.chatMessageService.sendOperationLog(`${this.diceSymbol.name == '' ? '(無名の' + (this.isCoin ? 'コイン' : 'ダイス') + ')' : this.diceSymbol.name} の${this.isCoin ? '表／裏' : '目'}を公開 → ${this.face}`);
         }
       })
-      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+      .on<object>('TABLE_VIEW_ROTATE', event => {
         this.ngZone.run(() => {
           this.viewRotateX = event.data['x'];
           this.viewRotateZ = event.data['z'];
@@ -449,7 +449,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   diceRoll(): string {
-    EventSystem.call('ROLL_DICE_SYNBOL', { identifier: this.diceSymbol.identifier });
+    EventSystem.call('ROLL_DICE_SYMBOL', { identifier: this.diceSymbol.identifier });
     //if (this.owner === '') {
       if (this.isCoin) {
         SoundEffect.play(PresetSound.coinToss);
