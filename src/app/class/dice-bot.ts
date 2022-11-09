@@ -545,9 +545,9 @@ export class DiceBot extends GameObject {
     const replaceText = ' ' + text.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=').replace('＞', '>');
 
     console.log('リソース変更：' + replaceText);
-    const resourceEditRegExp = /[:]([^-+=>]+)([-+=>])(.+)/;
+    const resourceEditRegExp = /[:]([^-+=>]+)([-+=>])(.*)/;
     const resourceEditResult = replaceText.match(resourceEditRegExp);
-    if (!resourceEditResult) { return false; }
+    if (resourceEditResult[2] != '>' && resourceEditResult[3] == '') { return false;}
 
     const reg1: string = resourceEditResult[1];
     const reg1HalfWidth: string = StringUtil.toHalfWidth(reg1);
