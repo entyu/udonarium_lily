@@ -67,6 +67,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get roll(): number { return this.gameCharacter.roll; }
   set roll(roll: number) { this.gameCharacter.roll = roll; }
 
+  private foldingBuff: boolean = false;
   gridSize: number = 50;
 
   movableOption: MovableOption = {};
@@ -268,4 +269,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     component.character = gameObject;
   }
 
+  private foldingBuffFlag(flag: boolean){
+    console.log('private foldingBuffFlag');
+    this.foldingBuff = flag;
+  }
 }

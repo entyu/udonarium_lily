@@ -297,3 +297,20 @@
           inset 0px 0px 10px 5px #ff0; }
   100% { box-shadow: none; }
 }
+
+.buff-folding-icon {
+  font-size: 12px;
+  vertical-align: middle;
+  text-align: center;
+  margin-left:100%;
+  position:absolute;
+  width:20px;
+  height:20px;
+  left:-20px;
+  top:-20px;
+  background-color: rgba(240,229,215, 0.8);
+  box-sizing: border-box;
+  border: 1px #222 solid; 
+  border-radius: 4px;
+  cursor: pointer;
+}
