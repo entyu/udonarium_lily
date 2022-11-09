@@ -298,6 +298,12 @@
   100% { box-shadow: none; }
 }
 
+.buff-folding-dummy {
+  width: 1px;
+  height: 1px;
+  
+}
+
 .buff-folding-icon {
   font-size: 12px;
   vertical-align: middle;

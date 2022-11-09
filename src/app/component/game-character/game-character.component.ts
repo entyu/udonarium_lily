@@ -273,4 +273,11 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     console.log('private foldingBuffFlag');
     this.foldingBuff = flag;
   }
+
+  private buffNum(): number{
+    if ( this.gameCharacter.buffDataElement.children.length == 0){
+      return 0;
+    }
+    return this.gameCharacter.buffDataElement.children[0].children.length;
+  }
 }

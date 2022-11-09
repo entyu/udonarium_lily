@@ -29,7 +29,7 @@
                   <ng-container *ngIf="child.children.length > 0">
                     <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off"
                       [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
-                      <div *ngIf="!foldingBuff">
+                      <div [hidden]="foldingBuff">
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
                         <div class="!table is-3d">
                           <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
@@ -37,18 +37,18 @@
                           </div>
                         </div>
                       </div>
-                      <div *ngIf="foldingBuff">
+                      <div [hidden]="!foldingBuff">
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
                         <div class="table is-3d">
                           <div class="flex-item is-3d">
-                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{child.children.length}}個</div>
+                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum()}}個</div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off" 
                      [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%) rotateY(180deg)'}">
-                      <div *ngIf="!foldingBuff">
+                      <div [hidden]="foldingBuff">
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
                         <div class="table is-3d">
                           <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
@@ -56,11 +56,11 @@
                           </div>
                         </div>
                       </div>
-                      <div *ngIf="foldingBuff">
+                      <div [hidden]="!foldingBuff">
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
                         <div class="table is-3d">
                           <div class="flex-item is-3d">
-                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{child.children.length}}個</div>
+                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum()}}個</div>
                           </div>
                         </div>
                       </div>
