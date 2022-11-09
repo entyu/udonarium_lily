@@ -228,8 +228,12 @@ export class ChatTab extends ObjectNode implements InnerXml {
       }else{
         str += '（シークレットダイス）';
       }
+      let fixd = ''
+      if (message.fixd){
+        fixd = ' (編集済)';
+      }
+      str += fixd;
       str += '</font><br>';
-
       str += '\n';
     }
     return str;
@@ -249,6 +253,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
         '>': '&gt;',
       }[match];
     });
+
     return escapeText.replace(/[\|｜]([^\|｜\s]+?)《(.+?)》/g, '<ruby>$1<rt>$2</rt></ruby>').replace(/\\s/g,' ');
   }
 
