@@ -14,6 +14,7 @@ export enum CardState {
 @SyncObject('card')
 export class Card extends TabletopObject {
   @SyncVar() isLock: boolean = false;
+  @SyncVar() dispLockMark: boolean = true;
 
   @SyncVar() state: CardState = CardState.FRONT;
   @SyncVar() rotate: number = 0;

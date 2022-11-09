@@ -25,7 +25,7 @@
       </div>
       <div class="border-bg is-pointer-events-none is-3d will-change"></div>
     </ng-container>
-    <div *ngIf="isLock" class="lock-icon-mark is-nowrap is-black-background is-3d will-change" [ngStyle]="{'transform': 'translateY(0%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+    <div *ngIf="isLock && dispLockMark" class="lock-icon-mark is-nowrap is-black-background is-3d will-change" [ngStyle]="{'transform': 'translateY(0%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
       <i class="material-icons" style="display: inline;">lock</i>
     </div>
   </div>

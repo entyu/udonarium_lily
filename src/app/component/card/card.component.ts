@@ -38,6 +38,9 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() card: Card = null;
   @Input() is3D: boolean = false;
 
+  get dispLockMark(): boolean { return this.card.dispLockMark; }
+  set dispLockMark(disp: boolean) { this.card.dispLockMark = disp; }
+
   get isLock(): boolean { return this.card.isLock; }
   set isLock(isLock: boolean) { this.card.isLock = isLock; }
 
@@ -204,21 +207,43 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     e.preventDefault();
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
-    this.contextMenuService.open(position, [
-      (this.isLock
+    let menuArray = [];
+    menuArray.push(
+      this.isLock
         ? {
           name: '固定解除', action: () => {
             this.isLock = false;
+            this.dispLockMark = true;
             SoundEffect.play(PresetSound.unlock);
           }
-        } : {
+        }
+        : {
           name: '固定する', action: () => {
             this.isLock = true;
             SoundEffect.play(PresetSound.lock);
           }
-        }),
-      ContextMenuSeparator,
-      (!this.isVisible || this.isHand
+        }
+      );
+    if (this.isLock){
+      menuArray.push(
+      this.dispLockMark
+        ? {
+          name: '固定マーク消去', action: () => {
+            this.dispLockMark = false;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }
+        : {
+          name: '固定マーク表示', action: () => {
+            this.dispLockMark = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }
+      );
+    }
+    menuArray.push( ContextMenuSeparator);
+    menuArray.push( 
+      !this.isVisible || this.isHand
         ? {
           name: '表にする', action: () => {
             this.card.faceUp();
@@ -231,8 +256,9 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
             SoundEffect.play(PresetSound.cardDraw);
           }
         }
-      ),
-      (this.isHand
+      );
+    menuArray.push(
+        this.isHand
         ? {
           name: '裏にする', action: () => {
             this.card.faceDown();
@@ -245,16 +271,21 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
             this.card.faceDown();
             this.owner = Network.peerContext.userId;
           }
-        }),
-      ContextMenuSeparator,
+        }
+      );
+    menuArray.push( ContextMenuSeparator);
+    menuArray.push(
       {
         name: '重なったカードで山札を作る', action: () => {
           this.createStack();
           SoundEffect.play(PresetSound.cardPut);
         }
-      },
-      ContextMenuSeparator,
-      { name: 'カードを編集', action: () => { this.showDetail(this.card); } },
+      }
+    );
+    menuArray.push(
+      { name: 'カードを編集', action: () => { this.showDetail(this.card); } }
+    );
+    menuArray.push(
       {
         name: 'コピーを作る', action: () => {
           let cloneObject = this.card.clone();
@@ -263,14 +294,17 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
           cloneObject.toTopmost();
           SoundEffect.play(PresetSound.cardPut);
         }
-      },
+      }
+    );
+    menuArray.push(
       {
         name: '削除する', action: () => {
           this.card.destroy();
           SoundEffect.play(PresetSound.sweep);
         }
-      },
-    ], this.isVisible ? this.name : 'カード');
+      }
+    );
+    this.contextMenuService.open(position, menuArray, this.isVisible ? this.name : 'カード');
   }
 
   onMove() {
