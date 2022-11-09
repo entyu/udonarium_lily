@@ -9,6 +9,7 @@ import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PanelOption, PanelService } from 'service/panel.service';
 
+import { PointerDeviceService } from 'service/pointer-device.service';
 import { ChatMessageFixComponent } from 'component/chat-message-fix/chat-message-fix.component';
 
 @Component({
@@ -48,6 +49,7 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   
   constructor(
     private chatMessageService: ChatMessageService,
+    private pointerDeviceService: PointerDeviceService,
     private panelService: PanelService,
   ) { }
 
@@ -67,7 +69,8 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
 
   clickFix(){
     console.log('clickFix');
-    let option: PanelOption = { width: 700, height: 120, left: 300 , top: 100};
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { width: 700, height: 120, left: coordinate.x , top: coordinate.y};
     option.title = 'チャット編集';
     let component = this.panelService.open(ChatMessageFixComponent, option);
     component.chatMessage = this.chatMessage;

@@ -37,6 +37,7 @@ export class ChatMessageFixComponent implements OnInit, OnDestroy {
   @Output() chat = new EventEmitter<{ text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number ,messColor: string}>();
 
   chatMessage: ChatMessage;
+  initTimestamp = 0;
 
   private previousWritingLength: number = 0;
 
@@ -52,7 +53,9 @@ export class ChatMessageFixComponent implements OnInit, OnDestroy {
     private batchService: BatchService,
     private panelService: PanelService,
     private pointerDeviceService: PointerDeviceService
-  ) { }
+  ) { 
+    this.initTimestamp = Date.now();
+  }
 
   ngOnInit(): void {
     this.kickCalcFitHeight();
@@ -76,6 +79,8 @@ export class ChatMessageFixComponent implements OnInit, OnDestroy {
       this.calcFitHeightInterval = setTimeout(() => {
         this.calcFitHeightInterval = null;
         this.calcFitHeight();
+        let txtarea = <HTMLInputElement> document.getElementById('messageFix' + '_' + this.initTimestamp);
+        txtarea.focus();
       }, 0)
     }
   }

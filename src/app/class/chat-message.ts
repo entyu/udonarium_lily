@@ -79,5 +79,7 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
   
   get isSystemToPL(): boolean { return -1 < this.tags.indexOf('to-pl-system-message') ? true : false; }
-
+  get changeable(): boolean {
+    return ((this.from == Network.peerContext.userId) && (this.name != 'システムメッセージ')) ? true : false; 
+  }
 }
