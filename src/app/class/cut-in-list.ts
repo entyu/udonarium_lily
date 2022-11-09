@@ -5,6 +5,7 @@ import { StringUtil } from './core/system/util/string-util';
 import { CutIn } from './cut-in';
 
 export interface CutInInfo {
+  names: string[],
   identifiers: string[],
   matchMostLongText: string
 }
@@ -96,8 +97,10 @@ export class CutInList extends ObjectNode implements InnerXml {
     }
     */
     // 再度シャッフルして出現順をランダムに
+    const matchCutIns = matchCutIn.map<[number, CutIn]>(cutIn => [Math.random(), cutIn]).sort((a, b) => { return a[0] - b[0]; });
     return {
-      identifiers: matchCutIn.map<[number, CutIn]>(cutIn => [Math.random(), cutIn]).sort((a, b) => { return a[0] - b[0]; }).map(pair => pair[1].identifier),
+      names: matchCutIns.map(pair => pair[1].name),
+      identifiers: matchCutIns.map(pair => pair[1].identifier),
       matchMostLongText: textTagMatch
     };
   }

@@ -16,6 +16,7 @@ import { StandConditionType } from './stand-list';
 import { DiceRollTableList } from './dice-roll-table-list';
 
 import { CutInList } from './cut-in-list';
+import { ChatMessageService } from 'service/chat-message.service';
 
 export interface DiceBotInfo {
   id: string;
@@ -194,6 +195,13 @@ export class DiceBot extends GameObject {
     ['ペ', 'ヘ'],
     ['ポ', 'ホ']
   ];
+
+  constructor(
+    identifire,
+    private chatMessageService: ChatMessageService = null
+  ) { 
+    super(identifire);
+  }
 
   // GameObject Lifecycle
   onStoreAdded() {
@@ -464,6 +472,16 @@ export class DiceBot extends GameObject {
         } else {
           EventSystem.call('PLAY_CUT_IN', sendObj);
         }
+      }
+      if (!originalMessage.to && this.chatMessageService) {
+        const counter = new Map();
+        for (const name of cutInInfo.names) {
+          let count = counter.get(name) || 0;
+          count += 1;
+          counter.set(name == '' ? '(無名のカットイン)' : name, count);
+        }
+        const text = `${[...counter.keys()].map(key => counter.get(key) > 1 ? `${key}×${counter.get(key)}` : key).join('、')}`;
+        this.chatMessageService.sendOperationLog(text + ' が起動した');
       }
     }
 

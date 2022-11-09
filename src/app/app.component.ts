@@ -109,7 +109,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     ChatTabList.instance.initialize();
     DataSummarySetting.instance.initialize();
 
-    let diceBot: DiceBot = new DiceBot('DiceBot');
+    let diceBot: DiceBot = new DiceBot('DiceBot', this.chatMessageService);
     diceBot.initialize();
     DiceBot.getHelpMessage('').then(() => this.lazyNgZoneUpdate(true));
 
@@ -539,7 +539,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   toolBox() {
     const menu = [];
     const cunIns = CutInList.instance.cutIns;
-    menu.push({ name: 'カットイン再生', materialIcon: 'play_arrow', 
+    menu.push({ name: 'カットイン再生', materialIcon: 'play_arrow',
       action: null, subActions: cunIns.length === 0 ? [
         {
           name: '(カットインなし)',
@@ -556,7 +556,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                   identifier: cutIn.identifier,
                   secret: false,
                   sender: PeerCursor.myCursor.peerId
-                })
+                });
+                this.chatMessageService.sendOperationLog((cutIn.name == '' ? '(無名のカットイン)' : cutIn.name) + ' を再生した');
               }
             }, ContextMenuSeparator, ...this.otherPeers.map(peer => {
             return {

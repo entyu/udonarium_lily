@@ -21,6 +21,7 @@ import { UUID } from '@udonarium/core/system/util/uuid';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { CutInComponent } from 'component/cut-in/cut-in.component';
 import { ConfirmationComponent, ConfirmationType } from 'component/confirmation/confirmation.component';
+import { ChatMessageService } from 'service/chat-message.service';
 
 
 @Component({
@@ -167,7 +168,8 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
     private pointerDeviceService: PointerDeviceService,
     private modalService: ModalService,
     private panelService: PanelService,
-    private saveDataService: SaveDataService
+    private saveDataService: SaveDataService,
+    private chatMessageService: ChatMessageService
   ) { }
 
   ngOnInit(): void {
@@ -307,9 +309,10 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   playCutIn() {
-    if (!this.selectedCutIn) return;
+    const cutIn = this.selectedCutIn;
+    if (!cutIn) return;
     const sendObj = {
-      identifier: this.selectedCutIn.identifier,
+      identifier: cutIn.identifier,
       secret: this.sendTo ? true : false,
       sender: PeerCursor.myCursor.peerId
     };
@@ -321,6 +324,7 @@ export class CutInSettingComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     } else {
       EventSystem.call('PLAY_CUT_IN', sendObj);
+      this.chatMessageService.sendOperationLog((cutIn.name == '' ? '(無名のカットイン)' : cutIn.name) + ' を再生した');
     }
   }
 

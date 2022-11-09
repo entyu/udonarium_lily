@@ -407,6 +407,16 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           EventSystem.call('PLAY_CUT_IN', sendObj);
         }
       }
+      if (!this.sendTo) {
+        const counter = new Map();
+        for (const name of cutInInfo.names) {
+          let count = counter.get(name) || 0;
+          count += 1;
+          counter.set(name == '' ? '(無名のカットイン)' : name, count);
+        }
+        const text = `${[...counter.keys()].map(key => counter.get(key) > 1 ? `${key}×${counter.get(key)}` : key).join('、')}`;
+        this.chatMessageService.sendOperationLog(text + ' が起動した');
+      }
     }
     // 切り取り
     if (matchMostLongText.length < cutInInfo.matchMostLongText.length) matchMostLongText = cutInInfo.matchMostLongText;
