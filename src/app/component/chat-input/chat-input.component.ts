@@ -407,7 +407,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           EventSystem.call('PLAY_CUT_IN', sendObj);
         }
       }
-      if (!this.sendTo) {
+      if (cutInInfo.names.length && !this.sendTo) {
         const counter = new Map();
         for (const name of cutInInfo.names) {
           let count = counter.get(name) || 0;

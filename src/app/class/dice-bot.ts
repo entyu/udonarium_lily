@@ -473,7 +473,7 @@ export class DiceBot extends GameObject {
           EventSystem.call('PLAY_CUT_IN', sendObj);
         }
       }
-      if (!originalMessage.to && this.chatMessageService) {
+      if (cutInInfo.names.length && !originalMessage.to && this.chatMessageService) {
         const counter = new Map();
         for (const name of cutInInfo.names) {
           let count = counter.get(name) || 0;
