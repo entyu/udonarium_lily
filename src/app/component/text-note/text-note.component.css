@@ -74,8 +74,9 @@
 
 .is-back {
   transform-origin: 50% 100%;
-  transform: rotateX(-90deg) rotateY(180deg) scaleX(-100%);
-  filter: brightness(0.9) contrast(0.8);
+  transform: rotateX(-90deg) rotateY(180deg);
+  /*transform: rotateX(-90deg) rotateY(180deg) scaleX(-100%);
+  filter: brightness(0.9) contrast(0.8);*/
 }
 
 .is-bg-texture {
