@@ -147,14 +147,22 @@ export class ChatPalette extends ObjectNode {
       isContinue = false;
       evaluate = evaluate.replace(/[{｛]\s*([^{}｛｝]+)\s*[}｝]/g, (match, name) => {
         name = StringUtil.toHalfWidth(name);
-        console.log(name);
+        let useMax = false;
+        let namematch = name.match(/(.+)([\^＾]$)/);
+        if (namematch) {
+          name = namematch[1];
+          useMax = true;
+        }
         isContinue = true;
         for (let variable of this.paletteVariables) {
           if (variable.name == name) return variable.value;
         }
         if (extendVariables) {
           let element = extendVariables.getFirstElementByName(name);
-          if (element) return element.isNumberResource ? element.currentValue + '' : element.value + '';
+          if (element) {
+            if(useMax && element.isNumberResource) return element.value + '';
+            return element.isNumberResource ? element.currentValue + '' : element.value + '';
+          }
         }
         return '';
       });
