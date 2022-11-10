@@ -37,6 +37,7 @@ interface ResourceEdit {
   replace: string;
   isDiceRoll: boolean;
   calcAns: number;
+  nowOrMax: string;
   option: ResourceEditOption;
 }
 
@@ -549,14 +550,28 @@ export class DiceBot extends GameObject {
     const resourceEditResult = replaceText.match(resourceEditRegExp);
     if (resourceEditResult[2] != '>' && resourceEditResult[3] == '') { return false;}
 
-    const reg1: string = resourceEditResult[1];
-    const reg1HalfWidth: string = StringUtil.toHalfWidth(reg1);
+    let chkNowOrMaxString: string = resourceEditResult[1];
+    let reg1: string;
+    let reg1HalfWidth: string;
+
+    let namematch = chkNowOrMaxString.match(/(.+)([\^＾]$)/);
+    let nowOrMax = '';
+    if (namematch) {
+      reg1 = namematch[1];
+      reg1HalfWidth = StringUtil.toHalfWidth(reg1);
+      oneResourceEdit.nowOrMax = 'max';
+    }else{
+      reg1 = resourceEditResult[1];
+      reg1HalfWidth = StringUtil.toHalfWidth(reg1);
+      oneResourceEdit.nowOrMax = 'now';
+    }
+
     const reg2: string = resourceEditResult[2];
     oneResourceEdit.operator = reg2;                            // 演算符号
 
-    if (object.chkChangeStatus(reg1, 'now')){
+    if (object.chkChangeStatusName(reg1)){
       oneResourceEdit.target = reg1;                             // 操作対象検索文字タイプ生値
-    }else if (object.chkChangeStatus(reg1HalfWidth, 'now')){
+    }else if (object.chkChangeStatusName(reg1HalfWidth)){
       oneResourceEdit.target = reg1HalfWidth;                    // 操作対象検索文字半角化
     }else{
       return false; // 対象なし実行失敗
@@ -610,6 +625,7 @@ export class DiceBot extends GameObject {
         replace: '',
         isDiceRoll: false,
         calcAns: 0,
+        nowOrMax: 'now',
         option : null
       };
 
@@ -649,9 +665,20 @@ export class DiceBot extends GameObject {
 
   private resourceEdit(edit: ResourceEdit, character: GameCharacter): string{
     let optionText = '';
-    let oldNum = character.getStatusValue(edit.target, 'now');
+    let oldNum = 0;
     let newNum = 0;
-    let maxNum = character.getStatusValue(edit.target, 'max');
+    let maxNum = null;
+    let nowOrMax = edit.nowOrMax;
+
+    maxNum = character.getStatusValue(edit.target, 'max');
+    if(nowOrMax == 'max' && maxNum == null) {
+      nowOrMax = 'now';
+    }
+    if(nowOrMax == 'now') {
+      oldNum = character.getStatusValue(edit.target, 'now');
+    }else{
+      oldNum = character.getStatusValue(edit.target, 'max');
+    }
 
     if (edit.operator == '=') {
       newNum = edit.calcAns;
@@ -667,8 +694,9 @@ export class DiceBot extends GameObject {
         newNum = oldNum + edit.calcAns;
       }
     }
+
     if (edit.option.limitMinMax && maxNum != null){
-      if (newNum > maxNum){
+      if (newNum > maxNum && nowOrMax == 'now'){
         newNum = maxNum;
         optionText = '(最大)';
       }
@@ -677,9 +705,16 @@ export class DiceBot extends GameObject {
         optionText = '(最小)';
       }
     }
-    character.setStatusValue(edit.target, 'now', newNum);
+
+    if(nowOrMax == 'now') {
+      character.setStatusValue(edit.target, 'now', newNum);
+    }else{
+      character.setStatusValue(edit.target, 'max', newNum);
+    }
+
     const operatorText = edit.operator == '-' ? '' : edit.operator;
-    const ansText = edit.target + ':' + oldNum + operatorText + edit.diceResult + '＞' + newNum + optionText + '    ';
+    const changeMax = nowOrMax == 'max' ? '(最大値)' : '';
+    const ansText = edit.target + changeMax + ':' + oldNum + operatorText + edit.diceResult + '＞' + newNum + optionText + '    ';
     return ansText;
   }
 

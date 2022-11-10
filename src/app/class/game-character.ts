@@ -411,6 +411,16 @@ export class GameCharacter extends TabletopObject {
     }
   }
 
+
+  chkChangeStatusName(name: string): boolean{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return false;
+    if(data.type == 'numberResource'){ return true;}
+    if(data.type == ''){ return true;}
+    if(data.type == 'note'){ return true;}
+    return false;
+  }
+
   chkChangeStatus(name: string, nowOrMax: string): boolean{
     const data = this.detailDataElement.getFirstElementByName(name);
     if(!data)return false;
