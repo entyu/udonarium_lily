@@ -456,7 +456,7 @@ export class DiceBot extends GameObject {
     const chatTab = ObjectStore.instance.get<ChatTab>(originalMessage.tabIdentifier);
     // ダイスによるカットイン発生
     const cutInInfo = CutInList.instance.matchCutInInfo(result);
-    if (!isSecret && chatTab.isUseStandImage) {
+    if (!isSecret && chatTab.isUseStandImage && cutInInfo) {
       for (const identifier of cutInInfo.identifiers) {
         const sendObj = {
           identifier: identifier,
@@ -473,7 +473,7 @@ export class DiceBot extends GameObject {
           EventSystem.call('PLAY_CUT_IN', sendObj);
         }
       }
-      if (cutInInfo.names.length && !originalMessage.to && this.chatMessageService) {
+      if (cutInInfo.names && cutInInfo.names.length && !originalMessage.to && this.chatMessageService) {
         const counter = new Map();
         for (const name of cutInInfo.names) {
           let count = counter.get(name) || 0;

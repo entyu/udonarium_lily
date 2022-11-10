@@ -390,7 +390,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     }
     // カットイン
     const cutInInfo = CutInList.instance.matchCutInInfo(text);
-    if (this.isUseStandImageOnChatTab) {
+    if (this.isUseStandImageOnChatTab && cutInInfo) {
       for (const identifier of cutInInfo.identifiers) {
         const sendObj = {
           identifier: identifier, 
@@ -407,7 +407,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           EventSystem.call('PLAY_CUT_IN', sendObj);
         }
       }
-      if (cutInInfo.names.length && !this.sendTo) {
+      if (cutInInfo.names && cutInInfo.names.length && !this.sendTo) {
         const counter = new Map();
         for (const name of cutInInfo.names) {
           let count = counter.get(name) || 0;
