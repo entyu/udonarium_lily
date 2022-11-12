@@ -1,4 +1,4 @@
-<div class="component is-3d" [ngClass]="{'is-grab': !isLock}" style="pointer-events: none; backface-visibility: hidden"
+<div class="component is-3d" [ngClass]="{'is-grab': !isLock}" style="pointer-events: none"
   [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
   appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div class="is-3d text" style="left: 2px; top: 2px; backface-visibility: hidden" [ngClass]="{fall: altitude == 0}"
@@ -6,7 +6,7 @@
     [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
     <div class="is-3d" [ngClass]="{'is-inverse': isInverse}" [style.font-size.px]="fontSize + 9" [style.color]="color" style="z-index: 5; pointer-events: none" [innerHtml]="rubiedText"></div>
   </div>
-  <div class="border is-fit-full is-3d" style="backface-visibility: hidden" [ngClass]="{fall: altitude == 0}" [ngStyle]="{'border-width': isLock ? '0px' : '2px', 'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
+  <div class="border is-fit-full" style="backface-visibility: hidden" [ngClass]="{fall: altitude == 0}" [ngStyle]="{'border-width': isLock ? '0px' : '2px', 'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
     <div class="is-fit-full is-3d"
       style="pointer-events: auto" [style.opacity]="opacity * (isGMMode && gameTableMask.isTransparentOnGMMode ? 0.6 : 1)"
       [style.background-color]="imageFile.url.length < 1 || blendType > 0 ? bgcolor : null"
