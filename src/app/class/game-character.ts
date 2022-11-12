@@ -537,10 +537,14 @@ export class GameCharacter extends TabletopObject {
     if(oldNum == null) return text;
     let sum = oldNum + addValue;
 
+    let maxRecoveryMess = '';
     if ( type == 'value') {
+      if ( limitMin && sum <= 0 && limitMin){
+        maxRecoveryMess = '(最小)';
+        sum = 0;
+      }
       this.setStatusValue(name, nowOrMax, sum);
     }
-    let maxRecoveryMess = '';
     if ( type == 'currentValue'){
       if ( sum >= data.value && limitMax){
         maxRecoveryMess = '(最大)';
