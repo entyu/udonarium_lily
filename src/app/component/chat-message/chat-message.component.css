@@ -6,6 +6,12 @@
   width: 100%;
   overflow-x: hidden;
 }
+
+.container {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 .message {
   display: flex;
   flex-flow: row nowrap;
@@ -111,3 +117,14 @@
 .direct-message.dicebot-message .msg-text {
   /*color:#CCF;*/
 }
+
+.fix {
+  display:none;
+  opacity: 0;
+}
+
+.container:hover .fix {
+  display:inline-block;
+  opacity: 1;
+}
+

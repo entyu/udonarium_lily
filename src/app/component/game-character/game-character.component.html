@@ -27,22 +27,44 @@
               <ng-container *ngIf="this.gameCharacter.buffDataElement.children.length == 1">
                 <ng-container *ngFor="let child of this.gameCharacter.buffDataElement.children">
                   <ng-container *ngIf="child.children.length > 0">
-                    <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off" 
-                     [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
-                      <div class="table is-3d">
-                        <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
-                          <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                    <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off"
+                      [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
+                      <div [hidden]="foldingBuff">
+                        <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
+                        <div class="!table is-3d">
+                          <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
+                            <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div [hidden]="!foldingBuff">
+                        <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
+                        <div class="table is-3d">
+                          <div class="flex-item is-3d">
+                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum()}}個</div>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off" 
                      [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%) rotateY(180deg)'}">
-                      <div class="table is-3d">
-                        <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
-                          <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                      <div [hidden]="foldingBuff">
+                        <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
+                        <div class="table is-3d">
+                          <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
+                            <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
+                          </div>
                         </div>
                       </div>
-                     </div>
+                      <div [hidden]="!foldingBuff">
+                        <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
+                        <div class="table is-3d">
+                          <div class="flex-item is-3d">
+                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum()}}個</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </ng-container>
                 </ng-container>
               </ng-container>

@@ -7,6 +7,10 @@ import { ChatMessageService } from 'service/chat-message.service';
 
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
+import { PanelOption, PanelService } from 'service/panel.service';
+
+import { PointerDeviceService } from 'service/pointer-device.service';
+import { ChatMessageFixComponent } from 'component/chat-message-fix/chat-message-fix.component';
 
 @Component({
   selector: 'chat-message',
@@ -44,7 +48,9 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
   get chatTabList(): ChatTabList { return ObjectStore.instance.get<ChatTabList>('ChatTabList'); }
   
   constructor(
-    private chatMessageService: ChatMessageService
+    private chatMessageService: ChatMessageService,
+    private pointerDeviceService: PointerDeviceService,
+    private panelService: PanelService,
   ) { }
 
   ngOnInit() {
@@ -59,6 +65,16 @@ export class ChatMessageComponent implements OnInit, AfterViewInit {
 
   discloseMessage() {
     this.chatMessage.tag = this.chatMessage.tag.replace('secret', '');
+  }
+
+  clickFix(){
+    console.log('clickFix');
+    let coordinate = this.pointerDeviceService.pointers[0];
+    let option: PanelOption = { width: 700, height: 120, left: coordinate.x , top: coordinate.y};
+    option.title = 'チャット編集';
+    let component = this.panelService.open(ChatMessageFixComponent, option);
+    component.chatMessage = this.chatMessage;
+    component.text = this.chatMessage.text;
   }
 
   escapeHtmlAndRuby(text) {

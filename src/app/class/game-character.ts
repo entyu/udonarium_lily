@@ -411,6 +411,16 @@ export class GameCharacter extends TabletopObject {
     }
   }
 
+
+  chkChangeStatusName(name: string): boolean{
+    const data = this.detailDataElement.getFirstElementByName(name);
+    if(!data)return false;
+    if(data.type == 'numberResource'){ return true;}
+    if(data.type == ''){ return true;}
+    if(data.type == 'note'){ return true;}
+    return false;
+  }
+
   chkChangeStatus(name: string, nowOrMax: string): boolean{
     const data = this.detailDataElement.getFirstElementByName(name);
     if(!data)return false;
@@ -527,10 +537,14 @@ export class GameCharacter extends TabletopObject {
     if(oldNum == null) return text;
     let sum = oldNum + addValue;
 
+    let maxRecoveryMess = '';
     if ( type == 'value') {
+      if ( limitMin && sum <= 0 && limitMin){
+        maxRecoveryMess = '(最小)';
+        sum = 0;
+      }
       this.setStatusValue(name, nowOrMax, sum);
     }
-    let maxRecoveryMess = '';
     if ( type == 'currentValue'){
       if ( sum >= data.value && limitMax){
         maxRecoveryMess = '(最大)';

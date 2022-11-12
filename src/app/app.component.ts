@@ -53,6 +53,8 @@ import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.comp
 import { DiceTableSettingComponent } from 'component/dice-table-setting/dice-table-setting.component';
 import { VoteWindowComponent } from 'component/vote-window/vote-window.component';
 import { AlarmWindowComponent } from 'component/alarm-window/alarm-window.component';
+import { ChatMessageFixComponent } from 'component/chat-message-fix/chat-message-fix.component';
+
 
 @Component({
   selector: 'app-root',

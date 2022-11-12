@@ -15,6 +15,8 @@
         </div>
         <div class="text msg-text">
           <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret"></ng-container>
+          <ng-container *ngIf="chatMessage.fixd">&nbsp;(編集済)</ng-container>
+          <ng-container *ngIf="chatMessage.changeable"><div class='fix' (click)="clickFix()">&nbsp;[編集]</div></ng-container>
         </div>
       </div>
     </div>
@@ -31,6 +33,8 @@
           <font class="text msg-text">
             <ng-container *ngIf="!chatMessage.isSecret || chatMessage.isSendFromSelf; then visible; else secret">
             </ng-container>
+            <ng-container *ngIf="chatMessage.fixd">&nbsp;(編集済)</ng-container>
+            <ng-container *ngIf="chatMessage.changeable"><div class='fix' (click)="clickFix()">&nbsp;[編集]</div></ng-container>
           </font>
         </span>
       </div>

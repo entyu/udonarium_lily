@@ -13,7 +13,7 @@
       <img class="image is-fit-full" [style.opacity]="opacity" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
   </ng-template>
-  <div *ngIf="isLock" class="lock-icon is-center">
+  <div *ngIf="isLock && dispLockMark" class="lock-icon is-center">
     <i class="material-icons">lock</i>
   </div>
 </div>
