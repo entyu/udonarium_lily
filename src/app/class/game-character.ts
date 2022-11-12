@@ -27,8 +27,15 @@ export class GameCharacter extends TabletopObject {
   @SyncVar() chatColorCode: string[]  = ["#000000","#FF0000","#0099FF"];
   @SyncVar() syncDummyCounter: number = 0;
 
-  _selectedTachieNum: number = 0;
+  _targeted: boolean = false;
+  get targeted(): boolean {
+    return this._targeted;
+  }
+  set targeted( flag: boolean) {
+    this._targeted = flag;
+  }
 
+  _selectedTachieNum: number = 0;
   get selectedTachieNum(): number {
     if( this._selectedTachieNum > ( this.imageDataElement.children.length - 1) ){
       this._selectedTachieNum = this.imageDataElement.children.length - 1;

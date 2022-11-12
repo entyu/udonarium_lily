@@ -186,6 +186,12 @@ export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewIn
           this.changeDetector.markForCheck();
         }
       })
+      .on('CHK_TARGET_CHANGE', -1000, event => {
+        if (ObjectStore.instance.get(event.data.identifier) instanceof GameCharacter) {
+          this.targetSetChkBox(ObjectStore.instance.get(event.data.identifier));
+          console.log('REC CHK_TARGET_CHANGE');
+        }
+      })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         if (event.isSendFromSelf) { this.changeDetector.markForCheck(); }
       })
@@ -202,6 +208,12 @@ export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewIn
 
     this.disptimer = setInterval(() => {
       this.changeDetector.detectChanges();
+      const objectList = this.getGameObjects(this.selectTab);
+      for (const object of objectList) {
+        if (object instanceof GameCharacter) {
+          this.targetSetChkBox(object);
+        }
+      }
     }, 200 );
   }
 
@@ -305,10 +317,10 @@ export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewIn
   toggleEdit() {
     this.isEdit = !this.isEdit;
   }
+
   selectGameObject(gameObject: GameObject) {
     const aliasName: string = gameObject.aliasName;
     EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: gameObject.identifier, className: gameObject.aliasName });
-
     this.selectCharacter = gameObject;
   }
 
@@ -472,21 +484,32 @@ export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewIn
     for (const object of objectList){
       if (object instanceof GameCharacter) {
         const box = document.getElementById(object.identifier + '_' + this.initTimestamp) as HTMLInputElement;
+        object.targeted = value.check;
         if ( box ){
-          box.checked = value.check;
+          box.checked = object.targeted;
+          EventSystem.trigger('CHK_TARGET_CHANGE', { identifier: object.identifier, className: object.aliasName });
         }
       }
     }
   }
 
-  targetBlockClick(identifier){
-    console.log( 'identifier:' + identifier + ' initTimestamp:' + this.initTimestamp);
-    const box = document.getElementById(identifier + '_' + this.initTimestamp) as HTMLInputElement;
-    box.checked = !box.checked;
+  targetSetChkBox(object){
+    const box = document.getElementById(object.identifier + '_' + this.initTimestamp) as HTMLInputElement;
+    if ( box ){
+      box.checked = object.targeted;
+    }
   }
 
-  onChange(identifier) {
-    this.targetBlockClick(identifier);
+  targetBlockClick(object){
+    console.log('targetBlockClick');
+    object.targeted = object.targeted ? false : true;
+    this.targetSetChkBox(object);
+    EventSystem.trigger('CHK_TARGET_CHANGE', { identifier: object.identifier, className: object.aliasName });
+  }
+
+  onChange(object) {
+    console.log('onChange');
+    this.targetBlockClick(object);
   }
 
 }

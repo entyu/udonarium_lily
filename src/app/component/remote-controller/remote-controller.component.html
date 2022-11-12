@@ -145,12 +145,13 @@
         <button class="tab-setting small-font" (click)="buffEdit( gameObject )">バフ編集</button>
       </div>
       <div class="table">
-        <div class="table-cell click-area" (click)="targetBlockClick(gameObject.identifier)">
+        <div class="table-cell click-area" (click)="targetBlockClick(gameObject)">
           <div class="image-box">
             <img *ngIf="gameObject.imageFile.url" [src]="gameObject.imageFile.url | safe: 'resourceUrl'" />
           </div>
-          <input class="target_chk" id ={{gameObject.identifier}}_{{initTimestamp}}  name="target_chk" 
-          type="checkbox" (change) ="onChange(gameObject.identifier)" >
+          <input class="target_chk" id ={{gameObject.identifier}}_{{initTimestamp}}  name="target_chk" value="object.targeted"
+          type="checkbox" >
+<!--(change) ="onChange(gameObject)"-->
 <!-- +{{initTmepstamp}} -->
         </div>
         <div class="table-cell">
