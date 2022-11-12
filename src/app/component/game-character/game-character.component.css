@@ -324,9 +324,32 @@
 .target-icon {
   width: 30px;
   font-size: 20px;
+  left: 6px;
   box-sizing: border-box;
   position: absolute;
-  top: -65px;
+}
+
+.scrolldown4{
+	position:absolute;
+	animation: arrowmove 1s ease-in-out infinite;
+}
+
+@keyframes arrowmove{
+      0%{top: -70px;}
+     100%{top: -50px;}
+ }
+
+
+/* 矢印の描写 */
+.scrolldown4:before {
+  top: -50px;
+}
+
+/*描画位置*/
+.scrolldown4:after{
+	content:"";
+	position: absolute;
+	top: -70px;
 }
 
 .target-icon-buff {
@@ -336,7 +359,7 @@
   left: -10px;
   box-sizing: border-box;
   position: absolute;
-  top: -30px;
+  margin-top:
 }
 
 .target-icon-buff2 {
@@ -346,6 +369,30 @@
   left: -20px;
   box-sizing: border-box;
   position: absolute;
-  top: -30px;
+  margin-top:
 }
+
+.scrolldown5{
+	position:absolute;
+	animation: arrowmove2 1s ease-in-out infinite;
+}
+
+@keyframes arrowmove2{
+      0%{top: -45px;}
+     100%{top: -25px;}
+ }
+
+
+/* 矢印の描写 */
+.scrolldown5:before {
+  top: -25px;
+}
+
+/*描画位置*/
+.scrolldown5:after{
+	content:"";
+	position: absolute;
+	top: -45px;
+}
+
 
