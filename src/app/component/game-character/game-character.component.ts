@@ -274,7 +274,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.foldingBuff = flag;
   }
 
-  private buffNum(): number{
+  get buffNum(): number{
     if ( this.gameCharacter.buffDataElement.children.length == 0){
       return 0;
     }

@@ -29,6 +29,7 @@
                   <ng-container *ngIf="child.children.length > 0">
                     <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off"
                       [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
+                      <div class="target-icon-buff">▼</div>
                       <div [hidden]="foldingBuff">
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
                         <div class="!table is-3d">
@@ -41,13 +42,14 @@
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
                         <div class="table is-3d">
                           <div class="flex-item is-3d">
-                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum()}}個</div>
+                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off" 
                      [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%) rotateY(180deg)'}">
+                      <div class="target-icon-buff2" [ngStyle]="{'transform': 'rotateY(180deg)'}">▼</div>
                       <div [hidden]="foldingBuff">
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
                         <div class="table is-3d">
@@ -60,7 +62,7 @@
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
                         <div class="table is-3d">
                           <div class="flex-item is-3d">
-                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum()}}個</div>
+                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
                           </div>
                         </div>
                       </div>
@@ -71,6 +73,10 @@
             </div>
 <!-- 名前表示 -->
 <!-- クロームver102の描画問題に対処するため構成を修正している -->
+            <div [hidden]="!(this.buffNum==0)">
+              <div class="target-icon" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">▼</div>
+              <div class="target-icon" [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateY(180deg) translateY(50px)'}">▼</div>
+            </div>
             <ng-container *ngIf="this.gameCharacter.nonTalkFlag">
               <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'

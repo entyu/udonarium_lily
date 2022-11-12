@@ -320,3 +320,32 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+.target-icon {
+  width: 30px;
+  font-size: 20px;
+  box-sizing: border-box;
+  position: absolute;
+  top: -65px;
+}
+
+.target-icon-buff {
+  width: 30px;
+  font-size: 20px;
+  margin-left: 50%;
+  left: -10px;
+  box-sizing: border-box;
+  position: absolute;
+  top: -30px;
+}
+
+.target-icon-buff2 {
+  width: 30px;
+  font-size: 20px;
+  margin-left: 50%;
+  left: -20px;
+  box-sizing: border-box;
+  position: absolute;
+  top: -30px;
+}
+
