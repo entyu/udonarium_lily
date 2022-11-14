@@ -335,21 +335,21 @@
 }
 
 @keyframes arrowmove{
-      0%{top: -70px;}
-     100%{top: -50px;}
+      0%{top: -80px;}
+     100%{top: -60px;}
  }
 
 
 /* 矢印の描写 */
 .scrolldown4:before {
-  top: -50px;
+  top: -60px;
 }
 
 /*描画位置*/
 .scrolldown4:after{
 	content:"";
 	position: absolute;
-	top: -70px;
+	top: -80px;
 }
 
 .target-icon-buff {
@@ -378,21 +378,21 @@
 }
 
 @keyframes arrowmove2{
-      0%{top: -45px;}
-     100%{top: -25px;}
+      0%{top: -50px;}
+     100%{top: -30px;}
  }
 
 
 /* 矢印の描写 */
 .scrolldown5:before {
-  top: -25px;
+  top: -30px;
 }
 
 /*描画位置*/
 .scrolldown5:after{
 	content:"";
 	position: absolute;
-	top: -45px;
+	top: -50px;
 }
 
 

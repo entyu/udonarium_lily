@@ -102,6 +102,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
       })
+      .on('CHK_TARGET_CHANGE', -1000, event => {
+        let objct = ObjectStore.instance.get(event.data.identifier);
+        if (objct == this.gameCharacter) {
+          this.changeDetector.detectChanges();
+        }
+      })
+
       .on('HIGHTLIGHT_TABLETOP_OBJECT', event => {
         if (this.gameCharacter.identifier !== event.data.identifier) { return; }
         if (this.gameCharacter.location.name != "table") { return; }
@@ -235,7 +242,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   checkKey(event) {
-    console.log('checkKey');
     //イベント処理
     let key_event = event || window.event;
     let key_shift = (key_event.shiftKey);
@@ -246,7 +252,10 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     
     if (key_shift) console.log("shiftキー");
     if (key_ctrl) console.log("ctrlキー");
-    if (key_alt) console.log("altキー");
+    if (key_alt) {
+      console.log("altキー");
+      this.gameCharacter.targeted = this.gameCharacter.targeted ? false : true;
+    }
     if (key_meta) console.log("metaキー");
     //出力
   }
