@@ -198,10 +198,39 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     }
   }
 
+  private targeted(gameCharacter: GameCharacter): boolean {
+    return gameCharacter.targeted;
+  }
+
+  private targetedGameCharacterList( ): GameCharacter[]{
+    let objects :GameCharacter[] = [];
+    objects = ObjectStore.instance
+        .getObjects<GameCharacter>(GameCharacter)
+        .filter(character => this.targeted(character));
+    return objects;
+  }
+
   sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string , tachieNum: number, messColor: string}) {
     if (this.chatTab) {
-      let text = this.palette.evaluate(value.text, this.character.rootDataElement);
-      this.chatMessageService.sendMessage(this.chatTab, text, value.gameSystem, value.sendFrom, value.sendTo, value.tachieNum, value.messColor);
+      let outtext = '';
+      let objects: GameCharacter[] = [];
+      if ( this.palette.checkTargetCharactor(value.text)) {
+        objects = this.targetedGameCharacterList();
+        let first = true;
+        if (objects.length == 0) {
+          outtext += '対象が未選択です'
+        }
+        for(let object of objects){
+          outtext += first ? '' : '\n'
+          outtext += this.palette.evaluate(value.text, this.character.rootDataElement, object);
+          outtext += ' ['+object.name + ']';
+          first = false;
+        }
+      }else{
+        objects = [];
+        outtext = this.palette.evaluate(value.text, this.character.rootDataElement);
+      }
+      this.chatMessageService.sendMessage(this.chatTab, outtext, value.gameSystem, value.sendFrom, value.sendTo, value.tachieNum, value.messColor);
       // this.chatMessageService.sendMessage(this.chatTab, text, value.gameType, value.sendFrom, value.sendTo);
     }
   }

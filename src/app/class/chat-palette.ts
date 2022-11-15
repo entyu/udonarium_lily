@@ -3,6 +3,7 @@ import { ObjectContext } from './core/synchronize-object/game-object';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { StringUtil } from './core/system/util/string-util';
 import { DataElement } from './data-element';
+import { GameCharacter } from './game-character';
 
 export interface PaletteLine {
   palette: string;
@@ -128,9 +129,15 @@ export class ChatPalette extends ObjectNode {
     this.isAnalized = false;
   }
 
+  checkTargetCharactor(text: string): boolean{
+    let istarget = text.match(/[tTｔＴ][{｛]\s*([^{}｛｝]+)\s*[}｝]/g) ? true : false;
+    console.log('複数対象用コマンド');
+    return istarget;
+  }
+
   evaluate(line: PaletteLine, extendVariables?: DataElement): string
-  evaluate(line: string, extendVariables?: DataElement): string
-  evaluate(line: any, extendVariables?: DataElement): string {
+  evaluate(line: string, extendVariables?: DataElement,target?: GameCharacter): string
+  evaluate(line: any, extendVariables?: DataElement,target?: GameCharacter): string {
     let evaluate: string = '';
     if (typeof line === 'string') {
       evaluate = line;
@@ -145,7 +152,8 @@ export class ChatPalette extends ObjectNode {
     while (isContinue) {
       loop++;
       isContinue = false;
-      evaluate = evaluate.replace(/[{｛]\s*([^{}｛｝]+)\s*[}｝]/g, (match, name) => {
+      evaluate = evaluate.replace(/[tTｔＴ]?[{｛]\s*([^{}｛｝]+)\s*[}｝]/g, (match, name) => {
+
         name = StringUtil.toHalfWidth(name);
         let useMax = false;
         let namematch = name.match(/(.+)([\^＾]$)/);
@@ -154,14 +162,34 @@ export class ChatPalette extends ObjectNode {
           useMax = true;
         }
         isContinue = true;
-        for (let variable of this.paletteVariables) {
-          if (variable.name == name) return variable.value;
-        }
-        if (extendVariables) {
-          let element = extendVariables.getFirstElementByName(name);
-          if (element) {
-            if(useMax && element.isNumberResource) return element.value + '';
-            return element.isNumberResource ? element.currentValue + '' : element.value + '';
+
+        if (match.match(/^[tTｔＴ].*/)) {
+          for (let variable of target.chatPalette.paletteVariables) {
+            if (variable.name == name) return variable.value.replace(/[{｛]/g,'t{');;
+          }
+          if (target) {
+            let element = target.rootDataElement.getFirstElementByName(name);
+            if (element) {
+              let targetElementText =''
+              if (useMax && element.isNumberResource) targetElementText = element.value + '';
+              targetElementText = element.isNumberResource ? element.currentValue + '' : element.value + '';
+              if ( targetElementText.match(/[{｛]\s*([^{}｛｝]+)\s*[}｝]/g)) {
+                targetElementText = targetElementText.replace(/[{｛]/g,'t{');
+              }
+              return targetElementText;
+            }
+          }
+        }else{
+          for (let variable of this.paletteVariables) {
+            if (variable.name == name) return variable.value;
+          }
+
+          if (extendVariables) {
+            let element = extendVariables.getFirstElementByName(name);
+            if (element) {
+              if(useMax && element.isNumberResource) return element.value + '';
+              return element.isNumberResource ? element.currentValue + '' : element.value + '';
+            }
           }
         }
         return '';
