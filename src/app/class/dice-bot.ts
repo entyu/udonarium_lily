@@ -39,7 +39,15 @@ interface ResourceEdit {
   calcAns: number;
   nowOrMax: string;
   option: ResourceEditOption;
+  object: GameCharacter;
+  targeted: boolean;
 }
+
+interface BuffEdit {
+  command: string;
+  object : GameCharacter;
+  targeted : boolean;
+};
 
 interface DiceRollResult {
   result: string;
@@ -149,12 +157,12 @@ export class DiceBot extends GameObject {
     return ObjectStore.instance.getObjects(DiceTable);
   }
 
+
   // リソース操作コマンドでs付きがあるか判定
   checkSecretEditCommand(chatText: string): boolean {
     const text: string = ' ' + StringUtil.toHalfWidth(chatText).toLowerCase();
     const replaceText = text.replace('：', ':');
-    console.log('checkSecretEditCommand:' + chatText);
-    let m = replaceText.match(/\sS:/i);
+    let m = replaceText.match(/\sST?:/i);
     console.log(m);
     if( m ) return true;
     return false;
@@ -282,8 +290,6 @@ export class DiceBot extends GameObject {
         const gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
 
         this.checkResourceEditCommand( chatMessage );
-
-
         return;
       })
 
@@ -479,36 +485,62 @@ export class DiceBot extends GameObject {
     if (chatTab) { chatTab.addMessage(diceBotMessage); }
   }
 
+  private targeted(gameCharacter: GameCharacter): boolean {
+    return gameCharacter.targeted;
+  }
+
+  private targetedGameCharacterList( ): GameCharacter[]{
+    let objects :GameCharacter[] = [];
+    objects = ObjectStore.instance
+        .getObjects<GameCharacter>(GameCharacter)
+        .filter(character => this.targeted(character));
+    return objects;
+  }
+
+  private messageSendGameCharacter( from: string): GameCharacter{
+    let object = ObjectStore.instance.get<GameCharacter>(from);
+    if (object instanceof GameCharacter) {
+      return object;
+    }else{
+      console.log('キャラクタからの発信じゃありません');
+      return null;
+    }
+  }
 
   private checkResourceEditCommand( originalMessage: ChatMessage ){
 
     let text = ' ' + originalMessage.text;
-    let isMatch = text.match(/(\s[sSｓＳ][:：&＆])/i);
+    let isMatch = text.match(/(\s[sSｓＳ][tTｔＴ]?[:：&＆])/i) ? true : false;
     let isSecret = isMatch ? true : false;
-    
-    let text2 = text.replace(/(\s[sSｓＳ][:：])/i, ' :');
+    let targetObjects :GameCharacter[] = this.targetedGameCharacterList();
+    let sendFromObject :GameCharacter = this.messageSendGameCharacter(originalMessage.sendFrom)
 
-    const splitText = text2.split(/\s/);
+    let text2 = text.replace(/(\s[sSｓＳ][tTｔＴ][:：])/i, ' t:');
+    let text3 = text2.replace(/(\s[sSｓＳ][:：])/i, ' :');
+    let text4 = text3.replace(/([tTｔＴ][:：])/gi, 't:');
+    let text5 = text4.replace(/([tTｔＴ][&＆])/gi, 't&');
+    let text6 = text5.replace(/([:：])/gi, ':');
+    let text7 = text6.replace(/([&＆])/gi, '&');
+
+    let splitText = text7.split(/\s/);
+
     let resourceCommand: string[] = [];
     let buffCommand: string[] = [];
-    const allEditList: ResourceEdit[] = null;
+    let allEditList: ResourceEdit[] = null;
 
     for (const chktxt of splitText) {
-      if (chktxt.match(/^[:：&＆]/i)) {
-
-        let resultRes = chktxt.match(/[:：][^:：&＆]+/gi);
-        let resultBuff = chktxt.match(/[&＆][^:：&＆]+/gi);
-        if ( resultRes ){
-          resourceCommand = resourceCommand.concat(resultRes);
-        }
-        if ( resultBuff ){
-          buffCommand = buffCommand.concat(resultBuff);
-        }
+      let resultRes = chktxt.match(/t?:[^:：&＆]+/gi);
+      let resultBuff = chktxt.match(/t?&[^:：&＆]+/gi);
+      if ( resultRes ){
+        resourceCommand = resourceCommand.concat(resultRes);
+      }
+      if ( resultBuff ){
+        buffCommand = buffCommand.concat(resultBuff);
       }
     }
 
     console.log( 'checkResourceEditCommand' + resourceCommand);
-    this.resourceEditProcess( resourceCommand , buffCommand, originalMessage , isSecret);
+    this.resourceEditProcess(sendFromObject, targetObjects, resourceCommand , buffCommand, originalMessage , isSecret);
   }
 
   resourceEditParseOption( text: string): ResourceEditOption{
@@ -540,9 +572,11 @@ export class DiceBot extends GameObject {
     return ans;
   }
 
-  private resourceCommandToEdit(oneResourceEdit: ResourceEdit, text: string, object: GameCharacter): boolean{
-
-    let isSecret = this.checkSecretEditCommand(text);
+  private resourceCommandToEdit(oneResourceEdit: ResourceEdit, text: string, object: GameCharacter, targeted: boolean): boolean{
+    console.log('リソース変更コマンド処理開始');
+    console.log(object.name);
+    oneResourceEdit.object = object;
+    oneResourceEdit.targeted = targeted;
     const replaceText = ' ' + text.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=').replace('＞', '>');
 
     console.log('リソース変更：' + replaceText);
@@ -603,57 +637,120 @@ export class DiceBot extends GameObject {
     return true;
   }
 
-  async resourceEditProcess(resourceCommand: string[], buffCommand: string[], originalMessage: ChatMessage, isSecret: Boolean){
-
-    const object = ObjectStore.instance.get<GameCharacter>(originalMessage.sendFrom);
-    if (object instanceof GameCharacter) {
-      console.log( 'object.location.name' + object.location.name );
-    }else{
-      console.log('キャラクタじゃないので操作できません');
-      return;
-    }
+  async resourceEditProcess(sendFromObject , objects: GameCharacter[], resourceCommand: string[], buffCommand: string[], originalMessage: ChatMessage, isSecret: Boolean){
 
     const allEditList: ResourceEdit[] = [];
     const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tags ? originalMessage.tags[0] : '');
 
     for ( const oneText of resourceCommand ){
-      const oneResourceEdit: ResourceEdit = {
-        target: '',
-        operator: '',
-        diceResult: '',
-        command: '',
-        replace: '',
-        isDiceRoll: false,
-        calcAns: 0,
-        nowOrMax: 'now',
-        option : null
-      };
-
-      if ( !this.resourceCommandToEdit(oneResourceEdit, oneText, object) )return;
-
-      if (oneResourceEdit.operator != '>'){
-        // ダイスロール及び四則演算
-        try {
-          const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameSystem);
-          if (!rollResult.result) { return null; }
-          const splitResult = rollResult.result.split(' ＞ ');
-          oneResourceEdit.diceResult = splitResult[splitResult.length - 2].replace(/\+\(1\[1\]\-1\)$/, '');
-          const resultMatch = rollResult.result.match(/([-+]?\d+)$/); // 計算結果だけ格納
-          oneResourceEdit.calcAns = parseInt(resultMatch[1], 10);
-        } catch (e) {
-          console.error(e);
+      let targeted = oneText.match(/^t:/i) ? true :false;
+      let obj :GameCharacter;
+      if (targeted) {
+        for(const object of objects) {
+          let oneResourceEdit: ResourceEdit = {
+            target: '',
+            operator: '',
+            diceResult: '',
+            command: '',
+            replace: '',
+            isDiceRoll: false,
+            calcAns: 0,
+            nowOrMax: 'now',
+            option : null,
+            object : null,
+            targeted : false
+          };
+          if ( !this.resourceCommandToEdit(oneResourceEdit, oneText, object, targeted) )return;
+          
+          console.log('oneResourceEditチェック' +oneResourceEdit.object.name);
+          
+          if (oneResourceEdit.operator != '>') {
+            // ダイスロール及び四則演算
+            try {
+              const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameSystem);
+              if (!rollResult.result) { return null; }
+              const splitResult = rollResult.result.split(' ＞ ');
+              oneResourceEdit.diceResult = splitResult[splitResult.length - 2].replace(/\+\(1\[1\]\-1\)$/, '');
+              const resultMatch = rollResult.result.match(/([-+]?\d+)$/); // 計算結果だけ格納
+              oneResourceEdit.calcAns = parseInt(resultMatch[1], 10);
+            } catch (e) {
+              console.error(e);
+            }
+          }
+          allEditList.push( oneResourceEdit);
+        }
+      }else{
+        if( sendFromObject == null) {
+          obj = null;
+          console.log('キャラクターでないリソースは操作できません');
+          return;
+        }else{
+          obj = sendFromObject;
+          let oneResourceEdit: ResourceEdit = {
+            target: '',
+            operator: '',
+            diceResult: '',
+            command: '',
+            replace: '',
+            isDiceRoll: false,
+            calcAns: 0,
+            nowOrMax: 'now',
+            option : null,
+            object : null,
+            targeted : false
+          };
+          if ( !this.resourceCommandToEdit(oneResourceEdit, oneText, obj, targeted) )return;
+          console.log('oneResourceEditチェック2 ' +oneResourceEdit.object.name);
+          if (oneResourceEdit.operator != '>') {
+            // ダイスロール及び四則演算
+            try {
+              const rollResult = await DiceBot.diceRollAsync(oneResourceEdit.command, gameSystem);
+              if (!rollResult.result) { return null; }
+              const splitResult = rollResult.result.split(' ＞ ');
+              oneResourceEdit.diceResult = splitResult[splitResult.length - 2].replace(/\+\(1\[1\]\-1\)$/, '');
+              const resultMatch = rollResult.result.match(/([-+]?\d+)$/); // 計算結果だけ格納
+              oneResourceEdit.calcAns = parseInt(resultMatch[1], 10);
+            } catch (e) {
+              console.error(e);
+            }
+          }
+          allEditList.push( oneResourceEdit);
         }
       }
-      allEditList.push( oneResourceEdit );
     }
 
-    let repBuffCommandList: string[] = [];
+    let repBuffCommandList: BuffEdit[] = [];
     for ( const oneText of buffCommand ){
-      const replaceText = oneText.replace('＆', '&').replace(/＋$/, '+').replace(/－$/, '-');
-      repBuffCommandList.push(replaceText);
+      let targeted = oneText.match(/^t&/i) ? true :false;
+      let obj :GameCharacter;
+      if (targeted) {
+        for(const object of objects) {
+          const replaceText = oneText.replace('＆', '&').replace(/＋$/, '+').replace(/－$/, '-');
+          let oneBuffEdit: BuffEdit = {
+            command: replaceText,
+            object : object,
+            targeted : targeted
+          };
+          repBuffCommandList.push(oneBuffEdit);
+        }
+      }else{
+        if( sendFromObject == null) {
+          obj = null;
+          console.log('キャラクターでないものに対してバフ操作はできません');
+          return;
+        }else{
+          const replaceText = oneText.replace('＆', '&').replace(/＋$/, '+').replace(/－$/, '-');
+          let oneBuffEdit: BuffEdit = {
+            command: replaceText,
+            object : sendFromObject,
+            targeted : targeted
+          };
+          repBuffCommandList.push(oneBuffEdit);
+        }
+      }
     }
 
-    this.resourceBuffEdit( allEditList , repBuffCommandList, originalMessage, object, isSecret);
+    this.resourceBuffEdit( allEditList , repBuffCommandList, originalMessage, isSecret);
     return;
   }
 
@@ -718,22 +815,26 @@ export class DiceBot extends GameObject {
     return ansText;
   }
 
-  private buffEdit(command: string, character: GameCharacter): string{
+  private buffEdit(buff: BuffEdit, character: GameCharacter): string{
+    let command = buff.command;
     let text = '';
-    if ( command.match(/^&[RＲrｒ]-$/i) ){
+    if (buff.targeted) {
+      text += '[' + character.name + '] ';
+    }
+    if ( command.match(/^[tTｔＴ]?&[RＲrｒ]-$/i) ){
       character.decreaseBuffRound();
       text += 'バフRを減少';
       text += '    ';
-    }else if ( command.match(/^&[RＲrｒ][+]$/i) ){
+    }else if ( command.match(/^[tTｔＴ]?&[RＲrｒ][+]$/i) ){
       character.increaseBuffRound();
       text += 'バフRを増加';
       text += '    ';
-    }else if ( command.match(/^&[DＤdｄ]$/i) ){
+    }else if ( command.match(/^[tTｔＴ]?&[DＤdｄ]$/i) ){
       character.deleteZeroRoundBuff();
       text += '0R以下のバフを消去';
       text += '    ';
-    }else if ( command.match(/^&.+-$/i) ){
-      let match = command.match(/^&(.+)-$/i);
+    }else if ( command.match(/^[tTｔＴ]?&.+-$/i) ){
+      let match = command.match(/^[tTｔＴ]?&(.+)-$/i);
       console.log('match' + match);
       const reg1 = match[1];
       if (character.deleteBuff(reg1) ){
@@ -741,7 +842,7 @@ export class DiceBot extends GameObject {
         text += '    ';
       }
     }else{
-      const splittext = command.replace(/^&/i, '').split('/');
+      const splittext = command.replace(/^[tTｔＴ]?&/i, '').split('/');
       let round = null;
       let sub = '';
       let buffname = '';
@@ -767,11 +868,17 @@ export class DiceBot extends GameObject {
     return text;
   }
 
-  private resourceBuffEdit( allEditList: ResourceEdit[] , buffList: string[], originalMessage: ChatMessage , character: GameCharacter ,isSecret: Boolean){
+  private resourceBuffEdit( allEditList: ResourceEdit[] , buffList: BuffEdit[], originalMessage: ChatMessage , isSecret: Boolean){
+    let isTarget: Boolean = false;
     let text = '';
 // リソース処理
     let isDiceRoll = false;
-    for ( const edit of allEditList) {
+    let character: GameCharacter;
+    for ( let edit of allEditList) {
+      character = edit.object;
+      if ( edit.targeted) {
+        text += '['+ character.name +'] ';
+      }
       if (edit.operator == '>'){
         text += this.resourceTextEdit(edit, character);
       }else{
@@ -780,8 +887,9 @@ export class DiceBot extends GameObject {
       if ( edit.isDiceRoll ) { isDiceRoll = true; }
     }
 // バフ処理
-    for ( let command of buffList) {
-      text += this.buffEdit(command, character);
+    for ( let buff of buffList) {
+      character = buff.object;
+      text += this.buffEdit(buff, character);
     }
     text = text.replace(/\s\s\s\s$/, '');
 
