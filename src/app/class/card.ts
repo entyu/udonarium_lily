@@ -4,7 +4,7 @@ import { Network } from './core/system';
 import { DataElement } from './data-element';
 import { PeerCursor } from './peer-cursor';
 import { TabletopObject } from './tabletop-object';
-import { moveToTopmost } from './tabletop-object-util';
+import { moveToBackmost, moveToTopmost } from './tabletop-object-util';
 
 export enum CardState {
   FRONT,
@@ -34,8 +34,8 @@ export class Card extends TabletopObject {
   }
 
   get hasOwner(): boolean { return 0 < this.owner.length; }
-  get ownerIsOnline(): boolean { return this.hasOwner && Network.peerContexts.some(context => context.userId === this.owner && context.isOpen); }
-  get isHand(): boolean { return Network.peerContext.userId === this.owner; }
+  get ownerIsOnline(): boolean { return this.hasOwner && (this.isHand || Network.peers.some(peer => peer.userId === this.owner && peer.isOpen)); }
+  get isHand(): boolean { return Network.peer.userId === this.owner; }
   get isFront(): boolean { return this.state === CardState.FRONT; }
   get isVisible(): boolean { return this.isHand || this.isFront; }
 
@@ -51,6 +51,10 @@ export class Card extends TabletopObject {
 
   toTopmost() {
     moveToTopmost(this, ['card-stack']);
+  }
+
+  toBackmost() {
+    moveToBackmost(this, ['card-stack']);
   }
 
   static create(name: string, fornt: string, back: string, size: number = 2, identifier?: string): Card {

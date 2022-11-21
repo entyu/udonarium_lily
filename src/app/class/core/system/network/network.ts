@@ -1,11 +1,12 @@
 import { setZeroTimeout } from '../util/zero-timeout';
 import { Connection, ConnectionCallback } from './connection';
 import { IPeerContext, PeerContext } from './peer-context';
-import { SkyWayConnection } from './skyway-connection';
+import { IRoomInfo } from './room-info';
+import { SkyWayConnection } from './skyway/skyway-connection';
 
 type QueueItem = { data: any, sendTo: string };
 
-const unknownContext = PeerContext.parse('???');
+const unknownPeer = PeerContext.parse('???');
 
 export class Network {
   private static _instance: Network
@@ -13,14 +14,13 @@ export class Network {
     if (!Network._instance) Network._instance = new Network();
     return Network._instance;
   }
+  get isOpen(): boolean { return this.connection ? this.connection.peer.isOpen : false; }
 
-  get peerId(): string { return this.connection ? this.connection.peerId : unknownContext.peerId; }
+  get peerId(): string { return this.connection ? this.connection.peerId : unknownPeer.peerId; }
   get peerIds(): string[] { return this.connection ? this.connection.peerIds.concat() : []; }
 
-  get peerContexts(): IPeerContext[] { return this.connection ? this.connection.peerContexts.concat() : []; }
-  get peerContext(): IPeerContext { return this.connection ? this.connection.peerContext : unknownContext; }
-
-  get isOpen(): boolean { return this.connection && this.connection.peerContext ? this.connection.peerContext.isOpen : false; }
+  get peer(): IPeerContext { return this.connection ? this.connection.peer : unknownPeer; }
+  get peers(): IPeerContext[] { return this.connection ? this.connection.peers.concat() : []; }
 
   readonly callback: ConnectionCallback = new ConnectionCallback();
   get bandwidthUsage(): number { return this.connection ? this.connection.bandwidthUsage : 0; }
@@ -37,10 +37,10 @@ export class Network {
     console.log('Network ready...');
   }
 
-  open(peerId?: string)
+  open(userId?: string)
   open(userId: string, roomId: string, roomName: string, password: string)
   open(...args: any[]) {
-    if (this.connection && this.connection.peerContext) {
+    if (this.connection && this.connection.peer) {
       console.warn('It is already opened.');
       this.close();
     }
@@ -59,16 +59,16 @@ export class Network {
     console.log('Network close...');
   }
 
-  connect(peerId: string): boolean {
-    if (this.connection) return this.connection.connect(peerId);
+  connect(peer: IPeerContext): boolean {
+    if (this.connection) return this.connection.connect(peer);
     return false;
   }
 
-  disconnect(peerId: string) {
+  disconnect(peer: IPeerContext) {
     if (!this.connection) return;
-    if (this.connection.disconnect(peerId)) {
-      console.log('<disconnectPeer()> Peer:' + peerId);
-      this.disconnect(peerId);
+    if (this.connection.disconnect(peer)) {
+      console.log('<disconnectPeer()> Peer:' + peer.peerId);
+      this.disconnect(peer);
     }
   }
 
@@ -108,7 +108,7 @@ export class Network {
     // 自分自身への送信
     if (this.callback.onData) {
       this.callback.onData(null, broadcast);
-      this.callback.onData(this.peerId, echocast);
+      this.callback.onData(this.peer, echocast);
     }
 
     if (0 < this.queue.size) {
@@ -127,19 +127,23 @@ export class Network {
     return this.connection ? this.connection.listAllPeers() : Promise.resolve([]);
   }
 
-  private initializeConnection(): Connection {
-    let store = new SkyWayConnection();
-    store.setApiKey(this.key);
+  listAllRooms(): Promise<IRoomInfo[]> {
+    return this.connection ? this.connection.listAllRooms() : Promise.resolve([]);
+  }
 
-    store.callback.onOpen = (peerId) => { if (this.callback.onOpen) this.callback.onOpen(peerId); }
-    store.callback.onClose = (peerId) => { if (this.callback.onClose) this.callback.onClose(peerId); }
-    store.callback.onConnect = (peerId) => { if (this.callback.onConnect) this.callback.onConnect(peerId); }
-    store.callback.onDisconnect = (peerId) => { if (this.callback.onDisconnect) this.callback.onDisconnect(peerId); }
-    store.callback.onData = (peerId, data: any[]) => { if (this.callback.onData) this.callback.onData(peerId, data); }
-    store.callback.onError = (peerId, errorType, errorMessage, errorObject) => { if (this.callback.onError) this.callback.onError(peerId, errorType, errorMessage, errorObject); }
+  private initializeConnection(): Connection {
+    let connection = new SkyWayConnection();
+    connection.setApiKey(this.key);
+
+    connection.callback.onOpen = (peer) => { if (this.callback.onOpen) this.callback.onOpen(peer); }
+    connection.callback.onClose = (peer) => { if (this.callback.onClose) this.callback.onClose(peer); }
+    connection.callback.onConnect = (peer) => { if (this.callback.onConnect) this.callback.onConnect(peer); }
+    connection.callback.onDisconnect = (peer) => { if (this.callback.onDisconnect) this.callback.onDisconnect(peer); }
+    connection.callback.onData = (peer, data: any[]) => { if (this.callback.onData) this.callback.onData(peer, data); }
+    connection.callback.onError = (peer, errorType, errorMessage, errorObject) => { if (this.callback.onError) this.callback.onError(peer, errorType, errorMessage, errorObject); }
 
     if (0 < this.queue.size && this.sendInterval === null) this.sendInterval = setZeroTimeout(this.sendCallback);
 
-    return store;
+    return connection;
   }
 }

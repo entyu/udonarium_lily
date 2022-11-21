@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { ComponentRef, Injectable, OnChanges, ViewContainerRef } from '@angular/core';
 
 declare var Type: FunctionConstructor;
 interface Type<T> extends Function {
@@ -28,10 +28,6 @@ export class PanelService {
 
   scrollablePanel: HTMLDivElement = null;
 
-  constructor(
-    private componentFactoryResolver: ComponentFactoryResolver
-  ) { }
-
   get isShow(): boolean {
     return this.panelComponentRef ? true : false;
   }
@@ -40,15 +36,11 @@ export class PanelService {
     if (!parentViewContainerRef) {
       parentViewContainerRef = PanelService.defaultParentViewContainerRef;
     }
-    let panelComponentRef: ComponentRef<any>;
 
     const injector = parentViewContainerRef.injector;
 
-    const panelComponentFactory = this.componentFactoryResolver.resolveComponentFactory(PanelService.UIPanelComponentClass);
-    const bodyComponentFactory = this.componentFactoryResolver.resolveComponentFactory(childComponent);
-
-    panelComponentRef = parentViewContainerRef.createComponent(panelComponentFactory, parentViewContainerRef.length, injector);
-    let bodyComponentRef: ComponentRef<any> = panelComponentRef.instance.content.createComponent(bodyComponentFactory);
+    let panelComponentRef: ComponentRef<any> = parentViewContainerRef.createComponent(PanelService.UIPanelComponentClass, { index: parentViewContainerRef.length, injector: injector });
+    let bodyComponentRef: ComponentRef<any> = panelComponentRef.instance.content.createComponent(childComponent);
 
     const childPanelService: PanelService = panelComponentRef.injector.get(PanelService);
 
@@ -62,7 +54,21 @@ export class PanelService {
     }
     panelComponentRef.onDestroy(() => {
       childPanelService.panelComponentRef = null;
+      panelComponentRef = null;
     });
+
+    bodyComponentRef.onDestroy(() => {
+      bodyComponentRef = null;
+    });
+
+    let panelOnChanges = panelComponentRef.instance as OnChanges;
+    let bodyOnChanges = bodyComponentRef.instance as OnChanges;
+    if (panelOnChanges?.ngOnChanges != null || bodyOnChanges?.ngOnChanges != null) {
+      queueMicrotask(() => {
+        if (bodyComponentRef && bodyOnChanges?.ngOnChanges != null) bodyOnChanges?.ngOnChanges({});
+        if (panelComponentRef && panelOnChanges?.ngOnChanges != null) panelOnChanges?.ngOnChanges({});
+      });
+    }
 
     return <T>bodyComponentRef.instance;
   }

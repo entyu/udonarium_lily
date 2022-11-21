@@ -1,18 +1,18 @@
-import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { BatchService } from 'service/batch.service';
 import { CoordinateService } from 'service/coordinate.service';
 import { PointerCoordinate, PointerDeviceService } from 'service/pointer-device.service';
+import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 
 import { InputHandler } from './input-handler';
-
-export interface RotableTabletopObject extends TabletopObject {
-  rotate: number;
-}
+import { RotableSelectionSynchronizer } from './rotable-selection-synchronizer';
 
 export interface RotableOption {
-  readonly tabletopObject?: RotableTabletopObject;
+  readonly tabletopObject?: TabletopObject;
+  readonly targetPropertyName?: string
   readonly grabbingSelecter?: string;
   readonly transformCssOffset?: string;
 }
@@ -20,15 +20,30 @@ export interface RotableOption {
 @Directive({
   selector: '[appRotable]'
 })
-export class RotableDirective implements AfterViewInit, OnDestroy {
-  protected tabletopObject: RotableTabletopObject;
+export class RotableDirective implements AfterViewInit, OnChanges, OnDestroy {
+  private _tabletopObject: TabletopObject;
+  private _targetPropertyName: string = '';
+  private _transformCssOffset: string = '';
+  private _grabbingSelecter: string = '.rotate-grab';
 
-  private transformCssOffset: string = '';
-  private grabbingSelecter: string = '.rotate-grab';
+  get tabletopObject(): TabletopObject { return this._tabletopObject; }
+  get targetPropertyName(): string { return this._targetPropertyName; }
+  get targetProperty(): number { return this.tabletopObject[this.targetPropertyName]; }
+  set targetProperty(value: number) { if (this.targetPropertyName in this.tabletopObject) this.tabletopObject[this.targetPropertyName] = value; }
+  get transformCssOffset(): string { return this._transformCssOffset; }
+  get grabbingSelecter(): string { return this._grabbingSelecter; }
+
   @Input('rotable.option') set option(option: RotableOption) {
-    this.tabletopObject = option.tabletopObject != null ? option.tabletopObject : this.tabletopObject;
-    this.grabbingSelecter = option.grabbingSelecter != null ? option.grabbingSelecter : this.grabbingSelecter;
-    this.transformCssOffset = option.transformCssOffset != null ? option.transformCssOffset : this.transformCssOffset;
+    this.synchronizer.unregister();
+
+    this._tabletopObject = option.tabletopObject;
+    this._targetPropertyName = option.targetPropertyName ?? '';
+    this._grabbingSelecter = option.grabbingSelecter ?? '.rotate-grab';
+    this._transformCssOffset = option.transformCssOffset ?? '';
+
+    if (this._targetPropertyName.length < 1 && this._tabletopObject) this._targetPropertyName = 'rotate';
+
+    this.synchronizer.register();
   }
   @Input('rotable.disable') isDisable: boolean = false;
   @Output('rotable.onstart') onstart: EventEmitter<PointerEvent> = new EventEmitter();
@@ -39,11 +54,10 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
 
   private get nativeElement(): HTMLElement { return this.elementRef.nativeElement; }
 
+  private cssRotate = 0;
   private _rotate: number = 0;
   get rotate(): number { return this._rotate; }
-  set rotate(rotate: number) { this._rotate = rotate; this.setUpdateTimer(); }
-  @Input('rotable.value') set value(value: number) { this._rotate = value; this.updateTransformCss(); }
-  @Output('rotable.valueChange') valueChange: EventEmitter<number> = new EventEmitter();
+  set rotate(rotate: number) { this._rotate = rotate; this.setUpdateBatching(); }
 
   private get isAllowedToRotate(): boolean {
     if (!this.grabbingElement || !this.nativeElement) return false;
@@ -58,59 +72,60 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
   }
 
   private rotateOffset: number = 0;
-  private updateTimer: NodeJS.Timer = null;
+  private isUpdateBatching: boolean = false;
   private grabbingElement: HTMLElement = null;
-  private input: InputHandler = null;
+  private input: InputHandler = new InputHandler(this.nativeElement, false);
+
+  private synchronizer: RotableSelectionSynchronizer = new RotableSelectionSynchronizer(this, this.selectionService);
+  get state(): SelectionState { return this.selectionService.state(this.tabletopObject); }
 
   constructor(
     private elementRef: ElementRef,
     private batchService: BatchService,
     private pointerDeviceService: PointerDeviceService,
     private coordinateService: CoordinateService,
+    private selectionService: TabletopSelectionService,
   ) { }
 
   ngAfterViewInit() {
-    this.batchService.add(() => this.initialize(), this.elementRef);
-    if (this.tabletopObject) {
-      this.setRotate(this.tabletopObject);
-    } else {
-      this.updateTransformCss();
-    }
+    this.batchService.add(() => this.initialize(), this.onstart);
+  }
+
+  ngOnChanges(): void {
+    this.dispose();
+
+    EventSystem.register(this)
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.tabletopObject?.identifier}`, event => {
+        if ((event.isSendFromSelf && (this.input.isGrabbing || this.state !== SelectionState.NONE)) || !this.shouldTransition(this.tabletopObject)) return;
+        this.batchService.add(() => {
+          if (this.input.isGrabbing) {
+            this.cancel();
+          } else {
+            this.setAnimatedTransition(true);
+          }
+          this.stopTransition(this.targetProperty);
+          this.setRotate(this.tabletopObject);
+        }, this);
+      });
+
+    this.setRotate(this.tabletopObject);
   }
 
   ngOnDestroy() {
-    this.cancel();
+    this.dispose();
+    this.synchronizer.destroy();
     this.input.destroy();
-    EventSystem.unregister(this);
-    this.batchService.remove(this);
-    this.batchService.remove(this.elementRef);
+    this.batchService.remove(this.onstart);
   }
 
   initialize() {
-    this.input = new InputHandler(this.nativeElement);
+    this.synchronizer.initialize();
+    this.input.initialize();
     this.input.onStart = this.onInputStart.bind(this);
     this.input.onMove = this.onInputMove.bind(this);
     this.input.onEnd = this.onInputEnd.bind(this);
     this.input.onContextMenu = this.onContextMenu.bind(this);
-
-    if (this.tabletopObject) {
-      EventSystem.register(this)
-        .on('UPDATE_GAME_OBJECT', event => {
-          if ((event.isSendFromSelf && this.input.isGrabbing) || event.data.identifier !== this.tabletopObject.identifier || !this.shouldTransition(this.tabletopObject)) return;
-          this.batchService.add(() => {
-            if (this.input.isGrabbing) {
-              this.cancel();
-            } else {
-              this.setAnimatedTransition(true);
-            }
-            this.stopTransition();
-            this.setRotate(this.tabletopObject);
-          }, this);
-        });
-      this.setRotate(this.tabletopObject);
-    } else {
-      this.updateTransformCss();
-    }
+    this.setAnimatedTransition(true);
   }
 
   cancel() {
@@ -119,15 +134,24 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     this.setAnimatedTransition(true);
   }
 
+  dispose() {
+    EventSystem.unregister(this);
+    this.batchService.remove(this);
+  }
+
   onInputStart(e: MouseEvent | TouchEvent) {
     this.grabbingElement = e.target as HTMLElement;
-    if (this.isDisable || !this.isAllowedToRotate || (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
+    if (this.isDisable || !this.isAllowedToRotate || (e instanceof MouseEvent && (e.button !== 0 || e.ctrlKey || e.shiftKey))) {
+      this.cancel();
+      return;
+    }
     e.stopPropagation();
     this.onstart.emit(e as PointerEvent);
 
     let pointer = this.coordinateService.convertLocalToLocal(this.input.pointer, this.grabbingElement, this.nativeElement.parentElement);
     this.rotateOffset = this.calcRotate(pointer, this.rotate);
     this.setAnimatedTransition(false);
+    this.synchronizer.prepareRotate();
   }
 
   onInputMove(e: MouseEvent | TouchEvent) {
@@ -144,6 +168,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     if (!this.input.isDragging) this.ondragstart.emit(e as PointerEvent);
     this.ondrag.emit(e as PointerEvent);
     this.rotate = angle;
+    this.synchronizer.updateRotate();
   }
 
   onInputEnd(e: MouseEvent | TouchEvent) {
@@ -152,6 +177,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     if (this.input.isDragging) this.ondragend.emit(e as PointerEvent);
     this.cancel();
     this.snapToPolygonal();
+    this.synchronizer.finishRotate();
     this.onend.emit(e as PointerEvent);
   }
 
@@ -168,7 +194,22 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     let x = pointer.x - centerX;
     let y = pointer.y - centerY;
     let rad = Math.atan2(y, x);
-    return ((rad * 180 / Math.PI) - rotateOffset) % 360;
+    let rotate = (MathUtil.degrees(rad) - rotateOffset + 720) % 360;
+    return rotate < 180 ? rotate : rotate - 360;
+  }
+
+  private radianFromMatrix(a, b, c, d, e, f) {
+    let radian = 0;
+    if (a !== 0 || b !== 0) {
+      let r = Math.sqrt(a * a + b * b);
+      radian = b > 0 ? Math.acos(a / r) : -Math.acos(a / r);
+    } else if (c !== 0 || d !== 0) {
+      let s = Math.sqrt(c * c + d * d);
+      radian = Math.PI * 0.5 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
+    } else {
+      // a = b = c = d = 0
+    }
+    return radian;
   }
 
   snapToPolygonal(polygonal: number = 24) {
@@ -177,35 +218,68 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     this.rotate -= (this.rotate) % (360 / polygonal);
   }
 
-  private setUpdateTimer() {
-    if (this.updateTimer === null) {
-      this.updateTimer = setTimeout(() => {
-        this.valueChange.emit(this.rotate);
-        if (this.tabletopObject) this.tabletopObject.rotate = this.rotate;
-        this.updateTimer = null;
-      }, 66);
+  private setUpdateBatching() {
+    if (!this.isUpdateBatching) {
+      this.isUpdateBatching = true;
+      this.batchService.add(() => {
+        this.targetProperty = this.rotate;
+        this.isUpdateBatching = false;
+      });
     }
     this.updateTransformCss();
   }
 
-  private setRotate(object: RotableTabletopObject) {
-    if (object) this._rotate = object.rotate;
+  private setRotate(object: TabletopObject) {
+    if (object && this.targetPropertyName in object) this._rotate = object[this.targetPropertyName];
     this.updateTransformCss();
   }
 
-  private setAnimatedTransition(isEnable: boolean) {
+  setAnimatedTransition(isEnable: boolean) {
     this.nativeElement.style.transition = isEnable ? 'transform 132ms linear' : '';
   }
 
-  private shouldTransition(object: RotableTabletopObject): boolean {
-    return object.rotate !== this.rotate;
+  private shouldTransition(object: TabletopObject): boolean {
+    return this.targetProperty !== this.rotate;
   }
 
-  private stopTransition() {
+  stopTransition(nextRotate: number = this.rotate) {
+    let cssTransform = window.getComputedStyle(this.nativeElement).transform;
+
+    if (Math.abs(nextRotate - this.cssRotate) < 180) return;
+
+    let regArray = /matrix\(([^,]+),([^,]+),([^,]+),([^,]+),([^,]+),([^,]+)\)/gi.exec(cssTransform);
+    if (!regArray) return;
+
+    let currentRad = this.radianFromMatrix(
+      Number(regArray[1]), Number(regArray[2]), Number(regArray[3]),
+      Number(regArray[4]), Number(regArray[5]), Number(regArray[6])
+    );
+    let currentRotate = MathUtil.degrees(currentRad);
+    let currentVector = { x: Math.cos(currentRad), y: Math.sin(currentRad) };
+
+    let nextRad = MathUtil.radians(nextRotate);
+    let nextVector = { x: Math.cos(nextRad), y: Math.sin(nextRad) };
+
+    let crossProduct = currentVector.x * nextVector.y - nextVector.x * currentVector.y;
+
+    let diff = Math.abs(nextRotate - currentRotate);
+    if (180 < diff) diff = 360 - diff;
+
+    let expectRotate = nextRotate + (0 < crossProduct ? -diff : diff);
+    if (expectRotate === currentRotate) return;
+
+    let cssTransition = this.nativeElement.style.transition;
+    this.nativeElement.style.transition = '';
+
+    this.cssRotate = expectRotate;
+    this.nativeElement.style.transform = `${this.transformCssOffset} rotateZ(${expectRotate.toFixed(4)}deg)`;
     this.nativeElement.style.transform = window.getComputedStyle(this.nativeElement).transform;
+
+    this.nativeElement.style.transition = cssTransition;
   }
 
   private updateTransformCss() {
+    this.cssRotate = this.rotate;
     let css = `${this.transformCssOffset} rotateZ(${this.rotate.toFixed(4)}deg)`;
     this.nativeElement.style.transform = css;
   }

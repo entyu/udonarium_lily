@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { PeerCursor } from '@udonarium/peer-cursor';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
@@ -60,10 +60,10 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     this.targetUserId = '';
     if (targetUserId.length < 1) return;
     this.help = '';
-    let context = PeerContext.create(targetUserId);
-    if (context.isRoom) return;
+    let peer = PeerContext.create(targetUserId);
+    if (peer.isRoom) return;
     ObjectStore.instance.clearDeleteHistory();
-    Network.connect(context.peerId);
+    Network.connect(peer);
   }
 
   showLobby() {

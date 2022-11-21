@@ -43,6 +43,8 @@
   
   -moz-user-drag: none;
   -webkit-user-drag: none;
+
+  backface-visibility: hidden;
 }
 
 .component-content {
@@ -95,8 +97,19 @@
   filter: brightness(0.8);
 }
 
+.selected-highlight {
+  backface-visibility: hidden;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: hsla(200, 100%, 75%, 0.6);
+}
+
+.selected-highlight.is-magnetic {
+  background-color: hsla(60, 100%, 75%, 0.6);
+}
+
 .pedestal-grab {
-  z-index: -1;
   position: absolute;
   top: -14px;
   left: -14px;
@@ -114,7 +127,6 @@
 
 .rotate-grab {
   opacity: 0;
-  z-index: -1;
 }
 
 .rotate-grab-icon {
@@ -126,7 +138,6 @@
   cursor: -moz-default;
   cursor: -webkit-default;
   cursor: default;
-  z-index: 1;
   padding: 0;
   background-color: #CCCCCC;
   border-radius: 100%;

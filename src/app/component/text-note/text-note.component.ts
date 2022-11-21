@@ -1,16 +1,27 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TextNote } from '@udonarium/text-note';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
-import { ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 
 @Component({
   selector: 'text-note',
@@ -18,7 +29,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   styleUrls: ['./text-note.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TextNoteComponent implements OnChanges, OnDestroy {
   @ViewChild('textArea', { static: true }) textAreaElementRef: ElementRef;
 
   @Input() textNote: TextNote = null;
@@ -31,10 +42,14 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get imageFile(): ImageFile { return this.textNote.imageFile; }
   get rotate(): number { return this.textNote.rotate; }
   set rotate(rotate: number) { this.textNote.rotate = rotate; }
-  get height(): number { return this.adjustMinBounds(this.textNote.height); }
-  get width(): number { return this.adjustMinBounds(this.textNote.width); }
+  get height(): number { return MathUtil.clampMin(this.textNote.height); }
+  get width(): number { return MathUtil.clampMin(this.textNote.width); }
 
-  get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
+  get isActive(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
+
+  get selectionState(): SelectionState { return this.selectionService.state(this.textNote); }
+  get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
+  get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
 
   private callbackOnMouseUp = (e) => this.onMouseUp(e);
 
@@ -50,22 +65,26 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     private contextMenuService: ContextMenuService,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
+    private selectionService: TabletopSelectionService,
     private pointerDeviceService: PointerDeviceService
   ) { }
 
-  ngOnInit() {
+  ngOnChanges(): void {
+    EventSystem.unregister(this);
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', event => {
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.textNote || !object) return;
-        if (this.textNote === object || (object instanceof ObjectNode && this.textNote.contains(object))) {
-          this.changeDetector.markForCheck();
-        }
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.textNote?.identifier}`, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.textNote?.identifier}`, event => {
+        this.changeDetector.markForCheck();
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
       })
       .on('UPDATE_FILE_RESOURE', event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_SELECTION/identifier/${this.textNote?.identifier}`, event => {
         this.changeDetector.markForCheck();
       });
     this.movableOption = {
@@ -77,8 +96,6 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       tabletopObject: this.textNote
     };
   }
-
-  ngAfterViewInit() { }
 
   ngOnDestroy() {
     EventSystem.unregister(this);
@@ -92,13 +109,13 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(e: any) {
-    if (this.isSelected) return;
+    if (this.isActive) return;
     e.preventDefault();
     this.textNote.toTopmost();
 
     // TODO:もっと良い方法考える
     if (e.button === 2) {
-      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', { srcEvent: e });
       return;
     }
 
@@ -123,39 +140,62 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   @HostListener('contextmenu', ['$event'])
   onContextMenu(e: Event) {
     this.removeMouseEventListeners();
-    if (this.isSelected) return;
+    if (this.isActive) return;
     e.stopPropagation();
     e.preventDefault();
 
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
-    this.contextMenuService.open(position, [
-      { name: 'メモを編集', action: () => { this.showDetail(this.textNote); } },
-      {
-        name: 'コピーを作る', action: () => {
-          let cloneObject = this.textNote.clone();
-          console.log('コピー', cloneObject);
-          cloneObject.location.x += this.gridSize;
-          cloneObject.location.y += this.gridSize;
-          cloneObject.toTopmost();
-          SoundEffect.play(PresetSound.cardPut);
-        }
-      },
-      {
-        name: '削除する', action: () => {
-          this.textNote.destroy();
-          SoundEffect.play(PresetSound.sweep);
-        }
-      },
-    ], this.title);
+
+    let menuActions: ContextMenuAction[] = [];
+    menuActions = menuActions.concat(this.makeSelectionContextMenu());
+    menuActions = menuActions.concat(this.makeContextMenu());
+
+    this.contextMenuService.open(position, menuActions, this.title);
   }
 
   onMove() {
+    this.contextMenuService.close();
     SoundEffect.play(PresetSound.cardPick);
   }
 
   onMoved() {
     SoundEffect.play(PresetSound.cardPut);
+  }
+
+  private makeSelectionContextMenu(): ContextMenuAction[] {
+    if (this.selectionService.objects.length < 1) return [];
+
+    let actions: ContextMenuAction[] = [];
+
+    let objectPosition = { x: this.textNote.location.x, y: this.textNote.location.y, z: this.textNote.posZ };
+    actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
+    actions.push(ContextMenuSeparator);
+
+    return actions;
+  }
+
+  private makeContextMenu(): ContextMenuAction[] {
+    let actions: ContextMenuAction[] = [];
+
+    actions.push({ name: 'メモを編集', action: () => { this.showDetail(this.textNote); } });
+    actions.push({
+      name: 'コピーを作る', action: () => {
+        let cloneObject = this.textNote.clone();
+        cloneObject.location.x += this.gridSize;
+        cloneObject.location.y += this.gridSize;
+        cloneObject.toTopmost();
+        SoundEffect.play(PresetSound.cardPut);
+      }
+    });
+    actions.push({
+      name: '削除する', action: () => {
+        this.textNote.destroy();
+        SoundEffect.play(PresetSound.sweep);
+      }
+    });
+
+    return actions;
   }
 
   calcFitHeightIfNeeded() {
@@ -174,10 +214,6 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     if (textArea.scrollHeight > textArea.offsetHeight) {
       textArea.style.height = textArea.scrollHeight + 'px';
     }
-  }
-
-  private adjustMinBounds(value: number, min: number = 0): number {
-    return value < min ? min : value;
   }
 
   private addMouseEventListeners() {

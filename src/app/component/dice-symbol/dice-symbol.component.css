@@ -42,6 +42,8 @@
   user-select: none;
   -moz-user-drag: none;
   -webkit-user-drag: none;
+
+  backface-visibility: hidden;
 }
 
 .component-content {
@@ -50,7 +52,6 @@
 }
 
 .pedestal-grab {
-  z-index: -1;
   backface-visibility: hidden;
   position: absolute;
   top: -22px;
@@ -95,6 +96,21 @@
   box-sizing: border-box;
   border: solid 2px #212121;
   border-radius: 5px;
+}
+
+.selected-highlight {
+  pointer-events: none;
+  backface-visibility: hidden;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: hsla(200, 100%, 75%, 0.6);
+}
+
+.selected-highlight.is-magnetic {
+  background-color: hsla(60, 100%, 75%, 0.6);
 }
 
 .upright-transform {
@@ -195,7 +211,6 @@
   cursor: -moz-default;
   cursor: -webkit-default;
   cursor: default;
-  z-index: 1;
   padding: 2px;
   background-color: #CCCCCC;
   border-radius: 100%;
@@ -233,6 +248,11 @@
 
 .rotate-grab {
   opacity: 0;
+}
+
+.component:hover .pedestal-outer {
+  transform-style: preserve-3d;
+  transform: translateZ(0.01px);
 }
 
 .component:hover .rotate-grab {

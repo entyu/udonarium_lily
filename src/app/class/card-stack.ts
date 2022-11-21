@@ -2,11 +2,10 @@ import { Card } from './card';
 import { ImageFile } from './core/file-storage/image-file';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
-import { EventSystem } from './core/system';
 import { DataElement } from './data-element';
 import { PeerCursor } from './peer-cursor';
 import { TabletopObject } from './tabletop-object';
-import { moveToTopmost } from './tabletop-object-util';
+import { moveToBackmost, moveToTopmost } from './tabletop-object-util';
 
 @SyncObject('card-stack')
 export class CardStack extends TabletopObject {
@@ -32,14 +31,6 @@ export class CardStack extends TabletopObject {
   get topCard(): Card { return this.isEmpty ? null : this.cards[0]; }
   get isEmpty(): boolean { return this.cards.length < 1 }
   get imageFile(): ImageFile { return this.topCard ? this.topCard.imageFile : null; }
-
-  // ObjectNode Lifecycle
-  onChildRemoved(child: ObjectNode) {
-    super.onChildRemoved(child);
-    if (child instanceof Card) {
-      EventSystem.trigger('CARD_STACK_DECREASED', { cardStackIdentifier: this.identifier, cardIdentifier: child.identifier });
-    }
-  }
 
   shuffle(): Card[] {
     if (!this.cardRoot) return;
@@ -140,6 +131,10 @@ export class CardStack extends TabletopObject {
 
   toTopmost() {
     moveToTopmost(this, ['card']);
+  }
+
+  toBackmost() {
+    moveToBackmost(this, ['card']);
   }
 
   // override

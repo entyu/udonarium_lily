@@ -41,7 +41,7 @@
   -moz-user-drag: none;
   -webkit-user-drag: none;
 
-  touch-action: manipulation;
+  touch-action: none;
 
   height: 100%;
   width: 100%;
@@ -118,4 +118,64 @@
 .background-image.is-filter.black::after {
   background-color: hsl(0, 0%, 10%);
   filter: opacity(0.3);
+}
+
+.pick-area {
+  position: absolute;
+  display: none;
+  background-color: rgba(0, 168, 255, .1);
+  border: 1px solid hsl(200, 100%, 50%);
+  pointer-events: none;
+}
+
+.pick-cursor {
+  position: absolute;
+  display: none;
+  scale: 1;
+  transition: scale 200ms ease-out;
+  stroke: hsl(200, 100%, 50%);
+  pointer-events: none;
+}
+
+.pick-cursor svg {
+  transform: rotate(-90deg);
+}
+
+.pick-cursor circle {
+  fill: hsla(200, 100%, 95%, .7);
+  stroke: inherit;
+  stroke-width: 4;
+  animation-name: circle-animation, circle-fill;
+  animation-timing-function: linear, ease-out;
+  animation-duration: 0.85s, 0.85s;
+}
+
+@keyframes circle-animation {
+  0% {
+    stroke-dasharray: 0 94.3;
+  }
+
+  55% {
+    stroke-dasharray: 0 94.3;
+  }
+
+  99.9%,
+  to {
+    stroke-dasharray: 94.3 94.3;
+  }
+}
+
+@keyframes circle-fill {
+  0% {
+    opacity: 0;
+  }
+
+  45% {
+    opacity: 0;
+  }
+
+  99.9%,
+  to {
+    opacity: 1;
+  }
 }

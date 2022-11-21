@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { PeerCursor } from '@udonarium/peer-cursor';
 
 import { ModalService } from 'service/modal.service';
@@ -21,7 +21,7 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
   isPrivate: boolean = false;
 
   get peerId(): string { return Network.peerId; }
-  get isConnected(): boolean { return Network.peerIds.length <= 1 ? false : true; }
+  get isConnected(): boolean { return 0 < Network.peerIds.length; }
   validateLength: boolean = false;
 
   constructor(
@@ -40,13 +40,13 @@ export class RoomSettingComponent implements OnInit, OnDestroy {
   }
 
   calcPeerId(roomName: string, password: string) {
-    let userId = Network.peerContext ? Network.peerContext.userId : PeerContext.generateId();
-    let context = PeerContext.create(userId, PeerContext.generateId('***'), roomName, password);
-    this.validateLength = context.peerId.length < 64 ? true : false;
+    let userId = Network.peer.userId;
+    let peer = PeerContext.create(userId, PeerContext.generateId('***'), roomName, password);
+    this.validateLength = peer.peerId.length < 64 ? true : false;
   }
 
   createRoom() {
-    let userId = Network.peerContext ? Network.peerContext.userId : PeerContext.generateId();
+    let userId = Network.peer.userId;
     Network.open(userId, PeerContext.generateId('***'), this.roomName, this.password);
     PeerCursor.myCursor.peerId = Network.peerId;
 

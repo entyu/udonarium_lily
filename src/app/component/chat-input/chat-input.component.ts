@@ -103,8 +103,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
           this.updateWritingPeerNames();
         }
       })
-      .on('UPDATE_GAME_OBJECT', event => {
-        if (event.data.aliasName !== GameCharacter.aliasName) return;
+      .on(`UPDATE_GAME_OBJECT/aliasName/${GameCharacter.aliasName}`, event => {
         this.shouldUpdateCharacterList = true;
         if (event.data.identifier !== this.sendFrom) return;
         let gameCharacter = ObjectStore.instance.get<GameCharacter>(event.data.identifier);
@@ -168,7 +167,7 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.calcFitHeight();
   }
 
-  sendChat(event: KeyboardEvent) {
+  sendChat(event: Partial<KeyboardEvent>) {
     if (event) event.preventDefault();
 
     if (!this.text.length) return;
@@ -250,8 +249,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       case 'graveyard':
         return false;
       default:
-        for (const conn of Network.peerContexts) {
-          if (conn.isOpen && gameCharacter.location.name === conn.peerId) {
+        for (const peer of Network.peers) {
+          if (peer.isOpen && gameCharacter.location.name === peer.peerId) {
             return false;
           }
         }

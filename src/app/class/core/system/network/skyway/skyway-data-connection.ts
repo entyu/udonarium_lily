@@ -1,8 +1,10 @@
 import { EventEmitter } from 'events';
 
-import { MessagePack } from '../util/message-pack';
-import { UUID } from '../util/uuid';
-import { setZeroTimeout } from '../util/zero-timeout';
+import { MessagePack } from '../../util/message-pack';
+import { UUID } from '../../util/uuid';
+import { setZeroTimeout } from '../../util/zero-timeout';
+import { IPeerContext, PeerContext } from '../peer-context';
+import { PeerSessionGrade } from '../peer-session-state';
 import { SkyWayStatsMonitor } from './skyway-stats-monitor';
 import { CandidateType, WebRTCStats } from './webrtc-stats';
 
@@ -32,6 +34,8 @@ interface ReceivedChank {
 };
 
 export class SkyWayDataConnection extends EventEmitter {
+  readonly peer: PeerContext;
+
   private chunkSize = 15.5 * 1024;
   private receivedMap: Map<string, ReceivedChank> = new Map();
   private timeoutTimer: NodeJS.Timer = null;
@@ -55,17 +59,24 @@ export class SkyWayDataConnection extends EventEmitter {
   get candidateType(): CandidateType { return this._candidateType; }
   private set candidateType(candidateType: CandidateType) { this._candidateType = candidateType };
 
-  constructor(private conn: PeerJs.DataConnection) {
+  constructor(private conn: PeerJs.DataConnection, peer: IPeerContext) {
     super();
+
+    this.peer = PeerContext.parse(peer.peerId);
+    this.peer.userId = peer.userId;
+    this.peer.password = peer.password;
+
     conn.on('data', data => this.onData(data));
     conn.on('open', () => {
       this.stats = new WebRTCStats(this.getPeerConnection());
+      this.peer.isOpen = true;
       this.clearTimeoutTimer();
       exchangeSkyWayImplementation(conn);
       this.emit('open');
       this.startMonitoring();
     });
     conn.on('close', () => {
+      this.peer.isOpen = false;
       this.clearTimeoutTimer();
       this.emit('close');
     });
@@ -78,6 +89,7 @@ export class SkyWayDataConnection extends EventEmitter {
   }
 
   close() {
+    this.peer.isOpen = false;
     this.clearTimeoutTimer();
     this.stopMonitoring();
     this.conn.close();
@@ -120,6 +132,33 @@ export class SkyWayDataConnection extends EventEmitter {
     this.sendPing();
     await this.stats.updateAsync();
     this.candidateType = this.stats.candidateType;
+
+    let deltaTime = performance.now() - this.timestamp;
+    let healthRate = deltaTime <= 10000 ? 1 : 5000 / ((deltaTime - 10000) + 5000);
+    let ping = healthRate < 1 ? deltaTime : this.ping;
+    let pingRate = 500 / (ping + 500);
+
+    this.peer.session.health = healthRate;
+    this.peer.session.ping = ping;
+    this.peer.session.speed = pingRate * healthRate;
+
+    switch (this.candidateType) {
+      case CandidateType.HOST:
+        this.peer.session.grade = PeerSessionGrade.HIGH;
+        break;
+      case CandidateType.SRFLX:
+      case CandidateType.PRFLX:
+        this.peer.session.grade = PeerSessionGrade.MIDDLE;
+        break;
+      case CandidateType.RELAY:
+        this.peer.session.grade = PeerSessionGrade.LOW;
+        break;
+      default:
+        this.peer.session.grade = PeerSessionGrade.UNSPECIFIED;
+        break;
+    }
+    this.peer.session.description = this.candidateType;
+
     this.emit('stats', this.stats);
   }
 

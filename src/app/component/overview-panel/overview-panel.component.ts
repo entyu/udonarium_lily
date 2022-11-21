@@ -5,12 +5,12 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   Input,
+  OnChanges,
   OnDestroy,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
-import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 import { TabletopObject } from '@udonarium/tabletop-object';
@@ -39,7 +39,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
     ])
   ]
 })
-export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
+export class OverviewPanelComponent implements OnChanges, AfterViewInit, OnDestroy {
   @ViewChild('draggablePanel', { static: true }) draggablePanel: ElementRef<HTMLElement>;
   @Input() tabletopObject: TabletopObject = null;
 
@@ -54,7 +54,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   get hasDataElms(): boolean { return 0 < this.dataElms.length; }
 
   get newLineString(): string { return this.inventoryService.newLineString; }
-  get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
+  get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging || this.pointerDeviceService.isTablePickGesture; }
 
   get pointerEventsStyle(): any { return { 'is-pointer-events-auto': !this.isPointerDragging, 'pointer-events-none': this.isPointerDragging }; }
 
@@ -66,18 +66,14 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     private pointerDeviceService: PointerDeviceService
   ) { }
 
-  ngAfterViewInit() {
-    this.initPanelPosition();
-    setTimeout(() => {
-      this.adjustPositionRoot();
-    }, 16);
+  ngOnChanges(): void {
+    EventSystem.unregister(this);
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', event => {
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.tabletopObject || !object || !(object instanceof ObjectNode)) return;
-        if (this.tabletopObject === object || this.tabletopObject.contains(object)) {
-          this.changeDetector.markForCheck();
-        }
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.tabletopObject?.identifier}`, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.tabletopObject?.identifier}`, event => {
+        this.changeDetector.markForCheck();
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -87,8 +83,20 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       });
   }
 
+  ngAfterViewInit() {
+    this.initPanelPosition();
+    setTimeout(() => {
+      this.adjustPositionRoot();
+    }, 16);
+  }
+
   ngOnDestroy() {
     EventSystem.unregister(this);
+  }
+
+  @HostListener('document:draggingstate', ['$event'])
+  onChangeDragging(e: Event) {
+    this.changeDetector.markForCheck();
   }
 
   private initPanelPosition() {

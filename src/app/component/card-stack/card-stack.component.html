@@ -3,10 +3,12 @@
   appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div class="component-content is-pointer-events-auto is-grab is-3d"
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-    <img *ngIf="topCard && imageFile" [@shuffle]="animeState" 
-      (@shuffle.start)="animationShuffleStarted($event)" (@shuffle.done)="animationShuffleDone($event)"
-      class="card-image chrome-smooth-image-trick"
-      [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
+    <div [@shuffle]="animeState"
+      (@shuffle.start)="animationShuffleStarted($event)"
+      (@shuffle.done)="animationShuffleDone($event)">
+      <img *ngIf="topCard && imageFile" class="card-image chrome-smooth-image-trick"
+        [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
+    </div>
     <ng-container *ngIf="!isIconHidden">
       <div class="rotate-grab of-left-top">
         <i class="material-icons">autorenew</i>
@@ -27,5 +29,6 @@
     <div *ngIf="hasOwner" class="name-tag has-length-limit is-nowrap is-black-background" [ngStyle]="{'transform': 'translateY(50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
       <span>{{ownerName}} が確認中</span>
     </div>
+    <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
   </div>
 </div>

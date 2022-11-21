@@ -1,5 +1,6 @@
 import { EventSystem, Network } from '../system';
 import { GameObject, ObjectContext } from './game-object';
+import { markForChanged } from './object-event-extension';
 import { ObjectFactory } from './object-factory';
 import { CatalogItem, ObjectStore } from './object-store';
 import { SynchronizeRequest, SynchronizeTask } from './synchronize-task';
@@ -58,11 +59,13 @@ export class ObjectSynchronizer {
         let context: ObjectContext = event.data;
         let object: GameObject = ObjectStore.instance.get(context.identifier);
         if (object) {
-          if (!event.isSendFromSelf) this.updateObject(object, context);
+          if (!event.isSendFromSelf) object = this.updateObject(object, context);
+          markForChanged(object, event.sendFrom);
         } else if (ObjectStore.instance.isDeleted(context.identifier)) {
           EventSystem.call('DELETE_GAME_OBJECT', { aliasName: context.aliasName, identifier: context.identifier }, event.sendFrom);
         } else {
-          this.createObject(context);
+          object = this.createObject(context);
+          markForChanged(object, event.sendFrom);
         }
       })
       .on('DELETE_GAME_OBJECT', 1000, event => {
@@ -75,13 +78,14 @@ export class ObjectSynchronizer {
     EventSystem.unregister(this);
   }
 
-  private updateObject(object: GameObject, context: ObjectContext) {
+  private updateObject(object: GameObject, context: ObjectContext): GameObject {
     if (context.majorVersion + context.minorVersion > object.version) {
       object.apply(context);
     }
+    return object;
   }
 
-  private createObject(context: ObjectContext) {
+  private createObject(context: ObjectContext): GameObject {
     let newObject: GameObject = ObjectFactory.instance.create(context.aliasName, context.identifier);
     if (!newObject) {
       console.warn(context.aliasName + ' is Unknown...?', context);
@@ -89,6 +93,7 @@ export class ObjectSynchronizer {
     }
     ObjectStore.instance.add(newObject, false);
     newObject.apply(context);
+    return newObject;
   }
 
   private sendCatalog(sendTo: PeerId) {
@@ -168,18 +173,18 @@ export class ObjectSynchronizer {
   private getTargetPeerId(): PeerId {
     let min = 9999;
     let selectPeerId: PeerId = null;
-    let peerContexts = Network.peerContexts;
+    let peers = Network.peers;
 
-    for (let i = peerContexts.length - 1; 0 <= i; i--) {
+    for (let i = peers.length - 1; 0 <= i; i--) {
       let rand = Math.floor(Math.random() * (i + 1));
-      [peerContexts[i], peerContexts[rand]] = [peerContexts[rand], peerContexts[i]];
+      [peers[i], peers[rand]] = [peers[rand], peers[i]];
     }
 
-    for (let peerContext of peerContexts) {
-      let tasks = this.peerMap.get(peerContext.peerId);
-      if (peerContext.isOpen && tasks && tasks.length < min) {
+    for (let peer of peers) {
+      let tasks = this.peerMap.get(peer.peerId);
+      if (peer.isOpen && tasks && tasks.length < min) {
         min = tasks.length;
-        selectPeerId = peerContext.peerId;
+        selectPeerId = peer.peerId;
       }
     }
     return selectPeerId;
