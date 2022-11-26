@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import GameSystemClass from 'bcdice/lib/game_system';
 
-import { ChatMessage, ChatMessageContext } from '@udonarium/chat-message';
+import { ChatMessage, ChatMessageContext, ChatMessageTargetContext } from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
@@ -118,8 +118,7 @@ export class ChatMessageService {
   }
 
 
-  // 本家からachieNum?: number color? :string を追加
-  sendMessage(chatTab: ChatTab, text: string, gameSystem: GameSystemClass | null, sendFrom: string, sendTo?: string, tachieNum?: number, color?: string): ChatMessage {
+  sendMessage(chatTab: ChatTab, text: string, gameSystem: GameSystemClass | null, sendFrom: string, sendTo?: string, tachieNum?: number, color?: string, messageTargetContext?: ChatMessageTargetContext[]): ChatMessage {
 
     let img;
     let imgIndex;
@@ -158,8 +157,9 @@ export class ChatMessageService {
       text: text,
       imagePos: this.findImagePos(sendFrom),  //lily
       messColor: _color,  //lily
-      sendFrom: sendFrom  //lily
+      sendFrom: sendFrom,  //lily
     };
+
     console.log(text + ' ' + sendFrom + ' ' + sendTo + ' ' + tachieNum);
     this.setLastControlInfoToPeer(sendFrom, this.findImageIdentifier(sendFrom, imgIndex), tachieNum, sendTo);
 
@@ -199,7 +199,7 @@ export class ChatMessageService {
         }
       }
     }
-    return chatTab.addMessage(chatMessage);
+    return chatTab.addMessage(chatMessage, messageTargetContext ? messageTargetContext : null);
   }
 
   private findId(identifier: string): string {

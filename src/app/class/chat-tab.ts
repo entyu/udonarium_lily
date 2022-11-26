@@ -1,4 +1,4 @@
-import { ChatMessage, ChatMessageContext } from './chat-message';
+import { ChatMessage, ChatMessageContext, ChatMessageTargetContext } from './chat-message';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
@@ -123,7 +123,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
     }
   }
 
-  addMessage(message: ChatMessageContext): ChatMessage {
+  addMessage(message: ChatMessageContext , messageTargetContext ? :ChatMessageTargetContext[] ): ChatMessage {
     message.tabIdentifier = this.identifier;
 
     let chat = new ChatMessage();
@@ -179,7 +179,7 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
     EventSystem.trigger('DICE_TABLE_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
 
-    EventSystem.trigger('RESOURCE_EDIT_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
+    EventSystem.trigger('RESOURCE_EDIT_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier, messageTargetContext: messageTargetContext ? messageTargetContext : null});
 
     // 2021年4月実装のえいぷりるコマンド判定
     EventSystem.trigger('APRIL_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });

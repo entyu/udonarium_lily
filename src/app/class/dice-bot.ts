@@ -2,7 +2,7 @@ import GameSystemClass from 'bcdice/lib/game_system';
 import { GameSystemInfo } from 'bcdice/lib/bcdice/game_system_list.json';
 
 import BCDiceLoader from './bcdice/bcdice-loader';
-import { ChatMessage, ChatMessageContext } from './chat-message';
+import { ChatMessage, ChatMessageContext, ChatMessageTargetContext } from './chat-message';
 import { ChatTab } from './chat-tab';
 import { SyncObject } from './core/synchronize-object/decorator';
 import { GameObject } from './core/synchronize-object/game-object';
@@ -288,8 +288,19 @@ export class DiceBot extends GameObject {
 
         const text: string = StringUtil.toHalfWidth(chatMessage.text);
         const gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
+        
+        console.log('リソース操作判定');
+        console.log();
+        if (event.data.messageTargetContext != null){
+          
+          console.log('------------------');
+          for (let context of event.data.messageTargetContext){
+            console.log(context.text + ' '+ context.object.name);
+          }
+          console.log('------------------');
+        }
 
-        this.checkResourceEditCommand( chatMessage );
+        this.checkResourceEditCommand( chatMessage , event.data.messageTargetContext ? event.data.messageTargetContext : []);
         return;
       })
 
@@ -507,7 +518,7 @@ export class DiceBot extends GameObject {
     }
   }
 
-  private checkResourceEditCommand( originalMessage: ChatMessage ){
+  private checkResourceEditCommand( originalMessage: ChatMessage , messageTargetContext: ChatMessageTargetContext[]){
 
     let text = ' ' + originalMessage.text;
     let isMatch = text.match(/(\s[sSｓＳ][tTｔＴ]?[:：&＆])/i) ? true : false;
@@ -538,7 +549,8 @@ export class DiceBot extends GameObject {
         buffCommand = buffCommand.concat(resultBuff);
       }
     }
-
+    
+    console.log( 'リソース操作 messageTargetContext.length>' + messageTargetContext.length);
     console.log( 'checkResourceEditCommand' + resourceCommand);
     this.resourceEditProcess(sendFromObject, targetObjects, resourceCommand , buffCommand, originalMessage , isSecret);
   }
@@ -637,33 +649,36 @@ export class DiceBot extends GameObject {
     return true;
   }
 
+  defaultResourceEdit(): ResourceEdit{
+    let oneResourceEdit: ResourceEdit = {
+      target: '',
+      operator: '',
+      diceResult: '',
+      command: '',
+      replace: '',
+      isDiceRoll: false,
+      calcAns: 0,
+      nowOrMax: 'now',
+      option : null,
+      object : null,
+      targeted : false
+    };
+    return oneResourceEdit;
+  }
+
   async resourceEditProcess(sendFromObject , objects: GameCharacter[], resourceCommand: string[], buffCommand: string[], originalMessage: ChatMessage, isSecret: Boolean){
 
     const allEditList: ResourceEdit[] = [];
     const gameSystem = await DiceBot.loadGameSystemAsync(originalMessage.tags ? originalMessage.tags[0] : '');
 
+    let targetObjects: GameCharacter[] = [];
     for ( const oneText of resourceCommand ){
       let targeted = oneText.match(/^t:/i) ? true :false;
       let obj :GameCharacter;
       if (targeted) {
         for(const object of objects) {
-          let oneResourceEdit: ResourceEdit = {
-            target: '',
-            operator: '',
-            diceResult: '',
-            command: '',
-            replace: '',
-            isDiceRoll: false,
-            calcAns: 0,
-            nowOrMax: 'now',
-            option : null,
-            object : null,
-            targeted : false
-          };
+          let oneResourceEdit: ResourceEdit = this.defaultResourceEdit();
           if ( !this.resourceCommandToEdit(oneResourceEdit, oneText, object, targeted) )return;
-          
-          console.log('oneResourceEditチェック' +oneResourceEdit.object.name);
-          
           if (oneResourceEdit.operator != '>') {
             // ダイスロール及び四則演算
             try {
@@ -686,21 +701,8 @@ export class DiceBot extends GameObject {
           return;
         }else{
           obj = sendFromObject;
-          let oneResourceEdit: ResourceEdit = {
-            target: '',
-            operator: '',
-            diceResult: '',
-            command: '',
-            replace: '',
-            isDiceRoll: false,
-            calcAns: 0,
-            nowOrMax: 'now',
-            option : null,
-            object : null,
-            targeted : false
-          };
+          let oneResourceEdit: ResourceEdit = this.defaultResourceEdit();
           if ( !this.resourceCommandToEdit(oneResourceEdit, oneText, obj, targeted) )return;
-          console.log('oneResourceEditチェック2 ' +oneResourceEdit.object.name);
           if (oneResourceEdit.operator != '>') {
             // ダイスロール及び四則演算
             try {

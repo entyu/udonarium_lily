@@ -8,6 +8,14 @@ import { ChatTab } from '@udonarium/chat-tab';
 import { ChatTabList } from '@udonarium/chat-tab-list';
 import { ObjectStore } from './core/synchronize-object/object-store';
 
+import { GameCharacter } from '@udonarium/game-character';
+
+
+export interface ChatMessageTargetContext {
+  text: string;
+  object: GameCharacter;
+}
+
 export interface ChatMessageContext {
   identifier?: string;
   tabIdentifier?: string;
@@ -24,7 +32,9 @@ export interface ChatMessageContext {
   imagePos?: number;
   messColor?: string;
   sendFrom?: string; //lily
+
 }
+
 
 @SyncObject('chat')
 export class ChatMessage extends ObjectNode implements ChatMessageContext {
@@ -39,6 +49,8 @@ export class ChatMessage extends ObjectNode implements ChatMessageContext {
   @SyncVar() messColor: string;
   @SyncVar() sendFrom: string;
   @SyncVar() fixd: boolean = false;
+
+  targetInfo: ChatMessageTargetContext[];
 
   get tabIdentifier(): string { return this.parent.identifier; }
   get text(): string { return <string>this.value }
