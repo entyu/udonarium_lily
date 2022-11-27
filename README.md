@@ -41,11 +41,13 @@ https://github.com/TK11235/udonarium
 以下のファイルをダウンロードして解凍し、Webサーバに配置してください。  
 v1.05.0からYouTubeカットイン機能があります。YouTubeの規約もご確認ください。
 
-最新版v1.08.1　
+最新版v1.09.0　
 
-https://github.com/entyu/udonarium_lily/releases/download/v1.08.1/udonarium_lily-v1.08.1.zip
+https://github.com/entyu/udonarium_lily/releases/download/v1.09.0/udonarium_lily-v1.09.0.zip
 
 旧バージョン
+
+https://github.com/entyu/udonarium_lily/releases/download/v1.08.1/udonarium_lily-v1.08.1.zip
 
 https://github.com/entyu/udonarium_lily/releases/download/v1.08.0/udonarium_lily-v1.08.0.zip
 
