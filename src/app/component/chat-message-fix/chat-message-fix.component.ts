@@ -94,7 +94,9 @@ export class ChatMessageFixComponent implements OnInit, OnDestroy {
     }
   }
 
-  fix(){
+  fix(event: KeyboardEvent) {
+    if (event) event.preventDefault();
+    if (event && event.keyCode !== 13) return;
     if (this.chatMessage.text != this.text){
       this.chatMessage.text = this.text;
       this.chatMessage.fixd = true;
