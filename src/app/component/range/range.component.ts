@@ -297,13 +297,13 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     menuArray.push(
       this.isLock
         ? {
-          name: '固定解除', action: () => {
+          name: '☑ 固定', action: () => {
             this.isLock = false;
             SoundEffect.play(PresetSound.unlock);
           }
         }
         : {
-          name: '固定する', action: () => {
+          name: '☐ 固定', action: () => {
             this.isLock = true;
             SoundEffect.play(PresetSound.lock);
           }
@@ -327,6 +327,50 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       );
     }
     */
+    if (this.range.type == 'LINE' || this.range.type == 'CORN') {
+      menuArray.push(
+        this.range.subDivisionSnapPolygonal
+        ? {
+          name: '☑ 細かい角度で回転', action: () => {
+            this.range.subDivisionSnapPolygonal = false;
+          }
+        } :
+        {
+          name: '☐ 細かい角度で回転', action: () => {
+            this.range.subDivisionSnapPolygonal = true;
+          }
+        }
+      );
+    }
+    menuArray.push(
+      !this.range.fillOutLine
+      ? {
+        name: '☑ 有効なグリッドを表示', action: () => {
+          this.range.fillOutLine = true;
+        }
+      } :
+      {
+        name: '☐ 有効なグリッドを表示', action: () => {
+          this.range.fillOutLine = false;
+        }
+      }
+    );
+
+    menuArray.push(
+      {
+        name: '有効グリッド表示をずらす', action: null, 
+        subActions: [
+          this.range.offSetX 
+          ? { name: '☑ 横(左右) 方向', action: () => { this.range.offSetX = false; } }
+          : { name: '☐ 横(左右) 方向', action: () => { this.range.offSetX = true; }},
+          this.range.offSetY 
+          ? { name: `☑ 縦(上下) 方向`, action: () => { this.range.offSetY = false; } }
+          : { name: `☐ 縦(上下) 方向`, action: () => { this.range.offSetY = true; } },
+        ],
+        disabled: this.range.fillOutLine, level: 2
+      }
+    );
+
     menuArray.push( ContextMenuSeparator);
     menuArray.push(
       { name: '射程・範囲を編集', action: () => { this.showDetail(this.range); } }

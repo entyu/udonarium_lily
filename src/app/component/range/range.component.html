@@ -8,7 +8,7 @@
     </div>
   </div>
   <div class="component-content is-3d" 
-    appRotable [rotable.option]="rotableOption" [rotable.polygonal]="240" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLock" 
+    appRotable [rotable.option]="rotableOption" [rotable.polygonal]="this.range.subDivisionSnapPolygonal ? 240 : 24" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLock" 
     style="transform:rotateZ(0deg);" #rotate>
 <!-- <div *ngIf="isLock" class="lock-icon is-center">
       <i class="material-icons">lock</i>

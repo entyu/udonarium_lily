@@ -8,10 +8,10 @@
         <terrain class="is-3d" *ngFor="let terrain of terrains; trackBy: trackByGameObject" [style.z-index]="terrain.height > 0 ? 0 : 1" [terrain]="terrain"></terrain>
       </div>
       <game-table-mask class="is-3d" *ngFor="let mask of tableMasks; trackBy: trackByGameObject" [gameTableMask]="mask"></game-table-mask>
-      <range class="is-3d" *ngFor="let range of ranges; trackBy: trackByGameObject" [range]="range"></range>
       <text-note class="is-3d" *ngFor="let textNote of textNotes; trackBy: trackByGameObject" [textNote]="textNote" [appTooltip]="textNote" [ngStyle]="{'z-index' : textNote.zindex}"></text-note>
       <card-stack class="is-3d" *ngFor="let cardStack of cardStacks; trackBy: trackByGameObject" [cardStack]="cardStack" [appTooltip]="cardStack" [ngStyle]="{'z-index' : cardStack.zindex, 'transform': 'translateZ(' + (cardStack.zindex * 0.001) +'px)'}"></card-stack>
       <card class="is-3d" *ngFor="let card of cards; trackBy: trackByGameObject" [card]="card" [appTooltip]="card" [ngStyle]="{'z-index' : card.zindex, 'transform': 'translateZ(' + (card.zindex * 0.001) +'px)'}"></card>
+      <range class="is-3d" *ngFor="let range of ranges; trackBy: trackByGameObject" [range]="range"></range>
       <dice-symbol class="is-3d" *ngFor="let diceSymbol of diceSymbols; trackBy: trackByGameObject" [diceSymbol]="diceSymbol" [appTooltip]="diceSymbol"></dice-symbol>
       <ng-container *ngFor="let character of characters; trackBy: trackByGameObject"><ng-container *ngIf="character && (character.isVisible || isGMMode)"><game-character class="is-3d" [style.display]="character.isLoaded ? '' : 'none'" [gameCharacter]="character" [appTooltip]="character"></game-character></ng-container></ng-container>
       <peer-cursor *ngFor="let cursor of peerCursors; trackBy: trackByGameObject" class="is-3d" [cursor]="cursor" [style.display]="isCursorHidIn(cursor) && !isGMMode ? 'none' : ''"></peer-cursor>
