@@ -1,0 +1,31 @@
+<div class="component" [ngClass]="{'is-grab': !isLock}" 
+  [style.width.px]="0" [style.height.px]="0" [style.clip-path]="clipPathText"
+  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
+  <div style="position: absolute" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
+    <div class="image-box">
+      <canvas class="is-fill" #gridCanvas></canvas>
+      <canvas class="is-fill" #rangeCanvas></canvas>
+    </div>
+  </div>
+  <div class="component-content is-3d" 
+    appRotable [rotable.option]="rotableOption" [rotable.polygonal]="240" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLock" 
+    style="transform:rotateZ(0deg);" #rotate>
+<!-- <div *ngIf="isLock" class="lock-icon is-center">
+      <i class="material-icons">lock</i>
+    </div> -->
+    <ng-container *ngIf="(range.type != 'CIRCLE') && (range.type != 'SQUARE') && (range.type != 'DIAMOND')"> 
+      <div style="position: absolute; width: 28px">
+        <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style="position:absolute" 
+          [style.left.px]="( 1 * range.length) * gridSize">
+          <i class="material-icons">{{ isLock ? 'lock' : 'autorenew' }}</i>
+        </div>
+        <div class="rotate-grab of-corn-bottom rotate-grab-icon is-3d will-change">
+          <i class="material-icons">{{ isLock ? 'lock' : 'autorenew' }}</i>
+        </div>
+        <div class="rotate-grab of-corn-top rotate-grab-icon is-3d will-change">
+          <i class="material-icons">{{ isLock ? 'lock' : 'autorenew' }}</i>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

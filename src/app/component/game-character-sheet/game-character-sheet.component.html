@@ -21,7 +21,9 @@
     <button [disabled]="tabletopObject.faceIcons?.length >= MAX_IMAGE_ICON_COUNT" (click)="openModal('faceIcon')">顔IC{{ (tabletopObject.faceIcons?.length > 0) ? '追加' : '設定' }}</button>
   </ng-container>
   <ng-container *ngSwitchDefault>
-    <button (click)="openModal('imageIdentifier', tabletopObject.imageFile && tabletopObject.imageFile.url.length > 0)">画像変更</button>
+    <ng-container *ngIf="tabletopObject.aliasName !== 'range'">
+      <button (click)="openModal('imageIdentifier', tabletopObject.imageFile && tabletopObject.imageFile.url.length > 0)">画像変更</button>
+    </ng-container>
   </ng-container>
 </ng-container>
 <button (click)="clone()">コピーを作る</button>
@@ -81,7 +83,7 @@
     <div class="flex-item">
       <div class="table">
         <div class="table-row" game-data-element [gameDataElement]="tabletopObject.commonDataElement" [tableTopObjectName]="tableTopObjectName" [isTagLocked]="true"
-          [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand && !tabletopObject.isGMMode" [isNoLogging]="isNoLogging" [descriptionType]="tabletopObject.aliasName"></div>
+          [isHideText]="tabletopObject.aliasName === 'card' && !tabletopObject.isFront && !tabletopObject.isHand && !tabletopObject.isGMMode" [isNoLogging]="isNoLogging" [descriptionType]="descriptionType"></div>
       </div>
       <div *ngIf="tabletopObject.aliasName === 'character'" style="margin-top: 3px; text-align: right">
         <button style="font-size: 11px; color: #444;" (click)="showChatPalette()">チャットパレットを表示</button>

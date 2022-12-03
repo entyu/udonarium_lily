@@ -25,18 +25,32 @@
     </div>
     <div class="table-cell">
       <ng-container *ngIf="isCommonValue">
-        <ng-container *ngIf="name == 'opacity'">
-          <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
-            [(ngModel)]="currentValue" type="range" title="{{currentValue}}" min="0" max="100" step="1" />
-          <br />
-          <input style="margin-left: 3.5em; width:4em; text-align:right;" type="number" min="0" max="100" step="1" size="1" [(ngModel)]="currentValue" placeholder="Opacity" /><b class="move" style="font-size: small">%</b>
-        </ng-container>
-        <ng-container *ngIf="name != 'opacity'">
-          <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
-            [(ngModel)]="value" type="range" title="{{value}}" min="{{name === 'altitude' ? -12 : name === 'fontsize' ? 1 : 0}}" max="{{name === 'fontsize' ? 128 : 12}}" step="{{name === 'fontsize' ? 1 : 0.5}}" />
-          <br />
-          <input style="width:35%; max-width:4em; text-align:right;" type="number" min="{{name === 'altitude' ? -24 : name === 'fontsize' ? 1 : 0}}" step="{{name === 'fontsize' ? 1 : 0.1}}" size="1" [(ngModel)]="value" placeholder="Value" />
-          <dev *ngIf="descriptionType === 'character' && name === 'height'" style="color: #444; font-family: Cambria, Georgia; font-size: 0.9rem; display: inline-block; margin-left: 3px"><label><input type="checkbox" [(ngModel)]="currentValue" checked="{{currentValue ? 'checked' : ''}}" (change)="currentValue = (currentValue ? name : '')">× size</label></dev>
+        <ng-container *ngIf="isNotApplicable"><span style="font-size: 0.8rem">※適用されません</span></ng-container>
+        <ng-container *ngIf="!isNotApplicable">
+          <ng-container [ngSwitch]="gameDataElement.name">
+            <ng-container *ngSwitchCase="'opacity'">
+              <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
+                [(ngModel)]="currentValue" type="range" title="{{currentValue}}" min="0" max="100" step="1" />
+              <br />
+              <input style="margin-left: 3.5em; width:4em; text-align:right;" type="number" min="0" max="100" step="1" size="1" [(ngModel)]="currentValue" placeholder="Opacity" /><b class="move" style="font-size: small">%</b>
+            </ng-container>
+            <ng-container *ngSwitchCase="'color'">
+              <ng-container *ngIf="gameDataElement.type === 'colors'">
+                <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 6.5em" [style.color]="value" [style.background-color]="currentValue"><input type="color" style="width: 1em" [(ngModel)]="value" /><div style="display: inline-block; box-sizing: border-box; width: calc(100% - 1em); text-align: center">{{value}}</div></label>
+                <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 7.5em" [style.color]="value" [style.background-color]="currentValue"><input type="color" style="width: 1em" [(ngModel)]="currentValue" /><div style="display: inline-block; box-sizing: border-box; width: calc(100% - 1em); text-align: center">({{currentValue}})</div></label>
+              </ng-container>
+              <ng-container *ngIf="gameDataElement.type === 'color'">
+                <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 6.5em" [style.color]="value"><input type="color" style="width: 1em" [(ngModel)]="value" />{{value}}</label>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
+                [(ngModel)]="value" type="range" title="{{value}}" min="{{name === 'altitude' ? -12 : name === 'fontsize' ? 1 : 0}}" max="{{name === 'fontsize' ? 128 : 12}}" step="{{name === 'fontsize' ? 1 : 0.5}}" />
+              <br />
+              <input style="width:35%; max-width:4em; text-align:right;" type="number" min="{{name === 'altitude' ? -24 : name === 'fontsize' ? 1 : 0}}" step="{{name === 'fontsize' ? 1 : 0.1}}" size="1" [(ngModel)]="value" placeholder="Value" />
+              <dev *ngIf="descriptionType === 'character' && name === 'height'" style="color: #444; font-family: Cambria, Georgia; font-size: 0.9rem; display: inline-block; margin-left: 3px"><label><input type="checkbox" [(ngModel)]="currentValue" checked="{{currentValue ? 'checked' : ''}}" (change)="currentValue = (currentValue ? name : '')">× size</label></dev>
+            </ng-container>
+          </ng-container>
         </ng-container>
       </ng-container>
       <ng-container *ngIf="!isCommonValue">
@@ -85,13 +99,6 @@
               <input type="url" style="width:calc(100% - 1.6rem); min-width:10px;" size="1" [(ngModel)]="value" placeholder="https://www.example.com" />
               <button style="width: 1.6rem" [attr.disabled]="!stringUtil.validUrl(value) ? '' : null" (click)="stringUtil.validUrl(value) ? openUrl(value) : false"><i class="material-icons" style="font-size: 1.0rem">{{ !stringUtil.validUrl(value) ? 'link_off' : (stringUtil.sameOrigin(value) ? 'link' : 'open_in_new') }}</i></button>
             </span>
-          </ng-container>
-          <ng-container *ngSwitchCase="'colors'">
-            <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 6.5em" [style.color]="value" [style.background-color]="currentValue"><input type="color" style="width: 1em" [(ngModel)]="value" />{{value}}</label>
-            <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 7.5em" [style.color]="value" [style.background-color]="currentValue"><input type="color" style="width: 1em" [(ngModel)]="currentValue" />({{currentValue}})</label>
-          </ng-container>
-          <ng-container *ngSwitchCase="'color'">
-            <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 6.5em" [style.color]="value"><input type="color" style="width: 1em" [(ngModel)]="value" />{{value}}</label>
           </ng-container>
           <ng-container *ngSwitchDefault>
             <!-- size属性がないと小さくならない -->

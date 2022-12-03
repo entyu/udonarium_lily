@@ -74,6 +74,7 @@ import { YouTubePlayerModule } from "@angular/youtube-player";
 import { CardListImageComponent } from './component/card-list-image/card-list-image.component';
 import { LoggingInputDirective } from './directive/logging-input.directive';
 import { ConfirmationComponent } from './component/confirmation/confirmation.component';
+import { RangeComponent } from './component/range/range.component';
 
 @NgModule({
   declarations: [
@@ -130,7 +131,8 @@ import { ConfirmationComponent } from './component/confirmation/confirmation.com
     ChatLogOutputComponent,
     CardListImageComponent,
     LoggingInputDirective,
-    ConfirmationComponent
+    ConfirmationComponent,
+    RangeComponent
   ],
   imports: [
     BrowserModule,

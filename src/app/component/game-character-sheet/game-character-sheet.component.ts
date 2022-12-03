@@ -22,6 +22,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
+import { RangeArea } from '@udonarium/range';
 
 @Component({
   selector: 'game-character-sheet',
@@ -201,6 +202,11 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     if (!tabletopObject) return ImageFile.Empty;
     if (tabletopObject instanceof Card && this.isVisible) return tabletopObject.frontImage;
     return tabletopObject.imageFile;
+  }
+
+  get descriptionType():string {
+    if (this.tabletopObject instanceof RangeArea && !this.tabletopObject.isApplyWidth) return 'range-not-width';
+    return this.tabletopObject.aliasName;
   }
 
   async saveToXML() {

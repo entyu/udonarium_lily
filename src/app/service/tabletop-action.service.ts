@@ -17,6 +17,7 @@ import { ContextMenuAction } from './context-menu.service';
 import { PointerCoordinate } from './pointer-device.service';
 
 import { ImageTag } from '@udonarium/image-tag';
+import { RangeArea } from '@udonarium/range';
 
 @Injectable({
   providedIn: 'root'
@@ -199,6 +200,37 @@ export class TabletopActionService {
     return cardStack;
   }
 
+  createRangeArea(position: PointerCoordinate, typeName: string): RangeArea {
+    let range;
+    switch (typeName) {
+      case 'LINE':
+        range = RangeArea.create('射程・範囲（直線）', 1, 6, 100);
+        break;
+      case 'CIRCLE':
+        range = RangeArea.create('射程・範囲（円）', 3, 3, 100);
+        break;
+      case 'SQUARE':
+        range = RangeArea.create('射程・範囲（正方形）', 3, 3, 100);
+        break;
+      case 'DIAMOND':
+        range = RangeArea.create('射程・範囲（ダイヤモンド）', 3, 3, 100);
+        break;
+      case 'CORN':
+      default:
+        range = RangeArea.create('射程・範囲（錐形）', 6, 6, 100);
+        break;
+    }
+
+    range.location.x = position.x;
+    range.location.y = position.y;
+    range.posZ = position.z;
+    range.type = typeName;
+    let data = range.commonDataElement.getFirstElementByName('opacity');
+    //console.log( '射程範囲TEST' + data);
+    data.currentValue = 60;
+    return range;
+  }
+
   makeDefaultTable() {
     let gameTable = new GameTable('gameTable');
     let testBgFile: ImageFile = null;
@@ -288,6 +320,7 @@ export class TabletopActionService {
       this.getCreateBlankCardMenu(position),
       this.getCreateTrumpMenu(position),
       this.getCreateDiceSymbolMenu(position),
+      this.getCreateRangeMenu(position),
     ];
   }
 
@@ -369,6 +402,27 @@ export class TabletopActionService {
       });
     });
     return { name: 'ダイスを作成', action: null, subActions: subMenus };
+  }
+
+  private getCreateRangeMenu(position: PointerCoordinate): ContextMenuAction {
+    let dices: { menuName: string, typeName: string }[] = [
+      { menuName: '錐形', typeName: 'CORN'},
+      { menuName: '直線', typeName: 'LINE'},
+      { menuName: '円', typeName: 'CIRCLE'},
+      { menuName: '正方形', typeName: 'SQUARE'},
+      { menuName: 'ダイヤモンド', typeName: 'DIAMOND'},
+    ];
+    let subMenus: ContextMenuAction[] = [];
+
+    dices.forEach(item => {
+      subMenus.push({
+        name: item.menuName, action: () => {
+          this.createRangeArea(position, item.typeName);
+          SoundEffect.play(PresetSound.dicePut);
+        }
+      });
+    });
+    return { name: '射程・範囲を作成', action: null, subActions: subMenus };
   }
 
   private getViewTable(): GameTable {

@@ -10,6 +10,7 @@ import {
 import { EventSystem } from '@udonarium/core/system';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { DataElement } from '@udonarium/data-element';
+import { RangeArea } from '@udonarium/range';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { ModalService } from 'service/modal.service';
 
@@ -55,11 +56,17 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
         || this.gameDataElement.name === 'width'
         || this.gameDataElement.name === 'height'
         || this.gameDataElement.name === 'depth'
+        || this.gameDataElement.name === 'length'
         || this.gameDataElement.name === 'fontsize'
         || this.gameDataElement.name === 'opacity'
-        || this.gameDataElement.name === 'altitude');
+        || this.gameDataElement.name === 'altitude'
+        || this.gameDataElement.name === 'color');
     }
     return false;
+  }
+
+  get isNotApplicable(): boolean {
+    return this.isCommonValue && this.descriptionType === 'range-not-width' && this.gameDataElement.name === 'width';
   }
 
   get identifier(): string {

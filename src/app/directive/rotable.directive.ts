@@ -32,6 +32,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     this.transformCssOffset = option.transformCssOffset != null ? option.transformCssOffset : this.transformCssOffset;
   }
   @Input('rotable.disable') isDisable: boolean = false;
+  @Input('rotable.polygonal') polygonal = 24;
   @Output('rotable.onstart') onstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('rotable.ondragstart') ondragstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('rotable.ondrag') ondrag: EventEmitter<PointerEvent> = new EventEmitter();
@@ -159,7 +160,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     e.stopPropagation();
     if (this.input.isDragging) this.ondragend.emit(e as PointerEvent);
     this.cancel();
-    this.snapToPolygonal();
+    this.snapToPolygonal(this.polygonal);
     this.onend.emit(e as PointerEvent);
   }
 
@@ -167,7 +168,7 @@ export class RotableDirective implements AfterViewInit, OnDestroy {
     if (this.isDisable) return this.cancel();
     if (e.cancelable) e.preventDefault();
     this.cancel();
-    this.snapToPolygonal();
+    this.snapToPolygonal(this.polygonal);
   }
 
   private calcRotate(pointer: PointerCoordinate, rotateOffset: number): number {
