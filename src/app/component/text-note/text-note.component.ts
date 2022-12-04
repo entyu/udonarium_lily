@@ -250,11 +250,11 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
         }),
         (this.isWhiteOut
           ? {
-            name: '☑ 背景画像を色抜き', action: () => {
+            name: '☑ 画像から色抜き', action: () => {
               this.isWhiteOut = false;
             }
           } : {
-            name: '☐ 背景画像を色抜き', action: () => {
+            name: '☐ 画像から色抜き', action: () => {
               this.isWhiteOut = true;
             }
           }),
