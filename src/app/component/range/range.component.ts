@@ -33,6 +33,9 @@ import { TabletopService } from 'service/tabletop.service';
 import { RangeRender, RangeRenderSetting, ClipAreaCorn, ClipAreaLine, ClipAreaSquare, ClipAreaDiamond} from './range-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
 import { TableSelecter } from '@udonarium/table-selecter';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
+import { StringUtil } from '@udonarium/core/system/util/string-util';
+import { ModalService } from 'service/modal.service';
+import { OpenUrlComponent } from 'component/open-url/open-url.component';
 
 @Component({
   selector: 'range',
@@ -221,6 +224,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     private coordinateService: CoordinateService,
 
     private tabletopService: TabletopService,
+
+    private modalService: ModalService,
   ) { }
 
   ngOnInit() {
@@ -375,6 +380,30 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     menuArray.push(
       { name: '射程・範囲を編集', action: () => { this.showDetail(this.range); } }
     );
+    if (this.range.getUrls().length > 0) {
+      menuArray.push(
+        {
+          name: '参照URLを開く', action: null,
+          subActions: this.range.getUrls().map((urlElement) => {
+            const url = urlElement.value.toString();
+            return {
+              name: urlElement.name ? urlElement.name : url,
+              action: () => {
+                if (StringUtil.sameOrigin(url)) {
+                  window.open(url.trim(), '_blank', 'noopener');
+                } else {
+                  this.modalService.open(OpenUrlComponent, { url: url, title: this.range.name, subTitle: urlElement.name });
+                } 
+              },
+              disabled: !StringUtil.validUrl(url),
+              error: !StringUtil.validUrl(url) ? 'URLが不正です' : null,
+              isOuterLink: StringUtil.validUrl(url) && !StringUtil.sameOrigin(url)
+            };
+          })
+        }
+      );
+      menuArray.push(ContextMenuSeparator);
+    }
     menuArray.push(
       {
         name: 'コピーを作る', action: () => {
