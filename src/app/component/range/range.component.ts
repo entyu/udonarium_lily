@@ -345,12 +345,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     menuArray.push(
       !this.range.fillOutLine
       ? {
-        name: '☑ 有効なグリッドを表示', action: () => {
+        name: '☑ 範囲をグリッドで表示', action: () => {
           this.range.fillOutLine = true;
         }
       } :
       {
-        name: '☐ 有効なグリッドを表示', action: () => {
+        name: '☐ 範囲をグリッドで表示', action: () => {
           this.range.fillOutLine = false;
         }
       }
@@ -358,7 +358,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     menuArray.push(
       {
-        name: '有効グリッド表示をずらす', action: null, 
+        name: 'グリッド表示をずらす', action: null, 
         subActions: [
           this.range.offSetX 
           ? { name: '☑ 横(左右) 方向', action: () => { this.range.offSetX = false; } }
