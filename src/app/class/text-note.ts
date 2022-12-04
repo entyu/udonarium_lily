@@ -10,6 +10,7 @@ export class TextNote extends TabletopObject {
   @SyncVar() password: string = '';
   @SyncVar() isUpright: boolean = true;
   @SyncVar() isLocked: boolean = false;
+  @SyncVar() isWhiteOut: boolean = false;
 
   get width(): number { return this.getCommonValue('width', 1); }
   get height(): number { return this.getCommonValue('height', 1); }
@@ -17,6 +18,10 @@ export class TextNote extends TabletopObject {
   get title(): string { return this.getCommonValue('title', ''); }
   get text(): string { return this.getCommonValue('text', ''); }
   set text(text: string) { this.setCommonValue('text', text); }
+  get color(): string {
+    return this.getCommonValue('color', '#444444');
+  }
+  set color(color: string) { this.setCommonValue('color', color); }
 
   toTopmost() {
     moveToTopmost(this);
@@ -31,6 +36,7 @@ export class TextNote extends TabletopObject {
     object.commonDataElement.appendChild(DataElement.create('fontsize', fontSize, {}, 'fontsize_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('title', title, {}, 'title_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('text', text, { type: 'note', currentValue: text }, 'text_' + object.identifier));
+    object.commonDataElement.appendChild(DataElement.create('color', "#444444", { type: 'color' }, 'ccolor_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + object.identifier));
     object.initialize();
 

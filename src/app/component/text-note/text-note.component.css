@@ -84,6 +84,17 @@
   background-size: 100% 100%;
 }
 
+.is-bg-filter::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background: rgba(255, 255, 255, 0.7);
+  transition: background-color .2s;
+}
+
 .is-bg-color {
   box-sizing: border-box;
   color: #444;

@@ -31,6 +31,10 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get title(): string { return this.textNote.title; }
   get text(): string { this.calcFitHeightIfNeeded(); return this.textNote.text; }
   set text(text: string) { this.calcFitHeightIfNeeded(); this.textNote.text = text; }
+
+  get color(): string { return this.textNote.color; }
+  set color(color: string) { this.textNote.color = color; }
+
   get fontSize(): number { this.calcFitHeightIfNeeded(); return this.textNote.fontSize; }
   get imageFile(): ImageFile { return this.textNote.imageFile; }
   get rotate(): number { return this.textNote.rotate; }
@@ -58,6 +62,9 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get isLocked(): boolean { return this.textNote.isLocked; }
   set isLocked(isLocked: boolean) { this.textNote.isLocked = isLocked; }
+
+  get isWhiteOut(): boolean { return this.textNote.isWhiteOut; }
+  set isWhiteOut(isWhiteOut: boolean) { this.textNote.isWhiteOut = isWhiteOut; }
 
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
@@ -241,6 +248,16 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
             this.isUpright = true;
           }
         }),
+        (this.isWhiteOut
+          ? {
+            name: '☑ 背景画像を色抜き', action: () => {
+              this.isWhiteOut = false;
+            }
+          } : {
+            name: '☐ 背景画像を色抜き', action: () => {
+              this.isWhiteOut = true;
+            }
+          }),
       ContextMenuSeparator,
       (this.isAltitudeIndicate
         ? {
@@ -356,7 +373,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = '共有メモ設定';
     if (gameObject.title.length) title += ' - ' + gameObject.title;
-    let option: PanelOption = { title: title, left: coordinate.x - 350, top: coordinate.y - 200, width: 700, height: 450 };
+    let option: PanelOption = { title: title, left: coordinate.x - 350, top: coordinate.y - 200, width: 560, height: 470 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }
