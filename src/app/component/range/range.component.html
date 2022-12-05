@@ -10,9 +10,9 @@
   <div class="component-content is-3d" 
     appRotable [rotable.option]="rotableOption" [rotable.polygonal]="this.range.subDivisionSnapPolygonal ? 240 : 24" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLock" 
     style="transform:rotateZ(0deg);" #rotate>
-<!-- <div *ngIf="isLock" class="lock-icon is-center">
+    <div *ngIf="isLock && ((range.type == 'CIRCLE') || (range.type == 'SQUARE') || (range.type == 'DIAMOND'))" class="lock-icon is-center">
       <i class="material-icons">lock</i>
-    </div> -->
+    </div>
     <ng-container *ngIf="(range.type != 'CIRCLE') && (range.type != 'SQUARE') && (range.type != 'DIAMOND')"> 
       <div style="position: absolute; width: 28px">
         <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style="position:absolute" 
