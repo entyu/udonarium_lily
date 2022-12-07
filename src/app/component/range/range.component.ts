@@ -88,7 +88,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         text = this.gripSquare;
         break;
       case 'DIAMOND':
-        text = this.clipDiamond;
+        text = this.gripDiamond;
         break;
       case 'CORN':
       default:
@@ -158,10 +158,16 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public get clipDiamond() {
-    let clipDiamond = 'polygon(' + this.clipAreaDiamond.clip01x + 'px ' + this.clipAreaDiamond.clip01y + 'px, ';
-    clipDiamond += this.clipAreaDiamond.clip02x + 'px ' + this.clipAreaDiamond.clip02y + 'px, ';
-    clipDiamond += this.clipAreaDiamond.clip03x + 'px ' + this.clipAreaDiamond.clip03y + 'px, ';
-    clipDiamond += this.clipAreaDiamond.clip04x + 'px ' + this.clipAreaDiamond.clip04y + 'px)';
+    return this.clipDiamondPath(this.clipAreaDiamond);
+  }
+  public get gripDiamond() {
+    return this.clipDiamondPath(this.gripAreaDiamond);
+  }
+  private clipDiamondPath(clipAreaDiamond: ClipAreaDiamond) {
+    let clipDiamond = 'polygon(' + clipAreaDiamond.clip01x + 'px ' + clipAreaDiamond.clip01y + 'px, ';
+    clipDiamond += clipAreaDiamond.clip02x + 'px ' + clipAreaDiamond.clip02y + 'px, ';
+    clipDiamond += clipAreaDiamond.clip03x + 'px ' + clipAreaDiamond.clip03y + 'px, ';
+    clipDiamond += clipAreaDiamond.clip04x + 'px ' + clipAreaDiamond.clip04y + 'px)';
     return clipDiamond;
   }
 
@@ -248,7 +254,6 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     clip04x: 100, // 右下
     clip04y: 0,
   }
-
   private gripAreaSquare: ClipAreaSquare = {
     clip01x: 0, // 左下
     clip01y: 0,
@@ -270,7 +275,16 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     clip04x: 100, // 右下
     clip04y: 0,
   }
-
+  private gripAreaDiamond: ClipAreaDiamond = {
+    clip01x: 0, // 左下
+    clip01y: 0,
+    clip02x: 0, // 左上
+    clip02y: -50,
+    clip03x: 100, // 右上
+    clip03y: -50,
+    clip04x: 100, // 右下
+    clip04y: 0,
+  }
 
   get tableSelecter(): TableSelecter { return this.tabletopService.tableSelecter; }
   get currentTable(): GameTable { return this.tabletopService.currentTable; }
@@ -620,6 +634,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'DIAMOND':
         this.clipAreaDiamond = render.renderDiamond(setting);
+        this.gripAreaDiamond = RangeRender.gripAreaPathDiamond(setting);
         break;
       case 'CORN':
       default:

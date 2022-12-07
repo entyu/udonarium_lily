@@ -14,7 +14,7 @@
       <div class="is-3d" style="position: absolute" [style.z-index]="isMoving ? 5 : 0" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
         <canvas class="is-fill is-3d" #rangeCanvas></canvas>
       </div>
-      <div class="component-content is-3d" style="z-index: 3"
+      <div class="component-content is-3d" style="z-index: 3" [style.opacity]="isMoving ? 0.7 : 1"
         appRotable [rotable.option]="rotableOption" [rotable.polygonal]="this.range.subDivisionSnapPolygonal ? 240 : 24" 
         (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLock" 
         style="transform:rotateZ(0deg);" #rotate>

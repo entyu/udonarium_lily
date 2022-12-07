@@ -633,14 +633,14 @@ export class RangeRender {
 
     // クリッピング座標
     // 根本から時計回りにクリップ範囲を定義
-    let clip01x = p1x - (gridSize * 1.2);
+    let clip01x = p1x - (gridSize * 2);
     let clip01y = 0;
     let clip02x = 0;
-    let clip02y = p2y - (gridSize * 1.2);
-    let clip03x = p3x + (gridSize * 1.2);
+    let clip02y = p2y - (gridSize * 2);
+    let clip03x = p3x + (gridSize * 2);
     let clip03y = 0;
     let clip04x = 0;
-    let clip04y = p4y + (gridSize * 1.2);
+    let clip04y = p4y + (gridSize * 2);
 
     let clip: ClipAreaSquare = {
       clip01x: clip01x, // 根本始点
@@ -675,18 +675,39 @@ export class RangeRender {
       for (let h = 0; h <= setting.areaHeight + 1 ; h++) {
         for (let w = 0; w <= setting.areaWidth + 1 ; w++) {
           let { gx, gy } = calcGridPosition(w, h, gridSize);
+          if (setting.fillType == 1) {
+            gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
+            gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
+            // console.log('hw' + h + ',' + w);
 
-          gcx = gx + gridOffX + (gridSize / 2) - offSetX_px;
-          gcy = gy + gridOffY + (gridSize / 2) - offSetY_px;
-          // console.log('hw' + h + ',' + w);
-
-          // 全部trueで内側にある
-          if(  this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
-            && this.chkOuterProduct(p2x, p2y, p3x, p3y, gcx, gcy)
-            && this.chkOuterProduct(p3x, p3y, p4x, p4y, gcx, gcy)
-            && this.chkOuterProduct(p4x, p4y, p1x, p1y, gcx, gcy)
-            ){
-            this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+            // 全部trueで内側にある
+            if(  this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
+              && this.chkOuterProduct(p2x, p2y, p3x, p3y, gcx, gcy)
+              && this.chkOuterProduct(p3x, p3y, p4x, p4y, gcx, gcy)
+              && this.chkOuterProduct(p4x, p4y, p1x, p1y, gcx, gcy)
+              ){
+              this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+            }
+          } else {
+            /* 富豪的プログラミング */
+            let hit = 0;
+            for (let i = 0; i < gridSize; i++) {
+              for (let j = 0; j < gridSize; j++) {
+                gcx = gx + gridOffX + i - offSetX_px + 0.5;
+                gcy = gy + gridOffY + j - offSetY_px + 0.5;
+                if (this.chkOuterProduct(p1x, p1y, p2x, p2y, gcx, gcy)
+                && this.chkOuterProduct(p2x, p2y, p3x, p3y, gcx, gcy)
+                && this.chkOuterProduct(p3x, p3y, p4x, p4y, gcx, gcy)
+                && this.chkOuterProduct(p4x, p4y, p1x, p1y, gcx, gcy)) {
+                  hit++;
+                }
+              }
+            }
+            if ((setting.fillType == 2 && hit >= 1)
+              || (setting.fillType == 3 && hit >= (gridSize * gridSize / 2))
+              || (setting.fillType == 4 && hit >= (gridSize * gridSize))) {
+              this.fillSquare(context, gx + gridOffX, gy + gridOffY, gridSize);
+            }
           }
         }
       }
