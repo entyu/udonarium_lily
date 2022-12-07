@@ -38,14 +38,16 @@
   color: #444;
   width: 25px;
   height: 25px;
+  visibility: hidden;
+}
+.component:hover .lock-icon, .component:active .lock-icon {
+  visibility: visible;
 }
 
 .is-center {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  top: -12.5px;
+  left: -12.5px;
   margin: auto;
 }
 
@@ -181,4 +183,12 @@
   bottom: 0;
   right: 0;
   margin: auto;
+}
+
+.is-moveing {
+  transform: translateZ(5px);
+}
+
+.is-3d {
+  transform-style: preserve-3d;
 }

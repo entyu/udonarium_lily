@@ -75,40 +75,85 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     return text;
   }
 
+  public get gripPathText() {
+    let text = '';
+    switch (this.range.type) {
+      case 'LINE':
+        text = this.gripLine;
+        break;
+      case 'CIRCLE':
+        text = this.gripCircle;
+        break;
+      case 'SQUARE':
+        text = this.gripSquare;
+        break;
+      case 'DIAMOND':
+        text = this.clipDiamond;
+        break;
+      case 'CORN':
+      default:
+        text = this.gripCorn;
+        break;
+    }
+    return text;
+  }
+
   public get clipCircle() {
     let clipSize = ( this.range.length + 1.5 ) * this.gridSize;
     let circle = 'circle(' + clipSize + 'px)';
     return circle;
   }
 
+  public get gripCircle() {
+    return 'circle(' + ((this.range.length > 1 ? this.range.length : 1) * this.gridSize) + 'px)';
+  }
+
   public get clipCorn() {
-    let clipCorn = 'polygon(' + this.clipAreaCorn.clip01x + 'px ' + this.clipAreaCorn.clip01y + 'px, ';
-    clipCorn += this.clipAreaCorn.clip02x + 'px ' + this.clipAreaCorn.clip02y + 'px, ';
-    clipCorn += this.clipAreaCorn.clip03x + 'px ' + this.clipAreaCorn.clip03y + 'px, ';
-    clipCorn += this.clipAreaCorn.clip04x + 'px ' + this.clipAreaCorn.clip04y + 'px, ';
-    clipCorn += this.clipAreaCorn.clip05x + 'px ' + this.clipAreaCorn.clip05y + 'px, ';
-    clipCorn += this.clipAreaCorn.clip06x + 'px ' + this.clipAreaCorn.clip06y + 'px, ';
-    clipCorn += this.clipAreaCorn.clip07x + 'px ' + this.clipAreaCorn.clip07y + 'px, ';
-    clipCorn += this.clipAreaCorn.clip08x + 'px ' + this.clipAreaCorn.clip08y + 'px, ';
-    clipCorn += this.clipAreaCorn.clip09x + 'px ' + this.clipAreaCorn.clip09y + 'px)';
+    return this.clipCornPath(this.clipAreaCorn);
+  }
+  public get gripCorn() {
+    return this.clipCornPath(this.gripAreaCorn);
+  }
+  private clipCornPath(clipAreaCorn: ClipAreaCorn) {
+    let clipCorn = 'polygon(' + clipAreaCorn.clip01x + 'px ' + clipAreaCorn.clip01y + 'px, ';
+    clipCorn += clipAreaCorn.clip02x + 'px ' + clipAreaCorn.clip02y + 'px, ';
+    clipCorn += clipAreaCorn.clip03x + 'px ' + clipAreaCorn.clip03y + 'px, ';
+    clipCorn += clipAreaCorn.clip04x + 'px ' + clipAreaCorn.clip04y + 'px, ';
+    clipCorn += clipAreaCorn.clip05x + 'px ' + clipAreaCorn.clip05y + 'px, ';
+    clipCorn += clipAreaCorn.clip06x + 'px ' + clipAreaCorn.clip06y + 'px, ';
+    clipCorn += clipAreaCorn.clip07x + 'px ' + clipAreaCorn.clip07y + 'px, ';
+    clipCorn += clipAreaCorn.clip08x + 'px ' + clipAreaCorn.clip08y + 'px, ';
+    clipCorn += clipAreaCorn.clip09x + 'px ' + clipAreaCorn.clip09y + 'px)';
     // return this.sanitizer.bypassSecurityTrustStyle(this._polygon);
     // console.log( 'clipCorn:' + clipCorn);
     return clipCorn;
   }
 
   public get clipLine() {
-    let clipLine = 'polygon(' + this.clipAreaLine.clip01x + 'px ' + this.clipAreaLine.clip01y + 'px, ';
-    clipLine += this.clipAreaLine.clip02x + 'px ' + this.clipAreaLine.clip02y + 'px, ';
-    clipLine += this.clipAreaLine.clip03x + 'px ' + this.clipAreaLine.clip03y + 'px, ';
-    clipLine += this.clipAreaLine.clip04x + 'px ' + this.clipAreaLine.clip04y + 'px)';
+    return this.clipLinePath(this.clipAreaLine);
+  }
+  public get gripLine() {
+    return this.clipLinePath(this.gripAreaLine);
+  }
+  private clipLinePath(clipAreaLine: ClipAreaLine) {
+    let clipLine = 'polygon(' + clipAreaLine.clip01x + 'px ' + clipAreaLine.clip01y + 'px, ';
+    clipLine += clipAreaLine.clip02x + 'px ' + clipAreaLine.clip02y + 'px, ';
+    clipLine += clipAreaLine.clip03x + 'px ' + clipAreaLine.clip03y + 'px, ';
+    clipLine += clipAreaLine.clip04x + 'px ' + clipAreaLine.clip04y + 'px)';
     return clipLine;
   }
 
   public get clipSquare() {
-    let clipSquare = 'polygon(' + this.clipAreaSquare.clip01x + 'px ' + this.clipAreaSquare.clip01y + 'px, ';
-    clipSquare += this.clipAreaSquare.clip02x + 'px ' + this.clipAreaSquare.clip02y + 'px, ';
-    clipSquare += this.clipAreaSquare.clip03x + 'px ' + this.clipAreaSquare.clip03y + 'px, ';
-    clipSquare += this.clipAreaSquare.clip04x + 'px ' + this.clipAreaSquare.clip04y + 'px)';
+    return this.clipSquarePath(this.clipAreaSquare);
+  }
+  public get gripSquare() {
+    return this.clipSquarePath(this.gripAreaSquare);
+  }
+  private clipSquarePath(clipAreaSquare: ClipAreaSquare) {
+    let clipSquare = 'polygon(' + clipAreaSquare.clip01x + 'px ' + clipAreaSquare.clip01y + 'px, ';
+    clipSquare += clipAreaSquare.clip02x + 'px ' + clipAreaSquare.clip02y + 'px, ';
+    clipSquare += clipAreaSquare.clip03x + 'px ' + clipAreaSquare.clip03y + 'px, ';
+    clipSquare += clipAreaSquare.clip04x + 'px ' + clipAreaSquare.clip04y + 'px)';
     return clipSquare;
   }
 
@@ -120,8 +165,38 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     return clipDiamond;
   }
 
+  get gripLength() {
+    return this.range.length > 1 ? this.range.length : 1;
+  }
+
+  get gripWidth() {
+    if ((this.range.type == 'CIRCLE') || (this.range.type == 'SQUARE') || (this.range.type == 'DIAMOND')) {
+      return this.gripLength;
+    }
+    return (this.range.width > this.gripLength) ? this.range.width : this.gripLength;
+  }
 
   private clipAreaCorn: ClipAreaCorn = {
+    clip01x: 0, // 根本始点
+    clip01y: 0,
+    clip02x: 100,
+    clip02y: 0,
+    clip03x: 100,
+    clip03y: 100,
+    clip04x: 0,
+    clip04y: 100,
+    clip05x: 0, // 先端部
+    clip05y: 0,
+    clip06x: 0, // 折り返し
+    clip06y: 0,
+    clip07x: 0,
+    clip07y: 0,
+    clip08x: 0,
+    clip08y: 0,
+    clip09x: 0,
+    clip09y: 0,
+  }
+  private gripAreaCorn: ClipAreaCorn = {
     clip01x: 0, // 根本始点
     clip01y: 0,
     clip02x: 100,
@@ -152,8 +227,29 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     clip04x: 100, // 右下
     clip04y: 0,
   }
+  private gripAreaLine: ClipAreaLine = {
+    clip01x: 0, // 左下
+    clip01y: 0,
+    clip02x: 0, // 左上
+    clip02y: -50,
+    clip03x: 100, // 右上
+    clip03y: -50,
+    clip04x: 100, // 右下
+    clip04y: 0,
+  }
 
   private clipAreaSquare: ClipAreaSquare = {
+    clip01x: 0, // 左下
+    clip01y: 0,
+    clip02x: 0, // 左上
+    clip02y: -50,
+    clip03x: 100, // 右上
+    clip03y: -50,
+    clip04x: 100, // 右下
+    clip04y: 0,
+  }
+
+  private gripAreaSquare: ClipAreaSquare = {
     clip01x: 0, // 左下
     clip01y: 0,
     clip02x: 0, // 左上
@@ -210,6 +306,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
+  
+  isMoving = false;
 
   private input: InputHandler = null;
 
@@ -347,6 +445,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       );
     }
+    /*
     menuArray.push(
       !this.range.fillOutLine
       ? {
@@ -360,7 +459,21 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     );
-
+    */
+    menuArray.push(
+      {
+        name: '影響グリッドの表示方法', action: null, 
+        subActions: [
+          { name: `${this.range.fillType == 0 ? '◉' : '○'} なし (輪郭内を塗りつぶす)`, action: () => { this.range.fillType = 0; } },
+          ContextMenuSeparator,
+          { name: `${this.range.fillType == 1 ? '◉' : '○'} グリッドの中心と重なる`, action: () => { this.range.fillType = 1; } },
+          { name: `${this.range.fillType == 2 ? '◉' : '○'} グリッドの一部でも重なる`, action: () => { this.range.fillType = 2; } },
+          { name: `${this.range.fillType == 3 ? '◉' : '○'} グリッドの半分以上が重なる`, action: () => { this.range.fillType = 3; } },
+          { name: `${this.range.fillType == 4 ? '◉' : '○'} グリッド全体が重なる`, action: () => { this.range.fillType = 4; } },
+        ]
+      }
+    );
+/*
     menuArray.push(
       {
         name: 'グリッド表示をずらす', action: null, 
@@ -375,7 +488,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         disabled: this.range.fillOutLine, level: 2
       }
     );
-
+*/
     menuArray.push( ContextMenuSeparator);
     menuArray.push(
       { name: '射程・範囲を編集', action: () => { this.showDetail(this.range); } }
@@ -444,10 +557,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 */
 
   onMove() {
+    this.isMoving = true;
     SoundEffect.play(PresetSound.cardPick);
   }
 
   onMoved() {
+    this.isMoving = false;
     SoundEffect.play(PresetSound.cardPut);
   }
 
@@ -484,21 +599,24 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       degree: this.rotateDeg,
       offSetX: this.range.offSetX,
       offSetY: this.range.offSetY,
-      fillOutLine: this.range.fillOutLine,
+      //fillOutLine: this.range.fillOutLine,
       gridType: this.currentTable.gridType,
       isDocking: this.range.followingCharctor ? true : false,
+      fillType: this.range.fillType
     };
     console.log('this.range.location.x-y:' + this.range.location.x + ' ' + this.range.location.y);
 
     switch (this.range.type) {
       case 'LINE':
         this.clipAreaLine = render.renderLine(setting);
+        this.gripAreaLine = RangeRender.gripAreaPathLine(setting);
         break;
       case 'CIRCLE':
         render.renderCircle(setting);
         break;
       case 'SQUARE':
         this.clipAreaSquare = render.renderSquare(setting);
+        this.gripAreaSquare = RangeRender.gripAreaPathSquare(setting);
         break;
       case 'DIAMOND':
         this.clipAreaDiamond = render.renderDiamond(setting);
@@ -506,6 +624,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'CORN':
       default:
         this.clipAreaCorn = render.renderCorn(setting);
+        this.gripAreaCorn = RangeRender.gripAreaPathCorn(setting);
         break;
     }
 

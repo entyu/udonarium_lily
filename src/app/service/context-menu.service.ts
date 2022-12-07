@@ -34,7 +34,8 @@ export interface ContextMenuAction {
   selfOnly?: boolean,
   level?: number,
   color?: string,
-  center?: boolean
+  center?: boolean,
+  colorSample?: boolean
 }
 
 @Injectable()

@@ -28,14 +28,14 @@
       <input *ngIf="action.name && action.name.indexOf('☐') == 0" type="checkbox" [disabled]="action.disabled" />
       <input *ngIf="action.name && action.name.indexOf('◉') == 0" type="radio" [disabled]="action.disabled" checked />
       <input *ngIf="action.name && action.name.indexOf('○') == 0" type="radio" [disabled]="action.disabled" />
-      <span *ngIf="action.name && action.name.indexOf('ブラック') == 2" class="color-indicator" style="color: #000">■</span>
-      <span *ngIf="action.name && action.name.indexOf('ブルー') == 2" class="color-indicator" style="color: #00f">■</span>
-      <span *ngIf="action.name && action.name.indexOf('グリーン') == 2" class="color-indicator" style="color: #0f0">■</span>
-      <span *ngIf="action.name && action.name.indexOf('シアン') == 2" class="color-indicator" style="color: #0ff">■</span>
-      <span *ngIf="action.name && action.name.indexOf('レッド') == 2" class="color-indicator" style="color: #f00">■</span>
-      <span *ngIf="action.name && action.name.indexOf('マゼンタ') == 2" class="color-indicator" style="color: #f0f">■</span>
-      <span *ngIf="action.name && action.name.indexOf('イエロー') == 2" class="color-indicator" style="color: #ff0">■</span>
-      <span *ngIf="action.name && action.name.indexOf('ホワイト') == 2" class="color-indicator" style="color: #fff">■</span>
+      <span *ngIf="action.name && action.colorSample && action.name.indexOf('ブラック') == 2" class="color-indicator" style="color: #000">■</span>
+      <span *ngIf="action.name && action.colorSample && action.name.indexOf('ブルー') == 2" class="color-indicator" style="color: #00f">■</span>
+      <span *ngIf="action.name && action.colorSample && action.name.indexOf('グリーン') == 2" class="color-indicator" style="color: #0f0">■</span>
+      <span *ngIf="action.name && action.colorSample && action.name.indexOf('シアン') == 2" class="color-indicator" style="color: #0ff">■</span>
+      <span *ngIf="action.name && action.colorSample && action.name.indexOf('レッド') == 2" class="color-indicator" style="color: #f00">■</span>
+      <span *ngIf="action.name && action.colorSample && action.name.indexOf('マゼンタ') == 2" class="color-indicator" style="color: #f0f">■</span>
+      <span *ngIf="action.name && action.colorSample && action.name.indexOf('イエロー') == 2" class="color-indicator" style="color: #ff0">■</span>
+      <span *ngIf="action.name && action.colorSample && action.name.indexOf('ホワイト') == 2" class="color-indicator" style="color: #fff">■</span>
       <span *ngIf="action.materialIcon" style="vertical-align: top"><i style="font-size: 150%; padding-left: 2px;" class="material-icons">{{action.materialIcon}}</i></span>
       {{ action.name.replace('☑', '').replace('☐', '').replace('◉', '').replace('○', '') }}<sup *ngIf="action.selfOnly" class="self-only">*</sup>
       <span *ngIf="action.icon && 0 < action.icon?.url.length" class="imagebox"><img class="image" [src]="action.icon.url | safe: 'resourceUrl'"></span>

@@ -16,8 +16,9 @@ export class RangeArea extends TabletopObject {
   //@SyncVar() gridColor: string = "#FFFF00";
   //@SyncVar() rangeColor: string = "#000000";
   @SyncVar() type: string = 'CORN';
-  @SyncVar() fillOutLine: boolean = false;
+  //@SyncVar() fillOutLine: boolean = false;
   @SyncVar() subDivisionSnapPolygonal: boolean = true;
+  @SyncVar() fillType: number = 1; // 0: 輪郭に合わせて塗る　1: 中心を通る　2:一部を覆う　3:半分を覆う　4:全体を覆う　
 
   get name(): string { return this.getCommonValue('name', ''); }
   get length(): number { return this.getCommonValue('length', 1); }

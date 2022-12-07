@@ -228,15 +228,15 @@ input[type="color"]:not(:hover) {
   font-weight: bolder;
   width: 6em;
   text-shadow: 
-    #fff 0px 0px 2px, 
-    #fff 0px 0px 2px, 
-    #fff 0px 0px 2px, 
-    #fff 0px 0px 2px, 
-    #fff 0px 0px 2px, 
-    #fff 0px 0px 2px,
-    #fff 0px 0px 2px,
-    #fff 0px 0px 2px;
-}
+    #eee -1px -1px 0px, 
+    #eee 0px -1px 0px, 
+    #eee 1px -1px 0px, 
+    #eee -1px 0px 0px, 
+    #eee 1px 0px 0px,
+    #eee -1px 1px 0px,
+    #eee 0px 1px 0px,
+    #eee 1px 1px 0px;
+  }
 
 input + .move {
   display: inline-block;
