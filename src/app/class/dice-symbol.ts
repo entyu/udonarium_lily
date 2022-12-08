@@ -56,6 +56,7 @@ export class DiceSymbol extends TabletopObject {
   }
   
   get hasOwner(): boolean { return 0 < this.owner.length; }
+  get ownerIsOnline(): boolean { return this.hasOwner && Network.peerContexts.some(context => context.userId === this.owner && context.isOpen); }
   get isMine(): boolean { return Network.peerContext.userId === this.owner; }
   get isVisible(): boolean { return !this.hasOwner || this.isMine || this.isGMMode; }
   get isCoin(): boolean { return this.faces.length === 2; }

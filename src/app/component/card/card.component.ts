@@ -112,6 +112,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   get isFront(): boolean { return this.card.isFront; }
   get isVisible(): boolean { return this.card.isVisible; }
   get hasOwner(): boolean { return this.card.hasOwner; }
+  get ownerIsOnline(): boolean { return this.card.ownerIsOnline; }
   get ownerName(): string { return this.card.ownerName; }
   get ownerColor(): string { return this.card.ownerColor; }
 

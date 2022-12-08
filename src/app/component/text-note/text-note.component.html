@@ -4,7 +4,7 @@
     <div class="component-content is-3d is-pointer-events-auto"
       [style.width.px]="width * gridSize">
       <div class="is-3d" [ngClass]="{'is-transition': transition, 'fall': fall}" [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px) rotateY(90deg) rotateZ(' + (isUpright ? 0 : 90) + 'deg) rotateY(-90deg)'}">
-        <div class="upright-transform is-3d is-bg-color is-front is-bg-texture" [ngClass]="{'is-bg-filter': isWhiteOut && imageFile?.url.length > 0}"
+        <div class="upright-transform is-3d is-bg-color is-front is-bg-texture chrome-smooth-image-trick" [ngClass]="{'is-bg-filter': isWhiteOut && imageFile?.url.length > 0}"
           [style.background-image]="'url(' + imageFile?.url + ')' | safe: 'style'" [style.width.px]="width * gridSize" [style.min-height.px]="height * gridSize">
           <div *ngIf="title.length" class="title is-3d is-black-background is-pointer-events-none">{{title}}</div>
           <textarea #textArea (input)="calcFitHeight();" class="textarea is-3d" [ngClass]="{'is-pointer-events-none': !isSelected, 'is-pointer-events-auto': isSelected, 'hide-area': !isSelected}"
@@ -12,7 +12,7 @@
           <div class="is-3d is-outline-text note-text" style="margin-top:-18px" [ngClass]="{'hide-area': isSelected}"
             [style.font-size.px]="fontSize + 9" [style.color]="color" [style.text-shadow]="textShadowCss" [innerHTML]="lastNewLineAdjust(rubiedText) | safe: 'html'"></div>
         </div>
-        <div class="upright-transform is-3d is-back is-bg-color is-bg-texture" [ngClass]="{'is-bg-filter': isWhiteOut && imageFile?.url.length > 0}"
+        <div class="upright-transform is-3d is-back is-bg-color is-bg-texture chrome-smooth-image-trick" [ngClass]="{'is-bg-filter': isWhiteOut && imageFile?.url.length > 0}"
           [style.background-image]="'url(' + imageFile?.url + ')' | safe: 'style'" [style.width.px]="width * gridSize" [style.min-height.px]="height * gridSize">
           <div class="is-3d is-pointer-events-none" style="visibility: hidden">
             <div *ngIf="title.length" class="title is-3d is-black-background is-pointer-events-none">{{title}}</div>
