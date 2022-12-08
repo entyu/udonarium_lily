@@ -476,7 +476,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     */
     menuArray.push(
       {
-        name: '影響グリッドの表示方法', action: null, 
+        name: '影響グリッドの判定方法', action: null, 
         subActions: [
           { name: `${this.range.fillType == 0 ? '◉' : '○'} なし (輪郭内を塗りつぶす)`, action: () => { this.range.fillType = 0; } },
           ContextMenuSeparator,
