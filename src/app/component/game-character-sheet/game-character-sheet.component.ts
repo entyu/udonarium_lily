@@ -488,6 +488,18 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     return card ? StringUtil.rubyToHtml(StringUtil.escapeHtml(card.text)) : '';
   }
 
+  get cardTextShadowCss(): string {
+    const shadow = StringUtil.textShadowColor(this.cardColor);
+    return `${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px,
+    ${shadow} 0px 0px 2px,
+    ${shadow} 0px 0px 2px`;
+  }
+
   get isVisible(): boolean {
     if (!this.tabletopObject) return false;
     if (PeerCursor.myCursor && PeerCursor.myCursor.isGMMode) return true;

@@ -4,7 +4,7 @@
   <div class="is-3d text" style="left: 2px; top: 2px; backface-visibility: hidden" [ngClass]="{fall: altitude == 0}"
     [style.width.px]="width * gridSize - 4" [style.height.px]="height * gridSize - 4"
     [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
-    <div class="is-3d" [ngClass]="{'is-inverse': isInverse}" [style.font-size.px]="fontSize + 9" [style.color]="color" style="z-index: 5; pointer-events: none" [innerHtml]="rubiedText"></div>
+    <div class="is-3d" [ngClass]="{'is-inverse': isInverse}" [style.font-size.px]="fontSize + 9" [style.color]="color" [style.text-shadow]="textShadowCss" style="z-index: 5; pointer-events: none" [innerHtml]="rubiedText"></div>
   </div>
   <div class="border is-fit-full" style="backface-visibility: hidden" [ngClass]="{fall: altitude == 0}" [ngStyle]="{'border-width': isLock ? '0px' : '2px', 'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
     <div class="is-fit-full is-3d"

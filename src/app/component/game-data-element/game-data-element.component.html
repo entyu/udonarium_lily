@@ -34,11 +34,11 @@
           </ng-container>
           <ng-container *ngSwitchCase="'color'">
             <ng-container *ngIf="gameDataElement.type === 'colors'">
-              <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 6.5em" [style.color]="value" [style.background-color]="currentValue"><input type="color" style="width: 1em" [(ngModel)]="value" /><div style="display: inline-block; box-sizing: border-box; width: calc(100% - 1em); text-align: center">{{value}}</div></label>
-              <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 7.5em" [style.color]="value" [style.background-color]="currentValue"><input type="color" style="width: 1em" [(ngModel)]="currentValue" /><div style="display: inline-block; box-sizing: border-box; width: calc(100% - 1em); text-align: center">({{currentValue}})</div></label>
+              <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 6.5em" [style.color]="value" [style.background-color]="currentValue" [style.text-shadow]="colorSampleTextShadowCss"><input type="color" style="width: 1em" [(ngModel)]="value" /><div style="display: inline-block; box-sizing: border-box; width: calc(100% - 1em); text-align: center">{{value}}</div></label>
+              <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 7.5em" [style.color]="value" [style.background-color]="currentValue" [style.text-shadow]="colorSampleTextShadowCss"><input type="color" style="width: 1em" [(ngModel)]="currentValue" /><div style="display: inline-block; box-sizing: border-box; width: calc(100% - 1em); text-align: center">({{currentValue}})</div></label>
             </ng-container>
             <ng-container *ngIf="gameDataElement.type === 'color'">
-              <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 6.5em" [style.color]="value"><input type="color" style="width: 1em" [(ngModel)]="value" /> {{value}}</label>
+              <label class="color-sample" style="padding: 0px 2px 0px 0xp; width: 6.5em" [style.color]="value" [style.text-shadow]="colorSampleTextShadowCss"><input type="color" style="width: 1em" [(ngModel)]="value" /> {{value}}</label>
             </ng-container>
           </ng-container>
           <ng-container *ngSwitchDefault>

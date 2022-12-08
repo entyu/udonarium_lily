@@ -123,4 +123,11 @@ export namespace StringUtil {
        return aliasName;
     }
   }
+
+  export function textShadowColor(textColor: string, lightColor='#ffffff', darkColor='#333333'): string {
+    //let str = textColor && /^\#[0-9a-f]{6}$/i.test(textColor) ? '#' + (textColor.substring(1, 7).match(/.{2}/g).reduce((a, c) => { let d = (255 - parseInt(c, 16)).toString(16).toLowerCase(); return a + ('0' + d).substring(d.length - 1); }, '')) : '#ffffff';
+    //console.log(str)
+    //return str;
+    return textColor && /^\#[0-9a-f]{6}$/i.test(textColor) ? (textColor.substring(1, 7).match(/.{2}/g).reduce((a, c) => { return a + parseInt(c, 16); }, 0) > 255 * 2 ? darkColor : lightColor) : lightColor;
+  }
 }

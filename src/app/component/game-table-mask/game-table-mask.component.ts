@@ -58,6 +58,18 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get bgcolor(): string { return this.gameTableMask.bgcolor; }
   set bgcolor(bgcolor: string) { this.gameTableMask.bgcolor = bgcolor; }
 
+  get textShadowCss(): string {
+    const shadow = StringUtil.textShadowColor(this.color);
+    return `${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px,
+    ${shadow} 0px 0px 2px,
+    ${shadow} 0px 0px 2px`;
+  }
+
   get altitude(): number { return this.gameTableMask.altitude; }
   set altitude(altitude: number) { this.gameTableMask.altitude = altitude; }
 

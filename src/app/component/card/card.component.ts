@@ -96,6 +96,18 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
   get color(): string { return this.card.color; }
   set color(color: string) { this.card.color = color; }
 
+  get textShadowCss(): string {
+    const shadow = StringUtil.textShadowColor(this.color);
+    return `${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px,
+    ${shadow} 0px 0px 2px,
+    ${shadow} 0px 0px 2px`;
+  }
+
   get isHand(): boolean { return this.card.isHand; }
   get isFront(): boolean { return this.card.isFront; }
   get isVisible(): boolean { return this.card.isVisible; }

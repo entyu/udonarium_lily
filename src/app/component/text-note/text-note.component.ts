@@ -35,6 +35,18 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get color(): string { return this.textNote.color; }
   set color(color: string) { this.textNote.color = color; }
 
+  get textShadowCss(): string {
+    const shadow = StringUtil.textShadowColor(this.color, '#f2f2f2', '#000000');
+    return `${shadow} 0px 0px 0.5px, 
+    ${shadow} 0px 0px 0.5px, 
+    ${shadow} 0px 0px 0.5px, 
+    ${shadow} 0px 0px 0.5px, 
+    ${shadow} 0px 0px 0.5px, 
+    ${shadow} 0px 0px 0.5px,
+    ${shadow} 0px 0px 0.5px,
+    ${shadow} 0px 0px 0.5px`;
+  }
+
   get fontSize(): number { this.calcFitHeightIfNeeded(); return this.textNote.fontSize; }
   get imageFile(): ImageFile { return this.textNote.imageFile; }
   get rotate(): number { return this.textNote.rotate; }

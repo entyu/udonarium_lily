@@ -68,4 +68,16 @@ export class CardListImageComponent implements OnInit {
   get cardText(): string {
     return this.card ? this.card.text : '';
   }
+
+  get textShadowCss(): string {
+    const shadow = StringUtil.textShadowColor(this.cardColor);
+    return `${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px,
+    ${shadow} 0px 0px 2px,
+    ${shadow} 0px 0px 2px`;
+  }
 }

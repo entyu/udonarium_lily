@@ -535,6 +535,18 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     return card;
   }
 
+  textShadowCss(textColor: string): string {
+    const shadow = StringUtil.textShadowColor(textColor);
+    return `${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px, 
+    ${shadow} 0px 0px 2px,
+    ${shadow} 0px 0px 2px,
+    ${shadow} 0px 0px 2px`;
+  }
+
   private breakStack() {
     let cards = this.cardStack.drawCardAll().reverse();
     for (let card of cards) {
