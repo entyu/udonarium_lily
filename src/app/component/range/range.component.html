@@ -44,16 +44,16 @@
     [style.height.px]="math.abs(altitude * gridSize)"
     [ngStyle]="{transform: 'rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
     <div class="is-3d" [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
-      <span class="elevation-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor"><i>{{ elevation }}</i></span>
-      <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor"><i>{{ elevation }}</i></span>
+      <span class="elevation-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
+      <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
     </div>
     <div class="is-3d">
-      <span class="altitude-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor">{{ math.abs(altitude) }}</span>
-      <span class="altitude-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor">{{ math.abs(altitude) }}</span>
+      <span class="altitude-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss">{{ math.abs(altitude) }}</span>
+      <span class="altitude-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss">{{ math.abs(altitude) }}</span>
     </div>
     <div class="is-3d" [style.visibility]="altitude < 0 ? 'visible' : 'hidden'">
-      <span class="elevation-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor"><i>{{ elevation }}</i></span>
-      <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor"><i>{{ elevation }}</i></span>
+      <span class="elevation-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
+      <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
     </div>
   </div>
   <div class="is-3d" [style.visibility]="altitude != 0 ? 'visible' : 'hidden'" style="position: absolute; z-index: 0" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">

@@ -340,7 +340,7 @@
 .elevation-indicator, .altitude-indicator {
   padding-left: 2px;
   color: black;
-  text-shadow: whitesmoke 0px 0px 3px;
+  text-shadow: #f5f5f5 0px 0px 3px;
   backface-visibility: hidden;
 }
 .elevation-indicator {

@@ -327,6 +327,11 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   get isAltitudeIndicate(): boolean { return this.range.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.range.isAltitudeIndicate = isAltitudeIndicate; }
 
+  get textShadowCss(): string {
+    let shadow = StringUtil.textShadowColor(this.range.rangeColor, '#f5f5f5');
+    return `${shadow} 0px 0px 3px`;
+  }
+
   gridSize: number = 50;
   
   movableOption: MovableOption = {};
@@ -481,12 +486,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       {
         name: '影響グリッドの判定方法', action: null, 
         subActions: [
-          { name: `${this.range.fillType == 0 ? '◉' : '○'} なし (輪郭内を塗りつぶす)`, action: () => { this.range.fillType = 0; } },
+          { name: `${this.range.fillType == 0 ? '◉' : '○'} 判定なし (輪郭内を塗りつぶす)`, action: () => { this.range.fillType = 0; } },
           ContextMenuSeparator,
-          { name: `${this.range.fillType == 1 ? '◉' : '○'} グリッドの中心と重なる`, action: () => { this.range.fillType = 1; } },
-          { name: `${this.range.fillType == 2 ? '◉' : '○'} グリッドの一部でも重なる`, action: () => { this.range.fillType = 2; } },
-          { name: `${this.range.fillType == 3 ? '◉' : '○'} グリッドの半分以上が重なる`, action: () => { this.range.fillType = 3; } },
-          { name: `${this.range.fillType == 4 ? '◉' : '○'} グリッド全体が重なる`, action: () => { this.range.fillType = 4; } },
+          { name: `${this.range.fillType == 1 ? '◉' : '○'} グリッドの中心を覆う`, action: () => { this.range.fillType = 1; } },
+          { name: `${this.range.fillType == 2 ? '◉' : '○'} グリッドの一部でも覆う`, action: () => { this.range.fillType = 2; } },
+          { name: `${this.range.fillType == 3 ? '◉' : '○'} グリッドの半分以上を覆う`, action: () => { this.range.fillType = 3; } },
+          { name: `${this.range.fillType == 4 ? '◉' : '○'} グリッド全体を覆う`, action: () => { this.range.fillType = 4; } },
         ]
       }
     );
@@ -502,7 +507,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
           ? { name: `☑ 縦(上下) 方向`, action: () => { this.range.offSetY = false; } }
           : { name: `☐ 縦(上下) 方向`, action: () => { this.range.offSetY = true; } },
         ],
-        disabled: this.range.fillOutLine, level: 2
+        disabled: this.range.fillType == 0
       }
     );
 */
