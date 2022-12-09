@@ -3,9 +3,15 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
+import { UUID } from './core/system/util/uuid';
 
 @SyncObject('range')
 export class RangeArea extends TabletopObject {
+  constructor(identifier: string = UUID.generateUuid()) {
+    super(identifier);
+    this.isAltitudeIndicate = true;
+  }
+  
   @SyncVar() isLock: boolean = false;
   @SyncVar() rotate: number = 0;
   @SyncVar() followingCharctor: GameCharacter = null;
@@ -85,6 +91,7 @@ export class RangeArea extends TabletopObject {
     object.commonDataElement.appendChild(DataElement.create('width', width, {}, 'width_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('opacity', opacity, { type: 'numberResource', currentValue: opacity }, 'opacity_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('color', "#ff0000", { type: 'colors' , currentValue: '#ffff00' }, 'ccolor_' + object.identifier));
+    object.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + object.identifier));
     object.initialize();
 
     return object;

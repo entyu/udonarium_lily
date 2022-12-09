@@ -50,6 +50,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('rangeCanvas', { static: true }) rangeCanvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('centerPunch', { static: true }) centerPunch: ElementRef<HTMLCanvasElement>;
   @ViewChild('rotate') rotate: ElementRef<HTMLElement>;
   
   public get clipPathText() {
@@ -316,12 +317,24 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     return parseFloat(data2);
   }
 
-  gridSize: number = 50;
+  get altitude(): number { return this.range.altitude; }
+  set altitude(altitude: number) { this.range.altitude = altitude; }
 
+  get elevation(): number {
+    return +((this.range.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
+  }
+
+  get isAltitudeIndicate(): boolean { return this.range.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.range.isAltitudeIndicate = isAltitudeIndicate; }
+
+  gridSize: number = 50;
+  
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
   
+  viewRotateZ = 10;
   isMoving = false;
+  math = Math;
 
   private input: InputHandler = null;
 
@@ -361,6 +374,11 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      }).on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
       });
     this.movableOption = {
       tabletopObject: this.range,
@@ -459,21 +477,6 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       );
     }
-    /*
-    menuArray.push(
-      !this.range.fillOutLine
-      ? {
-        name: '☑ 範囲をグリッドで表示', action: () => {
-          this.range.fillOutLine = true;
-        }
-      } :
-      {
-        name: '☐ 範囲をグリッドで表示', action: () => {
-          this.range.fillOutLine = false;
-        }
-      }
-    );
-    */
     menuArray.push(
       {
         name: '影響グリッドの判定方法', action: null, 
@@ -503,7 +506,27 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     );
 */
-    menuArray.push( ContextMenuSeparator);
+    menuArray.push(ContextMenuSeparator);
+    menuArray.push(this.isAltitudeIndicate
+      ? {
+        name: '☑ 高度の表示', action: () => {
+          this.isAltitudeIndicate = false;
+        }
+      } : {
+        name: '☐ 高度の表示', action: () => {
+          this.isAltitudeIndicate = true;
+        }
+      });
+    menuArray.push({
+      name: '高度を0にする', action: () => {
+        if (this.altitude != 0) {
+          this.altitude = 0;
+          SoundEffect.play(PresetSound.sweep);
+        }
+      },
+      altitudeHande: this.range
+    });
+    menuArray.push(ContextMenuSeparator);
     menuArray.push(
       { name: '射程・範囲を編集', action: () => { this.showDetail(this.range); } }
     );
@@ -588,13 +611,13 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     let coordinate = this.pointerDeviceService.pointers[0];
     let title = '射程・範囲設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
-    let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 340 };
+    let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 390 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }
 
   private setRange() {
-    let render = new RangeRender(this.gridCanvas.nativeElement,this.rangeCanvas.nativeElement);
+    let render = new RangeRender(this.gridCanvas.nativeElement,this.rangeCanvas.nativeElement, this.centerPunch.nativeElement);
 
 //    this.width, this.length, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor
 

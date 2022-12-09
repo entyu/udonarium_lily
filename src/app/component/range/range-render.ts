@@ -82,6 +82,7 @@ export class RangeRender {
   constructor(
     readonly canvasElement: HTMLCanvasElement,
     readonly canvasElementRange: HTMLCanvasElement,
+    readonly canvasElementCenter: HTMLCanvasElement,
   ) { }
 
   private makeBrush(context: CanvasRenderingContext2D, gridSize: number, gridColor: string): CanvasRenderingContext2D {
@@ -198,6 +199,21 @@ export class RangeRender {
     context.lineWidth = 2;
     context.arc(offSetX_px, offSetY_px, setting.range * gridSize, 0, 2 * Math.PI, true);
     context.stroke();
+    
+    if(setting.isDocking){
+      context.beginPath();
+      context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
+    }else{
+      context.beginPath();
+      context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+      context.fill();
+    }
+
+    this.canvasElementCenter.width = setting.areaWidth * gridSize;
+    this.canvasElementCenter.height = setting.areaHeight * gridSize;
+    context = this.canvasElementCenter.getContext('2d');
+
+    this.makeBrush(context, gridSize, setting.rangeColor);
     
     if(setting.isDocking){
       context.beginPath();
@@ -356,6 +372,14 @@ export class RangeRender {
     context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
     context.stroke();
 
+    context.beginPath();
+    context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+    context.fill();
+
+    this.canvasElementCenter.width = setting.areaWidth * gridSize;
+    this.canvasElementCenter.height = setting.areaHeight * gridSize;
+    context = this.canvasElementCenter.getContext('2d');
+    this.makeBrush(context, gridSize, setting.rangeColor);
     context.beginPath();
     context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
     context.fill();
@@ -538,6 +562,21 @@ export class RangeRender {
     context.lineTo(p1x + offSetX_px, p1y + offSetY_px);
     context.stroke();
 
+    if(setting.isDocking){
+      context.beginPath();
+      context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
+    }else{
+      context.beginPath();
+      context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+      context.fill();
+    }
+
+    this.canvasElementCenter.width = setting.areaWidth * gridSize;
+    this.canvasElementCenter.height = setting.areaHeight * gridSize;
+    context = this.canvasElementCenter.getContext('2d');
+
+    this.makeBrush(context, gridSize, setting.rangeColor);
+    
     if(setting.isDocking){
       context.beginPath();
       context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
@@ -732,6 +771,21 @@ export class RangeRender {
       context.beginPath();
       context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
     } else {
+      context.beginPath();
+      context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+      context.fill();
+    }
+
+    this.canvasElementCenter.width = setting.areaWidth * gridSize;
+    this.canvasElementCenter.height = setting.areaHeight * gridSize;
+    context = this.canvasElementCenter.getContext('2d');
+
+    this.makeBrush(context, gridSize, setting.rangeColor);
+    
+    if(setting.isDocking){
+      context.beginPath();
+      context.strokeRect(offSetX_px -6 , offSetY_px -6, 12, 12);
+    }else{
       context.beginPath();
       context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
       context.fill();
@@ -933,6 +987,14 @@ export class RangeRender {
     context.lineTo(cx + offSetX_px, cy + offSetY_px);
     context.stroke();
 
+    context.beginPath();
+    context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
+    context.fill();
+
+    this.canvasElementCenter.width = setting.areaWidth * gridSize;
+    this.canvasElementCenter.height = setting.areaHeight * gridSize;
+    context = this.canvasElementCenter.getContext('2d');
+    this.makeBrush(context, gridSize, setting.rangeColor);
     context.beginPath();
     context.arc(offSetX_px, offSetX_px, 5, 0, 2 * Math.PI, true);
     context.fill();
