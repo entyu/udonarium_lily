@@ -24,7 +24,9 @@ export class RangeArea extends TabletopObject {
   @SyncVar() type: string = 'CORN';
   //@SyncVar() fillOutLine: boolean = false;
   @SyncVar() subDivisionSnapPolygonal: boolean = true;
-  @SyncVar() fillType: number = 1; // 0: 輪郭に合わせて塗る　1: 中心を通る　2:一部を覆う　3:半分を覆う　4:全体を覆う　
+  @SyncVar() fillType: number = 1; // 0: 輪郭に合わせて塗る　1: 中心を通る　2:一部を覆う　3:半分を覆う　4:全体を覆う
+  @SyncVar() isExpandByFollowing: boolean = false;
+  @SyncVar() isFollowAltitude: boolean = false;
 
   get name(): string { return this.getCommonValue('name', ''); }
   get length(): number { return this.getCommonValue('length', 1); }
@@ -64,7 +66,7 @@ export class RangeArea extends TabletopObject {
 
   following(){
     let object = <TabletopObject>ObjectStore.instance.get(this.followingCharctor.identifier);
-    if(!object ){
+    if(!object || this.followingCharctor.isHideIn){
       console.log('追従対象見失い');
       this.followingCharctor = null;
       return ;
@@ -73,6 +75,8 @@ export class RangeArea extends TabletopObject {
 
     this.location.x = object.location.x + (this.gridSize * this.followingCharctor.size) / 2;
     this.location.y = object.location.y + (this.gridSize * this.followingCharctor.size) / 2;
+    this.posZ = this.followingCharctor.posZ;
+    if (this.isFollowAltitude) this.altitude = this.followingCharctor.altitude;
     this.followingCounterDummyCount();
   }
 

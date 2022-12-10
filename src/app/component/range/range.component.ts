@@ -23,7 +23,7 @@ import { GameCharacterSheetComponent } from 'component/game-character-sheet/game
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { CoordinateService } from 'service/coordinate.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -36,6 +36,8 @@ import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
+import { GameCharacter } from '@udonarium/game-character';
+import { NumberSymbol } from '@angular/common';
 
 @Component({
   selector: 'range',
@@ -100,13 +102,13 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public get clipCircle() {
-    let clipSize = ( this.range.length + 1.5 ) * this.gridSize;
+    let clipSize = ( this.rangeLength + 1.5 ) * this.gridSize;
     let circle = 'circle(' + clipSize + 'px)';
     return circle;
   }
 
   public get gripCircle() {
-    return 'circle(' + ((this.range.length > 1 ? this.range.length : 1) * this.gridSize) + 'px)';
+    return 'circle(' + ((this.rangeLength > 1 ? this.rangeLength : 1) * this.gridSize) + 'px)';
   }
 
   public get clipCorn() {
@@ -173,7 +175,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   get gripLength() {
-    return this.range.length > 1 ? this.range.length : 1;
+    return this.rangeLength > 1 ? this.rangeLength : 1;
   }
 
   get gripWidth() {
@@ -300,7 +302,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get areaQuadrantSize(): number { 
     let w = this.width < 1 ? 1 : this.width;
-    let l = this.length < 1 ? 1 : this.length;
+    let l = this.rangeLength < 1 ? 1 : this.rangeLength;
     return Math.ceil( Math.sqrt(w * w + l * l) ) +1 ; 
   }
 
@@ -330,6 +332,32 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   get textShadowCss(): string {
     let shadow = StringUtil.textShadowColor(this.range.rangeColor, '#f5f5f5');
     return `${shadow} 0px 0px 3px`;
+  }
+
+  get dockableCharacters(): GameCharacter[] {
+    let ary = this.tabletopService.characters.filter(character => {
+      if (character.location.name !== 'table') return false;
+      //if (this.range.followingCharctor && this.range.followingCharctor === character) isContainFollowing = true;
+      return [
+        {x: 0, y: 0},
+        {x: character.size * this.gridSize, y: 0},
+        {x: 0, y: character.size * this.gridSize},
+        {x: character.size * this.gridSize, y: character.size * this.gridSize}
+      ].some(point => {
+        return (this.range.location.x - this.rangeLength * this.gridSize) <= character.location.x + point.x && character.location.x + point.x <= (this.range.location.x + this.rangeLength * this.gridSize)
+        && (this.range.location.y - this.rangeLength * this.gridSize) <= character.location.y  + point.y && character.location.y + point.y <= (this.range.location.y + this.rangeLength * this.gridSize);
+      });
+    });
+    if (this.range.followingCharctor && !ary.some(character => character === this.range.followingCharctor)) ary.push(this.range.followingCharctor);
+    return ary.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+  }
+  
+  get rangeLength() {
+    let length = (this.length < 1 ? 1 : this.length);
+    if (this.range.followingCharctor && this.range.isExpandByFollowing) {
+      length += this.range.followingCharctor.size / 2;
+    }
+    return length;
   }
 
   gridSize: number = 50;
@@ -362,17 +390,25 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
-        this.setRange();
-
+        //this.setRange();
         if (!this.range || !object) return;
-        if (this.range === object || (object instanceof ObjectNode && this.range.contains(object))) {
-          this.changeDetector.markForCheck();
+        let markForCheck = false;
+        if (this.range === object || ((object instanceof ObjectNode && this.range.contains(object)))) {
+          this.ngZone.run(() => {
+            //if (this.range.followingCharctor) this.range.following();
+            this.setRange();
+          });
+          markForCheck = true;
         }
-        if( object == this.range.followingCharctor){
+        if (object === this.range.followingCharctor || (this.range.followingCharctor && object instanceof ObjectNode && this.range.followingCharctor.contains(object))) {
           console.log('追従動作');
-          this.range.following();
-          this.setRange();
+          this.ngZone.run(() => {
+            this.range.following();
+            this.setRange();
+          });
+          markForCheck = true;
         }
+        if (markForCheck) this.changeDetector.markForCheck();
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -449,25 +485,73 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }
     )
-    /*
-    if(this.range.type == 'CIRCLE' || this.range.type == 'SQUARE' || this.range.type == 'DIAMOND'){
+    menuArray.push(
+      {
+        name: '影響グリッドの判定方法', action: null, 
+        subActions: [
+          { name: `${this.range.fillType == 0 ? '◉' : '○'} 判定なし (輪郭内を塗りつぶす)`, action: () => { this.range.fillType = 0; } },
+          ContextMenuSeparator,
+          { name: `${this.range.fillType == 1 ? '◉' : '○'} グリッドの中心を覆う`, action: () => { this.range.fillType = 1; } },
+          { name: `${this.range.fillType == 2 ? '◉' : '○'} グリッドの一部でも覆う`, action: () => { this.range.fillType = 2; } },
+          { name: `${this.range.fillType == 3 ? '◉' : '○'} グリッドの半分以上を覆う`, action: () => { this.range.fillType = 3; } },
+          { name: `${this.range.fillType == 4 ? '◉' : '○'} グリッド全体を覆う`, action: () => { this.range.fillType = 4; } },
+        ]
+      }
+    );
+    menuArray.push(ContextMenuSeparator);
+
+    if (this.range.type == 'CIRCLE' || this.range.type == 'SQUARE' || this.range.type == 'DIAMOND') {
+      let menu: ContextMenuAction[] = this.dockableCharacters.length <= 0
+        ? this.range.followingCharctor ? [] : [{ name: 'キャラクターがいません', action: null, disabled: true, center: true }] 
+        : this.dockableCharacters.map(character => {
+          return {
+            name: `${this.range.followingCharctor && this.range.followingCharctor === character ? '◉' : '○'} ${character.name}`,
+            action: () => {
+              this.range.followingCharctor = character;
+              this.range.following();
+              SoundEffect.play(PresetSound.lock);
+            }
+          };
+        });
+      if (this.range.followingCharctor) {
+        if (menu.length != 0) menu.push(ContextMenuSeparator);
+        menu.push({
+            name: '追従を解除', action: () => {
+              SoundEffect.play(PresetSound.unlock);
+              this.range.followingCharctor = null;
+            },
+            level: menu.length != 0 ? 2 : 0
+          });
+      }
+      menuArray.push({
+          name: '付近のキャラクターに追従', action: null, 
+          subActions: menu
+        });
       menuArray.push(
-        this.range.followingCharctor
+        this.range.isExpandByFollowing
         ? {
-          name: '追従を解除', action: () => {
-            SoundEffect.play(PresetSound.unlock);
-            this.range.followingCharctor = null;
+          name: '☑ 追従時サイズに合わせて拡大', action: () => {
+            this.range.isExpandByFollowing = false;
           }
         }
         : {
-          name: 'キャラクターに追従', action: () => {
-            this.dockingWindowOpen();
+          name: '☐ 追従時サイズに合わせて拡大', action: () => {
+            this.range.isExpandByFollowing = true;
           }
-        }
-      );
-    }
-    */
-    if (this.range.type == 'LINE' || this.range.type == 'CORN') {
+        });
+        menuArray.push(
+          this.range.isFollowAltitude
+          ? {
+            name: '☑ 高度を追従', action: () => {
+              this.range.isFollowAltitude = false;
+            }
+          }
+          : {
+            name: '☐ 高度を追従', action: () => {
+              this.range.isFollowAltitude = true;
+            }
+          });
+    } else {
       menuArray.push(
         this.range.subDivisionSnapPolygonal
         ? {
@@ -482,19 +566,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       );
     }
-    menuArray.push(
-      {
-        name: '影響グリッドの判定方法', action: null, 
-        subActions: [
-          { name: `${this.range.fillType == 0 ? '◉' : '○'} 判定なし (輪郭内を塗りつぶす)`, action: () => { this.range.fillType = 0; } },
-          ContextMenuSeparator,
-          { name: `${this.range.fillType == 1 ? '◉' : '○'} グリッドの中心を覆う`, action: () => { this.range.fillType = 1; } },
-          { name: `${this.range.fillType == 2 ? '◉' : '○'} グリッドの一部でも覆う`, action: () => { this.range.fillType = 2; } },
-          { name: `${this.range.fillType == 3 ? '◉' : '○'} グリッドの半分以上を覆う`, action: () => { this.range.fillType = 3; } },
-          { name: `${this.range.fillType == 4 ? '◉' : '○'} グリッド全体を覆う`, action: () => { this.range.fillType = 4; } },
-        ]
-      }
-    );
+
 /*
     menuArray.push(
       {
@@ -511,7 +583,6 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     );
 */
-    menuArray.push(ContextMenuSeparator);
     menuArray.push(this.isAltitudeIndicate
       ? {
         name: '☑ 高度の表示', action: () => {
@@ -629,7 +700,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     let setting: RangeRenderSetting = {
       areaWidth: this.areaQuadrantSize * 2,
       areaHeight: this.areaQuadrantSize * 2,
-      range: this.length < 1 ? 1 : this.length,
+      range: this.rangeLength,
       width: this.width < 0.1 ? 0.1 : this.width,
       centerX: this.range.location.x,
       centerY: this.range.location.y,
