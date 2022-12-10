@@ -401,7 +401,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
           markForCheck = true;
         }
         if (object === this.range.followingCharctor || (this.range.followingCharctor && object instanceof ObjectNode && this.range.followingCharctor.contains(object))) {
-          console.log('追従動作');
+          //console.log('追従動作');
           this.ngZone.run(() => {
             this.range.following();
             this.setRange();
@@ -542,12 +542,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         menuArray.push(
           this.range.isFollowAltitude
           ? {
-            name: '☑ 高度を追従', action: () => {
+            name: '☑ 高度にも追従', action: () => {
               this.range.isFollowAltitude = false;
             }
           }
           : {
-            name: '☐ 高度を追従', action: () => {
+            name: '☐ 高度にも追従', action: () => {
               this.range.isFollowAltitude = true;
             }
           });
