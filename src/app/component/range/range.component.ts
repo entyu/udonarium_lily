@@ -531,7 +531,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.range.followingCharctorIdentifier) {
         if (menu.length != 0) menu.push(ContextMenuSeparator);
         menu.push({
-            name: '追従を解除', action: () => {
+            name: '追従を解除する', action: () => {
               SoundEffect.play(PresetSound.unlock);
               this.range.followingCharctorIdentifier = null;
             },
@@ -564,6 +564,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
           : {
             name: '☐ 高度にも追従', action: () => {
               this.range.isFollowAltitude = true;
+              if (this.range.followingCharctorIdentifier) this.range.following();
             }
           });
     } else {
