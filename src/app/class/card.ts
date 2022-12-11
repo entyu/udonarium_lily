@@ -66,7 +66,7 @@ export class Card extends TabletopObject {
   get ownerIsOnline(): boolean { 
     return this.hasOwner && Network.peerContexts.some(context => {
       const cursor = PeerCursor.findByPeerId(context.peerId); // とりあえずPeerCursorから取る
-      return cursor && cursor.userId === this.owner && context.isOpen
+      return cursor && cursor.userId === this.owner && context.isOpen;
     }); 
   }
   get isHand(): boolean { return Network.peerContext.userId === this.owner; }
