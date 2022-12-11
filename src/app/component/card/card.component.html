@@ -7,22 +7,23 @@
         <div [@inverse]="state" [style.font-size.px]="fontSize + 9" [style.color]="color" [style.text-shadow]="textShadowCss" class="is-3d" [innerHTML]="rubiedText | safe: 'html'"></div>
       </div>
       <img [@inverse]="state" *ngIf="imageFile" class="card-image is-3d chrome-smooth-image-trick" [src]="(isFront ? frontImage.url : backImage.url) | safe: 'resourceUrl'">
-      <div *ngIf="!isFront && (isHand || ownerIsOnline) && 0 < ownerName.length" class="name-tag is-nowrap has-length-limit is-black-background is-3d" [ngStyle]="{'background-color': ownerColor, 'transform': 'translateY(-75%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+      <div *ngIf="!isFront && hasOwner && 0 < ownerName.length" class="name-tag is-nowrap has-length-limit is-black-background is-3d" [ngStyle]="{'background-color': ownerColor, 'transform': 'translateY(-75%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+        <i *ngIf="!isHand && !ownerIsOnline" class="material-icons health health-red">person_off</i>
         <span class="is-3d"><b>{{ownerName}}</b></span>
       </div>
       <img *ngIf="!isFront && (isHand || isGMMode) && frontImage" class="card-image thumbnail-transform is-translucent is-3d chrome-smooth-image-trick" [src]="frontImage.url | safe: 'resourceUrl'">
       <ng-container *ngIf="!isIconHidden">
         <div class="rotate-grab of-left-top is-3d">
-          <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
+          <i class="material-icons grabbing">{{ isLocked ? 'lock' : 'autorenew' }}</i>
         </div>
         <div class="rotate-grab of-left-bottom is-3d">
-          <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
+          <i class="material-icons grabbing">{{ isLocked ? 'lock' : 'autorenew' }}</i>
         </div>
         <div class="rotate-grab of-right-bottom is-3d">
-          <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
+          <i class="material-icons grabbing">{{ isLocked ? 'lock' : 'autorenew' }}</i>
         </div>
         <div class="rotate-grab of-right-top is-3d">
-          <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
+          <i class="material-icons grabbing">{{ isLocked ? 'lock' : 'autorenew' }}</i>
         </div>
         <div class="border-bg is-pointer-events-none is-3d"></div>
       </ng-container>

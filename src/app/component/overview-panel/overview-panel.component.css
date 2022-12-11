@@ -645,3 +645,23 @@ button.link:disabled:hover {
 .hide-text-area {
   color: transparent;
 }
+
+.health {
+  font-size: 12px;
+  font-weight: normal;
+  margin-top: -2px;
+  display: inline-block;
+  position: relative;
+}
+.health-red {
+  color: red;
+  text-shadow: 
+  #fff 0px 0px 1px, 
+  #fff 0px 0px 1px, 
+  #fff 0px 0px 1px, 
+  #fff 0px 0px 1px, 
+  #fff 0px 0px 1px, 
+  #fff 0px 0px 1px,
+  #fff 0px 0px 1px,
+  #fff 0px 0px 1px;
+}
