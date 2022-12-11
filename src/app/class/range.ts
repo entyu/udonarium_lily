@@ -62,7 +62,7 @@ export class RangeArea extends TabletopObject {
   followingCounterDummyCount(){
     this.followingCounterDummy ++;
     if(this.followingCounterDummy >= 50) this.followingCounterDummy = 0;
-    console.log(this.followingCounterDummy);
+    //console.log(this.followingCounterDummy);
   }
 
   following(){
@@ -72,8 +72,7 @@ export class RangeArea extends TabletopObject {
       this.followingCharctorIdentifier = null;
       return ;
     }
-    console.log('following x:'+ object.location.x + ' y:' + object.location.y);
-
+    //console.log('following x:'+ object.location.x + ' y:' + object.location.y);
     this.location.x = object.location.x + (this.gridSize * object.size) / 2;
     this.location.y = object.location.y + (this.gridSize * object.size) / 2;
     this.posZ = object.posZ;

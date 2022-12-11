@@ -1093,12 +1093,12 @@ export class RangeRender {
     context.beginPath();
     context.fillRect(gx+1, gy+1, gridSize-1, gridSize-1);
 
-    this.strokeSquare(context, gx, gy, gridSize);
+    //this.strokeSquare(context, gx, gy, gridSize);
   }
 
   private strokeSquare(context: CanvasRenderingContext2D, gx: number, gy: number, gridSize: number) {
     context.beginPath();
-    context.strokeStyle = '#55555566'
+    context.strokeStyle = '#55555533'
     context.strokeRect(gx, gy, gridSize, gridSize);
   }
 
