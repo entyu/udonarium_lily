@@ -37,7 +37,6 @@ import { StringUtil } from '@udonarium/core/system/util/string-util';
 import { ModalService } from 'service/modal.service';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { GameCharacter } from '@udonarium/game-character';
-import { NumberSymbol } from '@angular/common';
 
 @Component({
   selector: 'range',
