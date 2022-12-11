@@ -119,6 +119,8 @@ export namespace StringUtil {
         return 'テーブル';
       case 'chat-tab':
         return 'チャットタブ';
+      case 'range':
+        return '射程・範囲';
       default:
        return aliasName;
     }

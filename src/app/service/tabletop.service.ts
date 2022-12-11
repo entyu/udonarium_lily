@@ -159,7 +159,7 @@ export class TabletopService {
     this.terrainCache.refresh();
     this.textNoteCache.refresh();
     this.diceSymbolCache.refresh();
-
+    this.rangeCache.refresh();
     this.clearMap();
   }
 
@@ -181,11 +181,18 @@ export class TabletopService {
     switch (gameObject.aliasName) {
       case GameTableMask.aliasName:
         if (gameObject instanceof GameTableMask) gameObject.isLock = false;
+        // フォールスルー
       case Terrain.aliasName:
         if (gameObject instanceof Terrain) gameObject.isLocked = false;
         if (!this.tableSelecter || !this.tableSelecter.viewTable) return;
         this.tableSelecter.viewTable.appendChild(gameObject);
         break;
+      case Card.aliasName:
+      case CardStack.aliasName:
+      case RangeArea.aliasName:
+      case TextNote.aliasName:
+        if (gameObject instanceof Card || gameObject instanceof CardStack || gameObject instanceof RangeArea || gameObject instanceof TextNote) gameObject.isLocked = false;
+        if (gameObject instanceof RangeArea) gameObject.followingCharctorIdentifier = null;
       default:
         gameObject.setLocation('table');
         break;

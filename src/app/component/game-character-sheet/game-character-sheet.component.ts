@@ -136,6 +136,9 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
             case 'character':
               this.panelService.title = `キャラクターシート - ${this.tableTopObjectName}`;
               break;
+            case 'range':
+              this.panelService.title = `射程・範囲設定 - ${this.tableTopObjectName}`;
+              break;
           }  
         }
       });
