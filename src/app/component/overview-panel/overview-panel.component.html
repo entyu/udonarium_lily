@@ -41,7 +41,7 @@
       <button class="zoom-button" (click)="chanageImageView(true)" style="z-index: 10">
         <i class="material-icons">zoom_in</i>
       </button>
-      <div *ngIf="(card.isHand || card.ownerIsOnline) && 0 < card.ownerName.length" class="component-owner position-right-bottom" style="z-index: 10"
+      <div *ngIf="card.ownerIsOnline && 0 < card.ownerName.length" class="component-owner position-right-bottom" style="z-index: 10"
         [ngClass]="{'with-button-marign': hasImage}">
         <div class="owner-tag" [style.background-color]="card.ownerColor">{{card.ownerName}}</div>
       </div>

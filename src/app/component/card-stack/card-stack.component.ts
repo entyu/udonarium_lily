@@ -93,6 +93,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get hasOwner(): boolean { return this.cardStack.hasOwner; }
+  get ownerIsOnline(): boolean { return this.cardStack.ownerIsOnline; }
   get ownerName(): string { return this.cardStack.ownerName; }
   get ownerColor(): string { return this.cardStack.ownerColor; }
 

@@ -7,6 +7,7 @@ import { DataElement } from './data-element';
 import { PeerCursor } from './peer-cursor';
 import { TabletopObject } from './tabletop-object';
 import { moveToTopmost } from './tabletop-object-util';
+import { Network } from './core/system';
 
 @SyncObject('card-stack')
 export class CardStack extends TabletopObject {
@@ -26,6 +27,14 @@ export class CardStack extends TabletopObject {
     return object ? object.color : '#444444';
   }
   get hasOwner(): boolean { return 0 < this.owner.length; }
+  get ownerIsOnline(): boolean {
+    if (!this.hasOwner) return false; 
+    return (Network.peerContext.userId === this.owner && Network.peerContext.isOpen)
+      || Network.peerContexts.some(context => {
+        const cursor = PeerCursor.findByPeerId(context.peerId); // とりあえずPeerCursorから取る
+        return cursor && cursor.userId === this.owner && context.isOpen;
+      }); 
+  }
 
   private get cardRoot(): ObjectNode {
     for (let node of this.children) {

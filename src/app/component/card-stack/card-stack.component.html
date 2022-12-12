@@ -28,7 +28,7 @@
     <div *ngIf="isShowTotal" class="name-tag is-nowrap is-black-background is-3d number-of-cards" style="z-index: 10" [ngStyle]="{'transform': 'translateY(-50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateZ(' + (isInverse ? 180 : 0) + 'deg)'}">
       <span [ngClass]="{'is-inverse': isInverse}">{{cards.length}}枚</span>
     </div>
-    <div *ngIf="hasOwner" class="name-tag has-length-limit is-nowrap is-black-background is-3d" style="z-index: 10; color: whitesmoke" [ngStyle]="{'background-color': ownerColor,'transform': 'translateY(50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateZ(' + (isInverse ? 180 : 0) + 'deg)'}">
+    <div *ngIf="ownerIsOnline" class="name-tag has-length-limit is-nowrap is-black-background is-3d" style="z-index: 10; color: whitesmoke" [ngStyle]="{'background-color': ownerColor,'transform': 'translateY(50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px) rotateZ(' + (isInverse ? 180 : 0) + 'deg)'}">
       <span [ngClass]="{'is-inverse': isInverse}"><b>{{ownerName}}</b> が確認中</span>
     </div>
   </div>
