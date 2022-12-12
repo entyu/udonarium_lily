@@ -248,7 +248,7 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
     let distance = (this.doubleClickPoint.x - this.input.pointer.x) ** 2 + (this.doubleClickPoint.y - this.input.pointer.y) ** 2;
     if (distance < 10 ** 2) {
       console.log('onDoubleClick !!!!');
-      if (this.hasOwner && !this.isHand) return;
+      if (this.ownerIsOnline && !this.isHand) return;
       this.state = this.isVisible && !this.isHand ? CardState.BACK : CardState.FRONT;
       this.owner = '';
       if (this.state === CardState.FRONT) this.chatMessageService.sendOperationLog((this.card.name == '' ? '(無名のカード)' : this.card.name)  + ' を公開');
@@ -295,17 +295,17 @@ export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
       ContextMenuSeparator,
       (!this.isVisible || this.isHand
         ? {
-          name: this.isHand ? '表向きで出す（公開する）' : this.hasOwner ? '表にする（公開する）' : '表にする', action: () => {
+          name: this.isHand ? '表向きで出す（公開する）' : this.ownerIsOnline ? '表にする（公開する）' : '表にする', action: () => {
             this.card.faceUp();
             this.chatMessageService.sendOperationLog((this.card.name == '' ? '(無名のカード)' : this.card.name) + ' を公開');
             SoundEffect.play(PresetSound.cardDraw);
-          }, default: !this.isLocked && (!this.hasOwner || this.isHand)
+          }, default: !this.isLocked && (!this.ownerIsOnline || this.isHand)
         }
         : {
           name: '裏にする', action: () => {
             this.card.faceDown();
             SoundEffect.play(PresetSound.cardDraw);
-          }, default: !this.isLocked && (!this.hasOwner || this.isHand)
+          }, default: !this.card.isLocked && (!this.ownerIsOnline || this.isHand)
         }
       ),
       (this.isHand

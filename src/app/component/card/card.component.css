@@ -184,10 +184,10 @@
   background-color: rgba(30, 30, 30, 0.8);
 }
 
-.grabbing {
+.material-icons {
   display: none;
 }
-.component:hover .grabbing, .component:active .grabbing {
+.component:hover .material-icons, .component:active .material-icons {
   display: inline;
 }
 
@@ -218,25 +218,4 @@
   #fff 0px 0px 2px,
   #fff 0px 0px 2px,
   #fff 0px 0px 2px;
-}
-
-.health {
-  font-size: 16px;
-  font-weight: normal;
-  margin-top: -2px;
-  display: inline-block;
-  position: relative;
-}
-.health-red {
-  color: red;
-  padding-right: 2px;
-  text-shadow: 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 2px, 
-  #fff 0px 0px 1px, 
-  #fff 0px 0px 1px,
-  #fff 0px 0px 1px,
-  #fff 0px 0px 1px;
 }
