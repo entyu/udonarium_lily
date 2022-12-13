@@ -57,6 +57,33 @@ export class RangeArea extends TabletopObject {
     return this.type === 'LINE' || this.type === 'CORN';
   }
 
+  get followingCharactor(): GameCharacter {
+    if (this.followingCharctorIdentifier) {
+      if (!this.followingCharactorCache || this.followingCharactorCache.identifier !== this.followingCharctorIdentifier) {
+        let object = ObjectStore.instance.get(this.followingCharctorIdentifier);
+        if (object && object instanceof GameCharacter) {
+          this.followingCharactorCache = object;
+        } else {
+          this.followingCharctorIdentifier = null;
+          this.followingCharactorCache = null;
+        }
+      }
+    } else {
+      this.followingCharactorCache = null;
+    }
+    return this.followingCharactorCache;
+  }
+  set followingCharactor(followingCharacter: GameCharacter) {
+    if (!followingCharacter) {
+      this. followingCharactorCache = null;
+      this.followingCharctorIdentifier = null;
+    } else {
+      this.followingCharactorCache = followingCharacter;
+      this.followingCharctorIdentifier = followingCharacter.identifier;
+    }
+  }
+  private followingCharactorCache: GameCharacter = null;
+
   gridSize: number = 50;
 
   followingCounterDummyCount(){
@@ -66,17 +93,16 @@ export class RangeArea extends TabletopObject {
   }
 
   following(){
-    let object = <TabletopObject>ObjectStore.instance.get(this.followingCharctorIdentifier);
-    if(!object || !(object instanceof GameCharacter) || object.isHideIn) {
+    if(!this.followingCharactor || this.followingCharactor.isHideIn) {
       console.log('追従対象見失い');
-      this.followingCharctorIdentifier = null;
-      return ;
+      this.followingCharactor = null;
+      return;
     }
     //console.log('following x:'+ object.location.x + ' y:' + object.location.y);
-    this.location.x = object.location.x + (this.gridSize * object.size) / 2;
-    this.location.y = object.location.y + (this.gridSize * object.size) / 2;
-    this.posZ = object.posZ;
-    if (this.isFollowAltitude) this.altitude = object.altitude;
+    this.location.x = this.followingCharactor.location.x + (this.gridSize * this.followingCharactor.size) / 2;
+    this.location.y = this.followingCharactor.location.y + (this.gridSize * this.followingCharactor.size) / 2;
+    this.posZ = this.followingCharactor.posZ;
+    if (this.isFollowAltitude) this.altitude = this.followingCharactor.altitude;
     this.followingCounterDummyCount();
   }
 

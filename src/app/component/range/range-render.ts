@@ -1091,7 +1091,7 @@ export class RangeRender {
 
   private fillSquare(context: CanvasRenderingContext2D, gx: number, gy: number, gridSize: number) {
     context.beginPath();
-    context.fillRect(gx+1, gy+1, gridSize-1, gridSize-1);
+    context.fillRect(gx, gy, gridSize, gridSize);
 
     //this.strokeSquare(context, gx, gy, gridSize);
   }
