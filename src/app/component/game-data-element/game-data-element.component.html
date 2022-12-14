@@ -28,7 +28,7 @@
         <ng-container [ngSwitch]="gameDataElement.name">
           <ng-container *ngSwitchCase="'opacity'">
             <input style="width:90%;" [style]="'font-size: 1.0em; min-width: 90px; width: 90%; --min: 0; --max: ' + value + '; --val:' + currentValue +';' | safe: 'style'" 
-              [(ngModel)]="currentValue" type="range" title="{{currentValue}}" min="0" max="100" step="1" />
+              [(ngModel)]="currentValue" type="range" title="{{currentValue}}%" min="0" max="100" step="1" />
             <br />
             <input style="margin-left: 3.5em; width:4em; text-align:right;" type="number" min="0" max="100" step="1" size="1" [(ngModel)]="currentValue" placeholder="Opacity" /><b class="move" style="font-size: small">%</b>
           </ng-container>
