@@ -551,6 +551,32 @@ input[type='range']::-ms-tooltip {
   filter: drop-shadow(0 -6px 6px #fff);
 }
 
+.aura-following.black {
+  filter: drop-shadow(0 -2px 2px black);
+}
+.aura-following.blue {
+  filter: drop-shadow(0 -2px 2px #33f);
+}
+.aura-following.green {
+  filter: drop-shadow(0 -2px 2px #3f3);
+}
+.aura-following.cyan {
+  filter: drop-shadow(0 -2px 2px #3ff);
+}
+.aura-following.red {
+  filter: drop-shadow(0 -2px 2px #f00);
+}
+.aura-following.magenta {
+  filter: drop-shadow(0 -2px 2px #f0f);
+}
+.aura-following.yellow {
+  filter: drop-shadow(0 -2px 2px #ff3);
+}
+.aura-following.white {
+  filter: drop-shadow(0 -2px 2px #fff);
+}
+
+
 button.link {
 /*.input {*/
   background: none;
@@ -644,4 +670,24 @@ button.link:disabled:hover {
 
 .hide-text-area {
   color: transparent;
+}
+
+input + .move {
+  display: inline-block;
+  transform: translateX(-1em);
+  transition: transform 18ms;
+}
+input:hover + .move,
+input:active + .move,
+input:focus + .move {
+  display: inline-block;
+  transform: translateX(0px);
+  transition: transform 18ms;
+}
+
+@supports (-moz-user-select: -moz-none) {
+  /* 汚いけどとりあえず */
+  input + .move {
+    transform: translateX(0px);
+  }
 }

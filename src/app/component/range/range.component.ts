@@ -529,8 +529,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
             name: '追従を解除する', action: () => {
               SoundEffect.play(PresetSound.unlock);
               this.followingCharactor = null;
-            },
-            level: menu.length != 0 ? 2 : 0
+            }
           });
       }
       menuArray.push({
