@@ -6,6 +6,7 @@ import { DataElement } from '@udonarium/data-element';
 import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { GameTableMask } from '@udonarium/game-table-mask';
+import { RangeArea } from '@udonarium/range';
 import { Terrain } from '@udonarium/terrain';
 import { TextNote } from '@udonarium/text-note';
 import { ChatMessageService } from 'service/chat-message.service';
@@ -52,6 +53,9 @@ export class LoggingInputDirective implements AfterViewInit, OnDestroy {
       }
       if (elm instanceof TextNote) {
         this.type = '共有メモ';
+      }
+      if (elm instanceof RangeArea) {
+        this.type = '射程・範囲';
       }
       if (!elm.parentIsAssigned || elm.parentIsUnknown) break;
     }
