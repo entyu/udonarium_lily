@@ -5,9 +5,15 @@
     <div id="app-game-table" class="game-table table-image is-3d" [style.background-image]="'url(' + tableImage.url + ')' | safe: 'style'" #gameObjects>
       <canvas class="grid-canvas is-fill is-pointer-events-none" #gridCanvas [ngStyle]="{'transform': 'translateZ(' + (gridHeight + 0.1) + 'px)'}"></canvas>
       <div class="is-fill is-3d is-pointer-events-none">
-        <terrain class="is-3d" *ngFor="let terrain of terrains; trackBy: trackByGameObject" [style.z-index]="terrain.height > 0 ? 0 : 1" [terrain]="terrain"></terrain>
+        <ng-container *ngFor="let terrain of terrains; trackBy: trackByGameObject">
+          <ng-container *ngIf="terrain.detailDataElement && 0 < terrain.detailDataElement.children.length"><terrain class="is-3d" [style.z-index]="terrain.height > 0 ? 0 : 1" [terrain]="terrain" [appTooltip]="terrain"></terrain></ng-container>
+          <ng-container *ngIf="!terrain.detailDataElement || terrain.detailDataElement.children.length <= 0"><terrain class="is-3d" [style.z-index]="terrain.height > 0 ? 0 : 1" [terrain]="terrain"></terrain></ng-container>
+        </ng-container>
       </div>
-      <game-table-mask class="is-3d" *ngFor="let mask of tableMasks; trackBy: trackByGameObject" [gameTableMask]="mask"></game-table-mask>
+      <ng-container *ngFor="let mask of tableMasks; trackBy: trackByGameObject">
+        <ng-container *ngIf="mask.detailDataElement && 0 < mask.detailDataElement.children.length"><game-table-mask class="is-3d" [gameTableMask]="mask" [appTooltip]="mask"></game-table-mask></ng-container>
+        <ng-container *ngIf="!mask.detailDataElement || mask.detailDataElement.children.length <= 0"><game-table-mask class="is-3d" [gameTableMask]="mask"></game-table-mask></ng-container>
+      </ng-container>
       <text-note class="is-3d" *ngFor="let textNote of textNotes; trackBy: trackByGameObject" [textNote]="textNote" [appTooltip]="textNote" [ngStyle]="{'z-index' : textNote.zindex}"></text-note>
       <card-stack class="is-3d" *ngFor="let cardStack of cardStacks; trackBy: trackByGameObject" [cardStack]="cardStack" [appTooltip]="cardStack" [ngStyle]="{'z-index' : cardStack.zindex, 'transform': 'translateZ(' + (cardStack.zindex * 0.001) +'px)'}"></card-stack>
       <card class="is-3d" *ngFor="let card of cards; trackBy: trackByGameObject" [card]="card" [appTooltip]="card" [ngStyle]="{'z-index' : card.zindex, 'transform': 'translateZ(' + (card.zindex * 0.001) +'px)'}"></card>
