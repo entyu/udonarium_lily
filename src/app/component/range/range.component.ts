@@ -448,6 +448,9 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.input.onStart = this.onInputStart.bind(this);
     this.setRange();
+    queueMicrotask(() =>{
+      this.changeDetector.markForCheck();
+    });
   }
 
   ngOnDestroy() {
@@ -518,7 +521,10 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
             name: `${this.followingCharactor && this.followingCharactor.identifier === character.identifier ? '◉' : '○'} ${character.name}`,
             action: () => {
               this.followingCharactor = character;
-              this.range.following();
+              this.ngZone.run(() => {
+                this.range.following();
+                //this.setRange();
+              });
               SoundEffect.play(PresetSound.lock);
             }
           };
@@ -728,7 +734,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       isDocking: this.followingCharactor ? true : false,
       fillType: this.range.fillType
     };
-    console.log('this.range.location.x-y:' + this.range.location.x + ' ' + this.range.location.y);
+    //console.log('this.range.location.x-y:' + this.range.location.x + ' ' + this.range.location.y);
 
     switch (this.range.type) {
       case 'LINE':

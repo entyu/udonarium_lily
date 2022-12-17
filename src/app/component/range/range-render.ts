@@ -301,7 +301,7 @@ export class RangeRender {
     let gcy = 0.0;
 
     let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
-    console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
+    //console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
     this.makeBrush(context, gridSize, setting.gridColor);
 
     if(setting.fillType == 0){
@@ -492,7 +492,7 @@ export class RangeRender {
     let gcy = 0.0;
 
     let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
-    console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
+    //console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
     this.makeBrush(context, gridSize, setting.gridColor);
 
     if(setting.fillType == 0){
@@ -695,7 +695,7 @@ export class RangeRender {
     let gcy = 0.0;
 
     let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(setting.gridType, setting.centerX, setting.centerY, setting.areaWidth, setting.areaHeight);
-    console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
+    //console.log('LINE setting.centerX:'+setting.centerX + 'LINE setting.centerY:'+setting.centerY);
     this.makeBrush(context, gridSize, setting.gridColor);
 
     if (setting.fillType == 0) {
