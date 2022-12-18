@@ -202,11 +202,11 @@
             </ng-container>
           </ng-container>
           <ng-container *ngIf="range.followingCharactor">
-            <div class="tag">→ {{ range.followingCharactor.name }}</div>
-            <div class="value" style="margin-top: 3px">
+            <div class="tag">➡ {{ range.followingCharactor.name }}</div>
+            <div class="value" style="margin-top: 3px; pointer-events: none">
               <div class="inverser" style="min-width: 32px; min-height: 32px; max-width: 32px; max-height: 32px; margin-left: auto; margin-right: 0px" [ngClass]="{inverse: range.followingCharactor.isInverse, hollow: range.followingCharactor.isHollow}">
                 <span class="aura-following" [ngClass]="{black: range.followingCharactor.aura == 0, blue: range.followingCharactor.aura == 1, green: range.followingCharactor.aura == 2, cyan: range.followingCharactor.aura == 3, red: range.followingCharactor.aura == 4, magenta: range.followingCharactor.aura == 5, yellow: range.followingCharactor.aura == 6, white: range.followingCharactor.aura == 7}">
-                  <img style="max-width: 32px; max-height: 32px" class="character-image" [ngClass]="{'black-paint': range.followingCharactor.isBlackPaint}" [src]="range.followingCharactor.imageFile.url | safe: 'resourceUrl'" style="pointer-events: none">
+                  <img style="max-width: 32px; max-height: 32px" class="character-image" draggable="false" [ngClass]="{'black-paint': range.followingCharactor.isBlackPaint}" [src]="range.followingCharactor.imageFile.url | safe: 'resourceUrl'" style="pointer-events: none">
                 </span>
               </div>
             </div>
