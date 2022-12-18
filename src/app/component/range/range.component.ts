@@ -360,6 +360,16 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     return length;
   }
 
+  get rotateHandlesLeftPos(): number[] {
+    let ret: number[] = [];
+    for (let i = 1; i < Math.ceil((this.rangeLength + 0.1) / 10); i++) {
+      ret.push(this.rangeLength * i / Math.ceil((this.rangeLength + 0.1) / 10));
+    }
+    ret.push(this.rangeLength);
+    //console.log(ret)
+    return ret;
+  }
+
   gridSize: number = 50;
   
   movableOption: MovableOption = {};

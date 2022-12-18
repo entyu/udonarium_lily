@@ -15,7 +15,7 @@
         <canvas class="is-fill is-3d" #rangeCanvas></canvas>
       </div>
       <div class="component-content is-3d" style="z-index: 3" [style.opacity]="isMoving ? 0.7 : 1"
-        appRotable [rotable.option]="rotableOption" [rotable.polygonal]="this.range.subDivisionSnapPolygonal ? 240 : 24" 
+        appRotable [rotable.option]="rotableOption" [rotable.polygonal]="range.subDivisionSnapPolygonal ? 360*10 : 24" 
         (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLocked" 
         style="transform: rotateZ(0deg);" #rotate>
         <div class="is-3d" *ngIf="(range.type == 'CIRCLE') || (range.type == 'SQUARE') || (range.type == 'DIAMOND')" class="lock-icon is-center">
@@ -23,10 +23,12 @@
         </div>
         <ng-container *ngIf="(range.type != 'CIRCLE') && (range.type != 'SQUARE') && (range.type != 'DIAMOND')"> 
           <div class="is-3d" style="position: absolute; width: 28px; pointer-events: auto">
-            <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style="position:absolute" 
-              [style.left.px]="(range.length - 0.3) * gridSize">
-              <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
-            </div>
+            <ng-container *ngFor="let pos of rotateHandlesLeftPos">
+              <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style="position:absolute"
+                [style.left.px]="math.ceil((pos - 0.3) * gridSize)">
+                <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
+              </div>
+            </ng-container>
             <div class="rotate-grab of-corn-bottom rotate-grab-icon is-3d will-change">
               <i class="material-icons">{{ isLocked ? 'lock' : 'autorenew' }}</i>
             </div>
