@@ -196,8 +196,8 @@ class ObjectInventory {
       this._dataElementMap.clear();
       let caches = this.tabletopObjects;
       for (let object of caches) {
-        if (!object.rootDataElement) continue;
-        let elements = this.dataTags.map(tag => tag === this.newLineString ? this.newLineDataElement : object.rootDataElement.getFirstElementByName(tag));
+        if (!object.detailDataElement) continue;
+        let elements = this.dataTags.map(tag => tag === this.newLineString ? this.newLineDataElement : object.detailDataElement.getFirstElementByName(tag));
         this._dataElementMap.set(object.identifier, elements);
       }
       this.needsRefreshElements = false;
