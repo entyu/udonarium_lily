@@ -15,7 +15,7 @@
         <canvas class="is-fill is-3d" #rangeCanvas></canvas>
       </div>
       <div class="component-content is-3d" style="z-index: 3" [style.opacity]="isMoving ? 0.7 : 1"
-        appRotable [rotable.option]="rotableOption" [rotable.polygonal]="range.subDivisionSnapPolygonal ? 360*10 : 24" 
+        appRotable [rotable.option]="rotableOption" [rotable.polygonal]="range.subDivisionSnapPolygonal ? 360 : 24" 
         (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLocked" 
         style="transform: rotateZ(0deg);" #rotate>
         <div class="is-3d" *ngIf="(range.type == 'CIRCLE') || (range.type == 'SQUARE') || (range.type == 'DIAMOND')" class="lock-icon is-center">
