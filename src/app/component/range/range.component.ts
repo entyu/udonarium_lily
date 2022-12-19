@@ -362,8 +362,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get rotateHandlesLeftPos(): number[] {
     let ret: number[] = [];
-    for (let i = 1; i < Math.ceil((this.rangeLength + 0.1) / 10); i++) {
-      ret.push(this.rangeLength * i / Math.ceil((this.rangeLength + 0.1) / 10));
+    for (let i = 1; i < Math.ceil((this.rangeLength) / 6); i++) {
+      ret.push(this.rangeLength * i / Math.ceil((this.rangeLength) / 6));
     }
     ret.push(this.rangeLength);
     //console.log(ret)
