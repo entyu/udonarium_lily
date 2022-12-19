@@ -50,6 +50,13 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     return this.isTagLocked && (this.gameDataElement.name === 'name');
   }
 
+  get checkValue(): string {
+    if (this.currentValue == null) return '';
+    let ary = this.currentValue.toString().split(/[|｜]/, 2);
+    if (ary.length <= 1) return this.value == null || this.value == '' ? '' : this.currentValue.toString();
+    return this.value == null || this.value == '' ? ary[1] : ary[0];
+  }
+
   get isCommonValue(): boolean {
     if (this.gameDataElement) {
       return this.isTagLocked && (this.gameDataElement.name === 'size'
