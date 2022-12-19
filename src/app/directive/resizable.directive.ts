@@ -15,40 +15,51 @@ interface BoxSize {
   selector: '[appResizable]'
 })
 export class ResizableDirective implements AfterViewInit, OnDestroy {
-  @Input('resizable.disable') set isDisable(isDisable: boolean) { this._isDisable = isDisable; this.handleMap.forEach(handle => handle.cursor(!isDisable)); };
-  get isDisable(): boolean { return this._isDisable; }
-
+  @Input('resizable.disable') isDisable: boolean = false;
   @Input('resizable.bounds') boundsSelector: string = 'body';
   @Input('resizable.stack') stackSelector: string = '';
   @Input('resizable.minWidth') minWidth: number = 100;
-  @Input('resizable.minHeight') minHeight: number = 100
+  @Input('resizable.minHeight') minHeight: number = 100;
 
-  @Input('resizable.align') set align(align: string) { this._align = align; this.handleMap.forEach(handle => handle.able(align)); };
-  get align(): string { return this._align; }
-
+  //@Input('resizable.align') align: string = null;
+  @Input('resizable.align') set align(align: string) { this._align = align; this.initialize(); };
+  
   @Output('resizable.start') ostart: EventEmitter<MouseEvent | TouchEvent> = new EventEmitter();
   @Output('resizable.move') onmove: EventEmitter<MouseEvent | TouchEvent> = new EventEmitter();
   @Output('resizable.end') onend: EventEmitter<MouseEvent | TouchEvent> = new EventEmitter();
 
   private handleMap = new Map<HandleType, ResizeHandler>();
-  private handleTypes: HandleType[] = [
-    HandleType.N,
-    HandleType.E,
-    HandleType.W,
-    HandleType.S,
-    HandleType.NE,
-    HandleType.NW,
-    HandleType.SE,
-    HandleType.SW
-  ];
+  private _align = 'normal';
+
+  private get handleTypes(): HandleType[] {
+    if (this._align === 'horizontal') {
+      return [
+        HandleType.E,
+        HandleType.W
+      ];  
+    }
+    if (this._align === 'vertical') {
+      return [
+        HandleType.N,
+        HandleType.S
+      ];
+    }
+    return [
+      HandleType.N,
+      HandleType.E,
+      HandleType.W,
+      HandleType.S,
+      HandleType.NE,
+      HandleType.NW,
+      HandleType.SE,
+      HandleType.SW
+    ];
+  }
 
   private startPosition: BoxSize = { left: 0, top: 0, width: 0, height: 0 };
 
   private startPointer: PointerCoordinate = { x: 0, y: 0, z: 0 };
   private prevTrans: BoxSize = { left: 0, top: 0, width: 0, height: 0 };
-
-  private _isDisable = false;
-  private _align = 'normal';
 
   constructor(
     private ngZone: NgZone,
@@ -67,6 +78,8 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
 
   private initialize() {
     this.ngZone.runOutsideAngular(() => {
+      this.handleMap.forEach(handle => handle.destroy());
+      this.handleMap.clear();
       this.handleTypes.forEach(type => {
         let handle = new ResizeHandler(this.elementRef.nativeElement, type);
         this.handleMap.set(type, handle);
@@ -74,7 +87,6 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
         handle.input.onMove = ev => this.onResizeMove(ev, handle);
         handle.input.onEnd = ev => this.onResizeEnd(ev, handle);
         handle.input.onContextMenu = ev => this.onContextMenu(ev, handle);
-        handle.able(this.align);
       });
     });
   }
@@ -84,11 +96,11 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
   }
 
   destroy() {
-    this.handleMap.forEach(handle => handle.input.destroy());
+    this.handleMap.forEach(handle => handle.destroy());
+    this.handleMap.clear();
   }
 
   private onResizeStart(e: MouseEvent | TouchEvent, handle: ResizeHandler) {
-    if (this.isDisable) return this.cancel();
     if ((e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
     this.setForeground();
     this.handleMap.forEach(h => {

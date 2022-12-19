@@ -137,38 +137,4 @@ export class ResizeHandler {
       style.cursor = 'default';
     }
   }
-
-  able(align: string) {
-    let style = this.handle.style;
-    if (align !== 'horizontal' && align !== 'vertical') {
-      style.pointerEvents = 'auto';
-    } else {
-      switch (this.type) {
-        case HandleType.N:
-          style.pointerEvents = (align === 'vertical') ? 'auto' : 'none';
-          break;
-        case HandleType.E:
-          style.pointerEvents = (align === 'horizontal') ? 'auto' : 'none';
-          break;
-        case HandleType.W:
-          style.pointerEvents = (align === 'horizontal') ? 'auto' : 'none';
-          break;
-        case HandleType.S:
-          style.pointerEvents = (align === 'vertical') ? 'auto' : 'none';
-          break;
-        case HandleType.NE:
-          style.pointerEvents = 'none';
-          break;
-        case HandleType.NW:
-          style.pointerEvents = 'none';
-          break;
-        case HandleType.SE:
-          style.pointerEvents = 'none';
-          break;
-        case HandleType.SW:
-          style.pointerEvents = 'none';
-          break;
-      }
-    }
-  }
 }
