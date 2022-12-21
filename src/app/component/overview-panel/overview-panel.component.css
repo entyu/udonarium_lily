@@ -161,7 +161,6 @@
 
 .character-image-box {
   width: 100px;
-  overflow: hidden;
   vertical-align: bottom;
   margin-left: 0.5em;
   margin-bottom: -6px;
@@ -170,9 +169,10 @@
   overflow: visible;
 }
 .character-image-box img {
+  max-height: 150px;
   vertical-align: bottom;
   object-fit: contain;
-  object-position: bottom left;
+  object-position: bottom center;
 }
 
 .character-image-box.has-icon {
@@ -291,7 +291,7 @@
   color: #444;
   padding: 0;
   box-sizing: border-box;
-  resize: both;
+  resize: none;
   overflow: hidden;
   white-space: pre-wrap;
   word-wrap: break-word;

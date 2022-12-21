@@ -15,13 +15,12 @@ interface BoxSize {
   selector: '[appResizable]'
 })
 export class ResizableDirective implements AfterViewInit, OnDestroy {
-  @Input('resizable.disable') isDisable: boolean = false;
   @Input('resizable.bounds') boundsSelector: string = 'body';
   @Input('resizable.stack') stackSelector: string = '';
   @Input('resizable.minWidth') minWidth: number = 100;
   @Input('resizable.minHeight') minHeight: number = 100;
 
-  //@Input('resizable.align') align: string = null;
+  @Input('resizable.disable') set isDisable(isDisable: boolean) { this._isDisable = isDisable; this.initialize(); };
   @Input('resizable.align') set align(align: string) { this._align = align; this.initialize(); };
   
   @Output('resizable.start') ostart: EventEmitter<MouseEvent | TouchEvent> = new EventEmitter();
@@ -29,9 +28,11 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
   @Output('resizable.end') onend: EventEmitter<MouseEvent | TouchEvent> = new EventEmitter();
 
   private handleMap = new Map<HandleType, ResizeHandler>();
+  private _isDisable = false;
   private _align = 'normal';
 
   private get handleTypes(): HandleType[] {
+    if (this._isDisable || this._align === 'none') return [];
     if (this._align === 'horizontal') {
       return [
         HandleType.E,
@@ -101,7 +102,7 @@ export class ResizableDirective implements AfterViewInit, OnDestroy {
   }
 
   private onResizeStart(e: MouseEvent | TouchEvent, handle: ResizeHandler) {
-    if ((e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
+    if (this._isDisable || (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
     this.setForeground();
     this.handleMap.forEach(h => {
       if (h !== handle) h.input.cancel();
