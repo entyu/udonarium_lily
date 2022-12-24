@@ -335,7 +335,7 @@ export class GameCharacterComponent implements OnInit, AfterViewInit, OnDestroy 
     let sin = Math.abs(Math.sin(this.roll * Math.PI / 180));
     if (cos < 0.5) cos = 0.5;
     if (sin < 0.5) sin = 0.5;
-    const altitude1 = (this.characterImageHeight + (this.name ? 36 : 0)) * cos + 4;
+    const altitude1 = (this.characterImageHeight + (this.name != '' ? 24 : 0)) * cos + 4;
     const altitude2 = (this.characterImageWidth / 2) * sin + 4 + this.characterImageWidth / 2;
     let ret = altitude1 > altitude2 ? altitude1 : altitude2;
     this.gameCharacter.chatBubbleAltitude = ret;
