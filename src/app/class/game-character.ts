@@ -26,6 +26,9 @@ export class GameCharacter extends TabletopObject {
   isEmote = false;
   isLoaded = false;
 
+  //汚い、別の方法ないか
+  chatBubbleAltitude = 0;
+
   get name(): string { return this.getCommonValue('name', ''); }
   set name(name) { this.setCommonValue('name', name); }
   get size(): number { return this.getCommonValue('size', 1); }

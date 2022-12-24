@@ -94,7 +94,7 @@
         <span class="altitude-indicator is-3d" style="position: absolute">{{ math.abs(altitude) }}</span>
         <span class="altitude-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)">{{ math.abs(altitude) }}</span>
       </div>
-      <div class="is-3d" [style.visibility]="altitude < 0 ? 'visible' : 'hidden'">
+      <div class="is-3d" [style.visibility]="altitude < 0 ? 'visible' : 'hidden'" [ngStyle]="{transform: 'translateY(' + (chatBubbleAltitude + 4) + 'px)'}">
         <span class="elevation-indicator is-3d" style="position: absolute"><i>{{ elevation }}</i></span>
         <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
       </div>
