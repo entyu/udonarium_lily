@@ -340,6 +340,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.followingCharactor 
       && this.followingCharactor.location.x <= this.range.location.x && this.range.location.x <= (this.followingCharactor.location.x + this.followingCharactor.size * this.gridSize)
       && this.followingCharactor.location.y <= this.range.location.y && this.range.location.y <= (this.followingCharactor.location.y + this.followingCharactor.size * this.gridSize)
+      && (this.followingCharactor.altitude - 0.5) <= this.range.altitude && this.range.altitude <= (this.followingCharactor.altitude + 0.5)
   }
 
   get dockableCharacters(): GameCharacter[] {
