@@ -43,7 +43,7 @@
   <div class="is-3d" *ngIf="isAltitudeIndicate && (altitude <= -0.5 || 0.5 <= altitude)"
     style="display: flex; flex-flow: column nowrap; justify-content: space-between; border-left: 2px dashed black; transform-origin: top left"
     [style.border-left-color]="range.rangeColor"
-    [style.height.px]="math.abs(altitude * gridSize) - ((altitude > 0 || !followingCharactor) ? 0 : followingCharactor.chatBubbleAltitude + 4)"
+    [style.height.px]="math.abs(altitude * gridSize) - ((altitude > 0 || !isFollowed) ? 0 : followingCharactor.chatBubbleAltitude + 4)"
     [ngStyle]="{transform: 'rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
     <div class="is-3d" [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
       <span class="elevation-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
@@ -53,7 +53,7 @@
       <span class="altitude-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss">{{ math.abs(altitude) }}</span>
       <span class="altitude-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss">{{ math.abs(altitude) }}</span>
     </div>
-    <div class="is-3d" [style.visibility]="altitude < 0 ? 'visible' : 'hidden'"  [ngStyle]="{transform: 'translateY(' + (followingCharactor ? followingCharactor.chatBubbleAltitude + 4 : 0) + 'px)'}">
+    <div class="is-3d" [style.visibility]="altitude < 0 ? 'visible' : 'hidden'"  [ngStyle]="{transform: 'translateY(' + (isFollowed ? followingCharactor.chatBubbleAltitude + 4 : 0) + 'px)'}">
       <span class="elevation-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
       <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
     </div>

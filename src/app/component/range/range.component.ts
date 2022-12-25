@@ -336,6 +336,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   get followingCharactor(): GameCharacter { return this.range.followingCharactor; }
   set followingCharactor(followingCharactor: GameCharacter) { this.range.followingCharactor = followingCharactor; }
 
+  get isFollowed(): boolean {
+    return this.followingCharactor 
+      && this.followingCharactor.location.x <= this.range.location.x && this.range.location.x <= (this.followingCharactor.location.x + this.followingCharactor.size * this.gridSize)
+      && this.followingCharactor.location.y <= this.range.location.y && this.range.location.y <= (this.followingCharactor.location.y + this.followingCharactor.size * this.gridSize)
+  }
+
   get dockableCharacters(): GameCharacter[] {
     let ary: GameCharacter[] = this.tabletopService.characters.filter(character => {
       if (character.location.name !== 'table' || character.isHideIn) return false;
