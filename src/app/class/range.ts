@@ -101,8 +101,11 @@ export class RangeArea extends TabletopObject {
     //console.log('following x:'+ object.location.x + ' y:' + object.location.y);
     this.location.x = this.followingCharactor.location.x + (this.gridSize * this.followingCharactor.size) / 2;
     this.location.y = this.followingCharactor.location.y + (this.gridSize * this.followingCharactor.size) / 2;
-    this.posZ = this.followingCharactor.posZ;
-    if (this.isFollowAltitude) this.altitude = this.followingCharactor.altitude;
+    
+    if (this.isFollowAltitude) {
+      this.altitude = this.followingCharactor.altitude;
+      this.posZ = this.followingCharactor.posZ;
+    }
     this.followingCounterDummyCount();
   }
 
