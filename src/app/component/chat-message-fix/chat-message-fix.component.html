@@ -1,7 +1,7 @@
 <div class="table">
   <textarea class="chat-input is-caret" id = messageFix_{{initTimestamp}} [(ngModel)]="text" [ngModelOptions]="{standalone: true}"
-    (input)="onInput()" (keydown.enter)="fix()"
+    (input)="onInput()" (keydown.enter)="fix($event)"
     #textArea></textarea>
-  <button type="submit" (click)="fix()">変更</button>
+  <button type="submit" (click)="fix(null)">変更</button>
   <button type="submit" (click)="cancel()">キャンセル</button>
 </div>
