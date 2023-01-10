@@ -187,6 +187,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private targeted(gameCharacter: GameCharacter): boolean {
+    if (gameCharacter.location.name != 'table') return false;
     return gameCharacter.targeted;
   }
 
