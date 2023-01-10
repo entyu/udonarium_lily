@@ -131,7 +131,20 @@ export class ChatPalette extends ObjectNode {
 
   checkTargetCharactor(text: string): boolean{
     let istarget = text.match(/[tTｔＴ][{｛]\s*([^{}｛｝]+)\s*[}｝]/g) ? true : false;
-    console.log('複数対象用コマンド');
+
+    if( text.match(/^[tTｔＴ][:：]([^:：]+)/g) ){
+      istarget = true;
+    }
+    if( text.match(/\s[tTｔＴ][:：]([^:：]+)/g) ){
+      istarget = true;
+    }
+    if( text.match(/^[tTｔＴ][&＆]([^&＆]+)/g) ){
+      istarget = true;
+    }
+    if( text.match(/\s[tTｔＴ][&＆]([^&＆]+)/g) ){
+      istarget = true;
+    }
+    console.log('複数対象用コマンド：'+istarget);
     return istarget;
   }
 

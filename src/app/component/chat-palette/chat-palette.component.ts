@@ -226,9 +226,27 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
         
         for(let object of objects){
           outtext += first ? '' : '\n'
-          outtext += this.palette.evaluate(value.text, this.character.rootDataElement, object);
+          let str = value.text;
+          let str2 = '';
+          //自分リソース操作指定の総略処理、あとでやる
+          if( first){
+            console.log( 'sendChat文字置換' + '初回');
+            str2 = str;
+          }else{
+            console.log( 'sendChat文字置換' + '2回目以降');
+            let deleteStart = true;
+            let deleteCommandFlag = true;
+            for (let i = 0; i < str.length; i++) {
+              
+              str2 = str2 + str[i];
+            }
+          }
+
+          console.log( 'sendChat文字置換' + str)
+          outtext += this.palette.evaluate(str, this.character.rootDataElement, object);
           outtext += ' ['+object.name + ']';
           first = false;
+
 
           let targetContext: ChatMessageTargetContext = {
             text: '',
@@ -241,6 +259,13 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
       }else{
         objects = [];
         outtext = this.palette.evaluate(value.text, this.character.rootDataElement);
+        let targetContext: ChatMessageTargetContext = {
+          text: '',
+          object: null
+        };
+        targetContext.text = outtext;
+        targetContext.object = null;
+        messageTargetContext.push( targetContext);
       }
       this.chatMessageService.sendMessage(this.chatTab, outtext, value.gameSystem, value.sendFrom, value.sendTo, value.tachieNum, value.messColor, messageTargetContext);
       // this.chatMessageService.sendMessage(this.chatTab, text, value.gameType, value.sendFrom, value.sendTo);
