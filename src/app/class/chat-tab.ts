@@ -1,4 +1,4 @@
-import { ChatMessage, ChatMessageContext } from './chat-message';
+import { ChatMessage, ChatMessageContext, ChatMessageTargetContext } from './chat-message';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { InnerXml, ObjectSerializer } from './core/synchronize-object/object-serializer';
@@ -82,7 +82,6 @@ export class ChatTab extends ObjectNode implements InnerXml {
     if ( index >= 0 ){
       this.imageIdentifierZpos.splice(index, 1);
       this.imageIdentifierZpos.push( Number(toppos) );
-      console.log( 'imageIdentifierZpos = ' + this.imageIdentifierZpos );
     }
   }
 
@@ -116,19 +115,18 @@ export class ChatTab extends ObjectNode implements InnerXml {
       }else{
         // マウスクリック非表示を復帰する
         this.imageDispFlag[child.imagePos] = true;
-//        console.log("立ち絵テスト3 this.imageDispFlag[child.imagePos]" + child.imagePos + " / "+this.imageDispFlag[child.imagePos] + ":");
       }
 
       EventSystem.trigger('MESSAGE_ADDED', { tabIdentifier: this.identifier, messageIdentifier: child.identifier });
     }
   }
 
-  addMessage(message: ChatMessageContext): ChatMessage {
+  addMessage(message: ChatMessageContext , messageTargetContext ? :ChatMessageTargetContext[] ): ChatMessage {
     message.tabIdentifier = this.identifier;
 
     let chat = new ChatMessage();
     for (let key in message) {
-      console.log('addMessage:' + key);
+//      console.log('addMessage:' + key);
       if (key === 'identifier') continue;
       if (key === 'tabIdentifier') continue;
 
@@ -175,11 +173,23 @@ export class ChatTab extends ObjectNode implements InnerXml {
       this.cutInLauncher.chatActivateCutIn( chat.text , message.to ); // カットイン末尾発動
     }
 
-    EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
-
+    let isContext = false;
+    if (messageTargetContext){
+      if (messageTargetContext.length >= 1){
+        isContext = true;
+      }
+    }
+    if(isContext){
+      for( let context of messageTargetContext){
+        EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier, messageTrget: context });
+      }
+    }else{
+      EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier, messageTrget: null });
+    }
+    
     EventSystem.trigger('DICE_TABLE_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
 
-    EventSystem.trigger('RESOURCE_EDIT_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });
+    EventSystem.trigger('RESOURCE_EDIT_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier, messageTargetContext: messageTargetContext ? messageTargetContext : null});
 
     // 2021年4月実装のえいぷりるコマンド判定
     EventSystem.trigger('APRIL_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier });

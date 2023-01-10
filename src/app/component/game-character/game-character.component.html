@@ -3,7 +3,7 @@
 </div>
 <div class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
   [style.height.px]="size * gridSize" appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()"
-  (movable.ondragend)="onMoved()" #root>
+  (movable.ondragend)="onMoved()" (mousedown)="checkKey($event)" #root>
   <div class="component-content is-3d" [@bounceInOut]="'in'">
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
       (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
@@ -29,8 +29,9 @@
                   <ng-container *ngIf="child.children.length > 0">
                     <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off"
                       [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%)'}">
+                      <div [hidden]="!this.gameCharacter.targeted" class="target-icon-buff scrolldown5"><img src="./assets/images/target/target.png"></div>
                       <div [hidden]="foldingBuff">
-                        <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
+                        <div class="buff-folding-icon " (mousedown)="foldingBuffFlag(true)">▼</div>
                         <div class="!table is-3d">
                           <div class="flex-item is-3d" *ngFor="let childElement of this.gameCharacter.buffDataElement.children">
                             <div class="table-row fornt-tag is-3d" game-data-element-buff [gameDataElement]="childElement" [isEdit]="isEdit" [isPieceMode]="true"></div>
@@ -41,13 +42,15 @@
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
                         <div class="table is-3d">
                           <div class="flex-item is-3d">
-                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum()}}個</div>
+                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div style="" *ngIf="this.gameCharacter.buffDataElement" class="buff-tag is-nowrap is-buff-background is-3d will-change backface-off" 
                      [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) translateY(-100%) rotateY(180deg)'}">
+                      <div class="target-icon-buff2 scrolldown5" [hidden]="!this.gameCharacter.targeted"
+                      [ngStyle]="{'transform': 'rotateY(180deg)'}"><img src="./assets/images/target/target.png"></div>
                       <div [hidden]="foldingBuff">
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(true)">▼</div>
                         <div class="table is-3d">
@@ -60,7 +63,7 @@
                         <div class="buff-folding-icon" (mousedown)="foldingBuffFlag(false)">▲</div>
                         <div class="table is-3d">
                           <div class="flex-item is-3d">
-                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum()}}個</div>
+                            <div class="table-row fornt-tag is-3d" style="font-family: Cambria, Georgia; font-size: 12px;">簡易表示中/バフ{{buffNum}}個</div>
                           </div>
                         </div>
                       </div>
@@ -71,6 +74,12 @@
             </div>
 <!-- 名前表示 -->
 <!-- クロームver102の描画問題に対処するため構成を修正している -->
+            <div [hidden]="!(this.buffNum==0)">
+              <div class="target-icon scrolldown4" [hidden]="!this.gameCharacter.targeted" 
+                [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
+                <img src="./assets/images/target/target.png">
+              </div>
+            </div>
             <ng-container *ngIf="this.gameCharacter.nonTalkFlag">
               <div *ngIf="0 < name.length" class="name-tag is-nowrap is-black-background is-3d will-change backface-off"
                 [ngStyle]="{'transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'
