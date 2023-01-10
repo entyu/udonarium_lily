@@ -212,26 +212,18 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         if (objects.length == 0) {
           outtext += '対象が未選択です'
         }
-        console.log('マルチターゲット構文');
         for(let object of objects){
           outtext += first ? '' : '\n'
           let str = value.text;
           let str2 = '';
-          //自分リソース操作指定の総略処理、あとでやる
           if( first){
-            console.log( 'sendChat文字置換' + '初回');
             str2 = str;
           }else{
-            console.log( 'sendChat文字置換' + '2回目以降');
-            let deleteStart = true;
-            let deleteCommandFlag = true;
-            for (let i = 0; i < str.length; i++) {
-              str2 = str2 + str[i];
-            }
+            //自分リソース操作指定の省略
+            str2 = DiceBot.deleteMyselfResourceBuff(str);
           }
 
-          console.log( 'sendChat文字置換' + str)
-          outtext += str;
+          outtext += str2;
           outtext += ' ['+object.name + ']';
           first = false;
 
@@ -239,7 +231,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
             text: '',
             object: null
           };
-          targetContext.text = value.text + ' ['+object.name + ']';
+          targetContext.text = str2;
           targetContext.object = object;
           messageTargetContext.push( targetContext);
         }
@@ -253,7 +245,6 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
         targetContext.object = null;
         messageTargetContext.push( targetContext);
       }
-      console.log('sendChat');
       this.chatMessageService.sendMessage(this.chatTab, outtext, value.gameSystem, value.sendFrom, value.sendTo, value.tachieNum, value.messColor, messageTargetContext);
     }
   }

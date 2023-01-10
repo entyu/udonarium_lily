@@ -180,12 +180,10 @@ export class ChatTab extends ObjectNode implements InnerXml {
       }
     }
     if(isContext){
-      console.log('SEND_MESSAGE messageTargetContext　あり')
       for( let context of messageTargetContext){
         EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier, messageTrget: context });
       }
     }else{
-      console.log('SEND_MESSAGE messageTargetContext　なし')
       EventSystem.trigger('SEND_MESSAGE', { tabIdentifier: this.identifier, messageIdentifier: chat.identifier, messageTrget: null });
     }
     

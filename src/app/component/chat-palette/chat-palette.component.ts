@@ -228,21 +228,14 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
           outtext += first ? '' : '\n'
           let str = value.text;
           let str2 = '';
-          //自分リソース操作指定の総略処理、あとでやる
           if( first){
-            console.log( 'sendChat文字置換' + '初回');
             str2 = str;
           }else{
-            console.log( 'sendChat文字置換' + '2回目以降');
-            let deleteStart = true;
-            let deleteCommandFlag = true;
-            for (let i = 0; i < str.length; i++) {
-              str2 = str2 + str[i];
-            }
+            //自分リソース操作指定の省略
+            str2 = DiceBot.deleteMyselfResourceBuff(str);
           }
 
-          console.log( 'sendChat文字置換' + str)
-          outtext += this.palette.evaluate(str, this.character.rootDataElement, object);
+          outtext += this.palette.evaluate(str2, this.character.rootDataElement, object);
           outtext += ' ['+object.name + ']';
           first = false;
 
@@ -250,7 +243,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
             text: '',
             object: null
           };
-          targetContext.text = this.palette.evaluate(value.text, this.character.rootDataElement, object) + ' ['+object.name + ']';
+          targetContext.text = this.palette.evaluate(str2, this.character.rootDataElement, object);
           targetContext.object = object;
           messageTargetContext.push( targetContext);
         }

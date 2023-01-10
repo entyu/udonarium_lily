@@ -167,6 +167,63 @@ export class DiceBot extends GameObject {
     return ObjectStore.instance.getObjects(DiceTable);
   }
 
+  static deleteMyselfResourceBuff(str: string): string{
+    let beforeIsSpace = true;
+    let beforeIsT = false;
+    let tCommand = false;
+    let deleteCommand = false;
+    let str2 = '';
+    for (let i = 0; i < str.length; i++) {
+      let chktext :string = str[i];
+
+      if ( beforeIsSpace && chktext.match(/[tTｔＴ]/)){
+        beforeIsSpace = false;
+        beforeIsT = true;
+        deleteCommand = false;
+        tCommand = false;
+        console.log( 'sendChat文字置換' + 'match(/[tTｔＴ]/)');
+        str2 = str2 + str[i];
+        continue;
+      }
+
+      if ( beforeIsT && chktext.match(/[:：&＆]/)){
+        beforeIsSpace = false;
+        beforeIsT = false;
+        deleteCommand = false;
+        tCommand = true;
+        console.log( 'sendChat文字置換' + 'match(/[:：&＆]/)');
+        str2 = str2 + str[i];
+        continue;
+      }
+
+      if ( (tCommand || beforeIsSpace || deleteCommand) && chktext.match(/[:：&＆]/)){
+        beforeIsSpace = false;
+        beforeIsT = false;
+        deleteCommand = true;
+        tCommand = false;
+        continue;
+      }
+
+      if ( chktext.match(/\s/)){
+        beforeIsSpace = true;
+        beforeIsT = false;
+        deleteCommand = false;
+        tCommand = false;
+        str2 = str2 + str[i];
+        console.log( 'sendChat文字置換' + 'match(/\\s/)');
+        continue;
+      }else{
+        beforeIsSpace = false;
+      }
+
+      if(deleteCommand){
+        continue;
+      }
+
+      str2 = str2 + str[i];
+    }
+    return str2;
+  }
 
   // リソース操作コマンドでs付きがあるか判定
   checkSecretEditCommand(chatText: string): boolean {
@@ -314,19 +371,6 @@ export class DiceBot extends GameObject {
         const gameType: string = chatMessage.tags ? chatMessage.tags[0] : '';
         
         console.log('リソース操作判定');
-        console.log();
-/*
-        if (event.data.messageTargetContext != null){
-          
-          console.log('------------------');
-          for (let context of event.data.messageTargetContext){
-            if(context.object){
-              console.log(context.text + ' '+ context.object.name);
-            }
-          }
-          console.log('------------------');
-        }
-*/
         this.checkResourceEditCommand( chatMessage , event.data.messageTargetContext ? event.data.messageTargetContext : []);
         return;
       })
@@ -574,6 +618,12 @@ export class DiceBot extends GameObject {
       let allEditList: ResourceEdit[] = null;
 
       for (const chktxt of splitText) {
+        if ( chktxt.match(/^(t?[:&][^:：&＆])+/gi)){
+          //正常。処理無し
+        }else{
+          continue;
+        }
+
         let resultRes = chktxt.match(/t?:[^:：&＆]+/gi);
         let resultBuff = chktxt.match(/t?&[^:：&＆]+/gi);
 
@@ -636,7 +686,7 @@ export class DiceBot extends GameObject {
 
   private resourceCommandToEdit(oneResourceEdit: ResourceEdit, text: string, object: GameCharacter, targeted: boolean): boolean{
     console.log('リソース変更コマンド処理開始');
-    console.log(object.name);
+//    console.log(object.name);
     oneResourceEdit.object = object;
     oneResourceEdit.targeted = targeted;
     const replaceText = ' ' + text.replace('：', ':').replace('＋', '+').replace('－', '-').replace('＝', '=').replace('＞', '>');
