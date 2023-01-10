@@ -237,7 +237,6 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
             let deleteStart = true;
             let deleteCommandFlag = true;
             for (let i = 0; i < str.length; i++) {
-              
               str2 = str2 + str[i];
             }
           }
@@ -246,7 +245,6 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
           outtext += this.palette.evaluate(str, this.character.rootDataElement, object);
           outtext += ' ['+object.name + ']';
           first = false;
-
 
           let targetContext: ChatMessageTargetContext = {
             text: '',

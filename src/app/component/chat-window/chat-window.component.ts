@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import GameSystemClass from 'bcdice/lib/game_system';
-import { ChatMessage } from '@udonarium/chat-message';
+import { ChatMessage, ChatMessageTargetContext} from '@udonarium/chat-message';
 import { ChatTab } from '@udonarium/chat-tab';
 import { DiceBot } from '@udonarium/dice-bot';
+import { GameCharacter } from '@udonarium/game-character';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { PeerCursor } from '@udonarium/peer-cursor';
@@ -168,9 +169,92 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
     let component = this.panelService.open<AlarmMenuComponent>(AlarmMenuComponent, option);
   }
 
+  checkTargetCharactor(text: string): boolean{
+    let istarget = false;
+    if( text.match(/^[tTｔＴ][:：]([^:：]+)/g) ){
+      istarget = true;
+    }
+    if( text.match(/\s[tTｔＴ][:：]([^:：]+)/g) ){
+      istarget = true;
+    }
+    if( text.match(/^[tTｔＴ][&＆]([^&＆]+)/g) ){
+      istarget = true;
+    }
+    if( text.match(/\s[tTｔＴ][&＆]([^&＆]+)/g) ){
+      istarget = true;
+    }
+    return istarget;
+  }
+
+  private targeted(gameCharacter: GameCharacter): boolean {
+    return gameCharacter.targeted;
+  }
+
+  private targetedGameCharacterList( ): GameCharacter[]{
+    let objects :GameCharacter[] = [];
+    objects = ObjectStore.instance
+        .getObjects<GameCharacter>(GameCharacter)
+        .filter(character => this.targeted(character));
+    return objects;
+  }
+
   sendChat(value: { text: string, gameSystem: GameSystemClass, sendFrom: string, sendTo: string ,tachieNum: number , messColor:string }) {
     if (this.chatTab) {
-      this.chatMessageService.sendMessage(this.chatTab, value.text, value.gameSystem, value.sendFrom, value.sendTo, value.tachieNum, value.messColor);
+      let outtext = '';
+      let objects: GameCharacter[] = [];
+      let messageTargetContext: ChatMessageTargetContext[] = [];
+
+      console.log(value.text + ':'+ this.checkTargetCharactor(value.text));
+
+      if ( this.checkTargetCharactor(value.text)) {
+        objects = this.targetedGameCharacterList();
+        let first = true;
+        if (objects.length == 0) {
+          outtext += '対象が未選択です'
+        }
+        console.log('マルチターゲット構文');
+        for(let object of objects){
+          outtext += first ? '' : '\n'
+          let str = value.text;
+          let str2 = '';
+          //自分リソース操作指定の総略処理、あとでやる
+          if( first){
+            console.log( 'sendChat文字置換' + '初回');
+            str2 = str;
+          }else{
+            console.log( 'sendChat文字置換' + '2回目以降');
+            let deleteStart = true;
+            let deleteCommandFlag = true;
+            for (let i = 0; i < str.length; i++) {
+              str2 = str2 + str[i];
+            }
+          }
+
+          console.log( 'sendChat文字置換' + str)
+          outtext += str;
+          outtext += ' ['+object.name + ']';
+          first = false;
+
+          let targetContext: ChatMessageTargetContext = {
+            text: '',
+            object: null
+          };
+          targetContext.text = value.text + ' ['+object.name + ']';
+          targetContext.object = object;
+          messageTargetContext.push( targetContext);
+        }
+      }else{
+        outtext = value.text;
+        let targetContext: ChatMessageTargetContext = {
+          text: '',
+          object: null
+        };
+        targetContext.text = value.text;
+        targetContext.object = null;
+        messageTargetContext.push( targetContext);
+      }
+      console.log('sendChat');
+      this.chatMessageService.sendMessage(this.chatTab, outtext, value.gameSystem, value.sendFrom, value.sendTo, value.tachieNum, value.messColor, messageTargetContext);
     }
   }
 
