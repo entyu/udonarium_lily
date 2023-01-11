@@ -118,6 +118,24 @@
   word-break: break-word;
 }
 
+.textarea-markdown{
+  background: none;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+
+  color: #444;
+  font-family: Cambria, Georgia;
+  padding: 2px;
+  box-sizing: border-box;
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
 /*button,*/
 input, button, textarea, select{
 /*.input {*/

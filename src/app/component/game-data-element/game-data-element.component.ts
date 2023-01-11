@@ -6,6 +6,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  HostListener,
 } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
@@ -15,6 +16,8 @@ import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+
+import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'game-data-element, [game-data-element]',
@@ -48,7 +51,8 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   constructor(
     private panelService: PanelService,
     private modalService: ModalService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private domSanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -168,7 +172,70 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
                .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
-  
+
+  clickMarkDownBox(id: string) {
+    console.log("マークダウンクリック:" + id);
+  }
+
+
+  escapeHtmlMarkDown(text,baseId): SafeHtml{
+
+    let text2 = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+               .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    let text3 = text2.replace(/[\[［][xXｘＸ][\]］]/g,"<input type=\"checkbox\" checked=\"checked\" class=\"markDounBox\" />")
+               .replace(/[\[［][\]］]/g,"<input type=\"checkbox\" class=\"markDounBox\" />");
+
+    let splitText = text3.split("<input ");
+    let text4 = '';
+    for( let i = 0; i < splitText.length; i++){
+      text4 += splitText[i];
+      if (i < splitText.length -1){
+        let num = ( '000000000' + i ).slice( -9 );
+        text4 += "<input " + "id=\"" + baseId + "_"+ num + "\" " + "(change)=\"clickMarkDownBox(\'" + baseId + "_" + num + "\')\" ";
+//        setTimeout(() => { this.addMarkDownEvent( baseId + "_"+ num); }, 1000);
+      }
+    }
+    
+//    let text3 = text2.replace(/[\[［][\]］]/g,"<div id\=\"1234\">クリック後(h3に変更)id=\u00221234\u0022</div>");
+//    let text3 = text2.replace(/[\[［][\]］]/g,"<span style='color: red;'>Hello！</span>");
+//    let text3 = text2.replace(/[\[［][\]］]/g,"<span>Hello！</span>");
+
+    return this.domSanitizer.bypassSecurityTrustHtml(text4);
+  }
+
+  @HostListener('click', ['$event'])
+  onclick(event){
+    let match = event.target.id.match();
+
+    console.log("HostListeneronclick event=" + event.target);
+    console.log("HostListeneronclick event=" + event.target.id);
+    console.log("HostListeneronclick event=" + event.target.class);
+    
+  }
+
+/*
+  addMarkDownEvent(id){
+    console.log("addMarkDownEvent id=" + id);
+    let doc = document.getElementById(id);
+    console.log("addMarkDownEvent id=" + doc);
+    
+    doc.onclick = function() { 
+      console.log("click");
+    };
+    
+*/
+/*    element.onclick = function() {
+      element.innerText += " クリックされました!";
+    };
+  }
+*/
+
+  isEditMarkDown( dataElmIdentifier) {
+    let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);
+    if( !box )return false;
+    return box.checked;
+  }
+
   isEditUrl( dataElmIdentifier) {
     let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);
     if( !box )return false;
