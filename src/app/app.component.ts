@@ -23,6 +23,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ReloadCheck } from '@udonarium/reload-check';
 import { TableSelecter } from '@udonarium/table-selecter';
+import { MarkDown } from '@udonarium/mark-down';
 
 import { CutIn } from '@udonarium/cut-in';
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
@@ -117,6 +118,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     let jukebox: Jukebox = new Jukebox('Jukebox');
     jukebox.initialize();
+
+    let markdown: MarkDown = new MarkDown('markdwon');
+    markdown.initialize();
 
     let cutInLauncher = new CutInLauncher('CutInLauncher');
     cutInLauncher.initialize();

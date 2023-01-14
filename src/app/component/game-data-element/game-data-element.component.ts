@@ -10,9 +10,11 @@ import {
 } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
+import { MarkDown } from '@udonarium/mark-down';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
@@ -177,6 +179,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     console.log("マークダウンクリック:" + id);
   }
 
+  get markdown(): MarkDown { return ObjectStore.instance.get<MarkDown>('markdwon'); }
 
   escapeHtmlMarkDown(text,baseId): SafeHtml{
 
@@ -190,45 +193,21 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     for( let i = 0; i < splitText.length; i++){
       text4 += splitText[i];
       if (i < splitText.length -1){
-        let num = ( '000000000' + i ).slice( -9 );
-        text4 += "<input " + "id=\"" + baseId + "_"+ num + "\" " + "(change)=\"clickMarkDownBox(\'" + baseId + "_" + num + "\')\" ";
-//        setTimeout(() => { this.addMarkDownEvent( baseId + "_"+ num); }, 1000);
+        let num = ( '00000000' + i ).slice( -8 );
+        text4 += "<input " + "id=\"" + baseId + "_mark_"+ num + "\" ";
       }
+      if(i>=99999999){break;}
     }
-    
-//    let text3 = text2.replace(/[\[［][\]］]/g,"<div id\=\"1234\">クリック後(h3に変更)id=\u00221234\u0022</div>");
-//    let text3 = text2.replace(/[\[［][\]］]/g,"<span style='color: red;'>Hello！</span>");
-//    let text3 = text2.replace(/[\[［][\]］]/g,"<span>Hello！</span>");
 
     return this.domSanitizer.bypassSecurityTrustHtml(text4);
   }
 
   @HostListener('click', ['$event'])
-  onclick(event){
-    let match = event.target.id.match();
-
-    console.log("HostListeneronclick event=" + event.target);
-    console.log("HostListeneronclick event=" + event.target.id);
-    console.log("HostListeneronclick event=" + event.target.class);
-    
+  click(event){
+    if (this.markdown){
+      this.markdown.changeMarkDownCheckBox(event.target.id,true);
+    }
   }
-
-/*
-  addMarkDownEvent(id){
-    console.log("addMarkDownEvent id=" + id);
-    let doc = document.getElementById(id);
-    console.log("addMarkDownEvent id=" + doc);
-    
-    doc.onclick = function() { 
-      console.log("click");
-    };
-    
-*/
-/*    element.onclick = function() {
-      element.innerText += " クリックされました!";
-    };
-  }
-*/
 
   isEditMarkDown( dataElmIdentifier) {
     let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);

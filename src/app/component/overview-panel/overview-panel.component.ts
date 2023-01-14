@@ -8,11 +8,14 @@ import {
   Input,
   OnDestroy,
   ViewChild,
+  HostListener,
 } from '@angular/core';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
+import { MarkDown } from '@udonarium/mark-down';
+
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -21,6 +24,8 @@ import { GameCharacter } from '@udonarium/game-character'; //
 import { TextNote } from '@udonarium/text-note'; //
 import { Card } from '@udonarium/card'; //
 import { CardStack } from '@udonarium/card-stack'; //
+
+import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'overview-panel',
@@ -71,7 +76,8 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   constructor(
     private inventoryService: GameObjectInventoryService,
     private changeDetector: ChangeDetectorRef,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private domSanitizer: DomSanitizer
   ) { }
 
   ngAfterViewInit() {
@@ -285,31 +291,45 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     if( maxHeight > 1000 ) maxHeight = 1000;
     return maxHeight;
   }
-/*
-  get overViewCardStackWidth() : number {
-    let cardStack = <CardStack>this.tabletopObject;
-    if( ! cardStack ) return 270;
-    let width = cardStack.overViewWidth ;
-    if( width < 270 ) width = 270;
-    if( width > 800 ) width = 800;
-    return width;
-  }
-
-  get overViewCardStackMaxHeight() : number {
-    let cardStack = <CardStack>this.tabletopObject;
-    if( ! cardStack ) return 250;
-    let maxHeight = cardStack.overViewMaxHeight ;
-    if( maxHeight < 250 ) maxHeight = 250;
-    if( maxHeight > 1000 ) maxHeight = 1000;
-    return maxHeight;
-  }
-*/
 
   escapeHtml(text) {
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
                .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
-  
+
+  clickMarkDownBox(id: string) {
+    console.log("マークダウンクリック:" + id);
+  }
+
+  get markdown(): MarkDown { return ObjectStore.instance.get<MarkDown>('markdwon'); }
+
+  escapeHtmlMarkDown(text,baseId): SafeHtml{
+    let text2 = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+               .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    let text3 = text2.replace(/[\[［][xXｘＸ][\]］]/g,"<input type=\"checkbox\" checked=\"checked\" class=\"markDounBox\" />")
+               .replace(/[\[［][\]］]/g,"<input type=\"checkbox\" class=\"markDounBox\" />");
+
+    let splitText = text3.split("<input ");
+    let text4 = '';
+    for( let i = 0; i < splitText.length; i++){
+      text4 += splitText[i];
+      if (i < splitText.length -1){
+        let num = ( '00000000' + i ).slice( -8 );
+        text4 += "<input " + "id=\"" + baseId + "_mark_"+ num + "\" ";
+      }
+      if(i>=99999999){break;}
+    }
+    return this.domSanitizer.bypassSecurityTrustHtml(text4.replace(/\n/g,'<br>'));
+  }
+
+  @HostListener('click', ['$event'])
+  click(event){
+    if (this.markdown){
+      this.markdown.changeMarkDownCheckBox(event.target.id,false);
+    }
+  }
+
+
   isEditUrl( dataElmIdentifier) {
     let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);
     if( !box )return false;
