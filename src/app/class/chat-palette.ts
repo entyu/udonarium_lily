@@ -184,8 +184,11 @@ export class ChatPalette extends ObjectNode {
             let element = target.rootDataElement.getFirstElementByName(name);
             if (element) {
               let targetElementText =''
-              if (useMax && element.isNumberResource) targetElementText = element.value + '';
-              targetElementText = element.isNumberResource ? element.currentValue + '' : element.value + '';
+              if (useMax && element.isNumberResource){
+                targetElementText = element.value + '';
+              }else{
+                targetElementText = element.isNumberResource ? element.currentValue + '' : element.value + '';
+              }
               if ( targetElementText.match(/[{｛]\s*([^{}｛｝]+)\s*[}｝]/g)) {
                 targetElementText = targetElementText.replace(/[{｛]/g,'t{');
               }
