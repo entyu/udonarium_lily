@@ -132,10 +132,10 @@ export class ChatPalette extends ObjectNode {
   checkTargetCharactor(text: string): boolean{
     let istarget = text.match(/[tTｔＴ][{｛]\s*([^{}｛｝]+)\s*[}｝]/g) ? true : false;
 
-    if( text.match(/^[tTｔＴ][:：]([^:：]+)/g) ){
+    if( text.match(/^[sSｓＳ]?[tTｔＴ][:：]([^:：]+)/g) ){
       istarget = true;
     }
-    if( text.match(/\s[tTｔＴ][:：]([^:：]+)/g) ){
+    if( text.match(/\s[sSｓＳ]?[tTｔＴ][:：]([^:：]+)/g) ){
       istarget = true;
     }
     if( text.match(/^[tTｔＴ][&＆]([^&＆]+)/g) ){
