@@ -171,10 +171,10 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
 
   checkTargetCharactor(text: string): boolean{
     let istarget = false;
-    if( text.match(/^[tTｔＴ][:：]([^:：]+)/g) ){
+    if( text.match(/^[sSｓＳ]?[tTｔＴ][:：]([^:：]+)/g) ){
       istarget = true;
     }
-    if( text.match(/\s[tTｔＴ][:：]([^:：]+)/g) ){
+    if( text.match(/\s[sSｓＳ]?[tTｔＴ][:：]([^:：]+)/g) ){
       istarget = true;
     }
     if( text.match(/^[tTｔＴ][&＆]([^&＆]+)/g) ){
