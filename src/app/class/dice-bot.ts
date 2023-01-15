@@ -618,6 +618,7 @@ export class DiceBot extends GameObject {
       let allEditList: ResourceEdit[] = null;
 
       for (const chktxt of splitText) {
+        console.log('chktxt=' + chktxt);
         if ( chktxt.match(/^(t?[:&][^:：&＆])+/gi)){
           //正常。処理無し
         }else{
@@ -636,6 +637,7 @@ export class DiceBot extends GameObject {
             }
             resByCharacter.resourceCommand = res;
             resByCharacter.object = oneMessageTargetContext.object;
+            console.log('テスト' + res + resByCharacter.object.name);
             resourceByCharacter.push(resByCharacter);
           }
         }
