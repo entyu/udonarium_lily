@@ -637,7 +637,6 @@ export class DiceBot extends GameObject {
             }
             resByCharacter.resourceCommand = res;
             resByCharacter.object = oneMessageTargetContext.object;
-            console.log('テスト' + res + resByCharacter.object.name);
             resourceByCharacter.push(resByCharacter);
           }
         }
