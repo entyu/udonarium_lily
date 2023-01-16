@@ -13,14 +13,11 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { GameCharacter } from '@udonarium/game-character';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { GameObject } from './core/synchronize-object/game-object';
-//import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
-
 
 @SyncObject('markdown')
 export class MarkDown extends GameObject {
 
   changeMarkDownCheckBox(cliskId, dubleCountCheck){
-    
     let match = cliskId.match(/^(.*)_mark_(\d{8})$/);
     console.log("HostListeneronclick event id " + cliskId);
 
@@ -79,6 +76,47 @@ export class MarkDown extends GameObject {
     console.log('newText' + newText);
 
     object.value = newText;
+  }
+
+  markDownTable(text){
+    let splitLine = text.split('\n');
+    let textOut = '';
+
+    let tableMaking = false;
+    for( let i = 0; i < splitLine.length; i++){
+      let splitVar = splitLine[i].split(/[|｜]/);
+      console.log("テーブル"  + splitLine[i] + ' splitVar.length :' + splitVar.length);
+      if (splitVar.length == 1){
+        if (tableMaking == false){
+          textOut += splitLine[i];
+        }else{
+          textOut += "</div>\n";
+          textOut += splitLine[i];
+          tableMaking = false;
+        }
+      }else{
+        if (tableMaking == false){
+          textOut += splitVar[0];
+          textOut += "<div class=\"markdown_table\" style=\"display: table; table-layout: fixed; border: 1px solid #000000;\">"
+          textOut += "  <div class=\"markdown_table_row\" style=\"display: table-row; border: 1px solid #000000;\">";
+          for( let j = 1; j < splitVar.length - 1; j++){
+            textOut += "    <div class=\"markdown_table_cell\" style=\"display: table-cell; border: 1px solid #000000;\">" + splitVar[j] + "</div>";
+          }
+          textOut += "  </div>";
+          tableMaking = true;
+        }else{
+          textOut += "  <div class=\"markdown_table_row\" style=\"display: table-row; border: 1px solid #000000;\">";
+          for( let j = 1; j < splitVar.length - 1; j++){
+            textOut += "    <div class=\"markdown_table_cell\" style=\"display: table-cell; border: 1px solid #000000;\">" + splitVar[j] + "</div>";
+          }
+          textOut += "  </div>";
+        }
+      }
+    }
+    if (tableMaking == true){
+      textOut += "</div>\n";
+    }
+  return textOut;
   }
 
   // GameObject Lifecycle

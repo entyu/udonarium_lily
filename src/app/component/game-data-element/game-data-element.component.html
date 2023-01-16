@@ -79,9 +79,9 @@
               
           <div [hidden]="isEditMarkDown(gameDataElement.myIdentifer + '_elm')" 
           style="width:100%;max-width:200px;min-width:50px;">
-            <span class="textarea-markdown" 
+            <div class="textarea-markdown" 
             style="width:100%;min-width:50px; font-size: 0.8em;" 
-            [innerHTML]="escapeHtmlMarkDown(gameDataElement.value,gameDataElement.myIdentifer)"></span>
+            [innerHTML]="escapeHtmlMarkDown(gameDataElement.value,gameDataElement.myIdentifer)"></div>
           </div>
         </ng-container>
 

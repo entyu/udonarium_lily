@@ -319,7 +319,10 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       }
       if(i>=99999999){break;}
     }
-    return this.domSanitizer.bypassSecurityTrustHtml(text4.replace(/\n/g,'<br>'));
+
+    let textOut = this.markdown.markDownTable(text4);
+
+    return this.domSanitizer.bypassSecurityTrustHtml(textOut.replace(/\n/g,'<br>'));
   }
 
   @HostListener('click', ['$event'])

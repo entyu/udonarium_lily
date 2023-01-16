@@ -199,7 +199,10 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
       if(i>=99999999){break;}
     }
 
-    return this.domSanitizer.bypassSecurityTrustHtml(text4);
+    // テーブル用のマークダウン処理
+    let textOut =  this.markdown.markDownTable(text4);
+
+    return this.domSanitizer.bypassSecurityTrustHtml(textOut);
   }
 
   @HostListener('click', ['$event'])
