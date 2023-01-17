@@ -96,7 +96,7 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.scrollToBottom(true);
+    queueMicrotask(() => this.scrollToBottom(true));
   }
 
   ngOnDestroy() {
@@ -106,15 +106,16 @@ export class ChatWindowComponent implements OnInit, OnDestroy, AfterViewInit {
   // @TODO やり方はもう少し考えた方がいいい
   scrollToBottom(isForce: boolean = false) {
     if (isForce) this.isAutoScroll = true;
-    if (this.scrollToBottomTimer != null || !this.isAutoScroll) return;
+    if (!this.isAutoScroll) return;
+    let event = new CustomEvent('scrolltobottom', {});
+    this.panelService.scrollablePanel.dispatchEvent(event);
+    if (this.scrollToBottomTimer != null) return;
     this.scrollToBottomTimer = setTimeout(() => {
       if (this.chatTab) this.chatTab.markForRead();
       this.scrollToBottomTimer = null;
       this.isAutoScroll = false;
       if (this.panelService.scrollablePanel) {
         this.panelService.scrollablePanel.scrollTop = this.panelService.scrollablePanel.scrollHeight;
-        let event = new CustomEvent('scrolltobottom', {});
-        this.panelService.scrollablePanel.dispatchEvent(event);
       }
     }, 0);
   }

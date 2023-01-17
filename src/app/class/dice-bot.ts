@@ -50,6 +50,7 @@ interface BuffEdit {
 };
 
 interface DiceRollResult {
+  id: string;
   result: string;
   isSecret: boolean;
 }
@@ -327,7 +328,7 @@ export class DiceBot extends GameObject {
           const regArray = /^((\d+)?\s+)?(.*)?/ig.exec(rollTable.dice);
           const repeat: number = (regArray[2] != null) ? Number(regArray[2]) : 1;
           const rollText: string = (regArray[3] != null) ? regArray[3] : text;
-          const finalResult: DiceRollResult = { result: '', isSecret: false };
+          const finalResult: DiceRollResult = { id: null, result: '', isSecret: false };
           for (let i = 0; i < repeat && i < 32; i++) {
             const gameSystem = await DiceBot.loadGameSystemAsync(rollTable.diceTablePalette.dicebot);
             const rollResult = await DiceBot.diceRollAsync(rollText, gameSystem);

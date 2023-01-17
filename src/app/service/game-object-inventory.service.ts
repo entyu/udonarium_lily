@@ -51,7 +51,7 @@ export class GameObjectInventoryService {
       .on('OPEN_NETWORK', event => { this.refresh(); })
       .on('CONNECT_PEER', event => { this.refresh(); })
       .on('DISCONNECT_PEER', event => { this.refresh(); })
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
+      .on('UPDATE_GAME_OBJECT', event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!object) return;
 
@@ -83,7 +83,7 @@ export class GameObjectInventoryService {
           this.callInventoryUpdate();
         }
       })
-      .on('DELETE_GAME_OBJECT', 1000, event => {
+      .on('DELETE_GAME_OBJECT', event => {
         this.locationMap.delete(event.data.identifier);
         this.tagNameMap.delete(event.data.identifier);
         this.refresh();

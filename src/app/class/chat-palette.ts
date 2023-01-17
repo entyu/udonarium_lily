@@ -30,12 +30,12 @@ export class ChatPalette extends ObjectNode {
   //TODO: キャラシ項目のコピー
 
   get paletteLines(): PaletteLine[] {
-    if (!this.isAnalized) this.parse(<string> this.value);
+    if (!this.isAnalized) this.parse(<string>this.value);
     return this._paletteLines;
   }
 
   get paletteVariables(): PaletteVariable[] {
-    if (!this.isAnalized) this.parse(<string> this.value);
+    if (!this.isAnalized) this.parse(<string>this.value);
     return this._paletteVariables;
   }
 
@@ -120,7 +120,7 @@ export class ChatPalette extends ObjectNode {
   private isAnalized: boolean = false;
 
   getPalette(): string[] {
-    if (!this.isAnalized) this.parse(<string> this.value);
+    if (!this.isAnalized) this.parse(<string>this.value);
     return this._palettes;
   }
 

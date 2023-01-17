@@ -254,13 +254,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.panelService.open(PeerMenuComponent, { width: 500, height: 450, left: 100 });
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
     }, 0);
-/*
-    setInterval(() => {
-      this.dispcounter = this.dispcounter + 1;
-      if ( this.dispcounter > 100 )this.dispcounter = 0;
-//      PeerCursor.myCursor.time = new Date();
-    }, 2 );
-*/
   }
 
   ngOnDestroy() {
@@ -366,8 +359,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   open(componentName: string) {
-    let component: new(...args: any[]) => any = null;
-    let option: PanelOption = { width: 450, height: 600, left: 100 };
+    let component: { new(...args: any[]): any } = null;
+    let option: PanelOption = { width: 450, height: 600, left: 100 }
     switch (componentName) {
       case 'PeerMenuComponent':
         component = PeerMenuComponent;
@@ -424,7 +417,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   handleFileSelect(event: Event) {
-    let input = <HTMLInputElement> event.target;
+    let input = <HTMLInputElement>event.target;
     let files = input.files;
 
     this.reloadCheck.reloadCheckStart(this.networkService.peerContext.roomName != '');
@@ -456,8 +449,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       }, 100);
     }
   }
-
 }
+
 PanelService.UIPanelComponentClass = UIPanelComponent;
 ContextMenuService.ContextMenuComponentClass = ContextMenuComponent;
 ModalService.ModalComponentClass = ModalComponent;

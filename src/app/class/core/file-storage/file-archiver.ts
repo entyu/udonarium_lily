@@ -1,5 +1,5 @@
 import { saveAs } from 'file-saver';
-import * as JSZip from 'jszip/dist/jszip.min.js';
+import * as JSZip from 'jszip';
 
 import { EventSystem, Network } from '../system';
 import { XmlUtil } from '../system/util/xml-util';
@@ -148,7 +148,7 @@ export class FileArchiver {
       console.warn(reason);
       return;
     }
-    let zipEntries = [];
+    let zipEntries: JSZip.JSZipObject[] = [];
     zip.forEach((relativePath, zipEntry) => zipEntries.push(zipEntry));
     for (let zipEntry of zipEntries) {
       try {

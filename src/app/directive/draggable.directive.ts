@@ -104,8 +104,11 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
       this.elementRef.nativeElement.style.opacity = this.opacity + '';
     }
 
+    this.elementRef.nativeElement.style.willChange = 'top, left';
     this.elementRef.nativeElement.style.left = trans.x + this.startPosition.x + 'px';
     this.elementRef.nativeElement.style.top = trans.y + this.startPosition.y + 'px';
+
+    console.log( "ポジション　trans.y + this.startPosition.y" + trans.y + " " + this.startPosition.y + " " + this.input.pointer.y + " - " +  this.startPointer.y);
 
     this.prevTrans = trans;
     if (e.cancelable) e.preventDefault();
@@ -114,6 +117,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
 
   private onInputEnd(e: MouseEvent | TouchEvent) {
     this.elementRef.nativeElement.style.opacity = null;
+    this.elementRef.nativeElement.style.willChange = null;
     if (this.input.isDragging && e.cancelable) {
       this.preventClickIfNeeded(e);
       e.preventDefault();
@@ -147,6 +151,8 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
   private adjustPosition() {
     let current = this.calcElementPosition(this.elementRef.nativeElement);
     let correction = this.calcCorrectionPosition();
+    console.log("current x " + current.x+ "  y" + current.y);
+    console.log("correction x " + correction.x+ "  y" + correction.y);
     this.elementRef.nativeElement.style.left = correction.x + current.x + 'px';
     this.elementRef.nativeElement.style.top = correction.y + current.y + 'px';
   }
@@ -188,6 +194,20 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
     let box = this.elementRef.nativeElement.getBoundingClientRect();
     let bounds = this.elementRef.nativeElement.ownerDocument.querySelector(this.boundsSelector).getBoundingClientRect();
     
+    let test = document.body.getBoundingClientRect();
+    
+    if( document.body == this.elementRef.nativeElement.ownerDocument.querySelector(this.boundsSelector) ){
+      console.log("BODY取得成功");
+    }else{
+      console.log("BODY取得失敗");
+    }
+    
+    console.log("ownerDocument" + this.elementRef.nativeElement.ownerDocument.querySelector(this.boundsSelector) );
+    console.log("this.allowOverHalf" + this.allowOverHalf);
+    console.log("box" + box + " boxW" + (box.right - box.left) + " boxH" + (box.bottom - box.top));
+    console.log("test" + " boundsRLBT" + test.right + "/" + test.left + "/" + test.bottom + "/" + test.top);
+    console.log("bounds" + bounds + " boundsRLBT" + bounds.right + "/" + bounds.left + "/" + bounds.bottom + "/" + bounds.top);
+
     if (this.allowOverHalf) {
       const boxWidth = box.right - box.left;
       const boxHeight = box.bottom - box.top;
