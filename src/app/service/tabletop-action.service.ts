@@ -462,7 +462,21 @@ export class TabletopActionService {
     testCharacter.location.y = 13 * 50;
     testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
     this.addBuffRound( testCharacter, 'テストバフ3', '', 3);
-    
+
+    //-------------------------
+
+    testCharacter = new GameCharacter('testCharacter_7');
+    fileContext = ImageFile.createEmpty('testCharacter_7_image').toContext();
+    fileContext.url = './assets/images/ninja.png';
+    testFile = ImageStorage.instance.add(fileContext);
+
+    ImageTag.create(testFile.identifier).tag = '';//本家PR #92より
+
+    testCharacter.initialize();
+    testCharacter.location.x = 10 * 50;
+    testCharacter.location.y = 5 * 50;
+    testCharacter.createTestGameDataElementCheckTable('忍者A', 1, testFile.identifier);
+
   }
 
   makeDefaultContextMenuActions(position: PointerCoordinate): ContextMenuAction[] {

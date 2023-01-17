@@ -304,25 +304,11 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   get markdown(): MarkDown { return ObjectStore.instance.get<MarkDown>('markdwon'); }
 
   escapeHtmlMarkDown(text,baseId): SafeHtml{
-    let text2 = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-               .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    let text3 = text2.replace(/[\[［][xXｘＸ][\]］]/g,"<input type=\"checkbox\" checked=\"checked\" class=\"markDounBox\" />")
-               .replace(/[\[［][\]］]/g,"<input type=\"checkbox\" class=\"markDounBox\" />");
 
-    let splitText = text3.split("<input ");
-    let text4 = '';
-    for( let i = 0; i < splitText.length; i++){
-      text4 += splitText[i];
-      if (i < splitText.length -1){
-        let num = ( '00000000' + i ).slice( -8 );
-        text4 += "<input " + "id=\"" + baseId + "_mark_"+ num + "\" ";
-      }
-      if(i>=99999999){break;}
-    }
+    let textCheckBox = this.markdown.markDownCheckBox(text, baseId);
+    let textTable = this.markdown.markDownTable(textCheckBox);
 
-    let textOut = this.markdown.markDownTable(text4);
-
-    return this.domSanitizer.bypassSecurityTrustHtml(textOut.replace(/\n/g,'<br>'));
+    return this.domSanitizer.bypassSecurityTrustHtml(textTable.replace(/\n/g,'<br>'));
   }
 
   @HostListener('click', ['$event'])

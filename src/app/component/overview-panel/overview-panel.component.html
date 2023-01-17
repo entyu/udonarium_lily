@@ -216,7 +216,8 @@
               <span class="textarea-markdown" 
               [innerHTML]="escapeHtmlMarkDown(dataElm.value,dataElm.myIdentifer)"></span>
             </div>
-            <div class="textarea-spacer" >{{dataElm.value}}</div>
+             <div class="textarea-spacer" 
+             [innerHTML]="escapeHtmlMarkDown(dataElm.value,dataElm.myIdentifer)"></div>
           </div>
         </div>
       </ng-container>

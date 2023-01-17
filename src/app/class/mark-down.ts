@@ -78,6 +78,26 @@ export class MarkDown extends GameObject {
     object.value = newText;
   }
 
+  markDownCheckBox(text, baseId){
+    let textOut = '';
+    let text2 = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+               .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    let text3 = text2.replace(/[\[［][xXｘＸ][\]］]/g,"<input type=\"checkbox\" checked=\"checked\" class=\"markDounBox\" />")
+               .replace(/[\[［][\]］]/g,"<input type=\"checkbox\" class=\"markDounBox\" />");
+
+    let splitText = text3.split("<input ");
+    for( let i = 0; i < splitText.length; i++){
+      textOut += splitText[i];
+      if (i < splitText.length -1){
+        let num = ( '00000000' + i ).slice( -8 );
+        textOut += "<input " + "id=\"" + baseId + "_mark_"+ num + "\" ";
+      }
+      if(i>=99999999){break;}
+    }
+
+    return textOut;
+  }
+
   markDownTable(text){
     let splitLine = text.split('\n');
     let textOut = '';
@@ -88,10 +108,10 @@ export class MarkDown extends GameObject {
       console.log("テーブル"  + splitLine[i] + ' splitVar.length :' + splitVar.length);
       if (splitVar.length == 1){
         if (tableMaking == false){
-          textOut += splitLine[i];
+          textOut += splitLine[i] + "\n";
         }else{
-          textOut += "</div>\n";
-          textOut += splitLine[i];
+          textOut += "</div>";
+          textOut += splitLine[i] + "\n";
           tableMaking = false;
         }
       }else{
@@ -114,7 +134,7 @@ export class MarkDown extends GameObject {
       }
     }
     if (tableMaking == true){
-      textOut += "</div>\n";
+      textOut += "</div>";
     }
   return textOut;
   }

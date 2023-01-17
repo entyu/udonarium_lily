@@ -181,28 +181,12 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
 
   get markdown(): MarkDown { return ObjectStore.instance.get<MarkDown>('markdwon'); }
 
-  escapeHtmlMarkDown(text,baseId): SafeHtml{
+  escapeHtmlMarkDown(text, baseId): SafeHtml{
 
-    let text2 = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-               .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    let text3 = text2.replace(/[\[［][xXｘＸ][\]］]/g,"<input type=\"checkbox\" checked=\"checked\" class=\"markDounBox\" />")
-               .replace(/[\[［][\]］]/g,"<input type=\"checkbox\" class=\"markDounBox\" />");
+    let textCheckBox = this.markdown.markDownCheckBox(text, baseId);
+    let textTable =  this.markdown.markDownTable(textCheckBox);
 
-    let splitText = text3.split("<input ");
-    let text4 = '';
-    for( let i = 0; i < splitText.length; i++){
-      text4 += splitText[i];
-      if (i < splitText.length -1){
-        let num = ( '00000000' + i ).slice( -8 );
-        text4 += "<input " + "id=\"" + baseId + "_mark_"+ num + "\" ";
-      }
-      if(i>=99999999){break;}
-    }
-
-    // テーブル用のマークダウン処理
-    let textOut =  this.markdown.markDownTable(text4);
-
-    return this.domSanitizer.bypassSecurityTrustHtml(textOut);
+    return this.domSanitizer.bypassSecurityTrustHtml("<div>" + textTable + "</div>");
   }
 
   @HostListener('click', ['$event'])

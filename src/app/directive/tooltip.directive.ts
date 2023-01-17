@@ -92,7 +92,7 @@ export class TooltipDirective implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.ngZone.run(() => this.closeAll());
       }
-    }, 400);
+    }, 400); // ポップアップのクローズタイミング
   }
 
   private clearTimer() {
