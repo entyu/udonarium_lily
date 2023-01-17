@@ -314,7 +314,8 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   @HostListener('click', ['$event'])
   click(event){
     if (this.markdown){
-      this.markdown.changeMarkDownCheckBox(event.target.id,false);
+      console.log("event.timeStamp:" + event.timeStamp);
+      this.markdown.changeMarkDownCheckBox(event.target.id, event.timeStamp);
     }
   }
 

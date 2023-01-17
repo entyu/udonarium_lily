@@ -17,37 +17,29 @@ import { GameObject } from './core/synchronize-object/game-object';
 @SyncObject('markdown')
 export class MarkDown extends GameObject {
 
-  changeMarkDownCheckBox(cliskId, dubleCountCheck){
+  clickTimeStamp = 0;
+
+  changeMarkDownCheckBox(cliskId, timeStamp){
     let match = cliskId.match(/^(.*)_mark_(\d{8})$/);
-    console.log("HostListeneronclick event id " + cliskId);
 
     if(!match) return;
-    
+
     let parentId = match[1];
     let boxNum = match[2];
-
     let object = ObjectStore.instance.get<DataElement>(parentId);
-    
+
     if (!object)return;
 
-    console.log('object.currentValue     :' + object.currentValue);
-
-    if(dubleCountCheck){
-      if( object.currentValue == 0){
-        object.currentValue = 1;
-      }else{
-        object.currentValue = 0;
-        return;
-      }
+    // 2回連続イベントが発生した際の回避処置
+    if( this.clickTimeStamp == timeStamp){
+      return;
     }else{
-      object.currentValue = 0;
+      this.clickTimeStamp = timeStamp;
     }
 
     let objectValue :string = <string>object.value;
-    console.log("HostListeneronclick text = " + objectValue);
 
     let clickIndex = parseInt(boxNum);
-    console.log("clickIndex = " + clickIndex);
 
     let splitText = objectValue.split(/[\[［][xXｘＸ]?[\]］]/g);
     let matchText = objectValue.match(/[\[［][xXｘＸ]?[\]］]/g);
@@ -72,8 +64,6 @@ export class MarkDown extends GameObject {
     for( ; i < splitText.length; i++){
       newText += splitText[i];
     }
-
-    console.log('newText' + newText);
 
     object.value = newText;
   }
@@ -105,7 +95,6 @@ export class MarkDown extends GameObject {
     let tableMaking = false;
     for( let i = 0; i < splitLine.length; i++){
       let splitVar = splitLine[i].split(/[|｜]/);
-      console.log("テーブル"  + splitLine[i] + ' splitVar.length :' + splitVar.length);
       if (splitVar.length == 1){
         if (tableMaking == false){
           textOut += splitLine[i] + "\n";
