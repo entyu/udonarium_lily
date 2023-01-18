@@ -108,8 +108,6 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
     this.elementRef.nativeElement.style.left = trans.x + this.startPosition.x + 'px';
     this.elementRef.nativeElement.style.top = trans.y + this.startPosition.y + 'px';
 
-    console.log( "ポジション　trans.y + this.startPosition.y" + trans.y + " " + this.startPosition.y + " " + this.input.pointer.y + " - " +  this.startPointer.y);
-
     this.prevTrans = trans;
     if (e.cancelable) e.preventDefault();
     e.stopPropagation();
