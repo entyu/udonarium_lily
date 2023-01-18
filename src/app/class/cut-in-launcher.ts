@@ -15,6 +15,7 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { CutInWindowComponent } from 'component/cut-in-window/cut-in-window.component';
 import { ModalService } from 'service/modal.service';
 
+import { Jukebox } from '@udonarium/Jukebox';
 import { CutIn } from './cut-in';
 
 import { Network } from '@udonarium/core/system';
@@ -32,8 +33,13 @@ export class CutInLauncher extends GameObject {
 
   reloadDummy = 5;
 
-  // カットイン時のジューク音楽停止はカットインリストウィンドウ操作による
-  // 秘話仕様で止まる必要もないためそのまま止めずにカットインする
+  get jukebox(): Jukebox { return ObjectStore.instance.get<Jukebox>('Jukebox'); }
+
+  isCutInBgmUploaded(audioIdentifier) {
+    let audio = AudioStorage.instance.get( audioIdentifier );
+    return audio ? true : false ;
+  }
+
   chatActivateCutIn( text: string , sendTo: string){
     const text2 = ' ' + text;
     const matches_array = text2.match(/\s(\S+)$/i);
@@ -45,6 +51,11 @@ export class CutInLauncher extends GameObject {
 
       for ( const cutIn_ of allCutIn ){
         if ( cutIn_.chatActivate && ( cutIn_.name == activateName ) ){
+          // 無タグで音声付きの場合BGM停止
+          if ( this.isCutInBgmUploaded( cutIn_.audioIdentifier) && ( cutIn_.tagName == '' ) ){
+            this.jukebox.stop();
+          }
+
           this.startCutIn( cutIn_ , sendTo);
           return ;
         }
