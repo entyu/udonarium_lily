@@ -3,7 +3,6 @@ import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
 import { ImageContext, ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DiceSymbol, DiceType } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
@@ -460,9 +459,24 @@ export class TabletopActionService {
     testCharacter.initialize();
     testCharacter.location.x = 5 * 50;
     testCharacter.location.y = 13 * 50;
+    testCharacter.initialize();
     testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
     this.addBuffRound( testCharacter, 'テストバフ3', '', 3);
-    
+
+    //-------------------------
+
+    testCharacter = new GameCharacter('testCharacter_7');
+    fileContext = ImageFile.createEmpty('testCharacter_7_image').toContext();
+    fileContext.url = './assets/images/ninja.png';
+    testFile = ImageStorage.instance.add(fileContext);
+
+    ImageTag.create(testFile.identifier).tag = '';//本家PR #92より
+
+    testCharacter.initialize();
+    testCharacter.location.x = 10 * 50;
+    testCharacter.location.y = 5 * 50;
+    testCharacter.createTestGameDataElementCheckTable('忍者A', 1, testFile.identifier);
+
   }
 
   makeDefaultContextMenuActions(position: PointerCoordinate): ContextMenuAction[] {
@@ -568,7 +582,6 @@ export class TabletopActionService {
   }
 
   private getViewTable(): GameTable {
-    let tableSelecter = ObjectStore.instance.get<TableSelecter>('tableSelecter');
-    return tableSelecter ? tableSelecter.viewTable : null;
+    return TableSelecter.instance.viewTable;
   }
 }

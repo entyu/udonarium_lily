@@ -23,6 +23,8 @@ import { CutInLauncher } from '@udonarium/cut-in-launcher';
 })
 export class JukeboxComponent implements OnInit, OnDestroy {
 
+  roomVolumeChange = false;
+
   get roomVolume(): number { 
     let conf = ObjectStore.instance.get<Config>('Config');
 //    console.log("roomVolume()" + conf +" "+ conf.roomVolume);

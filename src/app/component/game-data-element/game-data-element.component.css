@@ -118,6 +118,24 @@
   word-break: break-word;
 }
 
+.textarea-markdown{
+  background: none;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+
+  color: #444;
+  font-family: Cambria, Georgia;
+  padding: 2px;
+  box-sizing: border-box;
+
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
 /*button,*/
 input, button, textarea, select{
 /*.input {*/
@@ -250,7 +268,23 @@ input[type='range']::-ms-thumb {
 input[type='range']::-ms-tooltip {
   display: none;
 }
+/*
+.markdown_table{
+  display: table;
+	border: 2px solid #000000;
+}
 
+.markdown_table_cell{
+  display: table-cell;
+  vertical-align: bottom;
+	border: 2px solid #000000;
+}
+
+.markdown_table_row{
+  display:table-row;
+	border: 2px solid #000000;
+}
+*/
 /*2022/1/16現在、クロームバージョン: 97.0.4692.71（Official Build） （64 ビット）
 キャレットの点滅で負荷がかかることへの対策不透明度指定*/
 .is-caret {

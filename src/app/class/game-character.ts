@@ -280,6 +280,102 @@ export class GameCharacter extends TabletopObject {
     this.addExtendData();
   }
 
+  createTestGameDataElementCheckTable(name: string, size: number, imageIdentifier: string) {
+    this.createDataElements();
+
+    let nameElement: DataElement = DataElement.create('name', name, {}, 'name_' + this.identifier);
+    let sizeElement: DataElement = DataElement.create('size', size, {}, 'size_' + this.identifier);
+
+    if (this.imageDataElement.getFirstElementByName('imageIdentifier')) {
+      this.imageDataElement.getFirstElementByName('imageIdentifier').value = imageIdentifier;
+    }
+
+    let resourceElement: DataElement = DataElement.create('リソース', '', {}, 'リソース' + this.identifier);
+    let hpElement: DataElement = DataElement.create('HP', 200, { 'type': 'numberResource', 'currentValue': '200' }, 'HP_' + this.identifier);
+    let mpElement: DataElement = DataElement.create('MP', 100, { 'type': 'numberResource', 'currentValue': '100' }, 'MP_' + this.identifier);
+
+    this.commonDataElement.appendChild(nameElement);
+    this.commonDataElement.appendChild(sizeElement);
+
+    this.detailDataElement.appendChild(resourceElement);
+    resourceElement.appendChild(hpElement);
+    resourceElement.appendChild(mpElement);
+
+    //TEST
+    let testElement: DataElement = DataElement.create('情報', '', {}, '情報' + this.identifier);
+    this.detailDataElement.appendChild(testElement);
+
+    let textMarkDown =`テーブル表
+|[]|[]器術|[]|[]体術|[]|[]忍術|[]|[]謀術|[]|[]戦術|[]|[]妖術||
+|　|[]絡繰術|　|[]騎乗術|　|[]生存術|　|[]医術|　|[]兵糧術|　|[]異形化|2|
+|　|[]火術|　|[]砲術|　|[]潜伏術|　|[]毒術|　|[]鳥獣術|　|[]召喚術|3|
+|　|[]水術|　|[]手裏剣術|　|[]遁走術|　|[]罠術|　|[]野戦術|　|[]死霊術|4|
+|　|[]針術|　|[]手練|　|[]盗聴術|　|[]調査術|　|[]地の利|　|[]結界術|5|
+|　|[]仕込み|　|[]身体操術|　|[]腹話術|　|[]詐術|　|[]意気|　|[]封術|6|
+|　|[]衣装術|　|[]歩法|　|[]隠形術|　|[]対人術|　|[]用兵術|　|[]言霊術|7|
+|　|[]縄術|　|[]走法|　|[]変装術|　|[]遊芸|　|[]記憶術|　|[]幻術|8|
+|　|[]登術|　|[]飛術|　|[]香術|　|[]九ノ一の術|　|[]見敵術|　|[]瞳術|9|
+|　|[]拷問術|　|[]骨法術|　|[]分身の術|　|[]傀儡の術|　|[]暗号術|　|[]千里眼の術|10|
+|　|[]壊器術|　|[]刀術|　|[]隠蔽術|　|[]流言の術|　|[]伝達術|　|[]憑依術|11|
+|　|[]掘削術|　|[]怪力|　|[]第六感|　|[]経済力|　|[]人脈|　|[]呪術|12|
+`
+    testElement.appendChild(DataElement.create('忍術', textMarkDown, { 'type': 'markdown' }, '忍術' + this.identifier));
+
+    let textMarkDownNecro =
+`|損傷|使用|タイミング|コスト|射程|効果|
+|[]こぶし|[]|アクション|2|0|肉弾攻撃1|
+|[]うで|[]|ジャッジ|1|0|支援1|`
+
+    testElement.appendChild(DataElement.create('ネクロニカ的パーツ', textMarkDownNecro, { 'type': 'markdown' }, 'ネクロニカ的パーツ' + this.identifier));
+
+    testElement.appendChild(DataElement.create('宝物への依存', '[][][][] 幼児退行', { 'type': 'markdown' }, 'ネクロニカ的未練' + this.identifier));
+
+    this.overViewWidth = 800;
+    this.overViewMaxHeight = 620;
+
+    //TEST
+    testElement = DataElement.create('能力', '', {}, '能力' + this.identifier);
+    this.detailDataElement.appendChild(testElement);
+    testElement.appendChild(DataElement.create('器用度', 24, {}, '器用度' + this.identifier));
+    testElement.appendChild(DataElement.create('敏捷度', 24, {}, '敏捷度' + this.identifier));
+    testElement.appendChild(DataElement.create('筋力', 24, {}, '筋力' + this.identifier));
+    testElement.appendChild(DataElement.create('生命力', 24, {}, '生命力' + this.identifier));
+    testElement.appendChild(DataElement.create('知力', 24, {}, '知力' + this.identifier));
+    testElement.appendChild(DataElement.create('精神力', 24, {}, '精神力' + this.identifier));
+
+    //TEST
+    testElement = DataElement.create('戦闘特技', '', {}, '戦闘特技' + this.identifier);
+    this.detailDataElement.appendChild(testElement);
+    testElement.appendChild(DataElement.create('Lv1', '全力攻撃', {}, 'Lv1' + this.identifier));
+    testElement.appendChild(DataElement.create('Lv3', '武器習熟/ソード', {}, 'Lv3' + this.identifier));
+    testElement.appendChild(DataElement.create('Lv5', '武器習熟/ソードⅡ', {}, 'Lv5' + this.identifier));
+    testElement.appendChild(DataElement.create('Lv7', '頑強', {}, 'Lv7' + this.identifier));
+    testElement.appendChild(DataElement.create('Lv9', '薙ぎ払い', {}, 'Lv9' + this.identifier));
+    testElement.appendChild(DataElement.create('自動', '治癒適正', {}, '自動' + this.identifier));
+
+    //
+    let domParser: DOMParser = new DOMParser();
+    let gameCharacterXMLDocument: Document = domParser.parseFromString(this.rootDataElement.toXml(), 'application/xml');
+
+    let palette: ChatPalette = new ChatPalette('ChatPalette_' + this.identifier);
+    palette.setPalette(`チャットパレット入力例：
+2d6+1 ダイスロール
+１ｄ２０＋{敏捷}＋｛格闘｝　{name}の格闘！
+
+自己バフ、リソース操作コマンド例：
+&マッスルベアー/筋B+2/3
+:MP-3
+&マッスルベアー/筋B+2/3:MP-3
+
+//敏捷=10+{敏捷A}
+//敏捷A=10
+//格闘＝１`);
+    palette.initialize();
+    this.appendChild(palette);
+
+    this.addExtendData();
+  }
+
 
   createTestGameDataElementExtendSample(name: string, size: number, imageIdentifier: string) {
     this.createDataElements();

@@ -1,7 +1,9 @@
 <div>試聴音量：<input [(ngModel)]="auditionVolume" type="range" min="0" max="1" step="0.01" /></div>
 <div>BGM音量：<input [(ngModel)]="volume" type="range" min="0" max="1" step="0.01" /></div>
 <hr/>
-<div>全体音量：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" /><font style="font-size: 12px;">※全プレイヤー共通</font></div>
+<div>全体音量：<input [(ngModel)]="roomVolume" type="range" min="0" max="2" step="0.01" disabled = {{!roomVolumeChange}}/><br>
+<font style="font-size: 12px;">※全プレイヤー共通 GM制御用：変更を有効にする<input type="checkbox" id="roomVolumeChange" value="roomVolumeChange"  [(ngModel)]="roomVolumeChange"></font>
+</div>
 <hr/>
 <button *ngIf="1" (click)="openCutInList()" [disabled]="0" >カットイン編集</button>
 <hr/>

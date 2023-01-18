@@ -104,6 +104,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
       this.elementRef.nativeElement.style.opacity = this.opacity + '';
     }
 
+    this.elementRef.nativeElement.style.willChange = 'top, left';
     this.elementRef.nativeElement.style.left = trans.x + this.startPosition.x + 'px';
     this.elementRef.nativeElement.style.top = trans.y + this.startPosition.y + 'px';
 
@@ -114,6 +115,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
 
   private onInputEnd(e: MouseEvent | TouchEvent) {
     this.elementRef.nativeElement.style.opacity = null;
+    this.elementRef.nativeElement.style.willChange = null;
     if (this.input.isDragging && e.cancelable) {
       this.preventClickIfNeeded(e);
       e.preventDefault();
@@ -147,6 +149,8 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
   private adjustPosition() {
     let current = this.calcElementPosition(this.elementRef.nativeElement);
     let correction = this.calcCorrectionPosition();
+    console.log("current x " + current.x+ "  y" + current.y);
+    console.log("correction x " + correction.x+ "  y" + correction.y);
     this.elementRef.nativeElement.style.left = correction.x + current.x + 'px';
     this.elementRef.nativeElement.style.top = correction.y + current.y + 'px';
   }
@@ -187,7 +191,6 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
     let correction: PointerCoordinate = { x: 0, y: 0, z: 0 };
     let box = this.elementRef.nativeElement.getBoundingClientRect();
     let bounds = this.elementRef.nativeElement.ownerDocument.querySelector(this.boundsSelector).getBoundingClientRect();
-    
     if (this.allowOverHalf) {
       const boxWidth = box.right - box.left;
       const boxHeight = box.bottom - box.top;

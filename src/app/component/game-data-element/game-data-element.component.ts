@@ -6,15 +6,20 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  HostListener,
 } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
+import { MarkDown } from '@udonarium/mark-down';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ImageStorage } from '@udonarium/core/file-storage/image-storage';
+import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+
+import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'game-data-element, [game-data-element]',
@@ -48,20 +53,21 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   constructor(
     private panelService: PanelService,
     private modalService: ModalService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private domSanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
     if (this.gameDataElement) this.setValues(this.gameDataElement);
 
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
+      .on('UPDATE_GAME_OBJECT', event => {
         if (this.gameDataElement && event.data.identifier === this.gameDataElement.identifier) {
           this.setValues(this.gameDataElement);
           this.changeDetector.markForCheck();
         }
       })
-      .on('DELETE_GAME_OBJECT', -1000, event => {
+      .on('DELETE_GAME_OBJECT', event => {
         if (this.gameDataElement && this.gameDataElement.identifier === event.data.identifier) {
           this.changeDetector.markForCheck();
         }
@@ -168,7 +174,35 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
                .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
-  
+
+  clickMarkDownBox(id: string) {
+    console.log("マークダウンクリック:" + id);
+  }
+
+  get markdown(): MarkDown { return ObjectStore.instance.get<MarkDown>('markdwon'); }
+
+  escapeHtmlMarkDown(text, baseId): SafeHtml{
+
+    let textCheckBox = this.markdown.markDownCheckBox(text, baseId);
+    let textTable =  this.markdown.markDownTable(textCheckBox);
+
+    return this.domSanitizer.bypassSecurityTrustHtml("<div>" + textTable + "</div>");
+  }
+
+  @HostListener('click', ['$event'])
+  click(event){
+    if (this.markdown){
+      console.log("event.timeStamp:" + event.timeStamp);
+      this.markdown.changeMarkDownCheckBox(event.target.id, event.timeStamp);
+    }
+  }
+
+  isEditMarkDown( dataElmIdentifier) {
+    let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);
+    if( !box )return false;
+    return box.checked;
+  }
+
   isEditUrl( dataElmIdentifier) {
     let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);
     if( !box )return false;

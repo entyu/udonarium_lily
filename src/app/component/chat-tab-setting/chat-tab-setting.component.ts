@@ -51,6 +51,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
 
   allowDeleteLog = false;
   allowDeleteTab = false;
+  modeCocLog = false;
 
   constructor(
     private modalService: ModalService,
@@ -62,7 +63,7 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     Promise.resolve().then(() => this.modalService.title = this.panelService.title = 'チャットタブ設定');
     EventSystem.register(this)
-      .on('DELETE_GAME_OBJECT', 1000, event => {
+      .on('DELETE_GAME_OBJECT', 2000, event => {
         if (!this.selectedTab || event.data.identifier !== this.selectedTab.identifier) return;
         let object = ObjectStore.instance.get(event.data.identifier);
         if (object !== null) {
@@ -136,7 +137,11 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     let fileName: string = this.roomName + '_log_' + this.selectedTab.name;
     let fileName_: string = this.appendTimestamp( fileName ) ;
 
-    this.saveDataService.saveHtmlChatLog(this.selectedTab, fileName_);
+//    if (this.modeCocLog){
+//      this.saveDataService.saveHtmlChatLogCoc(this.selectedTab, fileName_);
+//    }else{
+      this.saveDataService.saveHtmlChatLog(this.selectedTab, fileName_);
+//    }
   }
 
   saveAllLog(){
@@ -144,8 +149,11 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     let fileName: string = this.roomName + '_log_' + '全タブ';
     let fileName_: string = this.appendTimestamp( fileName ) ;
 
-    this.saveDataService.saveHtmlChatLogAll( fileName_);
-
+//    if (this.modeCocLog){
+//      this.saveDataService.saveHtmlChatLogAllCoc( fileName_);
+//    }else{
+      this.saveDataService.saveHtmlChatLogAll( fileName_);
+//    }
   }
 
   delete() {

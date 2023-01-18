@@ -1,3 +1,7 @@
+:host {
+  display: block;
+}
+
 .component {
   position: absolute;
   max-height: 100%;
@@ -145,7 +149,7 @@
 .text-note-container {
   width: 100%;
   max-height: 400px; 
-  padding: 0.5em 1.5em;
+  padding: 0.6em 1.2em;
   box-sizing: border-box;
   overflow: hidden auto;
   line-height: 1.8;

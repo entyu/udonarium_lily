@@ -249,6 +249,34 @@ export class ChatTab extends ObjectNode implements InnerXml {
     return str;
   }
 
+  messageHtmlCoc( tabName: string, message: ChatMessage ): string{
+    let str = '';
+    if ( message ) {
+      str += "    <p style=\"color:" + message.messColor.toLowerCase() +";\">" + "\n";
+      str += "      <span> [" + tabName + "]</span>" + "\n";
+      str += "      <span>" + this.escapeHtml( message.name ).replace('<', '').replace('>', '') + "</span>" + "\n";
+      str += "      <span>"+"\n";
+      str += "        ";
+
+      if ( !message.isSecret || message.isSendFromSelf ){
+        if ( message.text ) str += this.escapeHtml( message.text ).replace(/\n/g, '<br>').replace(/→/g, '＞');
+      }else{
+        str += '（シークレットダイス）';
+      }
+      let fixd = ''
+      if (message.fixd){
+        fixd = ' (編集済)';
+      }
+      str += fixd;
+      str += "\n";;
+
+      str += "      </span>"+"\n";
+      str += "    </p>"+"\n";
+      str += "    "+"\n";
+    }
+    return str;
+  }
+
   escapeHtml(string) {
     if (typeof string !== 'string') {
       return string;
@@ -268,7 +296,6 @@ export class ChatTab extends ObjectNode implements InnerXml {
   }
 
   logHtml( ): string {
-    
     let head : string =     
     "<?xml version='1.0' encoding='UTF-8'?>"+'\n'+
     "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+'\n'+
@@ -286,7 +313,6 @@ export class ChatTab extends ObjectNode implements InnerXml {
 
     let main : string = "";
 
-
     for (let mess of this.chatMessages ) {
       let to = mess.to;
       let from = mess.from;
@@ -300,6 +326,45 @@ export class ChatTab extends ObjectNode implements InnerXml {
       }
 
       main += this.messageHtml( true , '' , mess );
+    }
+    let str: string = head + main + last;
+
+    return str;
+  }
+
+  logHtmlCoc( ): string {
+    let head : string =
+    "<!DOCTYPE html>"+'\n'+
+    "<html lang=\"ja\">"+'\n'+
+    "  <head>"+'\n'+
+    "    <meta charset=\"UTF-8\" />"+'\n'+
+    "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />"+'\n'+
+    "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\" />"+'\n'+
+    "    <title>udonaliumlily - logs</title>"+'\n'+
+    "  </head>"+'\n'+
+    "  <body>"+'\n'+
+    "   "+'\n';
+
+
+    let last : string =
+    "  </body>"+'\n'+
+    "</html>";
+
+    let main : string = "";
+
+    for (let mess of this.chatMessages ) {
+      let to = mess.to;
+      let from = mess.from;
+      let myId = Network.peerContext.userId; // 1.13.xとのmargeで修正
+      console.log( 'from:' + mess.from
+                  + ' To:' + mess.to + 'myId:' + myId);
+      if ( to ){
+        if ( ( to != myId) && ( from != myId) ){
+          continue;
+        }
+      }
+
+      main += this.messageHtmlCoc( this.escapeHtml( this.name ) , mess );
     }
     let str: string = head + main + last;
 

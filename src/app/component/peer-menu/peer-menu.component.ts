@@ -21,8 +21,8 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   targetUserId = '';
   networkService = Network;
   gameRoomService = ObjectStore.instance;
-  help = '';
-
+  help: string = '';
+  isPasswordVisible = false;
   disptimer = null;
   dispDetailFlag = false;
 

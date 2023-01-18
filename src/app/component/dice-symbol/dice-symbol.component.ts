@@ -117,7 +117,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     EventSystem.register(this)
-      .on('ROLL_DICE_SYNBOL', -1000, event => {
+      .on('ROLL_DICE_SYMBOL', event => {
         if (event.data.identifier === this.diceSymbol.identifier) {
           this.ngZone.run(() => {
             this.animeState = 'inactive';
@@ -126,7 +126,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         }
       })
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
+      .on('UPDATE_GAME_OBJECT', event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.diceSymbol || !object) return;
         if ((this.diceSymbol === object)
@@ -138,7 +138,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
       })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
       })
       .on('DISCONNECT_PEER', event => {
@@ -234,7 +234,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     }
-    actions.push(ContextMenuSeparator);
+    if (actions.length) actions.push(ContextMenuSeparator);
     if (this.isMine || this.hasOwner) {
       actions.push({
         name: 'ダイスを公開', action: () => {
@@ -308,7 +308,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   diceRoll(): string {
-    EventSystem.call('ROLL_DICE_SYNBOL', { identifier: this.diceSymbol.identifier });
+    EventSystem.call('ROLL_DICE_SYMBOL', { identifier: this.diceSymbol.identifier });
     SoundEffect.play(PresetSound.diceRoll1);
     return this.diceSymbol.diceRoll();
   }

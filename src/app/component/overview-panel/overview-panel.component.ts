@@ -8,11 +8,14 @@ import {
   Input,
   OnDestroy,
   ViewChild,
+  HostListener,
 } from '@angular/core';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
+import { MarkDown } from '@udonarium/mark-down';
+
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -21,6 +24,8 @@ import { GameCharacter } from '@udonarium/game-character'; //
 import { TextNote } from '@udonarium/text-note'; //
 import { Card } from '@udonarium/card'; //
 import { CardStack } from '@udonarium/card-stack'; //
+
+import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'overview-panel',
@@ -71,7 +76,8 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
   constructor(
     private inventoryService: GameObjectInventoryService,
     private changeDetector: ChangeDetectorRef,
-    private pointerDeviceService: PointerDeviceService
+    private pointerDeviceService: PointerDeviceService,
+    private domSanitizer: DomSanitizer
   ) { }
 
   ngAfterViewInit() {
@@ -80,7 +86,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       this.adjustPositionRoot();
     }, 16);
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
+      .on('UPDATE_GAME_OBJECT', event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.tabletopObject || !object || !(object instanceof ObjectNode)) return;
         if (this.tabletopObject === object || this.tabletopObject.contains(object)) {
@@ -90,7 +96,7 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
       })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
       });
   }
@@ -285,31 +291,35 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     if( maxHeight > 1000 ) maxHeight = 1000;
     return maxHeight;
   }
-/*
-  get overViewCardStackWidth() : number {
-    let cardStack = <CardStack>this.tabletopObject;
-    if( ! cardStack ) return 270;
-    let width = cardStack.overViewWidth ;
-    if( width < 270 ) width = 270;
-    if( width > 800 ) width = 800;
-    return width;
-  }
-
-  get overViewCardStackMaxHeight() : number {
-    let cardStack = <CardStack>this.tabletopObject;
-    if( ! cardStack ) return 250;
-    let maxHeight = cardStack.overViewMaxHeight ;
-    if( maxHeight < 250 ) maxHeight = 250;
-    if( maxHeight > 1000 ) maxHeight = 1000;
-    return maxHeight;
-  }
-*/
 
   escapeHtml(text) {
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
                .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
-  
+
+  clickMarkDownBox(id: string) {
+    console.log("マークダウンクリック:" + id);
+  }
+
+  get markdown(): MarkDown { return ObjectStore.instance.get<MarkDown>('markdwon'); }
+
+  escapeHtmlMarkDown(text,baseId): SafeHtml{
+
+    let textCheckBox = this.markdown.markDownCheckBox(text, baseId);
+    let textTable = this.markdown.markDownTable(textCheckBox);
+
+    return this.domSanitizer.bypassSecurityTrustHtml(textTable.replace(/\n/g,'<br>'));
+  }
+
+  @HostListener('click', ['$event'])
+  click(event){
+    if (this.markdown){
+      console.log("event.timeStamp:" + event.timeStamp);
+      this.markdown.changeMarkDownCheckBox(event.target.id, event.timeStamp);
+    }
+  }
+
+
   isEditUrl( dataElmIdentifier) {
     let box = <HTMLInputElement>document.getElementById(dataElmIdentifier);
     if( !box )return false;

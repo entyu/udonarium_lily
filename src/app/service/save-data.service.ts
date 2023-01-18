@@ -152,19 +152,27 @@ export class SaveDataService {
   }
 
   saveHtmlChatLog(chatTab: ChatTab, fileName: string ){
-//    let files: File[] = [];
     let text: string = chatTab.logHtml();
-
     let blob = new Blob( [text], {type: "text/plain;charset=utf-8"});
     saveAs(blob, fileName + ".html");
   }
 
   saveHtmlChatLogAll( fileName: string ){
-//    let files: File[] = [];
     let text: string = ChatTabList.instance.logHtml();
-
     let blob = new Blob( [text], {type: "text/plain;charset=utf-8"});
     saveAs(blob, fileName + ".html");
+  }
+
+  saveHtmlChatLogCoc(chatTab: ChatTab, fileName: string ){
+    let text: string = chatTab.logHtmlCoc();
+    let blob = new Blob( [text], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, fileName + ".html");
+  }
+
+  saveHtmlChatLogAllCoc( fileName: string ){
+//    let text: string = ChatTabList.instance.logHtmlCoc();
+//    let blob = new Blob( [text], {type: "text/plain;charset=utf-8"});
+//    saveAs(blob, fileName + ".html");
   }
 
 

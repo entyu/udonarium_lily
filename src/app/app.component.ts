@@ -23,6 +23,7 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ReloadCheck } from '@udonarium/reload-check';
 import { TableSelecter } from '@udonarium/table-selecter';
+import { MarkDown } from '@udonarium/mark-down';
 
 import { CutIn } from '@udonarium/cut-in';
 import { CutInLauncher } from '@udonarium/cut-in-launcher';
@@ -117,6 +118,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     let jukebox: Jukebox = new Jukebox('Jukebox');
     jukebox.initialize();
+
+    let markdown: MarkDown = new MarkDown('markdwon');
+    markdown.initialize();
 
     let cutInLauncher = new CutInLauncher('CutInLauncher');
     cutInLauncher.initialize();
@@ -250,13 +254,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       this.panelService.open(PeerMenuComponent, { width: 500, height: 450, left: 100 });
       this.panelService.open(ChatWindowComponent, { width: 700, height: 400, left: 100, top: 450 });
     }, 0);
-/*
-    setInterval(() => {
-      this.dispcounter = this.dispcounter + 1;
-      if ( this.dispcounter > 100 )this.dispcounter = 0;
-//      PeerCursor.myCursor.time = new Date();
-    }, 2 );
-*/
   }
 
   ngOnDestroy() {
@@ -362,8 +359,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   open(componentName: string) {
-    let component: new(...args: any[]) => any = null;
-    let option: PanelOption = { width: 450, height: 600, left: 100 };
+    let component: { new(...args: any[]): any } = null;
+    let option: PanelOption = { width: 450, height: 600, left: 100 }
     switch (componentName) {
       case 'PeerMenuComponent':
         component = PeerMenuComponent;
@@ -420,7 +417,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   handleFileSelect(event: Event) {
-    let input = <HTMLInputElement> event.target;
+    let input = <HTMLInputElement>event.target;
     let files = input.files;
 
     this.reloadCheck.reloadCheckStart(this.networkService.peerContext.roomName != '');
@@ -452,8 +449,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       }, 100);
     }
   }
-
 }
+
 PanelService.UIPanelComponentClass = UIPanelComponent;
 ContextMenuService.ContextMenuComponentClass = ContextMenuComponent;
 ModalService.ModalComponentClass = ModalComponent;

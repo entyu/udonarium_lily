@@ -9,6 +9,7 @@
           <option value="">通常</option>
           <option value="numberResource">リソース</option>
           <option value="note">ノート</option>
+          <option value="markdown">チェック/表</option>
         </select>
       </ng-container>
       <ng-container *ngIf="isImage && indexNum>=1">
@@ -65,6 +66,25 @@
             [innerHTML]="escapeHtml(value) | linky:{stripPrefix: false}"></span>
           </div>
         </ng-container>
+        <ng-container *ngSwitchCase="'markdown'">
+          <span style="font-size: 0.8em;">
+            &nbsp;&nbsp;内容編集:<input id = "{{gameDataElement.myIdentifer +'_elm'}}" type="checkbox" (change)="changeChk()"/>
+          </span>
+          <textarea class="textarea-markdown is-caret"
+          style="width:100%;height:5em; min-width:50px; resize: none; font-size: 0.8em;"
+          [(ngModel)]="value" placeholder="Note"
+          [hidden]="!isEditMarkDown(gameDataElement.myIdentifer + '_elm')"
+          (focus)="textFocus(gameDataElement.myIdentifer + '_elm')">
+          </textarea>
+              
+          <div [hidden]="isEditMarkDown(gameDataElement.myIdentifer + '_elm')" 
+          style="width:100%;max-width:200px;min-width:50px;">
+            <div class="textarea-markdown" 
+            style="width:100%;min-width:50px; font-size: 0.8em;" 
+            [innerHTML]="escapeHtmlMarkDown(gameDataElement.value,gameDataElement.myIdentifer)"></div>
+          </div>
+        </ng-container>
+
         <ng-container *ngSwitchDefault>
 
           <ng-container *ngIf="!isImage">

@@ -20,7 +20,6 @@ import { ChatMessageService } from 'service/chat-message.service';
   styleUrls: ['./peer-cursor.component.css']
 })
 export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
-
   @ViewChild('cursor') cursorElementRef: ElementRef;
   @ViewChild('opacity') opacityElementRef: ElementRef;
   @Input() cursor: PeerCursor = PeerCursor.myCursor;
@@ -265,7 +264,7 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setPosition(x: number, y: number, z: number) {
-    this.cursorElement.style.transform = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(' + z + 'px)';
+    this.cursorElement.style.transform = `translateX(${x.toFixed(4)}px) translateY(${y.toFixed(4)}px) translateZ(${z.toFixed(4)}px)`;
   }
 
 }

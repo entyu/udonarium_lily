@@ -74,7 +74,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
     this.gameType = this.character.chatPalette ? this.character.chatPalette.dicebot : '';
     this._timeId = Date.now() + '_chat-palette';
     EventSystem.register(this)
-      .on('DELETE_GAME_OBJECT', -1000, event => {
+      .on('DELETE_GAME_OBJECT', event => {
         if (this.character && this.character.identifier === event.data.identifier) {
           this.panelService.close();
         }
@@ -201,6 +201,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   private targeted(gameCharacter: GameCharacter): boolean {
+    if (gameCharacter.location.name != 'table') return false;
     return gameCharacter.targeted;
   }
 

@@ -188,7 +188,6 @@
     <ng-container [ngSwitch]="dataElm.type">
       <ng-container *ngSwitchCase="'note'">
         <div class="section">
-          
           <div>{{dataElm.name}} 
             <span [hidden]="!isUrlText(dataElm.value)">
               &nbsp;&nbsp;URL編集:<input id = {{dataElm.myIdentifer}} type="checkbox" (change)="changeChk()"/>
@@ -205,6 +204,20 @@
 
             </div>
             <div class="textarea-spacer" >{{dataElm.value}}</div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'markdown'">
+        <div class="section">
+          <div>{{dataElm.name}} 
+          </div>
+          <div class="note" style="position: relative;">
+            <div class="is-fill">
+              <span class="textarea-markdown" 
+              [innerHTML]="escapeHtmlMarkDown(dataElm.value,dataElm.myIdentifer)"></span>
+            </div>
+             <div class="textarea-spacer" 
+             [innerHTML]="escapeHtmlMarkDown(dataElm.value,dataElm.myIdentifer)"></div>
           </div>
         </div>
       </ng-container>

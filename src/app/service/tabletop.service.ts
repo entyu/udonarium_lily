@@ -67,15 +67,13 @@ export class TabletopService {
   constructor(
     private coordinateService: CoordinateService
   ) {
-    console.log('円柱 constructor時');
     this.initialize();
   }
 
   private initialize() {
     this.refreshCacheAll();
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
-         console.log('UPDATE_GAME_OBJECT' + event);
+      .on('UPDATE_GAME_OBJECT', event => {
         if (event.data.identifier === this.currentTable.identifier || event.data.identifier === this.tableSelecter.identifier) {
           this.refreshCache(GameTableMask.aliasName);
           this.refreshCache(Terrain.aliasName);
@@ -90,13 +88,12 @@ export class TabletopService {
           this.updateMap(object);
         }
       })
-      .on('DELETE_GAME_OBJECT', -1000, event => {
-        let garbage = ObjectStore.instance.get(event.data.identifier);
-         console.log('DELETE_GAME_OBJECT');
-        if (garbage == null || garbage.aliasName.length < 1) {
+      .on('DELETE_GAME_OBJECT', event => {
+        let aliasName = event.data.aliasName;
+        if (!aliasName) {
           this.refreshCacheAll();
         } else {
-          this.refreshCache(garbage.aliasName);
+          this.refreshCache(aliasName);
         }
       })
       .on('XML_LOADED', event => {
@@ -201,226 +198,6 @@ export class TabletopService {
         break;
     }
   }
-/* #marge
-  calcTabletopLocalCoordinate(
-    x: number = this.pointerDeviceService.pointers[0].x,
-    y: number = this.pointerDeviceService.pointers[0].y,
-    target: HTMLElement = this.pointerDeviceService.targetElement
-  ): PointerCoordinate {
-    let coordinate: PointerCoordinate = { x: x, y: y, z: 0 };
-    if (target.contains(this.dragAreaElement)) {
-      coordinate = PointerDeviceService.convertToLocal(coordinate, this.dragAreaElement);
-      coordinate.z = 0;
-    } else {
-      coordinate = PointerDeviceService.convertLocalToLocal(coordinate, target, this.dragAreaElement);
-    }
-    return { x: coordinate.x, y: coordinate.y, z: 0 < coordinate.z ? coordinate.z : 0 };
-  }
-*/
-
-
-/*
-  makeDefaultTabletopObjects() {
-    let testCharacter: GameCharacter = null;
-    let testFile: ImageFile = null;
-    let fileContext: ImageContext = null;
-
-    //-------------------------
-    testCharacter = new GameCharacter('testCharacter_1');
-
-    fileContext = ImageFile.createEmpty('testCharacter_1_image').toContext();
-    fileContext.url = './assets/images/mon_052.gif';
-    testFile = ImageStorage.instance.add(fileContext);
-    
-    
-    ImageTag.create(testFile.identifier).tag = 'モンスター';    //本家PR #92より
-        
-    testCharacter.location.x = 5 * 50;
-    testCharacter.location.y = 9 * 50;
-    testCharacter.initialize();
-    testCharacter.createTestGameDataElement('モンスターA', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ1' , '防+1' , 3);
-
-    //-------------------------
-    testCharacter = new GameCharacter('testCharacter_2');
-
-    testCharacter.location.x = 8 * 50;
-    testCharacter.location.y = 8 * 50;
-    testCharacter.initialize();
-    testCharacter.createTestGameDataElement('モンスターB', 1, testFile.identifier);
-
-    //-------------------------
-    testCharacter = new GameCharacter('testCharacter_3');
-
-    fileContext = ImageFile.createEmpty('testCharacter_3_image').toContext();
-    fileContext.url = './assets/images/mon_128.gif';
-//本家PR #92より
-//  fileContext.tag = 'テスト01';
-    testFile = ImageStorage.instance.add(fileContext);
-
-    ImageTag.create(testFile.identifier).tag = 'モンスター'; //本家PR #92より
-
-    testCharacter.location.x = 4 * 50;
-    testCharacter.location.y = 2 * 50;
-    testCharacter.initialize();
-    testCharacter.createTestGameDataElement('モンスターC', 3, testFile.identifier);
-
-    //-------------------------
-    testCharacter = new GameCharacter('testCharacter_4');
-
-    fileContext = ImageFile.createEmpty('testCharacter_4_image').toContext();
-    fileContext.url = './assets/images/mon_150.gif';
-//本家PR #92より
-//    fileContext.tag = 'テスト01';
-    testFile = ImageStorage.instance.add(fileContext);
-
-    ImageTag.create(testFile.identifier).tag = '';//本家PR #92より
-
-    testCharacter.location.x = 6 * 50;
-    testCharacter.location.y = 11 * 50;
-    testCharacter.initialize();
-    testCharacter.createTestGameDataElement('キャラクターA', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ2' , '攻撃+10' , 1);
-
-    //-------------------------
-    testCharacter = new GameCharacter('testCharacter_5');
-
-    fileContext = ImageFile.createEmpty('testCharacter_5_image').toContext();
-    fileContext.url = './assets/images/mon_211.gif';
-    testFile = ImageStorage.instance.add(fileContext);
-    
-    ImageTag.create(testFile.identifier).tag = ''; //本家PR #92より
-
-    testCharacter.location.x = 12 * 50;
-    testCharacter.location.y = 12 * 50;
-    testCharacter.initialize();
-    testCharacter.createTestGameDataElement('キャラクターB', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ2' , '攻撃+10' , 1);
-
-    testCharacter = new GameCharacter('testCharacter_5B');
-
-    fileContext = ImageFile.createEmpty('testCharacter_5_image').toContext();
-    fileContext.url = './assets/images/mon_211.gif';
-    testFile = ImageStorage.instance.add(fileContext);
-    
-    ImageTag.create(testFile.identifier).tag = ''; //本家PR #92より
-
-    testCharacter.location.x = 11 * 50;
-    testCharacter.location.y = 10 * 50;
-    testCharacter.initialize();
-    testCharacter.createTestGameDataElementExtendSample('Bのサブコマ', 1, testFile.identifier);
-    
-    testCharacter.hideInventory = true;
-    testCharacter.nonTalkFlag = true;
-    testCharacter.overViewWidth = 350;
-    testCharacter.overViewMaxHeight = 350;
-    //-------------------------
-    testCharacter = new GameCharacter('testCharacter_6');
-
-    fileContext = ImageFile.createEmpty('testCharacter_6_image').toContext();
-    fileContext.url = './assets/images/mon_135.gif';
-    testFile = ImageStorage.instance.add(fileContext);
-    
-    ImageTag.create(testFile.identifier).tag = '';//本家PR #92より
-
-    testCharacter.initialize();
-    testCharacter.location.x = 5 * 50;
-    testCharacter.location.y = 13 * 50;
-    testCharacter.createTestGameDataElement('キャラクターC', 1, testFile.identifier);
-    this.addBuffRound( testCharacter ,'テストバフ3' , '回避+5' , 1);
-    
-    
-  }
-*/
-
-/*
-  getContextMenuActionsForCreateObject(position: PointerCoordinate): ContextMenuAction[] {
-    return [
-      this.getCreateCharacterMenu(position),
-      this.getCreateTableMaskMenu(position),
-      this.getCreateTerrainMenu(position),
-      this.getCreateTextNoteMenu(position),
-      this.getCreateTrumpMenu(position),
-      this.getCreateDiceSymbolMenu(position),
-    ];
-  }
-*/
-  /*
-  private getCreateCharacterMenu(position: PointerCoordinate): ContextMenuAction {
-    return {
-      name: 'キャラクターを作成', action: () => {
-        let character = this.createGameCharacter(position);
-        EventSystem.trigger('SELECT_TABLETOP_OBJECT', { identifier: character.identifier, className: character.aliasName });
-        SoundEffect.play(PresetSound.piecePut);
-      }
-    }
-  }
-  */
-  /*
-  private getCreateTableMaskMenu(position: PointerCoordinate): ContextMenuAction {
-    return {
-      name: 'マップマスクを作成', action: () => {
-        this.createGameTableMask(position);
-        SoundEffect.play(PresetSound.cardPut);
-      }
-    }
-  }
-  */
-  /*
-  private getCreateTerrainMenu(position: PointerCoordinate): ContextMenuAction {
-    return {
-      name: '地形を作成', action: () => {
-        this.createTerrain(position);
-        SoundEffect.play(PresetSound.blockPut);
-      }
-    }
-  }
-  */
-  /*
-  private getCreateTextNoteMenu(position: PointerCoordinate): ContextMenuAction {
-    return {
-      name: '共有メモを作成', action: () => {
-        this.createTextNote(position);
-        SoundEffect.play(PresetSound.cardPut);
-      }
-    }
-  }
-  */
-  /*
-  private getCreateTrumpMenu(position: PointerCoordinate): ContextMenuAction {
-    return {
-      name: 'トランプの山札を作成', action: () => {
-        this.createTrump(position);
-        SoundEffect.play(PresetSound.cardPut);
-      }
-    }
-  }
-  */
-  /*
-  private getCreateDiceSymbolMenu(position: PointerCoordinate): ContextMenuAction {
-    let dices: { menuName: string, diceName: string, type: DiceType, imagePathPrefix: string }[] = [
-      { menuName: 'D4', diceName: 'D4', type: DiceType.D4, imagePathPrefix: '4_dice' },
-      { menuName: 'D6', diceName: 'D6', type: DiceType.D6, imagePathPrefix: '6_dice' },
-      { menuName: 'D8', diceName: 'D8', type: DiceType.D8, imagePathPrefix: '8_dice' },
-      { menuName: 'D10', diceName: 'D10', type: DiceType.D10, imagePathPrefix: '10_dice' },
-      { menuName: 'D10 (00-90)', diceName: 'D10', type: DiceType.D10_10TIMES, imagePathPrefix: '100_dice' },
-      { menuName: 'D12', diceName: 'D12', type: DiceType.D12, imagePathPrefix: '12_dice' },
-      { menuName: 'D20', diceName: 'D20', type: DiceType.D20, imagePathPrefix: '20_dice' },
-    ];
-    let subMenus: ContextMenuAction[] = [];
-
-    dices.forEach(item => {
-      subMenus.push({
-        name: item.menuName, action: () => {
-          this.createDiceSymbol(position, item.diceName, item.type, item.imagePathPrefix);
-          SoundEffect.play(PresetSound.dicePut);
-        }
-      });
-    });
-    return { name: 'ダイスを作成', action: null, subActions: subMenus };
-  }
-  */
-  
 }
 
 class TabletopCache<T extends TabletopObject> {
