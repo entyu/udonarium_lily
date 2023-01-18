@@ -201,6 +201,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   }
 
   private targeted(gameCharacter: GameCharacter): boolean {
+    if (gameCharacter.location.name != 'table') return false;
     return gameCharacter.targeted;
   }
 
