@@ -193,21 +193,6 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
     let correction: PointerCoordinate = { x: 0, y: 0, z: 0 };
     let box = this.elementRef.nativeElement.getBoundingClientRect();
     let bounds = this.elementRef.nativeElement.ownerDocument.querySelector(this.boundsSelector).getBoundingClientRect();
-    
-    let test = document.body.getBoundingClientRect();
-    
-    if( document.body == this.elementRef.nativeElement.ownerDocument.querySelector(this.boundsSelector) ){
-      console.log("BODY取得成功");
-    }else{
-      console.log("BODY取得失敗");
-    }
-    
-    console.log("ownerDocument" + this.elementRef.nativeElement.ownerDocument.querySelector(this.boundsSelector) );
-    console.log("this.allowOverHalf" + this.allowOverHalf);
-    console.log("box" + box + " boxW" + (box.right - box.left) + " boxH" + (box.bottom - box.top));
-    console.log("test" + " boundsRLBT" + test.right + "/" + test.left + "/" + test.bottom + "/" + test.top);
-    console.log("bounds" + bounds + " boundsRLBT" + bounds.right + "/" + bounds.left + "/" + bounds.bottom + "/" + bounds.top);
-
     if (this.allowOverHalf) {
       const boxWidth = box.right - box.left;
       const boxHeight = box.bottom - box.top;
