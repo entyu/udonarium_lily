@@ -1,7 +1,10 @@
+/*
+// これを入れるとチャットログの高さ計算が8px(おそらくpadding分）ずれて最終行下部の高さが足りなくなるためコメントアウト※リリィ
 :host {
   display: block;
   height: 100%;
 }
+*/
 
 .loop-anime {
   -webkit-animation: anime1 1.3s infinite ease-in-out;
