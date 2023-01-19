@@ -77,6 +77,10 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     this.modalService.open(LobbyComponent, { width: 700, height: 400, left: 0, top: 400 });
   }
 
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
   findUserId(peerId: string) {
     const peerCursor = PeerCursor.findByPeerId(peerId);
     return peerCursor ? peerCursor.userId : '';
