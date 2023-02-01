@@ -5,12 +5,18 @@ import { ImageStorage } from './core/file-storage/image-storage';
 import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
+import { UUID } from '@udonarium/core/system/util/uuid';
 
 //import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { ObjectStore } from './core/synchronize-object/object-store';
 
 @SyncObject('character')
 export class GameCharacter extends TabletopObject {
+  constructor(identifier: string = UUID.generateUuid()) {
+    super(identifier);
+    this.isAltitudeIndicate = true;
+  }
+
   @SyncVar() isLock: boolean = false;
 
   @SyncVar() rotate: number = 0;
@@ -235,6 +241,7 @@ export class GameCharacter extends TabletopObject {
 
     this.commonDataElement.appendChild(nameElement);
     this.commonDataElement.appendChild(sizeElement);
+    this.commonDataElement.appendChild(altitudeElement);
 
     this.detailDataElement.appendChild(resourceElement);
     resourceElement.appendChild(hpElement);
@@ -295,6 +302,7 @@ export class GameCharacter extends TabletopObject {
 
     let nameElement: DataElement = DataElement.create('name', name, {}, 'name_' + this.identifier);
     let sizeElement: DataElement = DataElement.create('size', size, {}, 'size_' + this.identifier);
+    let altitudeElement: DataElement = DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier);
 
     if (this.imageDataElement.getFirstElementByName('imageIdentifier')) {
       this.imageDataElement.getFirstElementByName('imageIdentifier').value = imageIdentifier;
@@ -393,6 +401,7 @@ export class GameCharacter extends TabletopObject {
 
     let nameElement: DataElement = DataElement.create('name', name, {}, 'name_' + this.identifier);
     let sizeElement: DataElement = DataElement.create('size', size, {}, 'size_' + this.identifier);
+    let altitudeElement: DataElement = DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier);
 
     if (this.imageDataElement.getFirstElementByName('imageIdentifier')) {
       this.imageDataElement.getFirstElementByName('imageIdentifier').value = imageIdentifier;
@@ -404,6 +413,7 @@ export class GameCharacter extends TabletopObject {
 
     this.commonDataElement.appendChild(nameElement);
     this.commonDataElement.appendChild(sizeElement);
+    this.commonDataElement.appendChild(altitudeElement);
 
 //    this.detailDataElement.appendChild(resourceElement);
 //    resourceElement.appendChild(hpElement);

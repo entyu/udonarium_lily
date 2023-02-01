@@ -310,6 +310,16 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.viewPotisonY += transformY;
     this.viewPotisonZ += transformZ;
 
+    if ( rotateX != 0 || rotateY != 0 || rotateX != 0) {
+      this.ngZone.run(() => {
+        EventSystem.trigger('TABLE_VIEW_ROTATE', {
+          x: this.viewRotateX,
+          y: this.viewRotateY,
+          z: this.viewRotateZ
+        });
+      });
+    }
+
     this.gameTable.nativeElement.style.transform = `translateZ(${this.viewPotisonZ.toFixed(4)}px) translateY(${this.viewPotisonY.toFixed(4)}px) translateX(${this.viewPotisonX.toFixed(4)}px) rotateY(${this.viewRotateY.toFixed(4)}deg) rotateX(${this.viewRotateX.toFixed(4) + 'deg) rotateZ(' + this.viewRotateZ.toFixed(4)}deg)`;
   }
 

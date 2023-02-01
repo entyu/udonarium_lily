@@ -143,5 +143,22 @@
         </div>
       </div>
     </div>
+    <div class="is-3d" *ngIf="isAltitudeIndicate && (altitude <= -0.5 || 0.5 <= altitude)"
+      style="display: flex; flex-flow: column nowrap; justify-content: space-between; border-left: 2px dashed black; transform-origin: top left"
+      [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : 0)"
+      [ngStyle]="{transform: 'translateX(' + (size * gridSize / 2) + 'px) translateY(' + (-size * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
+      <div class="is-3d" [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
+        <span class="elevation-indicator is-3d" style="position: absolute"><i>{{ elevation }}</i></span>
+        <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
+      </div>
+      <div class="is-3d">
+        <span class="altitude-indicator is-3d" style="position: absolute">{{ math.abs(altitude) }}</span>
+        <span class="altitude-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)">{{ math.abs(altitude) }}</span>
+      </div>
+      <div class="is-3d" [style.visibility]="altitude < 0 ? 'visible' : 'hidden'" [ngStyle]="{transform: 'translateY(' + (chatBubbleAltitude + 4) + 'px)'}">
+        <span class="elevation-indicator is-3d" style="position: absolute"><i>{{ elevation }}</i></span>
+        <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
+      </div>
+    </div>
   </div>
 </div>
