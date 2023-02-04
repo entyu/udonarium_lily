@@ -93,15 +93,6 @@ export class GameCharacter extends TabletopObject {
 
   get name(): string { return this.getCommonValue('name', ''); }
   get size(): number { return this.getCommonValue('size', 1); }
-  get altitude(): number {
-    let element = this.getElement('altitude', this.commonDataElement);
-    if (!element) {
-      this.commonDataElement.appendChild(DataElement.create('altitude', 0, {}, 'altitude_' + this.identifier));
-    }
-    let num = element ? +element.value : 0;
-    return Number.isNaN(num) ? 0 : num;
-  }
-
   get chatPalette(): ChatPalette {
     for (let child of this.children) {
       if (child instanceof ChatPalette) return child;

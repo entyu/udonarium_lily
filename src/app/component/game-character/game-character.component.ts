@@ -62,6 +62,7 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
   get altitude(): number { return this.gameCharacter.altitude; }
+  set altitude(altitude: number) { this.gameCharacter.altitude = altitude; }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
@@ -219,18 +220,31 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
-      (this.isDropShadow
-        ? {
-          name: '影を非表示', action: () => {
-            this.isDropShadow = false;
-            SoundEffect.play(PresetSound.sweep);
+      { 
+        name: '高度設定', action: null, subActions: [
+          (this.isDropShadow
+            ? {
+              name: '影を非表示', action: () => {
+                this.isDropShadow = false;
+                SoundEffect.play(PresetSound.sweep);
+              }
+            } : {
+              name: '影を表示', action: () => {
+               this.isDropShadow = true;
+                SoundEffect.play(PresetSound.sweep);
+              },
+            }),
+          {
+            name: '高度を0にする', action: () => {
+              if (this.altitude != 0) {
+                this.altitude = 0;
+                SoundEffect.play(PresetSound.sweep);
+              }
+            },
+            altitudeHande: this.gameCharacter
           }
-        } : {
-          name: '影を表示', action: () => {
-            this.isDropShadow = true;
-            SoundEffect.play(PresetSound.sweep);
-          }
-        }),
+        ]
+      },
       ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },

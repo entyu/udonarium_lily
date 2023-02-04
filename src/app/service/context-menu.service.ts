@@ -1,4 +1,5 @@
 import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { TabletopObject } from '@udonarium/tabletop-object';
 
 interface ContextMenuPoint {
   x: number,
@@ -20,6 +21,7 @@ export interface ContextMenuAction {
   name: string,
   action?: Function,
   enabled?: boolean,
+  altitudeHande?: TabletopObject,
   type?: ContextMenuType,
   subActions?: ContextMenuAction[]
 }

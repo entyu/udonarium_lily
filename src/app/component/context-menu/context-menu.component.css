@@ -48,6 +48,40 @@
 .menu-title {
   display: inline-block;
 }
+
+
+td.altitude {
+  vertical-align: middle;
+  height: 100%;
+}
+
+input.altitude {
+  writing-mode: bt-lr;   
+  appearance: slider-vertical;
+  width: 8px;
+  height: 200px;
+
+  padding: 3px;
+}
+
+.disabled .menu-title, .disabled .material-icons {
+  color: gray;
+}
+
+.altitude-view {
+  color: black;
+  vertical-align: top;
+  width: 3em;
+  text-align: right;
+}
+
+.ruler {
+  color: #444;
+  font-size: small;
+  padding-left: 4px;
+  padding-right: 2px;
+}
+
 hr.separator {
   margin: 0.1em -12px;
   height: 1px;

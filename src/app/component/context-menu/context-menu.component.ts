@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ContextMenuAction, ContextMenuService } from 'service/context-menu.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { TabletopObject } from '@udonarium/tabletop-object';
 
 import { EventSystem } from '@udonarium/core/system';
 
@@ -26,6 +27,12 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   private callbackOnOutsideClick = (e) => this.onOutsideClick(e);
 
   get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
+  get altitudeHande(): TabletopObject { 
+    for (let action of this.actions) {
+      if (action && action.altitudeHande) return action.altitudeHande;
+    }
+    return null;
+  }
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,

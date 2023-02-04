@@ -1,17 +1,29 @@
 <div class="component" [ngClass]="{'submenu-panel': isSubmenu, 'is-max-limit': !isSubmenu, 'pointer-events-none': isPointerDragging}" (mouseleave)="hideSubMenu()" #root>
   <div *ngIf="0 < title.length" class="title">{{title}}</div>
-  <ul>
-    <ng-container *ngIf = "title != 'インデックス'">
-      <ng-container *ngFor="let action of actions">
-        <ng-container *ngTemplateOutlet="action?.type === 'separator' ? separator : actionMenu; context: { action: action }"></ng-container>
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf = "title == 'インデックス'">
-      <ng-container *ngFor="let action of actions">
-        <ng-container *ngTemplateOutlet="action?.type === 'separator' ? separator : indexMenu; context: { action: action }"></ng-container>
-      </ng-container>
-    </ng-container>
-  </ul>
+  <div style="display: flex; align-items: top">
+    <div *ngIf="altitudeHande" class="altitude ruler" style="display: flex; align-self: stretch; flex-direction: column; align-content: center">
+      <div style="margin-top: 2em;">高</div><div style="align-self: center; margin-top: auto; margin-bottom: auto">0</div><div style="margin-bottom: 2em;">低</div>
+    </div>
+    <div *ngIf="altitudeHande" class="altitude"><input #altitudeSlider class="altitude" title="{{altitudeHande.altitude}}" [(ngModel)]="altitudeHande.altitude" type="range" max="12" min="-12" step="0.5" orient="vertical"></div>
+    <div style="flex-grow: 1;">
+      <div *ngIf="altitudeHande">
+        <div class="title" [style.color]="titleColor" [style.font-weight]="titleBold ? 'bolder' : 'normal'"><span style="font-size: small;" *ngIf="altitudeHande"> (高度 <input type="number" step="0.1" style="font-size: small; width:3.6em; text-align:right" [(ngModel)]="altitudeHande.altitude">)</span>
+        </div>
+      </div>
+      <ul>
+        <ng-container *ngIf = "title != 'インデックス'">
+          <ng-container *ngFor="let action of actions">
+            <ng-container *ngTemplateOutlet="action?.type === 'separator' ? separator : actionMenu; context: { action: action }"></ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf = "title == 'インデックス'">
+          <ng-container *ngFor="let action of actions">
+            <ng-container *ngTemplateOutlet="action?.type === 'separator' ? separator : indexMenu; context: { action: action }"></ng-container>
+          </ng-container>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <ng-template #indexMenu let-action="action">
