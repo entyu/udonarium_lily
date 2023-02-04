@@ -222,18 +222,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.contextMenuService.open(position, [
       { 
         name: '高度設定', action: null, subActions: [
-          (this.isDropShadow
-            ? {
-              name: '影を非表示', action: () => {
-                this.isDropShadow = false;
-                SoundEffect.play(PresetSound.sweep);
-              }
-            } : {
-              name: '影を表示', action: () => {
-               this.isDropShadow = true;
-                SoundEffect.play(PresetSound.sweep);
-              },
-            }),
           {
             name: '高度を0にする', action: () => {
               if (this.altitude != 0) {
@@ -242,7 +230,35 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
               }
             },
             altitudeHande: this.gameCharacter
-          }
+          },
+          (this.isAltitudeIndicate
+            ? {
+              name: '☑ 高度の表示', action: () => {
+                this.isAltitudeIndicate = false;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            } : {
+              name: '☐ 高度の表示', action: () => {
+                this.isAltitudeIndicate = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            }),
+          (this.isDropShadow
+            ? {
+              name: '☑ 影の表示', action: () => {
+                this.isDropShadow = false;
+                SoundEffect.play(PresetSound.sweep);
+               EventSystem.trigger('UPDATE_INVENTORY', null);
+               }
+            } : {
+              name: '☐ 影の表示', action: () => {
+               this.isDropShadow = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              },
+            })
         ]
       },
       ContextMenuSeparator,

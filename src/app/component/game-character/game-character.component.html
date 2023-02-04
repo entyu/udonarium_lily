@@ -18,9 +18,9 @@
         </div>
       </div>
 <!--影-->
-      <img class="image" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) scaleY(0.5) translateY(-150%) translateY(' + size * gridSize +'px)'}" *ngIf="(0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'" 
+      <img class="image" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) scaleY(0.5) translateY(-150%) translateY(' + size * gridSize +'px)'}" *ngIf="isDropShadow && (0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'" 
       style="filter: brightness(0) opacity(0.7) blur(1px);">
-      <img class="image" [ngStyle]="{'width':'100%','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) scaleY(0.5) translateY(-150%) translateY(' + size * gridSize +'px)'}" *ngIf="(0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'"
+      <img class="image" [ngStyle]="{'width':'100%','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) scaleY(0.5) translateY(-150%) translateY(' + size * gridSize +'px)'}" *ngIf="isDropShadow && (0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'"
       style="filter: brightness(0) opacity(0.7) blur(1px);">
       <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
