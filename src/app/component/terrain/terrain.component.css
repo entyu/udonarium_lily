@@ -220,3 +220,22 @@
 .is-pointer-events-none {
   pointer-events: none;
 }
+
+.altitude-indicator {
+  padding-left: 2px;
+  font-size: 11px;
+  font-weight: bolder;
+  color: blanchedalmond;
+  text-shadow: #444 0px 0px 3px;
+  backface-visibility: hidden;
+}
+
+.upright-transform {
+  -webkit-transition: transform 132ms ease-in-out;
+  transition: transform 132ms ease-in-out;
+}
+
+.fall {
+  -webkit-transition: -webkit-transform 132ms cubic-bezier(.21,.97,.75,1.25);
+  transition: transform 132ms cubic-bezier(.21,.97,.75,1.25);
+}

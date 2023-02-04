@@ -17,7 +17,7 @@ import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { Terrain, TerrainViewState } from '@udonarium/terrain';
+import { SlopeDirection, Terrain, TerrainViewState } from '@udonarium/terrain';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
@@ -67,6 +67,20 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
   get height(): number { return this.adjustMinBounds(this.terrain.height); }
   get width(): number { return this.adjustMinBounds(this.terrain.width); }
   get depth(): number { return this.adjustMinBounds(this.terrain.depth); }
+  get altitude(): number { return this.terrain.altitude; }
+  set altitude(altitude: number) { this.terrain.altitude = altitude; }
+
+  get isDropShadow(): boolean { return this.terrain.isDropShadow; }
+  set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
+
+  get isSlope(): boolean { return this.terrain.isSlope; }
+  set isSlope(isSlope: boolean) {
+    this.terrain.isSlope = isSlope;
+    if (!isSlope) this.terrain.slopeDirection = SlopeDirection.NONE;
+  }
+
+  get isAltitudeIndicate(): boolean { return this.terrain.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.terrain.isAltitudeIndicate = isAltitudeIndicate; }
 
   get isVisibleFloor(): boolean { return 0 < this.width * this.depth; }
   get isVisibleWallTopBottom(): boolean { return 0 < this.width * this.height; }
@@ -82,13 +96,23 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
     if(conf) conf.roomGridDispAlways = disp;
   }
 
-  get isDropShadow(): boolean { return this.terrain.isDropShadow; }
-  set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
-
   gridSize: number = 50;
+
+  get isWallExist(): boolean {
+    return this.hasWall && this.wallImage && this.wallImage.url && this.wallImage.url.length > 0;
+  }
+
+  get terreinAltitude(): number {
+    let ret = this.altitude;
+    if (this.altitude < 0 || (!this.isSlope && !this.isWallExist)) ret += this.height;
+    return ret;
+  }
 
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
+
+  math = Math;
+  slopeDirectionState = SlopeDirection;
 
   private input: InputHandler = null;
 
@@ -105,6 +129,8 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
 
     private tabletopService: TabletopService,
   ) { }
+
+  viewRotateZ = 10;
 
   ngOnInit() {
     EventSystem.register(this)
@@ -143,6 +169,12 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
       })
       .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
+      })
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
       });
     this.movableOption = {
       tabletopObject: this.terrain,
@@ -191,6 +223,48 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
     let menuPosition = this.pointerDeviceService.pointers[0];
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     this.contextMenuService.open(menuPosition, [
+      {
+        name: '高度設定', action: null, subActions: [
+          {
+            name: '高度を0にする', action: () => {
+              if (this.altitude != 0) {
+                this.altitude = 0;
+                SoundEffect.play(PresetSound.sweep);
+              }
+            },
+            altitudeHande: this.terrain
+          },
+          (this.isAltitudeIndicate
+            ? {
+              name: '☑ 高度の表示', action: () => {
+                this.isAltitudeIndicate = false;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            } : {
+              name: '☐ 高度の表示', action: () => {
+                this.isAltitudeIndicate = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            }),
+          (this.isDropShadow
+            ? {
+              name: '☑ 影の表示', action: () => {
+                this.isDropShadow = false;
+                SoundEffect.play(PresetSound.sweep);
+               EventSystem.trigger('UPDATE_INVENTORY', null);
+               }
+            } : {
+              name: '☐ 影の表示', action: () => {
+               this.isDropShadow = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              },
+            })
+        ]
+      },
+      ContextMenuSeparator,
       (this.isLocked
         ? {
           name: '固定解除', action: () => {
