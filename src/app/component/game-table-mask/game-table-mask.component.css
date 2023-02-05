@@ -73,3 +73,22 @@
   height: 100%;
   width: 100%;
 }
+
+.is-3d {
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.altitude-indicator {
+  padding-left: 2px;
+  font-size: 11px;
+  font-weight: bolder;
+  color: blanchedalmond;
+  text-shadow: #444 0px 0px 3px;
+  backface-visibility: hidden;
+}
+
+.fall {
+  -webkit-transition: transform 132ms ease-in-out;
+  transition: transform 132ms ease-in-out;
+}

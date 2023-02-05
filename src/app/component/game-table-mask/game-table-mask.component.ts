@@ -46,7 +46,19 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
   get isLock(): boolean { return this.gameTableMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
 
+  get altitude(): number { return this.gameTableMask.altitude; }
+  set altitude(altitude: number) { this.gameTableMask.altitude = altitude; }
+
+  get isAltitudeIndicate(): boolean { return this.gameTableMask.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameTableMask.isAltitudeIndicate = isAltitudeIndicate; }
+
+  get gameTableMaskAltitude(): number {
+    return +this.altitude.toFixed(1); 
+  }
+
   gridSize: number = 50;
+  math = Math;
+  viewRotateZ = 10;
 
   movableOption: MovableOption = {};
 
@@ -122,6 +134,34 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     let menuArray = [];
     menuArray.push(
+      {
+        name: '高度設定', action: null, subActions: [
+          {
+            name: '高度を0にする', action: () => {
+              if (this.altitude != 0) {
+                this.altitude = 0;
+                SoundEffect.play(PresetSound.sweep);
+              }
+            },
+            altitudeHande: this.gameTableMask
+          },
+          (this.isAltitudeIndicate
+            ? {
+              name: '☑ 高度の表示', action: () => {
+                this.isAltitudeIndicate = false;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            } : {
+              name: '☐ 高度の表示', action: () => {
+                this.isAltitudeIndicate = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            })
+        ]
+      },
+      ContextMenuSeparator,
       this.isLock
         ? {
           name: '固定解除', action: () => {
