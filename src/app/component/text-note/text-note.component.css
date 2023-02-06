@@ -223,6 +223,20 @@
   display: inline;
 }
 
+.altitude-indicator {
+  padding-left: 2px;
+  font-size: 11px;
+  font-weight: bolder;
+  color: blanchedalmond;
+  text-shadow: #444 0px 0px 3px;
+  backface-visibility: hidden;
+}
+
+.fall {
+  -webkit-transition: -webkit-transform 132ms cubic-bezier(.21,.97,.75,1.25);
+  transition: transform 132ms cubic-bezier(.21,.97,.75,1.25);
+}
+
 /*2022/1/16現在、クロームバージョン: 97.0.4692.71（Official Build） （64 ビット）
 キャレットの点滅で負荷がかかることへの対策不透明度指定*/
 .is-caret {
