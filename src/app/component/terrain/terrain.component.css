@@ -217,10 +217,6 @@
   margin: auto;
 }
 
-.is-pointer-events-none {
-  pointer-events: none;
-}
-
 .altitude-indicator {
   padding-left: 2px;
   font-size: 11px;
