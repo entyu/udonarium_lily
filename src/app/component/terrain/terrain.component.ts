@@ -73,10 +73,27 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
   get isDropShadow(): boolean { return this.terrain.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
 
+  get isSurfaceShading(): boolean { return true; }
+  set isSurfaceShading(isSurfaceShading: boolean) { }
+
+/*
+  get isSurfaceShading(): boolean { return this.terrain.isSurfaceShading; }
+  set isSurfaceShading(isSurfaceShading: boolean) { this.terrain.isSurfaceShading = isSurfaceShading; }
+*/
   get isSlope(): boolean { return this.terrain.isSlope; }
   set isSlope(isSlope: boolean) {
     this.terrain.isSlope = isSlope;
     if (!isSlope) this.terrain.slopeDirection = SlopeDirection.NONE;
+  }
+
+  get slopeDirection(): number {
+    if (!this.terrain.isSlope) return SlopeDirection.NONE;
+    if (this.terrain.isSlope && this.terrain.slopeDirection === SlopeDirection.NONE) return SlopeDirection.BOTTOM;
+    return this.terrain.slopeDirection;
+  }
+  set slopeDirection(slopeDirection: number) {
+    this.terrain.isSlope = (slopeDirection != SlopeDirection.NONE);
+    this.terrain.slopeDirection = slopeDirection;
   }
 
   get isAltitudeIndicate(): boolean { return this.terrain.isAltitudeIndicate; }
@@ -278,6 +295,34 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
           }
         }),
       ContextMenuSeparator,
+      { name: '傾斜', action: null, subActions: [
+        {
+          name: `${ this.slopeDirection == SlopeDirection.NONE ? '◉' : '○' } なし`, action: () => {
+            this.slopeDirection = SlopeDirection.NONE;
+          }
+        },
+        ContextMenuSeparator,
+        {
+          name: `${ this.slopeDirection == SlopeDirection.TOP ? '◉' : '○' } 上（北）`, action: () => {
+            this.slopeDirection = SlopeDirection.TOP;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.BOTTOM ? '◉' : '○' } 下（南）`, action: () => {
+            this.slopeDirection = SlopeDirection.BOTTOM;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.LEFT ? '◉' : '○' } 左（西）`, action: () => {
+            this.slopeDirection = SlopeDirection.LEFT;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.RIGHT ? '◉' : '○' } 右（東）`, action: () => {
+            this.slopeDirection = SlopeDirection.RIGHT;
+          }
+        }
+      ]},
       (this.hasWall
         ? {
           name: '壁を非表示', action: () => {
@@ -333,6 +378,50 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
 
   onMoved() {
     SoundEffect.play(PresetSound.blockPut);
+  }
+
+  get floorModCss() {
+    let ret = '';
+    let tmp = 0;
+    switch (this.slopeDirection) {
+      case SlopeDirection.TOP:
+        tmp = Math.atan(this.height / this.depth);
+        ret = ' rotateX(' + tmp + 'rad) scaleY(' + (1 / Math.cos(tmp)) + ')';
+        break;
+      case SlopeDirection.BOTTOM:
+        tmp = Math.atan(this.height / this.depth);
+        ret = ' rotateX(' + -tmp + 'rad) scaleY(' + (1 / Math.cos(tmp)) + ')';
+        break;
+      case SlopeDirection.LEFT:
+        tmp = Math.atan(this.height / this.width);
+        ret = ' rotateY(' + -tmp + 'rad) scaleX(' + (1 / Math.cos(tmp)) + ')';
+        break;
+      case SlopeDirection.RIGHT:
+        tmp = Math.atan(this.height / this.width);
+        ret = ' rotateY(' + tmp + 'rad) scaleX(' + (1 / Math.cos(tmp)) + ')';
+        break;
+    }
+    return ret;
+  }
+
+  get floorBrightness() {
+    let ret = 1.0;
+    if (!this.isSurfaceShading) return ret;
+    switch (this.slopeDirection) {
+      case SlopeDirection.TOP:
+        ret = 0.4;
+        break;
+      case SlopeDirection.BOTTOM:
+        ret = 1.0;
+        break;
+      case SlopeDirection.LEFT:
+        ret = 0.6;
+        break;
+      case SlopeDirection.RIGHT:
+        ret = 0.9;
+        break;
+    }
+    return ret;
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {
