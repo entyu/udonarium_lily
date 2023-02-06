@@ -25,6 +25,7 @@ export class Terrain extends TabletopObject {
   @SyncVar() rotate: number = 0;
   @SyncVar() isDropShadow: boolean = true;
   @SyncVar() isSlope: boolean = false;
+  @SyncVar() isSurfaceShading: boolean = true;
   @SyncVar() slopeDirection: number = SlopeDirection.NONE;
 
   @SyncVar() isGrid: boolean = false;

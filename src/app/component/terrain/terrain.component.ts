@@ -73,13 +73,9 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
   get isDropShadow(): boolean { return this.terrain.isDropShadow; }
   set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
 
-  get isSurfaceShading(): boolean { return true; }
-  set isSurfaceShading(isSurfaceShading: boolean) { }
-
-/*
   get isSurfaceShading(): boolean { return this.terrain.isSurfaceShading; }
   set isSurfaceShading(isSurfaceShading: boolean) { this.terrain.isSurfaceShading = isSurfaceShading; }
-*/
+
   get isSlope(): boolean { return this.terrain.isSlope; }
   set isSlope(isSlope: boolean) {
     this.terrain.isSlope = isSlope;
@@ -337,6 +333,18 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
             this.mode = TerrainViewState.ALL;
           }
         }),
+        (this.isSurfaceShading
+          ? {
+            name: '壁の陰影を非表示', action: () => {
+              this.isSurfaceShading = false;
+              SoundEffect.play(PresetSound.sweep);
+            }
+          } : {
+            name: '壁の陰影を表示', action: () => {
+              this.isSurfaceShading = true;
+              SoundEffect.play(PresetSound.sweep);
+            }
+          }),
         (this.isDropShadow
           ? {
             name: '影を非表示', action: () => {
