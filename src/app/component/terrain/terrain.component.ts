@@ -449,7 +449,11 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
   private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
 
     let render = new GridLineRender(this.gridCanvas.nativeElement);
-    render.render(width, height, gridSize, gridType, gridColor);
+    
+    let leftPx = this.terrain.location.x - ( width / 2 );
+    let topPx = this.terrain.location.y - ( height / 2 );
+    
+    render.render(width, height, gridSize, gridType, gridColor, true, topPx, leftPx);
     let opacity: number = 0.0;
     setTimeout(() => { // 他PL操作で表示条件変更時、情報更新されてからUpdate処理をするため
       if (this.terrain.isGrid){
