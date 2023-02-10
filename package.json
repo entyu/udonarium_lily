@@ -30,7 +30,7 @@
     "file-saver": "^2.0.5",
     "hammerjs": "^2.0.8",
     "js-yaml": "^4.1.0",
-    "jszip": "~3.7.1",
+    "jszip": "~3.8.0",
     "lzbase62": "^2.0.0",
     "msgpack-lite": "^0.1.26",
     "ngx-linky": "^4.0.0",
