@@ -61,14 +61,24 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   get name(): string { return this.gameCharacter.name; }
   get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
+  get altitude(): number { return this.gameCharacter.altitude; }
+  set altitude(altitude: number) { this.gameCharacter.altitude = altitude; }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
   get rotate(): number { return this.gameCharacter.rotate; }
   set rotate(rotate: number) { this.gameCharacter.rotate = rotate; }
   get roll(): number { return this.gameCharacter.roll; }
   set roll(roll: number) { this.gameCharacter.roll = roll; }
+  get isDropShadow(): boolean { return this.gameCharacter.isDropShadow; }
+  set isDropShadow(isDropShadow: boolean) { this.gameCharacter.isDropShadow = isDropShadow; }
+  get isAltitudeIndicate(): boolean { return this.gameCharacter.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
 
   private foldingBuff: boolean = false;
   gridSize: number = 50;
+  math = Math;
+
+  viewRotateX = 50;
+  viewRotateZ = 10;
 
   movableOption: MovableOption = {};
   private input: InputHandler = null;
@@ -77,6 +87,25 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   private highlightTimer: NodeJS.Timer;
   private unhighlightTimer: NodeJS.Timer;
+
+  get elevation(): number {
+    return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
+  }
+
+  get chatBubbleAltitude(): number {
+/*
+    let cos =  Math.cos(this.roll * Math.PI / 180);
+    let sin = Math.abs(Math.sin(this.roll * Math.PI / 180));
+    if (cos < 0.5) cos = 0.5;
+    if (sin < 0.5) sin = 0.5;
+    const altitude1 = (this.characterImageHeight + (this.name != '' ? 24 : 0)) * cos + 4;
+    const altitude2 = (this.characterImageWidth / 2) * sin + 4 + this.characterImageWidth / 2;
+    let ret = altitude1 > altitude2 ? altitude1 : altitude2;
+    this.gameCharacter.chatBubbleAltitude = ret;
+*/
+    let ret = 0;
+    return ret;
+  }
 
   constructor(
     private ngZone: NgZone,
@@ -101,6 +130,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       })
       .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
+      })
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateX = event.data['x'];
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
       })
       .on('CHK_TARGET_CHANGE', -1000, event => {
         let objct = ObjectStore.instance.get(event.data.identifier);
@@ -184,6 +220,48 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
 
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      { 
+        name: '高度設定', action: null, subActions: [
+          {
+            name: '高度を0にする', action: () => {
+              if (this.altitude != 0) {
+                this.altitude = 0;
+                SoundEffect.play(PresetSound.sweep);
+              }
+            },
+            altitudeHande: this.gameCharacter
+          },
+          (this.isAltitudeIndicate
+            ? {
+              name: '☑ 高度の表示', action: () => {
+                this.isAltitudeIndicate = false;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            } : {
+              name: '☐ 高度の表示', action: () => {
+                this.isAltitudeIndicate = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            }),
+          (this.isDropShadow
+            ? {
+              name: '☑ 影の表示', action: () => {
+                this.isDropShadow = false;
+                SoundEffect.play(PresetSound.sweep);
+               EventSystem.trigger('UPDATE_INVENTORY', null);
+               }
+            } : {
+              name: '☐ 影の表示', action: () => {
+               this.isDropShadow = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              },
+            })
+        ]
+      },
+      ContextMenuSeparator,
       { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
       { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
       { name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } },

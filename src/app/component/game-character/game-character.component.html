@@ -17,7 +17,12 @@
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
-      <div class="upright-transform is-fit-width is-3d">
+<!--影-->
+      <img class="image" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) scaleY(0.5) translateY(-150%) translateY(' + size * gridSize +'px)'}" *ngIf="isDropShadow && (0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'" 
+      style="filter: brightness(0) opacity(0.7) blur(1px);">
+      <img class="image" [ngStyle]="{'width':'100%','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) scaleY(0.5) translateY(-150%) translateY(' + size * gridSize +'px)'}" *ngIf="isDropShadow && (0 < imageFile.url.length) && !this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'"
+      style="filter: brightness(0) opacity(0.7) blur(1px);">
+      <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
           appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d">
@@ -140,6 +145,23 @@
 
           </div>
         </div>
+      </div>
+    </div>
+    <div class="is-3d" *ngIf="isAltitudeIndicate && (altitude <= -0.5 || 0.5 <= altitude)"
+      style="display: flex; flex-flow: column nowrap; justify-content: space-between; border-left: 2px dashed black; transform-origin: top left"
+      [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : 0)"
+      [ngStyle]="{transform: 'translateX(' + (size * gridSize / 2) + 'px) translateY(' + (-size * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
+      <div class="is-3d" [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
+        <span class="elevation-indicator is-3d" style="position: absolute"><i>{{ elevation }}</i></span>
+        <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
+      </div>
+      <div class="is-3d">
+        <span class="altitude-indicator is-3d" style="position: absolute">{{ math.abs(altitude) }}</span>
+        <span class="altitude-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)">{{ math.abs(altitude) }}</span>
+      </div>
+      <div class="is-3d" [style.visibility]="altitude < 0 ? 'visible' : 'hidden'" [ngStyle]="{transform: 'translateY(' + (chatBubbleAltitude + 4) + 'px)'}">
+        <span class="elevation-indicator is-3d" style="position: absolute"><i>{{ elevation }}</i></span>
+        <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)"><i>{{ elevation }}</i></span>
       </div>
     </div>
   </div>

@@ -3,12 +3,19 @@ import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { GameCharacter } from '@udonarium/game-character';
 import { DataElement } from './data-element';
 import { TabletopObject } from './tabletop-object';
+import { UUID } from './core/system/util/uuid';
 
 @SyncObject('range')
 export class RangeArea extends TabletopObject {
+  constructor(identifier: string = UUID.generateUuid()) {
+    super(identifier);
+    this.isAltitudeIndicate = true;
+    this.followingCharctorIdentifier = null;
+  }
   @SyncVar() isLock: boolean = false;
   @SyncVar() rotate: number = 0;
   @SyncVar() followingCharctor: GameCharacter = null;
+  @SyncVar() followingCharctorIdentifier: string = null;
   @SyncVar() followingCounterDummy: number = 0; // 追従時再描画用ダミー
 
   @SyncVar() offSetX: boolean = false;

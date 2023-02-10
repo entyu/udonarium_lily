@@ -32,6 +32,11 @@
   transition: transform 132ms linear;
 }
 
+.upright-transform {
+  -webkit-transition: -webkit-transform 132ms ease;
+  transition: transform 132ms ease;
+}
+
 .is-pointer-events-none {
   pointer-events: none;
 }
@@ -267,6 +272,22 @@
 
 .material-icons {
   display: none;
+}
+
+.altitude-indicator {
+  font-size: 10px;
+}
+
+.elevation-indicator, .altitude-indicator {
+  padding-left: 2px;
+  color: black;
+  text-shadow: #f5f5f5 0px 0px 3px;
+  backface-visibility: hidden;
+}
+
+.elevation-indicator {
+  font-weight: bolder;
+  font-size: 12px;
 }
 
 .component:hover .material-icons, .component:active .material-icons {

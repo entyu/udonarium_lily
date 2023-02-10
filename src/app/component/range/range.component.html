@@ -1,35 +1,58 @@
 <!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
 <div class="dummy-will-change" appMovable [movable.option]="movableOption">
 </div>
-<div class="component" [ngClass]="{'is-grab': !isLock}" 
-  [style.width.px]="0" [style.height.px]="0" [style.clip-path]="clipPathText"
-  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
-  <div style="position:absolute;" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
-    <div class="image-box" [appTooltip]="range">
-      <canvas class="is-fill" #gridCanvas></canvas>
-      <canvas class="is-fill" #rangeCanvas></canvas>
-    </div>
-  </div>
-  <div class="component-content is-3d" 
-    appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLock" 
-    style="transform:rotateZ(0deg);"  #rotate>
-    <div *ngIf="isLock" class="lock-icon is-center">
-      <i class="material-icons">lock</i>
-    </div>
-    <ng-container *ngIf="!isLock && (range.type != 'CIRCLE') && (range.type != 'SQUARE') && (range.type != 'DIAMOND')"> 
-      <div style="position:absolute;width:28px;">
-        <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style = "position:absolute;" 
-          [style.left.px]="( 1 * range.length) * gridSize">
-          <i class="material-icons">autorenew</i>
-        </div>
-        <div class="rotate-grab of-corn-bottom rotate-grab-icon is-3d will-change">
-          <i class="material-icons">autorenew</i>
-        </div>
-        <div class="rotate-grab of-corn-top rotate-grab-icon is-3d will-change">
-          <i class="material-icons">autorenew</i>
+<div class="component is-3d" [ngClass]="{'is-grab': !isLock}" appMovable style="pointer-events: none"
+  [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
+  <div class="is-3d" [style.transform]="'translateZ(' + (altitude * gridSize) + 'px)'" [ngClass]="{fall: altitude == 0}">
+    <div class="is-3d" style="position: absolute; pointer-events: auto" [style.width.px]="0" [style.height.px]="0" [style.clip-path]="clipPathText">
+      <div style="position:absolute;" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
+        <div class="image-box" [appTooltip]="range">
+          <canvas class="is-fill" #gridCanvas></canvas>
+          <canvas class="is-fill" #rangeCanvas></canvas>
         </div>
       </div>
-    </ng-container>
+      <div class="component-content is-3d" 
+        appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()" [rotable.disable]="isLock" 
+        style="transform:rotateZ(0deg);"  #rotate>
+        <div *ngIf="isLock" class="lock-icon is-center">
+          <i class="material-icons">lock</i>
+        </div>
+        <ng-container *ngIf="!isLock && (range.type != 'CIRCLE') && (range.type != 'SQUARE') && (range.type != 'DIAMOND')"> 
+          <div style="position:absolute;width:28px;">
+            <div class="rotate-grab of-corn-tip rotate-grab-icon is-3d will-change" style = "position:absolute;" 
+              [style.left.px]="( 1 * range.length) * gridSize">
+              <i class="material-icons">autorenew</i>
+            </div>
+            <div class="rotate-grab of-corn-bottom rotate-grab-icon is-3d will-change">
+              <i class="material-icons">autorenew</i>
+            </div>
+            <div class="rotate-grab of-corn-top rotate-grab-icon is-3d will-change">
+              <i class="material-icons">autorenew</i>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="is-3d" *ngIf="isAltitudeIndicate && (altitude <= -0.5 || 0.5 <= altitude)"
+    style="display: flex; flex-flow: column nowrap; justify-content: space-between; border-left: 2px dashed black; transform-origin: top left"
+    [style.border-left-color]="range.rangeColor"
+    [style.height.px]="math.abs(altitude * gridSize) - (altitude > 0 ? 0 : 0)"
+    [ngStyle]="{transform: 'rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
+    <div class="is-3d" [style.visibility]="altitude > 0 ? 'visible' : 'hidden'">
+      <span class="elevation-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
+      <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
+    </div>
+    <div class="is-3d">
+      <span class="altitude-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss">{{ math.abs(altitude) }}</span>
+      <span class="altitude-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss">{{ math.abs(altitude) }}</span>
+    </div>
+    <div class="is-3d" [style.visibility]="altitude < 0 ? 'visible' : 'hidden'"  [ngStyle]="{transform: 'translateY(' + (isFollowed ? followingCharactor.chatBubbleAltitude + 4 : 0) + 'px)'}">
+      <span class="elevation-indicator is-3d" style="position: absolute" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
+      <span class="elevation-indicator is-3d" style="position: absolute; transform: rotateY(-180deg)" [style.color]="range.rangeColor" [style.text-shadow]="textShadowCss"><i>{{ elevation }}</i></span>
+    </div>
+  </div>
+  <div class="is-3d" [style.visibility]="altitude != 0 ? 'visible' : 'hidden'" style="position: absolute; z-index: 0" [style.top.px]="0" [style.left.px]="( -1 * areaQuadrantSize) * gridSize">
+    <canvas class="is-fill is-3d" #centerPunch></canvas>
   </div>
 </div>
-<!--*ngIf="range.type == 'CORN'"-->

@@ -203,7 +203,17 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     return parseFloat(data2);
   }
 
+  get altitude(): number { return this.range.altitude; }
+  set altitude(altitude: number) { this.range.altitude = altitude; }
+
+  get isAltitudeIndicate(): boolean { return this.range.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.range.isAltitudeIndicate = isAltitudeIndicate; }
+
   gridSize: number = 50;
+  math = Math;
+
+  viewRotateX = 50;
+  viewRotateZ = 10;
 
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
@@ -244,6 +254,12 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      })
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
       });
     this.movableOption = {
       tabletopObject: this.range,
@@ -294,6 +310,37 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
 
     let menuArray = [];
+
+    menuArray.push(
+      {
+        name: '高度設定', action: null, subActions: [
+          {
+            name: '高度を0にする', action: () => {
+              if (this.altitude != 0) {
+                this.altitude = 0;
+                SoundEffect.play(PresetSound.sweep);
+              }
+            },
+            altitudeHande: this.range
+          },
+          (this.isAltitudeIndicate
+            ? {
+              name: '☑ 高度の表示', action: () => {
+                this.isAltitudeIndicate = false;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            } : {
+              name: '☐ 高度の表示', action: () => {
+                this.isAltitudeIndicate = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            }),
+        ]
+      }
+    )
+
     menuArray.push(
       this.isLock
         ? {

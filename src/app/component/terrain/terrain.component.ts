@@ -17,7 +17,7 @@ import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
-import { Terrain, TerrainViewState } from '@udonarium/terrain';
+import { SlopeDirection, Terrain, TerrainViewState } from '@udonarium/terrain';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
@@ -67,6 +67,33 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
   get height(): number { return this.adjustMinBounds(this.terrain.height); }
   get width(): number { return this.adjustMinBounds(this.terrain.width); }
   get depth(): number { return this.adjustMinBounds(this.terrain.depth); }
+  get altitude(): number { return this.terrain.altitude; }
+  set altitude(altitude: number) { this.terrain.altitude = altitude; }
+
+  get isDropShadow(): boolean { return this.terrain.isDropShadow; }
+  set isDropShadow(isDropShadow: boolean) { this.terrain.isDropShadow = isDropShadow; }
+
+  get isSurfaceShading(): boolean { return this.terrain.isSurfaceShading; }
+  set isSurfaceShading(isSurfaceShading: boolean) { this.terrain.isSurfaceShading = isSurfaceShading; }
+
+  get isSlope(): boolean { return this.terrain.isSlope; }
+  set isSlope(isSlope: boolean) {
+    this.terrain.isSlope = isSlope;
+    if (!isSlope) this.terrain.slopeDirection = SlopeDirection.NONE;
+  }
+
+  get slopeDirection(): number {
+    if (!this.terrain.isSlope) return SlopeDirection.NONE;
+    if (this.terrain.isSlope && this.terrain.slopeDirection === SlopeDirection.NONE) return SlopeDirection.BOTTOM;
+    return this.terrain.slopeDirection;
+  }
+  set slopeDirection(slopeDirection: number) {
+    this.terrain.isSlope = (slopeDirection != SlopeDirection.NONE);
+    this.terrain.slopeDirection = slopeDirection;
+  }
+
+  get isAltitudeIndicate(): boolean { return this.terrain.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.terrain.isAltitudeIndicate = isAltitudeIndicate; }
 
   get isVisibleFloor(): boolean { return 0 < this.width * this.depth; }
   get isVisibleWallTopBottom(): boolean { return 0 < this.width * this.height; }
@@ -84,8 +111,21 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
 
   gridSize: number = 50;
 
+  get isWallExist(): boolean {
+    return this.hasWall && this.wallImage && this.wallImage.url && this.wallImage.url.length > 0;
+  }
+
+  get terreinAltitude(): number {
+    let ret = this.altitude;
+    if (this.altitude < 0 || (!this.isSlope && !this.isWallExist)) ret += this.height;
+    return ret;
+  }
+
   movableOption: MovableOption = {};
   rotableOption: RotableOption = {};
+
+  math = Math;
+  slopeDirectionState = SlopeDirection;
 
   private input: InputHandler = null;
 
@@ -102,6 +142,8 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
 
     private tabletopService: TabletopService,
   ) { }
+
+  viewRotateZ = 10;
 
   ngOnInit() {
     EventSystem.register(this)
@@ -140,6 +182,12 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
       })
       .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
+      })
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
       });
     this.movableOption = {
       tabletopObject: this.terrain,
@@ -188,6 +236,48 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
     let menuPosition = this.pointerDeviceService.pointers[0];
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     this.contextMenuService.open(menuPosition, [
+      {
+        name: '高度設定', action: null, subActions: [
+          {
+            name: '高度を0にする', action: () => {
+              if (this.altitude != 0) {
+                this.altitude = 0;
+                SoundEffect.play(PresetSound.sweep);
+              }
+            },
+            altitudeHande: this.terrain
+          },
+          (this.isAltitudeIndicate
+            ? {
+              name: '☑ 高度の表示', action: () => {
+                this.isAltitudeIndicate = false;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            } : {
+              name: '☐ 高度の表示', action: () => {
+                this.isAltitudeIndicate = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            }),
+          (this.isDropShadow
+            ? {
+              name: '☑ 影の表示', action: () => {
+                this.isDropShadow = false;
+                SoundEffect.play(PresetSound.sweep);
+               EventSystem.trigger('UPDATE_INVENTORY', null);
+               }
+            } : {
+              name: '☐ 影の表示', action: () => {
+               this.isDropShadow = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              },
+            })
+        ]
+      },
+      ContextMenuSeparator,
       (this.isLocked
         ? {
           name: '固定解除', action: () => {
@@ -201,6 +291,34 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
           }
         }),
       ContextMenuSeparator,
+      { name: '傾斜', action: null, subActions: [
+        {
+          name: `${ this.slopeDirection == SlopeDirection.NONE ? '◉' : '○' } なし`, action: () => {
+            this.slopeDirection = SlopeDirection.NONE;
+          }
+        },
+        ContextMenuSeparator,
+        {
+          name: `${ this.slopeDirection == SlopeDirection.TOP ? '◉' : '○' } 上（北）`, action: () => {
+            this.slopeDirection = SlopeDirection.TOP;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.BOTTOM ? '◉' : '○' } 下（南）`, action: () => {
+            this.slopeDirection = SlopeDirection.BOTTOM;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.LEFT ? '◉' : '○' } 左（西）`, action: () => {
+            this.slopeDirection = SlopeDirection.LEFT;
+          }
+        },
+        {
+          name: `${ this.slopeDirection == SlopeDirection.RIGHT ? '◉' : '○' } 右（東）`, action: () => {
+            this.slopeDirection = SlopeDirection.RIGHT;
+          }
+        }
+      ]},
       (this.hasWall
         ? {
           name: '壁を非表示', action: () => {
@@ -215,6 +333,30 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
             this.mode = TerrainViewState.ALL;
           }
         }),
+        (this.isSurfaceShading
+          ? {
+            name: '壁に陰影を付けない', action: () => {
+              this.isSurfaceShading = false;
+              SoundEffect.play(PresetSound.sweep);
+            }
+          } : {
+            name: '壁に陰影を付ける', action: () => {
+              this.isSurfaceShading = true;
+              SoundEffect.play(PresetSound.sweep);
+            }
+          }),
+        (this.isDropShadow
+          ? {
+            name: '影を非表示', action: () => {
+              this.isDropShadow = false;
+              SoundEffect.play(PresetSound.sweep);
+            }
+          } : {
+            name: '影を表示', action: () => {
+              this.isDropShadow = true;
+              SoundEffect.play(PresetSound.sweep);
+            }
+          }),
       ContextMenuSeparator,
       { name: '地形設定を編集', action: () => { this.showDetail(this.terrain); } },
       {
@@ -246,6 +388,50 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
     SoundEffect.play(PresetSound.blockPut);
   }
 
+  get floorModCss() {
+    let ret = '';
+    let tmp = 0;
+    switch (this.slopeDirection) {
+      case SlopeDirection.TOP:
+        tmp = Math.atan(this.height / this.depth);
+        ret = ' rotateX(' + tmp + 'rad) scaleY(' + (1 / Math.cos(tmp)) + ')';
+        break;
+      case SlopeDirection.BOTTOM:
+        tmp = Math.atan(this.height / this.depth);
+        ret = ' rotateX(' + -tmp + 'rad) scaleY(' + (1 / Math.cos(tmp)) + ')';
+        break;
+      case SlopeDirection.LEFT:
+        tmp = Math.atan(this.height / this.width);
+        ret = ' rotateY(' + -tmp + 'rad) scaleX(' + (1 / Math.cos(tmp)) + ')';
+        break;
+      case SlopeDirection.RIGHT:
+        tmp = Math.atan(this.height / this.width);
+        ret = ' rotateY(' + tmp + 'rad) scaleX(' + (1 / Math.cos(tmp)) + ')';
+        break;
+    }
+    return ret;
+  }
+
+  get floorBrightness() {
+    let ret = 1.0;
+    if (!this.isSurfaceShading) return ret;
+    switch (this.slopeDirection) {
+      case SlopeDirection.TOP:
+        ret = 0.4;
+        break;
+      case SlopeDirection.BOTTOM:
+        ret = 1.0;
+        break;
+      case SlopeDirection.LEFT:
+        ret = 0.6;
+        break;
+      case SlopeDirection.RIGHT:
+        ret = 0.9;
+        break;
+    }
+    return ret;
+  }
+
   private adjustMinBounds(value: number, min: number = 0): number {
     return value < min ? min : value;
   }
@@ -263,7 +449,11 @@ export class TerrainComponent implements OnInit, OnDestroy, AfterViewInit{
   private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
 
     let render = new GridLineRender(this.gridCanvas.nativeElement);
-    render.render(width, height, gridSize, gridType, gridColor);
+    
+    let leftPx = this.terrain.location.x - ( width / 2 );
+    let topPx = this.terrain.location.y - ( height / 2 );
+    
+    render.render(width, height, gridSize, gridType, gridColor, true, topPx, leftPx);
     let opacity: number = 0.0;
     setTimeout(() => { // 他PL操作で表示条件変更時、情報更新されてからUpdate処理をするため
       if (this.terrain.isGrid){

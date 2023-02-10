@@ -61,11 +61,59 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get height(): number { return this.adjustMinBounds(this.textNote.height); }
   get width(): number { return this.adjustMinBounds(this.textNote.width); }
 
+  get altitude(): number { return this.textNote.altitude; }
+  set altitude(altitude: number) { this.textNote.altitude = altitude; }
+
+  get textNoteAltitude(): number {
+    let ret = this.altitude;
+    if (this.isUpright && this.altitude < 0) {
+      if (-this.height <= this.altitude) return 0;
+      ret += this.height;
+    }
+    return +ret.toFixed(1); 
+  }
+
+  get isUpright(): boolean { return this.textNote.isUpright; }
+  set isUpright(isUpright: boolean) { this.textNote.isUpright = isUpright; }
+
+  get isAltitudeIndicate(): boolean { return this.textNote.isAltitudeIndicate; }
+  set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.textNote.isAltitudeIndicate = isAltitudeIndicate; }
+
   get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
 
   private callbackOnMouseUp = (e) => this.onMouseUp(e);
 
   gridSize: number = 50;
+  math = Math;
+
+  private _transitionTimeout = null;
+  private _transition: boolean = false;
+  get transition(): boolean { return this._transition; }
+  set transition(transition: boolean) {
+    this._transition = transition;
+    if (this._transitionTimeout) clearTimeout(this._transitionTimeout);
+    if (transition) {
+      this._transitionTimeout = setTimeout(() => {
+        this._transition = false;
+      }, 132);
+    } else {
+      this._transitionTimeout = null;
+    }
+  }
+  private _fallTimeout = null;
+  private _fall: boolean = false;
+  get fall(): boolean { return this._fall; }
+  set fall(fall: boolean) {
+    this._fall = fall;
+    if (this._fallTimeout) clearTimeout(this._fallTimeout);
+    if (fall) {
+      this._fallTimeout = setTimeout(() => {
+        this._fall = false;
+      }, 132);
+    } else {
+      this._fallTimeout = null;
+    }
+  }
 
   private calcFitHeightTimer: NodeJS.Timer = null;
 
@@ -82,6 +130,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     private changeDetector: ChangeDetectorRef,
     private pointerDeviceService: PointerDeviceService
   ) { }
+
+  viewRotateZ = 10;
 
   ngOnInit() {
     EventSystem.register(this)
@@ -105,6 +155,12 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
+      })
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
       });
     this.movableOption = {
       tabletopObject: this.textNote,
@@ -124,6 +180,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    if (this._transitionTimeout) clearTimeout(this._transitionTimeout);
+    if (this._fallTimeout) clearTimeout(this._fallTimeout)
     EventSystem.unregister(this);
   }
 
@@ -189,6 +247,34 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
     this.contextMenuService.open(position, [
+      {
+        name: '高度設定', action: null, subActions: [
+          {
+            name: '高度を0にする', action: () => {
+              if (this.altitude != 0) {
+                this.altitude = 0;
+                SoundEffect.play(PresetSound.sweep);
+              }
+            },
+            altitudeHande: this.textNote
+          },
+          (this.isAltitudeIndicate
+            ? {
+              name: '☑ 高度の表示', action: () => {
+                this.isAltitudeIndicate = false;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            } : {
+              name: '☐ 高度の表示', action: () => {
+                this.isAltitudeIndicate = true;
+                SoundEffect.play(PresetSound.sweep);
+                EventSystem.trigger('UPDATE_INVENTORY', null);
+              }
+            })
+        ]
+      },
+      ContextMenuSeparator,
       (this.isLock
         ? {
           name: '固定解除', action: () => {
@@ -199,6 +285,21 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
           name: '固定する', action: () => {
             this.isLock = true;
             SoundEffect.play(PresetSound.lock);
+          }
+        }),
+      ContextMenuSeparator,
+      (this.isUpright
+        ? {
+          name: '寝かせる', action: () => {
+            this.transition = true;
+            this.isUpright = false;
+          SoundEffect.play(PresetSound.sweep);
+          }
+        } : {
+          name: '直立させる', action: () => {
+            this.transition = true;
+            this.isUpright = true;
+          SoundEffect.play(PresetSound.sweep);
           }
         }),
       ContextMenuSeparator,

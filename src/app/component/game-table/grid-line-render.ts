@@ -20,12 +20,15 @@ export class GridLineRender {
     return context
   }
 
-  render(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
+  render(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6', overTerrain = false, offsetTop: number = 0, offsetLeft: number = 0) {
     this.canvasElement.width = width * gridSize;
     this.canvasElement.height = height * gridSize;
     let context: CanvasRenderingContext2D = this.canvasElement.getContext('2d');
 
     if (gridType < 0) return;
+
+    let offTop = overTerrain ? (Math.floor( offsetTop / gridSize) + 1) : 0;
+    let offLeft = overTerrain ? (Math.floor( offsetLeft / gridSize) + 1) : 0;
 
     let calcGridPosition: StrokeGridFunc = this.generateCalcGridPositionFunc(gridType);
     this.makeBrush(context, gridSize, gridColor);
@@ -33,7 +36,18 @@ export class GridLineRender {
       for (let w = 0; w <= width; w++) {
         let { gx, gy } = calcGridPosition(w, h, gridSize);
         this.strokeSquare(context, gx, gy, gridSize);
-        context.fillText((w + 1).toString() + '-' + (h + 1).toString(), gx + (gridSize / 2), gy + (gridSize / 2));
+
+        let hexOffsetTop = 0;
+        let hexOffsetLeft = 0;
+
+        if( overTerrain && gridType == GridType.HEX_VERTICAL){
+          hexOffsetTop = (offLeft % 2 == 1) && (( w + 1 + offLeft) % 2 == 1) ? -1: 0;
+        }
+        if( overTerrain && gridType == GridType.HEX_HORIZONTAL){
+          hexOffsetLeft = (offTop % 2 == 1) && (( h + 1 + offTop) % 2 == 1) ? -1: 0;
+        }
+
+        context.fillText((w + 1 + offLeft + hexOffsetLeft).toString() + '-' + (h + 1 + offTop + hexOffsetTop).toString(), gx + (gridSize / 2), gy + (gridSize / 2));
       }
     }
   }
