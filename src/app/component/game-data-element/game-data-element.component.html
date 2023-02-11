@@ -10,6 +10,7 @@
           <option value="numberResource">リソース</option>
           <option value="note">ノート</option>
           <option value="markdown">チェック/表</option>
+          <option value="check">単一チェック</option>
         </select>
       </ng-container>
       <ng-container *ngIf="isImage && indexNum>=1">
@@ -84,7 +85,10 @@
             [innerHTML]="escapeHtmlMarkDown(gameDataElement.value,gameDataElement.myIdentifer)"></div>
           </div>
         </ng-container>
-
+        <ng-container *ngSwitchCase="'check'">
+          <input *ngIf="gameDataElement.value" type="checkbox" checked (click)="gameDataElement.value = 0"/>
+          <input *ngIf="!gameDataElement.value" type="checkbox" (click)="gameDataElement.value = 1"/>
+        </ng-container>
         <ng-container *ngSwitchDefault>
 
           <ng-container *ngIf="!isImage">
