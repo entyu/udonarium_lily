@@ -41,9 +41,9 @@
                 <div class="fornt-tag has-length-limit is-3d">{{ownerName}}</div>
                 <div class="back-tag has-length-limit is-3d">{{ownerName}}</div>
               </div>
-              <img class="image is-3d" [ngStyle]="{'height':+ imageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" 
+              <img class="image is-3d chrome-smooth-image-trick" [ngStyle]="{'height':+ imageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}" 
               *ngIf="(0 < imageFile.url.length) && specifyImageFlag" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
-              <img class="image is-3d" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !specifyImageFlag" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
+              <img class="image is-3d chrome-smooth-image-trick" [ngStyle]="{'width':'100%'}" *ngIf="(0 < imageFile.url.length) && !specifyImageFlag" [src]="imageFile.url | safe: 'resourceUrl'" [ngClass]="{'is-black-mask': !isVisible, 'is-harf-black-mask': isMine}">
             </div>
           </div>
         </div>
