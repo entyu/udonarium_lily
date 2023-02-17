@@ -179,6 +179,75 @@ export class ChatTabList extends ObjectNode implements InnerXml {
     return str;
   }
 
+  logHtmlCoc( ): string {
+        
+    let head : string =     
+    "<!DOCTYPE html>"+'\n'+
+    "<html lang=\"ja\">"+'\n'+
+    "  <head>"+'\n'+
+    "    <meta charset=\"UTF-8\" />"+'\n'+
+    "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />"+'\n'+
+    "    <meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\" />"+'\n'+
+    "    <title>udonaliumlily - logs</title>"+'\n'+
+    "  </head>"+'\n'+
+    "  <body>"+'\n'+
+    "   "+'\n';
 
+    let last : string =
+    ""+'\n'+
+    "  </body>"+'\n'+
+    "</html>";
+
+    let main : string = "";
+    
+    if( this.chatTabs ){
+      let tabNum = this.chatTabs.length;
+      let indexList : number[] = [] ;
+      console.log( 'tabNum :' + tabNum );
+      for( let i = 0 ; i < tabNum ;i++){
+        indexList.push(0);
+      }
+      
+      let fastTabIndex : number = null;
+      let chkTimestamp : number = null;
+
+      while( 1 ){
+        fastTabIndex = -1;
+        chkTimestamp = -1;
+
+        for( let i = 0 ; i < tabNum ; i++){
+          if( this.chatTabs[i].chatMessages.length <= indexList[i] ) continue;
+
+          if( chkTimestamp == -1){
+            chkTimestamp = this.chatTabs[i].chatMessages[indexList[i]].timestamp ;
+            fastTabIndex = i;
+          }
+          if( chkTimestamp > this.chatTabs[i].chatMessages[indexList[i]].timestamp ){
+            chkTimestamp = this.chatTabs[i].chatMessages[indexList[i]].timestamp;
+            fastTabIndex = i;
+          }
+        }
+        if( fastTabIndex == -1)break;
+        
+        let to = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].to;
+        let from = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].from;
+        let myId = Network.peerContext.userId; //1.13.xとのmargeで修正
+        if( to ){
+          if( ( to != myId) && ( from != myId) ){
+            console.log( " SKIP " + from + " > " + to + " : " + this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].text );
+            indexList[ fastTabIndex ] ++;
+            continue;
+          }
+        }
+        
+        main += this.chatTabs[ fastTabIndex ].messageHtmlCoc( this.chatTabs[ fastTabIndex ].name , this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ] );
+        indexList[ fastTabIndex ] ++;
+      }
+    }
+
+    let str :string = head + main + last;
+    
+    return str;
+  }
 
 }
