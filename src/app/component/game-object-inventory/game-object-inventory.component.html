@@ -127,6 +127,19 @@
             min="0" max="{{dataElm.value}}" [(ngModel)]="dataElm.currentValue" />
         </div>
       </ng-container>
+      <ng-container *ngSwitchCase="'check'">
+        <div class="tag-name">{{dataElm.name}}</div>
+        <div style="text-align: center; margin: 2px 0px 0px 0px">
+          <div style="display: inline-block;">
+            <div class="tag-value-box">
+              <input *ngIf="dataElm.value" type="checkbox" checked (click)="dataElm.value = 0"/>
+              <input *ngIf="!dataElm.value" type="checkbox" (click)="dataElm.value = 1"/>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'markdown'">
+      </ng-container>
       <ng-container *ngSwitchDefault>
         <div class="tag-name">{{dataElm.name}}</div>
         <div style="text-align: center;">

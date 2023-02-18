@@ -170,9 +170,9 @@ export class SaveDataService {
   }
 
   saveHtmlChatLogAllCoc( fileName: string ){
-//    let text: string = ChatTabList.instance.logHtmlCoc();
-//    let blob = new Blob( [text], {type: "text/plain;charset=utf-8"});
-//    saveAs(blob, fileName + ".html");
+    let text: string = ChatTabList.instance.logHtmlCoc();
+    let blob = new Blob( [text], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, fileName + ".html");
   }
 
 

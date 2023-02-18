@@ -137,11 +137,13 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     let fileName: string = this.roomName + '_log_' + this.selectedTab.name;
     let fileName_: string = this.appendTimestamp( fileName ) ;
 
-//    if (this.modeCocLog){
-//      this.saveDataService.saveHtmlChatLogCoc(this.selectedTab, fileName_);
-//    }else{
+    console.log("this.modeCocLog:" +this.modeCocLog);
+
+    if (this.modeCocLog){
+      this.saveDataService.saveHtmlChatLogCoc(this.selectedTab, fileName_);
+    }else{
       this.saveDataService.saveHtmlChatLog(this.selectedTab, fileName_);
-//    }
+    }
   }
 
   saveAllLog(){
@@ -149,11 +151,13 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
     let fileName: string = this.roomName + '_log_' + '全タブ';
     let fileName_: string = this.appendTimestamp( fileName ) ;
 
-//    if (this.modeCocLog){
-//      this.saveDataService.saveHtmlChatLogAllCoc( fileName_);
-//    }else{
+    console.log("this.modeCocLog:" +this.modeCocLog);
+
+    if (this.modeCocLog){
+      this.saveDataService.saveHtmlChatLogAllCoc( fileName_);
+    }else{
       this.saveDataService.saveHtmlChatLogAll( fileName_);
-//    }
+    }
   }
 
   delete() {
