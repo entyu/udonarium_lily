@@ -197,8 +197,8 @@
         <div style="text-align: center; margin: 2px 0px 0px 0px">
           <div style="display: inline-block;">
             <div class="tag-value-box">
-              <input *ngIf="dataElm.value" type="checkbox" checked (click)="dataElm.value = 0"/>
-              <input *ngIf="!dataElm.value" type="checkbox" (click)="dataElm.value = 1"/>
+              <input *ngIf="dataElm.value != 0" type="checkbox" checked (click)="dataElm.value = 0"/>
+              <input *ngIf="dataElm.value == 0" type="checkbox" (click)="dataElm.value = 1"/>
             </div>
           </div>
         </div>

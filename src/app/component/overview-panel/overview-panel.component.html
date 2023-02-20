@@ -224,8 +224,8 @@
       <ng-container *ngSwitchCase="'check'">
         <div class="tag">{{dataElm.name}}</div>
         <div class="value">
-          <input *ngIf="dataElm.value" type="checkbox" checked (click)="dataElm.value = 0"/>
-          <input *ngIf="!dataElm.value" type="checkbox" (click)="dataElm.value = 1"/>
+          <input *ngIf="dataElm.value != 0" type="checkbox" checked (click)="dataElm.value = 0"/>
+          <input *ngIf="dataElm.value == 0" type="checkbox" (click)="dataElm.value = 1"/>
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'numberResource'">

@@ -86,8 +86,8 @@
           </div>
         </ng-container>
         <ng-container *ngSwitchCase="'check'">
-          <input *ngIf="gameDataElement.value" type="checkbox" checked (click)="gameDataElement.value = 0"/>
-          <input *ngIf="!gameDataElement.value" type="checkbox" (click)="gameDataElement.value = 1"/>
+          <input *ngIf="gameDataElement.value != 0" type="checkbox" checked (click)="gameDataElement.value = 0"/>
+          <input *ngIf="gameDataElement.value == 0" type="checkbox" (click)="gameDataElement.value = 1"/>
         </ng-container>
         <ng-container *ngSwitchDefault>
 
