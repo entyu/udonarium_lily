@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { Card } from '@udonarium/card';
 import { CardStack } from '@udonarium/card-stack';
@@ -94,6 +94,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   get peerCursors(): PeerCursor[] { return this.tabletopService.peerCursors; }
 
   constructor(
+    private changeDetector: ChangeDetectorRef,
     private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
     private pointerDeviceService: PointerDeviceService,
@@ -110,6 +111,11 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
         if (event.data.identifier !== this.currentTable.identifier && event.data.identifier !== this.tableSelecter.identifier) return;
         console.log('UPDATE_GAME_OBJECT GameTableComponent ' + this.currentTable.identifier);
         this.setGameTableGrid(this.currentTable.width, this.currentTable.height, this.currentTable.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
+      })
+      .on('RE_DRAW_TABLE', event => {
+        console.log("テーブル再描画");
+        this.changeDetector.detectChanges();
+        this.changeDetector.markForCheck();
       })
       .on('DRAG_LOCKED_OBJECT', event => {
         this.isTableTransformMode = true;

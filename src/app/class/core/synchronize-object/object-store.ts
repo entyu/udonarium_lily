@@ -146,6 +146,12 @@ export class ObjectStore {
     this.garbageMap.clear();
   }
 
+  dispGarbageMap(){
+    for(let map of this.garbageMap){
+      console.log("garbageMap 履歴:" + map); 
+    }
+  }
+
   private garbageCollection(garbage: ObjectContext)
   private garbageCollection(ms: number)
   private garbageCollection(arg: any) {
