@@ -1,4 +1,6 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+
+import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
@@ -10,6 +12,8 @@ import { LobbyComponent } from 'component/lobby/lobby.component';
 import { AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+
+import { GameCharacter } from '@udonarium/game-character';
 
 @Component({
   selector: 'peer-menu',
@@ -29,6 +33,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
   constructor(
+    private changeDetector: ChangeDetectorRef,
     private ngZone: NgZone,
     private modalService: ModalService,
     private panelService: PanelService,
@@ -124,6 +129,58 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     if (peerCursor.firstTimeSignNo < 0) return '0/0';
     const degree = (peerCursor.totalTimeSignNum) + '/' + (peerCursor.lastTimeSignNo - peerCursor.firstTimeSignNo + 1);
     return degree ;
+  }
+
+  reConnect(){
+    
+    console.log("切断テスト");
+/*
+    for (let context of this.networkService.peerContexts){
+      console.log("切断対象 対象ID:" + context.peerId );
+      this.networkService.disconnect(context.peerId);
+    }
+*/
+    console.log("接続数 A:" + this.networkService.peerIds.length);
+    this.networkService.connectionClose();
+
+    console.log("接続数 B:" + this.networkService.peerIds.length);
+    
+    console.log("ネットワーク状態:" + this.networkService.isOpen);
+    
+    console.log("再接続挑戦:" + this.networkService.open());
+    console.log("ネットワーク状態:" + this.networkService.isOpen);
+    
+  }
+
+
+  checkConnect(){
+    console.log("自身のUserid:" + this.networkService.peerContext.userId );
+    
+    for (let context of this.networkService.peerContexts){
+      console.log("接続対象ID:" + context.peerId );
+    }
+    
+  }
+
+  deleteObject(){
+    console.log("切断元と不一致になっている可能性のあるオブジェクト削除");
+    
+    let gameCharacters = ObjectStore.instance.getObjects<GameCharacter>(GameCharacter);
+    for(let gameObject of gameCharacters){
+      gameObject.setLocation('graveyard');
+      this.deleteGameObject(gameObject);
+    }
+    ObjectStore.instance.clearDeleteHistory();
+  }
+
+  deleteList(){
+    console.log("削除した記録を表示");
+//    ObjectStore.instance.dispGarbageMap();
+  }
+
+  private deleteGameObject(gameObject: GameObject) {
+    gameObject.destroy();
+    this.changeDetector.markForCheck();
   }
 
 

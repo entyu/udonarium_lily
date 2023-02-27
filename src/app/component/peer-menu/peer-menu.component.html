@@ -17,6 +17,24 @@
       <span>ブラウザ時刻：</span>
       <span>{{myTime | date:'yy/MM/dd HH:mm:ss'}}</span>
     </div>
+        <button style="padding: 2px; margin-left: 1.0em; font-size: 1.0em;" (click)="checkConnect()">
+          <span class="material-icons" style="font-size: 1.0em; vertical-align: text-bottom;">接続確認</span>
+        </button>
+        <button style="padding: 2px; margin-left: 1.0em; font-size: 1.0em;" (click)="reConnect()">
+          <span class="material-icons" style="font-size: 1.0em; vertical-align: text-bottom;">切断テスト</span>
+        </button>
+
+        <button style="padding: 2px; margin-left: 1.0em; font-size: 1.0em;" (click)="deleteObject()">
+          <span class="material-icons" style="font-size: 1.0em; vertical-align: text-bottom;">オブジェクト削除</span>
+        </button>
+
+        <button style="padding: 2px; margin-left: 1.0em; font-size: 1.0em;" (click)="deleteList()">
+          <span class="material-icons" style="font-size: 1.0em; vertical-align: text-bottom;">削除リスト</span>
+        </button>
+
+        <div>
+          peerIds：length：{{networkService.peerIds.length}}
+        </div>
   </div>
 </div>
 <ng-container *ngIf="networkService.peerContext.isRoom">

@@ -52,6 +52,13 @@ export class Network {
     window.addEventListener('unload', this.callbackUnload, false);
   }
 
+  connectionClose(){//円柱デバッグ
+    if (this.connection) this.connection.close();
+    this.connection = null;
+    window.removeEventListener('unload', this.callbackUnload, false);
+    console.log('Network close...円柱');
+ }
+
   private close() {
     if (this.connection) this.connection.close();
     this.connection = null;
