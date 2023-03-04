@@ -26,6 +26,8 @@ export class PeerCursor extends GameObject {
   @SyncVar() voteAnswer = -1; // 投票選択肢のindex値、-2:棄権
   @SyncVar() voteId = -1; // 回答した投票のID
 
+  private _reConnectPass = '';
+
   private _timestampSend = -1;
   private _timestampReceive = -1;
 
@@ -78,6 +80,9 @@ export class PeerCursor extends GameObject {
 
   get totalTimeSignNum(): number { return this._totalTimeSignNum; }
   set totalTimeSignNum( num: number ){ this._totalTimeSignNum = num ; }
+
+  get reConnectPass(): string { return this._reConnectPass; }
+  set reConnectPass( pass: string ){ this._reConnectPass = pass ; }
 
   get vote(): Vote { return ObjectStore.instance.get<Vote>('Vote'); }
 
