@@ -64,6 +64,7 @@ export class ObjectStore {
   }
 
   private _delete(object: GameObject, shouldBroadcast: boolean): GameObject {
+    console.log("円柱　_delete:" + object.aliasName); 
     if (this.remove(object) === null) return null;
     if (shouldBroadcast) EventSystem.call('DELETE_GAME_OBJECT', { aliasName: object.aliasName, identifier: object.identifier });
 
@@ -71,6 +72,7 @@ export class ObjectStore {
   }
 
   private markForDelete(identifier: string) {
+    console.log("円柱　markForDelete" + identifier); 
     this.garbageMap.set(identifier, performance.now());
     this.garbageCollection(10 * 60 * 1000);
   }
@@ -142,6 +144,12 @@ export class ObjectStore {
 
   clearDeleteHistory() {
     this.garbageMap.clear();
+  }
+
+  dispGarbageMap(){
+    for(let map of this.garbageMap){
+      console.log("garbageMap 履歴:" + map); 
+    }
   }
 
   private garbageCollection(garbage: ObjectContext)

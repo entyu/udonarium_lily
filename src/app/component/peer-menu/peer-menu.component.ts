@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { PeerContext } from '@udonarium/core/system/network/peer-context';
@@ -7,9 +7,27 @@ import { PeerCursor } from '@udonarium/peer-cursor';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { LobbyComponent } from 'component/lobby/lobby.component';
+import { ReConnectComponent } from 'component/re-connect/re-connect.component';
 import { AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
+
+import { TabletopActionService } from 'service/tabletop-action.service';
+import { TableSelecter } from '@udonarium/table-selecter';
+
+import { Card } from '@udonarium/card';
+import { CardStack } from '@udonarium/card-stack';
+import { GameObject } from '@udonarium/core/synchronize-object/game-object';
+import { DiceSymbol } from '@udonarium/dice-symbol';
+import { GameCharacter } from '@udonarium/game-character';
+import { GameTableMask } from '@udonarium/game-table-mask';
+import { RangeArea } from '@udonarium/range';
+import { Terrain } from '@udonarium/terrain';
+import { TextNote } from '@udonarium/text-note';
+
+import { CutIn } from '@udonarium/cut-in';
+import { DiceTable } from '@udonarium/dice-table';
+
 
 @Component({
   selector: 'peer-menu',
@@ -29,11 +47,15 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
   constructor(
+    private tabletopActionService: TabletopActionService,
+    private changeDetector: ChangeDetectorRef,
     private ngZone: NgZone,
     private modalService: ModalService,
     private panelService: PanelService,
     public appConfigService: AppConfigService
   ) { }
+
+  get tableSelecter(): TableSelecter { return TableSelecter.instance; }
 
   ngOnInit() {
     Promise.resolve().then(() => this.panelService.title = '接続情報');
@@ -75,6 +97,10 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showLobby() {
     this.modalService.open(LobbyComponent, { width: 700, height: 400, left: 0, top: 400 });
+  }
+
+  showReConnect() {
+    this.modalService.open(ReConnectComponent, { width: 700, height: 400, left: 0, top: 400 });
   }
 
   togglePasswordVisibility() {
@@ -126,6 +152,12 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     return degree ;
   }
 
+  checkConnect(){
+    console.log("自身のUserid:" + this.networkService.peerContext.userId );
+    for (let context of this.networkService.peerContexts){
+      console.log("接続対象ID:" + context.peerId );
+    }
+  }
 
   myTime = 0;
   dispInfo(){

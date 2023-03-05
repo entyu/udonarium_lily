@@ -27,6 +27,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
   get isConnected(): boolean {
     return Network.peerIds.length <= 1 ? false : true;
   }
+
+  get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+
   constructor(
     private panelService: PanelService,
     private modalService: ModalService
@@ -90,6 +93,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     if (context.hasPassword) {
       password = await this.modalService.open<string>(PasswordCheckComponent, { peerId: context.peerId, title: `${context.roomName}/${context.roomId}` });
       if (password == null) password = '';
+      this.myPeer.reConnectPass = password;
     }
 
     if (!context.verifyPassword(password)) return;

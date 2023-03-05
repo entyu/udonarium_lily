@@ -47,6 +47,7 @@ import { OverviewPanelComponent } from 'component/overview-panel/overview-panel.
 import { PasswordCheckComponent } from 'component/password-check/password-check.component';
 import { PeerCursorComponent } from 'component/peer-cursor/peer-cursor.component';
 import { PeerMenuComponent } from 'component/peer-menu/peer-menu.component';
+import { ReConnectComponent } from 'component/re-connect/re-connect.component';
 import { RoomSettingComponent } from 'component/room-setting/room-setting.component';
 
 import { RangeComponent } from 'component/range/range.component';
@@ -156,6 +157,7 @@ import { AppComponent } from './app.component';
     ImportCharacterImgComponent,
 
     LobbyComponent,
+    ReConnectComponent,
     ModalComponent,
     OverviewPanelComponent,
     PasswordCheckComponent,

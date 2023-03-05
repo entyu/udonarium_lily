@@ -1,0 +1,27 @@
+<div>
+  ※試験的機能です<br>
+  <button (click)="cancel()">キャンセル</button>&nbsp;&nbsp;&nbsp;&nbsp;
+  <span *ngIf="isDisconnect" style="color: #bbb;">STEP1</span>
+  <span *ngIf="!isDisconnect" style="color: #000;">STEP1</span>
+  <button (click)="reConnect()" class="danger" [disabled]="isDisconnect">切断実行</button>＞
+  <span *ngIf="!isDisconnect" style="color: #bbb;">STEP2</span>
+  <span *ngIf="isDisconnect" style="color: #000;">STEP2</span>
+  <button (click)="reConnect2()" class="danger" [disabled]="!isDisconnect">再接続実行</button>
+  <hr/>
+</div>
+<span style="font-size: 16px;">
+画像や音楽の再ダウンロードを行わず高速に部屋に再接続します。<br>
+ただし、確実に成功するわけではありません。<br>
+うまくいかない場合は、従来どおりページリロードで最初からの接続を試みてください。<br>
+<font color="red">注意：他に部屋データの保持者が居ない場合、データが破棄された上に失敗します。<br>
+必要に応じて部屋データの保存を行ってから実行してください。</font><br>
+<br>
+STEP1、2の順で実行してください。<br>
+<br>
+STEP1：既存の接続を切断し、同期が取れなくなった可能性のある要素を削除します。<br>
+STEP2：ルームに再度接続し、データ同期の回復を試みます。<br>
+<br>
+STEP2は1度の試みで成功しない場合があります。<br>
+STEP2を複数回試みても復帰できない場合はページリロードし、部屋に入り直してください。
+</span>
+
