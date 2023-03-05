@@ -30,6 +30,8 @@ export class ReConnectComponent implements OnInit, OnDestroy {
 
   isReloading: boolean = false;
 
+  isDisconnect: boolean = false;
+
   networkService = Network;
   roomName = '';
   roomId = '';
@@ -49,10 +51,12 @@ export class ReConnectComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    Promise.resolve().then(() => this.changeTitle());
     if (this.networkService.peerContext.isRoom){
       this.roomName = this.networkService.peerContext.roomName;
       this.roomId = this.networkService.peerContext.roomId;
     }
+
     this.reload();
   }
 
@@ -69,7 +73,13 @@ export class ReConnectComponent implements OnInit, OnDestroy {
     this.disConnect();
     this.deleteObject();
 
-    for( let room of this.rooms){
+    this.isDisconnect = true;
+  }
+
+  reConnect2(){
+    if (!this.isDisconnect) return;
+
+    for ( let room of this.rooms){
       if (room.alias == ( this.roomId + this.roomName) ){
         this.connect(room.peerContexts);
         console.log("再接続成功");
@@ -156,7 +166,6 @@ export class ReConnectComponent implements OnInit, OnDestroy {
   }
 
   cancel(){
-//    this.panelService.close();
     this.modalService.resolve();
   }
 
