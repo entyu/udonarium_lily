@@ -13,8 +13,12 @@ export class AudioSharingSystem {
 
   private sendTaskMap: Map<string, BufferSharingTask<AudioFileContext>> = new Map();
   private receiveTaskMap: Map<string, BufferSharingTask<AudioFileContext>> = new Map();
-  private maxSendTask: number = 2;
-  private maxReceiveTask: number = 4;
+//  private maxSendTask: number = 2;
+//  private maxReceiveTask: number = 4;
+
+  private maxSendTask: number = 1;
+  private maxReceiveTask: number = 2;
+
 
   private constructor() { }
 
