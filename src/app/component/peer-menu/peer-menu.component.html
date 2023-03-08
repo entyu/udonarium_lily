@@ -35,9 +35,11 @@
     </span>
   </div>
   <div>
-    <button (click)="showReConnect()" class="danger">
-      <span>再接続</span>
-    </button>
+    <ng-container *ngIf="networkService.peerIds.length > 1">
+      <button (click)="showReConnect()" class="danger">
+        <span>再接続</span>
+      </button>
+    </ng-container>
   </div>
 </ng-container>
 <hr/>

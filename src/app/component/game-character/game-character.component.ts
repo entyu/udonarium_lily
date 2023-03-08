@@ -351,6 +351,16 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       this.gameCharacter.targeted = this.gameCharacter.targeted ? false : true;
     }
     if (key_meta) console.log("metaキー");
+
+    if (key_shift && key_alt) {
+      console.log("shift+ALTキー");
+      let objects = ObjectStore.instance.getObjects(GameCharacter);
+      for (let object of objects) {
+        object.targeted = false;
+        EventSystem.trigger('CHK_TARGET_CHANGE', { identifier: object.identifier, className: object.aliasName });
+      }
+    }
+
     //出力
   }
 
