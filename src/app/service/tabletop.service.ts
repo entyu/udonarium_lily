@@ -10,6 +10,7 @@ import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { GameTable } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
+import { GameTableScratchMask } from '@udonarium/game-table-scratch-mask';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
@@ -46,6 +47,10 @@ export class TabletopService {
     let viewTable = this.tableSelecter.viewTable;
     return viewTable ? viewTable.masks : [];
   });
+  private tableScratchMaskCache = new TabletopCache<GameTableScratchMask>(() => {
+    let viewTable = this.tableSelecter.viewTable;
+    return viewTable ? viewTable.scratchMasks : [];
+  });
   private rangeCache = new TabletopCache<RangeArea>(() => ObjectStore.instance.getObjects(RangeArea).filter(obj => obj.isVisibleOnTable));
   private terrainCache = new TabletopCache<Terrain>(() => {
     let viewTable = this.tableSelecter.viewTable;
@@ -58,6 +63,7 @@ export class TabletopService {
   get cards(): Card[] { return this.cardCache.objects; }
   get cardStacks(): CardStack[] { return this.cardStackCache.objects; }
   get tableMasks(): GameTableMask[] { return this.tableMaskCache.objects; }
+  get tableScratchMasks(): GameTableScratchMask[] { return this.tableScratchMaskCache.objects; }
   get ranges(): RangeArea[] { return this.rangeCache.objects; }
   get terrains(): Terrain[] { return this.terrainCache.objects; }
   get textNotes(): TextNote[] { return this.textNoteCache.objects; }
@@ -76,6 +82,7 @@ export class TabletopService {
       .on('UPDATE_GAME_OBJECT', event => {
         if (event.data.identifier === this.currentTable.identifier || event.data.identifier === this.tableSelecter.identifier) {
           this.refreshCache(GameTableMask.aliasName);
+          this.refreshCache(GameTableScratchMask.aliasName);
           this.refreshCache(Terrain.aliasName);
           return;
         }
@@ -140,6 +147,8 @@ export class TabletopService {
         return this.cardStackCache;
       case GameTableMask.aliasName:
         return this.tableMaskCache;
+      case GameTableScratchMask.aliasName:
+        return this.tableScratchMaskCache;
       case RangeArea.aliasName:
         return this.rangeCache;
       case Terrain.aliasName:
@@ -163,6 +172,7 @@ export class TabletopService {
     this.cardCache.refresh();
     this.cardStackCache.refresh();
     this.tableMaskCache.refresh();
+    this.tableScratchMaskCache.refresh();
     this.rangeCache.refresh();
     this.terrainCache.refresh();
     this.textNoteCache.refresh();

@@ -2,6 +2,7 @@ import { SyncObject, SyncVar } from './core/synchronize-object/decorator';
 import { ObjectNode } from './core/synchronize-object/object-node';
 import { EventSystem } from './core/system';
 import { GameTableMask } from './game-table-mask';
+import { GameTableScratchMask } from './game-table-scratch-mask';
 import { Terrain } from './terrain';
 
 export enum GridType {
@@ -42,6 +43,14 @@ export class GameTable extends ObjectNode {
     let masks: GameTableMask[] = [];
     this.children.forEach(object => {
       if (object instanceof GameTableMask) masks.push(object);
+    });
+    return masks;
+  }
+
+  get scratchMasks(): GameTableScratchMask[] {
+    let masks: GameTableScratchMask[] = [];
+    this.children.forEach(object => {
+      if (object instanceof GameTableScratchMask) masks.push(object);
     });
     return masks;
   }

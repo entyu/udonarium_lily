@@ -8,6 +8,8 @@ import { DiceSymbol } from './dice-symbol';
 import { GameCharacter } from './game-character';
 import { GameTable } from './game-table';
 import { GameTableMask } from './game-table-mask';
+import { GameTableScratchMask } from './game-table-scratch-mask';
+
 import { RangeArea } from './range';
 import { Terrain } from './terrain';
 import { TextNote } from './text-note';
@@ -53,6 +55,7 @@ export class Room extends GameObject implements InnerXml {
     let objects: GameObject[] = [];
     objects = objects.concat(ObjectStore.instance.getObjects(GameTable));
     objects = objects.concat(ObjectStore.instance.getObjects(GameTableMask));
+    objects = objects.concat(ObjectStore.instance.getObjects(GameTableScratchMask));
     objects = objects.concat(ObjectStore.instance.getObjects(Terrain));
     objects = objects.concat(ObjectStore.instance.getObjects(GameCharacter));
     objects = objects.concat(ObjectStore.instance.getObjects(RangeArea));
