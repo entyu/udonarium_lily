@@ -9,6 +9,7 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
@@ -24,6 +25,7 @@ import { CoordinateService } from 'service/coordinate.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
+import { ScratchRender, ScratchSetting} from './scratch-render';
 
 @Component({
   selector: 'game-table-scratch-mask',
@@ -34,6 +36,8 @@ import { TabletopActionService } from 'service/tabletop-action.service';
 export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() gameTableScratchMask: GameTableScratchMask = null;
   @Input() is3D: boolean = false;
+
+  @ViewChild('gridCanvas', { static: true }) gridCanvas: ElementRef<HTMLCanvasElement>;
 
   get dispLockMark(): boolean { return this.gameTableScratchMask.dispLockMark; }
   set dispLockMark(disp: boolean) { this.gameTableScratchMask.dispLockMark = disp; }
@@ -84,6 +88,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
         if (this.gameTableScratchMask === object || (object instanceof ObjectNode && this.gameTableScratchMask.contains(object))) {
           this.changeDetector.markForCheck();
         }
+        this.drawScratch();
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -96,6 +101,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
       transformCssOffset: 'translateZ(0.15px)',
       colideLayers: ['terrain']
     };
+    this.drawScratch();
   }
 
   ngAfterViewInit() {
@@ -103,12 +109,14 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
       this.input = new InputHandler(this.elementRef.nativeElement);
     });
     this.input.onStart = this.onInputStart.bind(this);
+    this.drawScratch();
   }
 
   ngOnDestroy() {
     this.input.destroy();
     EventSystem.unregister(this);
   }
+
 
   @HostListener('dragstart', ['$event'])
   onDragstart(e) {
@@ -197,7 +205,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
       }
       menuArray.push( ContextMenuSeparator);
       menuArray.push( 
-        { name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableScratchMask); } }
+        { name: 'スクラッチマスクを編集', action: () => { this.showDetail(this.gameTableScratchMask); } }
       );
       menuArray.push( 
         {name: 'コピーを作る', action: () => {
@@ -240,10 +248,65 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
 
   private showDetail(gameObject: GameTableScratchMask) {
     let coordinate = this.pointerDeviceService.pointers[0];
-    let title = 'マップマスク設定';
+    let title = 'スクラッチマスク設定';
     if (gameObject.name.length) title += ' - ' + gameObject.name;
     let option: PanelOption = { title: title, left: coordinate.x - 200, top: coordinate.y - 150, width: 400, height: 300 };
     let component = this.panelService.open<GameCharacterSheetComponent>(GameCharacterSheetComponent, option);
     component.tabletopObject = gameObject;
   }
+
+  private drawScratch(){
+    let render = new ScratchRender(this.gridCanvas.nativeElement);
+
+    let setting: ScratchSetting = {
+      areaWidth: this.gameTableScratchMask.width,
+      areaHeight: this.gameTableScratchMask.height,
+      centerX: this.gameTableScratchMask.location.x,
+      centerY: this.gameTableScratchMask.location.y,
+      gridSize: this.gridSize,
+      gridColor: '#202020',
+      fanDegree: 0.0,
+    };
+    console.log('this.range.location.x-y:' + this.gameTableScratchMask.location.x + ' ' + this.gameTableScratchMask.location.y);
+    render.renderScratch(setting);
+/*
+    switch (this.range.type) {
+      case 'LINE':
+        this.clipAreaLine = render.renderLine(setting);
+        break;
+      case 'CIRCLE':
+        render.renderCircle(setting);
+        break;
+      case 'SQUARE':
+        this.clipAreaSquare = render.renderSquare(setting);
+        break;
+      case 'DIAMOND':
+        this.clipAreaDiamond = render.renderDiamond(setting);
+        break;
+      case 'CORN':
+      default:
+        this.clipAreaCorn = render.renderCorn(setting);
+        break;
+    }
+
+*/
+    let opacity: number = this.gameTableScratchMask.opacity;
+    this.gridCanvas.nativeElement.style.opacity = opacity + '';
+  }
+
+
+  private makeBrush(context: CanvasRenderingContext2D, gridSize: number, gridColor: string): CanvasRenderingContext2D {
+    // 座標描画用brush設定
+    context.strokeStyle = gridColor;
+    context.fillStyle = context.strokeStyle;
+    context.lineWidth = 1;
+
+    let fontSize: number = Math.floor(gridSize / 5);
+    context.font = `bold ${fontSize}px sans-serif`;
+    context.textBaseline = 'top';
+    context.textAlign = 'center';
+    return context
+  }
+
+
 }

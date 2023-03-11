@@ -9,9 +9,10 @@
     <div class="is-fit-full is-3d chrome-smooth-image-trick"
       style="pointer-events: auto"
       [style.opacity]="opacity"
-      [style.background-color]="imageFile.url.length < 1 ? '#0a0a0a' : null"
-      [ngClass]="{image: imageFile.url.length >= 1}">
-      <img *ngIf="imageFile.url.length >= 1" class="is-fit-full is-3d chrome-smooth-image-trick" style="pointer-events: none; position: absolute;" [src]="imageFile.url | safe: 'resourceUrl'">
+      [style.background-color]="null">
+      <div class="image-box">
+        <canvas class="is-fill" #gridCanvas></canvas>
+      </div>
     </div>
     <div *ngIf="isLock && dispLockMark" class="lock-icon is-center">
       <i class="material-icons">lock</i>
