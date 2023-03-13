@@ -147,10 +147,6 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.callSelectedEvent();
     if (this.collidableElements.length < 1) this.findCollidableElements(); // 稀にcollidableElementsの取得に失敗している
 
-    if (this.isScratch) this.scratch();
-
-    console.log("chk (e as MouseEvent).button" + (e as MouseEvent).button);
-
     if ((this.isDisable && !this.isScratch )|| (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
     this.onstart.emit(e as PointerEvent);
 
@@ -160,8 +156,6 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
 
     this.width = this.nativeElement.clientWidth;
     this.height = this.nativeElement.clientHeight;
-
-    console.log("chk point2");
 
     let target3d = {
       x: this.posX + (this.width / 2),
@@ -180,24 +174,19 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.pointerStart3d.y = target3d.y;
     this.pointerStart3d.z = target3d.z;
 
-    console.log("chk point3");
     this.targetStartRect = this.nativeElement.getBoundingClientRect();
+    
+    if(this.isScratch){
+      EventSystem.trigger('SCRATCH_POINTER_XYZ', { x: target3d.x , y: target3d.y , z: target3d.z ,first: true});
+    }
 
     this.ratio = 1.0;
-  }
-
-  scratch(){
-     let x = this.input.pointer.x + (this.pointerOffset2d.x * this.ratio);
-     let y = this.input.pointer.y + (this.pointerOffset2d.y * this.ratio);
-    
-    console.log("スクラッチ動作確認:" + x + ':' + y);
   }
 
   onInputMove(e: MouseEvent | TouchEvent) {
     if (this.input.isGrabbing && !this.pointerDeviceService.isDragging) {
       return this.cancel(); // todo
     }
-    if (this.isScratch) this.scratch();
 
     if ((this.isDisable && !this.isScratch) || !this.input.isGrabbing) return this.cancel();
     
@@ -236,8 +225,9 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
       this.posX = pointer3d.x;
       this.posY = pointer3d.y;
       this.posZ = pointer3d.z;
+    }else{
+      EventSystem.trigger('SCRATCH_POINTER_XYZ', { x: pointer3d.x , y: pointer3d.y , z: pointer3d.z ,first: false});
     }
-    console.log("テスト" + this.posX + ':' + this.posY + ':' + this.posZ);
   }
 
   onInputEnd(e: MouseEvent | TouchEvent) {
