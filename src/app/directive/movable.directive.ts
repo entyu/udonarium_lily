@@ -33,6 +33,8 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.transformCssOffset = option.transformCssOffset != null ? option.transformCssOffset : this.transformCssOffset;
   }
   @Input('movable.disable') isDisable: boolean = false;
+  @Input('movable.scratch') isScratch: boolean = false;
+
   @Output('movable.onstart') onstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondragstart') ondragstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondrag') ondrag: EventEmitter<PointerEvent> = new EventEmitter();
@@ -145,7 +147,11 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.callSelectedEvent();
     if (this.collidableElements.length < 1) this.findCollidableElements(); // 稀にcollidableElementsの取得に失敗している
 
-    if (this.isDisable || (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
+    if (this.isScratch) this.scratch();
+
+    console.log("chk (e as MouseEvent).button" + (e as MouseEvent).button);
+
+    if ((this.isDisable && !this.isScratch )|| (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
     this.onstart.emit(e as PointerEvent);
 
     this.setPointerEvents(false);
@@ -154,6 +160,8 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
 
     this.width = this.nativeElement.clientWidth;
     this.height = this.nativeElement.clientHeight;
+
+    console.log("chk point2");
 
     let target3d = {
       x: this.posX + (this.width / 2),
@@ -172,16 +180,27 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.pointerStart3d.y = target3d.y;
     this.pointerStart3d.z = target3d.z;
 
+    console.log("chk point3");
     this.targetStartRect = this.nativeElement.getBoundingClientRect();
 
     this.ratio = 1.0;
+  }
+
+  scratch(){
+     let x = this.input.pointer.x + (this.pointerOffset2d.x * this.ratio);
+     let y = this.input.pointer.y + (this.pointerOffset2d.y * this.ratio);
+    
+    console.log("スクラッチ動作確認:" + x + ':' + y);
   }
 
   onInputMove(e: MouseEvent | TouchEvent) {
     if (this.input.isGrabbing && !this.pointerDeviceService.isDragging) {
       return this.cancel(); // todo
     }
-    if (this.isDisable || !this.input.isGrabbing) return this.cancel();
+    if (this.isScratch) this.scratch();
+
+    if ((this.isDisable && !this.isScratch) || !this.input.isGrabbing) return this.cancel();
+    
     if (e.cancelable) e.preventDefault();
 
     if (!this.input.isDragging) this.setPointerEvents(false);
@@ -213,9 +232,12 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
       this.ratio += (ratio - this.ratio) * 0.1;
     }
 
-    this.posX = pointer3d.x;
-    this.posY = pointer3d.y;
-    this.posZ = pointer3d.z;
+    if(!this.isScratch){  //スクラッチマスク用の処理スキップ
+      this.posX = pointer3d.x;
+      this.posY = pointer3d.y;
+      this.posZ = pointer3d.z;
+    }
+    console.log("テスト" + this.posX + ':' + this.posY + ':' + this.posZ);
   }
 
   onInputEnd(e: MouseEvent | TouchEvent) {

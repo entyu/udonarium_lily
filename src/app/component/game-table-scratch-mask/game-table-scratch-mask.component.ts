@@ -14,7 +14,7 @@ import {
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem } from '@udonarium/core/system';
+import { EventSystem, Network } from '@udonarium/core/system';
 import { GameTableScratchMask } from '@udonarium/game-table-scratch-mask';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
@@ -46,16 +46,26 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
   get width(): number { return this.adjustMinBounds(this.gameTableScratchMask.width); }
   get height(): number { return this.adjustMinBounds(this.gameTableScratchMask.height); }
 
-  get opacity(): number { return this.gameTableScratchMask.opacity; }
+  get opacity(): number { return 100; }
+
   get imageFile(): ImageFile { return this.gameTableScratchMask.imageFile; }
   get isLock(): boolean { return this.gameTableScratchMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableScratchMask.isLock = isLock; }
+  get isScratch(): boolean { return this.gameTableScratchMask.isScratch; }
+  set isScratch(isScratch: boolean) { this.gameTableScratchMask.isScratch = isScratch; }
 
   get altitude(): number { return this.gameTableScratchMask.altitude; }
   set altitude(altitude: number) { this.gameTableScratchMask.altitude = altitude; }
 
   get isAltitudeIndicate(): boolean { return this.gameTableScratchMask.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameTableScratchMask.isAltitudeIndicate = isAltitudeIndicate; }
+
+  get owner(): string { return this.gameTableScratchMask.owner; }
+  set owner(owner: string) { this.gameTableScratchMask.owner = owner; }
+
+  get hasOwner(): boolean { return this.gameTableScratchMask.hasOwner; }
+  get ownerIsOnline(): boolean { return this.gameTableScratchMask.ownerIsOnline; }
+  get ownerName(): string { return this.gameTableScratchMask.ownerName; }
 
   get gameTableMaskAltitude(): number {
     return +this.altitude.toFixed(1); 
@@ -128,7 +138,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
     this.input.cancel();
 
     // TODO:もっと良い方法考える
-    if (this.isLock) {
+    if (this.isLock && !this.isScratch) {
       EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
     }
   }
@@ -203,6 +213,35 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
           }
         );
       }
+      menuArray.push(
+      this.isScratch
+        ? {
+          name: 'スクラッチ確定', action: () => {
+            this.isScratch = false;
+            SoundEffect.play(PresetSound.cardDraw);
+            this.owner = '';
+          }
+        }
+        : {
+          name: 'スクラッチ開始', action: () => {
+            this.isScratch = true;
+            SoundEffect.play(PresetSound.cardDraw);
+            this.owner = Network.peerContext.userId;
+          }
+        }
+      )
+      if (this.isScratch){
+        menuArray.push(
+            {
+            name: 'スクラッチキャンセル', action: () => {
+              this.isScratch = false;
+              SoundEffect.play(PresetSound.cardDraw);
+              this.owner = '';
+            }
+          }
+        );
+      }
+      
       menuArray.push( ContextMenuSeparator);
       menuArray.push( 
         { name: 'スクラッチマスクを編集', action: () => { this.showDetail(this.gameTableScratchMask); } }
@@ -264,34 +303,12 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
       centerX: this.gameTableScratchMask.location.x,
       centerY: this.gameTableScratchMask.location.y,
       gridSize: this.gridSize,
-      gridColor: '#202020',
+      gridColor: this.gameTableScratchMask.color,
       fanDegree: 0.0,
     };
     console.log('this.range.location.x-y:' + this.gameTableScratchMask.location.x + ' ' + this.gameTableScratchMask.location.y);
     render.renderScratch(setting);
-/*
-    switch (this.range.type) {
-      case 'LINE':
-        this.clipAreaLine = render.renderLine(setting);
-        break;
-      case 'CIRCLE':
-        render.renderCircle(setting);
-        break;
-      case 'SQUARE':
-        this.clipAreaSquare = render.renderSquare(setting);
-        break;
-      case 'DIAMOND':
-        this.clipAreaDiamond = render.renderDiamond(setting);
-        break;
-      case 'CORN':
-      default:
-        this.clipAreaCorn = render.renderCorn(setting);
-        break;
-    }
-
-*/
-    let opacity: number = this.gameTableScratchMask.opacity;
-    this.gridCanvas.nativeElement.style.opacity = opacity + '';
+//    this.gridCanvas.nativeElement.style.opacity = opacity + '';
   }
 
 
