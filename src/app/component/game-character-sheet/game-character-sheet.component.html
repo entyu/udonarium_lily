@@ -165,6 +165,12 @@
       </div>
     </div>
   </ng-container>
+  <ng-container *ngIf="tabletopObject.aliasName === 'table-scratch-mask'">
+    <div>
+    カラー
+      <input type="color" name="color11" list="color-list_11" (change)="changeMaskFillColor($event.target.value)" value="{{tabletopObject.color}}">
+    </div>
+  </ng-container>
   <ng-container *ngIf="tabletopObject.aliasName === 'range'">
     <div>
       境界線
@@ -191,7 +197,7 @@
       </datalist>
 -->
       塗りつぶし
-      <input type="color" name="color02" list="color-list_02" (change)="changeGridColor($event.target.value)" value="{{tabletopObject.gridColor}}">
+      <input type="color" name="color02" list="color-list_02" (change)="changeMaskFillColor($event.target.value)" value="{{tabletopObject.gridColor}}">
 <!-- クローム側の更新都合による現象でリスト設定の値が正常に入らなくなったため一時的にリスト設定を辞める
       <datalist id="color-list_02">
         <option value="#000000">
@@ -214,6 +220,7 @@
       </datalist>
 -->
     </div>
+
     <div *ngIf="tabletopObject.type != 'CIRCLE'">
       回転角度のスナップを細かくする:<input type="checkbox" value="noSnapPolygonal"
       [(ngModel)]="tabletopObject.subDivisionSnapPolygonal" name="subDivisionSnapPolygonal" (click)="subDivisionSnapPolygonal()">

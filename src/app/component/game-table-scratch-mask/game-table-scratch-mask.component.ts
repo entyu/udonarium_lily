@@ -124,7 +124,8 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
         this.changeDetector.markForCheck();
       })
       .on('SCRATCH_POINTER_XYZ', event => {
-        this.scratch( event.data.x , +event.data.y , event.data.z , event.data.start);
+        if(event.data.identifier != this.gameTableScratchMask.identifier) return;
+        this.scratch( event.data.x , event.data.y , event.data.z , event.data.start);
       });
     this.movableOption = {
       tabletopObject: this.gameTableScratchMask,

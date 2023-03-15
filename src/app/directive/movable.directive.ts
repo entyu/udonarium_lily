@@ -161,11 +161,8 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     pointerSchratch3d.x -= this.posX;
     pointerSchratch3d.y -= this.posY;
 
-//    console.log("SCRATCH_POINTER_XY:" + Math.floor(pointerSchratch3d.x) + ':'+ Math.floor(pointerSchratch3d.y) + 'start:' + start);
-    EventSystem.trigger('SCRATCH_POINTER_XYZ', { x: pointerSchratch3d.x, y: pointerSchratch3d.y, z: pointerSchratch3d.z, start: start});
-  
+    EventSystem.trigger('SCRATCH_POINTER_XYZ', { x: pointerSchratch3d.x, y: pointerSchratch3d.y, z: pointerSchratch3d.z, identifier: this.tabletopObject.identifier, start: start});
   }
-
 
   onInputStart(e: MouseEvent | TouchEvent) {
     this.callSelectedEvent();
