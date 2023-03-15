@@ -16,6 +16,18 @@ export class GameTableScratchMask extends TabletopObject {
   @SyncVar() fillMap: boolean[] = [];
   @SyncVar() dummy: number = 0;
 
+  get mapSizeMax(): number {return 150};
+
+  getMapXY(x, y): boolean {return this.fillMap[150 * y +x]};
+  setMapXY(x, y, bool){this.fillMap[150 * y +x] = bool;
+                       this.dummy ++; if( this.dummy >= 100)
+                         this.dummy = 0 
+                       };
+  reverseMapXY(x, y){this.fillMap[150 * y +x] = !this.fillMap[150 * y +x]
+                     this.dummy ++; if( this.dummy >= 100)
+                       this.dummy = 0 
+                     };
+
   get name(): string { return this.getCommonValue('name', ''); }
   get width(): number { return this.getCommonValue('width', 1); }
   get height(): number { return this.getCommonValue('height', 1); }
@@ -35,6 +47,8 @@ export class GameTableScratchMask extends TabletopObject {
     } else {
       object = new GameTableScratchMask();
     }
+    object.fillMap = new Array(150 * 150).fill(1);
+    
     object.createDataElements();
     object.commonDataElement.appendChild(DataElement.create('name', name, {}, 'name_' + object.identifier));
     object.commonDataElement.appendChild(DataElement.create('width', width, {}, 'width_' + object.identifier));

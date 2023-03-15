@@ -54,7 +54,7 @@ export class TabletopActionService {
     let viewTable = this.getViewTable();
     if (!viewTable) return;
 
-    let tableMask = GameTableScratchMask.create('スクラッチマスク', 5, 5, 100);
+    let tableMask = GameTableScratchMask.create('スクラッチマスク', 10, 10, 100);
     tableMask.location.x = position.x - 25;
     tableMask.location.y = position.y - 25;
     tableMask.posZ = position.z;

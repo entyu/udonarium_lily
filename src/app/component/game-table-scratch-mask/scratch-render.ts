@@ -1,9 +1,11 @@
 import { GridType } from '@udonarium/game-table';
+import { GameTableScratchMask } from '@udonarium/game-table-scratch-mask';
 
 type StrokeGridFunc = (w: number, h: number, gridSize: number) => GridPosition;
 type GridPosition = { gx: number, gy: number };
 
 export interface ScratchSetting {
+  mask: GameTableScratchMask;
   areaWidth: number;
   areaHeight: number;
   centerX: number;
@@ -12,8 +14,6 @@ export interface ScratchSetting {
   fanDegree: number;
   gridColor: string;
 }
-
-
 
 export class ScratchRender {
   constructor(
@@ -48,7 +48,7 @@ export class ScratchRender {
     for (let h = 0; h <= setting.areaHeight ; h++) {
       for (let w = 0; w <= setting.areaWidth ; w++) {
         // 全部trueで内側にある
-        if( 1 ){
+        if( setting.mask.getMapXY(w, h) ){
           this.fillSquare(context, w * gridSize , h * gridSize , gridSize);
         }else{
           // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用

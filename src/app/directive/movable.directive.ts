@@ -143,6 +143,30 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.setCollidableLayer(false);
   }
 
+  scratchObjectPosition(start: boolean){
+
+    let pointerScratch2d = {
+      x: this.input.pointer.x,
+      y: this.input.pointer.y,
+      z: 0,
+    };
+    pointerScratch2d.x = Math.min(window.innerWidth - 0.1, Math.max(pointerScratch2d.x, 0.1));
+    pointerScratch2d.y = Math.min(window.innerHeight - 0.1, Math.max(pointerScratch2d.y, 0.1));
+
+    let elementScratch = document.elementFromPoint(pointerScratch2d.x, pointerScratch2d.y) as HTMLElement;
+    if (elementScratch == null) return;
+
+    let pointerSchratch3d = this.coordinateService.calcTabletopLocalCoordinate(pointerScratch2d, elementScratch);
+
+    pointerSchratch3d.x -= this.posX;
+    pointerSchratch3d.y -= this.posY;
+
+//    console.log("SCRATCH_POINTER_XY:" + Math.floor(pointerSchratch3d.x) + ':'+ Math.floor(pointerSchratch3d.y) + 'start:' + start);
+    EventSystem.trigger('SCRATCH_POINTER_XYZ', { x: pointerSchratch3d.x, y: pointerSchratch3d.y, z: pointerSchratch3d.z, start: start});
+  
+  }
+
+
   onInputStart(e: MouseEvent | TouchEvent) {
     this.callSelectedEvent();
     if (this.collidableElements.length < 1) this.findCollidableElements(); // 稀にcollidableElementsの取得に失敗している
@@ -177,7 +201,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.targetStartRect = this.nativeElement.getBoundingClientRect();
     
     if(this.isScratch){
-      EventSystem.trigger('SCRATCH_POINTER_XYZ', { x: target3d.x , y: target3d.y , z: target3d.z ,first: true});
+      this.scratchObjectPosition(true);
     }
 
     this.ratio = 1.0;
@@ -226,7 +250,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
       this.posY = pointer3d.y;
       this.posZ = pointer3d.z;
     }else{
-      EventSystem.trigger('SCRATCH_POINTER_XYZ', { x: pointer3d.x , y: pointer3d.y , z: pointer3d.z ,first: false});
+      this.scratchObjectPosition(false);
     }
   }
 

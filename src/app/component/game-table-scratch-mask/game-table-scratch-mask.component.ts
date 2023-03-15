@@ -90,6 +90,23 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
     private coordinateService: CoordinateService,
   ) { }
 
+
+  oldScratchX: number = -1;
+  oldScratchY: number = -1;
+
+  scratch( x, y, z, start){
+    let gridSize = 50;
+    let scratchX = Math.floor(x / gridSize);
+    let scratchY = Math.floor(y / gridSize);
+
+    if(start || scratchX != this.oldScratchX || scratchY != this.oldScratchY){
+      this.oldScratchX = scratchX ;
+      this.oldScratchY = scratchY ;
+      this.gameTableScratchMask.reverseMapXY(scratchX, scratchY);
+    }
+  }
+
+
   ngOnInit() {
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', event => {
@@ -107,7 +124,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
         this.changeDetector.markForCheck();
       })
       .on('SCRATCH_POINTER_XYZ', event => {
-        console.log('SCRATCH_POINTER_XYZ:' + event.data.x, event.data.y, event.data.z);
+        this.scratch( event.data.x , +event.data.y , event.data.z , event.data.start);
       });
     this.movableOption = {
       tabletopObject: this.gameTableScratchMask,
@@ -129,7 +146,6 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
     this.input.destroy();
     EventSystem.unregister(this);
   }
-
 
   @HostListener('dragstart', ['$event'])
   onDragstart(e) {
@@ -301,6 +317,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
     let render = new ScratchRender(this.gridCanvas.nativeElement);
 
     let setting: ScratchSetting = {
+      mask: this.gameTableScratchMask,
       areaWidth: this.gameTableScratchMask.width,
       areaHeight: this.gameTableScratchMask.height,
       centerX: this.gameTableScratchMask.location.x,
@@ -309,9 +326,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
       gridColor: this.gameTableScratchMask.color,
       fanDegree: 0.0,
     };
-    console.log('this.range.location.x-y:' + this.gameTableScratchMask.location.x + ' ' + this.gameTableScratchMask.location.y);
     render.renderScratch(setting);
-//    this.gridCanvas.nativeElement.style.opacity = opacity + '';
   }
 
 
