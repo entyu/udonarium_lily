@@ -163,8 +163,33 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
     }
   }
 
+  contextmenuEvent(event) {
+    //イベント処理
+    let key_event = event || window.event;
+    let key_shift = (key_event.shiftKey);
+    let key_ctrl = (key_event.ctrlKey);
+    let key_alt = (key_event.altKey);
+    let key_meta = (key_event.metaKey);
+    //キーに対応した処理
+    
+    if (key_shift) console.log("shiftキー");
+    if (key_ctrl) console.log("ctrlキー");
+    if (key_alt) {
+      console.log("altキー");
+      event.stopPropagation();
+      event.preventDefault();
+      return;
+    }
+    if (key_meta) console.log("metaキー");
+
+    if (key_shift && key_alt) {
+      console.log("shift+ALTキー");
+    }
+  }
+
   @HostListener('contextmenu', ['$event'])
   onContextMenu(e: Event) {
+
     e.stopPropagation();
     e.preventDefault();
 

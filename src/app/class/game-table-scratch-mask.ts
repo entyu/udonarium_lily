@@ -14,6 +14,8 @@ export class GameTableScratchMask extends TabletopObject {
   @SyncVar() owner: string = '';
 
   @SyncVar() fillMap: boolean[] = [];
+  fillMapBack: boolean[] = [];
+
   @SyncVar() dummy: number = 0;
 
   get mapSizeMax(): number {return 150};
@@ -23,6 +25,9 @@ export class GameTableScratchMask extends TabletopObject {
                        this.dummy ++; if( this.dummy >= 100)
                          this.dummy = 0 
                        };
+
+  copyBack2MainMap(){this.fillMap = this.fillMapBack.concat();}//ここからつづき
+
   reverseMapXY(x, y){this.fillMap[150 * y +x] = !this.fillMap[150 * y +x]
                      this.dummy ++; if( this.dummy >= 100)
                        this.dummy = 0 

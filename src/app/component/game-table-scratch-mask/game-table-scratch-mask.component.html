@@ -3,7 +3,8 @@
 </div>
 <div class="component is-3d" [ngClass]="{'is-grab': !isLock}" style="pointer-events: none"
   [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
-  appMovable [movable.option]="movableOption" [movable.disable]="isLock" [movable.scratch]="isScratch" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
+  appMovable [movable.option]="movableOption" [movable.disable]="isLock" [movable.scratch]="isScratch" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()"
+  (contextmenu)="contextmenuEvent($event)">
 
   <div *ngIf="hasOwner && 0 < ownerName.length" class="name-tag is-nowrap has-length-limit is-black-background will-change">
     <span class="is-3d">{{ownerName}}が操作中</span>
