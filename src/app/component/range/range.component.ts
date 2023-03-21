@@ -439,8 +439,6 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   private setRange() {
     let render = new RangeRender(this.gridCanvas.nativeElement,this.rangeCanvas.nativeElement);
 
-//    this.width, this.length, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor
-
     let setting: RangeRenderSetting = {
       areaWidth: this.areaQuadrantSize * 2,
       areaHeight: this.areaQuadrantSize * 2,
@@ -460,7 +458,6 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       gridType: this.currentTable.gridType,
       isDocking: this.range.followingCharctor ? true : false,
     };
-    console.log('this.range.location.x-y:' + this.range.location.x + ' ' + this.range.location.y);
 
     switch (this.range.type) {
       case 'LINE':
