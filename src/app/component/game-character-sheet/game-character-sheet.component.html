@@ -170,6 +170,8 @@
     カラー
       <input type="color" name="color11" list="color-list_11" (change)="changeMaskFillColor($event.target.value)" value="{{tabletopObject.color}}">
     </div>
+    <br>
+    ※width、height項目は最大50
   </ng-container>
   <ng-container *ngIf="tabletopObject.aliasName === 'range'">
     <div>

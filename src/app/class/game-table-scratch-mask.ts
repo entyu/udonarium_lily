@@ -17,9 +17,8 @@ export class GameTableScratchMask extends TabletopObject {
   fillMapBack: boolean[] = [];
 
   @SyncVar() dummy: number = 0;
-  maxSize_ = 50;
-
-  get maxSize(): number {return this.maxSize_};
+  private readonly maxSize = 50;
+  getMaxSize(): number{ return this.maxSize;}
 
   getMapXY(x, y, myScratch): boolean {
     if( myScratch){
@@ -39,8 +38,6 @@ export class GameTableScratchMask extends TabletopObject {
       return;
     }
     this.fillMapBack[this.maxSize * y +x] = bool;
-    this.dummy ++; 
-    if( this.dummy >= 100) this.dummy = 0;
   };
 
   copyBack2MainMap(){
@@ -62,8 +59,6 @@ export class GameTableScratchMask extends TabletopObject {
     }
 
     this.fillMapBack[this.maxSize * y +x] = !this.fillMapBack[this.maxSize * y +x];
-    this.dummy ++; 
-    if( this.dummy >= 100)this.dummy = 0;
   }
 
   isMapXYChange(x, y){
@@ -97,7 +92,7 @@ export class GameTableScratchMask extends TabletopObject {
     } else {
       object = new GameTableScratchMask();
     }
-    object.M = new Array(50 * 50).fill(1);
+    object.M = new Array( object.maxSize * object.maxSize).fill(1);
     
     object.createDataElements();
     object.commonDataElement.appendChild(DataElement.create('name', name, {}, 'name_' + object.identifier));

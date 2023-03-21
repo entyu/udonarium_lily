@@ -67,7 +67,6 @@ export class ScratchRender {
         for (let w = 0; w <= setting.areaWidth ; w++) {
           // 全部trueで内側にある
           if( setting.mask.isMapXYChange(w, h) ){
-            console.log("strokeSquare w" + w + " h" + h);
             this.strokeSquare(context, w * gridSize , h * gridSize , gridSize);
             this.strokeSquare(context, w * gridSize + 1 , h * gridSize + 1 , gridSize -2);
           }

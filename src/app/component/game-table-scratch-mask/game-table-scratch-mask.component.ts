@@ -43,8 +43,14 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
   set dispLockMark(disp: boolean) { this.gameTableScratchMask.dispLockMark = disp; }
 
   get name(): string { return this.gameTableScratchMask.name; }
-  get width(): number { return this.adjustMinBounds(this.gameTableScratchMask.width); }
-  get height(): number { return this.adjustMinBounds(this.gameTableScratchMask.height); }
+  get width(): number { 
+    let w = this.gameTableScratchMask.width <= this.gameTableScratchMask.getMaxSize() ? this.gameTableScratchMask.width : this.gameTableScratchMask.getMaxSize();
+    return this.adjustMinBounds(w);
+  }
+  get height(): number { 
+    let h = this.gameTableScratchMask.height <= this.gameTableScratchMask.getMaxSize() ? this.gameTableScratchMask.height : this.gameTableScratchMask.getMaxSize();
+    return this.adjustMinBounds(h);
+  }
 
   get opacity(): number { return 100; }
 
@@ -351,8 +357,8 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
 
     let setting: ScratchSetting = {
       mask: this.gameTableScratchMask,
-      areaWidth: this.gameTableScratchMask.width,
-      areaHeight: this.gameTableScratchMask.height,
+      areaWidth: this.gameTableScratchMask.width <= this.gameTableScratchMask.getMaxSize() ? this.gameTableScratchMask.width : this.gameTableScratchMask.getMaxSize(),
+      areaHeight: this.gameTableScratchMask.height <= this.gameTableScratchMask.getMaxSize() ? this.gameTableScratchMask.height : this.gameTableScratchMask.getMaxSize(),
       centerX: this.gameTableScratchMask.location.x,
       centerY: this.gameTableScratchMask.location.y,
       gridSize: this.gridSize,
