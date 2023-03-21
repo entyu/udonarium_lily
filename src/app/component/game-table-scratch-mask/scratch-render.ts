@@ -67,8 +67,7 @@ export class ScratchRender {
         for (let w = 0; w <= setting.areaWidth ; w++) {
           // 全部trueで内側にある
           if( setting.mask.isMapXYChange(w, h) ){
-            this.strokeSquare(context, w * gridSize , h * gridSize , gridSize);
-            this.strokeSquare(context, w * gridSize + 1 , h * gridSize + 1 , gridSize -2);
+            this.strokeSquare(context, w * gridSize + 5 , h * gridSize + 5 , gridSize - 10);
           }
         }
       }
@@ -82,6 +81,7 @@ export class ScratchRender {
   }
 
   private strokeSquare(context: CanvasRenderingContext2D, gx: number, gy: number, gridSize: number) {
+    context.lineWidth = 2;
     context.beginPath();
     context.strokeRect(gx, gy, gridSize, gridSize);
   }
