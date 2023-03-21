@@ -262,14 +262,15 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
       this.isScratch
         ? {
           name: 'スクラッチ確定', action: () => {
+            this.scratchUpdate();
             this.isScratch = false;
-            SoundEffect.play(PresetSound.cardDraw);
             this.owner = '';
           }
         }
         : {
           name: 'スクラッチ開始', action: () => {
             this.isScratch = true;
+            this.gameTableScratchMask.copyMain2BackMap();
             SoundEffect.play(PresetSound.cardDraw);
             this.owner = Network.peerContext.userId;
           }
@@ -318,6 +319,12 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
     this.contextMenuService.open(menuPosition, menuArray, this.name);
   }
 
+  scratchUpdate(){
+    this.gameTableScratchMask.copyBack2MainMap();
+    SoundEffect.play(PresetSound.cardDraw);
+    
+  }
+
   onMove() {
     SoundEffect.play(PresetSound.cardPick);
   }
@@ -352,7 +359,10 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
       gridColor: this.gameTableScratchMask.color,
       fanDegree: 0.0,
     };
-    render.renderScratch(setting);
+
+    let myScratch = this.owner == Network.peerContext.userId ? true : false;
+
+    render.renderScratch(setting, myScratch);
   }
 
 

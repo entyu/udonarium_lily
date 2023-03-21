@@ -33,7 +33,7 @@ export class ScratchRender {
     return context
   }
 
-  renderScratch(setting: ScratchSetting){
+  renderScratch(setting: ScratchSetting, myScratch: boolean){
     let gridSize = setting.gridSize;
 
     this.canvasElement.width = setting.areaWidth * gridSize;
@@ -48,13 +48,33 @@ export class ScratchRender {
     for (let h = 0; h <= setting.areaHeight ; h++) {
       for (let w = 0; w <= setting.areaWidth ; w++) {
         // 全部trueで内側にある
-        if( setting.mask.getMapXY(w, h) ){
-          this.fillSquare(context, w * gridSize , h * gridSize , gridSize);
+        if (myScratch){
+          if( setting.mask.getMapXY(w, h, myScratch) ){
+            this.fillSquare(context, w * gridSize , h * gridSize , gridSize);
+          }
         }else{
-          // this.strokeSquare(context, gx + gridOffX, gy + gridOffY, gridSize); // デバッグ用
+          if( setting.mask.getMapXY(w, h, myScratch) ){
+            this.fillSquare(context, w * gridSize , h * gridSize , gridSize);
+          }
         }
       }
     }
+
+    if (myScratch){
+      this.makeBrush(context, gridSize, '#FF5050');
+
+      for (let h = 0; h <= setting.areaHeight ; h++) {
+        for (let w = 0; w <= setting.areaWidth ; w++) {
+          // 全部trueで内側にある
+          if( setting.mask.isMapXYChange(w, h) ){
+            console.log("strokeSquare w" + w + " h" + h);
+            this.strokeSquare(context, w * gridSize , h * gridSize , gridSize);
+            this.strokeSquare(context, w * gridSize + 1 , h * gridSize + 1 , gridSize -2);
+          }
+        }
+      }
+    }
+    
   }
 
   private fillSquare(context: CanvasRenderingContext2D, gx: number, gy: number, gridSize: number) {

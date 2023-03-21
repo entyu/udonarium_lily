@@ -13,25 +13,70 @@ export class GameTableScratchMask extends TabletopObject {
 
   @SyncVar() owner: string = '';
 
-  @SyncVar() fillMap: boolean[] = [];
+  @SyncVar() M: boolean[] = []; // 保存データ量削減のため1文字変数
   fillMapBack: boolean[] = [];
 
   @SyncVar() dummy: number = 0;
+  maxSize_ = 50;
 
-  get mapSizeMax(): number {return 150};
+  get maxSize(): number {return this.maxSize_};
 
-  getMapXY(x, y): boolean {return this.fillMap[150 * y +x]};
-  setMapXY(x, y, bool){this.fillMap[150 * y +x] = bool;
-                       this.dummy ++; if( this.dummy >= 100)
-                         this.dummy = 0 
-                       };
+  getMapXY(x, y, myScratch): boolean {
+    if( myScratch){
+      if (this.fillMapBack.length < this.M.length){
+        console.log('スクラッチマスク作業領域未確保 getMapXY:' + this.fillMapBack.length);
+        return false;
+      }
+      return this.fillMapBack[this.maxSize * y +x];
+    }else{
+      return this.M[this.maxSize * y +x];
+    }
+  }
 
-  copyBack2MainMap(){this.fillMap = this.fillMapBack.concat();}//ここからつづき
+  setMapXY(x, y, bool){
+    if (this.fillMapBack.length < this.M.length){
+      console.log('スクラッチマスク作業領域未確保 setMapXY:' + this.fillMapBack.length);
+      return;
+    }
+    this.fillMapBack[this.maxSize * y +x] = bool;
+    this.dummy ++; 
+    if( this.dummy >= 100) this.dummy = 0;
+  };
 
-  reverseMapXY(x, y){this.fillMap[150 * y +x] = !this.fillMap[150 * y +x]
-                     this.dummy ++; if( this.dummy >= 100)
-                       this.dummy = 0 
-                     };
+  copyBack2MainMap(){
+    this.M = this.fillMapBack.concat();
+    console.log('スクラッチマスク：データを編集領域から反映:' + this.fillMapBack.length);
+    this.dummy ++; 
+    if( this.dummy >= 100)this.dummy = 0;
+  }
+
+  copyMain2BackMap(){
+    this.fillMapBack = this.M.concat();
+    console.log('スクラッチマスク：データを編集領域に複製:' + this.fillMapBack.length);
+  }
+
+  reverseMapXY(x, y){
+    if (this.fillMapBack.length < this.M.length){
+      console.log('スクラッチマスク作業領域未確保 reverseMapXY:' + this.fillMapBack.length);
+      return;
+    }
+
+    this.fillMapBack[this.maxSize * y +x] = !this.fillMapBack[this.maxSize * y +x];
+    this.dummy ++; 
+    if( this.dummy >= 100)this.dummy = 0;
+  }
+
+  isMapXYChange(x, y){
+    if (this.fillMapBack.length < this.M.length){
+      console.log('スクラッチマスク作業領域未確保 isMapXYChange:' + this.fillMapBack.length);
+      return false;
+    }
+    if (this.M[this.maxSize * y +x] != this.fillMapBack[this.maxSize * y +x]){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   get name(): string { return this.getCommonValue('name', ''); }
   get width(): number { return this.getCommonValue('width', 1); }
@@ -52,7 +97,7 @@ export class GameTableScratchMask extends TabletopObject {
     } else {
       object = new GameTableScratchMask();
     }
-    object.fillMap = new Array(150 * 150).fill(1);
+    object.M = new Array(50 * 50).fill(1);
     
     object.createDataElements();
     object.commonDataElement.appendChild(DataElement.create('name', name, {}, 'name_' + object.identifier));
