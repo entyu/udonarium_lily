@@ -69,6 +69,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
   get owner(): string { return this.gameTableScratchMask.owner; }
   set owner(owner: string) { this.gameTableScratchMask.owner = owner; }
 
+  get isMine(): boolean { return this.gameTableScratchMask.isMine; }
   get hasOwner(): boolean { return this.gameTableScratchMask.hasOwner; }
   get ownerIsOnline(): boolean { return this.gameTableScratchMask.ownerIsOnline; }
   get ownerName(): string { return this.gameTableScratchMask.ownerName; }
@@ -109,6 +110,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
       this.oldScratchX = scratchX ;
       this.oldScratchY = scratchY ;
       this.gameTableScratchMask.reverseMapXY(scratchX, scratchY);
+      this.drawScratch();
     }
   }
 
@@ -182,9 +184,12 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
     if (key_ctrl) console.log("ctrlキー");
     if (key_alt) {
       console.log("altキー");
-      event.stopPropagation();
-      event.preventDefault();
-      return;
+      if (this.isMine){
+        this.scratchUpdate();
+        event.stopPropagation();
+        event.preventDefault();
+        return;
+      }
     }
     if (key_meta) console.log("metaキー");
 
@@ -264,25 +269,25 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
           }
         );
       }
-      menuArray.push(
-      this.isScratch
-        ? {
-          name: 'スクラッチ確定', action: () => {
-            this.scratchUpdate();
-            this.isScratch = false;
-            this.owner = '';
-          }
-        }
-        : {
+      if (!this.isMine) {
+        menuArray.push({
           name: 'スクラッチ開始', action: () => {
             this.isScratch = true;
             this.gameTableScratchMask.copyMain2BackMap();
             SoundEffect.play(PresetSound.cardDraw);
             this.owner = Network.peerContext.userId;
           }
-        }
-      )
-      if (this.isScratch){
+        });
+      }else{
+        menuArray.push({
+          name: 'スクラッチ確定', action: () => {
+            this.scratchUpdate();
+            this.isScratch = false;
+            this.owner = '';
+          }
+        });
+      }
+      if (this.isMine){
         menuArray.push(
             {
             name: 'スクラッチキャンセル', action: () => {
