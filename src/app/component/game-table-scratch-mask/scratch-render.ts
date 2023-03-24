@@ -13,6 +13,7 @@ export interface ScratchSetting {
   gridSize: number;
   fanDegree: number;
   gridColor: string;
+  changeColor: string;
 }
 
 export class ScratchRender {
@@ -61,7 +62,7 @@ export class ScratchRender {
     }
 
     if (myScratch){
-      this.makeBrush(context, gridSize, '#FF5050');
+      this.makeBrush(context, gridSize, setting.changeColor);
 
       for (let h = 0; h <= setting.areaHeight ; h++) {
         for (let w = 0; w <= setting.areaWidth ; w++) {

@@ -220,6 +220,13 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
+  changeMaskChangeColor( event ){
+    if( this.tabletopObject ){
+      let mask: GameTableScratchMask = <GameTableScratchMask>this.tabletopObject;
+      mask.changeColor = event;
+    }
+  }
+
   changeGridColor( event ){
     if( this.tabletopObject ){
       let range: RangeArea = <RangeArea>this.tabletopObject;

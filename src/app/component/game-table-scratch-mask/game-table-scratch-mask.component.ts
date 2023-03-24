@@ -368,6 +368,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
       centerY: this.gameTableScratchMask.location.y,
       gridSize: this.gridSize,
       gridColor: this.gameTableScratchMask.color,
+      changeColor: this.gameTableScratchMask.changeColor,
       fanDegree: 0.0,
     };
 

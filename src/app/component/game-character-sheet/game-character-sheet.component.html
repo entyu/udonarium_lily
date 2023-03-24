@@ -169,6 +169,8 @@
     <div>
     カラー
       <input type="color" name="color11" list="color-list_11" (change)="changeMaskFillColor($event.target.value)" value="{{tabletopObject.color}}">
+    更新部カラー
+      <input type="color" name="color12" list="color-list_12" (change)="changeMaskChangeColor($event.target.value)" value="{{tabletopObject.changeColor}}">
     </div>
     <br>
     ※width、height項目は最大50

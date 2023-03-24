@@ -10,6 +10,7 @@ export class GameTableScratchMask extends TabletopObject {
   @SyncVar() isScratch: boolean = false;
   @SyncVar() dispLockMark: boolean = true;
   @SyncVar() color: string = '#404040';
+  @SyncVar() changeColor: string = '#FF5050';
 
   @SyncVar() owner: string = '';
 
