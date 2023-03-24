@@ -254,7 +254,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   onInputEnd(e: MouseEvent | TouchEvent) {
     if (this.isDisable) return this.cancel();
     if (this.input.isDragging) this.ondragend.emit(e as PointerEvent);
-    if (this.isGridSnap && this.input.isDragging) this.snapToGrid();
+    if (this.isGridSnap && this.input.isDragging && !this.isScratch) this.snapToGrid();
     this.cancel();
     this.onend.emit(e as PointerEvent);
   }
