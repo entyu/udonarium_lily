@@ -52,7 +52,9 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
     return this.adjustMinBounds(h);
   }
 
-  get opacity(): number { return 100; }
+  get opacity(): number { 
+    return 100; 
+  }
 
   get imageFile(): ImageFile { return this.gameTableScratchMask.imageFile; }
   get isLock(): boolean { return this.gameTableScratchMask.isLock; }
@@ -367,7 +369,7 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
       centerX: this.gameTableScratchMask.location.x,
       centerY: this.gameTableScratchMask.location.y,
       gridSize: this.gridSize,
-      gridColor: this.gameTableScratchMask.color,
+      gridColor: this.isMine ? this.gameTableScratchMask.color + 'DD' : this.gameTableScratchMask.color,
       changeColor: this.gameTableScratchMask.changeColor,
       fanDegree: 0.0,
     };
