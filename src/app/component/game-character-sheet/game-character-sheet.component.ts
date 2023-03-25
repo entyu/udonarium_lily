@@ -14,10 +14,11 @@ import { ModalService } from 'service/modal.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { SaveDataService } from 'service/save-data.service';
 
-import { GameCharacter } from '@udonarium/game-character'; //
-import { DiceSymbol } from '@udonarium/dice-symbol'; //
+import { GameCharacter } from '@udonarium/game-character';
+import { DiceSymbol } from '@udonarium/dice-symbol';
 
 import { RangeArea } from '@udonarium/range';
+import { GameTableScratchMask } from '@udonarium/game-table-scratch-mask';
 
 @Component({
   selector: 'game-character-sheet',
@@ -210,6 +211,20 @@ export class GameCharacterSheetComponent implements OnInit, OnDestroy, AfterView
       if (!element) return;
       element.value = value;
     });
+  }
+
+  changeMaskFillColor( event ){
+    if( this.tabletopObject ){
+      let mask: GameTableScratchMask = <GameTableScratchMask>this.tabletopObject;
+      mask.color = event;
+    }
+  }
+
+  changeMaskChangeColor( event ){
+    if( this.tabletopObject ){
+      let mask: GameTableScratchMask = <GameTableScratchMask>this.tabletopObject;
+      mask.changeColor = event;
+    }
   }
 
   changeGridColor( event ){

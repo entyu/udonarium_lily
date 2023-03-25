@@ -8,6 +8,7 @@ import { DiceSymbol, DiceType } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { GameTable } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
+import { GameTableScratchMask } from '@udonarium/game-table-scratch-mask';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
 import { RangeArea } from '@udonarium/range';
@@ -41,6 +42,19 @@ export class TabletopActionService {
     if (!viewTable) return;
 
     let tableMask = GameTableMask.create('マップマスク', 5, 5, 100);
+    tableMask.location.x = position.x - 25;
+    tableMask.location.y = position.y - 25;
+    tableMask.posZ = position.z;
+
+    viewTable.appendChild(tableMask);
+    return tableMask;
+  }
+
+  createGameTableScratchMask(position: PointerCoordinate): GameTableScratchMask {
+    let viewTable = this.getViewTable();
+    if (!viewTable) return;
+
+    let tableMask = GameTableScratchMask.create('スクラッチマスク', 10, 10, 100);
     tableMask.location.x = position.x - 25;
     tableMask.location.y = position.y - 25;
     tableMask.posZ = position.z;
@@ -483,6 +497,7 @@ export class TabletopActionService {
     return [
       this.getCreateCharacterMenu(position),
       this.getCreateTableMaskMenu(position),
+      this.getCreateTableScratchMaskMenu(position),
       this.getCreateTerrainMenu(position),
       this.getCreateTextNoteMenu(position),
       this.getCreateTrumpMenu(position),
@@ -505,6 +520,15 @@ export class TabletopActionService {
     return {
       name: 'マップマスクを作成', action: () => {
         this.createGameTableMask(position);
+        SoundEffect.play(PresetSound.cardPut);
+      }
+    }
+  }
+
+  private getCreateTableScratchMaskMenu(position: PointerCoordinate): ContextMenuAction {
+    return {
+      name: 'スクラッチマスクを作成', action: () => {
+        this.createGameTableScratchMask(position);
         SoundEffect.play(PresetSound.cardPut);
       }
     }

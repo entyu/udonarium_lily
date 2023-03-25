@@ -9,6 +9,7 @@ import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
+import { GameTableScratchMask } from '@udonarium/game-table-scratch-mask';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { TableSelecter } from '@udonarium/table-selecter';
 import { RangeArea } from '@udonarium/range';
@@ -85,6 +86,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get characters(): GameCharacter[] { return this.tabletopService.characters; }
   get tableMasks(): GameTableMask[] { return this.tabletopService.tableMasks; }
+  get tableScratchMasks(): GameTableScratchMask[] { return this.tabletopService.tableScratchMasks; }
   get cards(): Card[] { return this.tabletopService.cards; }
   get cardStacks(): CardStack[] { return this.tabletopService.cardStacks; }
   get ranges(): RangeArea[] { return this.tabletopService.ranges; }

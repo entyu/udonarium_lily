@@ -14,7 +14,7 @@ export class RangeArea extends TabletopObject {
   }
   @SyncVar() isLock: boolean = false;
   @SyncVar() rotate: number = 0;
-  @SyncVar() followingCharctor: GameCharacter = null;
+//  @SyncVar() followingCharctor: GameCharacter = null;
   @SyncVar() followingCharctorIdentifier: string = null;
   @SyncVar() followingCounterDummy: number = 0; // 追従時再描画用ダミー
 
@@ -44,16 +44,16 @@ export class RangeArea extends TabletopObject {
   }
 
   following(){
-    let object = <TabletopObject>ObjectStore.instance.get(this.followingCharctor.identifier);
+    let object = <GameCharacter>ObjectStore.instance.get(this.followingCharctorIdentifier);
     if(!object ){
       console.log('追従対象見失い');
-      this.followingCharctor = null;
+      this.followingCharctorIdentifier = null;
       return ;
     }
     console.log('following x:'+ object.location.x + ' y:' + object.location.y);
 
-    this.location.x = object.location.x + (this.gridSize * this.followingCharctor.size) / 2;
-    this.location.y = object.location.y + (this.gridSize * this.followingCharctor.size) / 2;
+    this.location.x = object.location.x + (this.gridSize * object.size) / 2;
+    this.location.y = object.location.y + (this.gridSize * object.size) / 2;
     this.followingCounterDummyCount();
   }
 

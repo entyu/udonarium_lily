@@ -18,6 +18,8 @@
     </ng-container>
     <ng-container *ngSwitchCase="'range'">
     </ng-container>
+    <ng-container *ngSwitchCase="'table-scratch-mask'">
+    </ng-container>
     <ng-container *ngSwitchDefault>
       <button (click)="openModal('imageIdentifier', true)">画像変更</button>
     </ng-container>
@@ -163,6 +165,16 @@
       </div>
     </div>
   </ng-container>
+  <ng-container *ngIf="tabletopObject.aliasName === 'table-scratch-mask'">
+    <div>
+    カラー
+      <input type="color" name="color11" list="color-list_11" (change)="changeMaskFillColor($event.target.value)" value="{{tabletopObject.color}}">
+    更新部カラー
+      <input type="color" name="color12" list="color-list_12" (change)="changeMaskChangeColor($event.target.value)" value="{{tabletopObject.changeColor}}">
+    </div>
+    <br>
+    ※width、height項目は最大50
+  </ng-container>
   <ng-container *ngIf="tabletopObject.aliasName === 'range'">
     <div>
       境界線
@@ -189,7 +201,7 @@
       </datalist>
 -->
       塗りつぶし
-      <input type="color" name="color02" list="color-list_02" (change)="changeGridColor($event.target.value)" value="{{tabletopObject.gridColor}}">
+      <input type="color" name="color02" list="color-list_02" (change)="changeMaskFillColor($event.target.value)" value="{{tabletopObject.gridColor}}">
 <!-- クローム側の更新都合による現象でリスト設定の値が正常に入らなくなったため一時的にリスト設定を辞める
       <datalist id="color-list_02">
         <option value="#000000">
@@ -212,6 +224,7 @@
       </datalist>
 -->
     </div>
+
     <div *ngIf="tabletopObject.type != 'CIRCLE'">
       回転角度のスナップを細かくする:<input type="checkbox" value="noSnapPolygonal"
       [(ngModel)]="tabletopObject.subDivisionSnapPolygonal" name="subDivisionSnapPolygonal" (click)="subDivisionSnapPolygonal()">
@@ -259,6 +272,8 @@
       <ng-container *ngSwitchCase="'terrain'">
       </ng-container>
       <ng-container *ngSwitchCase="'dice-symbol'">
+      </ng-container>
+      <ng-container *ngSwitchCase="'table-scratch-mask'">
       </ng-container>
       <ng-container *ngSwitchDefault>
 

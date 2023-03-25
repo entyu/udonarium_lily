@@ -1,0 +1,35 @@
+<!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
+<div class="dummy-will-change" appMovable [movable.option]="movableOption">
+</div>
+<div class="component is-3d" [ngClass]="{'is-grab': !isLock}" style="pointer-events: none"
+  [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
+  appMovable [movable.option]="movableOption" [movable.disable]="isLock" [movable.scratch]="isScratch" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()"
+  (contextmenu)="contextmenuEvent($event)">
+
+  <div *ngIf="hasOwner && 0 < ownerName.length" class="name-tag is-nowrap has-length-limit is-black-background will-change">
+    <span class="is-3d">{{ownerName}}が編集中</span>
+  </div>
+
+  <div class="border is-fit-full" style="backface-visibility: hidden" [ngClass]="{fall: altitude == 0}" 
+    [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
+    <div class="is-fit-full is-3d chrome-smooth-image-trick"
+      style="pointer-events: auto"
+      [style.background-color]="null">
+      <div class="image-box">
+        <canvas class="is-fill" #gridCanvas></canvas>
+      </div>
+    </div>
+    <div *ngIf="isLock && dispLockMark" class="lock-icon is-center">
+      <i class="material-icons">lock</i>
+    </div>
+  </div>
+  <div class="is-3d" *ngIf="isAltitudeIndicate && math.abs(gameTableMaskAltitude) >= 0.5"
+    style="display: flex; align-items: center; border-left: 2px dashed blanchedalmond; transform-origin: top left; pointer-events: none"
+    [style.height.px]="math.abs(gameTableMaskAltitude * gridSize)"
+    [ngStyle]="{transform: 'translateX(' + (width * gridSize / 2) + 'px) translateY(' + (-height * gridSize / 2) + 'px) rotateX(-90deg) translateY(' + (altitude > 0 ? -altitude * gridSize : 0) + 'px) rotateY(' + (viewRotateZ) + 'deg)'}">
+    <div class="is-3d" style="pointer-events: none">
+      <span class="altitude-indicator is-3d" style="position: absolute; pointer-events: none">{{ math.abs(gameTableMaskAltitude) }}</span>
+      <span class="altitude-indicator is-3d" style="position: absolute; pointer-events: none; transform: rotateY(-180deg)">{{ gameTableMaskAltitude }}</span>
+    </div>
+  </div>
+</div>

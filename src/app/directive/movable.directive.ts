@@ -33,6 +33,8 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.transformCssOffset = option.transformCssOffset != null ? option.transformCssOffset : this.transformCssOffset;
   }
   @Input('movable.disable') isDisable: boolean = false;
+  @Input('movable.scratch') isScratch: boolean = false;
+
   @Output('movable.onstart') onstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondragstart') ondragstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondrag') ondrag: EventEmitter<PointerEvent> = new EventEmitter();
@@ -141,11 +143,32 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.setCollidableLayer(false);
   }
 
+  scratchObjectPosition(start: boolean){
+
+    let pointerScratch2d = {
+      x: this.input.pointer.x,
+      y: this.input.pointer.y,
+      z: 0,
+    };
+    pointerScratch2d.x = Math.min(window.innerWidth - 0.1, Math.max(pointerScratch2d.x, 0.1));
+    pointerScratch2d.y = Math.min(window.innerHeight - 0.1, Math.max(pointerScratch2d.y, 0.1));
+
+    let elementScratch = document.elementFromPoint(pointerScratch2d.x, pointerScratch2d.y) as HTMLElement;
+    if (elementScratch == null) return;
+
+    let pointerSchratch3d = this.coordinateService.calcTabletopLocalCoordinate(pointerScratch2d, elementScratch);
+
+    pointerSchratch3d.x -= this.posX;
+    pointerSchratch3d.y -= this.posY;
+
+    EventSystem.trigger('SCRATCH_POINTER_XYZ', { x: pointerSchratch3d.x, y: pointerSchratch3d.y, z: pointerSchratch3d.z, identifier: this.tabletopObject.identifier, start: start});
+  }
+
   onInputStart(e: MouseEvent | TouchEvent) {
     this.callSelectedEvent();
     if (this.collidableElements.length < 1) this.findCollidableElements(); // 稀にcollidableElementsの取得に失敗している
 
-    if (this.isDisable || (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
+    if ((this.isDisable && !this.isScratch )|| (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
     this.onstart.emit(e as PointerEvent);
 
     this.setPointerEvents(false);
@@ -173,6 +196,10 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.pointerStart3d.z = target3d.z;
 
     this.targetStartRect = this.nativeElement.getBoundingClientRect();
+    
+    if(this.isScratch){
+      this.scratchObjectPosition(true);
+    }
 
     this.ratio = 1.0;
   }
@@ -181,7 +208,9 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     if (this.input.isGrabbing && !this.pointerDeviceService.isDragging) {
       return this.cancel(); // todo
     }
-    if (this.isDisable || !this.input.isGrabbing) return this.cancel();
+
+    if ((this.isDisable && !this.isScratch) || !this.input.isGrabbing) return this.cancel();
+    
     if (e.cancelable) e.preventDefault();
 
     if (!this.input.isDragging) this.setPointerEvents(false);
@@ -213,15 +242,19 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
       this.ratio += (ratio - this.ratio) * 0.1;
     }
 
-    this.posX = pointer3d.x;
-    this.posY = pointer3d.y;
-    this.posZ = pointer3d.z;
+    if(!this.isScratch){  //スクラッチマスク用の処理スキップ
+      this.posX = pointer3d.x;
+      this.posY = pointer3d.y;
+      this.posZ = pointer3d.z;
+    }else{
+      this.scratchObjectPosition(false);
+    }
   }
 
   onInputEnd(e: MouseEvent | TouchEvent) {
     if (this.isDisable) return this.cancel();
     if (this.input.isDragging) this.ondragend.emit(e as PointerEvent);
-    if (this.isGridSnap && this.input.isDragging) this.snapToGrid();
+    if (this.isGridSnap && this.input.isDragging && !this.isScratch) this.snapToGrid();
     this.cancel();
     this.onend.emit(e as PointerEvent);
   }

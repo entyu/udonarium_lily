@@ -81,7 +81,7 @@ export class RangeDockingCharacterComponent implements OnInit, OnDestroy, AfterV
     if (object instanceof GameCharacter) {
       if(GameCharacter){
         SoundEffect.play(PresetSound.lock);
-        this.tabletopObject.followingCharctor = object;
+        this.tabletopObject.followingCharctorIdentifier = object.identifier;
         this.tabletopObject.following();
       }
     }

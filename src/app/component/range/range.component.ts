@@ -243,7 +243,7 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.range === object || (object instanceof ObjectNode && this.range.contains(object))) {
           this.changeDetector.markForCheck();
         }
-        if( object == this.range.followingCharctor){
+        if( object.identifier == this.range.followingCharctorIdentifier){
           console.log('追従動作');
           this.range.following();
           this.setRange();
@@ -358,11 +358,11 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
     )
     if(this.range.type == 'CIRCLE' || this.range.type == 'SQUARE' || this.range.type == 'DIAMOND'){
       menuArray.push(
-        this.range.followingCharctor
+        ObjectStore.instance.get( this.range.followingCharctorIdentifier) != null
         ? {
           name: '追従を解除', action: () => {
             SoundEffect.play(PresetSound.unlock);
-            this.range.followingCharctor = null;
+            this.range.followingCharctorIdentifier = null;
           }
         }
         : {
@@ -439,8 +439,6 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
   private setRange() {
     let render = new RangeRender(this.gridCanvas.nativeElement,this.rangeCanvas.nativeElement);
 
-//    this.width, this.length, this.gridSize, this.currentTable.gridType, this.currentTable.gridColor
-
     let setting: RangeRenderSetting = {
       areaWidth: this.areaQuadrantSize * 2,
       areaHeight: this.areaQuadrantSize * 2,
@@ -458,9 +456,8 @@ export class RangeComponent implements OnInit, OnDestroy, AfterViewInit {
       offSetY: this.range.offSetY,
       fillOutLine: this.range.fillOutLine,
       gridType: this.currentTable.gridType,
-      isDocking: this.range.followingCharctor ? true : false,
+      isDocking: ObjectStore.instance.get( this.range.followingCharctorIdentifier) ? true : false,
     };
-    console.log('this.range.location.x-y:' + this.range.location.x + ' ' + this.range.location.y);
 
     switch (this.range.type) {
       case 'LINE':

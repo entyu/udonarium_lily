@@ -90,7 +90,7 @@ export class GameTableMaskComponent implements OnInit, OnDestroy, AfterViewInit 
       .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
       });
-    this.movableOption = {
+      this.movableOption = {
       tabletopObject: this.gameTableMask,
       transformCssOffset: 'translateZ(0.15px)',
       colideLayers: ['terrain']

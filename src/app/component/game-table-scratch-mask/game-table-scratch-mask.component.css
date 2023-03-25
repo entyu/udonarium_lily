@@ -1,0 +1,122 @@
+:host {
+  display: block;
+}
+
+.is-grab {
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+.is-grabbing {
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+
+.is-transition {
+  -webkit-transition: -webkit-transform 132ms linear;
+  transition: transform 132ms linear;
+}
+
+.is-3d {
+  transform-style: preserve-3d;
+}
+
+.component {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  backface-visibility: hidden;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  
+  -moz-user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.dummy-will-change {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  will-change: opacity;
+}
+
+.image {
+  display: block;
+}
+
+.lock-icon {
+  background-color: #CCCCCC;
+  border-radius: 100%;
+  color: #444;
+  width: 25px;
+  height: 25px;
+}
+
+.is-center {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.border {
+  box-sizing: border-box;
+  border: solid 2px #CCCC55;
+}
+
+.is-fit-full {
+  height: 100%;
+  width: 100%;
+}
+
+.is-3d {
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.altitude-indicator {
+  padding-left: 2px;
+  font-size: 11px;
+  font-weight: bolder;
+  color: blanchedalmond;
+  text-shadow: #444 0px 0px 3px;
+  backface-visibility: hidden;
+}
+
+.fall {
+  -webkit-transition: transform 132ms ease-in-out;
+  transition: transform 132ms ease-in-out;
+}
+
+.name-tag {
+  box-sizing: border-box;
+  font-size: 15px;
+  padding: 3px 9px;
+  border-radius: 24px;
+  position: absolute;
+  top: 0;
+  color: whitesmoke !important;
+  opacity: 0.9;
+  z-index: 10;
+}
+
+.has-length-limit {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 18em;
+}
+
+.is-nowrap {
+  white-space: nowrap;
+}
+
+.is-black-background {
+  color: #CCC;
+  background-color: rgba(30, 30, 30, 0.8);
+}
