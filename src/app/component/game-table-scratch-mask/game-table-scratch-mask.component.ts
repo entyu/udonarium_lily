@@ -76,6 +76,8 @@ export class GameTableScratchMaskComponent implements OnInit, OnDestroy, AfterVi
   get ownerIsOnline(): boolean { return this.gameTableScratchMask.ownerIsOnline; }
   get ownerName(): string { return this.gameTableScratchMask.ownerName; }
 
+  get isScratchOwner(): boolean { return false; }
+
   get gameTableMaskAltitude(): number {
     return +this.altitude.toFixed(1); 
   }

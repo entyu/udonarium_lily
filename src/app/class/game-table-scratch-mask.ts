@@ -17,6 +17,9 @@ export class GameTableScratchMask extends TabletopObject {
   @SyncVar() M: boolean[] = []; // 保存データ量削減のため1文字変数
   fillMapBack: boolean[] = [];
 
+  @SyncVar() scratchingGrids: string = '';
+  @SyncVar() scratchedGrids: string = '';
+
   @SyncVar() dummy: number = 0;
   private readonly maxSize = 50;
   getMaxSize(): number{ return this.maxSize;}
