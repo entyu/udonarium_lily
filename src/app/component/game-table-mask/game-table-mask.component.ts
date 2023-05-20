@@ -227,7 +227,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
 
   ) { }
 
-
+/*
   ngOnInit() {
     EventSystem.register(this)
       .on('UPDATE_GAME_OBJECT', event => {
@@ -266,7 +266,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   ngOnChanges(): void {
   }
 
-/*
+*/
   ngOnChanges(): void {
     EventSystem.unregister(this);
     EventSystem.register(this)
@@ -302,7 +302,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     };
     this.panelId = UUID.generateUuid();
   }
-*/
+
   ngAfterViewInit() {
     this.ngZone.runOutsideAngular(() => {
       this.input = new InputHandler(this.elementRef.nativeElement);
@@ -365,8 +365,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   scratching(isStart: boolean, position: {offsetX: number, offsetY: number} = null) {
     if (!this.gameTableMask.isMine) return;
     // とりあえず、本当は周辺を表示したい。
-    
-    console.log("scratching X:" + position.offsetX + " Y:" + position.offsetY);
     const tableSelecter = TableSelecter.instance;
     if (!tableSelecter.gridShow) tableSelecter.viewTable.gridClipRect = {
         top: 0,
