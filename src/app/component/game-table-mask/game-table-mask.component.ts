@@ -34,20 +34,10 @@ import { TableSelecter } from '@udonarium/table-selecter';
 import { TabletopActionService } from 'service/tabletop-action.service';
 import { xor } from 'lodash';
 
-/*
 @Component({
   selector: 'game-table-mask',
   templateUrl: './game-table-mask.component.html',
   styleUrls: ['./game-table-mask.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-
-*/
-@Component({
-  selector: 'game-table-mask',
-  templateUrl: './game-table-mask.component.html',
-  styleUrls: ['./game-table-mask.component.css'],
-
   animations: [
     trigger('fadeInOut', [
       transition('void => *', [
@@ -67,12 +57,11 @@ import { xor } from 'lodash';
       transition('scrached<=>restore', [
         animate('132ms ease-in-out', keyframes([
           style({ transform: 'rotateY(0deg)', offset: 0.0 }),
-          style({ transform: 'rotateY(-90deg)', offset: 1.0 })
+          style({ transform: 'rotateY(0deg)', offset: 1.0 })
         ]))
       ])
     ]),
   ],
-
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -105,6 +94,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   get isPreviewMode(): boolean {
     if (!this.gameTableMask) return false;
     return this.isPreview && this.gameTableMask.isMine;
+    return false;
   }
 
   get gameTableMaskAltitude(): number {
@@ -401,7 +391,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     this._scratchingTimerId = setTimeout(() => {
       this.scratchingGrids = Array.from(this._currentScratchingSet).filter(grid => grid && /^\d+:\d+$/.test(grid)).sort().join(',');
       this._currentScratchingSet = null;
-    }, 250);
+    }, 2);
   }
 
   scratched() {
@@ -494,7 +484,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
               clearTimeout(this._scratchingTimerId);
               this._currentScratchingSet = null;
             }
-            this.isPreview = true;
+//            this.isPreview = true;
             SoundEffect.play(PresetSound.cardDraw);
             this.gameTableMask.owner = Network.peerContext.userId;
             this._scratchingGridX = -1;
