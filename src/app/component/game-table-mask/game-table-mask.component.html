@@ -46,42 +46,31 @@
           </g>
         </svg>
       </div>
-<!--      <div *ngIf="isSelected" class="selected-highlight border" [ngClass]="{'is-magnetic': isMagnetic}"></div>-->
     </div>
-    <div *ngIf="!isScratching" class="lock-icon is-center is-3d" style="pointer-events: none; z-index: 10; backface-visibility: hidden">
-      <i class="material-icons" style="pointer-events: none; backface-visibility: hidden">{{ isLock ? 'lock' : 'open_with' }}</i>
+    <div *ngIf="!isScratching" style="pointer-events: none; z-index: 10; backface-visibility: hidden">
+      <div *ngIf="isLock && dispLockMark" class="lock-icon is-center is-3d">
+        <i class="material-icons" style="pointer-events: none; backface-visibility: hidden">lock</i>
+      </div>
     </div>
+<!--
     <div *ngIf="isScratching" class="draw-icon is-center is-3d" style="pointer-events: none; z-index: 10; backface-visibility: hidden" [ngClass]="{'is-mine': gameTableMask.isMine}">
       <i class="material-icons" style="pointer-events: none; backface-visibility: hidden">{{ isPreviewMode ? 'visibility' : 'draw' }}</i>
     </div>
+-->
     <div *ngIf="isScratching && ownerIsOnline" class="scratching is-center is-3d" style="pointer-events: none; z-index: 10; top: -10px; left: 1px; backface-visibility: hidden">
       <div class="name-tag has-length-limit is-nowrap is-black-background" style="color: whitesmoke" [ngStyle]="{'background-color': ownerColor + 'E6'}">
+<!--
+        <div *ngIf="hasOwner && 0 < ownerName.length" class="name-tag is-nowrap has-length-limit is-black-background will-change">
+          <span class="is-3d">{{ownerName}}が編集中</span>
+        </div>
+-->
         <span style="display: inline-block" [ngClass]="{'is-inverse': isInverse}"><i *ngIf="isPreview" style="margin-right: 2px" class="material-icons">visibility</i><b>{{ownerName}}</b> が操作中
           <button *ngIf="gameTableMask.isMine" class="edit-button" (pointerdown)="prevent($event)" (mousedown)="prevent($event)" (click)="scratchDone($event)" [title]="gameTableMask.scratchingGrids ? '確定' : '終了'"><i class="material-icons small-font">done</i></button>
           <button *ngIf="gameTableMask.isMine" class="edit-button" (pointerdown)="prevent($event)" (mousedown)="prevent($event)" (click)="scratchCancel($event)" title="キャンセル"><i class="material-icons small-font">clear</i></button>
         </span>
       </div>
     </div>
-<!--
-<div class="component is-3d" [ngClass]="{'is-grab': !isLock}" style="pointer-events: none"
-  [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
-  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
-  <div class="border is-fit-full" style="backface-visibility: hidden" [ngClass]="{fall: altitude == 0}" 
-    [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
-    <div class="is-fit-full is-3d chrome-smooth-image-trick"
-      style="pointer-events: auto"
-      [style.opacity]="opacity"
-      [style.background-color]="imageFile.url.length < 1 ? '#0a0a0a' : null"
-      [ngClass]="{image: imageFile.url.length >= 1}">
-      <img *ngIf="imageFile.url.length >= 1" class="is-fit-full is-3d chrome-smooth-image-trick" style="pointer-events: none; position: absolute;" [src]="imageFile.url | safe: 'resourceUrl'">
-    </div>
-    <div *ngIf="isLock && dispLockMark" class="lock-icon is-center">
-      <i class="material-icons">lock</i>
-    </div>
   </div>
--->
-
-
   <div class="is-3d" *ngIf="isAltitudeIndicate && math.abs(gameTableMaskAltitude) >= 0.5"
     style="display: flex; align-items: center; border-left: 2px dashed blanchedalmond; transform-origin: top left; pointer-events: none"
     [style.height.px]="math.abs(gameTableMaskAltitude * gridSize)"

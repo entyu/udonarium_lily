@@ -248,14 +248,24 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     };
   }
 */
+
   ngOnChanges(): void {
     EventSystem.unregister(this);
     EventSystem.register(this)
+/*
       .on(`UPDATE_GAME_OBJECT/identifier/${this.gameTableMask?.identifier}`, event => {
         this.changeDetector.markForCheck();
       })
       .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.gameTableMask?.identifier}`, event => {
         this.changeDetector.markForCheck();
+      })
+*/
+      .on('UPDATE_GAME_OBJECT', event => {
+        let object = ObjectStore.instance.get(event.data.identifier);
+        if (!this.gameTableMask || !object) return;
+        if (this.gameTableMask === object || (object instanceof ObjectNode && this.gameTableMask.contains(object))) {
+          this.changeDetector.markForCheck();
+        }
       })
       .on('CHANGE_GM_MODE', event => {
         this.changeDetector.markForCheck();
@@ -469,18 +479,24 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
       if (!this.gameTableMask.isMine) {
         menuArray.push({
           name: 'スクラッチ開始', action: () => {
-//            this.isScratch = true;
-//            this.gameTableMask.copyMain2BackMap();
-
+            if (this.gameTableMask.owner != '') {
+              this.isPreview = false;
+              clearTimeout(this._scratchingTimerId);
+              this._currentScratchingSet = null;
+            }
+            this.isPreview = true;
             SoundEffect.play(PresetSound.cardDraw);
             this.gameTableMask.owner = Network.peerContext.userId;
+            this._scratchingGridX = -1;
+            this._scratchingGridY = -1;
+            SoundEffect.play(PresetSound.lock);
           }
         });
       }else{
         menuArray.push({
           name: 'スクラッチ確定', action: () => {
-//            this.scratchUpdate();
-//            this.isScratch = false;
+            this.scratchDone();
+            this.isPreview = false;
             this.gameTableMask.owner = '';
           }
         });
@@ -499,7 +515,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
       
       menuArray.push( ContextMenuSeparator);
       menuArray.push( 
-        { name: 'スクラッチマスクを編集', action: () => { this.showDetail(this.gameTableMask); } }
+        { name: 'マスクを編集', action: () => { this.showDetail(this.gameTableMask); } }
       );
       menuArray.push( 
         {name: 'コピーを作る', action: () => {
