@@ -24,7 +24,7 @@ import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { ModalService } from 'service/modal.service';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { CoordinateService } from 'service/coordinate.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
@@ -47,6 +47,7 @@ import { xor } from 'lodash';
   selector: 'game-table-mask',
   templateUrl: './game-table-mask.component.html',
   styleUrls: ['./game-table-mask.component.css'],
+
   animations: [
     trigger('fadeInOut', [
       transition('void => *', [
@@ -71,6 +72,7 @@ import { xor } from 'lodash';
       ])
     ]),
   ],
+
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -225,41 +227,9 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
 
   ) { }
 
-/*
+
   ngOnInit() {
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', event => {
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.gameTableMask || !object) return;
-        if (this.gameTableMask === object || (object instanceof ObjectNode && this.gameTableMask.contains(object))) {
-          this.changeDetector.markForCheck();
-        }
-      })
-      .on('SYNCHRONIZE_FILE_LIST', event => {
-        this.changeDetector.markForCheck();
-      })
-      .on('UPDATE_FILE_RESOURE', event => {
-        this.changeDetector.markForCheck();
-      });
-      this.movableOption = {
-      tabletopObject: this.gameTableMask,
-      transformCssOffset: 'translateZ(0.15px)',
-      colideLayers: ['terrain']
-    };
-  }
-*/
-
-  ngOnChanges(): void {
-    EventSystem.unregister(this);
-    EventSystem.register(this)
-/*
-      .on(`UPDATE_GAME_OBJECT/identifier/${this.gameTableMask?.identifier}`, event => {
-        this.changeDetector.markForCheck();
-      })
-      .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.gameTableMask?.identifier}`, event => {
-        this.changeDetector.markForCheck();
-      })
-*/
       .on('UPDATE_GAME_OBJECT', event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.gameTableMask || !object) return;
@@ -293,6 +263,46 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     this.panelId = UUID.generateUuid();
   }
 
+  ngOnChanges(): void {
+  }
+
+/*
+  ngOnChanges(): void {
+    EventSystem.unregister(this);
+    EventSystem.register(this)
+      .on('UPDATE_GAME_OBJECT', event => {
+        let object = ObjectStore.instance.get(event.data.identifier);
+        if (!this.gameTableMask || !object) return;
+        if (this.gameTableMask === object || (object instanceof ObjectNode && this.gameTableMask.contains(object))) {
+          this.changeDetector.markForCheck();
+        }
+      })
+      .on('CHANGE_GM_MODE', event => {
+        this.changeDetector.markForCheck();
+      })
+      .on('SYNCHRONIZE_FILE_LIST', event => {
+        this.changeDetector.markForCheck();
+      })
+      .on('UPDATE_FILE_RESOURE', event => {
+        this.changeDetector.markForCheck();
+      })
+      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
+        this.ngZone.run(() => {
+          this.viewRotateZ = event.data['z'];
+          this.changeDetector.markForCheck();
+        });
+      })
+      .on(`UPDATE_SELECTION/identifier/${this.gameTableMask?.identifier}`, event => {
+        this.changeDetector.markForCheck();
+      });
+    this.movableOption = {
+      tabletopObject: this.gameTableMask,
+      transformCssOffset: 'translateZ(0.10px)',
+      colideLayers: ['terrain']
+    };
+    this.panelId = UUID.generateUuid();
+  }
+*/
   ngAfterViewInit() {
     this.ngZone.runOutsideAngular(() => {
       this.input = new InputHandler(this.elementRef.nativeElement);
@@ -355,6 +365,8 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   scratching(isStart: boolean, position: {offsetX: number, offsetY: number} = null) {
     if (!this.gameTableMask.isMine) return;
     // とりあえず、本当は周辺を表示したい。
+    
+    console.log("scratching X:" + position.offsetX + " Y:" + position.offsetY);
     const tableSelecter = TableSelecter.instance;
     if (!tableSelecter.gridShow) tableSelecter.viewTable.gridClipRect = {
         top: 0,

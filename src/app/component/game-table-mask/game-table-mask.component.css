@@ -14,6 +14,10 @@
   cursor: grabbing;
 }
 
+.is-scratching {
+  cursor: pointer;
+}
+
 .is-transition {
   -webkit-transition: -webkit-transform 132ms linear;
   transition: transform 132ms linear;
@@ -36,23 +40,38 @@
   -webkit-user-drag: none;
 }
 
-.dummy-will-change {
-  position: absolute;
-  height: 1px;
-  width: 1px;
-  will-change: opacity;
-}
-
 .image {
   display: block;
+  box-sizing: border-box;
 }
 
-.lock-icon {
+.lock-icon, .draw-icon {
   background-color: #CCCCCC;
   border-radius: 100%;
   color: #444;
   width: 25px;
   height: 25px;
+}
+
+/*
+.lock-icon {
+  visibility: hidden;
+}
+.component:hover .lock-icon, .component:active .lock-icon {
+  visibility: visible;
+}
+*/
+
+.lock-icon {
+  visibility: visible;
+}
+
+.scratching, .draw-icon {
+  visibility: visible;
+}
+.component:hover .scratching.is-mine, .component:active .scratching.is-mine,
+.component:hover .draw-icon.is-mine, .component:active .draw-icon.is-mine {
+  visibility: hidden;
 }
 
 .is-center {
@@ -64,9 +83,15 @@
   margin: auto;
 }
 
-.border {
-  box-sizing: border-box;
-  border: solid 2px #CCCCCC;
+.image.border {
+  border-width: 0px;
+} 
+
+.component:hover .border, 
+.component:active .border,
+.is-border .border {
+  outline: 2px solid #CCC !important;
+  outline-offset: -2px;
 }
 
 .is-fit-full {
@@ -91,4 +116,191 @@
 .fall {
   -webkit-transition: transform 132ms ease-in-out;
   transition: transform 132ms ease-in-out;
+}
+
+.text {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: bolder;
+  text-align: center;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-size: 24px;
+  color: #444;
+  z-index: 5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px, 
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px,
+  #fff 0px 0px 2px;
+}
+
+.is-inverse {
+  transform: rotateZ(180deg);
+}
+
+.scratching-area {
+  overflow: hidden;
+}
+
+/*
+.scratching-mark.scratching::before,
+.scratching-mark.scratching::after,
+.scratching-mark.scratching2::before,
+.scratching-mark.scratching2::after,
+.scratching-mark.restore::before,
+.scratching-mark.restore::after,
+.scratching-mark.restore2::before,
+.scratching-mark.restore2::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 2px;
+}
+.scratching-mark.scratching::before,
+.scratching-mark.scratching::after {
+  width: 6px;
+  height: 51px;
+
+}
+.scratching-mark.scratching2::before,
+.scratching-mark.scratching2::after {
+  width: 4px;
+  height: 49px;
+}
+
+.scratching-mark.restore::before,
+.scratching-mark.restore::after {
+  width: 6px;
+  height: 26px;
+}
+.scratching-mark.restore2::before,
+.scratching-mark.restore2::after {
+  width: 4px;
+  height: 24px;
+}
+
+.scratching-mark.scratching::before,
+.scratching-mark.scratching2::before {
+  transform: translate(-50%,-50%) rotate(45deg);
+}
+.scratching-mark.scratching::after,
+.scratching-mark.scratching2::after {
+  transform: translate(-50%,-50%) rotate(-45deg);
+}
+.scratching-mark.restore::before,
+.scratching-mark.restore2::before {
+  transform: translate(-50%,-50%);
+}
+.scratching-mark.restore::after,
+.scratching-mark.restore2::after {
+  transform: translate(-50%,-50%) rotate(90deg);
+}
+
+.scratching-mark.restore,
+.scratching-mark.scratched {
+  border: 3px solid;
+  border-radius: 2px;
+}
+
+.scratching-mark.scratching::before,
+.scratching-mark.scratching::after {
+  background-color: #222;
+}
+.scratching-mark.scratching2::before,
+.scratching-mark.scratching2::after {
+  background-color: rgb(255, 62, 62);
+}
+
+.scratching-mark.scratched {
+  border-color: rgb(255, 62, 62);
+}
+.scratching-mark.restore::before,
+.scratching-mark.restore::after {
+  background-color: #222;
+}
+.scratching-mark.restore2::before,
+.scratching-mark.restore2::after {
+  background-color: rgb(128, 152, 255);
+}
+.scratching-mark.restore {
+  border-color: rgb(128, 152, 255);
+  box-shadow: 0px 0px 0px 1px #222,
+    inset 0px 0px 0px 1px #222;
+}
+*/
+.name-tag {
+  font-size: 15px;
+  padding: 3px 9px;
+  border-radius: 24px;
+  pointer-events: none;
+  display: inline-block;
+}
+
+.component:hover .is-mine, 
+.component:active .is-mine {
+  visibility: hidden;
+}
+
+.has-length-limit {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 18em;
+}
+
+.is-nowrap {
+  white-space: nowrap;
+}
+
+.is-black-background {
+  color: #CCC;
+  background-color: rgba(30, 30, 30, 0.8);
+}
+
+.name-tag .material-icons {
+  font-size: 16px;
+  display: inline-block;
+  position: relative;
+  vertical-align: text-bottom;
+}
+
+.small-font {
+  font-size: 14px;
+  vertical-align: bottom;
+}
+.edit-button {
+  padding: 0px 4px;
+  vertical-align: 10%;
+  margin: 0px 1px 0px 0px;
+  pointer-events: auto;
+}
+.selected-highlight {
+  pointer-events: none;
+  backface-visibility: hidden;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: hsla(200, 100%, 75%, 0.6);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.selected-highlight.is-magnetic {
+  background-color: hsla(60, 100%, 75%, 0.6);
 }

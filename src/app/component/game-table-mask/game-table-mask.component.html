@@ -2,7 +2,7 @@
 <div class="dummy-will-change" appMovable [movable.option]="movableOption">
 </div>
 
-<div class="component is-3d" [ngClass]="{'is-grab': !isLock && !isScratching, 'is-scratching': isScratching && gameTableMask.isMine, 'is-border': !isLock || isScratching }" style="pointer-events: none"
+<div class="component is-3d" [ngClass]="{'is-grab': !isLock && !isScratching, 'is-scratching': isScratching && gameTableMask.isMine, 'is-border': true }" style="pointer-events: none"
   [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
   appMovable [movable.option]="movableOption" [movable.disable]="isLock || isScratching" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div class="is-fit-full is-3d" style="pointer-events: none"  [ngClass]="{fall: altitude == 0}" [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
@@ -47,7 +47,7 @@
         </svg>
       </div>
     </div>
-    <div *ngIf="!isScratching" style="pointer-events: none; z-index: 10; backface-visibility: hidden">
+    <div *ngIf="1" style="pointer-events: none; z-index: 10; backface-visibility: hidden">
       <div *ngIf="isLock && dispLockMark" class="lock-icon is-center is-3d">
         <i class="material-icons" style="pointer-events: none; backface-visibility: hidden">lock</i>
       </div>
@@ -64,7 +64,7 @@
           <span class="is-3d">{{ownerName}}が編集中</span>
         </div>
 -->
-        <span style="display: inline-block" [ngClass]="{'is-inverse': isInverse}"><i *ngIf="isPreview" style="margin-right: 2px" class="material-icons">visibility</i><b>{{ownerName}}</b> が操作中
+        <span style="display: inline-block" [ngClass]="{'is-inverse': isInverse}"><b>{{ownerName}}</b> が操作中
           <button *ngIf="gameTableMask.isMine" class="edit-button" (pointerdown)="prevent($event)" (mousedown)="prevent($event)" (click)="scratchDone($event)" [title]="gameTableMask.scratchingGrids ? '確定' : '終了'"><i class="material-icons small-font">done</i></button>
           <button *ngIf="gameTableMask.isMine" class="edit-button" (pointerdown)="prevent($event)" (mousedown)="prevent($event)" (click)="scratchCancel($event)" title="キャンセル"><i class="material-icons small-font">clear</i></button>
         </span>
