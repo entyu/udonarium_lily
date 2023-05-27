@@ -10,6 +10,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  
 } from '@angular/core';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -39,6 +40,7 @@ import { xor } from 'lodash';
   templateUrl: './game-table-mask.component.html',
   styleUrls: ['./game-table-mask.component.css'],
   animations: [
+
     trigger('fadeInOut', [
       transition('void => *', [
         animate('132ms ease-out', keyframes([
@@ -53,19 +55,27 @@ import { xor } from 'lodash';
         ]))
       ])
     ]),
+    
+//      transition('scrached<=>restore', [
+    
+
     trigger('rotateInOut', [
-      transition('scrached<=>restore', [
+
+      transition('void<=>*', [
         animate('132ms ease-in-out', keyframes([
           style({ transform: 'rotateY(0deg)', offset: 0.0 }),
-          style({ transform: 'rotateY(0deg)', offset: 1.0 })
+          style({ transform: 'rotateY(-90deg)', offset: 1.0 })
         ]))
       ])
     ]),
+
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewInit {
+//  @ViewChild('elementToDetach') elementToDetach: ElementRef;
+
   @Input() gameTableMask: GameTableMask = null;
   @Input() is3D: boolean = false;
 
@@ -144,6 +154,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   }
 
   get scratchingGridInfos(): {x: number, y: number, state: string}[] {
+    console.log("scratchingGridInfos");
     const ret: {x: number, y: number, state: string}[] = [];
     if (!this.gameTableMask || (this.isNonScratching && this.isNonScratched)) return ret;
     const scratchingGridSet: Set<string> = this._currentScratchingSet ? this._currentScratchingSet : new Set(this.scratchingGrids.split(/,/g));
@@ -164,7 +175,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   }
 
   get operateOpacity(): number {
-    const ret = this.opacity * ((this.isPreview && this.gameTableMask.isMine) ? 0.6 : 1);
+    const ret = this.opacity * ((this.gameTableMask.isMine) ? 0.6 : 1);
     return (ret < 0.4 && this.isScratching) ? 0.4 : ret;
   }
 
@@ -205,15 +216,17 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
 
 
   constructor(
-
     private ngZone: NgZone,
     private tabletopActionService: TabletopActionService,
     private contextMenuService: ContextMenuService,
     private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
+//    private selectionService: TabletopSelectionService,
     private pointerDeviceService: PointerDeviceService,
+    private modalService: ModalService,
     private coordinateService: CoordinateService,
+//    private chatMessageService: ChatMessageService
 
   ) { }
 
@@ -260,6 +273,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   ngOnChanges(): void {
     EventSystem.unregister(this);
     EventSystem.register(this)
+
       .on('UPDATE_GAME_OBJECT', event => {
         let object = ObjectStore.instance.get(event.data.identifier);
         if (!this.gameTableMask || !object) return;
@@ -267,6 +281,14 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
           this.changeDetector.markForCheck();
         }
       })
+/*
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.gameTableMask?.identifier}`, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.gameTableMask?.identifier}`, event => {
+        this.changeDetector.markForCheck();
+      })
+*/
       .on('CHANGE_GM_MODE', event => {
         this.changeDetector.markForCheck();
       })
@@ -279,7 +301,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {
           this.viewRotateZ = event.data['z'];
-          this.changeDetector.markForCheck();
+//          this.changeDetector.markForCheck();
         });
       })
       .on(`UPDATE_SELECTION/identifier/${this.gameTableMask?.identifier}`, event => {
@@ -348,6 +370,11 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     if (this.isScratching && this.gameTableMask.isMine && this.input.isDragging && e.buttons < 2) {
       this.scratching(false, {offsetX: e.offsetX, offsetY: e.offsetY});
     }
+    if (this.isScratching && this.gameTableMask.isMine){
+      console.log("onInputMovePointer");
+    }
+    e.stopPropagation();
+    e.preventDefault();
   }
 
   private _currentScratchingSet: Set<string>;
@@ -391,7 +418,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     this._scratchingTimerId = setTimeout(() => {
       this.scratchingGrids = Array.from(this._currentScratchingSet).filter(grid => grid && /^\d+:\d+$/.test(grid)).sort().join(',');
       this._currentScratchingSet = null;
-    }, 2);
+    }, 250);
   }
 
   scratched() {
@@ -588,6 +615,11 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     SoundEffect.play(PresetSound.unlock);
 //    this.chatMessageService.sendOperationLog(`${ this.gameTableMask.name == '' ? '(無名のマップマスク)' : this.gameTableMask.name } のスクラッチを終了した`);
     return false;
+  }
+
+  prevent(e) {
+    e.preventDefault();
+    e.stopPropagation();
   }
 
   private adjustMinBounds(value: number, min: number = 0): number {
