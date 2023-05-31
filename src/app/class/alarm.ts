@@ -16,6 +16,10 @@ import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 
 import { PanelOption, PanelService } from 'service/panel.service';
 
+import { AudioFile } from './core/file-storage/audio-file';
+import { AudioPlayer } from './core/file-storage/audio-player';
+import { AudioStorage } from './core/file-storage/audio-storage';
+
 export interface AlarmContext {
   peerId: string;
 }
@@ -57,18 +61,13 @@ export class Alarm extends GameObject {
   }
 
   startAlarm(){
-    if(this.alarmPeerId == this.myPeer.peerId){
-      let text_ = 'アラーム(' + this.alarmTime + '秒)経過' + this.targetText + this.alarmTitle;
-      setTimeout(() => {
-        EventSystem.trigger('ALARM_TIMEUP_ORIGIN', { text : text_ });
-      }, this.alarmTime * 1000);
-    }
-
     if(this.chkToMe()){
       setTimeout(() => {
         if(this.isSound ){
+          let text_ = 'アラーム(' + this.alarmTime + '秒)経過' + this.targetText + this.alarmTitle;
+          EventSystem.trigger('ALARM_TIMEUP_ORIGIN', { text : text_ });
+          AudioPlayer.play(AudioStorage.instance.get(PresetSound.alarm), 0.5);
           console.log('アラーム音再生');
-          SoundEffect.play(PresetSound.alarm);
         }
         if(this.isPopUp ){
           console.log('アラーム ポップアップ再生');
