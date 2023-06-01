@@ -40,8 +40,8 @@ import { xor } from 'lodash';
   templateUrl: './game-table-mask.component.html',
   styleUrls: ['./game-table-mask.component.css'],
   animations: [
-
     trigger('fadeInOut', [
+    
       transition('void => *', [
         animate('132ms ease-out', keyframes([
           style({ opacity: 0, offset: 0 }),
@@ -54,21 +54,18 @@ import { xor } from 'lodash';
           style({ opacity: 0, offset: 1.0 })
         ]))
       ])
-    ]),
-    
-//      transition('scrached<=>restore', [
-    
 
+    ]),
     trigger('rotateInOut', [
 
-      transition('void<=>*', [
+      transition('scrached<=>restore', [
         animate('132ms ease-in-out', keyframes([
           style({ transform: 'rotateY(0deg)', offset: 0.0 }),
           style({ transform: 'rotateY(-90deg)', offset: 1.0 })
         ]))
       ])
-    ]),
 
+    ]),
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -273,22 +270,12 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   ngOnChanges(): void {
     EventSystem.unregister(this);
     EventSystem.register(this)
-
-      .on('UPDATE_GAME_OBJECT', event => {
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.gameTableMask || !object) return;
-        if (this.gameTableMask === object || (object instanceof ObjectNode && this.gameTableMask.contains(object))) {
-          this.changeDetector.markForCheck();
-        }
-      })
-/*
       .on(`UPDATE_GAME_OBJECT/identifier/${this.gameTableMask?.identifier}`, event => {
         this.changeDetector.markForCheck();
       })
       .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.gameTableMask?.identifier}`, event => {
         this.changeDetector.markForCheck();
       })
-*/
       .on('CHANGE_GM_MODE', event => {
         this.changeDetector.markForCheck();
       })
@@ -301,7 +288,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
       .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
         this.ngZone.run(() => {
           this.viewRotateZ = event.data['z'];
-//          this.changeDetector.markForCheck();
+          this.changeDetector.markForCheck();
         });
       })
       .on(`UPDATE_SELECTION/identifier/${this.gameTableMask?.identifier}`, event => {
