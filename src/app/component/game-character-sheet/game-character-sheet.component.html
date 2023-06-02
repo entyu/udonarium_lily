@@ -201,7 +201,7 @@
       </datalist>
 -->
       塗りつぶし
-      <input type="color" name="color02" list="color-list_02" (change)="changeMaskFillColor($event.target.value)" value="{{tabletopObject.gridColor}}">
+      <input type="color" name="color02" list="color-list_02" (change)="changeGridColor($event.target.value)" value="{{tabletopObject.gridColor}}">
 <!-- クローム側の更新都合による現象でリスト設定の値が正常に入らなくなったため一時的にリスト設定を辞める
       <datalist id="color-list_02">
         <option value="#000000">

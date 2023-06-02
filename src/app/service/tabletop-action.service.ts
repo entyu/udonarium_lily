@@ -497,7 +497,6 @@ export class TabletopActionService {
     return [
       this.getCreateCharacterMenu(position),
       this.getCreateTableMaskMenu(position),
-      this.getCreateTableScratchMaskMenu(position),
       this.getCreateTerrainMenu(position),
       this.getCreateTextNoteMenu(position),
       this.getCreateTrumpMenu(position),
@@ -520,15 +519,6 @@ export class TabletopActionService {
     return {
       name: 'マップマスクを作成', action: () => {
         this.createGameTableMask(position);
-        SoundEffect.play(PresetSound.cardPut);
-      }
-    }
-  }
-
-  private getCreateTableScratchMaskMenu(position: PointerCoordinate): ContextMenuAction {
-    return {
-      name: 'スクラッチマスクを作成', action: () => {
-        this.createGameTableScratchMask(position);
         SoundEffect.play(PresetSound.cardPut);
       }
     }

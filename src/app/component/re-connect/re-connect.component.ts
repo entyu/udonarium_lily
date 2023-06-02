@@ -213,7 +213,7 @@ export class ReConnectComponent implements OnInit, OnDestroy {
       obj.setLocation('graveyard'); 
       this.deleteGameObject(obj);
     }
-
+/* //カード関連は後日の課題とする
     let cardStack = ObjectStore.instance.getObjects<CardStack>(CardStack);
     for(let obj of cardStack){
       obj.setLocation('graveyard'); 
@@ -225,7 +225,7 @@ export class ReConnectComponent implements OnInit, OnDestroy {
       obj.setLocation('graveyard'); 
       this.deleteGameObject(obj);
     }
-
+*/
     let diceSymbol = ObjectStore.instance.getObjects<DiceSymbol>(DiceSymbol);
     for(let obj of diceSymbol){
       obj.setLocation('graveyard');

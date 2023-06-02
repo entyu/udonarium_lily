@@ -1,20 +1,63 @@
 <!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
 <div class="dummy-will-change" appMovable [movable.option]="movableOption">
 </div>
-<div class="component is-3d" [ngClass]="{'is-grab': !isLock}" style="pointer-events: none"
+
+<div class="component is-3d" [ngClass]="{'is-grab': !isLock && !isScratching, 'is-scratching': isScratching && gameTableMask.isMine, 'is-border': true }" style="pointer-events: none"
   [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
-  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
-  <div class="border is-fit-full" style="backface-visibility: hidden" [ngClass]="{fall: altitude == 0}" 
-    [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
-    <div class="is-fit-full is-3d chrome-smooth-image-trick"
-      style="pointer-events: auto"
-      [style.opacity]="opacity"
-      [style.background-color]="imageFile.url.length < 1 ? '#0a0a0a' : null"
-      [ngClass]="{image: imageFile.url.length >= 1}">
-      <img *ngIf="imageFile.url.length >= 1" class="is-fit-full is-3d chrome-smooth-image-trick" style="pointer-events: none; position: absolute;" [src]="imageFile.url | safe: 'resourceUrl'">
+  appMovable [movable.option]="movableOption" [movable.disable]="isLock || isScratching" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
+  <div class="is-fit-full is-3d" style="pointer-events: none"  [ngClass]="{fall: altitude == 0}" [ngStyle]="{'transform': 'translateZ(' + (altitude * gridSize) + 'px)'}">
+
+    <div class="is-fit-full is-3d">
+      <div class="is-fit-full is-3d chrome-smooth-image-trick" style="pointer-events: auto; position: absolute; backface-visibility: hidden"
+        [ngStyle]="{'opacity': operateOpacity, 'background-color': imageFile.url.length < 1 ? bgcolor : null, '-webkit-mask': masksCss, mask: masksCss}"
+        [ngClass]="{image: imageFile.url.length >= 1}">
+        <img *ngIf="imageFile.url.length >= 1" class="is-fit-full is-3d chrome-smooth-image-trick" style="pointer-events: none; position: absolute;" [style.mix-blend-mode]="blendType == 1 ? null : 'hard-light'" [src]="imageFile.url | safe: 'resourceUrl'">
+      </div>
+      <div class="is-fit-full is-3d scratching-area border" style="pointer-events: none; backface-visibility: hidden">
+        <svg *ngIf="isScratching" @fadeInOut [attr.width]="width * gridSize" [attr.height]="height * gridSize" [attr.viewBox]="'0, 0, ' + (width * gridSize) + ', ' + (height * gridSize)" #elementToDetach>
+          <g *ngFor="let gridInfo of scratchingGridInfos; trackBy: identify" [@rotateInOut]="gridInfo.state" [style.transform-origin]="((gridInfo.x + 0.5) * gridSize) + 'px ' + ((gridInfo.y + 0.5) * gridSize) + 'px'">
+            <desc>{{ gridInfo.state }}</desc>
+            <ng-container [ngSwitch]="gridInfo.state">
+              <ng-container *ngSwitchCase="'scrached'">
+                <rect [attr.x]="gridInfo.x * gridSize + 5" [attr.y]="gridInfo.y * gridSize + 5" [attr.width]="gridSize - 10" [attr.height]="gridSize - 10" fill="none" stroke="#22222288" stroke-width="5" stroke-linejoin="round" />
+                <rect [attr.x]="gridInfo.x * gridSize + 5" [attr.y]="gridInfo.y * gridSize + 5" [attr.width]="gridSize - 10" [attr.height]="gridSize - 10" fill="none" stroke="#ff3e3e" stroke-width="4" stroke-linejoin="round" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'scraching'">
+                <line [attr.x1]="gridInfo.x * gridSize + 5" [attr.y1]="gridInfo.y * gridSize + 5" [attr.x2]="gridInfo.x * gridSize + (gridSize - 5)" [attr.y2]="gridInfo.y * gridSize + (gridSize - 5)" stroke="#22222288" stroke-width="6" stroke-linecap="round" />
+                <line [attr.x1]="gridInfo.x * gridSize + (gridSize - 5)" [attr.y1]="gridInfo.y * gridSize + 5" [attr.x2]="gridInfo.x * gridSize + 5" [attr.y2]="gridInfo.y * gridSize + (gridSize - 5)" stroke="#22222288" stroke-width="6" stroke-linecap="round" />
+                <line [attr.x1]="gridInfo.x * gridSize + 5" [attr.y1]="gridInfo.y * gridSize + 5" [attr.x2]="gridInfo.x * gridSize + (gridSize - 5)" [attr.y2]="gridInfo.y * gridSize + (gridSize - 5)" stroke="#ff3e3e" stroke-width="4" stroke-linecap="round" />
+                <line [attr.x1]="gridInfo.x * gridSize + (gridSize - 5)" [attr.y1]="gridInfo.y * gridSize + 5" [attr.x2]="gridInfo.x * gridSize + 5" [attr.y2]="gridInfo.y * gridSize + (gridSize - 5)" stroke="#ff3e3e" stroke-width="4" stroke-linecap="round" />
+              </ng-container>
+              <ng-container *ngSwitchCase="'restore'">
+                <rect [attr.x]="gridInfo.x * gridSize + 5" [attr.y]="gridInfo.y * gridSize + 5" [attr.width]="gridSize - 10" [attr.height]="gridSize - 10" fill="none" stroke="#22222288" stroke-width="6" stroke-linejoin="round" />
+                <line [attr.x1]="gridInfo.x * gridSize + 15" [attr.y1]="gridInfo.y * gridSize + 25" [attr.x2]="gridInfo.x * gridSize + 35" [attr.y2]="gridInfo.y * gridSize + 25" stroke="#22222288" stroke-width="6" stroke-linecap="round" />
+                <line [attr.x1]="gridInfo.x * gridSize + 25" [attr.y1]="gridInfo.y * gridSize + 15" [attr.x2]="gridInfo.x * gridSize + 25" [attr.y2]="gridInfo.y * gridSize + 35" stroke="#22222288" stroke-width="6" stroke-linecap="round" />
+                <rect [attr.x]="gridInfo.x * gridSize + 5" [attr.y]="gridInfo.y * gridSize + 5" [attr.width]="gridSize - 10" [attr.height]="gridSize - 10" fill="none" stroke="#8098ff" stroke-width="4" stroke-linejoin="round" />
+                <line [attr.x1]="gridInfo.x * gridSize + 15" [attr.y1]="gridInfo.y * gridSize + 25" [attr.x2]="gridInfo.x * gridSize + 35" [attr.y2]="gridInfo.y * gridSize + 25" stroke="#8098ff" stroke-width="4" stroke-linecap="round" />
+                <line [attr.x1]="gridInfo.x * gridSize + 25" [attr.y1]="gridInfo.y * gridSize + 15" [attr.x2]="gridInfo.x * gridSize + 25" [attr.y2]="gridInfo.y * gridSize + 35" stroke="#8098ff" stroke-width="4" stroke-linecap="round" />
+              </ng-container>
+            </ng-container>
+          </g>
+        </svg>        
+      </div>
     </div>
-    <div *ngIf="isLock && dispLockMark" class="lock-icon is-center">
-      <i class="material-icons">lock</i>
+    <div *ngIf="1" style="pointer-events: none; z-index: 10; backface-visibility: hidden">
+      <div *ngIf="isLock && dispLockMark" class="lock-icon is-center is-3d">
+        <i class="material-icons" style="pointer-events: none; backface-visibility: hidden">lock</i>
+      </div>
+    </div>
+<!--
+    <div *ngIf="isScratching" class="draw-icon is-center is-3d" style="pointer-events: none; z-index: 10; backface-visibility: hidden" [ngClass]="{'is-mine': gameTableMask.isMine}">
+      <i class="material-icons" style="pointer-events: none; backface-visibility: hidden">{{ isPreviewMode ? 'visibility' : 'draw' }}</i>
+    </div>
+-->
+    <div *ngIf="isScratching && ownerIsOnline" class="scratching is-center is-3d" style="pointer-events: none; z-index: 10; top: -10px; left: 1px; backface-visibility: hidden">
+      <div class="name-tag has-length-limit is-nowrap is-black-background" style="color: whitesmoke" [ngStyle]="{'background-color': ownerColor + 'E6'}">
+        <span style="display: inline-block" [ngClass]="{'is-inverse': isInverse}"><b>{{ownerName}}</b> が操作中
+          <button *ngIf="gameTableMask.isMine" class="edit-button" (pointerdown)="prevent($event)" (mousedown)="prevent($event)" (click)="scratchDone($event)" [title]="gameTableMask.scratchingGrids ? '確定' : '終了'"><i class="material-icons small-font">done</i></button>
+          <button *ngIf="gameTableMask.isMine" class="edit-button" (pointerdown)="prevent($event)" (mousedown)="prevent($event)" (click)="scratchCancel($event)" title="キャンセル"><i class="material-icons small-font">clear</i></button>
+        </span>
+      </div>
     </div>
   </div>
   <div class="is-3d" *ngIf="isAltitudeIndicate && math.abs(gameTableMaskAltitude) >= 0.5"

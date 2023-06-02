@@ -33,7 +33,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.transformCssOffset = option.transformCssOffset != null ? option.transformCssOffset : this.transformCssOffset;
   }
   @Input('movable.disable') isDisable: boolean = false;
-  @Input('movable.scratch') isScratch: boolean = false;
+  @Input('movable.scratch_owner') isScratcOwner: boolean = false;
 
   @Output('movable.onstart') onstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondragstart') ondragstart: EventEmitter<PointerEvent> = new EventEmitter();
@@ -168,7 +168,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
     this.callSelectedEvent();
     if (this.collidableElements.length < 1) this.findCollidableElements(); // 稀にcollidableElementsの取得に失敗している
 
-    if ((this.isDisable && !this.isScratch )|| (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
+    if ((this.isDisable && !this.isScratcOwner )|| (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
     this.onstart.emit(e as PointerEvent);
 
     this.setPointerEvents(false);
@@ -197,7 +197,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
 
     this.targetStartRect = this.nativeElement.getBoundingClientRect();
     
-    if(this.isScratch){
+    if(this.isScratcOwner){
       this.scratchObjectPosition(true);
     }
 
@@ -209,7 +209,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
       return this.cancel(); // todo
     }
 
-    if ((this.isDisable && !this.isScratch) || !this.input.isGrabbing) return this.cancel();
+    if ((this.isDisable && !this.isScratcOwner) || !this.input.isGrabbing) return this.cancel();
     
     if (e.cancelable) e.preventDefault();
 
@@ -242,7 +242,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
       this.ratio += (ratio - this.ratio) * 0.1;
     }
 
-    if(!this.isScratch){  //スクラッチマスク用の処理スキップ
+    if(!this.isScratcOwner){  //スクラッチマスク用の処理スキップ
       this.posX = pointer3d.x;
       this.posY = pointer3d.y;
       this.posZ = pointer3d.z;
@@ -254,7 +254,7 @@ export class MovableDirective implements AfterViewInit, OnDestroy {
   onInputEnd(e: MouseEvent | TouchEvent) {
     if (this.isDisable) return this.cancel();
     if (this.input.isDragging) this.ondragend.emit(e as PointerEvent);
-    if (this.isGridSnap && this.input.isDragging && !this.isScratch) this.snapToGrid();
+    if (this.isGridSnap && this.input.isDragging && !this.isScratcOwner) this.snapToGrid();
     this.cancel();
     this.onend.emit(e as PointerEvent);
   }
