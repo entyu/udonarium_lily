@@ -370,6 +370,8 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     if (!this.gameTableMask.isMine) return;
     // とりあえず、本当は周辺を表示したい。
     const tableSelecter = TableSelecter.instance;
+    
+    console.log("tableSelecter.gridShow");
     if (!tableSelecter.gridShow) tableSelecter.viewTable.gridClipRect = {
         top: 0,
         right: 0,
