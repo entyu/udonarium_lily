@@ -1,15 +1,15 @@
 import {
   AfterViewInit,
-  ComponentFactoryResolver,
   ComponentRef,
   Directive,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
-  OnInit,
-  ViewContainerRef,
+  ViewContainerRef
 } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { OverviewPanelComponent } from 'component/overview-panel/overview-panel.component';
 import { ContextMenuService } from 'service/context-menu.service';
@@ -18,7 +18,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 @Directive({
   selector: '[appTooltip]'
 })
-export class TooltipDirective implements OnInit, AfterViewInit, OnDestroy {
+export class TooltipDirective implements AfterViewInit, OnDestroy {
   private static activeTooltips: ComponentRef<OverviewPanelComponent>[] = [];
 
   @Input('appTooltip') tabletopObject: TabletopObject;
@@ -26,6 +26,7 @@ export class TooltipDirective implements OnInit, AfterViewInit, OnDestroy {
   private callbackOnMouseEnter = (e) => this.onMouseEnter(e);
   private callbackOnMouseLeave = (e) => this.onMouseLeave(e);
   private callbackOnMouseDown = (e) => this.onMouseDown(e);
+  private callbackOnPick = (e) => this.ngZone.run(() => this.closeAll());
 
   private openTooltipTimer: NodeJS.Timer;
   private closeTooltipTimer: NodeJS.Timer;
@@ -35,11 +36,8 @@ export class TooltipDirective implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     private viewContainerRef: ViewContainerRef,
-    private componentFactoryResolver: ComponentFactoryResolver,
     private pointerDeviceService: PointerDeviceService
   ) { }
-
-  ngOnInit() { }
 
   ngAfterViewInit() {
     this.addEventListeners(this.viewContainerRef.element.nativeElement);
@@ -70,12 +68,11 @@ export class TooltipDirective implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private startOpenTimer() {
-    let pointerX = this.pointerDeviceService.pointerX;
-    let pointerY = this.pointerDeviceService.pointerY;
+    let prevPointer = this.pointerDeviceService.pointer;
 
     this.openTooltipTimer = setTimeout(() => {
       this.openTooltipTimer = null;
-      let magnitude = (pointerX - this.pointerDeviceService.pointerX) ** 2 + (pointerY - this.pointerDeviceService.pointerY) ** 2;
+      let magnitude = MathUtil.sqrMagnitude(prevPointer, this.pointerDeviceService.pointer);
       if (4 < magnitude) {
         this.startOpenTimer();
       } else {
@@ -103,14 +100,12 @@ export class TooltipDirective implements OnInit, AfterViewInit, OnDestroy {
 
   private open() {
     this.closeAll();
-    if (this.pointerDeviceService.isDragging) return;
+    if (this.pointerDeviceService.isDragging || this.pointerDeviceService.isTablePickGesture) return;
 
     let parentViewContainerRef = ContextMenuService.defaultParentViewContainerRef;
 
     const injector = parentViewContainerRef.injector;
-    const panelComponentFactory = this.componentFactoryResolver.resolveComponentFactory(OverviewPanelComponent);
-
-    this.tooltipComponentRef = parentViewContainerRef.createComponent(panelComponentFactory, parentViewContainerRef.length, injector);
+    this.tooltipComponentRef = parentViewContainerRef.createComponent(OverviewPanelComponent, { index: parentViewContainerRef.length, injector: injector });
 
     this.tooltipComponentRef.instance.tabletopObject = this.tabletopObject;
     this.tooltipComponentRef.instance.left = this.pointerDeviceService.pointerX;
@@ -120,9 +115,18 @@ export class TooltipDirective implements OnInit, AfterViewInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       document.body.addEventListener('touchstart', this.callbackOnMouseDown, true);
       document.body.addEventListener('mousedown', this.callbackOnMouseDown, true);
+      document.addEventListener('pickstart', this.callbackOnPick, true);
+      document.addEventListener('pickobject', this.callbackOnPick, true);
+      document.addEventListener('pickregion', this.callbackOnPick, true);
     });
 
     EventSystem.register(this)
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.tabletopObject.identifier}`, event => {
+        if (this.pointerDeviceService.isDragging) this.ngZone.run(() => this.closeAll());
+      })
+      .on('UPDATE_SELECTION', event => {
+        if (this.pointerDeviceService.isDragging) this.ngZone.run(() => this.closeAll());
+      })
       .on('DELETE_GAME_OBJECT', event => {
         if (this.tabletopObject && this.tabletopObject.identifier === event.data.identifier) this.closeAll();
       });
@@ -131,11 +135,21 @@ export class TooltipDirective implements OnInit, AfterViewInit, OnDestroy {
       this.removeEventListeners(this.tooltipComponentRef.location.nativeElement);
       document.body.removeEventListener('touchstart', this.callbackOnMouseDown, true);
       document.body.removeEventListener('mousedown', this.callbackOnMouseDown, true);
+      document.removeEventListener('pickstart', this.callbackOnPick, true);
+      document.removeEventListener('pickobject', this.callbackOnPick, true);
+      document.removeEventListener('pickregion', this.callbackOnPick, true);
       this.clearTimer();
       this.tooltipComponentRef = null;
       EventSystem.unregister(this);
     });
     TooltipDirective.activeTooltips.push(this.tooltipComponentRef);
+
+    let onChanges = this.tooltipComponentRef.instance as OnChanges;
+    if (onChanges?.ngOnChanges != null) {
+      queueMicrotask(() => {
+        if (this.tooltipComponentRef.instance) onChanges?.ngOnChanges({});
+      });
+    }
   }
 
   private close() {

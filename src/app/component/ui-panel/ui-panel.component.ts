@@ -62,7 +62,7 @@ export class UIPanelComponent implements OnInit {
   private tachieDispByMouse: boolean = true;
   private timerCheckWindowSize = null;
 
-  get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
+  get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging || this.pointerDeviceService.isTablePickGesture; }
 
   constructor(
     public panelService: PanelService,

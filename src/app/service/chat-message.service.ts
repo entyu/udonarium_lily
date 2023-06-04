@@ -148,7 +148,7 @@ export class ChatMessageService {
     }
 
     let chatMessage: ChatMessageContext = {
-      from: Network.peerContext.userId,
+      from: Network.peer.userId,
       to: this.findId(sendTo),
       name: this.makeMessageName(sendFrom, sendTo),
       imageIdentifier: this.findImageIdentifier(sendFrom, imgIndex), // lily

@@ -1,8 +1,18 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TextNote } from '@udonarium/text-note';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
@@ -12,6 +22,7 @@ import { RotableOption } from 'directive/rotable.directive';
 import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
+import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 
 @Component({
   selector: 'text-note',
@@ -19,7 +30,7 @@ import { PointerDeviceService } from 'service/pointer-device.service';
   styleUrls: ['./text-note.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TextNoteComponent implements OnChanges, OnDestroy {
   @ViewChild('textArea', { static: true }) textAreaElementRef: ElementRef;
 
   @Input() textNote: TextNote = null;
@@ -58,8 +69,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   get imageFile(): ImageFile { return this.textNote.imageFile; }
   get rotate(): number { return this.textNote.rotate; }
   set rotate(rotate: number) { this.textNote.rotate = rotate; }
-  get height(): number { return this.adjustMinBounds(this.textNote.height); }
-  get width(): number { return this.adjustMinBounds(this.textNote.width); }
+  get height(): number { return MathUtil.clampMin(this.textNote.height); }
+  get width(): number { return MathUtil.clampMin(this.textNote.width); }
 
   get altitude(): number { return this.textNote.altitude; }
   set altitude(altitude: number) { this.textNote.altitude = altitude; }
@@ -128,6 +139,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
     private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
+    private selectionService: TabletopSelectionService,
     private pointerDeviceService: PointerDeviceService
   ) { }
 
@@ -156,11 +168,8 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('UPDATE_FILE_RESOURE', -1000, event => {
         this.changeDetector.markForCheck();
       })
-      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
-        this.ngZone.run(() => {
-          this.viewRotateZ = event.data['z'];
-          this.changeDetector.markForCheck();
-        });
+      .on(`UPDATE_SELECTION/identifier/${this.textNote?.identifier}`, event => {
+        this.changeDetector.markForCheck();
       });
     this.movableOption = {
       tabletopObject: this.textNote,
@@ -200,7 +209,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // TODO:もっと良い方法考える
     if (e.button === 2) {
-      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
+      EventSystem.trigger('DRAG_LOCKED_OBJECT', { srcEvent: e });
       return;
     }
     this.addMouseEventListeners();
@@ -240,7 +249,7 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   @HostListener('contextmenu', ['$event'])
   onContextMenu(e: Event) {
     this.removeMouseEventListeners();
-    if (this.isSelected) return;
+    if (this.isActive) return;
     e.stopPropagation();
     e.preventDefault();
 
@@ -324,11 +333,47 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onMove() {
+    this.contextMenuService.close();
     SoundEffect.play(PresetSound.cardPick);
   }
 
   onMoved() {
     SoundEffect.play(PresetSound.cardPut);
+  }
+
+  private makeSelectionContextMenu(): ContextMenuAction[] {
+    if (this.selectionService.objects.length < 1) return [];
+
+    let actions: ContextMenuAction[] = [];
+
+    let objectPosition = { x: this.textNote.location.x, y: this.textNote.location.y, z: this.textNote.posZ };
+    actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
+    actions.push(ContextMenuSeparator);
+
+    return actions;
+  }
+
+  private makeContextMenu(): ContextMenuAction[] {
+    let actions: ContextMenuAction[] = [];
+
+    actions.push({ name: 'メモを編集', action: () => { this.showDetail(this.textNote); } });
+    actions.push({
+      name: 'コピーを作る', action: () => {
+        let cloneObject = this.textNote.clone();
+        cloneObject.location.x += this.gridSize;
+        cloneObject.location.y += this.gridSize;
+        cloneObject.toTopmost();
+        SoundEffect.play(PresetSound.cardPut);
+      }
+    });
+    actions.push({
+      name: '削除する', action: () => {
+        this.textNote.destroy();
+        SoundEffect.play(PresetSound.sweep);
+      }
+    });
+
+    return actions;
   }
 
   calcFitHeightIfNeeded() {
@@ -375,10 +420,6 @@ export class TextNoteComponent implements OnInit, OnDestroy, AfterViewInit {
       if( textAreaHeight > textAreaMax ) textAreaHeight = textAreaMax;
       textArea.style.height = textAreaHeight + 'px';
     }
-  }
-
-  private adjustMinBounds(value: number, min: number = 0): number {
-    return value < min ? min : value;
   }
 
   private addMouseEventListeners() {

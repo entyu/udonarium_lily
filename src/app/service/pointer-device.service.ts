@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 
 export interface PointerCoordinate {
   x: number;
@@ -37,8 +38,13 @@ export class PointerDeviceService {
   get isDragging(): boolean { return this._isDragging; }
   set isDragging(isDragging: boolean) {
     if (isDragging === this._isDragging) return;
-    this.ngZone.run(() => this._isDragging = isDragging);
+    this.ngZone.run(() => {
+      this._isDragging = isDragging;
+      document.body.dispatchEvent(new CustomEvent('draggingstate', { detail: isDragging, bubbles: true }));
+    });
   }
+
+  isTablePickGesture = false;
 
   constructor(private ngZone: NgZone) { }
 
@@ -74,7 +80,7 @@ export class PointerDeviceService {
   private onMouseMove(e: MouseEvent) {
     let mosuePointer: PointerData = { x: e.pageX, y: e.pageY, z: 0, identifier: MOUSE_IDENTIFIER };
     if (this.isSyntheticEvent(mosuePointer)) return;
-    if (this._isAllowedToOpenContextMenu) this.preventContextMenuIfNeeded(mosuePointer);
+    if (this._isAllowedToOpenContextMenu) this.preventContextMenuIfNeeded(mosuePointer, 3);
     this.pointers = [mosuePointer];
     this.primaryPointer = mosuePointer;
   }
@@ -86,7 +92,7 @@ export class PointerDeviceService {
     for (let i = 0; i < length; i++) {
       let touch = e.touches[i];
       let touchPointer: PointerData = { x: touch.pageX, y: touch.pageY, z: 0, identifier: touch.identifier };
-      if (this._isAllowedToOpenContextMenu) this.preventContextMenuIfNeeded(touchPointer);
+      if (this._isAllowedToOpenContextMenu) this.preventContextMenuIfNeeded(touchPointer, 12);
       this.pointers.push(touchPointer);
     }
     this.primaryPointer = this.pointers[0];
@@ -98,14 +104,14 @@ export class PointerDeviceService {
   }
 
   private preventContextMenuIfNeeded(pointer: PointerCoordinate, threshold: number = 3) {
-    let distance = (pointer.x - this.startPostion.x) ** 2 + (pointer.y - this.startPostion.y) ** 2;
+    let distance = MathUtil.sqrMagnitude(pointer, this.startPostion);
     if (threshold ** 2 < distance) this._isAllowedToOpenContextMenu = false;
   }
 
   private isSyntheticEvent(mosuePointer: PointerData, threshold: number = 15): boolean {
     for (let pointer of this.pointers) {
       if (pointer.identifier === mosuePointer.identifier) continue;
-      let distance = (mosuePointer.x - pointer.x) ** 2 + (mosuePointer.y - pointer.y) ** 2;
+      let distance = MathUtil.sqrMagnitude(mosuePointer, pointer);
       if (distance < threshold ** 2) return true;
     }
     return false;
