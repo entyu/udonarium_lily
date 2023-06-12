@@ -11,7 +11,7 @@
   </div>
   <div class="user_info">
     <span *ngIf="myPeer">あなたのニックネーム：</span><input class="is-caret" [(ngModel)]="myPeer.name"  placeholder="ニックネーム" /><br>
-    <span>ID：</span><span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.userId}}</span>
+    <span>ID：</span><span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peer.userId}}</span>
     <span *ngIf="!networkService.isOpen" style="font-weight: bold;">???</span><br>
     <div>
       <span>ブラウザ時刻：</span>
@@ -19,15 +19,15 @@
     </div>
   </div>
 </div>
-<ng-container *ngIf="networkService.peerContext.isRoom">
+<ng-container *ngIf="networkService.peer.isRoom">
   <hr/>
   <div>
-    <span>ルーム名：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peerContext.roomName}}/{{networkService.peerContext.roomId}}</span></span>
+    <span>ルーム名：<span *ngIf="networkService.isOpen" style="font-weight: bold;">{{networkService.peer.roomName}}/{{networkService.peer.roomId}}</span></span>
   </div>
   <div>
     <span>パスワード：<span
-      *ngIf="networkService.peerContext.hasPassword">
-        <span *ngIf="networkService.isOpen" style="font-weight: bold;">{{isPasswordVisible ? networkService.peerContext.password : '●●●●●●●●'}}</span>
+      *ngIf="networkService.peer.hasPassword">
+        <span *ngIf="networkService.isOpen" style="font-weight: bold;">{{isPasswordVisible ? networkService.peer.password : '●●●●●●●●'}}</span>
         <button style="padding: 2px; margin-left: 1.0em; font-size: 1.0em;" (click)="togglePasswordVisibility()">
           <span class="material-icons" style="font-size: 1.0em; vertical-align: text-bottom;">{{isPasswordVisible ? 'visibility' : 'visibility_off'}}</span>
         </button>
@@ -35,7 +35,7 @@
     </span>
   </div>
   <div>
-    <ng-container *ngIf="networkService.peerIds.length > 1">
+    <ng-container *ngIf="networkService.peerIds.length >= 1">
       <button (click)="showReConnect()" class="danger">
         <span>再接続</span>
       </button>
@@ -47,34 +47,34 @@
   <span><input class="is-caret" [(ngModel)]="myPeer.timeout" type="number" min="1" max="600" /> 秒以上通信できない参加者情報をチャットに表示</span><br>
   <span>詳細を表示<input type="checkbox" value="dispDetailFlag"  [(ngModel)]="dispDetailFlag"></span><br>
 </div>
-<div *ngFor="let context of networkService.peerContexts" style="font-size: 15px;">
+<div *ngFor="let peer of networkService.peers" style="font-size: 15px;">
   <div>
-    <span *ngIf="!context.isOpen">[接続中]</span>
-    <span>他の参加者：{{findUserId(context.peerId)}} [{{findPeerName(context.peerId)}}] </span>
-    <span *ngIf="findPeerTimeReceive(context.peerId) <= 0">接続確認：[-:--:--]</span>
-    <span *ngIf="findPeerTimeReceive(context.peerId) > 0">接続確認：[{{findPeerTimeReceive(context.peerId) | date:'HH:mm:ss'}}]</span><br>
+    <span *ngIf="!peer.isOpen">[接続中]</span>
+    <span>他の参加者：{{findUserId(peer.peerId)}} [{{findPeerName(peer.peerId)}}]</span>
+    <span *ngIf="findPeerTimeReceive(peer.peerId) <= 0">接続確認：[-:--:--]</span>
+    <span *ngIf="findPeerTimeReceive(peer.peerId) > 0">接続確認：[{{findPeerTimeReceive(peer.peerId) | date:'HH:mm:ss'}}]</span><br>
     <div *ngIf="dispDetailFlag">
-      <span *ngIf="findPeerTimeReceive(context.peerId) > 0">往復通信時間：{{findPeerTimeLatency(context.peerId)}}秒</span><br>
+      <span *ngIf="findPeerTimeReceive(peer.peerId) > 0">往復通信時間：{{findPeerTimeLatency(peer.peerId)}}秒</span><br>
     </div>
     <div *ngIf="myPeer.name=='円柱_'">
-      <span >伝送時間+時計誤差合計　受信：{{findPeerTimeDiffDown(context.peerId)}}ms 送信：{{findPeerTimeDiffUp(context.peerId)}}ms</span><br>
-      <span >相手の生存信号到着割合：{{findPeerDegreeOfSuccess(context.peerId)}}</span><br>
+      <span >伝送時間+時計誤差合計　受信：{{findPeerTimeDiffDown(peer.peerId)}}ms 送信：{{findPeerTimeDiffUp(peer.peerId)}}ms</span><br>
+      <span >相手の生存信号到着割合：{{findPeerDegreeOfSuccess(peer.peerId)}}</span><br>
     </div>
   </div>
 </div>
 <div>
-  <ng-container *ngIf="!networkService.peerContext.isRoom">
+  <ng-container *ngIf="!networkService.peer.isRoom">
     <input class="is-caret" [(ngModel)]="targetUserId" placeholder="接続したい相手のID" name="targetUserId" />
     <button (click)="connectPeer()" [disabled]="!networkService.isOpen">プライベート接続</button><br>
   </ng-container>
-  <button *ngIf="networkService.peerIds.length <= 1" (click)="showLobby()" [disabled]="!networkService.isOpen">ロビー（ルーム一覧）を表示</button>
+  <button *ngIf="networkService.peers.length < 1" (click)="showLobby()" [disabled]="!networkService.isOpen">ロビー（ルーム一覧）を表示</button>
 </div>
 <div><span style="font-size: 12px;">{{help}}</span></div>
-<ng-container *ngIf="!networkService.peerContext.isRoom">
-  <div style="font-size: 12px;" *ngIf="networkService.peerContexts.length < 1">※プライベート接続を使用する場合は、お互いのIDをユドナリウム外で共有してください。</div>
-  <div style="font-size: 12px;" *ngIf="networkService.peerContexts.length < 1">※一人で動作確認を行いたい場合はブラウザを2つ開くと良いと思います。</div>
+<ng-container *ngIf="!networkService.peer.isRoom">
+  <div style="font-size: 12px;" *ngIf="networkService.peers.length < 1">※プライベート接続を使用する場合は、お互いのIDをユドナリウム外で共有してください。</div>
+  <div style="font-size: 12px;" *ngIf="networkService.peers.length < 1">※一人で動作確認を行いたい場合はブラウザを2つ開くと良いと思います。</div>
 </ng-container>
-<ng-container *ngIf="networkService.peerContext.isRoom">
+<ng-container *ngIf="networkService.peer.isRoom">
   <div style="font-size: 12px;">※ルーム機能を利用している時はプライベート接続を利用できません。</div>
   <div style="font-size: 12px;"><font color="#FF5555">※接続情報のメッセージを出すタブの変更は<br>チャットウィンドウのタブ設定から行ってください。</font></div>
 </ng-container>

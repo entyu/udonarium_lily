@@ -15,7 +15,7 @@
           <ng-container *ngIf="peer === myPeer">（あなた）</ng-container>
         </ng-option>
       </ng-select>
-      <ng-select class="ud-select is-caret" style="width: 15em; margin-left:.1em;" (change)="loadDiceBot($event)" [(ngModel)]="gameType"
+      <ng-select #select class="ud-select is-caret" style="width: 15em; margin-left:.1em;" (change)="loadDiceBot($event)" [(ngModel)]="gameType"
         [ngModelOptions]="{standalone: true}" [clearable]="false">
         <ng-option *ngFor="let diceBotInfo of diceBotInfos" [value]="diceBotInfo.id">{{diceBotInfo.name}}</ng-option>
       </ng-select>

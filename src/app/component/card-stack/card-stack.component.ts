@@ -308,7 +308,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
       ContextMenuSeparator,
       {
         name: '山札を人数分に分割する', action: () => {
-          this.splitStack(Network.peerIds.length);
+          this.splitStack(Network.peerIds.length + 1);
           SoundEffect.play(PresetSound.cardDraw);
         }
       },
@@ -447,7 +447,7 @@ export class CardStackComponent implements OnInit, AfterViewInit, OnDestroy {
     let coordinate = this.pointerDeviceService.pointers[0];
     let option: PanelOption = { left: coordinate.x - 200, top: coordinate.y - 300, width: 400, height: 600 };
 
-    this.cardStack.owner = Network.peerContext.userId;
+    this.cardStack.owner = Network.peer.userId;
     let component = this.panelService.open<CardStackListComponent>(CardStackListComponent, option);
 //    let component = this.panelService.open<CardStackListComponentEx>(CardStackListComponentEx, option);
     component.cardStack = gameObject;

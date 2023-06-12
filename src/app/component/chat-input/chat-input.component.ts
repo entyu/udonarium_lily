@@ -389,8 +389,9 @@ export class ChatInputComponent implements OnInit, OnDestroy {
     this.tabSwitch.emit(direction);
   }
 
-  sendChat(event: KeyboardEvent) {
-    if (event) event.preventDefault();
+//  sendChat(event: KeyboardEvent) {
+  sendChat(event: Partial<KeyboardEvent>) {
+        if (event) event.preventDefault();
 
     if (!this.text.length) return;
     if (event && event.keyCode !== 13) return;
@@ -529,8 +530,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
         return false;
       default:
         if( gameCharacter.nonTalkFlag ) return false;
-        for (const conn of Network.peerContexts) {
-          if (conn.isOpen && gameCharacter.location.name === conn.peerId) {
+        for (const peer of Network.peers) {
+          if (peer.isOpen && gameCharacter.location.name === peer.peerId) {
             return false;
           }
         }

@@ -145,15 +145,14 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
 
   viewRotateZ = 10;
 
-  ngOnInit() {
+  ngOnChanges(): void {
+    EventSystem.unregister(this);
     EventSystem.register(this)
-      .on('RESIZE_NOTE_OBJECT', -1000, event => {
-        console.log('resize');
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.textNote || !object) return;
-        if (this.textNote === object ) {
-          this.calcFitHeight();
-        }
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.textNote?.identifier}`, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.textNote?.identifier}`, event => {
+        this.changeDetector.markForCheck();
       })
       .on('UPDATE_GAME_OBJECT', -1000, event => {
         let object = ObjectStore.instance.get(event.data.identifier);
