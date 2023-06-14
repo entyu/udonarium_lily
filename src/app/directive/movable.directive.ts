@@ -7,7 +7,7 @@ import {
   NgZone,
   OnChanges,
   OnDestroy,
-  Output,
+  Output
 } from '@angular/core';
 import { EventSystem } from '@udonarium/core/system';
 import { TableSelecter } from '@udonarium/table-selecter';
@@ -15,8 +15,12 @@ import { TabletopObject } from '@udonarium/tabletop-object';
 import { BatchService } from 'service/batch.service';
 import { CoordinateService } from 'service/coordinate.service';
 import { PointerCoordinate, PointerDeviceService } from 'service/pointer-device.service';
+import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 
 import { InputHandler } from './input-handler';
+import { MovableSelectionSynchronizer } from './movable-selection-synchronizer';
+
+type LayerName = string;
 
 export interface MovableOption {
   readonly tabletopObject?: TabletopObject;
@@ -28,52 +32,47 @@ export interface MovableOption {
 @Directive({
   selector: '[appMovable]'
 })
-export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
-  private static layerHash: { [layerName: string]: MovableDirective[] } = {};
+export class MovableDirective implements AfterViewInit, OnChanges, OnDestroy {
+  static readonly layerMap: Map<LayerName, Set<MovableDirective>> = new Map();
 
-  private tabletopObject: TabletopObject;
-  private layerName: string = '';
-  private colideLayers: string[] = [];
-  private transformCssOffset: string = '';
+  private _tabletopObject: TabletopObject;
+  private _layerName: string = '';
+  private _colideLayers: string[] = [];
+  private _transformCssOffset: string = '';
 
+  get tabletopObject(): TabletopObject { return this._tabletopObject; }
+  get layerName(): string { return this._layerName; }
+  get colideLayers(): string[] { return this._colideLayers; }
+  get transformCssOffset(): string { return this._transformCssOffset; }
   @Input('movable.option') set option(option: MovableOption) {
-    this.tabletopObject = option.tabletopObject != null ? option.tabletopObject : this.tabletopObject;
-    this.layerName = option.layerName != null ? option.layerName : this.layerName;
-    this.colideLayers = option.colideLayers != null ? option.colideLayers : this.colideLayers;
-    this.transformCssOffset = option.transformCssOffset != null ? option.transformCssOffset : this.transformCssOffset;
+    this.unregister();
+    this.synchronizer.unregister();
+
+    this._tabletopObject = option.tabletopObject ?? null;
+    this._layerName = option.layerName ?? '';
+    this._colideLayers = option.colideLayers ?? [];
+    this._transformCssOffset = option.transformCssOffset ?? '';
+
+    if (this._layerName.length < 1 && this._tabletopObject) this._layerName = this._tabletopObject.aliasName;
+
+    this.register();
+    this.synchronizer.register();
   }
   @Input('movable.disable') isDisable: boolean = false;
-  @Input('movable.scratch_owner') isScratcOwner: boolean = false;
-
+//  @Input('movable.scratch_owner') isScratcOwner: boolean = false;
   @Output('movable.onstart') onstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondragstart') ondragstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondrag') ondrag: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondragend') ondragend: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.onend') onend: EventEmitter<PointerEvent> = new EventEmitter();
 
-  private get nativeElement(): HTMLElement { return this.elementRef.nativeElement; }
+  get nativeElement(): HTMLElement { return this.elementRef.nativeElement; }
 
   private _posX: number = 0;
   private _posY: number = 0;
   private _posZ: number = 0;
-/*
-  get posX(): number { return this._posX; }
-  set posX(posX: number) { this._posX = posX; this.setUpdateTimer(); }
-  get posY(): number { return this._posY; }
-  set posY(posY: number) { this._posY = posY; this.setUpdateTimer(); }
-  get posZ(): number { return this._posZ; }
-  set posZ(posZ: number) { this._posZ = posZ; this.setUpdateTimer(); }
-*/
 
   private mathFloor: boolean = true;
-/*
-  get posX(): number { return this._posX; }
-  set posX(posX: number) { this._posX = Math.floor(posX); this.setUpdateTimer(); }
-  get posY(): number { return this._posY; }
-  set posY(posY: number) { this._posY = Math.floor(posY); this.setUpdateTimer(); }
-  get posZ(): number { return this._posZ; }
-  set posZ(posZ: number) { this._posZ = Math.floor(posZ); this.setUpdateTimer(); }
-*/
 
   get posX(): number { return this._posX; }
   set posX(posX: number) { this._posX = this.mathFloor? Math.floor(posX):posX; this.setUpdateTimer(); }
@@ -86,15 +85,22 @@ export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
   private pointerOffset2d: PointerCoordinate = { x: 0, y: 0, z: 0 };
   private pointerStart3d: PointerCoordinate = { x: 0, y: 0, z: 0 };
 
+  get magnitude(): number { return this.input.magnitude; }
+  get isPointerMoved(): boolean { return this.input.isPointerMoved; }
+
   private targetStartRect: DOMRect;
 
-  private height: number = 0;
-  private width: number = 0;
+  height: number = -1;
+  width: number = -1;
   private ratio: number = 1.0;
 
-  private updateTimer: NodeJS.Timer = null;
+  private isUpdateBatching: boolean = false;
   private collidableElements: HTMLElement[] = [];
-  private input: InputHandler = null;
+  private input: InputHandler = new InputHandler(this.nativeElement, false);
+
+  private synchronizer: MovableSelectionSynchronizer = new MovableSelectionSynchronizer(this, this.selectionService, this.pointerDeviceService);
+  get state(): SelectionState { return this.selectionService.state(this.tabletopObject); }
+  set state(state: SelectionState) { this.selectionService.add(this.tabletopObject, state); }
 
   private get isGridSnap(): boolean { return TableSelecter.instance.gridSnap; }
 
@@ -104,15 +110,16 @@ export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
     private batchService: BatchService,
     private pointerDeviceService: PointerDeviceService,
     private coordinateService: CoordinateService,
+    private selectionService: TabletopSelectionService,
   ) { }
 
   ngAfterViewInit() {
-    this.batchService.add(() => this.initialize(), this.elementRef);
-    this.setPosition(this.tabletopObject);
+    this.batchService.add(() => this.initialize(), this.onstart);
   }
 
   ngOnChanges(): void {
-    EventSystem.unregister(this);
+    this.dispose();
+//    EventSystem.unregister(this);
     EventSystem.register(this)
       .on(`UPDATE_GAME_OBJECT/identifier/${this.tabletopObject?.identifier}`, event => {
         if ((event.isSendFromSelf && (this.input.isGrabbing || this.state !== SelectionState.NONE)) || !this.shouldTransition(this.tabletopObject)) return;
@@ -122,32 +129,33 @@ export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
           } else {
             this.setAnimatedTransition(true);
           }
+          this.state = SelectionState.NONE;
           this.stopTransition();
           this.setPosition(this.tabletopObject);
         }, this);
       });
+
+      if (this.isDisable && this.state !== SelectionState.NONE) this.state = SelectionState.NONE;
+      this.setPosition(this.tabletopObject);  
   }
 
   ngOnDestroy() {
-    this.cancel();
-    this.input.destroy();
     this.unregister();
-    EventSystem.unregister(this);
-    this.batchService.remove(this);
-    this.batchService.remove(this.elementRef);
+    this.dispose();
+    this.synchronizer.destroy();
+    this.input.destroy();
+    this.batchService.remove(this.onstart);
   }
 
   initialize() {
-    this.input = new InputHandler(this.nativeElement);
+    this.synchronizer.initialize();
+    this.input.initialize();
     this.input.onStart = this.onInputStart.bind(this);
     this.input.onMove = this.onInputMove.bind(this);
     this.input.onEnd = this.onInputEnd.bind(this);
     this.input.onContextMenu = this.onContextMenu.bind(this);
 
-    if (this.layerName.length < 1 && this.tabletopObject) this.layerName = this.tabletopObject.aliasName;
-    this.register();
     this.findCollidableElements();
-    this.setPosition(this.tabletopObject);
   }
 
   cancel() {
@@ -155,6 +163,11 @@ export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
     this.setPointerEvents(true);
     this.setAnimatedTransition(true);
     this.setCollidableLayer(false);
+  }
+
+  dispose() {
+    EventSystem.unregister(this);
+    this.batchService.remove(this);
   }
 
   scratchObjectPosition(start: boolean){
@@ -182,7 +195,12 @@ export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
     this.callSelectedEvent();
     if (this.collidableElements.length < 1) this.findCollidableElements(); // 稀にcollidableElementsの取得に失敗している
 
-    if ((this.isDisable && !this.isScratcOwner )|| (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
+//    if ((this.isDisable && !this.isScratcOwner )|| (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
+    if (this.isDisable || (e instanceof MouseEvent && (e.button !== 0 || e.ctrlKey || e.shiftKey))) {
+      this.cancel();
+      return;
+    }
+
     this.onstart.emit(e as PointerEvent);
 
     this.setPointerEvents(false);
@@ -214,14 +232,16 @@ export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
     if(this.isScratcOwner){
       this.scratchObjectPosition(true);
     }
-
     this.ratio = 1.0;
+
+    this.synchronizer.prepareMove();
   }
 
   onInputMove(e: MouseEvent | TouchEvent) {
     if (this.input.isGrabbing && !this.pointerDeviceService.isDragging) {
       return this.cancel(); // todo
     }
+    if (this.isDisable || !this.input.isGrabbing) return this.cancel();
 
     if ((this.isDisable && !this.isScratcOwner) || !this.input.isGrabbing) return this.cancel();
     
@@ -268,7 +288,24 @@ export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
   onInputEnd(e: MouseEvent | TouchEvent) {
     if (this.isDisable) return this.cancel();
     if (this.input.isDragging) this.ondragend.emit(e as PointerEvent);
-    if (this.isGridSnap && this.input.isDragging && !this.isScratcOwner) this.snapToGrid();
+//    if (this.isGridSnap && this.input.isDragging && !this.isScratcOwner) this.snapToGrid();
+
+    let prev = {
+      x: this.posX,
+      y: this.posY,
+      z: this.posZ,
+    };
+
+    if (this.isGridSnap && this.input.isDragging) this.snapToGrid();
+
+    let delta = {
+      x: this.posX - prev.x,
+      y: this.posY - prev.y,
+      z: this.posZ - prev.z,
+    };
+
+    this.synchronizer.finishMove(delta);
+
     this.cancel();
     this.onend.emit(e as PointerEvent);
   }
@@ -307,31 +344,21 @@ export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   private setPosition(object: TabletopObject) {
-/*
-    this._posX = object.location.x;
-    this._posY = object.location.y;
-    this._posZ = object.posZ;
-
-
-    this._posX = Math.floor(object.location.x);
-    this._posY = Math.floor(object.location.y);
-    this._posZ = Math.floor(object.posZ);
-*/
     this._posX = this.mathFloor? Math.floor(object.location.x):object.location.x;
     this._posY = this.mathFloor? Math.floor(object.location.y):object.location.y;
     this._posZ = this.mathFloor? Math.floor(object.posZ*8)/8:object.posZ;
-
     this.updateTransformCss();
   }
 
-  private setUpdateTimer() {
-    if (this.updateTimer === null && this.tabletopObject) {
-      this.updateTimer = setTimeout(() => {
+  private setUpdateBatching() {
+    if (!this.isUpdateBatching && this.tabletopObject) {
+      this.isUpdateBatching = true;
+      this.batchService.add(() => {
         this.tabletopObject.location.x = this.posX;
         this.tabletopObject.location.y = this.posY;
         this.tabletopObject.posZ = this.posZ;
-        this.updateTimer = null;
-      }, 66);
+        this.isUpdateBatching = false;
+      });
     }
     this.updateTransformCss();
   }
@@ -364,12 +391,12 @@ export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
     }
   }
 
-  private setPointerEvents(isEnable: boolean) {
+  setPointerEvents(isEnable: boolean) {
     let css = isEnable ? 'auto' : 'none';
     this.collidableElements.forEach(element => element.style.pointerEvents = css);
   }
 
-  private setAnimatedTransition(isEnable: boolean) {
+   setAnimatedTransition(isEnable: boolean) {
     this.nativeElement.style.transition = isEnable ? 'transform 132ms linear' : '';
   }
 
@@ -377,46 +404,41 @@ export class MovableDirective implements OnChanges, AfterViewInit, OnDestroy {
     return object.location.x !== this.posX || object.location.y !== this.posY || object.posZ !== this.posZ;
   }
 
-  private stopTransition() {
+  stopTransition() {
     this.nativeElement.style.transform = window.getComputedStyle(this.nativeElement).transform;
   }
 
   private updateTransformCss() {
-//    let css = this.transformCssOffset + ' translateX(' + this.posX + 'px) translateY(' + this.posY + 'px) translateZ(' + this.posZ + 'px)';
-//    let css = 'translateX(' + this.posX + 'px) translateY(' + this.posY + 'px) translateZ(' + this.posZ + 'px)';
-    let css = 'translate3d(' + this.posX + 'px,' + this.posY + 'px,' + this.posZ + 'px) ' + this.transformCssOffset;
-//    let css = 'translate3d(' + this.posX + 'px,' + this.posY + 'px,' + this.posZ + 'px) ' + ' translate3d(0px,0px,1px) translate3d(0px,0px,1px)  translate3d(0px,0px,1px) translate3d(0px,0px,1px) translate3d(0px,0px,1px)';
-
-//    let css = 'translate3d(' + this.posX + 'px,' + this.posY + 'px,' + (this.posZ +100 )+ 'px) ';
-//    console.log(css);
+    let css = `${this.transformCssOffset} translate3d(${this.posX.toFixed(4)}px, ${this.posY.toFixed(4)}px, ${this.posZ.toFixed(4)}px)`;
     this.nativeElement.style.transform = css;
   }
 
   private setCollidableLayer(isCollidable: boolean) {
     // todo
     let isEnable = isCollidable;
-    for (let layerName in MovableDirective.layerHash) {
-      if (-1 < this.colideLayers.indexOf(layerName)) {
+    for (let layerName of MovableDirective.layerMap.keys()) {
+      if (this.colideLayers.includes(layerName)) {
         isEnable = this.input.isGrabbing ? isCollidable : true;
       } else {
         isEnable = !isCollidable;
       }
-      MovableDirective.layerHash[layerName].forEach(movable => {
-        if (movable === this || movable.input.isGrabbing) return;
+      MovableDirective.layerMap.get(layerName).forEach(movable => {
+        if (movable === this || (movable.input?.isGrabbing)) return;
         movable.setPointerEvents(isEnable);
       });
     }
   }
 
   private register() {
-    if (!(this.layerName in MovableDirective.layerHash)) MovableDirective.layerHash[this.layerName] = [];
-    let index = MovableDirective.layerHash[this.layerName].indexOf(this);
-    if (index < 0) MovableDirective.layerHash[this.layerName].push(this);
+    let layerSet = MovableDirective.layerMap.get(this.layerName) ?? new Set();
+    layerSet.add(this);
+    MovableDirective.layerMap.set(this.layerName, layerSet);
   }
 
   private unregister() {
-    if (!(this.layerName in MovableDirective.layerHash)) return;
-    let index = MovableDirective.layerHash[this.layerName].indexOf(this);
-    if (-1 < index) MovableDirective.layerHash[this.layerName].splice(index, 1);
+    let layerSet = MovableDirective.layerMap.get(this.layerName);
+    if (!layerSet) return;
+    layerSet.delete(this);
+    if (layerSet.size < 1) MovableDirective.layerMap.delete(this.layerName);
   }
 }
