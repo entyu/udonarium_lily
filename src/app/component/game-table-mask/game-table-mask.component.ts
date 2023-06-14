@@ -9,22 +9,17 @@ import {
   NgZone,
   OnChanges,
   OnDestroy,
-  OnInit,
   
 } from '@angular/core';
-
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { EventSystem, Network } from '@udonarium/core/system';
-
+import { EventSystem } from '@udonarium/core/system';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { GameTableMask } from '@udonarium/game-table-mask';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
 import { OpenUrlComponent } from 'component/open-url/open-url.component';
 import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
-import { ModalService } from 'service/modal.service';
 import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { CoordinateService } from 'service/coordinate.service';
 import { PanelOption, PanelService } from 'service/panel.service';
@@ -69,7 +64,6 @@ import { xor } from 'lodash';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewInit {
 //  @ViewChild('elementToDetach') elementToDetach: ElementRef;
 
@@ -86,10 +80,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   get imageFile(): ImageFile { return this.gameTableMask.imageFile; }
   get isLock(): boolean { return this.gameTableMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
-/*
-  get blendType(): number { return this.gameTableMask.blendType; }
-  set blendType(blendType: number) { this.gameTableMask.blendType = blendType; }
-*/
 
   get color(): string { return this.gameTableMask.color; }
   set color(color: string) { this.gameTableMask.color = color; }
@@ -182,18 +172,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   get isAltitudeIndicate(): boolean { return this.gameTableMask.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameTableMask.isAltitudeIndicate = isAltitudeIndicate; }
 
-/*
-  get rubiedText(): string {
-    return StringUtil.rubyToHtml(StringUtil.escapeHtml(this.text));
-  }
-*/
-/*
-  get isInverse(): boolean {
-    return 90 < Math.abs(this.viewRotateZ) % 360 && Math.abs(this.viewRotateZ) % 360 < 270
-  }
-*/
-
-//  get isGMMode(): boolean { return this.gameTableMask.isGMMode; }
   get isScratching(): boolean { return !!this.gameTableMask.owner; }
 
   get hasOwner(): boolean { return this.gameTableMask.hasOwner; }
@@ -211,7 +189,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
 
   private input: InputHandler = null;
 
-
   constructor(
     private ngZone: NgZone,
     private tabletopActionService: TabletopActionService,
@@ -219,54 +196,11 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
-//    private selectionService: TabletopSelectionService,
+    private selectionService: TabletopSelectionService,
     private pointerDeviceService: PointerDeviceService,
-    private modalService: ModalService,
     private coordinateService: CoordinateService,
-//    private chatMessageService: ChatMessageService
-
   ) { }
 
-/*
-  ngOnInit() {
-    EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', event => {
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.gameTableMask || !object) return;
-        if (this.gameTableMask === object || (object instanceof ObjectNode && this.gameTableMask.contains(object))) {
-          this.changeDetector.markForCheck();
-        }
-      })
-      .on('CHANGE_GM_MODE', event => {
-        this.changeDetector.markForCheck();
-      })
-      .on('SYNCHRONIZE_FILE_LIST', event => {
-        this.changeDetector.markForCheck();
-      })
-      .on('UPDATE_FILE_RESOURE', event => {
-        this.changeDetector.markForCheck();
-      })
-      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
-        this.ngZone.run(() => {
-          this.viewRotateZ = event.data['z'];
-          this.changeDetector.markForCheck();
-        });
-      })
-      .on(`UPDATE_SELECTION/identifier/${this.gameTableMask?.identifier}`, event => {
-        this.changeDetector.markForCheck();
-      });
-    this.movableOption = {
-      tabletopObject: this.gameTableMask,
-      transformCssOffset: 'translateZ(0.10px)',
-      colideLayers: ['terrain']
-    };
-    this.panelId = UUID.generateUuid();
-  }
-
-  ngOnChanges(): void {
-  }
-
-*/
   ngOnChanges(): void {
     EventSystem.unregister(this);
     EventSystem.register(this)
@@ -276,9 +210,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
       .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.gameTableMask?.identifier}`, event => {
         this.changeDetector.markForCheck();
       })
-      .on('CHANGE_GM_MODE', event => {
-        this.changeDetector.markForCheck();
-      })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
       })
@@ -296,7 +227,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
       });
     this.movableOption = {
       tabletopObject: this.gameTableMask,
-      transformCssOffset: 'translateZ(0.10px)',
+      transformCssOffset: 'translateZ(0.15px)',
       colideLayers: ['terrain']
     };
     this.panelId = UUID.generateUuid();
@@ -313,7 +244,6 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   ngOnDestroy() {
     this.input.destroy();
     EventSystem.unregister(this);
-    clearTimeout(this._scratchingTimerId);
   }
 
   @HostListener('dragstart', ['$event'])
