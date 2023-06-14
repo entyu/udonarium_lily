@@ -5,26 +5,22 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Input,
-  OnDestroy,
-  ViewChild,
   HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  ViewChild
 } from '@angular/core';
-import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem } from '@udonarium/core/system';
 import { DataElement } from '@udonarium/data-element';
 import { MarkDown } from '@udonarium/mark-down';
-
 import { TabletopObject } from '@udonarium/tabletop-object';
 import { GameObjectInventoryService } from 'service/game-object-inventory.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-
 import { GameCharacter } from '@udonarium/game-character'; //
 import { TextNote } from '@udonarium/text-note'; //
 import { Card } from '@udonarium/card'; //
 import { CardStack } from '@udonarium/card-stack'; //
-
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -80,18 +76,14 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     private domSanitizer: DomSanitizer
   ) { }
 
-  ngAfterViewInit() {
-    this.initPanelPosition();
-    setTimeout(() => {
-      this.adjustPositionRoot();
-    }, 16);
+  ngOnChanges(): void {
+    EventSystem.unregister(this);
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', event => {
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.tabletopObject || !object || !(object instanceof ObjectNode)) return;
-        if (this.tabletopObject === object || this.tabletopObject.contains(object)) {
-          this.changeDetector.markForCheck();
-        }
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.tabletopObject?.identifier}`, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.tabletopObject?.identifier}`, event => {
+        this.changeDetector.markForCheck();
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -101,8 +93,20 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
       });
   }
 
+    ngAfterViewInit() {
+    this.initPanelPosition();
+    setTimeout(() => {
+      this.adjustPositionRoot();
+    }, 16);
+  }
+
   ngOnDestroy() {
     EventSystem.unregister(this);
+  }
+
+  @HostListener('document:draggingstate', ['$event'])
+  onChangeDragging(e: Event) {
+    this.changeDetector.markForCheck();
   }
 
   private initPanelPosition() {
@@ -174,11 +178,11 @@ export class OverviewPanelComponent implements AfterViewInit, OnDestroy {
     let panelLeft : number = Number(panelBox.left);
     let panelRight : number =  Number(panelBox.left) + Number(width);
 
-    if (window.innerWidth < panelRight + diffLeft) {
-      diffLeft += window.innerWidth - (panelRight + diffLeft);
+    if (window.innerWidth < panelBox.right + diffLeft) {
+      diffLeft += window.innerWidth - (panelBox.right + diffLeft);
     }
-    if (panelLeft + diffLeft < 0) {
-      diffLeft += 0 - (panelLeft + diffLeft);
+    if (panelBox.left + diffLeft < 0) {
+      diffLeft += 0 - (panelBox.left + diffLeft);
     }
 
     if (window.innerHeight < panelBox.bottom + diffTop) {

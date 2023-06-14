@@ -16,10 +16,9 @@ import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TextNote } from '@udonarium/text-note';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
-import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
 import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
@@ -90,7 +89,9 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
   get isAltitudeIndicate(): boolean { return this.textNote.isAltitudeIndicate; }
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.textNote.isAltitudeIndicate = isAltitudeIndicate; }
 
-  get isSelected(): boolean { return document.activeElement === this.textAreaElementRef.nativeElement; }
+  get selectionState(): SelectionState { return this.selectionService.state(this.textNote); }
+  get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
+  get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
 
   private callbackOnMouseUp = (e) => this.onMouseUp(e);
 
@@ -154,17 +155,10 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
       .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.textNote?.identifier}`, event => {
         this.changeDetector.markForCheck();
       })
-      .on('UPDATE_GAME_OBJECT', -1000, event => {
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.textNote || !object) return;
-        if (this.textNote === object || (object instanceof ObjectNode && this.textNote.contains(object))) {
-          this.changeDetector.markForCheck();
-        }
-      })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
       })
-      .on('UPDATE_FILE_RESOURE', -1000, event => {
+      .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
       })
       .on(`UPDATE_SELECTION/identifier/${this.textNote?.identifier}`, event => {
@@ -201,8 +195,7 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
 
   @HostListener('mousedown', ['$event'])
   onMouseDown(e: any) {
-    console.log('e.id onMouseDown:' + e.target.id );
-    if (this.isSelected) return;
+    if (this.isActive) return;
     e.preventDefault();
     this.textNote.toTopmost();
 
@@ -211,38 +204,23 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
       EventSystem.trigger('DRAG_LOCKED_OBJECT', { srcEvent: e });
       return;
     }
+
     this.addMouseEventListeners();
   }
 
   onMouseUp(e: any) {
-    console.log('e.id onMouseUp:' + e.target.id );
-
-      if (this.pointerDeviceService.isAllowedToOpenContextMenu) {
-        console.log('TEST');
-        let selection = window.getSelection();
-        if (!selection.isCollapsed) selection.removeAllRanges();
-
-//        if( e.target.id != 'scroll'){
-          this.textAreaElementRef.nativeElement.focus();
-//        }
-      }
-      this.removeMouseEventListeners();
-      e.preventDefault();
-  }
-
-  onRotateMouseDown(e: any) {
-    console.log('e.id onRotateMouseDown:' + e.target.id );
-    e.stopPropagation();
+    if (this.pointerDeviceService.isAllowedToOpenContextMenu) {
+      let selection = window.getSelection();
+      if (!selection.isCollapsed) selection.removeAllRanges();
+      this.textAreaElementRef.nativeElement.focus();
+    }
+    this.removeMouseEventListeners();
     e.preventDefault();
   }
 
-  onInputStart(e: any) {
-    this.input.cancel();
-
-    // TODO:もっと良い方法考える
-    if (this.isLock) {
-      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
-    }
+  onRotateMouseDown(e: any) {
+    e.stopPropagation();
+    e.preventDefault();
   }
 
   @HostListener('contextmenu', ['$event'])
@@ -254,6 +232,12 @@ export class TextNoteComponent implements OnChanges, OnDestroy {
 
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
     let position = this.pointerDeviceService.pointers[0];
+
+    let menuActions: ContextMenuAction[] = [];
+    menuActions = menuActions.concat(this.makeSelectionContextMenu());
+    menuActions = menuActions.concat(this.makeContextMenu());
+
+//    this.contextMenuService.open(position, menuActions, this.title);    
     this.contextMenuService.open(position, [
       {
         name: '高度設定', action: null, subActions: [
