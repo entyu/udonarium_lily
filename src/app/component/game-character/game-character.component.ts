@@ -1,34 +1,26 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   HostListener,
   Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  ViewChild
+  OnChanges,
+  OnDestroy
 } from '@angular/core';
-import { GameObject } from '@udonarium/core/synchronize-object/game-object';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
-import { ObjectNode } from '@udonarium/core/synchronize-object/object-node';
-import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { GameCharacter } from '@udonarium/game-character';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { ChatPaletteComponent } from 'component/chat-palette/chat-palette.component';
 import { GameCharacterSheetComponent } from 'component/game-character-sheet/game-character-sheet.component';
-import { InputHandler } from 'directive/input-handler';
 import { MovableOption } from 'directive/movable.directive';
 import { RotableOption } from 'directive/rotable.directive';
-import { ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
+import { ContextMenuAction, ContextMenuSeparator, ContextMenuService } from 'service/context-menu.service';
 import { PanelOption, PanelService } from 'service/panel.service';
 import { PointerDeviceService } from 'service/pointer-device.service';
-import { RemoteControllerComponent } from 'component/remote-controller/remote-controller.component';
-import { GameCharacterBuffViewComponent } from 'component/game-character-buff-view/game-character-buff-view.component';
+import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 
 @Component({
   selector: 'game-character',
@@ -52,10 +44,10 @@ import { GameCharacterBuffViewComponent } from 'component/game-character-buff-vi
     ])
   ]
 })
-export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GameCharacterComponent implements OnChanges, OnDestroy {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
-  @ViewChild('root') rootElementRef: ElementRef<HTMLElement>;
+//  @ViewChild('root') rootElementRef: ElementRef<HTMLElement>;
 
   get isLock(): boolean { return this.gameCharacter.isLock; }
   set isLock(isLock: boolean) { this.gameCharacter.isLock = isLock; }
@@ -75,6 +67,11 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   set isAltitudeIndicate(isAltitudeIndicate: boolean) { this.gameCharacter.isAltitudeIndicate = isAltitudeIndicate; }
 
   private foldingBuff: boolean = false;
+
+  get selectionState(): SelectionState { return this.selectionService.state(this.gameCharacter); }
+  get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
+  get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
+
   gridSize: number = 50;
   math = Math;
 
@@ -82,49 +79,25 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
   viewRotateZ = 10;
 
   movableOption: MovableOption = {};
-  private input: InputHandler = null;
-
   rotableOption: RotableOption = {};
-
-  private highlightTimer: NodeJS.Timer;
-  private unhighlightTimer: NodeJS.Timer;
-
-  get elevation(): number {
-    return +((this.gameCharacter.posZ + (this.altitude * this.gridSize)) / this.gridSize).toFixed(1);
-  }
-
-  get chatBubbleAltitude(): number {
-/*
-    let cos =  Math.cos(this.roll * Math.PI / 180);
-    let sin = Math.abs(Math.sin(this.roll * Math.PI / 180));
-    if (cos < 0.5) cos = 0.5;
-    if (sin < 0.5) sin = 0.5;
-    const altitude1 = (this.characterImageHeight + (this.name != '' ? 24 : 0)) * cos + 4;
-    const altitude2 = (this.characterImageWidth / 2) * sin + 4 + this.characterImageWidth / 2;
-    let ret = altitude1 > altitude2 ? altitude1 : altitude2;
-    this.gameCharacter.chatBubbleAltitude = ret;
-*/
-    let ret = 0;
-    return ret;
-  }
+  rollOption: RotableOption = {};
 
   constructor(
-    private ngZone: NgZone,
     private contextMenuService: ContextMenuService,
-    private elementRef: ElementRef<HTMLElement>,
     private panelService: PanelService,
     private changeDetector: ChangeDetectorRef,
-    private pointerDeviceService: PointerDeviceService,
+    private selectionService: TabletopSelectionService,
+    private pointerDeviceService: PointerDeviceService
   ) { }
 
-  ngOnInit() {
+  ngOnChanges(): void {
+    EventSystem.unregister(this);
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', event => {
-        let object = ObjectStore.instance.get(event.data.identifier);
-        if (!this.gameCharacter || !object) return;
-        if (this.gameCharacter === object || (object instanceof ObjectNode && this.gameCharacter.contains(object))) {
-          this.changeDetector.markForCheck();
-        }
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.gameCharacter?.identifier}`, event => {
+        this.changeDetector.markForCheck();
+      })
+      .on(`UPDATE_OBJECT_CHILDREN/identifier/${this.gameCharacter?.identifier}`, event => {
+        this.changeDetector.markForCheck();
       })
       .on('SYNCHRONIZE_FILE_LIST', event => {
         this.changeDetector.markForCheck();
@@ -132,45 +105,8 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
       .on('UPDATE_FILE_RESOURE', event => {
         this.changeDetector.markForCheck();
       })
-      .on<object>('TABLE_VIEW_ROTATE', -1000, event => {
-        this.ngZone.run(() => {
-          this.viewRotateX = event.data['x'];
-          this.viewRotateZ = event.data['z'];
-          this.changeDetector.markForCheck();
-        });
-      })
-      .on('CHK_TARGET_CHANGE', -1000, event => {
-        let objct = ObjectStore.instance.get(event.data.identifier);
-        if (objct == this.gameCharacter) {
-          this.changeDetector.detectChanges();
-        }
-      })
-
-      .on('HIGHTLIGHT_TABLETOP_OBJECT', event => {
-        if (this.gameCharacter.identifier !== event.data.identifier) { return; }
-        if (this.gameCharacter.location.name != "table") { return; }
-
-        console.log(`recv focus event to ${this.gameCharacter.name}`);
-        // アニメーション開始のタイマーが既にあってアニメーション開始前（ごくわずかな間）ならば何もしない
-        if (this.highlightTimer != null) { return; }
-
-        // アニメーション中であればアニメーションを初期化
-        if (this.rootElementRef.nativeElement.classList.contains('focused')) {
-          clearTimeout(this.unhighlightTimer);
-          this.rootElementRef.nativeElement.classList.remove('focused');
-        }
-
-        // アニメーション開始処理タイマー
-        this.highlightTimer = setTimeout(() => {
-          this.highlightTimer = null;
-          this.rootElementRef.nativeElement.classList.add('focused');
-        }, 0);
-
-        // アニメーション終了処理タイマー
-        this.unhighlightTimer = setTimeout(() => {
-          this.unhighlightTimer = null;
-          this.rootElementRef.nativeElement.classList.remove('focused');
-        }, 1010);
+      .on(`UPDATE_SELECTION/identifier/${this.gameCharacter?.identifier}`, event => {
+        this.changeDetector.markForCheck();
       });
     this.movableOption = {
       tabletopObject: this.gameCharacter,
@@ -180,17 +116,13 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.rotableOption = {
       tabletopObject: this.gameCharacter
     };
-  }
-
-  ngAfterViewInit() {
-    this.ngZone.runOutsideAngular(() => {
-      this.input = new InputHandler(this.elementRef.nativeElement);
-    });
-    this.input.onStart = this.onInputStart.bind(this);
+    this.rollOption = {
+      tabletopObject: this.gameCharacter,
+      targetPropertyName: 'roll',
+    };
   }
 
   ngOnDestroy() {
-    this.input.destroy();
     EventSystem.unregister(this);
   }
 
@@ -201,17 +133,6 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     e.preventDefault();
   }
 
-
-  onInputStart(e: any) {
-    this.input.cancel();
-
-    // TODO:もっと良い方法考える
-    if (this.isLock) {
-      EventSystem.trigger('DRAG_LOCKED_OBJECT', {});
-    }
-  }
-
-
   @HostListener('contextmenu', ['$event'])
   onContextMenu(e: Event) {
     e.stopPropagation();
@@ -220,7 +141,71 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
     if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
 
     let position = this.pointerDeviceService.pointers[0];
-    this.contextMenuService.open(position, [
+
+    let menuActions: ContextMenuAction[] = [];
+    menuActions = menuActions.concat(this.makeSelectionContextMenu());
+    menuActions = menuActions.concat(this.makeContextMenu());
+    this.contextMenuService.open(position, menuActions, this.name);
+  }
+
+  onMove() {
+    this.contextMenuService.close();
+    SoundEffect.play(PresetSound.piecePick);
+  }
+
+  onMoved() {
+    SoundEffect.play(PresetSound.piecePut);
+  }
+
+  private makeSelectionContextMenu(): ContextMenuAction[] {
+    if (this.selectionService.objects.length < 1) return [];
+
+    let actions: ContextMenuAction[] = [];
+
+    let objectPosition = {
+      x: this.gameCharacter.location.x + (this.gameCharacter.size * this.gridSize) / 2,
+      y: this.gameCharacter.location.y + (this.gameCharacter.size * this.gridSize) / 2,
+      z: this.gameCharacter.posZ
+    };
+    actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
+
+    if (this.isSelected) {
+      let selectedCharacter = () => this.selectionService.objects.filter(object => object.aliasName === this.gameCharacter.aliasName) as GameCharacter[];
+      actions.push(
+        {
+          name: '選択したキャラクター', action: null, subActions: [
+            {
+              name: 'すべて共有イベントリに移動', action: () => {
+                selectedCharacter().forEach(gameCharacter => {
+                  gameCharacter.setLocation('common')
+                  this.selectionService.remove(gameCharacter);
+                });
+                SoundEffect.play(PresetSound.piecePut);
+              }
+            },
+            {
+              name: 'すべて個人イベントリに移動', action: () => {
+                selectedCharacter().forEach(gameCharacter => {
+                  gameCharacter.setLocation(Network.peerId);
+                  this.selectionService.remove(gameCharacter);
+                });
+                SoundEffect.play(PresetSound.piecePut);
+              }
+            },
+            {
+              name: 'すべて墓場に移動', action: () => {
+                selectedCharacter().forEach(gameCharacter => {
+                  gameCharacter.setLocation('graveyard');
+                  this.selectionService.remove(gameCharacter);
+                });
+                SoundEffect.play(PresetSound.sweep);
+              }
+            },
+          ]
+        }
+      );
+      actions.push(ContextMenuSeparator);
+      actions.push(
       { 
         name: '高度設定', action: null, subActions: [
           {
@@ -261,78 +246,64 @@ export class GameCharacterComponent implements OnInit, OnDestroy, AfterViewInit 
               },
             })
         ]
-      },
-      ContextMenuSeparator,
-      { name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } },
-      { name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } },
-      { name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } },
-      { name: 'バフ編集', action: () => { this.showBuffEdit(this.gameCharacter) } },
-      ContextMenuSeparator,
-      {
+      });
+      actions.push(ContextMenuSeparator);
+      return actions;
+    }
+  private makeContextMenu(): ContextMenuAction[] {
+    let actions: ContextMenuAction[] = [];
+    
+    actions.push({ name: '詳細を表示', action: () => { this.showDetail(this.gameCharacter); } });
+    actions.push({ name: 'チャットパレットを表示', action: () => { this.showChatPalette(this.gameCharacter) } });
+    actions.push({ name: 'リモコンを表示', action: () => { this.showRemoteController(this.gameCharacter) } });
+    actions.push(ContextMenuSeparator);
+    actions.push({ name: 'バフ編集', action: () => { this.showBuffEdit(this.gameCharacter) } });
+
+    actions.push(ContextMenuSeparator);
+    actions.push({
         name: '共有イベントリに移動', action: () => {
           this.gameCharacter.setLocation('common');
           SoundEffect.play(PresetSound.piecePut);
         }
-      },
-      {
-        name: '個人イベントリに移動', action: () => {
-          this.gameCharacter.setLocation(Network.peerId);
-          SoundEffect.play(PresetSound.piecePut);
-        }
-      },
-      {
+      });
+    actions.push({
+      name: '個人イベントリに移動', action: () => {
+        this.gameCharacter.setLocation(Network.peerId);
+        SoundEffect.play(PresetSound.piecePut);
+      }
+    });
+    actions.push({
         name: '墓場に移動', action: () => {
-          this.gameCharacter.setLocation('graveyard');
-          SoundEffect.play(PresetSound.sweep);
+        this.gameCharacter.setLocation('graveyard');
+        SoundEffect.play(PresetSound.sweep);
+      }
+    });
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      this.isLock
+      ? {
+        name: '固定解除', action: () => {
+          this.isLock = false;
+          SoundEffect.play(PresetSound.unlock);
         }
-      },
-/*
-      {
-        name: '削除', action: () => {
-          console.log("円柱_削除実行_キャラコマ");
-          this.gameCharacter.setLocation('graveyard');
-          this.deleteGameObject(this.gameCharacter);
-          ObjectStore.instance.clearDeleteHistory();
+      } : {
+        name: '固定する', action: () => {
+          this.isLock = true;
+          SoundEffect.play(PresetSound.lock);
         }
-      },
-*/
-      ContextMenuSeparator,
-      (this.isLock
-        ? {
-          name: '固定解除', action: () => {
-            this.isLock = false;
-            SoundEffect.play(PresetSound.unlock);
-          }
-        } : {
-          name: '固定する', action: () => {
-            this.isLock = true;
-            SoundEffect.play(PresetSound.lock);
-          }
-        }),
-      ContextMenuSeparator,
-      {
-        name: 'コピーを作る', action: () => {
-          let cloneObject = this.gameCharacter.clone();
-          cloneObject.location.x += this.gridSize;
-          cloneObject.location.y += this.gridSize;
-          cloneObject.update();
-          SoundEffect.play(PresetSound.piecePut);
-        }
-      },
-    ], this.name);
-  }
+      });
 
-  private deleteGameObject(gameObject: GameObject) {
-    gameObject.destroy();
-    this.changeDetector.markForCheck();
-  }
-
-  onMove() {
-    SoundEffect.play(PresetSound.piecePick);
-  }
-
-  onMoved() {
-    SoundEffect.play(PresetSound.piecePut);
+    actions.push(ContextMenuSeparator);
+    actions.push({
+      name: 'コピーを作る', action: () => {
+        let cloneObject = this.gameCharacter.clone();
+        cloneObject.location.x += this.gridSize;
+        cloneObject.location.y += this.gridSize;
+        cloneObject.update();
+        SoundEffect.play(PresetSound.piecePut);
+      }
+    });
+    return actions;
   }
 
   checkKey(event) {
