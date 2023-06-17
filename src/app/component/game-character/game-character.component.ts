@@ -47,7 +47,6 @@ import { SelectionState, TabletopSelectionService } from 'service/tabletop-selec
 export class GameCharacterComponent implements OnChanges, OnDestroy {
   @Input() gameCharacter: GameCharacter = null;
   @Input() is3D: boolean = false;
-//  @ViewChild('root') rootElementRef: ElementRef<HTMLElement>;
 
   get isLock(): boolean { return this.gameCharacter.isLock; }
   set isLock(isLock: boolean) { this.gameCharacter.isLock = isLock; }
