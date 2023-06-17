@@ -1,14 +1,6 @@
-img {
-  height: 5px;
-  width: 5px;
+:host {
+  display: block;
 }
-.dummydisp {
-  position: absolute;
-  color: rgba(30, 30, 30, 0.0);
-  font-size: 10px;
-  max-height: 5px;
-}
-
 nav ul {
     list-style:none;
     padding: 0px;

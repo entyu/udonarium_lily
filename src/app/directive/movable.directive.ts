@@ -44,6 +44,7 @@ export class MovableDirective implements AfterViewInit, OnChanges, OnDestroy {
   get layerName(): string { return this._layerName; }
   get colideLayers(): string[] { return this._colideLayers; }
   get transformCssOffset(): string { return this._transformCssOffset; }
+
   @Input('movable.option') set option(option: MovableOption) {
     this.unregister();
     this.synchronizer.unregister();
@@ -59,7 +60,6 @@ export class MovableDirective implements AfterViewInit, OnChanges, OnDestroy {
     this.synchronizer.register();
   }
   @Input('movable.disable') isDisable: boolean = false;
-//  @Input('movable.scratch_owner') isScratcOwner: boolean = false;
   @Output('movable.onstart') onstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondragstart') ondragstart: EventEmitter<PointerEvent> = new EventEmitter();
   @Output('movable.ondrag') ondrag: EventEmitter<PointerEvent> = new EventEmitter();
@@ -72,15 +72,12 @@ export class MovableDirective implements AfterViewInit, OnChanges, OnDestroy {
   private _posY: number = 0;
   private _posZ: number = 0;
 
-  private mathFloor: boolean = true;
-
   get posX(): number { return this._posX; }
-  set posX(posX: number) { this._posX = this.mathFloor? Math.floor(posX):posX; this.setUpdateTimer(); }
+  set posX(posX: number) { this._posX = posX; this.setUpdateBatching(); }
   get posY(): number { return this._posY; }
-  set posY(posY: number) { this._posY = this.mathFloor? Math.floor(posY):posY; this.setUpdateTimer(); }
+  set posY(posY: number) { this._posY = posY; this.setUpdateBatching(); }
   get posZ(): number { return this._posZ; }
-  set posZ(posZ: number) { this._posZ = this.mathFloor? Math.floor(posZ*8)/8:posZ; this.setUpdateTimer(); }
-
+  set posZ(posZ: number) { this._posZ = posZ; this.setUpdateBatching(); }
 
   private pointerOffset2d: PointerCoordinate = { x: 0, y: 0, z: 0 };
   private pointerStart3d: PointerCoordinate = { x: 0, y: 0, z: 0 };
@@ -195,7 +192,6 @@ export class MovableDirective implements AfterViewInit, OnChanges, OnDestroy {
     this.callSelectedEvent();
     if (this.collidableElements.length < 1) this.findCollidableElements(); // 稀にcollidableElementsの取得に失敗している
 
-//    if ((this.isDisable && !this.isScratcOwner )|| (e as MouseEvent).button === 1 || (e as MouseEvent).button === 2) return this.cancel();
     if (this.isDisable || (e instanceof MouseEvent && (e.button !== 0 || e.ctrlKey || e.shiftKey))) {
       this.cancel();
       return;
@@ -229,9 +225,9 @@ export class MovableDirective implements AfterViewInit, OnChanges, OnDestroy {
 
     this.targetStartRect = this.nativeElement.getBoundingClientRect();
     
-    if(this.isScratcOwner){
-      this.scratchObjectPosition(true);
-    }
+//    if(this.isScratcOwner){
+//      this.scratchObjectPosition(true);
+//    }
     this.ratio = 1.0;
 
     this.synchronizer.prepareMove();
@@ -243,7 +239,7 @@ export class MovableDirective implements AfterViewInit, OnChanges, OnDestroy {
     }
     if (this.isDisable || !this.input.isGrabbing) return this.cancel();
 
-    if ((this.isDisable && !this.isScratcOwner) || !this.input.isGrabbing) return this.cancel();
+//    if ((this.isDisable && !this.isScratcOwner) || !this.input.isGrabbing) return this.cancel();
     
     if (e.cancelable) e.preventDefault();
 
@@ -276,19 +272,22 @@ export class MovableDirective implements AfterViewInit, OnChanges, OnDestroy {
       this.ratio += (ratio - this.ratio) * 0.1;
     }
 
-    if(!this.isScratcOwner){  //スクラッチマスク用の処理スキップ
-      this.posX = pointer3d.x;
-      this.posY = pointer3d.y;
-      this.posZ = pointer3d.z;
-    }else{
-      this.scratchObjectPosition(false);
-    }
+    let delta = {
+      x: pointer3d.x - this.posX,
+      y: pointer3d.y - this.posY,
+      z: pointer3d.z - this.posZ,
+    };
+
+    this.posX = pointer3d.x;
+    this.posY = pointer3d.y;
+    this.posZ = pointer3d.z;
+
+    this.synchronizer.updateMove(delta);
   }
 
   onInputEnd(e: MouseEvent | TouchEvent) {
     if (this.isDisable) return this.cancel();
     if (this.input.isDragging) this.ondragend.emit(e as PointerEvent);
-//    if (this.isGridSnap && this.input.isDragging && !this.isScratcOwner) this.snapToGrid();
 
     let prev = {
       x: this.posX,
@@ -344,9 +343,9 @@ export class MovableDirective implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private setPosition(object: TabletopObject) {
-    this._posX = this.mathFloor? Math.floor(object.location.x):object.location.x;
-    this._posY = this.mathFloor? Math.floor(object.location.y):object.location.y;
-    this._posZ = this.mathFloor? Math.floor(object.posZ*8)/8:object.posZ;
+    this._posX = object.location.x;
+    this._posY = object.location.y;
+    this._posZ = object.posZ;
     this.updateTransformCss();
   }
 
