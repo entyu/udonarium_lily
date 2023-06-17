@@ -1,4 +1,4 @@
-import { ComponentFactoryResolver, ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { ComponentFactoryResolver, ComponentRef, Injectable, OnChanges, ViewContainerRef } from '@angular/core';
 import { ChatTab } from '@udonarium/chat-tab';
 import { CardStack } from '@udonarium/card-stack';
 
@@ -53,6 +53,9 @@ export class PanelService {
 
     const injector = parentViewContainerRef.injector;
 
+    let panelComponentRef: ComponentRef<any> = parentViewContainerRef.createComponent(PanelService.UIPanelComponentClass, { index: parentViewContainerRef.length, injector: injector });
+    let bodyComponentRef: ComponentRef<any> = panelComponentRef.instance.content.createComponent(childComponent);
+
     const panelComponentFactory = this.componentFactoryResolver.resolveComponentFactory(PanelService.UIPanelComponentClass);
     const bodyComponentFactory = this.componentFactoryResolver.resolveComponentFactory(childComponent);
 
@@ -82,7 +85,21 @@ export class PanelService {
     }
     panelComponentRef.onDestroy(() => {
       childPanelService.panelComponentRef = null;
+      panelComponentRef = null;
     });
+
+    bodyComponentRef.onDestroy(() => {
+      bodyComponentRef = null;
+    });
+
+    let panelOnChanges = panelComponentRef.instance as OnChanges;
+    let bodyOnChanges = bodyComponentRef.instance as OnChanges;
+    if (panelOnChanges?.ngOnChanges != null || bodyOnChanges?.ngOnChanges != null) {
+      queueMicrotask(() => {
+        if (bodyComponentRef && bodyOnChanges?.ngOnChanges != null) bodyOnChanges?.ngOnChanges({});
+        if (panelComponentRef && panelOnChanges?.ngOnChanges != null) panelOnChanges?.ngOnChanges({});
+      });
+    }
 
     return <T>bodyComponentRef.instance;
   }
@@ -92,6 +109,5 @@ export class PanelService {
       this.panelComponentRef.destroy();
       this.panelComponentRef = null;
     }
-
   }
 }
