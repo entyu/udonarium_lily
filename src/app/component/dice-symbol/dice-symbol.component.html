@@ -7,7 +7,7 @@
     <div appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()"
       class="component-content is-3d is-pointer-events-auto">
       <ng-container *ngIf="!isIconHidden">
-      <div *ngIf="!isLock" class="pedestal-grab rotate-grab is-3d will-change">
+      <div *ngIf="!isLock" class="pedestal-grab rotate-grab">
         <div class="pedestal-grab-border">
           <div class="material-icons of-front">autorenew</div>
           <div class="material-icons of-back">autorenew</div>

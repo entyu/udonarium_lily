@@ -61,7 +61,7 @@ import { SelectionState, TabletopSelectionService } from 'service/tabletop-selec
     ])
   ]
 })
-export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DiceSymbolComponent implements OnChanges, AfterViewInit, OnDestroy {
   @Input() diceSymbol: DiceSymbol = null;
   @Input() is3D: boolean = false;
 
@@ -74,7 +74,7 @@ export class DiceSymbolComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get name(): string { return this.diceSymbol.name; }
   set name(name: string) { this.diceSymbol.name = name; }
-  get size(): number { return this.adjustMinBounds(this.diceSymbol.size); }
+  get size(): number { return MathUtil.clampMin(this.diceSymbol.size); }
 
   get imageHeignt(): number { return this.diceSymbol.komaImageHeignt; }
   get specifyImageFlag(): boolean { return this.diceSymbol.specifyKomaImageFlag; }

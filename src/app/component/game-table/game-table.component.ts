@@ -9,7 +9,6 @@ import { DiceSymbol } from '@udonarium/dice-symbol';
 import { GameCharacter } from '@udonarium/game-character';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
 import { GameTableMask } from '@udonarium/game-table-mask';
-import { GameTableScratchMask } from '@udonarium/game-table-scratch-mask';
 import { PeerCursor } from '@udonarium/peer-cursor';
 import { PresetSound, SoundEffect } from '@udonarium/sound-effect';
 import { TableSelecter } from '@udonarium/table-selecter';
@@ -111,6 +110,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('UPDATE_GAME_OBJECT', event => {
         if (event.data.identifier !== this.currentTable.identifier && event.data.identifier !== this.tableSelecter.identifier) return;
         console.log('UPDATE_GAME_OBJECT GameTableComponent ' + this.currentTable.identifier);
+
         this.setGameTableGrid(this.currentTable.width, this.currentTable.height, this.currentTable.gridSize, this.currentTable.gridType, this.currentTable.gridColor);
       })
       .on('RE_DRAW_TABLE', event => {
@@ -251,6 +251,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
       this.gridCanvas.nativeElement.style.opacity = 1.0 + '';
       EventSystem.trigger('DISP_TERRAIN_GRID', {});
     }
+
     if (!document.activeElement.contains(e.target)) {
       this.removeSelectionRanges();
       this.removeFocus();
@@ -349,6 +350,7 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.contextMenuService.open(menuPosition, menuActions, this.currentTable.name);
   }
+
   @HostListener('document:mousedown', ['$event'])
   onDocumentMouseDown(e: MouseEvent) {
     this.isTableTransformed = false;
@@ -387,7 +389,6 @@ export class GameTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setGameTableGrid(width: number, height: number, gridSize: number = 50, gridType: GridType = GridType.SQUARE, gridColor: string = '#000000e6') {
-    
     this.gameTable.nativeElement.style.width = width * gridSize + 'px';
     this.gameTable.nativeElement.style.height = height * gridSize + 'px';
 

@@ -154,7 +154,8 @@ export class CardComponent implements OnDestroy, OnChanges, AfterViewInit {
 
     if (e.detail instanceof CardStack) {
       let cardStack: CardStack = e.detail;
-     let distance: number = this.card.calcSqrDistance(cardStack);      if (distance < 25 ** 2) {
+      let distance: number = this.card.calcSqrDistance(cardStack);
+      if (distance < 25 ** 2) {
         cardStack.location.x = this.card.location.x;
         cardStack.location.y = this.card.location.y;
         cardStack.posZ = this.card.posZ;

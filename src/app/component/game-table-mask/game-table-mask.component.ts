@@ -8,8 +8,7 @@ import {
   Input,
   NgZone,
   OnChanges,
-  OnDestroy,
-  
+  OnDestroy
 } from '@angular/core';
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
 import { EventSystem } from '@udonarium/core/system';
@@ -74,12 +73,16 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
   set dispLockMark(disp: boolean) { this.gameTableMask.dispLockMark = disp; }
 
   get name(): string { return this.gameTableMask.name; }
-  get width(): number { return this.adjustMinBounds(this.gameTableMask.width); }
-  get height(): number { return this.adjustMinBounds(this.gameTableMask.height); }
+  get width(): number { return MathUtil.clampMin(this.gameTableMask.width); }
+  get height(): number { return MathUtil.clampMin(this.gameTableMask.height); }
   get opacity(): number { return this.gameTableMask.opacity; }
   get imageFile(): ImageFile { return this.gameTableMask.imageFile; }
   get isLock(): boolean { return this.gameTableMask.isLock; }
   set isLock(isLock: boolean) { this.gameTableMask.isLock = isLock; }
+
+  get selectionState(): SelectionState { return this.selectionService.state(this.gameTableMask); }
+  get isSelected(): boolean { return this.selectionState !== SelectionState.NONE; }
+  get isMagnetic(): boolean { return this.selectionState === SelectionState.MAGNETIC; }
 
   get color(): string { return this.gameTableMask.color; }
   set color(color: string) { this.gameTableMask.color = color; }
@@ -265,6 +268,23 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     }
   }
 
+  @HostListener('contextmenu', ['$event'])
+  onContextMenu(e: Event) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
+    let menuPosition = this.pointerDeviceService.pointers[0];
+
+    let menuActions: ContextMenuAction[] = [];
+    menuActions = menuActions.concat(this.makeSelectionContextMenu());
+    menuActions = menuActions.concat(this.makeContextMenu());
+
+    this.contextMenuService.open(menuPosition, menuActions, this.name);
+  }
+
+
+
   @HostListener('pointerdown', ['$event'])
   onInputStartPointer(e: PointerEvent) {
     if (!this.isScratching || !this.gameTableMask.isMine) { 
@@ -351,17 +371,91 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
     this.scratchedGrids = xor(currentScratchedAry, currentScratchingAry).filter(grid => grid && /^\d+:\d+$/.test(grid)).sort().join(',');
   }
 
-  @HostListener('contextmenu', ['$event'])
-  onContextMenu(e: Event) {
+  onMove() {
+    this.contextMenuService.close();
+    SoundEffect.play(PresetSound.cardPick);
+  }
 
-    e.stopPropagation();
-    e.preventDefault();
+  onMoved() {
+    SoundEffect.play(PresetSound.cardPut);
+  }
 
-    if (!this.pointerDeviceService.isAllowedToOpenContextMenu) return;
-    let menuPosition = this.pointerDeviceService.pointers[0];
+  private makeSelectionContextMenu(): ContextMenuAction[] {
+    if (this.selectionService.objects.length < 1) return [];
+
+    let actions: ContextMenuAction[] = [];
+
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
-    let menuArray = [];
-    menuArray.push(
+    actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
+
+    if (this.isSelected) {
+      let selectedGameTableMasks = () => this.selectionService.objects.filter(object => object.aliasName === this.gameTableMask.aliasName) as GameTableMask[];
+      actions.push(
+        {
+          name: '選択したマップマスク', action: null, subActions: [
+            {
+              name: 'すべて固定する', action: () => {
+                selectedGameTableMasks().forEach(gameTableMask => gameTableMask.isLock = true);
+                SoundEffect.play(PresetSound.lock);
+              }
+            },
+            {
+              name: 'すべてのコピーを作る', action: () => {
+                selectedGameTableMasks().forEach(gameTableMask => {
+                  let cloneObject = gameTableMask.clone();
+                  cloneObject.location.x += this.gridSize;
+                  cloneObject.location.y += this.gridSize;
+                  cloneObject.isLock = false;
+                  if (gameTableMask.parent) gameTableMask.parent.appendChild(cloneObject);
+                });
+                SoundEffect.play(PresetSound.cardPut);
+              }
+            },
+          ]
+        }
+      );
+    }
+    actions.push(ContextMenuSeparator);
+    return actions;
+  }
+
+  private makeContextMenu(): ContextMenuAction[] {
+    let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
+    let actions: ContextMenuAction[] = [];
+    actions.push((this.isLock
+        ? {
+          name: '固定解除', action: () => {
+            this.isLock = false;
+            this.dispLockMark = true;
+            SoundEffect.play(PresetSound.unlock);
+          }
+        }
+        : {
+          name: '固定する', action: () => {
+            this.isLock = true;
+            SoundEffect.play(PresetSound.lock);
+          }
+        }
+      ));
+    if (this.isLock){
+        actions.push(
+        this.dispLockMark
+          ? {
+            name: '固定マーク消去', action: () => {
+              this.dispLockMark = false;
+              SoundEffect.play(PresetSound.lock);
+            }
+          }
+          : {
+            name: '固定マーク表示', action: () => {
+              this.dispLockMark = true;
+              SoundEffect.play(PresetSound.lock);
+            }
+          }
+        );
+      };
+
+    actions.push(
       {
         name: '高度設定', action: null, subActions: [
           {
@@ -388,49 +482,16 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
               }
             })
         ]
-      },
-      ContextMenuSeparator,
-      this.isLock
-        ? {
-          name: '固定解除', action: () => {
-            this.isLock = false;
-            this.dispLockMark = true;
-            SoundEffect.play(PresetSound.unlock);
-          }
-        }
-        : {
-          name: '固定する', action: () => {
-            this.isLock = true;
-            SoundEffect.play(PresetSound.lock);
-          }
-        }
-      )
-      if (this.isLock){
-        menuArray.push(
-        this.dispLockMark
-          ? {
-            name: '固定マーク消去', action: () => {
-              this.dispLockMark = false;
-              SoundEffect.play(PresetSound.lock);
-            }
-          }
-          : {
-            name: '固定マーク表示', action: () => {
-              this.dispLockMark = true;
-              SoundEffect.play(PresetSound.lock);
-            }
-          }
-        );
-      }
+      });
+    actions.push(ContextMenuSeparator);
       if (!this.gameTableMask.isMine) {
-        menuArray.push({
+        actions.push({
           name: 'スクラッチ開始', action: () => {
             if (this.gameTableMask.owner != '') {
               this.isPreview = false;
               clearTimeout(this._scratchingTimerId);
               this._currentScratchingSet = null;
             }
-//            this.isPreview = true;
             SoundEffect.play(PresetSound.cardDraw);
             this.gameTableMask.owner = Network.peerContext.userId;
             this._scratchingGridX = -1;
@@ -439,7 +500,7 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
           }
         });
       }else{
-        menuArray.push({
+        actions.push({
           name: 'スクラッチ確定', action: () => {
             this.scratchDone();
             this.isPreview = false;
@@ -448,10 +509,9 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
         });
       }
       if (this.gameTableMask.isMine){
-        menuArray.push(
+        actions.push(
             {
             name: 'スクラッチキャンセル', action: () => {
-//              this.isScratch = false;
               SoundEffect.play(PresetSound.cardDraw);
               this.gameTableMask.owner = '';
             }
@@ -459,45 +519,28 @@ export class GameTableMaskComponent implements OnChanges, OnDestroy, AfterViewIn
         );
       }
       
-      menuArray.push( ContextMenuSeparator);
-      menuArray.push( 
-        { name: 'マスクを編集', action: () => { this.showDetail(this.gameTableMask); } }
-      );
-      menuArray.push( 
+      actions.push( ContextMenuSeparator);
+      actions.push( { name: 'マップマスクを編集', action: () => { this.showDetail(this.gameTableMask); } } );
+      actions.push( 
         {name: 'コピーを作る', action: () => {
           let cloneObject = this.gameTableMask.clone();
-          console.log('コピー', cloneObject);
           cloneObject.location.x += this.gridSize;
           cloneObject.location.y += this.gridSize;
           cloneObject.isLock = false;
           if (this.gameTableMask.parent) this.gameTableMask.parent.appendChild(cloneObject);
           SoundEffect.play(PresetSound.cardPut);
         }
-      }
-      );
-      menuArray.push( 
-      {
+      });
+      actions.push({
         name: '削除する', action: () => {
           this.gameTableMask.destroy();
           SoundEffect.play(PresetSound.sweep);
         }
-      }
-      );
-      menuArray.push( ContextMenuSeparator);
-      menuArray.push( 
-        { name: 'オブジェクト作成', action: null, subActions: this.tabletopActionService.makeDefaultContextMenuActions(objectPosition) }
-      );
-    this.contextMenuService.open(menuPosition, menuArray, this.name);
+      });
+      actions.push( ContextMenuSeparator);
+      actions.push({ name: 'オブジェクト作成', action: null, subActions: this.tabletopActionService.makeDefaultContextMenuActions(objectPosition) });
+      return actions;
   }
-
-  onMove() {
-    SoundEffect.play(PresetSound.cardPick);
-  }
-
-  onMoved() {
-    SoundEffect.play(PresetSound.cardPut);
-  }
-
 
   scratchDone(e: Event=null) {
     if (e) {

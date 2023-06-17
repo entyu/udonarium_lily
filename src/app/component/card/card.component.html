@@ -11,19 +11,19 @@
     </div>
     <img *ngIf="isHand && frontImage" class="card-image thumbnail-transform is-translucent is-3d will-change chrome-smooth-image-trick" [src]="frontImage.url | safe: 'resourceUrl'">
     <ng-container *ngIf="!isIconHidden  && !isLock">
-      <div class="rotate-grab of-left-top is-3d will-change">
+      <div class="rotate-grab of-left-top">
         <i class="material-icons">autorenew</i>
       </div>
-      <div class="rotate-grab of-left-bottom is-3d will-change">
+      <div class="rotate-grab of-left-bottom">
         <i class="material-icons">autorenew</i>
       </div>
-      <div class="rotate-grab of-right-bottom is-3d will-change">
+      <div class="rotate-grab of-right-bottom">
         <i class="material-icons">autorenew</i>
       </div>
-      <div class="rotate-grab of-right-top is-3d will-change">
+      <div class="rotate-grab of-right-top">
         <i class="material-icons">autorenew</i>
       </div>
-      <div class="border-bg is-pointer-events-none is-3d will-change"></div>
+      <div class="border-bg is-pointer-events-none"></div>
     </ng-container>
     <div *ngIf="isLock && dispLockMark" class="lock-icon-mark is-nowrap is-black-background is-3d will-change" [ngStyle]="{'transform': 'translateY(0%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
       <i class="material-icons" style="display: inline;">lock</i>

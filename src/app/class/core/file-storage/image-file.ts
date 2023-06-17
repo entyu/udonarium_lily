@@ -24,7 +24,7 @@ export interface ThumbnailContext {
 }
 
 export class ImageFile {
-  context: ImageContext = {
+  private context: ImageContext = {
     identifier: '',
     name: '',
     blob: null,

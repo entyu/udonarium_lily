@@ -26,13 +26,6 @@
 .is-3d {
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
-  backface-visibility: visible;
-  position: absolute;
-}
-
-.is-3d-2 {
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
   backface-visibility: hidden;
   position: absolute;
 }
@@ -100,6 +93,7 @@
   -moz-transition: 0.3s ease-out;
   -o-transition: 0.3s ease-out;
   transition: 0.3s ease-out;
+  
   backface-visibility: hidden;
 }
 

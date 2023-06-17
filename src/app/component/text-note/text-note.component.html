@@ -19,7 +19,7 @@
             [style.font-size.px]="fontSize + 9" [(ngModel)]="text" spellcheck="false" id="text-area" 
             style = "overflow:hidden auto;"
             ></textarea>
-           
+          <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
         </div>
       </div>
       <ng-container *ngIf="!isLock">

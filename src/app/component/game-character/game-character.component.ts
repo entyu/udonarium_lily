@@ -52,7 +52,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
   set isLock(isLock: boolean) { this.gameCharacter.isLock = isLock; }
 
   get name(): string { return this.gameCharacter.name; }
-  get size(): number { return this.adjustMinBounds(this.gameCharacter.size); }
+  get size(): number { return MathUtil.clampMin(this.gameCharacter.size); }
   get altitude(): number { return this.gameCharacter.altitude; }
   set altitude(altitude: number) { this.gameCharacter.altitude = altitude; }
   get imageFile(): ImageFile { return this.gameCharacter.imageFile; }
@@ -249,6 +249,7 @@ export class GameCharacterComponent implements OnChanges, OnDestroy {
       actions.push(ContextMenuSeparator);
       return actions;
     }
+    
   private makeContextMenu(): ContextMenuAction[] {
     let actions: ContextMenuAction[] = [];
     

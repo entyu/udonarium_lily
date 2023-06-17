@@ -64,8 +64,19 @@
   bottom: 0;
   left: 0;
   right: 0;
+/*  transform-origin: 50% 100%;
+  transform: rotateX(-90deg);*/
+  backface-visibility: hidden;
+}
+
+.is-front {
   transform-origin: 50% 100%;
   transform: rotateX(-90deg);
+}
+
+.is-back {
+  transform-origin: 50% 100%;
+  transform: rotateX(-90deg) rotateY(180deg);
 }
 
 .is-bg-texture {
@@ -157,7 +168,6 @@
   #f2f2f2 0px 0px 0.5px,
   #f2f2f2 0px 0px 0.5px;
 }
-
 
 .selected-highlight {
   pointer-events: none;

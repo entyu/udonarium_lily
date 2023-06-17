@@ -27,11 +27,8 @@ import { PointerDeviceService } from 'service/pointer-device.service';
 import { TabletopActionService } from 'service/tabletop-action.service';
 import { SelectionState, TabletopSelectionService } from 'service/tabletop-selection.service';
 
-//import { TabletopService } from 'service/tabletop.service';
 import { GridLineRender } from 'component/game-table/grid-line-render'; // 注意別のコンポーネントフォルダにアクセスしてグリッドの描画を行っている
-//import { TableSelecter } from '@udonarium/table-selecter';
 import { FilterType, GameTable, GridType } from '@udonarium/game-table';
-
 import { Config } from '@udonarium/config';
 
 @Component({
@@ -268,6 +265,7 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
     actions.push(ContextMenuSeparator);
     return actions;
   }
+  
   private makeContextMenu(): ContextMenuAction[] {
     let objectPosition = this.coordinateService.calcTabletopLocalCoordinate();
     let actions: ContextMenuAction[] = [];

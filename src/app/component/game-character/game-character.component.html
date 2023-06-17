@@ -9,6 +9,7 @@
       (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
       <div *ngIf="!this.gameCharacter.hideInventory" class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #FFCC80'}"></div> 
       <div *ngIf="this.gameCharacter.hideInventory" class="pedestal-inner is-3d" [style]="{ 'border': 'solid 6px #A0E0FF'}"></div>
+      <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
       <div class="pedestal-outer"></div>
 <!--床回転アイコン-->
       <div *ngIf="!isLock" class="pedestal-grab rotate-grab will-change">
