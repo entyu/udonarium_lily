@@ -237,7 +237,7 @@ export class TerrainComponent implements OnChanges, OnDestroy, AfterViewInit {
 
     if (this.isSelected) {
       let selectedGameTableMasks = () => this.selectionService.objects.filter(object => object.aliasName === this.terrain.aliasName) as Terrain[];
-          actions.push(
+      actions.push(
         {
           name: '選択した地形', action: null, subActions: [
             {

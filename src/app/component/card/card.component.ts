@@ -257,11 +257,9 @@ export class CardComponent implements OnDestroy, OnChanges, AfterViewInit {
     };
     actions.push({ name: 'ここに集める', action: () => this.selectionService.congregate(objectPosition) });
 
-        }
     actions.push(ContextMenuSeparator);
-    return actions;
-  }    if (this.isSelected) {
-    let selectedCards = () => this.selectionService.objects.filter(object => object.aliasName === this.card.aliasName) as Card[];
+    if (this.isSelected) {
+      let selectedCards = () => this.selectionService.objects.filter(object => object.aliasName === this.card.aliasName) as Card[];
       actions.push(
         {
           name: '選択したカード', action: null, subActions: [
@@ -289,7 +287,10 @@ export class CardComponent implements OnDestroy, OnChanges, AfterViewInit {
           ]
         }
       );
-
+    }
+    actions.push(ContextMenuSeparator);
+    return actions;
+  }
 
   private makeContextMenu(): ContextMenuAction[] {
     let actions: ContextMenuAction[] = [];      
