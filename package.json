@@ -25,7 +25,7 @@
     "@angular/youtube-player": "^13.3.0",
     "@ng-select/ng-select": "^8.1.1",
     "autolinker": "^3.15.0",
-    "bcdice": "^4.2.0",
+    "bcdice": "^4.6.0",
     "crypto-js": "^4.1.1",
     "file-saver": "^2.0.5",
     "hammerjs": "^2.0.8",
