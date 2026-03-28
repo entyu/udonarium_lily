@@ -45,7 +45,7 @@ export class ChatMessageFixComponent implements OnInit, OnDestroy {
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get otherPeers(): PeerCursor[] { return ObjectStore.instance.getObjects(PeerCursor); }
 
-  private calcFitHeightInterval: NodeJS.Timer = null;
+  private calcFitHeightInterval: NodeJS.Timeout = null;
 
   constructor(
     private ngZone: NgZone,

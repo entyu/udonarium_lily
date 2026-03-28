@@ -203,9 +203,9 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
   private shouldUpdateCharacterList = true;
   private _gameCharacters: GameCharacter[] = [];
 
-  private writingEventInterval: NodeJS.Timer = null;
+  private writingEventInterval: NodeJS.Timeout = null;
   private previousWritingLength = 0;
-//  writingPeers: Map<string, NodeJS.Timer> = new Map();
+//  writingPeers: Map<string, NodeJS.Timeout> = new Map();
   writingPeers: Map<string, ResettableTimeout> = new Map(); // 1.13.xとのmargeで修正
 
   writingPeerNames: string[] = [];
