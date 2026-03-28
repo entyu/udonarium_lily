@@ -38,10 +38,10 @@ export class ReConnectComponent implements OnInit, OnDestroy {
 
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
 
-  get currentRoom(): string { return Network.peerContext.roomId };
+  get currentRoom(): string { return Network.peer.roomId };
   get peerId(): string { return Network.peerId; }
   get isConnected(): boolean {
-    return Network.peerIds.length <= 1 ? false : true;
+    return Network.peerIds.length <= 0 ? false : true;
   }
 
   constructor(
@@ -52,9 +52,9 @@ export class ReConnectComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     Promise.resolve().then(() => this.changeTitle());
-    if (this.networkService.peerContext.isRoom){
-      this.roomName = this.networkService.peerContext.roomName;
-      this.roomId = this.networkService.peerContext.roomId;
+    if (this.networkService.peer.isRoom){
+      this.roomName = this.networkService.peer.roomName;
+      this.roomId = this.networkService.peer.roomId;
     }
 
     this.reload();
@@ -128,7 +128,7 @@ export class ReConnectComponent implements OnInit, OnDestroy {
 
     if (!context.verifyPassword(password)) return;
 
-    let userId = Network.peerContext ? Network.peerContext.userId : PeerContext.generateId();
+    let userId = Network.peer ? Network.peer.userId : PeerContext.generateId();
     Network.open(userId, context.roomId, context.roomName, password);
     PeerCursor.myCursor.peerId = Network.peerId;
 
@@ -139,7 +139,7 @@ export class ReConnectComponent implements OnInit, OnDestroy {
         EventSystem.unregister(triedPeer);
         ObjectStore.instance.clearDeleteHistory();
         for (let context of peerContexts) {
-          Network.connect(context.peerId);
+          Network.connect(context);
         }
         EventSystem.register(triedPeer)
           .on('CONNECT_PEER', event => {
@@ -170,14 +170,14 @@ export class ReConnectComponent implements OnInit, OnDestroy {
   }
 
   private resetNetwork() {
-    if (Network.peerContexts.length < 1) {
+    if (Network.peers.length < 1) {
       Network.open();
       PeerCursor.myCursor.peerId = Network.peerId;
     }
   }
 
   private closeIfConnected() {
-    if (0 < Network.peerContexts.length) this.modalService.resolve();
+    if (0 < Network.peers.length) this.modalService.resolve();
   }
 
   disConnect(){

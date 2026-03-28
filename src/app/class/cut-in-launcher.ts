@@ -172,7 +172,7 @@ export class CutInLauncher extends GameObject {
     }
 
     if ( this.sendTo != '' ){ // 秘話再生
-      if ( this.sendTo != Network.peerContext.userId ){
+      if ( this.sendTo != Network.peer.userId ){
         return;
       }
     }

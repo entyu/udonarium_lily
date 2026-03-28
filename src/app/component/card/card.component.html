@@ -28,5 +28,6 @@
     <div *ngIf="isLock && dispLockMark" class="lock-icon-mark is-nowrap is-black-background is-3d will-change" [ngStyle]="{'transform': 'translateY(0%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
       <i class="material-icons" style="display: inline;">lock</i>
     </div>
+    <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
   </div>
 </div>

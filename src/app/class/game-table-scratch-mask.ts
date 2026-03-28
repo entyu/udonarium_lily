@@ -87,8 +87,8 @@ export class GameTableScratchMask extends TabletopObject {
   }
 
   get hasOwner(): boolean { return 0 < this.owner.length; }
-  get isMine(): boolean { return Network.peerContext.userId === this.owner; }
-  get ownerIsOnline(): boolean { return this.hasOwner && Network.peerContexts.some(context => context.userId === this.owner && context.isOpen); }
+  get isMine(): boolean { return Network.peer.userId === this.owner; }
+  get ownerIsOnline(): boolean { return this.hasOwner && Network.peers.some(context => context.userId === this.owner && context.isOpen); }
 
   static create(name: string, width: number, height: number, opacity: number, identifier?: string): GameTableScratchMask {
     let object: GameTableScratchMask = null;

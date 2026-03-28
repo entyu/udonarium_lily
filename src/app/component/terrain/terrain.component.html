@@ -14,29 +14,39 @@
     <div class="is-3d texture" style="z-index: 1" [ngClass]="{'upright-transform': (height < 0.5 && altitude == 0), 'fall': (height >= 0.5 && altitude == 0)}" [ngStyle]="{transform: 'translateZ(' + (altitude * gridSize) + 'px)'}">
       <ng-container *ngIf="hasFloor && isVisibleFloor && 0 < floorImage?.url.length">
         <div class="is-3d texture chrome-smooth-image-trick" [ngClass]="{'blinking-animation': !isLocked}" [ngStyle]="{'backface-visibility': isSlope ? 'visible' : 'hidden', 'transform': 'translateZ(' + ((height / (isSlope ? 2 : 1)) * gridSize) + 'px)' + floorModCss, filter: 'brightness(' + floorBrightness + ')'}"
-          [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'"></div>
+          [style.background-image]="'url(' + floorImage.url + ')' | safe: 'style'">
+          <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
+        </div>
       </ng-container>
       <canvas class="grid-canvas is-fill" [ngStyle]="{'backface-visibility': isSlope ? 'visible' : 'hidden', 'transform': 'translateZ(' + ((height / (isSlope ? 2 : 1)) * gridSize) + 'px)' + floorModCss, filter: 'brightness(' + floorBrightness + ')'}" #gridCanvas></canvas>
       <ng-container *ngIf="hasWall && 0 < wallImage?.url.length">
         <ng-container *ngIf="slopeDirection != slopeDirectionState.TOP">
           <div *ngIf="isVisibleWallTopBottom" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.LEFT, 'is-inverse-slope': slopeDirection == slopeDirectionState.RIGHT}" class="is-3d texture of-wall-top chrome-smooth-image-trick" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
             [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
-            style="transform: translateY(-100%) rotateX(90deg) rotateZ(180deg) scaleX(-1.0)"></div>
+            style="transform: translateY(-100%) rotateX(90deg) rotateZ(180deg) scaleX(-1.0)">
+            <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
+          </div>
         </ng-container>
         <ng-container *ngIf="slopeDirection != slopeDirectionState.BOTTOM">
           <div *ngIf="isVisibleWallTopBottom" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.LEFT, 'is-inverse-slope': slopeDirection == slopeDirectionState.RIGHT}" class="is-3d texture of-wall-bottom chrome-smooth-image-trick" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
             [style.width.px]="width * gridSize" [style.height.px]="height * gridSize"
-            style="transform: rotateX(-90deg)"></div>
+            style="transform: rotateX(-90deg)">
+            <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
+          </div>
         </ng-container>
         <ng-container *ngIf="slopeDirection != slopeDirectionState.LEFT">
           <div *ngIf="isVisibleWallLeftRight" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.BOTTOM, 'is-inverse-slope': slopeDirection == slopeDirectionState.TOP}" class="is-3d texture of-wall-left chrome-smooth-image-trick" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
             [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize" 
-            style="transform: rotateZ(90deg) rotateX(-90deg) scaleX(-1.0) translateX(-100%) translateY(-100%)"></div>
+            style="transform: rotateZ(90deg) rotateX(-90deg) scaleX(-1.0) translateX(-100%) translateY(-100%)">
+            <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
+          </div>
         </ng-container>
         <ng-container *ngIf="slopeDirection != slopeDirectionState.RIGHT">
           <div *ngIf="isVisibleWallLeftRight" [ngClass]="{'blinking-animation': !isLocked, 'no-shadow': !isSurfaceShading, 'is-slope': slopeDirection == slopeDirectionState.BOTTOM, 'is-inverse-slope': slopeDirection == slopeDirectionState.TOP}" class="is-3d texture of-wall-right chrome-smooth-image-trick" [style.background-image]="'url(' + wallImage.url + ')' | safe: 'style'"
             [style.width.px]="depth * gridSize" [style.height.px]="height * gridSize"
-            style="transform: rotateZ(-90deg) rotateX(-90deg) translateY(-100%)"></div>
+            style="transform: rotateZ(-90deg) rotateX(-90deg) translateY(-100%)">
+          <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
+          </div>
         </ng-container>
       </ng-container>
       <ng-container *ngIf="!isLocked">

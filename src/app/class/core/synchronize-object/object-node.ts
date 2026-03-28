@@ -2,8 +2,12 @@ import { XmlUtil } from '../system/util/xml-util';
 import { Attributes } from './attributes';
 import { defineSyncObject as SyncObject, defineSyncVariable as SyncVar } from './decorator-core';
 import { GameObject, ObjectContext } from './game-object';
+import { markForChildrenChanged } from './object-event-extension';
 import { InnerXml, ObjectSerializer, XmlAttributes } from './object-serializer';
 import { ObjectStore } from './object-store';
+
+// 親Nodeの存在が未知の子Node
+const orphanNodes: { [parentIdentifier: string]: ObjectNode[] } = {};
 
 @SyncObject('node')
 export class ObjectNode extends GameObject implements XmlAttributes, InnerXml {
@@ -27,17 +31,9 @@ export class ObjectNode extends GameObject implements XmlAttributes, InnerXml {
   get parentIsDestroyed(): boolean { return this.parentIsAssigned && ObjectStore.instance.isDeleted(this.parentIdentifier); }
 
   private _children: ObjectNode[] = [];
-  get children(): ObjectNode[] {
-    if (this.needsSort) {
-      this.needsSort = false;
-      this._children.sort((a, b) => a.index - b.index);
-    }
-    return this._children.concat();
-  }
+  get children(): ObjectNode[] { return this.sortChildren().concat(); }
 
-  // TODO 名前　親Nodeの存在が未知の状態であるNode
-  private static unknownNodes: { [identifier: string]: ObjectNode[] } = {};
-  private needsSort: boolean = true;
+  private needsSort: boolean = false;
 
   // override
   destroy() {
@@ -67,38 +63,52 @@ export class ObjectNode extends GameObject implements XmlAttributes, InnerXml {
   onChildRemoved(child: ObjectNode) { }
 
   private _onChildAdded(child: ObjectNode) {
+    markForChildrenChanged(this);
+    let identifiers = new Set<string>();
     let node: ObjectNode = this;
     while (node) {
+      if (identifiers.has(node.identifier)) break;
+      identifiers.add(node.identifier);
       node.onChildAdded(child);
       node = node.parent;
-      if (node === this) break;
     }
   }
 
   private _onChildRemoved(child: ObjectNode) {
+    markForChildrenChanged(this);
+    let identifiers = new Set<string>();
     let node: ObjectNode = this;
     while (node) {
+      if (identifiers.has(node.identifier)) break;
+      identifiers.add(node.identifier);
       node.onChildRemoved(child);
       node = node.parent;
-      if (node === this) break;
     }
   }
 
   private initializeChildren() {
-    if (ObjectNode.unknownNodes[this.identifier] == null) return;
-    let objects = ObjectNode.unknownNodes[this.identifier];
+    if (orphanNodes[this.identifier] == null) return;
+    let objects = orphanNodes[this.identifier];
     for (let object of objects) {
       if (object.parent === this) this.updateChildren(object);
     }
-    if (ObjectNode.unknownNodes[this.identifier]) {
-      delete ObjectNode.unknownNodes[this.identifier];
+    if (orphanNodes[this.identifier]) {
+      delete orphanNodes[this.identifier];
     }
+  }
+
+  private sortChildren(): ObjectNode[] {
+    if (this.needsSort) {
+      this.needsSort = false;
+      this._children.sort((a, b) => a.index - b.index);
+    }
+    return this._children;
   }
 
   private updateChildren(child: ObjectNode = this) {
     let index = this._children.indexOf(child);
     let isAdded = false;
-    let isMyChild = child.parent === this;
+    let isMyChild = child.parentIdentifier === this.identifier;
 
     if (index < 0 && isMyChild) {
       this._children.push(child);
@@ -122,7 +132,7 @@ export class ObjectNode extends GameObject implements XmlAttributes, InnerXml {
   }
 
   private updateIndexs() {
-    let children = this.children;
+    let children = this.sortChildren();
     for (let i = 0; i < children.length; i++) {
       children[i].majorIndex = i;
       children[i].minorIndex = Math.random();
@@ -131,37 +141,53 @@ export class ObjectNode extends GameObject implements XmlAttributes, InnerXml {
 
   appendChild<T extends ObjectNode>(child: T): T {
     if (child.contains(this)) return null;
-    if (child.parent && child.parent !== this) child.parent.removeChild(child);
+    let isAdded = child.parentIdentifier !== this.identifier;
+    if (child.parent && isAdded) child.parent.removeChild(child);
 
-    let lastIndex = 0 < this.children.length ? this.children[this.children.length - 1].majorIndex + 1 : 0;
+    let children = this.sortChildren();
+    let lastIndex = 0 < children.length ? children[children.length - 1].majorIndex + 1 : 0;
 
     child.parentIdentifier = this.identifier;
     child.majorIndex = lastIndex;
     child.minorIndex = Math.random();
 
-    this.updateChildren(child);
+    if (isAdded) {
+      children.push(child);
+      this._onChildAdded(child);
+    }
 
     return child;
   }
 
+  prependChild<T extends ObjectNode>(child: T): T {
+    return this._children.length < 1 ? this.appendChild(child) : this.insertBefore(child, this.sortChildren()[0]);
+  }
+
   insertBefore<T extends ObjectNode>(child: T, reference: ObjectNode): T {
     if (child.contains(this)) return null;
-    if (child === reference && child.parent === this) return child;
+    let isAdded = child.parentIdentifier !== this.identifier;
+    if (child === reference && !isAdded) return child;
+    if (child.parent && isAdded) child.parent.removeChild(child);
 
-    if (child.parent && child.parent !== this) child.parent.removeChild(child);
-
-    let index = this.children.indexOf(reference);
+    let children = this.sortChildren();
+    let index = children.indexOf(reference);
     if (index < 0) return this.appendChild(child);
 
     child.parentIdentifier = this.identifier;
 
-    let prevIndex = 0 < index ? this.children[index - 1].index : 0;
+    let prevIndex = 0 < index ? children[index - 1].index : 0;
     let diff = reference.index - prevIndex;
     let insertIndex = prevIndex + diff * (0.45 + 0.1 * Math.random());
     child.majorIndex = insertIndex | 0;
     child.minorIndex = insertIndex - child.majorIndex;
 
-    this.updateChildren(child);
+    if (isAdded) {
+      children.splice(index, 0, child);
+      this._onChildAdded(child);
+    } else {
+      this.needsSort = true;
+    }
+
     if (diff < 1e-7) {
       this.updateIndexs();
     }
@@ -170,26 +196,28 @@ export class ObjectNode extends GameObject implements XmlAttributes, InnerXml {
   }
 
   removeChild<T extends ObjectNode>(child: T): T {
-    let children = this.children;
-    let index: number = children.indexOf(child);
+    let index: number = this._children.indexOf(child);
     if (index < 0) return null;
 
     child.parentIdentifier = '';
     child.majorIndex = 0;
     child.minorIndex = Math.random();
 
-    this.updateChildren(child);
+    this._children.splice(index, 1);
+    this._onChildRemoved(child);
     return child;
   }
 
   contains(child: ObjectNode): boolean {
+    let identifiers = new Set<string>();
     let parent = child.parent;
     while (parent) {
-      if (parent === child) {
+      if (identifiers.has(parent.identifier)) {
         console.error('あ やっべ、循環参照', child);
         return false;
       }
       if (parent === this) return true;
+      identifiers.add(parent.identifier);
       parent = parent.parent;
     }
     return false;
@@ -250,10 +278,10 @@ export class ObjectNode extends GameObject implements XmlAttributes, InnerXml {
     if (this.parent) {
       this.parent.updateChildren(this);
     } else if (this.parentIsAssigned) {
-      if (!(this.parentIdentifier in ObjectNode.unknownNodes)) {
-        ObjectNode.unknownNodes[this.parentIdentifier] = [];
+      if (!(this.parentIdentifier in orphanNodes)) {
+        orphanNodes[this.parentIdentifier] = [];
       }
-      ObjectNode.unknownNodes[this.parentIdentifier].push(this);
+      orphanNodes[this.parentIdentifier].push(this);
     }
   }
 }

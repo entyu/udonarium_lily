@@ -410,7 +410,7 @@ export class ControllerInputComponent implements OnInit, OnDestroy {
       case 'graveyard':
         return false;
       default:
-        for (const conn of Network.peerContexts) {
+        for (const conn of Network.peers) {
 //          if (conn.isOpen && gameCharacter.location.name === conn.fullstring) {
           if (conn.isOpen && gameCharacter.location.name === conn.peerId) {
             return false;

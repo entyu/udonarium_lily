@@ -661,7 +661,7 @@ export class GameCharacter extends TabletopObject {
       this.setStatusValue(name, nowOrMax, sum);
     }
     if ( type == 'currentValue'){
-      if ( sum >= data.value && limitMax){
+      if (typeof data.value === "number" && sum >= data.value && limitMax){
         maxRecoveryMess = '(最大)';
         sum = this.getStatusValue(name,'max');
       }

@@ -69,4 +69,5 @@
       <span class="altitude-indicator is-3d" style="position: absolute; pointer-events: none; transform: rotateY(-180deg)">{{ gameTableMaskAltitude }}</span>
     </div>
   </div>
+  <div *ngIf="isSelected" class="selected-highlight border" [ngClass]="{'is-magnetic': isMagnetic}"></div>
 </div>

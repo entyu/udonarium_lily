@@ -65,11 +65,11 @@ interface BuffByCharacter{
   object : GameCharacter;
 }
 
+let loader: BCDiceLoader;
+let queue: PromiseQueue = initializeDiceBotQueue();
+
 @SyncObject('dice-bot')
 export class DiceBot extends GameObject {
-  private static loader: BCDiceLoader;
-  private static queue: PromiseQueue = DiceBot.initializeDiceBotQueue();
-
   static diceBotInfos: GameSystemInfo[] = [];
 
   static getCustomGameSystemInfo(ststem: GameSystemClass, locale: string): GameSystemInfo{
@@ -85,7 +85,7 @@ export class DiceBot extends GameObject {
   }
 
   private static listAvailableGameSystems(): GameSystemInfo[]{
-    const diceBotInfos: GameSystemInfo[] = DiceBot.loader.listAvailableGameSystems();
+    const diceBotInfos: GameSystemInfo[] = loader.listAvailableGameSystems();
     diceBotInfos.push( this.getCustomGameSystemInfo( KariDice as GameSystemClass, "ja_jp" ));
     diceBotInfos.push( this.getCustomGameSystemInfo( IdoDice as GameSystemClass, "ja_jp" ));
     // 追加カスタムダイスは下記追記
@@ -94,7 +94,7 @@ export class DiceBot extends GameObject {
   }
 
   static async diceRollAsync(message: string, gameSystem: GameSystemClass): Promise<DiceRollResult> {
-    return DiceBot.queue.add(() => {
+    return queue.add(() => {
       try {
         const result = gameSystem.eval(message);
         if (result) {
@@ -133,36 +133,20 @@ export class DiceBot extends GameObject {
   }
 
   static async loadGameSystemAsync(gameType: string): Promise<GameSystemClass> {
-    return await DiceBot.queue.add(() => {
+    return await queue.add(() => {
       let system = this.loadCustomGameSystem( gameType );
       if ( system ) {
         return system;
       }
       const id = this.diceBotInfos.some((info) => info.id === gameType) ? gameType : 'DiceBot';
       try {
-        return DiceBot.loader.getGameSystemClass(id);
+        return loader.getGameSystemClass(id);
       } catch {
-        return DiceBot.loader.dynamicLoad(id);
+        return loader.dynamicLoad(id);
       }
     });
   }
 
-  private static initializeDiceBotQueue(): PromiseQueue {
-    let queue = new PromiseQueue('DiceBotQueue');
-    queue.add(async () => {
-      DiceBot.loader = new (await import(
-        /* webpackChunkName: "lib/bcdice/bcdice-loader" */
-        './bcdice/bcdice-loader')
-      ).default();
-      DiceBot.diceBotInfos = DiceBot.listAvailableGameSystems()
-        .sort((a, b) => {
-          if (a.sortKey < b.sortKey) return -1;
-          if (a.sortKey > b.sortKey) return 1;
-          return 0;
-        });
-    });
-    return queue;
-  }
 
   getDiceTables(): DiceTable[] {
     return ObjectStore.instance.getObjects(DiceTable);
@@ -1062,4 +1046,21 @@ export class DiceBot extends GameObject {
     EventSystem.unregister(this);
   }
 
+}
+
+function initializeDiceBotQueue(): PromiseQueue {
+  let queue = new PromiseQueue('DiceBotQueue');
+  queue.add(async () => {
+    loader = new (await import(
+      /* webpackChunkName: "lib/bcdice/bcdice-loader" */
+      './bcdice/bcdice-loader')
+    ).default;
+    DiceBot.diceBotInfos = loader.listAvailableGameSystems()
+      .sort((a, b) => {
+        if (a.sortKey < b.sortKey) return -1;
+        if (a.sortKey > b.sortKey) return 1;
+        return 0;
+      });
+  });
+  return queue;
 }

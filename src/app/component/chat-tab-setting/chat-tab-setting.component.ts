@@ -115,8 +115,8 @@ export class ChatTabSettingComponent implements OnInit, OnDestroy {
   }
 
   get roomName(): string {
-    let roomName = Network.peerContext && 0 < Network.peerContext.roomName.length
-      ? Network.peerContext.roomName
+    let roomName = Network.peer && 0 < Network.peer.roomName.length
+      ? Network.peer.roomName
       : 'ルームデータ';
     return roomName;
   }

@@ -1,4 +1,5 @@
 import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, NgZone, OnDestroy, Output } from '@angular/core';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 import { CSSNumber } from '@udonarium/transform/css-number';
 import { PointerCoordinate } from 'service/pointer-device.service';
 
@@ -79,6 +80,9 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
       this.cancel();
       return;
     }
+
+    this.removeSelectionRanges();
+    this.removeFocus();
     e.stopPropagation();
   }
 
@@ -100,7 +104,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
     trans.y += correction.y;
     trans.z += correction.z;
 
-    if (0 < trans.x ** 2 + trans.y ** 2 + trans.z ** 2) {
+    if (0 < MathUtil.sqrMagnitude(trans)) {
       this.elementRef.nativeElement.style.opacity = this.opacity + '';
     }
 
@@ -109,6 +113,9 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
     this.elementRef.nativeElement.style.top = trans.y + this.startPosition.y + 'px';
 
     this.prevTrans = trans;
+
+    this.removeSelectionRanges();
+    this.removeFocus();
     if (e.cancelable) e.preventDefault();
     e.stopPropagation();
   }
@@ -130,10 +137,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
   private preventClickIfNeeded(e: MouseEvent | TouchEvent) {
     if ((e as TouchEvent).touches != null) return;
 
-    let diffX = this.input.pointer.x - this.startPointer.x;
-    let diffY = this.input.pointer.y - this.startPointer.y;
-    let diffZ = this.input.pointer.z - this.startPointer.z;
-    let distance = diffX ** 2 + diffY ** 2 + diffZ ** 2;
+    let distance = MathUtil.sqrMagnitude(this.input.pointer, this.startPointer);
 
     if (15 ** 2 > distance) return;
 
@@ -249,5 +253,18 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
       elm.style.zIndex = (parseInt(elm.style.zIndex) - bottomZindex) + '';
     });
     this.elementRef.nativeElement.style.zIndex = (topZindex + 1) + '';
+  }
+
+  private removeSelectionRanges() {
+    let selection = window.getSelection();
+    if (!selection.isCollapsed) {
+      selection.removeAllRanges();
+    }
+  }
+
+  private removeFocus() {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
   }
 }

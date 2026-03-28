@@ -32,7 +32,7 @@ export class VoteMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   isRollCall = true;
   includSelf = false;
 
-  get peerList() { return this.networkService.peerContexts; }
+  get peerList() { return this.networkService.peers; }
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
   get vote(): Vote { return ObjectStore.instance.get<Vote>('Vote'); }
 

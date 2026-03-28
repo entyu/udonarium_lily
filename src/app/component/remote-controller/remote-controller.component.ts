@@ -88,7 +88,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewIn
 
   get sortOrderName(): string { return this.sortOrder === SortOrder.ASC ? '昇順' : '降順'; }
 
-  get newLineString(): string { return this.inventoryService.newLineString; }
+  get newLineDataElement(): DataElement { return this.inventoryService.newLineDataElement; }
   @ViewChild('controllerInput', { static: true }) controllerInputComponent: ControllerInputComponent;
   @ViewChild('chatPalette') chatPaletteElementRef: ElementRef<HTMLSelectElement>;
   @Input() character: GameCharacter = null;
@@ -123,7 +123,7 @@ export class RemoteControllerComponent implements OnInit, OnDestroy, AfterViewIn
   isEdit = false;
   editPalette = '';
 
-  private doubleClickTimer: NodeJS.Timer = null;
+  private doubleClickTimer: NodeJS.Timeout = null;
 
   charList: string[] = [];
 

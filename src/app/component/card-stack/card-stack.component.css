@@ -41,6 +41,10 @@
   width: 100px;
 }
 
+.is-backface-hidden {
+  backface-visibility: hidden;
+}
+
 .component {
   position: absolute;
   backface-visibility: hidden;
@@ -79,6 +83,23 @@
   margin: auto;
   height: auto;
   width: 100%;
+  backface-visibility: hidden;
+}
+
+.selected-highlight {
+  pointer-events: none;
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: hsla(200, 100%, 75%, 0.6);
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+}
+
+.selected-highlight.is-magnetic {
+  background-color: hsla(60, 100%, 75%, 0.6);
 }
 
 .lock-icon-mark {
@@ -119,6 +140,8 @@
 .component:hover .rotate-grab {
   display: block;
   opacity: 0.5;
+  transform-style: preserve-3d;
+  transform: translateZ(0.01px);
 }
 
 .component:active .rotate-grab {
@@ -157,7 +180,8 @@
   padding: 3px 9px;
   border-radius: 24px;
   position: absolute;
-  top: 50%
+  top: 50%;
+  backface-visibility: hidden;
 }
 
 .has-length-limit {

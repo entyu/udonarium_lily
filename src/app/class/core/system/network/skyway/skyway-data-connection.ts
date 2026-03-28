@@ -1,16 +1,13 @@
 import { EventEmitter } from 'events';
+import { DataConnection } from 'skyway-js';
 
-import { MessagePack } from '../util/message-pack';
-import { UUID } from '../util/uuid';
-import { setZeroTimeout } from '../util/zero-timeout';
-import { SkyWayStatsMonitor } from './skyway-stats-monitor';
-import { CandidateType, WebRTCStats } from './webrtc-stats';
-
-// @types/skywayを使用すると@types/webrtcが定義エラーになるので代替定義
-declare module PeerJs {
-  export type Peer = any;
-  export type DataConnection = any;
-}
+import { MessagePack } from '../../util/message-pack';
+import { UUID } from '../../util/uuid';
+import { setZeroTimeout } from '../../util/zero-timeout';
+import { IPeerContext, PeerContext } from '../peer-context';
+import { PeerSessionGrade } from '../peer-session-state';
+import { CandidateType, WebRTCStats } from '../webrtc/webrtc-stats';
+import { WebRTCConnection, WebRTCStatsMonitor } from '../webrtc/webrtc-stats-monitor';
 
 interface Ping {
   from: string;
@@ -31,15 +28,17 @@ interface ReceivedChank {
   byteLength: number;
 };
 
-export class SkyWayDataConnection extends EventEmitter {
+export class SkyWayDataConnection extends EventEmitter implements WebRTCConnection {
+  readonly peer: PeerContext;
+
   private chunkSize = 15.5 * 1024;
   private receivedMap: Map<string, ReceivedChank> = new Map();
-  private timeoutTimer: NodeJS.Timer = null;
+  private timeoutTimer: NodeJS.Timeout = null;
 
   get open(): boolean { return this.conn.open; }
   get remoteId(): string { return this.conn.remoteId; }
   get metadata(): any { return this.conn.metadata; }
-  get bufferedAmount(): number { return this.conn._dc?.bufferedAmount ?? 0; }
+  get bufferedAmount(): number { return (this.conn as any)._dc?.bufferedAmount ?? 0; }
 
   private stats: WebRTCStats;
 
@@ -55,17 +54,24 @@ export class SkyWayDataConnection extends EventEmitter {
   get candidateType(): CandidateType { return this._candidateType; }
   private set candidateType(candidateType: CandidateType) { this._candidateType = candidateType };
 
-  constructor(private conn: PeerJs.DataConnection) {
+  constructor(private conn: DataConnection, peer: IPeerContext) {
     super();
+
+    this.peer = PeerContext.parse(peer.peerId);
+    this.peer.userId = peer.userId;
+    this.peer.password = peer.password;
+
     conn.on('data', data => this.onData(data));
     conn.on('open', () => {
       this.stats = new WebRTCStats(this.getPeerConnection());
+      this.peer.isOpen = true;
       this.clearTimeoutTimer();
       exchangeSkyWayImplementation(conn);
       this.emit('open');
       this.startMonitoring();
     });
     conn.on('close', () => {
+      this.peer.isOpen = false;
       this.clearTimeoutTimer();
       this.emit('close');
     });
@@ -78,6 +84,7 @@ export class SkyWayDataConnection extends EventEmitter {
   }
 
   close() {
+    this.peer.isOpen = false;
     this.clearTimeoutTimer();
     this.stopMonitoring();
     this.conn.close();
@@ -108,11 +115,11 @@ export class SkyWayDataConnection extends EventEmitter {
   }
 
   private startMonitoring() {
-    SkyWayStatsMonitor.add(this);
+    WebRTCStatsMonitor.add(this);
   }
 
   private stopMonitoring() {
-    SkyWayStatsMonitor.remove(this);
+    WebRTCStatsMonitor.remove(this);
   }
 
   async updateStatsAsync() {
@@ -120,6 +127,33 @@ export class SkyWayDataConnection extends EventEmitter {
     this.sendPing();
     await this.stats.updateAsync();
     this.candidateType = this.stats.candidateType;
+
+    let deltaTime = performance.now() - this.timestamp;
+    let healthRate = deltaTime <= 10000 ? 1 : 5000 / ((deltaTime - 10000) + 5000);
+    let ping = healthRate < 1 ? deltaTime : this.ping;
+    let pingRate = 500 / (ping + 500);
+
+    this.peer.session.health = healthRate;
+    this.peer.session.ping = ping;
+    this.peer.session.speed = pingRate * healthRate;
+
+    switch (this.candidateType) {
+      case CandidateType.HOST:
+        this.peer.session.grade = PeerSessionGrade.HIGH;
+        break;
+      case CandidateType.SRFLX:
+      case CandidateType.PRFLX:
+        this.peer.session.grade = PeerSessionGrade.MIDDLE;
+        break;
+      case CandidateType.RELAY:
+        this.peer.session.grade = PeerSessionGrade.LOW;
+        break;
+      default:
+        this.peer.session.grade = PeerSessionGrade.UNSPECIFIED;
+        break;
+    }
+    this.peer.session.description = this.candidateType;
+
     this.emit('stats', this.stats);
   }
 
@@ -204,7 +238,7 @@ setInterval() に由来する遅延を解消するが skyway-js-sdk の更新次
 
 https://github.com/skyway/skyway-js-sdk/blob/master/src/peer/dataConnection.js
 */
-function exchangeSkyWayImplementation(conn: PeerJs.DataConnection) {
+function exchangeSkyWayImplementation(conn: any) {
   if (conn._dc && conn._sendBuffer) {
     conn._startSendLoop = startSendLoopZeroTimeout;
   }
