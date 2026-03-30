@@ -20,7 +20,7 @@ const HOURS = 60 * 60 * 1000;
 
 @Injectable()
 export class ChatMessageService {
-  private intervalTimer: NodeJS.Timer = null;
+  private intervalTimer: NodeJS.Timeout = null;
   private timeOffset: number = Date.now();
   private performanceOffset: number = performance.now();
 
@@ -148,7 +148,7 @@ export class ChatMessageService {
     }
 
     let chatMessage: ChatMessageContext = {
-      from: Network.peerContext.userId,
+      from: Network.peer.userId,
       to: this.findId(sendTo),
       name: this.makeMessageName(sendFrom, sendTo),
       imageIdentifier: this.findImageIdentifier(sendFrom, imgIndex), // lily

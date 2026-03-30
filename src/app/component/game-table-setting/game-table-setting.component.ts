@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnDestroy, OnInit } from '@angular/core';
 import GameSystemClass from 'bcdice/lib/game_system';
 
 import { ImageFile } from '@udonarium/core/file-storage/image-file';
@@ -23,7 +23,7 @@ import { Config } from '@udonarium/config';
   templateUrl: './game-table-setting.component.html',
   styleUrls: ['./game-table-setting.component.css']
 })
-export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GameTableSettingComponent implements OnInit, OnDestroy {
 
   @Input('gameType') _gameType: string = '';
   @Output() gameTypeChange = new EventEmitter<string>();
@@ -132,8 +132,6 @@ export class GameTableSettingComponent implements OnInit, OnDestroy, AfterViewIn
         }
       });
   }
-
-  ngAfterViewInit() { }
 
   ngOnDestroy() {
     EventSystem.unregister(this);

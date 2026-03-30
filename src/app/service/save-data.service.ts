@@ -17,7 +17,7 @@ import { Room } from '@udonarium/room';
 
 import { saveAs } from 'file-saver';
 
-import * as Beautify from 'vkbeautify';
+import Beautify from 'vkbeautify';
 //本家PR #92より
 import { ImageTagList } from '@udonarium/image-tag-list';
 //

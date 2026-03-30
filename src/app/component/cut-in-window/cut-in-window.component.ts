@@ -39,7 +39,7 @@ export class CutInWindowComponent implements AfterViewInit, OnInit, OnDestroy {
   width = 200;
   height = 150;
 
-  private lazyUpdateTimer: NodeJS.Timer = null;
+  private lazyUpdateTimer: NodeJS.Timeout = null;
   readonly audioPlayer: AudioPlayer = new AudioPlayer();
   private cutInTimeOut = null ;
   timerCheckWindowSize = null ;

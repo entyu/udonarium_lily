@@ -1,14 +1,15 @@
 import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 import { ObjectStore } from '@udonarium/core/synchronize-object/object-store';
-import { PeerContext } from '@udonarium/core/system/network/peer-context';
 import { EventSystem, Network } from '@udonarium/core/system';
+import { PeerContext } from '@udonarium/core/system/network/peer-context';
+import { PeerSessionGrade } from '@udonarium/core/system/network/peer-session-state';
 import { PeerCursor } from '@udonarium/peer-cursor';
 
 import { FileSelecterComponent } from 'component/file-selecter/file-selecter.component';
 import { LobbyComponent } from 'component/lobby/lobby.component';
 import { ReConnectComponent } from 'component/re-connect/re-connect.component';
-import { AppConfigService } from 'service/app-config.service';
+import { AppConfig, AppConfigService } from 'service/app-config.service';
 import { ModalService } from 'service/modal.service';
 import { PanelService } from 'service/panel.service';
 
@@ -44,7 +45,11 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   disptimer = null;
   dispDetailFlag = false;
 
+  private interval: NodeJS.Timeout;
   get myPeer(): PeerCursor { return PeerCursor.myCursor; }
+
+  get config(): AppConfig { return AppConfigService.appConfig; }
+  get canUsePrivateSession(): boolean { return this.config.backend.mode == 'skyway'; }
 
   constructor(
     private tabletopActionService: TabletopActionService,
@@ -66,6 +71,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
       .on('OPEN_NETWORK', event => {
         this.ngZone.run(() => { });
       });
+    this.interval = setInterval(() => { }, 1000);
 
     this.disptimer = setInterval(() => {
       this.dispInfo();
@@ -74,6 +80,7 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy() {
     EventSystem.unregister(this);
+    clearInterval(this.interval);
     this.disptimer = null;
   }
 
@@ -89,10 +96,10 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     this.targetUserId = '';
     if (targetUserId.length < 1) return;
     this.help = '';
-    let context = PeerContext.create(targetUserId);
-    if (context.isRoom) return;
+    let peer = PeerContext.create(targetUserId);
+    if (peer.isRoom) return;
     ObjectStore.instance.clearDeleteHistory();
-    Network.connect(context.peerId);
+    Network.connect(peer);
   }
 
   showLobby() {
@@ -105,6 +112,10 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  stringFromSessionGrade(grade: PeerSessionGrade): string {
+    return PeerSessionGrade[grade] ?? PeerSessionGrade[PeerSessionGrade.UNSPECIFIED];
   }
 
   findUserId(peerId: string) {
@@ -153,8 +164,8 @@ export class PeerMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   checkConnect(){
-    console.log("自身のUserid:" + this.networkService.peerContext.userId );
-    for (let context of this.networkService.peerContexts){
+    console.log("自身のUserid:" + this.networkService.peer.userId );
+    for (let context of this.networkService.peers){
       console.log("接続対象ID:" + context.peerId );
     }
   }

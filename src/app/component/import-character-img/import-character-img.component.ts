@@ -107,7 +107,7 @@ export class ImportCharacterImgComponent implements OnInit, OnDestroy, AfterView
         let icon = root.getElementsByName('ICON');
         if(icon){
           icon[0].value = distImageDataElement.children.length - 1;
-          if( icon[0].currentValue > icon[0].value ) icon[0].currentValue = icon[0].value;
+          if(typeof icon[0].currentValue === 'number' && icon[0].currentValue > icon[0].value ) icon[0].currentValue = icon[0].value;
         }
 
       }

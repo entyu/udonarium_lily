@@ -1,8 +1,5 @@
-<!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
-<div class="dummy-will-change" appMovable [movable.option]="movableOption">
-</div>
 <div class="component is-3d is-grab is-pointer-events-none" [style.width.px]="size * gridSize"
-  [style.height.px]="size * gridSize" appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()"
+  [style.height.px]="size * gridSize" appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()"
   (movable.ondragend)="onMoved()" (mousedown)="checkKey($event)" #root>
   <div class="component-content is-3d" [@bounceInOut]="'in'">
     <div class="component-content is-3d is-pointer-events-auto" appRotable [rotable.option]="rotableOption"
@@ -17,6 +14,9 @@
           <div class="material-icons of-back">autorenew</div>
         </div>
       </div>
+      <div class="pedestal-inner"></div>
+      <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
+      <div class="pedestal-outer"></div>
 <!--影-->
       <img class="image is-pointer-events-none chrome-smooth-image-trick" [ngStyle]="{'height':+ this.gameCharacter.komaImageHeignt + 'px','transform': 'translateX(-50%) translateX(' + size * gridSize / 2 +'px) scaleY(0.5) translateY(-150%) translateY(' + size * gridSize +'px)'}" *ngIf="isDropShadow && (0 < imageFile.url.length) && this.gameCharacter.specifyKomaImageFlag" [src]="imageFile.url | safe: 'resourceUrl'" 
       style="filter: brightness(0) opacity(0.7) blur(1px);">
@@ -24,7 +24,7 @@
       style="filter: brightness(0) opacity(0.7) blur(1px);">
       <div class="upright-transform is-fit-width is-3d" [ngStyle]="{'transform': 'rotateY(90deg) rotateZ(-90deg) rotateY(-90deg) translateY(-50%) translateY(' + (-altitude) * gridSize +'px)'}">
         <div class="rotate-frame is-3d" [style.width.px]="size * gridSize" [style.height.px]="size * gridSize"
-          appRotable [(rotable.value)]="roll" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
+          appRotable [rotable.option]="rollOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
           <div class="rotate-inner is-3d">
 <!-- バフ表示 -->
 <!-- クロームver102の描画問題に対処するため構成を修正している -->

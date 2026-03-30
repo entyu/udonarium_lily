@@ -75,7 +75,7 @@ body {
   padding: 0;
   overflow: hidden;
   background-color: hsl(0, 0%, 97%);
-  touch-action: manipulation;
+  touch-action: none;
 }
 
 body {
@@ -210,10 +210,25 @@ body {
 }
 
 /*
- * デスクトップWindows版Chrome 102-103におけるレンダリング改善のための定義.
+ * デスクトップWindows版Chrome 119におけるレンダリング改善のための定義.
  * 3D表示している画像にこのCSSクラスを付与すると至近距離で表示した時の解像度が鮮明になる.
- * 将来的なChromeのアップデートでレンダリング速度が改善された場合は削除を検討.
+ * 将来的なChromeのアップデートでレンダリングが改善された場合は削除を検討.
  */
 .chrome-smooth-image-trick {
   transform-style: inherit;
+  overflow: visible;
+}
+
+/*
+ * Windows版デスクトップChrome 138におけるレンダリング改善の定義.
+ * rotateZ(180deg)された3D要素の高さ軸（z軸）を正しく表示するトリック.
+ * 将来的なChromeのアップデートでレンダリングが改善された場合は削除を検討.
+ */
+.is-3d:has(> .chrome-smooth-image-trick)::before {
+  content: ".";
+  position: absolute;
+  color: transparent;
+  pointer-events: none;
+  width: 0;
+  height: 0;
 }

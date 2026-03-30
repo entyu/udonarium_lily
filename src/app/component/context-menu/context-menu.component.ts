@@ -21,12 +21,12 @@ export class ContextMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   parentMenu: ContextMenuAction;
   subMenu: ContextMenuAction[];
 
-  showSubMenuTimer: NodeJS.Timer;
-  hideSubMenuTimer: NodeJS.Timer;
+  showSubMenuTimer: NodeJS.Timeout;
+  hideSubMenuTimer: NodeJS.Timeout;
 
   private callbackOnOutsideClick = (e) => this.onOutsideClick(e);
 
-  get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging; }
+  get isPointerDragging(): boolean { return this.pointerDeviceService.isDragging || this.pointerDeviceService.isTablePickGesture; }
   get altitudeHande(): TabletopObject { 
     for (let action of this.actions) {
       if (action && action.altitudeHande) return action.altitudeHande;

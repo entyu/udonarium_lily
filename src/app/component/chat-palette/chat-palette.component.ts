@@ -53,7 +53,7 @@ export class ChatPaletteComponent implements OnInit, OnDestroy {
   isIndexOpen: boolean = false;
   editPalette: string = '';
 
-  private doubleClickTimer: NodeJS.Timer = null;
+  private doubleClickTimer: NodeJS.Timeout = null;
 
   get diceBotInfos() { return DiceBot.diceBotInfos; }
 

@@ -33,9 +33,9 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   private opacityElement: HTMLElement = null;
   private fadeOutTimer: ResettableTimeout = null;
 
-  private updateInterval: NodeJS.Timer = null;
+  private updateInterval: NodeJS.Timeout = null;
 
-  private timestampInterval: NodeJS.Timer = null;
+  private timestampInterval: NodeJS.Timeout = null;
   private timestampIntervalEnable = false;
 
   private callcack: any = (e) => this.onMouseMove(e);
@@ -47,12 +47,12 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
   networkService = Network;
 
   get delayMs(): number {
-    let maxDelay = Network.peerIds.length * 16.6;
+    let maxDelay = (Network.peerIds.length + 1) * 16.6;
     return maxDelay < 100 ? 100 : maxDelay;
   }
 
   get delayMsHb(): number {
-    let maxDelay = Network.peerIds.length * 166;
+    let maxDelay = (Network.peerIds.length + 1) * 166;
     return maxDelay < 1000 ? 1000 : maxDelay;
   }
 
@@ -156,18 +156,18 @@ export class PeerCursorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.timestampInterval = null;
 
         if ( PeerCursor.myCursor.peerId == this.cursor.peerId ){
-          const peerlength = this.networkService.peerContexts.length;
+          const peerlength = this.networkService.peers.length;
           if ( peerlength ){
             if (peerlength <= this.indexCounter) this.indexCounter = 0;
             let timestanmp = Date.now() + PeerCursor.myCursor.debugTimeShift;
             let peerContext = null;
-            if (this.networkService.peerContexts[this.indexCounter]){
-              peerContext = this.networkService.peerContexts[this.indexCounter];
+            if (this.networkService.peers[this.indexCounter]){
+              peerContext = this.networkService.peers[this.indexCounter];
             }
             let id = '';
             if (peerContext){
-              if (this.networkService.peerContexts[this.indexCounter].isOpen){
-                id = this.networkService.peerContexts[this.indexCounter].peerId;
+              if (this.networkService.peers[this.indexCounter].isOpen){
+                id = this.networkService.peers[this.indexCounter].peerId;
               }
             }
 

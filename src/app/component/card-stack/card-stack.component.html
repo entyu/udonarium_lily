@@ -1,13 +1,13 @@
-<!-- 下2行なぜこれで クロームver102 の重さが軽減できるのか検証が終わっていないが保留にして入れておく -->
-<div class="dummy-will-change" appMovable [movable.option]="movableOption">
-</div>
 <div class="component is-3d is-pointer-events-none" [ngClass]="{'is-empty': isEmpty}"
   [style.width.px]="size * gridSize"
-  appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
+  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div class="component-content is-pointer-events-auto is-grab"
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
-    <div *ngIf="topCard && imageFile" (@shuffle.start)="animationShuffleStarted($event)" (@shuffle.done)="animationShuffleDone($event)"
-      [@shuffle]="animeState">
+    <div *ngIf="topCard && imageFile"
+      (@shuffle.start)="animationShuffleStarted($event)"
+      (@shuffle.done)="animationShuffleDone($event)"
+      [@shuffle]="animeState"
+      class="is-backface-hidden chrome-smooth-image-trick">
       <img class="card-image chrome-smooth-image-trick" [ngStyle]="{'transform': 'rotateZ(' + topCard.rotate +'deg)'}" [src]="imageFile.url | safe: 'resourceUrl'">
     </div>
     <ng-container *ngIf="!isIconHidden && !isLock">
@@ -33,5 +33,6 @@
     <div *ngIf="hasOwner" class="name-tag has-length-limit is-nowrap is-black-background is-3d will-change" [ngStyle]="{'transform': 'translateY(50%) translateX(-50%) translateX(' + size * gridSize / 2 +'px)'}">
       <span>{{ownerName}} が確認中</span>
     </div>
+    <div *ngIf="isSelected" class="selected-highlight" [ngClass]="{'is-magnetic': isMagnetic}"></div>
   </div>
 </div>

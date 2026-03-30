@@ -39,8 +39,8 @@ export class GameObjectInventoryService {
   private locationMap: Map<ObjectIdentifier, LocationName> = new Map();
   private tagNameMap: Map<ObjectIdentifier, ElementName> = new Map();
 
-  readonly newLineString: string = '/';
-  readonly newLineDataElement: DataElement = DataElement.create(this.newLineString);
+  static _newLineDataElement = createMockElement('/');
+  get newLineDataElement(): DataElement { return GameObjectInventoryService._newLineDataElement; }
 
   constructor() {
     this.initialize();
@@ -137,8 +137,8 @@ export class GameObjectInventoryService {
 
   private isAnyLocation(location: string): boolean {
     if (location === 'table' || location === Network.peerId || location === 'graveyard') return true;
-    for (let conn of Network.peerContexts) {
-      if (conn.isOpen && location === conn.peerId) {
+    for (let peer of Network.peers) {
+      if (peer.isOpen && location === peer.peerId) {
         return true;
       }
     }
@@ -148,7 +148,7 @@ export class GameObjectInventoryService {
 
 class ObjectInventory {
   newLineString: string = '/';
-  private newLineDataElement: DataElement = DataElement.create(this.newLineString);
+  private newLineDataElement: DataElement = GameObjectInventoryService._newLineDataElement;
 
   private get summarySetting(): DataSummarySetting { return DataSummarySetting.instance; }
 
@@ -276,4 +276,11 @@ class ObjectInventory {
     let resultNum = +resultStr;
     return Number.isNaN(resultNum) ? resultStr : resultNum;
   }
+}
+
+function createMockElement(name: string): DataElement {
+  let identifier = 'newLineString_DataElement';
+  let dataElement = new DataElement(identifier);
+  dataElement.name = name;
+  return dataElement;
 }

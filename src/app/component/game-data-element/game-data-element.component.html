@@ -5,7 +5,7 @@
       <ng-container *ngIf="!isImage">
 
         <ng-container *ngTemplateOutlet="editButtons"></ng-container>
-        <select (change)="setElementType($event.target.value)" [ngModel]="gameDataElement.type">
+        <select #select (change)="setElementType(select.value)" [ngModel]="gameDataElement.type ?? ''">
           <option value="">通常</option>
           <option value="numberResource">リソース</option>
           <option value="note">ノート</option>
@@ -138,7 +138,7 @@
       <div class="table" *ngIf="0 < gameDataElement.children.length">
 
           <div game-data-element class="table-row" *ngFor="let childElement of gameDataElement.children; let i = index;"
-            [gameDataElement]="childElement" [isEdit]="isEdit" [isTagLocked]="isTagLocked"  [isImage]="isImage" [indexNum]="i"></div>
+            [gameDataElement]="$any(childElement)" [isEdit]="isEdit" [isTagLocked]="isTagLocked"  [isImage]="isImage" [indexNum]="i"></div>
 
       </div>
     </div>

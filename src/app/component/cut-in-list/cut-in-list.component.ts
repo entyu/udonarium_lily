@@ -190,7 +190,7 @@ export class CutInListComponent implements OnInit, OnDestroy {
     return file ? file : ImageFile.Empty;
   }
 
-  private lazyUpdateTimer: NodeJS.Timer = null;
+  private lazyUpdateTimer: NodeJS.Timeout = null;
   selectedCutIn: CutIn = null;
   isYouTubeCutIn = false;
 

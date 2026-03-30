@@ -1,4 +1,5 @@
 import { NgZone } from '@angular/core';
+import { MathUtil } from '@udonarium/core/system/util/math-util';
 
 type Callback = (srcEvent: TouchEvent | MouseEvent | PointerEvent) => void;
 type OnGestureCallback = (srcEvent: TouchEvent | MouseEvent | PointerEvent) => void;
@@ -23,7 +24,7 @@ export class TableTouchGesture {
   private prevHammerScale: number = 0;
   private prevHammerRotation: number = 0;
 
-  private tappedPanTimer: NodeJS.Timer = null;
+  private tappedPanTimer: NodeJS.Timeout = null;
   private tappedPanCenter: HammerPoint = { x: 0, y: 0 };
 
   onstart: Callback = null;
@@ -106,7 +107,7 @@ export class TableTouchGesture {
     this.prevHammerDeltaY = ev.deltaY;
 
     if (this.tappedPanTimer == null || ev.eventType != Hammer.INPUT_START) return;
-    let distance = (this.tappedPanCenter.x - ev.center.x) ** 2 + (this.tappedPanCenter.y - ev.center.y) ** 2;
+    let distance = MathUtil.sqrMagnitude(this.tappedPanCenter, ev.center);
     if (50 ** 2 < distance) {
       this.clearTappedPanTimer();
     }

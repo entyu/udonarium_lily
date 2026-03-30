@@ -160,7 +160,7 @@ export class ChatTabList extends ObjectNode implements InnerXml {
         
         let to = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].to;
         let from = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].from;
-        let myId = Network.peerContext.userId; //1.13.xとのmargeで修正
+        let myId = Network.peer.userId; //1.13.xとのmargeで修正
         if( to ){
           if( ( to != myId) && ( from != myId) ){
             console.log( " SKIP " + from + " > " + to + " : " + this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].text );
@@ -231,7 +231,7 @@ export class ChatTabList extends ObjectNode implements InnerXml {
         
         let to = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].to;
         let from = this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].from;
-        let myId = Network.peerContext.userId; //1.13.xとのmargeで修正
+        let myId = Network.peer.userId; //1.13.xとのmargeで修正
         if( to ){
           if( ( to != myId) && ( from != myId) ){
             console.log( " SKIP " + from + " > " + to + " : " + this.chatTabs[ fastTabIndex ].chatMessages[ indexList[fastTabIndex] ].text );

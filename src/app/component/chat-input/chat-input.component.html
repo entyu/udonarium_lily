@@ -68,7 +68,7 @@
          {{tachieNum}}/{{selectCharacterTachieNum - 1}} 立ち絵
 <!--          <ng-container *ngIf="1 <= selectCharacterTachieNum">-->
             <ng-container *ngIf="selectCharacterTachie"> 
-              <ng-container *ngIf="selectCharacterTachie.currentValue.length > 0"> 
+              <ng-container *ngIf="selectCharacterTachie.currentValue?.length > 0"> 
                 {{selectCharacterTachie.currentValue}}
               </ng-container>
             </ng-container>

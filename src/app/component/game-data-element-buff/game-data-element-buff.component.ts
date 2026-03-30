@@ -37,7 +37,7 @@ export class GameDataElementBuffComponent implements OnInit, OnDestroy, AfterVie
   get currentValue(): number | string { return this._currentValue; }
   set currentValue(currentValue: number | string) { this._currentValue = currentValue; this.setUpdateTimer(); }
 
-  private updateTimer: NodeJS.Timer = null;
+  private updateTimer: NodeJS.Timeout = null;
 
   constructor(
     private changeDetector: ChangeDetectorRef

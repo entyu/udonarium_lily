@@ -1,9 +1,9 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   HostListener,
@@ -27,7 +27,7 @@ import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./game-data-element.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GameDataElementComponent implements OnInit, OnChanges, OnDestroy {
   @Input() gameDataElement: DataElement = null;
   @Input() isEdit: boolean = false;
   @Input() isTagLocked: boolean = false;
@@ -48,7 +48,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
   get currentValue(): number | string { return this._currentValue; }
   set currentValue(currentValue: number | string) { this._currentValue = currentValue; this.setUpdateTimer(); }
 
-  private updateTimer: NodeJS.Timer = null;
+  private updateTimer: NodeJS.Timeout = null;
 
   constructor(
     private panelService: PanelService,
@@ -59,13 +59,14 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit() {
     if (this.gameDataElement) this.setValues(this.gameDataElement);
+  }
 
+  ngOnChanges(): void {
+    EventSystem.unregister(this);
     EventSystem.register(this)
-      .on('UPDATE_GAME_OBJECT', event => {
-        if (this.gameDataElement && event.data.identifier === this.gameDataElement.identifier) {
-          this.setValues(this.gameDataElement);
-          this.changeDetector.markForCheck();
-        }
+      .on(`UPDATE_GAME_OBJECT/identifier/${this.gameDataElement?.identifier}`, event => {
+        this.setValues(this.gameDataElement);
+        this.changeDetector.markForCheck();
       })
       .on('DELETE_GAME_OBJECT', event => {
         if (this.gameDataElement && this.gameDataElement.identifier === event.data.identifier) {
@@ -76,10 +77,6 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnDestroy() {
     EventSystem.unregister(this);
-  }
-
-  ngAfterViewInit() {
-
   }
 
   get imageFileUrl(): string { 
@@ -103,7 +100,7 @@ export class GameDataElementComponent implements OnInit, OnDestroy, AfterViewIni
     let icon = root.getElementsByName('ICON');
     if(icon){
       icon[0].value = image.children.length - 1;
-      if( icon[0].currentValue > icon[0].value ) icon[0].currentValue = icon[0].value;
+      if(typeof icon[0].currentValue === 'number' && icon[0].currentValue > icon[0].value ) icon[0].currentValue = icon[0].value;
     }
   }
 
