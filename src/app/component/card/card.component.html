@@ -1,5 +1,5 @@
 <div class="component is-3d is-pointer-events-none is-grab" [style.width.px]="size * gridSize"
-  appMovable [movable.option]="movableOption" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
+  appMovable [movable.option]="movableOption" [movable.disable]="isLock" (movable.ondragstart)="onMove()" (movable.ondragend)="onMoved()">
   <div class="component-content is-pointer-events-auto is-3d"
     appRotable [rotable.option]="rotableOption" (rotable.ondragstart)="onMove()" (rotable.ondragend)="onMoved()">
     <img *ngIf="imageFile" class="card-image is-3d chrome-smooth-image-trick" [src]="(isFront ? frontImage.url : backImage.url) | safe: 'resourceUrl'">
